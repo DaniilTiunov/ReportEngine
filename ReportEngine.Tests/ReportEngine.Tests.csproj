@@ -21,4 +21,10 @@
     <Using Include="NUnit.Framework" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="AppTests\" />
+    <Folder Include="DomainTests\" />
+    <Folder Include="ExportTests\" />
+  </ItemGroup>
+
 </Project>
