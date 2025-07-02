@@ -20,5 +20,15 @@ namespace ReportEngine.App
         {
             InitializeComponent();
         }
+
+        private void High_button_click(object sender, RoutedEventArgs e)
+        {
+            textDisplay.Content = "HMI quality is so high";
+        }
+
+        private void Low_button_click(object sender, RoutedEventArgs e)
+        {
+            textDisplay.Content = "HMI quality is so low";
+        }
     }
 }
