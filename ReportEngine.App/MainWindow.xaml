@@ -7,6 +7,8 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-
+        <Button Height="50" Width="200" Content="Set high quality HMI" Margin="10,374,590,10" />
+        <Button Height="50" Width="200" Content="Set low quality HMI" Margin="590,374,10,10" />
+        <Label 
     </Grid>
 </Window>
