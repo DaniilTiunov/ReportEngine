@@ -9,9 +9,7 @@
   <ItemGroup>
     <Folder Include="Database\Context\" />
     <Folder Include="Database\" />
-    <Folder Include="Entities\" />
     <Folder Include="Database\Migrations\" />
-    <Folder Include="Repositories\" />
     <Folder Include="Services\" />
   </ItemGroup>
 
