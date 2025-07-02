@@ -1,6 +1,6 @@
 ﻿namespace ReportEngine.Domain.Repositories.Interfaces
 {
-    internal interface IBaseRepository<TEntity> where TEntity : class
+    public interface IBaseRepository<TEntity> where TEntity : class
     {
         Task<IEnumerable<TEntity>> GetAllAsync();
         Task<TEntity> GetByIdAsync(int id);

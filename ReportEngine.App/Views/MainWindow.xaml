@@ -11,24 +11,42 @@
     mc:Ignorable="d">
     <Grid>
         <Button
-            x:Name="HighQualityButton"
-            Width="200"
-            Height="50"
-            Margin="10,374,590,10"
-            Click="High_button_click"
-            Content="Set high quality HMI" />
-        <Button
-            x:Name="LowQualityButton"
-            Width="200"
-            Height="50"
-            Margin="590,374,10,10"
-            Click="Low_button_click"
-            Content="Set low quality HMI" />
+            Width="193"
+            Height="38"
+            Margin="127,321,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Command="{Binding AddUserCommand}"
+            Content="Добавить еблана" />
+        <TextBox
+            Width="213"
+            Height="41"
+            Margin="127,234,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Text="{Binding UserId, UpdateSourceTrigger=PropertyChanged}"
+            TextWrapping="Wrap" />
+        <TextBox
+            Width="213"
+            Height="41"
+            Margin="400,234,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}"
+            TextWrapping="Wrap" />
         <Label
-            x:Name="textDisplay"
-            Height="50"
-            Margin="210,192,270,192"
-            Content="HMI quality is so unknown"
-            FontSize="20" />
+            Width="213"
+            Height="31"
+            Margin="127,173,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Content="Id Еблана" />
+        <Label
+            Width="213"
+            Height="31"
+            Margin="400,173,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Content="Имя еблана" />
     </Grid>
 </Window>

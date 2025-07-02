@@ -2,11 +2,11 @@
 
 namespace ReportEngine.Domain.Logging
 {
-    public static class DomainLogger
+    public  class DomainLogger
     {
-        private static ILoggerFactory _loggerFactory;
+        private  ILoggerFactory _loggerFactory;
         
-        public static void InitLogger(ILoggerFactory loggerFactory)
+        public  void InitLogger(ILoggerFactory loggerFactory)
         {
             _loggerFactory = loggerFactory;
         }

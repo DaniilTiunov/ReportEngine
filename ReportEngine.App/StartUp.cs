@@ -4,6 +4,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ReportEngine.App.Config.JsonHelpers;
 using ReportEngine.Domain.Database.Context;
+using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Repositories;
+using ReportEngine.Domain.Repositories.Interfaces;
 using Serilog;
 
 namespace ReportEngine.App
@@ -13,12 +16,12 @@ namespace ReportEngine.App
         [STAThread]
         public static void Main()
         {
-            JsonHandler jsonHandler = new JsonHandler(@"C:\Work\Prjs\ReportEngine.App\ReportEngine.App\Config\appsettings.json");
-            var connString = jsonHandler.GetConnectionString();
+            JsonHandler jsonHandler = new JsonHandler(@"C:\Work\Prjs\ReportEngine.App\ReportEngine.App\Config\appsettings.json"); // Тут разобраться почему только полная строка
+            var connString = jsonHandler.GetConnectionString(); // Из жысона получаем строку
 
-            Log.Logger = new LoggerConfiguration() //Конфигурация Serilog
+            Log.Logger = new LoggerConfiguration() // Конфигурация Serilog
                 .Enrich.FromLogContext()
-                .WriteTo.File(
+                .WriteTo.File( //Пишем в файл
                         path: @"C:\Work\Prjs\ReportEngine.App\ReportEngine.App\logs\log.txt",
                         rollingInterval: RollingInterval.Day,
                         retainedFileCountLimit: 7,
@@ -28,15 +31,17 @@ namespace ReportEngine.App
                         outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}"
                 )
                 .CreateLogger();
-
-            var host = Host.CreateDefaultBuilder(). //Конфигурация Host приложения
-                ConfigureServices(services => //Регаем сервисы
+            try
+            {
+                var host = Host.CreateDefaultBuilder(). //Конфигурация Host приложения
+                ConfigureServices(services => //Регаем сервисы хуервисы
                 {
                     services.AddDbContext<ReAppContext>(options => //И контекст
                     {
                         options.UseNpgsql(connString);
                     });
                     services.AddSingleton<App>();
+                    services.AddScoped<IBaseRepository<User>, UserRepository>();
                     services.AddSingleton<MainWindow>();
                 })
 
@@ -47,14 +52,22 @@ namespace ReportEngine.App
                 })
                 .Build();
 
-            var app = host.Services.GetService<App>(); //Получаем экземпляр приложения
+                var app = host.Services.GetService<App>(); //Получаем экземпляр приложения
+                var mainWindow = host.Services.GetService<MainWindow>(); //Получаем экземпляр главного окна
 
-            app?.Run(); //Запускаем
+                mainWindow?.Show(); //Запускаем главное окно
+                app?.Run(); //Запускаем
 
-            Log.Information("Приложение запущено без ошибок"); //Логируем
-
-
-
+                Log.Information("Приложение запущено без ошибок"); //Логируем
+            }
+            catch (Exception ex) 
+            {
+                Log.Fatal(ex, "Приложение не запущено");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
     }
 }

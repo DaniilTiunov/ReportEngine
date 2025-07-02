@@ -1,4 +1,8 @@
-﻿using System.Windows;
+﻿using Microsoft.Extensions.DependencyInjection;
+using ReportEngine.App.ViewModels;
+using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Repositories.Interfaces;
+using System.Windows;
 
 namespace ReportEngine.App
 {
@@ -7,24 +11,11 @@ namespace ReportEngine.App
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(IServiceProvider serviceProvider)
         {
             InitializeComponent();
-        }
-
-        private void High_button_click(object sender, RoutedEventArgs e)
-        {
-            textDisplay.Content = "HMI quality is so high";
-        }
-
-        private void Low_button_click(object sender, RoutedEventArgs e)
-        {
-            textDisplay.Content = "HMI quality is so low";
-        }
-
-        private void HighQualityButton_Click(object sender, RoutedEventArgs e)
-        {
-
+            var userRepository = serviceProvider.GetRequiredService<IBaseRepository<User>>();
+            DataContext = new MainWindowViewModel(userRepository);
         }
     }
 }
