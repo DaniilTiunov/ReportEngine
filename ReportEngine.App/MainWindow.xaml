@@ -10,8 +10,25 @@
     Height="450"
     mc:Ignorable="d">
     <Grid>
-        <Button x:Name="HighQualityButton" Height="50" Width="200" Content="Set high quality HMI" Margin="10,374,590,10" Click="High_button_click" />
-        <Button x:Name="LowQualityButton" Height="50" Width="200" Content="Set low quality HMI" Margin="590,374,10,10" Click="Low_button_click"/>
-        <Label x:Name="textDisplay" Height="50" Content="HMI quality is so unknown" FontSize="20" Margin="210,192,270,192" />
+        <Button
+            x:Name="HighQualityButton"
+            Width="200"
+            Height="50"
+            Margin="10,374,590,10"
+            Click="High_button_click"
+            Content="Set high quality HMI" />
+        <Button
+            x:Name="LowQualityButton"
+            Width="200"
+            Height="50"
+            Margin="590,374,10,10"
+            Click="Low_button_click"
+            Content="Set low quality HMI" />
+        <Label
+            x:Name="textDisplay"
+            Height="50"
+            Margin="210,192,270,192"
+            Content="HMI quality is so unknown"
+            FontSize="20" />
     </Grid>
 </Window>
