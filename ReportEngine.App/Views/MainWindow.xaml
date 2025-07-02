@@ -48,12 +48,5 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Content="Имя еблана" />
-        <Button
-            Width="213"
-            Height="38"
-            Margin="400,321,0,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Content="Создать отчет" Click="Button_Click" />
     </Grid>
 </Window>
