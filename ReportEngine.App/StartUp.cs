@@ -7,6 +7,7 @@ using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Export.ExcelWork;
 using Serilog;
 
 namespace ReportEngine.App
@@ -41,7 +42,7 @@ namespace ReportEngine.App
                         options.UseNpgsql(connString);
                     });
                     services.AddSingleton<App>();
-                    services.AddScoped<IBaseRepository<User>, UserRepository>();
+                    services.AddScoped<IBaseRepository<User>, UserRepository>();                   
                     services.AddSingleton<MainWindow>();
                 })
 
