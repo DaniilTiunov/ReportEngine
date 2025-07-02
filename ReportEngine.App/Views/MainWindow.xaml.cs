@@ -30,5 +30,10 @@ namespace ReportEngine.App
         {
             textDisplay.Content = "HMI quality is so low";
         }
+
+        private void HighQualityButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
