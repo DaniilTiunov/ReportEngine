@@ -8,6 +8,7 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using Serilog;
+using System.IO;
 
 namespace ReportEngine.App
 {
@@ -16,13 +17,20 @@ namespace ReportEngine.App
         [STAThread]
         public static void Main()
         {
-            JsonHandler jsonHandler = new JsonHandler(@"C:\Work\Prjs\ReportEngine.App\ReportEngine.App\Config\appsettings.json"); // Тут разобраться почему только полная строка
-            var connString = jsonHandler.GetConnectionString(); // Из жысона получаем строку
+            string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+            string configPath = Path.Combine(appDirectory, "Config", "appsettings.json");
+            string logPath = Path.Combine(appDirectory, "logs", "log.txt");
+
+            Directory.CreateDirectory(Path.GetDirectoryName(logPath));
+
+            JsonHandler jsonHandler = new JsonHandler(configPath);
+            var connString = jsonHandler.GetConnectionString();
 
             Log.Logger = new LoggerConfiguration() // Конфигурация Serilog
                 .Enrich.FromLogContext()
                 .WriteTo.File( //Пишем в файл
-                        path: @"C:\Work\Prjs\ReportEngine.App\ReportEngine.App\logs\log.txt",
+                        path: logPath,
                         rollingInterval: RollingInterval.Day,
                         retainedFileCountLimit: 7,
                         outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
