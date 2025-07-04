@@ -6,19 +6,12 @@ namespace ReportEngine.App.Config.JsonHelpers
 {
     public class JsonHandler
     {
-        private string _jsonFileName { get; set; }
         private AppSettings _appSettings { get; set; }
-
-        public JsonHandler(string jsonFileName)
+        public static string GetConnectionString(string jsonFilePath)
         {
-            _jsonFileName = jsonFileName;
-            string json = File.ReadAllText(_jsonFileName);
-            _appSettings = JsonSerializer.Deserialize<AppSettings>(json);
-        }
-
-        public string GetConnectionString()
-        {
-            return _appSettings.ConnectionStrings.DefaultConnection;
+            string json = File.ReadAllText(jsonFilePath);
+            var appSettings = JsonSerializer.Deserialize<AppSettings>(json);
+            return appSettings.ConnectionStrings.DefaultConnection;
         }
     }
 }

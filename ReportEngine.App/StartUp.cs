@@ -17,15 +17,18 @@ namespace ReportEngine.App
         [STAThread]
         public static void Main()
         {
-            string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string appDirectory = AppDomain.CurrentDomain.BaseDirectory; //Это приложение путь 
 
-            string configPath = Path.Combine(appDirectory, "Config", "appsettings.json");
-            string logPath = Path.Combine(appDirectory, "logs", "log.txt");
+            string configPath = Path.Combine(appDirectory, "Config", "appsettings.json"); //Тянется жысон
+            string logPath = Path.Combine(appDirectory, "logs", "log.txt");//Тянется лог
 
-            Directory.CreateDirectory(Path.GetDirectoryName(logPath));
+            #if DEBUG //Если сборка Debug, то путь лога будет другой
+                   logPath = @"C:\Work\Prjs\ReportEngine.App\ReportEngine.App\logs\log.txt"; //Тянется жысон
+            #endif
+            
+            Directory.CreateDirectory(Path.GetDirectoryName(logPath)); //Создаем каталог если его нет для лога 
 
-            JsonHandler jsonHandler = new JsonHandler(configPath);
-            var connString = jsonHandler.GetConnectionString();
+            var connString = JsonHandler.GetConnectionString(configPath);
 
             Log.Logger = new LoggerConfiguration() // Конфигурация Serilog
                 .Enrich.FromLogContext()
