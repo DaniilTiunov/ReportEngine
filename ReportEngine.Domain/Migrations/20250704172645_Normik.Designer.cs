@@ -11,8 +11,8 @@ using ReportEngine.Domain.Database.Context;
 namespace ReportEngine.Domain.Migrations
 {
     [DbContext(typeof(ReAppContext))]
-    [Migration("20250702143837_baguvix")]
-    partial class baguvix
+    [Migration("20250704172645_Normik")]
+    partial class Normik
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,6 +31,9 @@ namespace ReportEngine.Domain.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Company")
+                        .HasColumnType("text");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
