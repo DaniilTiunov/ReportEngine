@@ -17,6 +17,9 @@ namespace ReportEngine.App
         [STAThread]
         public static void Main()
         {
+            //У меня всё неожиданно сломалось при попытке добавить material design
+            //поэтому пришлось пару раз откатиться, ревёртать и менять веткиБ ничо не помогало, в итоге снём локальную репу
+            //и заново клонировал репу, но это все не очень хорошо(слава богу есть гитхаб) (почти весь этот коммент написал интелисенс)
             string appDirectory = AppDomain.CurrentDomain.BaseDirectory; //Это приложение путь 
 
             string configPath = Path.Combine(appDirectory, "Config", "appsettings.json"); //Тянется жысон
