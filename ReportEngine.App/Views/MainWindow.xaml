@@ -48,5 +48,19 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Content="Имя еблана" />
+        <Label
+            Width="95"
+            Height="31"
+            Margin="314,56,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Content="HELLO ETALON" />
+        <Label
+            Width="119"
+            Height="31"
+            Margin="671,393,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Content="Версия build 0.0.0.4" />
     </Grid>
 </Window>

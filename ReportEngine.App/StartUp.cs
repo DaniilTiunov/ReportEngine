@@ -25,10 +25,10 @@ namespace ReportEngine.App
             string configPath = Path.Combine(appDirectory, "Config", "appsettings.json"); //Тянется жысон
             string logPath = Path.Combine(appDirectory, "logs", "log.txt");//Тянется лог
 
-            #if DEBUG //Если сборка Debug, то путь лога будет другой
-                   logPath = @"C:\Work\Prjs\ReportEngine.App\ReportEngine.App\logs\log.txt"; //Тянется жысон
-            #endif
-            
+#if DEBUG //Если сборка Debug, то путь лога будет другой
+            logPath = @"C:\Work\Prjs\ReportEngine\ReportEngine.App\logs\log.txt"; //Тянется жысон
+#endif
+
             Directory.CreateDirectory(Path.GetDirectoryName(logPath)); //Создаем каталог если его нет для лога 
 
             var connString = JsonHandler.GetConnectionString(configPath);
@@ -53,7 +53,7 @@ namespace ReportEngine.App
                     services.AddDbContext<ReAppContext>(options => //И контекст
                     {
                         options.UseNpgsql(connString);
-                    });
+                    });                 
                     services.AddSingleton<App>();
                     services.AddScoped<IBaseRepository<User>, UserRepository>();
                     services.AddSingleton<MainWindow>();
