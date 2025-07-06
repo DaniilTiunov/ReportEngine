@@ -56,11 +56,11 @@
             VerticalAlignment="Top"
             Content="HELLO ETALON" />
         <Label
-            Width="119"
+            Width="147"
             Height="31"
-            Margin="671,393,0,0"
+            Margin="643,393,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Content="Версия build 0.0.0.4" />
+            Content="Версия build 0.0.0.10" />
     </Grid>
 </Window>
