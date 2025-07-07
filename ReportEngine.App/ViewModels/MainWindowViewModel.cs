@@ -1,8 +1,12 @@
-﻿using System.Windows.Input;
+﻿using ReportEngine.App.Config.JsonHelpers;
+using ReportEngine.App.UpdateInformation;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels
 {
@@ -36,11 +40,13 @@ namespace ReportEngine.App.ViewModels
         }
 
         public ICommand AddUserCommand { get; }
+        public ICommand CheckForUpdatesCommand { get; }
 
         public MainWindowViewModel(IBaseRepository<User> userRepository)
         {
             _userRepository = userRepository;
             AddUserCommand = new RelayCommand(async _ => await AddUser());
+            CheckForUpdatesCommand = new RelayCommand(async _ => await CheckForUpdates());
         }
 
         private async Task AddUser()
@@ -49,6 +55,23 @@ namespace ReportEngine.App.ViewModels
             {
                 var newUser = new User { Id = id, Name = UserName };
                 await _userRepository.AddAsync(newUser);
+            }
+        }
+
+        private async Task CheckForUpdates()
+        {
+            try
+            {
+                string appDirectory = AppDomain.CurrentDomain.BaseDirectory; //Это приложение путь 
+
+                string configPath = Path.Combine(appDirectory, "Config", "appsettings.json"); //Тянется жысон
+                string logPath = Path.Combine(appDirectory, "logs", "log.txt");//Тянется лог
+
+                Updater.CheckForUpdate(JsonHandler.GetVersionOnServer(configPath), JsonHandler.GetLocalVersion(configPath));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при проверке обновлений: {ex.Message}");
             }
         }
 

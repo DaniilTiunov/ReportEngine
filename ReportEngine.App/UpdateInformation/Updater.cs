@@ -12,7 +12,11 @@ namespace ReportEngine.App.UpdateInformation
             if (versionOnServer != localVersionPath)
             {
                 MessageBox.Show($"Доступна новая версия приложения\n" +
-                    $"Новая версия: {versionOnServer}" + $"Ваша версия: {localVersionPath}", "Обновление", MessageBoxButton.OK, MessageBoxImage.Information);
+                    $"Новая версия: {versionOnServer}\n" + $"Ваша версия: {localVersionPath}", "Обновление", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show($"Вы используете последнюю версию: {localVersionPath}", "Обновление", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
     }
