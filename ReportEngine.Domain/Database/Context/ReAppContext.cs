@@ -7,6 +7,7 @@ namespace ReportEngine.Domain.Database.Context
     {
         public DbSet<ProjectInfo> Projects { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Company> Companies { get; set; }
 
         public ReAppContext(DbContextOptions<ReAppContext> options) : base(options)
         {

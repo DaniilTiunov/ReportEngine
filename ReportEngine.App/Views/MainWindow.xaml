@@ -11,13 +11,17 @@
     mc:Ignorable="d">
     <Grid>
         <Button
-            Width="213"
             Height="38"
-            Margin="127,321,0,0"
-            HorizontalAlignment="Left"
+            Margin="127,321,460,0"
             VerticalAlignment="Top"
             Command="{Binding AddUserCommand}"
-            Content="Добавить еблана" />
+            Content="Добавить" />
+        <Button
+            Width="213"
+            Height="38"
+            Margin="400,321,187,75"
+            Command="{Binding CheckForUpdatesCommand}"
+            Content="Проверить обновления" />
         <TextBox
             Width="213"
             Height="41"
@@ -40,14 +44,14 @@
             Margin="127,173,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Content="Id Еблана" />
+            Content="Id" />
         <Label
             Width="213"
             Height="31"
             Margin="400,173,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Content="Имя еблана" />
+            Content="Имя " />
         <Label
             Width="95"
             Height="31"
@@ -57,8 +61,8 @@
             Content="HELLO ETALON" />
         <Label
             Width="147"
-            Height="31"
-            Margin="643,393,0,0"
+            Height="32"
+            Margin="616,376,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Content="Версия build 0.0.0.10" />
