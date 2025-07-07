@@ -14,12 +14,12 @@ namespace ReportEngine.App
         {
             try
             {
-                var connString = JsonHandler.GetConnectionString(DirectoryHelper.GetConfigPath());
+                var connString = JsonHandler.GetConnectionString(DirectoryHelper.GetConfigPath());// Получаем строку подключения из json файла
 
                 Log.Logger = LoggerConfig.InitializeLogger(); // Конфигурация Serilog
 
-                var host = HostFactory.BuildHost(connString); //Конфигурация Host приложения
-                var app = host.Services.GetService<App>(); //Получаем экземпляр приложения
+                var host = HostFactory.BuildHost(connString); //Конфигурация Host приложения 
+                var app = host.Services.GetService<App>(); //Получаем экземпляр приложения 
                 var mainWindow = host.Services.GetService<MainWindow>(); //Получаем экземпляр главного окна
 
                 mainWindow?.Show(); //Запускаем главное окно

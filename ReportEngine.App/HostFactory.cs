@@ -13,27 +13,27 @@ namespace ReportEngine.App
 {
     public class HostFactory
     {
-        public static IHost BuildHost(string connString)
+        public static IHost BuildHost(string connString) //Создание Host приложения
         {
-            return Host.CreateDefaultBuilder(). //Конфигурация Host приложения
-                ConfigureServices(services => //Регаем сервисы хуервисы
+            return Host.CreateDefaultBuilder(). //Конфигурация Host приложения 
+                ConfigureServices(services => //Регаем сервисы хуервисы 
                 {
                     services.AddDbContext<ReAppContext>(options => //И контекст
                     {
-                        options.UseNpgsql(connString);
+                        options.UseNpgsql(connString); //Используем Npgsql
                     });
-                    services.AddSingleton<App>();
-                    services.AddScoped<IBaseRepository<User>, UserRepository>();
-                    services.AddSingleton<MainWindow>();
-                    services.AddScoped<ExcelCreater>();
+                    services.AddSingleton<App>(); //Регистрируем приложение
+                    services.AddSingleton<MainWindow>(); //Регистрируем главное окно
+                    services.AddScoped<IBaseRepository<User>, UserRepository>(); //Регистрируем репозитории
+                    services.AddScoped<ExcelCreater>(); //Регистрируем эксель
                 })
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders(); //Очищаем провайдеры логирования
-                    logging.AddSerilog();
-                    logging.SetMinimumLevel(LogLevel.Information);
+                    logging.AddSerilog(); //Добавляем Serilog
+                    logging.SetMinimumLevel(LogLevel.Information); //Устанавливаем уровень логирования
                 })
-                .Build();
+                .Build(); // Возвращаем собранный Host
         }
     }
 }
