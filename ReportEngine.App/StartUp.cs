@@ -71,7 +71,7 @@ namespace ReportEngine.App
                 var app = host.Services.GetService<App>(); //Получаем экземпляр приложения
                 var mainWindow = host.Services.GetService<MainWindow>(); //Получаем экземпляр главного окна
 
-                Updater.CheckForUpdate(JsonHandler.GetVersionOnServer(configPath), JsonHandler.GetLocalVersion(configPath));
+                //Updater.CheckForUpdate(JsonHandler.GetVersionOnServer(configPath), JsonHandler.GetLocalVersion(configPath));
                 mainWindow?.Show(); //Запускаем главное окно
                 app?.Run(); //Запускаем
 

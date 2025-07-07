@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Смета КИП"
-#define MyAppVersion "0.0.0.10"
+#define MyAppVersion "0.0.0.1"
 #define MyAppPublisher "ETALON"
 #define MyAppURL "https://www.example.com/"
 #define MyAppExeName "ReportEngine.App.exe"

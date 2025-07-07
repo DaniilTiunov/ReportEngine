@@ -1,5 +1,4 @@
-﻿using ReportEngine.App.Config.JsonHelpers;
-using System.IO;
+﻿using System.IO;
 using System.Windows;
 
 namespace ReportEngine.App.UpdateInformation
