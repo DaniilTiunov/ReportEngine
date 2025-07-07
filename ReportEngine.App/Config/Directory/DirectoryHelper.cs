@@ -8,13 +8,13 @@ namespace ReportEngine.App.Config.Directory
         {
             return AppDomain.CurrentDomain.BaseDirectory; ;
         }
-        public static string GetConfigPath(string appDirectory)
+        public static string GetConfigPath()
         {
-            return Path.Combine(appDirectory, "Config", "appsettings.json");
+            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config", "appsettings.json");
         }
-        public static string GetLogsPath(string appDirectory)
+        public static string GetLogsPath()
         {
-            return Path.Combine(appDirectory, "logs", "log.txt");
+            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", "log.txt");
         }
     }
 }

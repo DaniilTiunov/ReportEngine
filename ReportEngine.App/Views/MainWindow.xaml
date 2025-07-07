@@ -11,17 +11,15 @@
     mc:Ignorable="d">
     <Grid>
         <Button
-            Width="213"
             Height="38"
-            Margin="127,321,0,0"
-            HorizontalAlignment="Left"
+            Margin="127,321,460,0"
             VerticalAlignment="Top"
             Command="{Binding AddUserCommand}"
             Content="Добавить" />
         <Button
             Width="213"
             Height="38"
-            Margin="400,316,187,80"
+            Margin="400,321,187,75"
             Command="{Binding CheckForUpdatesCommand}"
             Content="Проверить обновления" />
         <TextBox
