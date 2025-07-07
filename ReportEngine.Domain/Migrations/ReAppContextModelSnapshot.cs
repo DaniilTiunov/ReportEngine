@@ -21,6 +21,25 @@ namespace ReportEngine.Domain.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("ReportEngine.Domain.Entities.Company", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Companies");
+                });
+
             modelBuilder.Entity("ReportEngine.Domain.Entities.ProjectInfo", b =>
                 {
                     b.Property<int>("Id")
@@ -32,11 +51,17 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Company")
                         .HasColumnType("text");
 
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("numeric");
+
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
+
+                    b.Property<bool>("isStarted")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -52,6 +77,9 @@ namespace ReportEngine.Domain.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SecondName")
                         .HasColumnType("text");
 
                     b.HasKey("Id");

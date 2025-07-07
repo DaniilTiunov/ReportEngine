@@ -4,7 +4,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ReportEngine.App.Config.Directory;
 using ReportEngine.App.Config.JsonHelpers;
-using ReportEngine.App.UpdateInformation;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories;
@@ -21,11 +20,11 @@ namespace ReportEngine.App
         {
 
 #if DEBUG //Если сборка Debug, то пути будут другие
-            logPath = @"C:\Work\Prjs\ReportEngine\ReportEngine.App\logs\log.txt";
-            configPath = @"C:\Work\Prjs\ReportEngine\ReportEngine.App\Config\appsettings.json";
+            string logPath = @"C:\Work\Prjs\ReportEngine\ReportEngine.App\logs\log.txt";
+            string configPath = @"C:\Work\Prjs\ReportEngine\ReportEngine.App\Config\appsettings.json";
 #endif
 
-            Directory.CreateDirectory(Path.GetDirectoryName(DirectoryHelper.GetLogsPath(DirectoryHelper.GetDirectory()))); //Создаем каталог если его нет для лога
+            Directory.CreateDirectory(Path.GetDirectoryName(DirectoryHelper.GetLogsPath(DirectoryHelper.GetDirectory())));
 
             var connString = JsonHandler.GetConnectionString(DirectoryHelper.GetConfigPath(DirectoryHelper.GetDirectory()));
 
@@ -49,7 +48,7 @@ namespace ReportEngine.App
                     services.AddDbContext<ReAppContext>(options => //И контекст
                     {
                         options.UseNpgsql(connString);
-                    });                 
+                    });
                     services.AddSingleton<App>();
                     services.AddScoped<IBaseRepository<User>, UserRepository>();
                     services.AddSingleton<MainWindow>();
