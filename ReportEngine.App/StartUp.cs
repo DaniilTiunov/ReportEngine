@@ -14,7 +14,7 @@ namespace ReportEngine.App
         {
             try
             {
-                //тест
+                //тест2
 
                 var connString = JsonHandler.GetConnectionString(DirectoryHelper.GetConfigPath());// Получаем строку подключения из json файла
 
