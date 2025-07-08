@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Windows;
 
-namespace ReportEngine.App.UpdateInformation
+namespace ReportEngine.App.Views.UpdateInformation
 {
     public class Updater
     {

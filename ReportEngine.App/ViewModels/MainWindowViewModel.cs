@@ -1,6 +1,6 @@
 ﻿using ReportEngine.App.Config.Directory;
 using ReportEngine.App.Config.JsonHelpers;
-using ReportEngine.App.UpdateInformation;
+using ReportEngine.App.Views.UpdateInformation;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using System.ComponentModel;

@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using ReportEngine.App.Config.Directory;
+using Serilog;
 
 namespace ReportEngine.App.Config.Logger
 {
