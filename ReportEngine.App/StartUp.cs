@@ -2,6 +2,7 @@
 using ReportEngine.App.Config.Directory;
 using ReportEngine.App.Config.JsonHelpers;
 using ReportEngine.App.Config.Logger;
+using ReportEngine.Export.ExcelWork;
 using Serilog;
 
 
@@ -20,10 +21,13 @@ namespace ReportEngine.App
 
                 var host = HostFactory.BuildHost(connString); //Конфигурация Host приложения 
                 var app = host.Services.GetService<App>(); //Получаем экземпляр приложения 
+                var excel = host.Services.GetService<ExcelCreater>(); //Получаем экземпляр экселя
                 var mainWindow = host.Services.GetService<MainWindow>(); //Получаем экземпляр главного окна
 
                 mainWindow?.Show(); //Запускаем главное окно
                 app?.Run(); //Запускаем
+
+                //excel?.CreateExcelFile().GetAwaiter().GetResult();
 
                 Log.Information("Приложение запущено без ошибок"); //Логируем
             }

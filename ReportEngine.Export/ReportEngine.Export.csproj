@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ReportEngine.Domain\ReportEngine.Domain.csproj" />
+    <ProjectReference Include="..\ReportEngine.Shared\ReportEngine.Shared.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace ReportEngine.App.Config.Directory
+﻿namespace ReportEngine.App.Config.Directory
 {
     public class DirectoryHelper
     {

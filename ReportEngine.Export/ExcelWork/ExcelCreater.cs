@@ -1,6 +1,7 @@
 ﻿using Excel = Microsoft.Office.Interop.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Export.Formatting;
 
 namespace ReportEngine.Export.ExcelWork
 {
@@ -30,7 +31,8 @@ namespace ReportEngine.Export.ExcelWork
             sheet.Name = "Лист1";
 
             User user = await _userRepository.GetByIdAsync(2);
-            sheet.Range["A1"].Value = user?.ToString();
+
+            sheet.Range["A2"].Value = UserFormat.ToStringFullName(user);
         }
     }
 }
