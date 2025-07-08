@@ -23,5 +23,11 @@ namespace ReportEngine.App.Config.JsonHelpers
             var appSettings = JsonSerializer.Deserialize<AppSettings>(json);
             return appSettings.AboutProgram.VersionOnServerPath;
         }
+        public static string GetCurrentVersion(string jsonFilePath)
+        {
+            string json = File.ReadAllText(jsonFilePath);
+            var appSettings = JsonSerializer.Deserialize<AppSettings>(json);
+            return appSettings.AboutProgram.Version;
+        }
     }
 }
