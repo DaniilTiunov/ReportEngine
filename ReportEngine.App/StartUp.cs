@@ -15,7 +15,7 @@ namespace ReportEngine.App
         {
             try
             {
-                //Тест4
+                //Тест5
                 var connString = JsonHandler.GetConnectionString(DirectoryHelper.GetConfigPath());// Получаем строку подключения из json файла
 
                 Log.Logger = LoggerConfig.InitializeLogger(); // Конфигурация Serilog
