@@ -5,11 +5,11 @@ using ReportEngine.Export.Formatting;
 
 namespace ReportEngine.Export.ExcelWork
 {
-    public class ExcelCreater
+    public class ExcelCreator
     {
         private readonly IBaseRepository<User> _userRepository;
 
-        public ExcelCreater(IBaseRepository<User> userRepository)
+        public ExcelCreator(IBaseRepository<User> userRepository)
         {
             _userRepository = userRepository;
         }

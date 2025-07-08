@@ -25,7 +25,7 @@ namespace ReportEngine.App
                     services.AddSingleton<App>(); //Регистрируем приложение
                     services.AddSingleton<MainWindow>(); //Регистрируем главное окно
                     services.AddScoped<IBaseRepository<User>, UserRepository>(); //Регистрируем репозитории
-                    services.AddScoped<ExcelCreater>(); //Регистрируем эксель
+                    services.AddScoped<ExcelCreator>(); //Регистрируем эксель
                 })
                 .ConfigureLogging(logging =>
                 {

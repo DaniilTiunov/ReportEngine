@@ -21,7 +21,7 @@ namespace ReportEngine.App
 
                 var host = HostFactory.BuildHost(connString); //Конфигурация Host приложения 
                 var app = host.Services.GetService<App>(); //Получаем экземпляр приложения 
-                var excel = host.Services.GetService<ExcelCreater>(); //Получаем экземпляр экселя
+                var excel = host.Services.GetService<ExcelCreator>(); //Получаем экземпляр экселя
                 var mainWindow = host.Services.GetService<MainWindow>(); //Получаем экземпляр главного окна
 
                 mainWindow?.Show(); //Запускаем главное окно
