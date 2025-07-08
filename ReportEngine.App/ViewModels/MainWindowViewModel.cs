@@ -1,4 +1,5 @@
-﻿using ReportEngine.App.Config.JsonHelpers;
+﻿using ReportEngine.App.Config.Directory;
+using ReportEngine.App.Config.JsonHelpers;
 using ReportEngine.App.UpdateInformation;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
@@ -38,6 +39,8 @@ namespace ReportEngine.App.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public string Version => JsonHandler.GetCurrentVersion(DirectoryHelper.GetConfigPath());
 
         public ICommand AddUserCommand { get; }
         public ICommand CheckForUpdatesCommand { get; }

@@ -19,7 +19,7 @@
         <Button
             Width="213"
             Height="38"
-            Margin="400,321,187,75"
+            Margin="550,32,37,364"
             Command="{Binding CheckForUpdatesCommand}"
             Content="Проверить обновления" />
         <TextBox
@@ -59,12 +59,12 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Content="HELLO ETALON" />
-        <Label
-            Width="147"
-            Height="32"
-            Margin="616,376,0,0"
+        <TextBlock
+            Width="140"
+            Height="31"
+            Margin="623,359,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Content="Версия build 0.0.0.10" />
+            Text="{Binding Version, StringFormat='Версия build: {0}'}" />
     </Grid>
 </Window>
