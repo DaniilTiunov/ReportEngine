@@ -1,8 +1,8 @@
-﻿using ReportEngine.App.Config.Directory;
-using ReportEngine.App.Config.JsonHelpers;
-using ReportEngine.App.Views.UpdateInformation;
+﻿using ReportEngine.App.Views.UpdateInformation;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Shared.Config.Directory;
+using ReportEngine.Shared.Config.JsonHelpers;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -20,7 +20,7 @@ namespace ReportEngine.App.ViewModels
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public string UserId
+        public string UserSecondName
         {
             get => _userId;
             set
@@ -51,14 +51,11 @@ namespace ReportEngine.App.ViewModels
             AddUserCommand = new RelayCommand(async _ => await AddUser());
             CheckForUpdatesCommand = new RelayCommand(async _ => await CheckForUpdates());
         }
-
+        
         private async Task AddUser()
         {
-            if (int.TryParse(UserId, out int id))
-            {
-                var newUser = new User { Id = id, Name = UserName };
-                await _userRepository.AddAsync(newUser);
-            }
+            var newUser = new User { SecondName = UserSecondName, Name = UserName };
+            await _userRepository.AddAsync(newUser);
         }
 
         private async Task CheckForUpdates()

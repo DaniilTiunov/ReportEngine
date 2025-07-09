@@ -1,4 +1,4 @@
-﻿namespace ReportEngine.App.Config.Directory
+﻿namespace ReportEngine.Shared.Config.Directory
 {
     public class DirectoryHelper
     {

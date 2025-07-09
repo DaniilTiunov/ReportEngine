@@ -18,7 +18,6 @@ namespace ReportEngine.Domain.Repositories
         {
             await _context.Set<User>().AddAsync(user);
             await _context.SaveChangesAsync();
-
         }
 
         public async Task<int> DeleteByIdAsync(int id)
@@ -43,9 +42,11 @@ namespace ReportEngine.Domain.Repositories
                                     .ToListAsync();
         }
 
-        public async Task<User> GetByIdAsync(int id)
+        public async Task<User?> GetByIdAsync(int id)
         {
-            return await _context.Set<User>().FindAsync(id);
+            return await _context.Set<User>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public Task UpdateAsync(User entity)

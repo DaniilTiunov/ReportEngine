@@ -2,8 +2,8 @@
 
 namespace ReportEngine.App
 {
-    public class App : Application
+    public partial class App : Application
     {
-        
+
     }
 }

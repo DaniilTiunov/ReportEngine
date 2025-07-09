@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text.Json;
 
-namespace ReportEngine.App.Config.JsonHelpers
+namespace ReportEngine.Shared.Config.JsonHelpers
 {
     public class JsonHandler
     {

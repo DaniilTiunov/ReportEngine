@@ -17,7 +17,5 @@ namespace ReportEngine.App
             var userRepository = serviceProvider.GetRequiredService<IBaseRepository<User>>();
             DataContext = new MainWindowViewModel(userRepository);
         }
-
-  
     }
 }

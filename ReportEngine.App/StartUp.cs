@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ReportEngine.App.Config.Directory;
-using ReportEngine.App.Config.JsonHelpers;
-using ReportEngine.App.Config.Logger;
 using ReportEngine.Export.ExcelWork;
+using ReportEngine.Shared.Config.Directory;
+using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Config.Logger;
 using Serilog;
 
 
@@ -15,7 +15,6 @@ namespace ReportEngine.App
         {
             try
             {
-                //Тест8
                 var connString = JsonHandler.GetConnectionString(DirectoryHelper.GetConfigPath());// Получаем строку подключения из json файла
 
                 Log.Logger = LoggerConfig.InitializeLogger(); // Конфигурация Serilog
