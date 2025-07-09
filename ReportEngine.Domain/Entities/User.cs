@@ -1,8 +1,13 @@
-﻿namespace ReportEngine.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ReportEngine.Domain.Entities
 {
     public class User
     {
-        public int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
         public string? Name { get; set; }
         public string? SecondName { get; set; }
     }

@@ -30,9 +30,8 @@ namespace ReportEngine.Export.ExcelWork
             //Название листа (вкладки снизу)
             sheet.Name = "Лист1";
 
-            User user = await _userRepository.GetByIdAsync(2);
 
-            sheet.Range["A2"].Value = UserFormat.ToStringFullName(user);
+            
         }
     }
 }

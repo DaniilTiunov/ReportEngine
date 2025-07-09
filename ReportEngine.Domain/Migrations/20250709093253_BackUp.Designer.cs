@@ -12,15 +12,15 @@ using ReportEngine.Domain.Database.Context;
 namespace ReportEngine.Domain.Migrations
 {
     [DbContext(typeof(ReAppContext))]
-    [Migration("20250709073537_DateTimeAdded")]
-    partial class DateTimeAdded
+    [Migration("20250709093253_BackUp")]
+    partial class BackUp
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.6")
+                .HasAnnotation("ProductVersion", "9.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);

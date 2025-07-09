@@ -33,7 +33,7 @@
             Margin="127,234,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Text="{Binding UserId, UpdateSourceTrigger=PropertyChanged}"
+            Text="{Binding UserSecondName, UpdateSourceTrigger=PropertyChanged}"
             TextWrapping="Wrap" />
         <TextBox
             Width="213"
@@ -49,7 +49,7 @@
             Margin="127,173,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Content="Id" />
+            Content="Фамилия" />
         <Label
             Width="213"
             Height="31"
