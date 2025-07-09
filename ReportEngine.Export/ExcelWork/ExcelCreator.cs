@@ -1,7 +1,7 @@
 ﻿using Excel = Microsoft.Office.Interop.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
-using ReportEngine.Export.Formatting;
+using ReportEngine.Shared.Formatting;
 
 namespace ReportEngine.Export.ExcelWork
 {

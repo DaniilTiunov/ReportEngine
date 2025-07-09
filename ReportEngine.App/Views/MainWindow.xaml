@@ -9,17 +9,22 @@
     Width="800"
     Height="450"
     mc:Ignorable="d">
-    <Grid>
+
+    <Grid Margin="0,0,10,-6">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="384*" />
+            <ColumnDefinition Width="11*" />
+        </Grid.ColumnDefinitions>
         <Button
             Height="38"
-            Margin="127,321,460,0"
+            Margin="127,321,438,0"
             VerticalAlignment="Top"
             Command="{Binding AddUserCommand}"
             Content="Добавить" />
         <Button
             Width="213"
             Height="38"
-            Margin="550,32,37,364"
+            Margin="480,34,75,368"
             Command="{Binding CheckForUpdatesCommand}"
             Content="Проверить обновления" />
         <TextBox

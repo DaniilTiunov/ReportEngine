@@ -1,5 +1,4 @@
-﻿using ReportEngine.App.Config.Directory;
-using ReportEngine.App.Config.JsonHelpers;
+﻿using ReportEngine.Shared.Config.JsonHelpers;
 using ReportEngine.App.Views.UpdateInformation;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
@@ -8,6 +7,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
+using ReportEngine.Shared.Config.Directory;
 
 namespace ReportEngine.App.ViewModels
 {

@@ -18,7 +18,6 @@ namespace ReportEngine.Domain.Repositories
         {
             await _context.Set<User>().AddAsync(user);
             await _context.SaveChangesAsync();
-
         }
 
         public async Task<int> DeleteByIdAsync(int id)

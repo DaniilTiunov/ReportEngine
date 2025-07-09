@@ -8,10 +8,5 @@ namespace ReportEngine.Shared.Formatting
         {
             return $"{user.Name}, {user.SecondName}";
         }
-
-        public static string ToStringID(User user)
-        {
-            return user.Id.ToString();
-        }
     }
 }
