@@ -18,7 +18,7 @@ namespace ReportEngine.Domain.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<int> DeleteByIdAsync(Guid id)
+        public async Task<int> DeleteByIdAsync(int id)
         {
             var entityProjectInfo = await _context.Set<ProjectInfo>().FindAsync(id);
             if (entityProjectInfo == null)
@@ -32,7 +32,7 @@ namespace ReportEngine.Domain.Repositories
         {
             throw new NotImplementedException();
         }
-        public async Task<ProjectInfo> GetByIdAsync(Guid id)
+        public async Task<ProjectInfo> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }

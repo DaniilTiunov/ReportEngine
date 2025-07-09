@@ -51,7 +51,7 @@ namespace ReportEngine.App.ViewModels
             AddUserCommand = new RelayCommand(async _ => await AddUser());
             CheckForUpdatesCommand = new RelayCommand(async _ => await CheckForUpdates());
         }
-
+        
         private async Task AddUser()
         {
             var newUser = new User { SecondName = UserSecondName, Name = UserName };
