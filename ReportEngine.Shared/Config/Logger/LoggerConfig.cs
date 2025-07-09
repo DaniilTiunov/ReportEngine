@@ -1,7 +1,7 @@
-﻿using ReportEngine.App.Config.Directory;
+﻿using ReportEngine.Shared.Config.Directory;
 using Serilog;
 
-namespace ReportEngine.App.Config.Logger
+namespace ReportEngine.Shared.Config
 {
     public class LoggerConfig
     {

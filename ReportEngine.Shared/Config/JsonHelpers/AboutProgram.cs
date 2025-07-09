@@ -1,4 +1,4 @@
-﻿namespace ReportEngine.App.Config.JsonHelpers
+﻿namespace ReportEngine.Shared.Config.JsonHelpers
 {
     public class AboutProgram
     {

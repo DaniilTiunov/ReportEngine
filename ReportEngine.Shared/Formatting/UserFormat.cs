@@ -1,6 +1,6 @@
 ﻿using ReportEngine.Domain.Entities;
 
-namespace ReportEngine.Export.Formatting
+namespace ReportEngine.Shared.Formatting
 {
     public class UserFormat
     {
