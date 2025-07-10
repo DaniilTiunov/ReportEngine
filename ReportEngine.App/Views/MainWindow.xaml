@@ -14,18 +14,20 @@
     WindowState="Maximized"
     mc:Ignorable="d">
 
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Dictionaries/GigaChadUI.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
 
     <DockPanel>
-
         <Menu
             Height="25"
             DockPanel.Dock="Top"
             FontSize="14">
-
-
-
             <MenuItem Header="Файл">
-
                 <MenuItem Header="Открыть..." />
                 <MenuItem Header="Сохранить" />
                 <MenuItem Header="Сохранить как..." />
@@ -33,22 +35,12 @@
                 <MenuItem Header="Настройки" />
                 <Separator />
                 <MenuItem Header="Выход" />
-
             </MenuItem>
-
-
-
             <MenuItem Header="Вид">
-
                 <MenuItem Header="Масштаб..." />
                 <MenuItem Header="Темная тема" />
                 <MenuItem Header="Светлая тема" />
-                <!--  не верится что я это пишу  -->
-
             </MenuItem>
-
-
-
             <MenuItem Header="Данные">
                 <MenuItem Header="Таблица проектов" />
                 <MenuItem Header="Таблица контрагентов" />
@@ -56,56 +48,33 @@
                 <Separator />
                 <MenuItem Header="Таблица сотрудников" />
                 <MenuItem Header="Таблица чуханов" />
-
             </MenuItem>
-
-
-
             <MenuItem Header="Инструменты">
-
-                <MenuItem Header="Калькулятор" />
-                <MenuItem Header="Вылетатель на рабочий стол" />
-                <MenuItem Header="Флюгегехаймен" />
-
+                <MenuItem Click="ShowCalculator" Header="Калькулятор" />
+                <MenuItem Click="ShowNotepad" Header="Блокнот" />
+                <Separator />
             </MenuItem>
-
-
-
             <MenuItem Header="Справка">
-
                 <MenuItem Click="ShowAboutProgram" Header="О программе" />
                 <MenuItem Header="Открыть справку" />
                 <MenuItem Command="{Binding CheckForUpdatesCommand}" Header="Проверить обновления" />
-
             </MenuItem>
         </Menu>
 
-
-
-
         <StatusBar Height="30" DockPanel.Dock="Bottom">
-
-            <!--  костыль с шириной  -->
-            <!--  Grid должна растягиваться на весь StatusBar, но этого не происходит почему-то  -->
-            <!--  поэтому привязываемся в ширине родителя  -->
-
             <Grid Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=StatusBar}}">
-
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
-
                 </Grid.ColumnDefinitions>
-
 
                 <TextBlock
                     Grid.Column="0"
                     FontSize="14"
                     Text="Текущий пользователь:" />
-
 
                 <TextBlock
                     Grid.Column="1"
@@ -118,20 +87,17 @@
                     Margin="1555,0,9,0"
                     FontSize="14"
                     Text="{Binding ConnectionStatusMessage}" />
-
-
             </Grid>
+
         </StatusBar>
-
         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-
             <Button
-                Height="38"
-                Margin="47,356,1351,0"
+                Width="100"
+                Height="40"
+                Margin="66,335,1333,0"
                 VerticalAlignment="Top"
                 Command="{Binding AddUserCommand}"
                 Content="Добавить" />
-
 
             <TextBox
                 Width="213"
@@ -141,6 +107,7 @@
                 VerticalAlignment="Top"
                 Text="{Binding UserSecondName, UpdateSourceTrigger=PropertyChanged}"
                 TextWrapping="Wrap" />
+
             <TextBox
                 Width="213"
                 Height="41"
@@ -149,6 +116,7 @@
                 VerticalAlignment="Top"
                 Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}"
                 TextWrapping="Wrap" />
+
             <Label
                 Width="213"
                 Height="31"
@@ -156,6 +124,7 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Content="Фамилия" />
+
             <Label
                 Width="213"
                 Height="31"
@@ -163,6 +132,7 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Content="Имя " />
+
             <Label
                 Width="96"
                 Height="30"
@@ -170,14 +140,7 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Content="HELLO ETALON" />
-
-
-
-
         </Grid>
 
-
-
     </DockPanel>
-
 </Window>

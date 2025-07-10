@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using MaterialDesignThemes.Wpf;
+using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.Views;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
+using System.Diagnostics;
 using System.Windows;
 
 namespace ReportEngine.App
@@ -33,6 +35,13 @@ namespace ReportEngine.App
             
             aboutWindow.Show();
         }
-
+        private void ShowCalculator(object sender, RoutedEventArgs e)
+        {
+            Process.Start("calc.exe");
+        }
+        private void ShowNotepad(object sender, RoutedEventArgs e)
+        {
+            Process.Start("notepad.exe");
+        }
     }
 }
