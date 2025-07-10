@@ -72,7 +72,7 @@
 
                 <MenuItem Click="AboutProgram_Click" Header="О программе" />
                 <MenuItem Header="Открыть справку" />
-                <MenuItem Command="{Binding CheckForUpdates}" Header="Проверить обновления" />
+                <MenuItem Command="{Binding CheckForUpdatesCommand}" Header="Проверить обновления" />
 
             </MenuItem>
         </Menu>
@@ -101,9 +101,16 @@
                 <TextBlock Grid.Column="0" Text="Слава богу ZOV" />
 
 
-                <TextBlock Grid.Column="2" Text="Статус подключения к серверу:" />
+                <TextBlock
+                    Grid.Column="1"
+                    Grid.ColumnSpan="2"
+                    Margin="1463,0,56,0"
+                    Text="Статус подключения к серверу:" />
 
-                <TextBlock Grid.Column="3" Text="Сервер уничтожен Лёхой" />
+                <TextBlock
+                    Grid.Column="1"
+                    Margin="1652,0,27,0"
+                    Text="Сервер уничтожен Лёхой" />
 
 
             </Grid>
