@@ -6,9 +6,10 @@
     xmlns:local="clr-namespace:ReportEngine.App"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="MainWindow"
+    Title="Кварта СКИП"
     Width="1920"
     Height="1080"
+    Icon="/Resources/Icons/estimate_cost_icon_213382.ico"
     WindowStartupLocation="CenterScreen"
     WindowState="Maximized"
     mc:Ignorable="d">
@@ -100,18 +101,22 @@
                 </Grid.ColumnDefinitions>
 
 
-                <TextBlock Grid.Column="0" Text="Слава богу ZOV" />
+                <TextBlock
+                    Grid.Column="0"
+                    FontSize="14"
+                    Text="Текущий пользователь:" />
 
 
                 <TextBlock
                     Grid.Column="1"
-                    Grid.ColumnSpan="2"
-                    Margin="1463,0,56,0"
+                    Margin="1335,0,184,0"
+                    FontSize="14"
                     Text="Статус подключения к серверу:" />
 
                 <TextBlock
                     Grid.Column="1"
-                    Margin="1652,0,27,0"
+                    Margin="1555,0,9,0"
+                    FontSize="14"
                     Text="{Binding ConnectionStatusMessage}" />
 
 

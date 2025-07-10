@@ -21,7 +21,7 @@ namespace ReportEngine.App
             _userRepository = _serviceProvider.GetRequiredService<IBaseRepository<User>>();
 
             InitializeComponent();
-            InitializeDataContext();
+            InitializeDataContext(); 
         }
         private void InitializeDataContext()
         {
@@ -30,7 +30,9 @@ namespace ReportEngine.App
         private void ShowAboutProgram(object sender, RoutedEventArgs e)
         {
             var aboutWindow = new AboutProgram();
+            
             aboutWindow.Show();
         }
+
     }
 }

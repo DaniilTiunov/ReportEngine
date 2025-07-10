@@ -10,6 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Icons\estimate_cost_icon_213382.ico" />
+    <None Remove="Resources\Icons\install_line_icon_236048.ico" />
+    <None Remove="Resources\Images\logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MaterialDesignColors" Version="5.2.1" />
     <PackageReference Include="MaterialDesignThemes" Version="5.2.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.7">
@@ -35,7 +41,24 @@
   
   <ItemGroup>
     <Folder Include="logs\" />
-    <Folder Include="Resources\Dictionary\" />
+    <Folder Include="..\Resources\Icons\" />
   </ItemGroup>
-
+  
+  <ItemGroup>
+    <Resource Include="Resources\Icons\estimate_cost_icon_213382.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\install_line_icon_236048.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Page Update="Dictionaries\DarkTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>  
 </Project>
