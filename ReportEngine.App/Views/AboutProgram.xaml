@@ -9,13 +9,14 @@
     Title="О программе"
     Width="400"
     Height="300"
+    WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Grid>
         <TextBlock
-            Margin="10,48,10,10"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top">
-            <Run FontWeight="Bold" Text="{Binding Version}" />
-        </TextBlock>
+            Width="360"
+            Margin="0,240,0,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Text="{Binding Version, StringFormat=Версия приложения build: \{0\}}" />
     </Grid>
 </Window>

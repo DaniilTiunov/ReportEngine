@@ -62,10 +62,8 @@ namespace ReportEngine.App.ViewModels
         {
             try
             {
-                string appDirectory = AppDomain.CurrentDomain.BaseDirectory; //Это приложение путь 
 
-                string configPath = Path.Combine(appDirectory, "Config", "appsettings.json"); //Тянется жысон
-                string logPath = Path.Combine(appDirectory, "logs", "log.txt");//Тянется лог
+                string configPath = DirectoryHelper.GetConfigPath(); //Тянется жысон
 
                 Updater.CheckForUpdate(JsonHandler.GetVersionOnServer(configPath), JsonHandler.GetLocalVersion(configPath));
             }

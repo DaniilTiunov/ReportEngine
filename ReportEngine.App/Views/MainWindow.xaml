@@ -9,14 +9,16 @@
     Title="MainWindow"
     Width="1920"
     Height="1080"
+    WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
 
     <DockPanel>
 
-        <Menu DockPanel.Dock="Top"
-              Height="25"
-              FontSize="14">
+        <Menu
+            Height="25"
+            DockPanel.Dock="Top"
+            FontSize="14">
 
 
 
@@ -25,9 +27,9 @@
                 <MenuItem Header="Открыть..." />
                 <MenuItem Header="Сохранить" />
                 <MenuItem Header="Сохранить как..." />
-                <Separator/>
+                <Separator />
                 <MenuItem Header="Настройки" />
-                <Separator/>
+                <Separator />
                 <MenuItem Header="Выход" />
 
             </MenuItem>
@@ -38,7 +40,7 @@
 
                 <MenuItem Header="Масштаб..." />
                 <MenuItem Header="Темная тема" />
-                <!--не верится что я это пишу-->
+                <!--  не верится что я это пишу  -->
 
             </MenuItem>
 
@@ -48,7 +50,7 @@
 
                 <MenuItem Header="Таблица контрагентов" />
                 <MenuItem Header="Таблица оборудования" />
-                <Separator/>
+                <Separator />
                 <MenuItem Header="Таблица слоняр" />
                 <MenuItem Header="Таблица чуханов" />
 
@@ -68,9 +70,9 @@
 
             <MenuItem Header="Справка">
 
-                <MenuItem Header="О программе" />
+                <MenuItem Click="AboutProgram_Click" Header="О программе" />
                 <MenuItem Header="Открыть справку" />
-                <MenuItem Header="Проверить обновления" />
+                <MenuItem Command="{Binding CheckForUpdates}" Header="Проверить обновления" />
 
             </MenuItem>
         </Menu>
@@ -78,49 +80,45 @@
 
 
 
-        <StatusBar DockPanel.Dock="Bottom" 
-                   Height="30">
+        <StatusBar Height="30" DockPanel.Dock="Bottom">
 
-            <!--костыль с шириной-->
-            <!--Grid должна растягиваться на весь StatusBar, но этого не происходит почему-то-->
-            <!--поэтому привязываемся в ширине родителя-->
+            <!--  костыль с шириной  -->
+            <!--  Grid должна растягиваться на весь StatusBar, но этого не происходит почему-то  -->
+            <!--  поэтому привязываемся в ширине родителя  -->
 
             <Grid Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=StatusBar}}">
 
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
 
                 </Grid.ColumnDefinitions>
 
 
-                <TextBlock Grid.Column="0" 
-                           Text="Слава богу ZOV" />
+                <TextBlock Grid.Column="0" Text="Слава богу ZOV" />
 
 
-                <TextBlock Grid.Column="2" 
-                           Text="Статус подключения к серверу:"/>
+                <TextBlock Grid.Column="2" Text="Статус подключения к серверу:" />
 
-                <TextBlock Grid.Column="3"
-                           Text="Сервер уничтожен Лёхой" />
+                <TextBlock Grid.Column="3" Text="Сервер уничтожен Лёхой" />
 
 
             </Grid>
         </StatusBar>
 
-        <Grid VerticalAlignment="Center"
-              HorizontalAlignment="Center">
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
 
-            <Button Height="38"
-                    Margin="47,356,1351,0"
-                    VerticalAlignment="Top"
-                    Command="{Binding AddUserCommand}"
-                    Content="Добавить" />
-            
-            
+            <Button
+                Height="38"
+                Margin="47,356,1351,0"
+                VerticalAlignment="Top"
+                Command="{Binding AddUserCommand}"
+                Content="Добавить" />
+
+
             <TextBox
                 Width="213"
                 Height="41"
@@ -158,13 +156,8 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Content="HELLO ETALON" />
-            <TextBlock
-                Width="140"
-                Height="31"
-                Margin="815,878,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Text="{Binding Version, StringFormat=Версия build: \{0\}}" />
+
+
 
 
         </Grid>
