@@ -12,17 +12,25 @@ namespace ReportEngine.App
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IBaseRepository<User> _userRepository;
+
         public MainWindow(IServiceProvider serviceProvider)
         {
-            InitializeComponent();
-            var userRepository = serviceProvider.GetRequiredService<IBaseRepository<User>>();
-            DataContext = new MainWindowViewModel(userRepository);
-        }
+            _serviceProvider = serviceProvider;
+            _userRepository = _serviceProvider.GetRequiredService<IBaseRepository<User>>();
 
-        private void AboutProgram_Click(object sender, RoutedEventArgs e)
+            InitializeComponent();
+            InitializeDataContext();
+        }
+        private void InitializeDataContext()
         {
-            AboutProgram aboutProgram = new AboutProgram();
-            aboutProgram.Show();
+            DataContext = new MainWindowViewModel(_userRepository, _serviceProvider);
+        }
+        private void ShowAboutProgram(object sender, RoutedEventArgs e)
+        {
+            var aboutWindow = new AboutProgram();
+            aboutWindow.Show();
         }
     }
 }

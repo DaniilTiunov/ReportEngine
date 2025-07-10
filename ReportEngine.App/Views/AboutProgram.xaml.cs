@@ -1,5 +1,4 @@
-﻿using ReportEngine.App.ViewModels;
-using ReportEngine.Shared.Config.Directory;
+﻿using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
 using System.Windows;
 namespace ReportEngine.App.Views

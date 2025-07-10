@@ -41,6 +41,7 @@
 
                 <MenuItem Header="Масштаб..." />
                 <MenuItem Header="Темная тема" />
+                <MenuItem Header="Светлая тема" />
                 <!--  не верится что я это пишу  -->
 
             </MenuItem>
@@ -48,11 +49,11 @@
 
 
             <MenuItem Header="Данные">
-
+                <MenuItem Header="Таблица проектов" />
                 <MenuItem Header="Таблица контрагентов" />
                 <MenuItem Header="Таблица оборудования" />
                 <Separator />
-                <MenuItem Header="Таблица слоняр" />
+                <MenuItem Header="Таблица сотрудников" />
                 <MenuItem Header="Таблица чуханов" />
 
             </MenuItem>
@@ -71,7 +72,7 @@
 
             <MenuItem Header="Справка">
 
-                <MenuItem Click="AboutProgram_Click" Header="О программе" />
+                <MenuItem Click="ShowAboutProgram" Header="О программе" />
                 <MenuItem Header="Открыть справку" />
                 <MenuItem Command="{Binding CheckForUpdatesCommand}" Header="Проверить обновления" />
 
@@ -111,7 +112,7 @@
                 <TextBlock
                     Grid.Column="1"
                     Margin="1652,0,27,0"
-                    Text="Сервер уничтожен: Лёхой" />
+                    Text="{Binding ConnectionStatusMessage}" />
 
 
             </Grid>
