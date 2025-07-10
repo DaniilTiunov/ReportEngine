@@ -13,7 +13,7 @@
     WindowStartupLocation="CenterScreen"
     WindowState="Maximized"
     mc:Ignorable="d">
-
+    <!--
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -21,7 +21,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-
+    -->
     <DockPanel>
         <Menu
             Height="25"
@@ -46,8 +46,7 @@
                 <MenuItem Header="Таблица контрагентов" />
                 <MenuItem Header="Таблица оборудования" />
                 <Separator />
-                <MenuItem Header="Таблица сотрудников" />
-                <MenuItem Header="Таблица чуханов" />
+                <MenuItem Click="ShowUsersTable" Header="Таблица сотрудников" />
             </MenuItem>
             <MenuItem Header="Инструменты">
                 <MenuItem Click="ShowCalculator" Header="Калькулятор" />
@@ -140,6 +139,9 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Content="HELLO ETALON" />
+
+            <ContentControl Content="{Binding CurrentView}" />
+
         </Grid>
 
     </DockPanel>

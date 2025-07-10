@@ -43,8 +43,10 @@ namespace ReportEngine.App.ViewModels
                 OnPropertyChanged();
             }
         }
+        
         public ICommand AddUserCommand { get; }
         public ICommand CheckForUpdatesCommand { get; }
+        public ICommand ShowUsersTableCommand { get; }
 
         public MainWindowViewModel(IBaseRepository<User> userRepository, IServiceProvider serviceProvider)
         {
@@ -54,7 +56,6 @@ namespace ReportEngine.App.ViewModels
             CheckForUpdatesCommand = new RelayCommand(async _ => await CheckForUpdates());
             Task.Run(() => UpdateConnectionStatus()).Wait();
         }
-
         private void UpdateConnectionStatus()
         {
             using var scope = _serviceProvider.CreateScope();

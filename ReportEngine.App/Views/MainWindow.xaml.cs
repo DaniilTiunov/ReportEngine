@@ -43,5 +43,11 @@ namespace ReportEngine.App
         {
             Process.Start("notepad.exe");
         }
+
+        private void ShowUsersTable(object sender, RoutedEventArgs e)
+        {
+            var usersTable = new UserTableView();
+            usersTable.Show();
+        }
     }
 }
