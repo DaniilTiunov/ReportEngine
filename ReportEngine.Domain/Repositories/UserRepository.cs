@@ -22,13 +22,13 @@ namespace ReportEngine.Domain.Repositories
 
         public async Task<int> DeleteByIdAsync(int id)
         {
-           
+
             var entity = await _context.Set<User>().FindAsync(id);
 
             if (entity == null)
                 return 0;
 
-                _context.Set<User>().Remove(entity);
+            _context.Set<User>().Remove(entity);
 
             await _context.SaveChangesAsync();
 

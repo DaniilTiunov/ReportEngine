@@ -1,4 +1,5 @@
-﻿using ReportEngine.App.ViewModels;
+﻿using ReportEngine.Shared.Config.Directory;
+using ReportEngine.Shared.Config.JsonHelpers;
 using System.Windows;
 namespace ReportEngine.App.Views
 {
@@ -7,10 +8,11 @@ namespace ReportEngine.App.Views
     /// </summary>
     public partial class AboutProgram : Window
     {
+        public string Version => JsonHandler.GetCurrentVersion(DirectoryHelper.GetConfigPath());
         public AboutProgram()
         {
-            InitializeComponent();
-            DataContext = new AboutProgramViewModel(); // Устанавливаем DataContext
+            InitializeComponent(); // Устанавливаем DataContext
+            DataContext = this;
         }
     }
 }

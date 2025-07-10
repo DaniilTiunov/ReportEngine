@@ -1,7 +1,6 @@
-﻿using Excel = Microsoft.Office.Interop.Excel;
-using ReportEngine.Domain.Entities;
+﻿using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
-using ReportEngine.Shared.Formatting;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace ReportEngine.Export.ExcelWork
 {
@@ -31,7 +30,7 @@ namespace ReportEngine.Export.ExcelWork
             sheet.Name = "Лист1";
 
 
-            
+
         }
     }
 }

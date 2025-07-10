@@ -1,10 +1,11 @@
-﻿using ReportEngine.App.Views.UpdateInformation;
+﻿using Microsoft.Extensions.DependencyInjection;
+using ReportEngine.App.Views.UpdateInformation;
+using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
 using System.ComponentModel;
-using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
@@ -14,22 +15,25 @@ namespace ReportEngine.App.ViewModels
     public class MainWindowViewModel : INotifyPropertyChanged
     {
         private readonly IBaseRepository<User> _userRepository;
+        private readonly IServiceProvider _serviceProvider;
 
-        private string _userId;
+        private string _userSecondName;
         private string _userName;
+
+        public string ConnectionStatusMessage { get; private set; } = string.Empty;
+        public bool IsConnected { get; private set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public string UserSecondName
         {
-            get => _userId;
+            get => _userSecondName;
             set
             {
-                _userId = value;
+                _userSecondName = value;
                 OnPropertyChanged();
             }
         }
-
         public string UserName
         {
             get => _userName;
@@ -39,19 +43,27 @@ namespace ReportEngine.App.ViewModels
                 OnPropertyChanged();
             }
         }
-
-        public string Version => JsonHandler.GetCurrentVersion(DirectoryHelper.GetConfigPath());
-
         public ICommand AddUserCommand { get; }
         public ICommand CheckForUpdatesCommand { get; }
 
-        public MainWindowViewModel(IBaseRepository<User> userRepository)
+        public MainWindowViewModel(IBaseRepository<User> userRepository, IServiceProvider serviceProvider)
         {
+            _serviceProvider = serviceProvider;
             _userRepository = userRepository;
             AddUserCommand = new RelayCommand(async _ => await AddUser());
             CheckForUpdatesCommand = new RelayCommand(async _ => await CheckForUpdates());
+            Task.Run(() => UpdateConnectionStatus()).Wait();
         }
-        
+
+        private void UpdateConnectionStatus()
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<ReAppContext>();
+
+            IsConnected = context.Database.CanConnect();
+            ConnectionStatusMessage = IsConnected ? "Соединение установлено" : "Соединение не установлено";
+        }
+
         private async Task AddUser()
         {
             var newUser = new User { SecondName = UserSecondName, Name = UserName };
@@ -62,10 +74,8 @@ namespace ReportEngine.App.ViewModels
         {
             try
             {
-                string appDirectory = AppDomain.CurrentDomain.BaseDirectory; //Это приложение путь 
 
-                string configPath = Path.Combine(appDirectory, "Config", "appsettings.json"); //Тянется жысон
-                string logPath = Path.Combine(appDirectory, "logs", "log.txt");//Тянется лог
+                string configPath = DirectoryHelper.GetConfigPath(); //Тянется жысон
 
                 Updater.CheckForUpdate(JsonHandler.GetVersionOnServer(configPath), JsonHandler.GetLocalVersion(configPath));
             }

@@ -7,15 +7,56 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:ReportEngine.App.ViewModels"
     Title="О программе"
-    Width="400"
-    Height="300"
+    Width="450"
+    Height="350"
+    Background="#f5f5f5"
+    WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Grid>
-        <TextBlock
-            Margin="10,48,10,10"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top">
-            <Run FontWeight="Bold" Text="{Binding Version}" />
-        </TextBlock>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Border
+            Grid.Row="0"
+            Padding="10"
+            Background="#f5f5f5">
+            <Image
+                MaxHeight="100"
+                Source="../Resources/Images/logo.png"
+                Stretch="Uniform" />
+        </Border>
+
+        <StackPanel
+            Grid.Row="1"
+            Margin="10"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+            <TextBlock
+                Margin="0,0,0,20"
+                FontSize="16"
+                FontWeight="Bold"
+                Text="{Binding Version, StringFormat=Версия приложения: \{0\}}"
+                TextAlignment="Center" />
+        </StackPanel>
+
+        <StackPanel
+            Grid.Row="2"
+            Margin="0,0,0,20"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom">
+            <TextBlock
+                Margin="0,0,0,5"
+                FontSize="14"
+                FontWeight="Bold"
+                Text="ЗАО «ЭТАЛОН-ПРИБОР»"
+                TextAlignment="Center" />
+            <TextBlock
+                FontSize="10"
+                Text="@Все права защищены"
+                TextAlignment="Center" />
+        </StackPanel>
     </Grid>
 </Window>
