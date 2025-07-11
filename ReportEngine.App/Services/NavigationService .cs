@@ -12,6 +12,12 @@ namespace ReportEngine.App.Services
         {
             _serviceProvider = serviceProvider;
         }
+        public void ShowAsContent<T>() where T : Window
+        {
+            var _mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+            var _currentWindow = _serviceProvider.GetRequiredService<T>();
+            _mainWindow.Content = _currentWindow;
+        }
         public void ShowWindow<T>() where T : Window
         {
             CloseWindow();

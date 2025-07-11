@@ -10,14 +10,19 @@ using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels
 {
-    public class MainWindowViewModel
+    public class MainWindowViewModel : BaseViewModel
     {
         #region DI сервисов
         private readonly NavigationService _navigation;
         private readonly IServiceProvider _serviceProvider;
         #endregion
 
+        #region Приватные поля
+ 
+        #endregion
+
         #region Публичные поля для привязки
+
         public string ConnectionStatusMessage { get; private set; } = string.Empty;
         public bool IsConnected { get; private set; }
         #endregion
@@ -34,6 +39,10 @@ namespace ReportEngine.App.ViewModels
             _navigation.ShowWindow<UsersView>();
         }
 
+        public ICommand OpenAllUsersAsContentCommand { get; }
+        public bool CanOpenAllUsersAsContentCommandExecute(object e) => true;
+        public void OnOpenAllUsersAsContentCommandExecuted(object e) => _navigation.ShowAsContent<UsersView>();
+
         #endregion
 
         #region Конструктор
@@ -42,6 +51,7 @@ namespace ReportEngine.App.ViewModels
             #region Комманды
             CloseAppCommand = new RelayCommand(OnCloseAppCommandExecuted, CanCloseAppCommandExecute);
             OpenAllUsersCommand = new RelayCommand(OnOpenAllUsersCommandExecuted, CanOpenAllUsersCommandExecute);
+            OpenAllUsersAsContentCommand = new RelayCommand(OnOpenAllUsersAsContentCommandExecuted, CanOpenAllUsersAsContentCommandExecute);
             #endregion
 
             _serviceProvider = serviceProvider;

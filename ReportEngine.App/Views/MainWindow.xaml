@@ -90,6 +90,5 @@
 
         </StatusBar>
         <Grid HorizontalAlignment="Center" VerticalAlignment="Center" />
-
     </DockPanel>
 </Window>
