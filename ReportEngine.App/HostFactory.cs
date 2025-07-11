@@ -11,7 +11,7 @@ using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork;
 using Serilog;
 
-namespace ReportEngine.App.Core
+namespace ReportEngine.App
 {
     public class HostFactory
     {

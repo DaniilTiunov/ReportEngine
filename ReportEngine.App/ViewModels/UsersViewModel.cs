@@ -1,5 +1,9 @@
-﻿using ReportEngine.Domain.Entities;
+﻿using ReportEngine.App.Commands;
+using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
+using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels
 {
@@ -8,6 +12,8 @@ namespace ReportEngine.App.ViewModels
         private readonly IBaseRepository<User> _userRepository;
 
         #region Приватные свойства для хранения данных
+        private ObservableCollection<User> _allUsers;
+
         private string _userName;
 
         private string _userSecondName;
@@ -59,10 +65,40 @@ namespace ReportEngine.App.ViewModels
             get => _phoneContact;
             set => Set(ref _phoneContact, value);
         }
+        public ObservableCollection<User> AllUsers
+        {
+            get => _allUsers;
+            set => Set(ref _allUsers, value);
+        }
+
         #endregion
+
+        #region Конструктор
         public UsersViewModel(IBaseRepository<User> userRepository)
         {
+            ShowAllUsersCommand = new RelayCommand(OnShowAllUsersCommandExecuted, CanShowAllUsersCommandExecute);
             _userRepository = userRepository;
         }
+        #endregion
+
+        #region Комманды
+        public ICommand AddUserCommand { get; set; }
+        public ICommand ShowAllUsersCommand{ get; set; }
+        public bool CanShowAllUsersCommandExecute(object p) => true;
+        public async void OnShowAllUsersCommandExecuted(object p) 
+        {
+            try
+            {
+                var users = await _userRepository.GetAllAsync();
+
+                AllUsers = new ObservableCollection<User>(users);
+            }
+            catch(Exception ex)  
+            {
+                MessageBox.Show(ex.Message, "Ошибка при полученни данных", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        } 
+        #endregion
+
     }
 }

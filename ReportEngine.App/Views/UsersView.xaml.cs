@@ -1,21 +1,18 @@
 ﻿using ReportEngine.App.ViewModels;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace ReportEngine.App.Views
 {
     /// <summary>
-    /// Логика взаимодействия для UserTableView.xaml
+    /// Логика взаимодействия для UsersView.xaml
     /// </summary>
-    public partial class UserView : Window
+    public partial class UsersView : Window
     {
-        public UserView(UsersViewModel usersViewModel)
+        public UsersView(UsersViewModel usersViewModel)
         {
             InitializeComponent();
             DataContext = usersViewModel;
-        }
-        private void InitializeComponent()
-        {
-            // Initialize UI components here
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ReportEngine.App.Core;
+using ReportEngine.App.ViewModels;
+using ReportEngine.App.Views;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
 using ReportEngine.Shared.Config.Logger;
@@ -24,8 +25,11 @@ namespace ReportEngine.App
 
                 var mainWindow = host.Services.GetService<MainWindow>(); //Получаем экземпляр окна
 
+                var userView = host.Services.GetService<UsersView>(); //Получаем экземпляр ViewModel
+
                 app.MainWindow = mainWindow;
                 mainWindow?.Show(); //Показываем главное окно приложения
+                userView?.Show();
                 app?.Run(); //Запускаем
 
 
