@@ -1,38 +1,45 @@
-﻿using MaterialDesignThemes.Wpf;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.Views;
+using ReportEngine.App.Views.UpdateInformation;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Shared.Config.Directory;
+using ReportEngine.Shared.Config.JsonHelpers;
 using System.Diagnostics;
 using System.Windows;
+using AboutProgram = ReportEngine.App.Views.AboutProgram;
 
 namespace ReportEngine.App
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window //Это так называемый "Code Behind" файл для MainWindow.xaml
     {
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IBaseRepository<User> _userRepository;
-
-        public MainWindow(IServiceProvider serviceProvider)
+        public MainWindow(MainWindowViewModel mainViewModel)
         {
-            _serviceProvider = serviceProvider;
-            _userRepository = _serviceProvider.GetRequiredService<IBaseRepository<User>>();
-
             InitializeComponent();
-            InitializeDataContext(); 
+            DataContext = mainViewModel;
         }
-        private void InitializeDataContext()
+        //Здесь реализованый методы, которые не требуют много времени на выполнение 
+        private void CheckForUpdates(object sender, RoutedEventArgs e)
         {
-            DataContext = new MainWindowViewModel(_userRepository, _serviceProvider);
+            try
+            {
+                string appSettingsConfigPath = DirectoryHelper.GetConfigPath(); //Тянется жысон
+
+                Updater.CheckForUpdate(JsonHandler.GetVersionOnServer(appSettingsConfigPath), JsonHandler.GetLocalVersion(appSettingsConfigPath));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Критическая ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
-        private void ShowAboutProgram(object sender, RoutedEventArgs e)
+        private void ShowAboutProgram(object sender, RoutedEventArgs e) //Просто простые синхронные операции
         {
             var aboutWindow = new AboutProgram();
-            
+
             aboutWindow.Show();
         }
         private void ShowCalculator(object sender, RoutedEventArgs e)
@@ -42,12 +49,6 @@ namespace ReportEngine.App
         private void ShowNotepad(object sender, RoutedEventArgs e)
         {
             Process.Start("notepad.exe");
-        }
-
-        private void ShowUsersTable(object sender, RoutedEventArgs e)
-        {
-            var usersTable = new UserTableView();
-            usersTable.Show();
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using ReportEngine.App.ViewModels;
+using System.Windows;
 
 namespace ReportEngine.App.Views
 {
@@ -8,14 +8,14 @@ namespace ReportEngine.App.Views
     /// </summary>
     public partial class UserTableView : Window
     {
-        public UserTableView()
+        public UserTableView(UsersViewModel usersViewModel)
         {
             InitializeComponent();
+            DataContext = usersViewModel;
         }
         private void InitializeComponent()
         {
             // Initialize UI components here
         }
-        
     }
 }
