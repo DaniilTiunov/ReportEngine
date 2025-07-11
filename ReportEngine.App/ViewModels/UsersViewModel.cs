@@ -80,6 +80,8 @@ namespace ReportEngine.App.ViewModels
         {
             ShowAllUsersCommand = new RelayCommand(OnShowAllUsersCommandExecuted, CanShowAllUsersCommandExecute);
             HideUsersCommand = new RelayCommand(OnHideUsersCommandExecuted, CanHideUsersCommandExecute);
+            CloseUsersCommand = new RelayCommand(OnCloseUsersCommandExecuted, CanCloseUsersCommandExecute);
+
 
             _userRepository = userRepository;
             _navigation = navigation;
@@ -88,11 +90,14 @@ namespace ReportEngine.App.ViewModels
 
         #region Комманды
         public ICommand AddUserCommand { get; set; }
-
         #region Команда закрыть окно
         public ICommand HideUsersCommand { get; set; }
         public bool CanHideUsersCommandExecute(object p) => true;
-        public void OnHideUsersCommandExecuted(object p) => _navigation.HideWindow(); 
+        public void OnHideUsersCommandExecuted(object p) => _navigation.HideWindow();
+
+        public ICommand CloseUsersCommand { get; }
+        public bool CanCloseUsersCommandExecute(object e) => true;
+        public void OnCloseUsersCommandExecuted(object e) => _navigation.CloseWindow();
         #endregion
 
         #region Команда показать всех пользователей

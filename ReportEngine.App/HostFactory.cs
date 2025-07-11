@@ -34,7 +34,7 @@ namespace ReportEngine.App
                     services.AddSingleton<NavigationService>(); //Регистрация сервиса навигации>
                     // Регистрация ViewModels
                     services.AddTransient<MainWindowViewModel>();
-                    services.AddTransient<UsersViewModel>();
+                    services.AddScoped<UsersViewModel>();
 
                     // Регистрация окон
                     services.AddSingleton<App>();

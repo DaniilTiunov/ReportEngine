@@ -24,15 +24,16 @@ namespace ReportEngine.App.ViewModels
 
         #region Комманды
         public ICommand CloseAppCommand { get; }
-        public ICommand OpenAllUsersCommand { get; }
         public bool CanCloseAppCommandExecute(object e) => true;
         public void OnCloseAppCommandExecuted(object e) => Application.Current.Shutdown();
 
+        public ICommand OpenAllUsersCommand { get; }
         public bool CanOpenAllUsersCommandExecute(object e) => true;
         public void OnOpenAllUsersCommandExecuted(object e)
         {
             _navigation.ShowWindow<UsersView>();
         }
+
         #endregion
 
         #region Конструктор

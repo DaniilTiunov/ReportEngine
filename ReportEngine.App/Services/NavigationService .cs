@@ -14,6 +14,8 @@ namespace ReportEngine.App.Services
         }
         public void ShowWindow<T>() where T : Window
         {
+            CloseWindow();
+
             _currentWindow = _serviceProvider.GetRequiredService<T>();
             _currentWindow.Show();
         }
@@ -23,7 +25,11 @@ namespace ReportEngine.App.Services
         }
         public void CloseWindow()
         {
-            _currentWindow?.Close();
+            if (_currentWindow != null)
+            {
+                _currentWindow.Close();
+                _currentWindow = null; // Освобождаем ссылку на окно
+            }
         }
     }
 }
