@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ReportEngine.App.ViewModels;
+using ReportEngine.App.Views;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories;
@@ -41,6 +42,7 @@ namespace ReportEngine.App
                         var viewModel = provider.GetRequiredService<MainWindowViewModel>();
                         return new MainWindow(viewModel);
                     });
+                    services.AddSingleton<UsersView>();
                 })
                 .ConfigureLogging(logging =>
                 {

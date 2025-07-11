@@ -6,9 +6,9 @@ namespace ReportEngine.App.Views
     /// <summary>
     /// Логика взаимодействия для UserTableView.xaml
     /// </summary>
-    public partial class UserTableView : Window
+    public partial class UserView : Window
     {
-        public UserTableView(UsersViewModel usersViewModel)
+        public UserView(UsersViewModel usersViewModel)
         {
             InitializeComponent();
             DataContext = usersViewModel;
