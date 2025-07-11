@@ -1,7 +1,5 @@
 ﻿using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace ReportEngine.App.ViewModels
 {
@@ -24,7 +22,7 @@ namespace ReportEngine.App.ViewModels
 
         private string _phoneContact;
         #endregion
-        
+
         #region Публичные свойства для привязки к контролам
         public string UserName
         {

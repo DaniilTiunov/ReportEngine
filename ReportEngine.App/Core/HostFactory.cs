@@ -11,7 +11,7 @@ using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork;
 using Serilog;
 
-namespace ReportEngine.App
+namespace ReportEngine.App.Core
 {
     public class HostFactory
     {
@@ -37,9 +37,10 @@ namespace ReportEngine.App
 
                     // Регистрация окон
                     services.AddSingleton<App>();
-                    services.AddSingleton<MainWindow>(provider =>
+                    services.AddSingleton(provider =>
                     {
                         var viewModel = provider.GetRequiredService<MainWindowViewModel>();
+                       
                         return new MainWindow(viewModel);
                     });
                     services.AddSingleton<UsersView>();

@@ -34,7 +34,7 @@
                 <Separator />
                 <MenuItem Header="Настройки" />
                 <Separator />
-                <MenuItem Header="Выход" />
+                <MenuItem Command="{Binding CloseAppCommand}" Header="Выход" />
             </MenuItem>
             <MenuItem Header="Вид">
                 <MenuItem Header="Масштаб..." />
