@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.Commands;
+using ReportEngine.App.Services;
+using ReportEngine.App.Views;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
@@ -11,7 +13,7 @@ namespace ReportEngine.App.ViewModels
     public class MainWindowViewModel
     {
         #region DI сервисов
-        private readonly IBaseRepository<User> _userRepository;
+        private readonly NavigationService _navigation;
         private readonly IServiceProvider _serviceProvider;
         #endregion
 
@@ -22,19 +24,28 @@ namespace ReportEngine.App.ViewModels
 
         #region Комманды
         public ICommand CloseAppCommand { get; }
+        public ICommand OpenAllUsersCommand { get; }
         public bool CanCloseAppCommandExecute(object e) => true;
         public void OnCloseAppCommandExecuted(object e) => Application.Current.Shutdown();
+
+        public bool CanOpenAllUsersCommandExecute(object e) => true;
+        public void OnOpenAllUsersCommandExecuted(object e)
+        {
+            _navigation.ShowWindow<UsersView>();
+        }
         #endregion
 
         #region Конструктор
-        public MainWindowViewModel(IBaseRepository<User> userRepository, IServiceProvider serviceProvider)
+        public MainWindowViewModel(IServiceProvider serviceProvider, NavigationService navigation)
         {
             #region Комманды
             CloseAppCommand = new RelayCommand(OnCloseAppCommandExecuted, CanCloseAppCommandExecute);
+            OpenAllUsersCommand = new RelayCommand(OnOpenAllUsersCommandExecuted, CanOpenAllUsersCommandExecute);
             #endregion
 
             _serviceProvider = serviceProvider;
-            _userRepository = userRepository;
+            _navigation = navigation;
+
             Task.Run(() => UpdateConnectionStatus()).Wait();
         }
         #endregion

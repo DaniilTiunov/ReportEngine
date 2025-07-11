@@ -25,11 +25,8 @@ namespace ReportEngine.App
 
                 var mainWindow = host.Services.GetService<MainWindow>(); //Получаем экземпляр окна
 
-                var userView = host.Services.GetService<UsersView>(); //Получаем экземпляр ViewModel
-
                 app.MainWindow = mainWindow;
                 mainWindow?.Show(); //Показываем главное окно приложения
-                userView?.Show();
                 app?.Run(); //Запускаем
 
 

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using ReportEngine.App.Services;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.Views;
 using ReportEngine.Domain.Database.Context;
@@ -30,7 +31,7 @@ namespace ReportEngine.App
 
                     // Регистрация сервисов
                     services.AddScoped<ExcelCreator>();
-
+                    services.AddSingleton<NavigationService>(); //Регистрация сервиса навигации>
                     // Регистрация ViewModels
                     services.AddTransient<MainWindowViewModel>();
                     services.AddTransient<UsersViewModel>();

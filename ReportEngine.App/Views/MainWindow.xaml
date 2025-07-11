@@ -46,7 +46,7 @@
                 <MenuItem Header="Таблица контрагентов" />
                 <MenuItem Header="Таблица оборудования" />
                 <Separator />
-                <MenuItem Header="Таблица сотрудников" />
+                <MenuItem Command="{Binding OpenAllUsersCommand}" Header="Таблица сотрудников" />
             </MenuItem>
             <MenuItem Header="Инструменты">
                 <MenuItem Click="ShowCalculator" Header="Калькулятор" />

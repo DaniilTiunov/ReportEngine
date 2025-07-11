@@ -1,4 +1,5 @@
 ﻿using ReportEngine.App.Commands;
+using ReportEngine.App.Services;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using System.Collections.ObjectModel;
@@ -9,6 +10,7 @@ namespace ReportEngine.App.ViewModels
 {
     public class UsersViewModel : BaseViewModel
     {
+        private readonly NavigationService _navigation;
         private readonly IBaseRepository<User> _userRepository;
 
         #region Приватные свойства для хранения данных
@@ -74,18 +76,29 @@ namespace ReportEngine.App.ViewModels
         #endregion
 
         #region Конструктор
-        public UsersViewModel(IBaseRepository<User> userRepository)
+        public UsersViewModel(IBaseRepository<User> userRepository, NavigationService navigation)
         {
             ShowAllUsersCommand = new RelayCommand(OnShowAllUsersCommandExecuted, CanShowAllUsersCommandExecute);
+            HideUsersCommand = new RelayCommand(OnHideUsersCommandExecuted, CanHideUsersCommandExecute);
+
             _userRepository = userRepository;
+            _navigation = navigation;
         }
         #endregion
 
         #region Комманды
         public ICommand AddUserCommand { get; set; }
-        public ICommand ShowAllUsersCommand{ get; set; }
+
+        #region Команда закрыть окно
+        public ICommand HideUsersCommand { get; set; }
+        public bool CanHideUsersCommandExecute(object p) => true;
+        public void OnHideUsersCommandExecuted(object p) => _navigation.HideWindow(); 
+        #endregion
+
+        #region Команда показать всех пользователей
+        public ICommand ShowAllUsersCommand { get; set; }
         public bool CanShowAllUsersCommandExecute(object p) => true;
-        public async void OnShowAllUsersCommandExecuted(object p) 
+        public async void OnShowAllUsersCommandExecuted(object p)
         {
             try
             {
@@ -93,11 +106,12 @@ namespace ReportEngine.App.ViewModels
 
                 AllUsers = new ObservableCollection<User>(users);
             }
-            catch(Exception ex)  
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Ошибка при полученни данных", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        } 
+        }  
+        #endregion
         #endregion
 
     }
