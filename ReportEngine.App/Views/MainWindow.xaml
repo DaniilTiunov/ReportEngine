@@ -27,19 +27,18 @@
             Height="25"
             DockPanel.Dock="Top"
             FontSize="14">
+            
             <MenuItem Header="Файл">
                 <MenuItem Header="Открыть..." />
                 <MenuItem Header="Сохранить" />
                 <MenuItem Header="Сохранить как..." />
                 <Separator />
-                <MenuItem Header="Настройки" />
+                <MenuItem Header="Настройки" Click="OpenSettingsWindow" />
                 <Separator />
                 <MenuItem Command="{Binding CloseAppCommand}" Header="Выход" />
             </MenuItem>
             <MenuItem Header="Вид">
                 <MenuItem Header="Масштаб..." />
-                <MenuItem Header="Темная тема" />
-                <MenuItem Header="Светлая тема" />
             </MenuItem>
             <MenuItem Header="Данные">
                 <MenuItem Header="Таблица проектов" />
