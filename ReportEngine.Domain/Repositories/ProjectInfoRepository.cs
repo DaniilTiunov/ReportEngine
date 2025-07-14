@@ -17,17 +17,6 @@ namespace ReportEngine.Domain.Repositories
             await _context.Set<ProjectInfo>().AddAsync(entity);
             await _context.SaveChangesAsync();
         }
-
-        public async Task<int> DeleteByIdAsync(int id)
-        {
-            var entityProjectInfo = await _context.Set<ProjectInfo>().FindAsync(id);
-            if (entityProjectInfo == null)
-                return 0;
-
-            _context.Set<ProjectInfo>().Remove(entityProjectInfo);
-            await _context.SaveChangesAsync();
-            return 1;
-        }
         public async Task<IEnumerable<ProjectInfo>> GetAllAsync()
         {
             throw new NotImplementedException();
@@ -39,6 +28,20 @@ namespace ReportEngine.Domain.Repositories
         public async Task UpdateAsync(ProjectInfo entity)
         {
             throw new NotImplementedException();
+        }
+        public Task DeleteAsync(ProjectInfo entity)
+        {
+            throw new NotImplementedException();
+        }
+        public async Task<int> DeleteByIdAsync(int id)
+        {
+            var entityProjectInfo = await _context.Set<ProjectInfo>().FindAsync(id);
+            if (entityProjectInfo == null)
+                return 0;
+
+            _context.Set<ProjectInfo>().Remove(entityProjectInfo);
+            await _context.SaveChangesAsync();
+            return 1;
         }
     }
 }

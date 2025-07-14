@@ -38,10 +38,6 @@ namespace ReportEngine.App.ViewModels
             _navigation.ShowWindow<UsersView>();
         }
 
-        public ICommand OpenAllUsersAsContentCommand { get; }
-        public bool CanOpenAllUsersAsContentCommandExecute(object e) => true;
-        public void OnOpenAllUsersAsContentCommandExecuted(object e) => _navigation.ShowAsContent<UsersView>();
-
         public ICommand ChekDbConnectionCommand { get; }
         public bool CanChekDbConnectionCommandCommandExecute(object e) => true;
         public void OnChekDbConnectionCommandExecuted(object e)
@@ -61,7 +57,6 @@ namespace ReportEngine.App.ViewModels
             #region Комманды
             CloseAppCommand = new RelayCommand(OnCloseAppCommandExecuted, CanCloseAppCommandExecute);
             OpenAllUsersCommand = new RelayCommand(OnOpenAllUsersCommandExecuted, CanOpenAllUsersCommandExecute);
-            OpenAllUsersAsContentCommand = new RelayCommand(OnOpenAllUsersAsContentCommandExecuted, CanOpenAllUsersAsContentCommandExecute);
             ChekDbConnectionCommand = new RelayCommand(OnChekDbConnectionCommandExecuted, CanChekDbConnectionCommandCommandExecute);
             #endregion
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System.ComponentModel;
 using System.Windows;
 
 namespace ReportEngine.App.Services
@@ -12,16 +13,18 @@ namespace ReportEngine.App.Services
         {
             _serviceProvider = serviceProvider;
         }
-        public void ShowAsContent<T>() where T : Window
-        {
-            var _mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
-            var _currentWindow = _serviceProvider.GetRequiredService<T>();
-            _mainWindow.Content = _currentWindow;
-        }
         public void ShowWindow<T>() where T : Window
         {
-            _currentWindow = _serviceProvider.GetRequiredService<T>();
-            _currentWindow.Show();
+            try
+            {
+                var _mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+                var _currentWindow = _serviceProvider.GetRequiredService<T>();
+                _currentWindow.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Критическая ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
         public void HideWindow()
         {
@@ -29,11 +32,7 @@ namespace ReportEngine.App.Services
         }
         public void CloseWindow()
         {
-            if (_currentWindow != null)
-            {
-                _currentWindow.Close();
-                _currentWindow = null; // Освобождаем ссылку на окно
-            }
+            _currentWindow?.Hide();
         }
     }
 }
