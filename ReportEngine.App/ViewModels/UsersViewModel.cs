@@ -2,6 +2,7 @@
 using ReportEngine.App.Services;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
+using Serilog;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;

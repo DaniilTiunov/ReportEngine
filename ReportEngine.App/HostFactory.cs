@@ -10,6 +10,7 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork;
+using Serilog.Extensions.Hosting;
 using Serilog;
 
 namespace ReportEngine.App
@@ -18,7 +19,8 @@ namespace ReportEngine.App
     {
         public static IHost BuildHost(string connString) //Создание Host приложения
         {
-            return Host.CreateDefaultBuilder(). //Конфигурация Host приложения 
+            return Host.CreateDefaultBuilder().
+                UseSerilog().//Конфигурация Host приложения 
                 ConfigureServices(services => //Регаем сервисы хуервисы 
                 {
                     services.AddDbContext<ReAppContext>(options => //И контекст

@@ -3,8 +3,7 @@ using ReportEngine.App.Commands;
 using ReportEngine.App.Services;
 using ReportEngine.App.Views;
 using ReportEngine.Domain.Database.Context;
-using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Repositories.Interfaces;
+using Serilog.Core;
 using System.Windows;
 using System.Windows.Input;
 
@@ -22,7 +21,8 @@ namespace ReportEngine.App.ViewModels
         #endregion
 
         #region Публичные поля для привязки
-        public string ConnectionStatusMessage { get => _connectionStatusMessage; set => Set(ref _connectionStatusMessage, value); }
+        public string ConnectionStatusMessage { get => _connectionStatusMessage; 
+                                                set => Set(ref _connectionStatusMessage, value); }
         public bool IsConnected { get; private set; }
         #endregion
 
@@ -44,13 +44,14 @@ namespace ReportEngine.App.ViewModels
 
         public ICommand ChekDbConnectionCommand { get; }
         public bool CanChekDbConnectionCommandCommandExecute(object e) => true;
-        public void OnChekDbConnectionCommandExecuted(object e) 
+        public void OnChekDbConnectionCommandExecuted(object e)
         {
             using var scope = _serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ReAppContext>();
 
             IsConnected = context.Database.CanConnect();
             ConnectionStatusMessage = IsConnected ? "Соединение установлено" : "Соединение не установлено";
+           
         }
         #endregion
 

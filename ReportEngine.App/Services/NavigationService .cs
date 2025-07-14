@@ -20,8 +20,6 @@ namespace ReportEngine.App.Services
         }
         public void ShowWindow<T>() where T : Window
         {
-            CloseWindow();
-
             _currentWindow = _serviceProvider.GetRequiredService<T>();
             _currentWindow.Show();
         }
