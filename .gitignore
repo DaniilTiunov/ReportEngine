@@ -364,3 +364,4 @@ FodyWeavers.xsd
 /Output
 ReportEngine.Shared/Config/Logger/LoggerConfig.cs
 ReportEngine.Shared/Config/Logger/LoggerConfig.cs
+/ReportEngine.Shared/Config/Logger/LoggerConfig.cs
