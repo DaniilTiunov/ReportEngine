@@ -13,6 +13,7 @@
     <None Remove="Resources\Icons\estimate_cost_icon_213382.ico" />
     <None Remove="Resources\Icons\install_line_icon_236048.ico" />
     <None Remove="Resources\Images\logo.png" />
+    <None Remove="Resources\Images\refresh-button.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -52,6 +53,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\Images\logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\refresh-button.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
