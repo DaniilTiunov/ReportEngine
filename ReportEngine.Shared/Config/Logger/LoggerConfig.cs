@@ -14,6 +14,7 @@ namespace ReportEngine.Shared.Config.Logger
             Log.Logger = new LoggerConfiguration() // Конфигурация Serilog
                 .Enrich.FromLogContext()
                 .WriteTo.File( //Пишем в файл
+
                         path: logPath,
                         rollingInterval: RollingInterval.Day,
                         retainedFileCountLimit: 7,
