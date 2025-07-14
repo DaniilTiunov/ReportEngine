@@ -2,6 +2,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using ReportEngine.App.Services;
+using ReportEngine.App.ViewModels;
+using ReportEngine.App.Views;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories;
@@ -22,11 +25,26 @@ namespace ReportEngine.App
                     {
                         options.UseNpgsql(connString); //Используем Npgsql
                     });
-                    services.AddSingleton<App>(); //Регистрируем приложение
-                    services.AddSingleton<MainWindow>(); //Регистрируем главное окно
-                    services.AddScoped<IBaseRepository<User>, UserRepository>(); //Регистрируем репозитории
-                    services.AddScoped<IBaseRepository<ProjectInfo>, ProjectInfoRepository>(); //Регистрируем репозитории>
-                    services.AddScoped<ExcelCreator>(); //Регистрируем эксель
+                    //Регистрируем репозитории
+                    services.AddScoped<IBaseRepository<User>, UserRepository>(); 
+                    services.AddScoped<IBaseRepository<ProjectInfo>, ProjectInfoRepository>();
+
+                    // Регистрация сервисов
+                    services.AddScoped<ExcelCreator>();
+                    services.AddSingleton<NavigationService>(); //Регистрация сервиса навигации>
+                    // Регистрация ViewModels
+                    services.AddTransient<MainWindowViewModel>();
+                    services.AddScoped<UsersViewModel>();
+
+                    // Регистрация окон
+                    services.AddSingleton<App>();
+                    services.AddSingleton(provider =>
+                    {
+                        var viewModel = provider.GetRequiredService<MainWindowViewModel>();
+                       
+                        return new MainWindow(viewModel);
+                    });
+                    services.AddSingleton<UsersView>();
                 })
                 .ConfigureLogging(logging =>
                 {

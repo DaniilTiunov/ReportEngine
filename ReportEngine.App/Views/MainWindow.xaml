@@ -13,7 +13,7 @@
     WindowStartupLocation="CenterScreen"
     WindowState="Maximized"
     mc:Ignorable="d">
-
+    <!--
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -21,33 +21,31 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-
+    -->
     <DockPanel>
         <Menu
             Height="25"
             DockPanel.Dock="Top"
             FontSize="14">
+            
             <MenuItem Header="Файл">
                 <MenuItem Header="Открыть..." />
                 <MenuItem Header="Сохранить" />
                 <MenuItem Header="Сохранить как..." />
                 <Separator />
-                <MenuItem Header="Настройки" />
+                <MenuItem Header="Настройки" Click="OpenSettingsWindow" />
                 <Separator />
-                <MenuItem Header="Выход" />
+                <MenuItem Command="{Binding CloseAppCommand}" Header="Выход" />
             </MenuItem>
             <MenuItem Header="Вид">
                 <MenuItem Header="Масштаб..." />
-                <MenuItem Header="Темная тема" />
-                <MenuItem Header="Светлая тема" />
             </MenuItem>
             <MenuItem Header="Данные">
                 <MenuItem Header="Таблица проектов" />
                 <MenuItem Header="Таблица контрагентов" />
                 <MenuItem Header="Таблица оборудования" />
                 <Separator />
-                <MenuItem Header="Таблица сотрудников" />
-                <MenuItem Header="Таблица чуханов" />
+                <MenuItem Command="{Binding OpenAllUsersCommand}" Header="Таблица сотрудников" />
             </MenuItem>
             <MenuItem Header="Инструменты">
                 <MenuItem Click="ShowCalculator" Header="Калькулятор" />
@@ -57,7 +55,7 @@
             <MenuItem Header="Справка">
                 <MenuItem Click="ShowAboutProgram" Header="О программе" />
                 <MenuItem Header="Открыть справку" />
-                <MenuItem Command="{Binding CheckForUpdatesCommand}" Header="Проверить обновления" />
+                <MenuItem Click="CheckForUpdates" Header="Проверить обновления" />
             </MenuItem>
         </Menu>
 
@@ -90,57 +88,6 @@
             </Grid>
 
         </StatusBar>
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button
-                Width="100"
-                Height="40"
-                Margin="66,335,1333,0"
-                VerticalAlignment="Top"
-                Command="{Binding AddUserCommand}"
-                Content="Добавить" />
-
-            <TextBox
-                Width="213"
-                Height="41"
-                Margin="47,234,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Text="{Binding UserSecondName, UpdateSourceTrigger=PropertyChanged}"
-                TextWrapping="Wrap" />
-
-            <TextBox
-                Width="213"
-                Height="41"
-                Margin="293,234,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}"
-                TextWrapping="Wrap" />
-
-            <Label
-                Width="213"
-                Height="31"
-                Margin="127,173,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Content="Фамилия" />
-
-            <Label
-                Width="213"
-                Height="31"
-                Margin="400,173,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Content="Имя " />
-
-            <Label
-                Width="96"
-                Height="30"
-                Margin="570,360,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Content="HELLO ETALON" />
-        </Grid>
-
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" />
     </DockPanel>
 </Window>

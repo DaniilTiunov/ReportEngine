@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ReportEngine.Export.ExcelWork;
+using ReportEngine.App.ViewModels;
+using ReportEngine.App.Views;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
 using ReportEngine.Shared.Config.Logger;
 using Serilog;
-
 
 namespace ReportEngine.App
 {
@@ -20,14 +20,15 @@ namespace ReportEngine.App
                 Log.Logger = LoggerConfig.InitializeLogger(); // Конфигурация Serilog
 
                 var host = HostFactory.BuildHost(connString); //Конфигурация Host приложения 
-                var app = host.Services.GetService<App>(); //Получаем экземпляр приложения 
-                var excel = host.Services.GetService<ExcelCreator>(); //Получаем экземпляр экселя
-                var mainWindow = host.Services.GetService<MainWindow>(); //Получаем экземпляр главного окна
 
-                mainWindow?.Show(); //Запускаем главное окно
+                var app = host.Services.GetService<App>(); //Получаем экземпляр приложения 
+
+                var mainWindow = host.Services.GetService<MainWindow>(); //Получаем экземпляр окна
+
+                app.MainWindow = mainWindow;
+                mainWindow?.Show(); //Показываем главное окно приложения
                 app?.Run(); //Запускаем
 
-                //excel?.CreateExcelFile().GetAwaiter().GetResult();
 
                 Log.Information("Приложение запущено без ошибок"); //Логируем
             }
