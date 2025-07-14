@@ -90,6 +90,7 @@ namespace ReportEngine.App.ViewModels
             HideUsersCommand = new RelayCommand(OnHideUsersCommandExecuted, CanHideUsersCommandExecute);
             CloseUsersCommand = new RelayCommand(OnCloseUsersCommandExecuted, CanCloseUsersCommandExecute);
             DeleteUserCommand = new RelayCommand(OnDeleteUserCommandExecuted, CanDeleteUserCommandExecute);
+            AddNewUserCommand = new RelayCommand(OnAddNewUserCommandExecuted, CanAddNewUserCommandExecute);
 
             _userRepository = userRepository;
             _navigation = navigation;
@@ -97,9 +98,7 @@ namespace ReportEngine.App.ViewModels
         #endregion
 
         #region Комманды
-        public ICommand AddUserCommand { get; set; }
-        #region Команда закрыть окно
-        public ICommand HideUsersCommand { get; set; }
+        public ICommand HideUsersCommand { get; }
         public bool CanHideUsersCommandExecute(object p) => true;
         public void OnHideUsersCommandExecuted(object p) => _navigation.HideWindow();
 
@@ -142,9 +141,37 @@ namespace ReportEngine.App.ViewModels
                 MessageBox.Show(ex.Message, "Ошибка при удалении пользователя", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+        public ICommand AddNewUserCommand { get; set; }
+        public bool CanAddNewUserCommandExecute(object e) => true;
+        public async void OnAddNewUserCommandExecuted(object p)
+        {
+            try
+            {
+                // Создаем нового пользователя с пустыми значениями
+                var newUser = new User
+                {
+                    Name = "",
+                    SecondName = "",
+                    LastName = "",
+                    Position = "",
+                    Cabinet = "",
+                    Email = "",
+                    PhoneContact = ""
+                };
 
-        #endregion
-        #endregion
+                // Добавляем нового пользователя в коллекцию
+                AllUsers.Add(newUser);
 
+                // Сохраняем нового пользователя в базе данных
+                await _userRepository.AddAsync(newUser);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка при добавлении пользователя", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+            #endregion
+
+        }
     }
 }

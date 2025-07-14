@@ -10,7 +10,6 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork;
-using Serilog.Extensions.Hosting;
 using Serilog;
 
 namespace ReportEngine.App
@@ -28,14 +27,14 @@ namespace ReportEngine.App
                         options.UseNpgsql(connString); //Используем Npgsql
                     });
                     //Регистрируем репозитории
-                    services.AddScoped<IBaseRepository<User>, UserRepository>(); 
+                    services.AddScoped<IBaseRepository<User>, UserRepository>();
                     services.AddScoped<IBaseRepository<ProjectInfo>, ProjectInfoRepository>();
 
                     // Регистрация сервисов
                     services.AddScoped<ExcelCreator>();
                     services.AddSingleton<NavigationService>(); //Регистрация сервиса навигации>
                     // Регистрация ViewModels
-                    services.AddTransient<MainWindowViewModel>();
+                    services.AddScoped<MainWindowViewModel>();
                     services.AddScoped<UsersViewModel>();
 
                     // Регистрация окон
@@ -43,7 +42,7 @@ namespace ReportEngine.App
                     services.AddSingleton(provider =>
                     {
                         var viewModel = provider.GetRequiredService<MainWindowViewModel>();
-                       
+
                         return new MainWindow(viewModel);
                     });
                     services.AddSingleton<UsersView>();

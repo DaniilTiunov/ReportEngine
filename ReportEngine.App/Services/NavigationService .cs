@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System.ComponentModel;
 using System.Windows;
 
 namespace ReportEngine.App.Services
@@ -15,20 +14,12 @@ namespace ReportEngine.App.Services
         }
         public void ShowWindow<T>() where T : Window
         {
-            try
-            {
-                var _mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
-                var _currentWindow = _serviceProvider.GetRequiredService<T>();
-                _currentWindow.Show();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Критическая ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            _currentWindow = _serviceProvider.GetRequiredService<T>();
+            _currentWindow.Show();
         }
         public void HideWindow()
         {
-            _currentWindow?.Hide();
+            _currentWindow.Hide();
         }
         public void CloseWindow()
         {

@@ -1,6 +1,5 @@
 ﻿using ReportEngine.App.ViewModels;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace ReportEngine.App.Views
 {
