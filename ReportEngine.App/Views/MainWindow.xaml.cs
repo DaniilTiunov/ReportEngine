@@ -36,8 +36,6 @@ namespace ReportEngine.App
                 MessageBox.Show(ex.Message, "Критическая ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-
         private void ShowAboutProgram(object sender, RoutedEventArgs e) //Просто простые синхронные операции
         {
             var aboutWindow = new AboutProgram();
@@ -45,17 +43,12 @@ namespace ReportEngine.App
             aboutWindow.Show();
         }
 
-
         private void OpenSettingsWindow(object sender, RoutedEventArgs e) //Просто простые синхронные операции
         {
             var settingsWindow = new SettingsWindow();
 
             settingsWindow.Show();
         }
-
-
-
-
         private void ShowCalculator(object sender, RoutedEventArgs e)
         {
             Process.Start("calc.exe");
