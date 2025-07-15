@@ -11,10 +11,5 @@ namespace ReportEngine.App.Views
         {
             InitializeComponent();
         }
-
-        private void OpenInTabControl(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-
-        }
     }
 }

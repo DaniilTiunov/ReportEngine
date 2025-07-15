@@ -60,7 +60,6 @@
             <MenuItem Header="Файл">
                 <MenuItem Click="OpenTreeProject" Header="Новый проект" />
                 <MenuItem Click="OpenMainScreen" Header="На главный экран" />
-                <MenuItem Header="Сохранить как..." />
                 <Separator />
                 <MenuItem Click="OpenSettingsWindow" Header="Настройки" />
                 <Separator />
@@ -69,7 +68,7 @@
             <MenuItem Header="Вид">
                 <MenuItem Header="Масштаб..." />
             </MenuItem>
-            <MenuItem Header="Данные">
+            <MenuItem Header="Исходные данные">
                 <MenuItem Header="Таблица проектов" />
                 <MenuItem Header="Таблица контрагентов" />
                 <MenuItem Header="Таблица оборудования" />
