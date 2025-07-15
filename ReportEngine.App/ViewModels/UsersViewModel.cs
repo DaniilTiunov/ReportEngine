@@ -2,6 +2,7 @@
 using ReportEngine.App.Services;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Shared.Config.DebugConsol;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -29,6 +30,8 @@ namespace ReportEngine.App.ViewModels
         private string _position;
 
         private string _phoneContact;
+
+        private User _selectedUser;
         #endregion
 
         #region Публичные свойства для привязки к контролам
@@ -67,6 +70,11 @@ namespace ReportEngine.App.ViewModels
             get => _phoneContact;
             set => Set(ref _phoneContact, value);
         }
+        public User SelectedUser
+        {
+            get => _selectedUser;
+            set => Set(ref _selectedUser, value);
+        }
         public ObservableCollection<User> AllUsers
         {
             get => _allUsers;
@@ -81,7 +89,8 @@ namespace ReportEngine.App.ViewModels
             ShowAllUsersCommand = new RelayCommand(OnShowAllUsersCommandExecuted, CanShowAllUsersCommandExecute);
             HideUsersCommand = new RelayCommand(OnHideUsersCommandExecuted, CanHideUsersCommandExecute);
             CloseUsersCommand = new RelayCommand(OnCloseUsersCommandExecuted, CanCloseUsersCommandExecute);
-
+            DeleteUserCommand = new RelayCommand(OnDeleteUserCommandExecuted, CanDeleteUserCommandExecute);
+            AddNewUserCommand = new RelayCommand(OnAddNewUserCommandExecuted, CanAddNewUserCommandExecute);
 
             _userRepository = userRepository;
             _navigation = navigation;
@@ -89,9 +98,7 @@ namespace ReportEngine.App.ViewModels
         #endregion
 
         #region Комманды
-        public ICommand AddUserCommand { get; set; }
-        #region Команда закрыть окно
-        public ICommand HideUsersCommand { get; set; }
+        public ICommand HideUsersCommand { get; }
         public bool CanHideUsersCommandExecute(object p) => true;
         public void OnHideUsersCommandExecuted(object p) => _navigation.HideWindow();
 
@@ -115,9 +122,56 @@ namespace ReportEngine.App.ViewModels
             {
                 MessageBox.Show(ex.Message, "Ошибка при полученни данных", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }  
-        #endregion
-        #endregion
+        }
+        public ICommand DeleteUserCommand { get; }
+        public bool CanDeleteUserCommandExecute(object e) => true;
+        public async void OnDeleteUserCommandExecuted(object e)
+        {
+            DebugConsole.WriteLine(SelectedUser);
 
+            try
+            {
+                if (SelectedUser != null)
+                {
+                    await _userRepository.DeleteAsync(SelectedUser);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка при удалении пользователя", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        public ICommand AddNewUserCommand { get; set; }
+        public bool CanAddNewUserCommandExecute(object e) => true;
+        public async void OnAddNewUserCommandExecuted(object p)
+        {
+            try
+            {
+                // Создаем нового пользователя с пустыми значениями
+                var newUser = new User
+                {
+                    Name = "",
+                    SecondName = "",
+                    LastName = "",
+                    Position = "",
+                    Cabinet = "",
+                    Email = "",
+                    PhoneContact = ""
+                };
+
+                // Добавляем нового пользователя в коллекцию
+                AllUsers.Add(newUser);
+
+                // Сохраняем нового пользователя в базе данных
+                await _userRepository.AddAsync(newUser);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка при добавлении пользователя", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+            #endregion
+
+        }
     }
 }

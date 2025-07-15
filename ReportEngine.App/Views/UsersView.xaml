@@ -6,24 +6,47 @@
     xmlns:local="clr-namespace:ReportEngine.App.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:ReportEngine.App.ViewModels"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
+    Title="Управление пользователями"
+    Width="830"
+    Height="450"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
+
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="Height" Value="40" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Background" Value="#FFDDDDDD" />
+            <Setter Property="BorderBrush" Value="Gray" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+        <Style TargetType="DataGrid">
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="AutoGenerateColumns" Value="False" />
+            <Setter Property="CanUserAddRows" Value="False" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderBrush" Value="Gray" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="RowBackground" Value="#FFF5F5F5" />
+            <Setter Property="AlternatingRowBackground" Value="#FFE0E0E0" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+    </Window.Resources>
+
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="66*" />
-            <ColumnDefinition Width="40*" />
-            <ColumnDefinition Width="53*" />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
         <DataGrid
             x:Name="UsersDataGrid"
-            Grid.ColumnSpan="3"
-            Margin="10,10,5,70"
-            AutoGenerateColumns="False"
-            CanUserAddRows="False"
-            ItemsSource="{Binding AllUsers}">
+            Grid.Row="1"
+            CanUserAddRows="True"
+            ItemsSource="{Binding AllUsers}"
+            SelectedItem="{Binding SelectedUser}">
             <DataGrid.Columns>
                 <DataGridTextColumn
                     Width="*"
@@ -53,25 +76,29 @@
                     Width="*"
                     Binding="{Binding PhoneContact}"
                     Header="Номер для связи" />
-                <DataGridTemplateColumn Width="Auto" />
             </DataGrid.Columns>
         </DataGrid>
-        <Button
-            Width="155"
-            Height="50"
-            Margin="10,390,0,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Command="{Binding ShowAllUsersCommand}"
-            Content="Показать всех" />
-        <Button
-            Grid.Column="2"
-            Width="180"
-            Height="50"
-            Margin="75,0,0,10"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            Command="{Binding HideUsersCommand}"
-            Content="Закрыть окно" />
+
+        <StackPanel
+            Grid.Row="2"
+            HorizontalAlignment="Center"
+            Orientation="Horizontal">
+            <Button
+                Width="120"
+                Command="{Binding ShowAllUsersCommand}"
+                Content="Показать всех" />
+            <Button
+                Width="120"
+                Command="{Binding HideUsersCommand}"
+                Content="Закрыть окно" />
+            <Button
+                Width="200"
+                Command="{Binding DeleteUserCommand}"
+                Content="Удалить выбранного пользователя" />
+            <Button
+                Width="120"
+                Command="{Binding AddNewUserCommand}"
+                Content="Добавить" />
+        </StackPanel>
     </Grid>
 </Window>

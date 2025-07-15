@@ -18,7 +18,8 @@ namespace ReportEngine.App
     {
         public static IHost BuildHost(string connString) //Создание Host приложения
         {
-            return Host.CreateDefaultBuilder(). //Конфигурация Host приложения 
+            return Host.CreateDefaultBuilder().
+                UseSerilog().//Конфигурация Host приложения 
                 ConfigureServices(services => //Регаем сервисы хуервисы 
                 {
                     services.AddDbContext<ReAppContext>(options => //И контекст
@@ -26,14 +27,14 @@ namespace ReportEngine.App
                         options.UseNpgsql(connString); //Используем Npgsql
                     });
                     //Регистрируем репозитории
-                    services.AddScoped<IBaseRepository<User>, UserRepository>(); 
+                    services.AddScoped<IBaseRepository<User>, UserRepository>();
                     services.AddScoped<IBaseRepository<ProjectInfo>, ProjectInfoRepository>();
 
                     // Регистрация сервисов
                     services.AddScoped<ExcelCreator>();
                     services.AddSingleton<NavigationService>(); //Регистрация сервиса навигации>
                     // Регистрация ViewModels
-                    services.AddTransient<MainWindowViewModel>();
+                    services.AddScoped<MainWindowViewModel>();
                     services.AddScoped<UsersViewModel>();
 
                     // Регистрация окон
@@ -41,7 +42,7 @@ namespace ReportEngine.App
                     services.AddSingleton(provider =>
                     {
                         var viewModel = provider.GetRequiredService<MainWindowViewModel>();
-                       
+
                         return new MainWindow(viewModel);
                     });
                     services.AddSingleton<UsersView>();
