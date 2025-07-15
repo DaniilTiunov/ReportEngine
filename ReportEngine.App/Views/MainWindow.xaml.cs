@@ -1,9 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using ReportEngine.App.ViewModels;
+﻿using ReportEngine.App.ViewModels;
 using ReportEngine.App.Views;
 using ReportEngine.App.Views.UpdateInformation;
-using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
 using System.Diagnostics;
@@ -21,6 +18,7 @@ namespace ReportEngine.App
         {
             InitializeComponent();
             DataContext = mainViewModel;
+            
         }
         //Здесь реализованый методы, которые не требуют много времени на выполнение 
         private void CheckForUpdates(object sender, RoutedEventArgs e)
@@ -56,6 +54,14 @@ namespace ReportEngine.App
         private void ShowNotepad(object sender, RoutedEventArgs e)
         {
             Process.Start("notepad.exe");
+        }
+        private void OpenTreeProject(object sender, RoutedEventArgs e)
+        {
+            MainContentControl.Content = new TreeProjectView();
+        }
+        private void OpenMainScreen(object sender, RoutedEventArgs e)
+        {
+            MainContentControl.Content = MainDataGrid;
         }
     }
 }
