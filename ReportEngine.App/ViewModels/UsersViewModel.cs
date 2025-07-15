@@ -17,9 +17,9 @@ namespace ReportEngine.App.ViewModels
         #region Приватные свойства для хранения данных
         private ObservableCollection<User> _allUsers;
 
-        private string _userName;
+        private string _name;
 
-        private string _userSecondName;
+        private string _secondName;
 
         private string _lastName;
 
@@ -35,15 +35,15 @@ namespace ReportEngine.App.ViewModels
         #endregion
 
         #region Публичные свойства для привязки к контролам
-        public string UserName
+        public string Name
         {
-            get => _userName;
-            set => Set(ref _userName, value);
+            get => _name;
+            set => Set(ref _name, value);
         }
-        public string UserSecondName
+        public string SecondName
         {
-            get => _userSecondName;
-            set => Set(ref _userSecondName, value);
+            get => _secondName;
+            set => Set(ref _secondName, value);
         }
         public string LastName
         {
@@ -123,17 +123,18 @@ namespace ReportEngine.App.ViewModels
                 MessageBox.Show(ex.Message, "Ошибка при полученни данных", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+        #endregion
         public ICommand DeleteUserCommand { get; }
         public bool CanDeleteUserCommandExecute(object e) => true;
         public async void OnDeleteUserCommandExecuted(object e)
         {
-            DebugConsole.WriteLine(SelectedUser);
-
             try
             {
                 if (SelectedUser != null)
                 {
+                    DebugConsole.WriteLine($"Удаляем пользователя {SelectedUser.SecondName} {SelectedUser.Name} {SelectedUser.LastName}");
                     await _userRepository.DeleteAsync(SelectedUser);
+
                 }
             }
             catch (Exception ex)
@@ -147,22 +148,20 @@ namespace ReportEngine.App.ViewModels
         {
             try
             {
-                // Создаем нового пользователя с пустыми значениями
                 var newUser = new User
                 {
-                    Name = "",
-                    SecondName = "",
-                    LastName = "",
-                    Position = "",
-                    Cabinet = "",
-                    Email = "",
-                    PhoneContact = ""
+                    SecondName = SelectedUser.SecondName,
+                    Name = SelectedUser.Name,
+                    LastName = SelectedUser.LastName,
+                    Email = SelectedUser.Email,
+                    Cabinet = SelectedUser.Cabinet,
+                    Position = SelectedUser.Position,
+                    PhoneContact = SelectedUser.PhoneContact
                 };
+                
 
-                // Добавляем нового пользователя в коллекцию
-                AllUsers.Add(newUser);
+                AllUsers.Add(newUser);               
 
-                // Сохраняем нового пользователя в базе данных
                 await _userRepository.AddAsync(newUser);
             }
             catch (Exception ex)
@@ -170,7 +169,7 @@ namespace ReportEngine.App.ViewModels
                 MessageBox.Show(ex.Message, "Ошибка при добавлении пользователя", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
-            #endregion
+            
 
         }
     }

@@ -25,7 +25,7 @@
             FontSize="14">
 
             <MenuItem Header="Файл">
-                <MenuItem Header="Открыть..." />
+                <MenuItem Header="Новый проект" />
                 <MenuItem Header="Сохранить" />
                 <MenuItem Header="Сохранить как..." />
                 <Separator />
@@ -85,6 +85,74 @@
                     Content="{StaticResource refresh-button.png}" />
             </Grid>
         </StatusBar>
+
+        <Grid DockPanel.Dock="Top">
+            <DataGrid
+                x:Name="MainDataGrid"
+                Margin="0,73,0,-73"
+                AutoGenerateColumns="False"
+                CanUserAddRows="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Property1}"
+                        Header="Заказчик" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Property2}"
+                        Header="Объект" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Property3}"
+                        Header="Кол-во стендов" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Property4}"
+                        Header="Статус" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Property5}"
+                        Header="Старт проекта" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Property6}"
+                        Header="Выход из производства" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Property7}"
+                        Header="Дата окончания договора" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Property8}"
+                        Header="Заказ покупателя" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Property9}"
+                        Header="Заявка на производтсво" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Property10}"
+                        Header="Ещё что-то" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Property11}"
+                        Header="Ещё что-то" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Property12}"
+                        Header="Ещё что-то" />
+                </DataGrid.Columns>
+                <DataGrid.Items>
+                    <DataGridTextColumn />
+                    <DataGridTextColumn />
+                    <DataGridTextColumn />
+                    <DataGridTextColumn />
+                    <DataGridTextColumn />
+                    <DataGridTextColumn />
+                </DataGrid.Items>
+            </DataGrid>
+        </Grid>
+
         <Grid HorizontalAlignment="Center" VerticalAlignment="Center" />
     </DockPanel>
 </Window>
