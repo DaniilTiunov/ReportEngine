@@ -11,26 +11,6 @@ namespace ReportEngine.Export.ExcelWork
         public ExcelCreator(IBaseRepository<User> userRepository)
         {
             _userRepository = userRepository;
-        }
-
-        public async Task CreateExcelFile()
-        {
-            Excel.Application excel = new Excel.Application
-            {
-                Visible = true,
-                SheetsInNewWorkbook = 1
-            };
-
-            Excel.Workbook workbook = excel.Workbooks.Add(Type.Missing);
-
-            excel.DisplayAlerts = false;
-
-            Excel.Worksheet sheet = (Excel.Worksheet)excel.Worksheets.get_Item(1);
-            //Название листа (вкладки снизу)
-            sheet.Name = "Лист1";
-
-
-
-        }
+        }       
     }
 }

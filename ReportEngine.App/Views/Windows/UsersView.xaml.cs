@@ -1,7 +1,7 @@
 ﻿using ReportEngine.App.ViewModels;
 using System.Windows;
 
-namespace ReportEngine.App.Views
+namespace ReportEngine.App.Views.Windows
 {
     /// <summary>
     /// Логика взаимодействия для UsersView.xaml
@@ -12,6 +12,11 @@ namespace ReportEngine.App.Views
         {
             InitializeComponent();
             DataContext = usersViewModel;
+        }
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true;
+            Hide();
         }
     }
 }

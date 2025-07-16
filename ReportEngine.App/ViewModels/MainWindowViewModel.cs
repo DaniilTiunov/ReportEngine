@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Services;
-using ReportEngine.App.Views;
+using ReportEngine.App.Views.Controls;
+using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Database.Context;
-using Serilog.Core;
+using ReportEngine.Shared.Config.DebugConsol;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 
@@ -21,12 +23,28 @@ namespace ReportEngine.App.ViewModels
         #endregion
 
         #region Публичные поля для привязки
-        public string ConnectionStatusMessage { get => _connectionStatusMessage; 
-                                                set => Set(ref _connectionStatusMessage, value); }
+        public string ConnectionStatusMessage
+        {
+            get => _connectionStatusMessage;
+            set => Set(ref _connectionStatusMessage, value);
+        }
         public bool IsConnected { get; private set; }
         #endregion
 
         #region Комманды
+        public ICommand OpenTreeViewCommand { get; }
+        public bool CanOpenTreeViewCommandExecute(object e) => true;
+        public void OnOpenTreeViewCommandExecuted(object e)
+        {
+            try
+            {
+                _navigation.ShowContent<TreeProjectView>();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        } 
         public ICommand CloseAppCommand { get; }
         public bool CanCloseAppCommandExecute(object e) => true;
         public void OnCloseAppCommandExecuted(object e) => Application.Current.Shutdown();
@@ -47,7 +65,7 @@ namespace ReportEngine.App.ViewModels
 
             IsConnected = context.Database.CanConnect();
             ConnectionStatusMessage = IsConnected ? "Соединение установлено" : "Соединение не установлено";
-           
+
         }
         #endregion
 
@@ -58,6 +76,7 @@ namespace ReportEngine.App.ViewModels
             CloseAppCommand = new RelayCommand(OnCloseAppCommandExecuted, CanCloseAppCommandExecute);
             OpenAllUsersCommand = new RelayCommand(OnOpenAllUsersCommandExecuted, CanOpenAllUsersCommandExecute);
             ChekDbConnectionCommand = new RelayCommand(OnChekDbConnectionCommandExecuted, CanChekDbConnectionCommandCommandExecute);
+            OpenTreeViewCommand = new RelayCommand(OnOpenTreeViewCommandExecuted, CanOpenTreeViewCommandExecute);
             #endregion
 
             _serviceProvider = serviceProvider;

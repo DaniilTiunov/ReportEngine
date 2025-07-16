@@ -1,14 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using ReportEngine.App.ViewModels;
+﻿using ReportEngine.App.ViewModels;
 using ReportEngine.App.Views;
 using ReportEngine.App.Views.UpdateInformation;
-using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
 using System.Diagnostics;
 using System.Windows;
-using AboutProgram = ReportEngine.App.Views.AboutProgram;
+using AboutProgram = ReportEngine.App.Views.Windows.AboutProgram;
+using ReportEngine.App.Views.Controls;
+
 
 namespace ReportEngine.App
 {
@@ -21,6 +20,7 @@ namespace ReportEngine.App
         {
             InitializeComponent();
             DataContext = mainViewModel;
+
         }
         //Здесь реализованый методы, которые не требуют много времени на выполнение 
         private void CheckForUpdates(object sender, RoutedEventArgs e)
@@ -42,7 +42,6 @@ namespace ReportEngine.App
 
             aboutWindow.Show();
         }
-
         private void OpenSettingsWindow(object sender, RoutedEventArgs e) //Просто простые синхронные операции
         {
             var settingsWindow = new SettingsWindow();
@@ -56,6 +55,10 @@ namespace ReportEngine.App
         private void ShowNotepad(object sender, RoutedEventArgs e)
         {
             Process.Start("notepad.exe");
+        }
+        private void OpenMainScreen(object sender, RoutedEventArgs e)
+        {
+            MainContentControl.Content = MainDataGrid;
         }
     }
 }

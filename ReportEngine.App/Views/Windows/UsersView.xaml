@@ -1,5 +1,5 @@
 ﻿<Window
-    x:Class="ReportEngine.App.Views.UsersView"
+    x:Class="ReportEngine.App.Views.Windows.UsersView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,8 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:ReportEngine.App.ViewModels"
     Title="Управление пользователями"
-    Width="830"
-    Height="450"
+    Width="1000"
+    Height="700"
+    Closing="Window_Closing"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
@@ -34,7 +35,23 @@
         </Style>
     </Window.Resources>
 
+    <Window.ContextMenu>
+        <ContextMenu>
+            <MenuItem Command="{Binding ShowAllUsersCommand}" Header="Показать всех" />
+            <MenuItem Command="{Binding HideUsersCommand}" Header="Закрыть окно" />
+            <MenuItem Command="{Binding DeleteUserCommand}" Header="Удалить выбранного пользователя" />
+            <MenuItem Command="{Binding AddNewUserCommand}" Header="Добавить" />
+        </ContextMenu>
+    </Window.ContextMenu>
+
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="89*" />
+            <ColumnDefinition Width="63*" />
+            <ColumnDefinition Width="43*" />
+            <ColumnDefinition Width="4*" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -44,9 +61,20 @@
         <DataGrid
             x:Name="UsersDataGrid"
             Grid.Row="1"
+            Grid.ColumnSpan="4"
+            Margin="10,79,5,10"
             CanUserAddRows="True"
             ItemsSource="{Binding AllUsers}"
-            SelectedItem="{Binding SelectedUser}">
+            RowHeaderWidth="40"
+            SelectedItem="{Binding SelectedUser}"
+            SelectionUnit="FullRow">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding ShowAllUsersCommand}" Header="Показать всех" />
+                    <MenuItem Command="{Binding DeleteUserCommand}" Header="Удалить выбранного пользователя" />
+                    <MenuItem Command="{Binding AddNewUserCommand}" Header="Добавить" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
             <DataGrid.Columns>
                 <DataGridTextColumn
                     Width="*"
@@ -78,27 +106,5 @@
                     Header="Номер для связи" />
             </DataGrid.Columns>
         </DataGrid>
-
-        <StackPanel
-            Grid.Row="2"
-            HorizontalAlignment="Center"
-            Orientation="Horizontal">
-            <Button
-                Width="120"
-                Command="{Binding ShowAllUsersCommand}"
-                Content="Показать всех" />
-            <Button
-                Width="120"
-                Command="{Binding HideUsersCommand}"
-                Content="Закрыть окно" />
-            <Button
-                Width="200"
-                Command="{Binding DeleteUserCommand}"
-                Content="Удалить выбранного пользователя" />
-            <Button
-                Width="120"
-                Command="{Binding AddNewUserCommand}"
-                Content="Добавить" />
-        </StackPanel>
     </Grid>
 </Window>
