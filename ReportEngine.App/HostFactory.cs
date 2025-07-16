@@ -45,7 +45,6 @@ namespace ReportEngine.App
 
                         var mainWindow = new MainWindow(viewModel);
                         var contentHost = mainWindow.FindName("MainContentControl") as ContentControl;
-
                         navService.InitializeContentHost(contentHost);
 
                         return mainWindow;

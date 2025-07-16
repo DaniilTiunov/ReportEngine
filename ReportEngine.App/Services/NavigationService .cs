@@ -19,7 +19,7 @@ namespace ReportEngine.App.Services
         }
         public void InitializeContentHost(ContentControl contentHost)
         {
-            _contentHost = contentHost;
+            _contentHost = contentHost ?? throw new ArgumentNullException(nameof(contentHost));
         }
         #region Методы открытия окон
         public void ShowWindow<T>() where T : Window

@@ -1,36 +1,34 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace ReportEngine.App.Views.Controls
 {
-    /// <summary>
-    /// Логика взаимодействия для TreeProjectView.xaml
-    /// </summary>
     public partial class TreeProjectView : UserControl
     {
         public TreeProjectView()
         {
             InitializeComponent();
         }
-
-        private void OpenCurrentView(object sender, RoutedEventArgs e)
+        private void OpenCurrentView(object sender, MouseButtonEventArgs e)
         {
-            try
+            var treeViewItem = MainTree.SelectedItem as TreeViewItem;
+            if (treeViewItem?.Tag != null)
             {
-                LoadContentByTag(MainTree.SelectedItem.ToString());
-
+                string tag = treeViewItem.Tag.ToString();
+                LoadContent(tag);
             }
-            catch(Exception ex) { MessageBox.Show(ex.Message); }
         }
-
-        private void LoadContentByTag(string tag)
+        private void LoadContent(string tag)
         {
-            switch (tag)
+            if (string.IsNullOrEmpty(tag))
+                return;
+
+            UserControl content = tag switch
             {
-                case "Карточка проекта":
-                    MainContent.Content = new ProjectCardView();
-                    break;
-            }
+                "ProjectCard" => new ProjectCardView()
+            };
+
+            MainContent.Content = content;
         }
     }
 }

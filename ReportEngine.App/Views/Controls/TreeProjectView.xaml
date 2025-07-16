@@ -25,7 +25,10 @@
             Grid.Column="0"
             MouseDoubleClick="OpenCurrentView">
             <TreeViewItem Header="Проект" IsExpanded="True">
-                <TreeViewItem Header="Карточка проекта" Tag="ProjectCard" />
+                <TreeViewItem
+                    x:Name="ProjectCard"
+                    Header="Карточка проекта"
+                    Tag="ProjectCard" />
                 <TreeViewItem Header="Типы обвязок" Tag="BindingTypes" />
                 <TreeViewItem Header="Датчики" Tag="Sensors" />
                 <TreeViewItem Header="Заказчик" Tag="Customer" />
@@ -36,9 +39,7 @@
             </TreeViewItem>
         </TreeView>
         <ContentControl x:Name="MainContent" Grid.Column="1">
-            <TabControl x:Name="ProjectTabControl">
-                <TabItem />
-            </TabControl>
+            <!--    -->
         </ContentControl>
     </Grid>
 </UserControl>
