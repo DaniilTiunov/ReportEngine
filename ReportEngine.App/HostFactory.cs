@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ReportEngine.App.Services;
 using ReportEngine.App.ViewModels;
+using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
@@ -11,6 +12,7 @@ using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork;
 using Serilog;
+using System.Windows.Controls;
 
 namespace ReportEngine.App
 {
@@ -29,23 +31,29 @@ namespace ReportEngine.App
                     //Регистрируем репозитории
                     services.AddScoped<IBaseRepository<User>, UserRepository>();
                     services.AddScoped<IBaseRepository<ProjectInfo>, ProjectInfoRepository>();
-
                     // Регистрация сервисов
                     services.AddScoped<ExcelCreator>();
-                    services.AddSingleton<NavigationService>(); //Регистрация сервиса навигации>
+                    services.AddSingleton<NavigationService>();
                     // Регистрация ViewModels
                     services.AddScoped<MainWindowViewModel>();
                     services.AddScoped<UsersViewModel>();
-
                     // Регистрация окон
-                    services.AddSingleton<App>();
                     services.AddSingleton(provider =>
                     {
+                        var navService = provider.GetRequiredService<NavigationService>();
                         var viewModel = provider.GetRequiredService<MainWindowViewModel>();
 
-                        return new MainWindow(viewModel);
+                        var mainWindow = new MainWindow(viewModel);
+                        var contentHost = mainWindow.FindName("MainContentControl") as ContentControl;
+
+                        navService.InitializeContentHost(contentHost);
+
+                        return mainWindow;
                     });
+
+                    services.AddSingleton<App>();
                     services.AddSingleton<UsersView>();
+                    services.AddScoped<TreeProjectView>();
                 })
                 .ConfigureLogging(logging =>
                 {

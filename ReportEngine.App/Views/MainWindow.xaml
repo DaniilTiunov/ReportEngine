@@ -58,7 +58,7 @@
             DockPanel.Dock="Top"
             FontSize="14">
             <MenuItem Header="Файл">
-                <MenuItem Click="OpenTreeProject" Header="Новый проект" />
+                <MenuItem Command="{Binding OpenTreeViewCommand}" Header="Новый проект" />
                 <MenuItem Click="OpenMainScreen" Header="На главный экран" />
                 <Separator />
                 <MenuItem Click="OpenSettingsWindow" Header="Настройки" />

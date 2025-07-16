@@ -20,7 +20,7 @@ namespace ReportEngine.App
         {
             InitializeComponent();
             DataContext = mainViewModel;
-            
+
         }
         //Здесь реализованый методы, которые не требуют много времени на выполнение 
         private void CheckForUpdates(object sender, RoutedEventArgs e)
@@ -42,7 +42,6 @@ namespace ReportEngine.App
 
             aboutWindow.Show();
         }
-
         private void OpenSettingsWindow(object sender, RoutedEventArgs e) //Просто простые синхронные операции
         {
             var settingsWindow = new SettingsWindow();
@@ -56,10 +55,6 @@ namespace ReportEngine.App
         private void ShowNotepad(object sender, RoutedEventArgs e)
         {
             Process.Start("notepad.exe");
-        }
-        private void OpenTreeProject(object sender, RoutedEventArgs e)
-        {
-            MainContentControl.Content = new TreeProjectView();
         }
         private void OpenMainScreen(object sender, RoutedEventArgs e)
         {

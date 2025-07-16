@@ -8,5 +8,26 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid />
+    <Grid>
+        <DataGrid x:Name="MainDataGrid">
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                Width="*"
+                Binding="{Binding Property1}"
+                Header="Заказчик" />
+                <DataGridTextColumn
+                Width="*"
+                Binding="{Binding Property1}"
+                Header="Заказчик" />
+            </DataGrid.Columns>
+          <DataGrid.Items>
+                <DataGridTextColumn />
+                <DataGridTextColumn />
+                <DataGridTextColumn />
+                <DataGridTextColumn />
+                <DataGridTextColumn />
+                <DataGridTextColumn />
+            </DataGrid.Items>
+        </DataGrid>
+    </Grid>
 </UserControl>

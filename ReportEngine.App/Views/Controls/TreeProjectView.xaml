@@ -20,7 +20,10 @@
             HorizontalAlignment="Right"
             Fill="#FFDDDDDD" />
 
-        <TreeView x:Name="MainTree" Grid.Column="0">
+        <TreeView
+            x:Name="MainTree"
+            Grid.Column="0"
+            MouseDoubleClick="OpenCurrentView">
             <TreeViewItem Header="Проект" IsExpanded="True">
                 <TreeViewItem Header="Карточка проекта" Tag="ProjectCard" />
                 <TreeViewItem Header="Типы обвязок" Tag="BindingTypes" />
@@ -34,11 +37,7 @@
         </TreeView>
         <ContentControl x:Name="MainContent" Grid.Column="1">
             <TabControl x:Name="ProjectTabControl">
-                <TabItem>
-                    <TabItem.Header>
-                        <TextBlock Text="Карточка проекта" />
-                    </TabItem.Header>
-                </TabItem>
+                <TabItem />
             </TabControl>
         </ContentControl>
     </Grid>
