@@ -1,15 +1,18 @@
-﻿using System.Windows.Controls;
+﻿using ReportEngine.App.ViewModels;
+using System.Windows.Controls;
 
-namespace ReportEngine.App.Views
+namespace ReportEngine.App.Views.Controls
 {
     /// <summary>
     /// Логика взаимодействия для TreeProjectView.xaml
     /// </summary>
     public partial class TreeProjectView : UserControl
     {
-        public TreeProjectView()
+        public TreeProjectView(TreeProjectViewModel treeProjectViewModel)
         {
             InitializeComponent();
+            DataContext = treeProjectViewModel;
         }
     }
 }
+

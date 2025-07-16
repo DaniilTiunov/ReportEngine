@@ -5,7 +5,9 @@ using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
 using System.Diagnostics;
 using System.Windows;
-using AboutProgram = ReportEngine.App.Views.AboutProgram;
+using AboutProgram = ReportEngine.App.Views.Windows.AboutProgram;
+using ReportEngine.App.Views.Controls;
+
 
 namespace ReportEngine.App
 {

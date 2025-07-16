@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace ReportEngine.App.Services
 {
@@ -7,6 +8,7 @@ namespace ReportEngine.App.Services
     {
         private readonly IServiceProvider _serviceProvider;
         private Window _currentWindow;
+        private UserControl _contentHost;
 
         public NavigationService(IServiceProvider serviceProvider)
         {
@@ -16,6 +18,11 @@ namespace ReportEngine.App.Services
         {
             _currentWindow = _serviceProvider.GetRequiredService<T>();
             _currentWindow.Show();
+        }
+        public void ShowContent<T>() where T : UserControl
+        {
+            var content = _serviceProvider.GetRequiredService<T>;
+            _contentHost.Content = content;
         }
         public void HideWindow()
         {

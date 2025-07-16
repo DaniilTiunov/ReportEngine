@@ -6,6 +6,7 @@ using ReportEngine.Domain.Database.Context;
 using Serilog.Core;
 using System.Windows;
 using System.Windows.Input;
+using ReportEngine.App.Views.Windows;
 
 namespace ReportEngine.App.ViewModels
 {
