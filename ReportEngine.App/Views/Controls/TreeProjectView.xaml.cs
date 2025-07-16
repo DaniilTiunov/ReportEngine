@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace ReportEngine.App.Views.Controls
@@ -11,24 +12,53 @@ namespace ReportEngine.App.Views.Controls
         }
         private void OpenCurrentView(object sender, MouseButtonEventArgs e)
         {
-            var treeViewItem = MainTree.SelectedItem as TreeViewItem;
-            if (treeViewItem?.Tag != null)
+            try
             {
-                string tag = treeViewItem.Tag.ToString();
-                LoadContent(tag);
+                var treeViewItem = MainTree.SelectedItem as TreeViewItem;
+                if (treeViewItem?.Tag != null)
+                {
+                    string? header = treeViewItem.Header.ToString();
+                    string? tag = treeViewItem.Tag.ToString();
+                    LoadTreeContent(tag, header);
+                }
             }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
-        private void LoadContent(string tag)
+        private void LoadTreeContent(string tag, string header)
         {
-            if (string.IsNullOrEmpty(tag))
-                return;
-
-            UserControl content = tag switch
+            try
             {
-                "ProjectCard" => new ProjectCardView()
-            };
+                if (string.IsNullOrEmpty(tag))
+                    return;
 
-            MainContent.Content = content;
+                var content = CreateCurrentContent(tag);
+
+                var tabControl = MainTabControl.Items
+                                    .Add(new TabItem() { Header = header, Content = content });
+
+
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+        private UserControl CreateCurrentContent(string tag)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(tag))
+                    return null;
+
+                UserControl control = tag switch
+                {
+                    "ProjectCard" => new ProjectCardView()
+                };
+
+                return control;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
     }
 }

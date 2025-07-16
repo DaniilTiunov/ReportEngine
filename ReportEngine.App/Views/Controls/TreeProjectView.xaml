@@ -38,8 +38,11 @@
                 <TreeViewItem Header="Отчеты" Tag="Reports" />
             </TreeViewItem>
         </TreeView>
-        <ContentControl x:Name="MainContent" Grid.Column="1">
-            <!--    -->
-        </ContentControl>
+        <TabControl
+            x:Name="MainTabControl"
+            Grid.Column="1"
+            SelectedIndex="0">
+            <ContentControl x:Name="MainContent" Grid.Column="1" />
+        </TabControl>
     </Grid>
 </UserControl>

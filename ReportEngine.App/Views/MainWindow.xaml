@@ -13,7 +13,7 @@
     WindowStartupLocation="CenterScreen"
     WindowState="Maximized"
     mc:Ignorable="d">
-
+    <!--  Loaded="MainWindowLoaded"  -->
     <Window.Resources>
         <Image x:Key="refresh-button.png" Source="/Resources/Images/refresh-button.png" />
 

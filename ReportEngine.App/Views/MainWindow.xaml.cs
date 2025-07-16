@@ -21,7 +21,16 @@ namespace ReportEngine.App
             InitializeComponent();
             DataContext = mainViewModel;
 
+
+            mainViewModel.OnChekDbConnectionCommandExecuted(null);
         }
+        //private void MainWindowLoaded(object sender, RoutedEventArgs e)
+        //{
+        //    if(DataContext is MainWindowViewModel viewModel)
+        //    {
+        //        viewModel.OnChekDbConnectionCommandExecuted(null);
+        //    }
+        //}
         //Здесь реализованый методы, которые не требуют много времени на выполнение 
         private void CheckForUpdates(object sender, RoutedEventArgs e)
         {
