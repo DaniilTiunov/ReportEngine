@@ -64,13 +64,15 @@
                     x:Name="ProjectCard"
                     Header="Карточка проекта"
                     Tag="ProjectCard" />
-                <TreeViewItem Header="Типы обвязок" Tag="BindingTypes" />
-                <TreeViewItem Header="Датчики" Tag="Sensors" />
-                <TreeViewItem Header="Заказчик" Tag="Customer" />
-                <TreeViewItem Header="Оборудование" Tag="Equipment" />
-                <TreeViewItem Header="Документация" Tag="Documentation" />
-                <TreeViewItem Header="Настройки" Tag="Settings" />
-                <TreeViewItem Header="Отчеты" Tag="Reports" />
+                <TreeViewItem Header="Создание нового стенда" Tag="BindingTypes">
+                    <TreeViewItem Header="Стенд" />
+                    <TreeViewItem Header="Создание обвязок стенда" />
+                    <TreeViewItem Header="Выбор рамы" />
+                    <TreeViewItem Header="Формирование дренажа" />
+                    <TreeViewItem Header="Формирование электрической части" />
+                    <TreeViewItem Header="Дополнительные комплектующие" />
+                </TreeViewItem>
+                <TreeViewItem Header="Создание отчёта" Tag="Reports" />
             </TreeViewItem>
         </TreeView>
         <TabControl x:Name="MainTabControl" Grid.Column="1">

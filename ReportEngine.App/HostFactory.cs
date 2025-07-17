@@ -52,7 +52,7 @@ namespace ReportEngine.App
                     });
 
                     services.AddSingleton<App>();
-                    services.AddSingleton<UsersView>();
+                    services.AddTransient<UsersView>();
                     services.AddScoped<TreeProjectView>();
                 })
                 .ConfigureLogging(logging =>

@@ -69,11 +69,49 @@
                 <MenuItem Header="Масштаб..." />
             </MenuItem>
             <MenuItem Header="Исходные данные">
-                <MenuItem Header="Таблица проектов" />
-                <MenuItem Header="Таблица контрагентов" />
-                <MenuItem Header="Таблица оборудования" />
+                <MenuItem Header="Сортамент труб">
+                    <MenuItem Header="Жарпрочная сталь" />
+                    <MenuItem Header="Нержавеющая сталь" />
+                    <MenuItem Header="Углеродистая сталь" />
+                </MenuItem>
+                <MenuItem Header="Запорные арматуры">
+                    <MenuItem Header="Жарпрочная сталь" />
+                    <MenuItem Header="Нержавеющая сталь" />
+                    <MenuItem Header="Углеродистая сталь" />
+                </MenuItem>
+                <MenuItem Header="Тройники и КМЧ">
+                    <MenuItem Header="Жарпрочная сталь" />
+                    <MenuItem Header="Нержавеющая сталь" />
+                    <MenuItem Header="Углеродистая сталь" />
+                </MenuItem>
                 <Separator />
-                <MenuItem Command="{Binding OpenAllUsersCommand}" Header="Таблица сотрудников" />
+                <MenuItem Header="Дренаж" />
+                <Separator />
+                <MenuItem Header="Рамные комплектующие">
+                    <MenuItem Header="Детали рамы" />
+                    <MenuItem Header="Комплектующие для стойки" />
+                    <MenuItem Header="Прокат" />
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Кронштейны">
+                    <MenuItem Header="Крепление датчиков" />
+                    <MenuItem Header="Крепление дренажа" />
+                    <MenuItem Header="Крепление клеммных коробок" />
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Электрические компоненты">
+                    <MenuItem Header="Кабельная продукция" />
+                    <MenuItem Header="Кабельные вводы" />
+                    <MenuItem Header="Клеммные коробки" />
+                    <MenuItem Header="Обогрев" />
+                    <MenuItem Header="Средства прокладки и защиты кабеля" />
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Прочие" />
+                <Separator />
+                <MenuItem Header="Тара" />
+                <Separator />
+                <MenuItem Command="{Binding OpenAllUsersCommand}" Header="Пользователи" />
             </MenuItem>
             <MenuItem Header="Инструменты">
                 <MenuItem Click="ShowCalculator" Header="Калькулятор" />
