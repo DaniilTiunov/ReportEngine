@@ -12,8 +12,8 @@ using ReportEngine.Domain.Database.Context;
 namespace ReportEngine.Domain.Migrations
 {
     [DbContext(typeof(ReAppContext))]
-    [Migration("20250717102327_UpdateProjectInfo")]
-    partial class UpdateProjectInfo
+    [Migration("20250717111258_UpdateProjectInfo3")]
+    partial class UpdateProjectInfo3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -908,8 +908,8 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("CreationDate")
+                        .HasColumnType("date");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");

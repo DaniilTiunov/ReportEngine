@@ -2,7 +2,9 @@
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Enums;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Shared.Config.DebugConsol;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 
@@ -100,8 +102,9 @@ namespace ReportEngine.App.ViewModels
                     MarkPlus = MarkPlus,
                     isGalvanized = IsGalvanized
                 };
-
+                DebugConsole.WriteLine($"{newProjectCard.EndDate}, {newProjectCard.StartDate}, {newProjectCard.CreationDate} ");
                 await _projectRepository.AddAsync(newProjectCard);
+                
             }
             catch(Exception ex){MessageBox.Show(ex.Message);} 
 
