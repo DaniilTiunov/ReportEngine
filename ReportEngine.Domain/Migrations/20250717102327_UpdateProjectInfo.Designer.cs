@@ -12,8 +12,8 @@ using ReportEngine.Domain.Database.Context;
 namespace ReportEngine.Domain.Migrations
 {
     [DbContext(typeof(ReAppContext))]
-    [Migration("20250717065251_FirstData")]
-    partial class FirstData
+    [Migration("20250717102327_UpdateProjectInfo")]
+    partial class UpdateProjectInfo
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -905,8 +905,8 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Company")
                         .HasColumnType("text");
 
-                    b.Property<decimal>("Cost")
-                        .HasColumnType("numeric");
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("timestamp with time zone");
@@ -914,16 +914,40 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("EndDate")
+                        .HasColumnType("date");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("MarkMinus")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<string>("MarkPlus")
+                        .HasColumnType("text");
 
-                    b.Property<bool>("isStarted")
+                    b.Property<int>("Number")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Object")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OrderCustomer")
+                        .HasColumnType("text");
+
+                    b.Property<DateOnly>("OutOfProduction")
+                        .HasColumnType("date");
+
+                    b.Property<string>("RequestProduction")
+                        .HasColumnType("text");
+
+                    b.Property<int>("StandCount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("isGalvanized")
                         .HasColumnType("boolean");
 
                     b.HasKey("Id");

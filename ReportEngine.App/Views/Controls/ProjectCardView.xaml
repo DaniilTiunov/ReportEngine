@@ -44,7 +44,7 @@
             Grid.Row="0"
             Grid.Column="1"
             Margin="0,0,0,10"
-            Text="{Binding OrderNumber, Mode=TwoWay}" />
+            Text="{Binding Number}" />
 
         <!--  Обозначение КД  -->
         <TextBlock
@@ -57,7 +57,7 @@
             Grid.Row="0"
             Grid.Column="3"
             Margin="0,0,0,10"
-            Text="{Binding Designation, Mode=TwoWay}" />
+            Text="{Binding Description}" />
 
         <!--  Дата запроса  -->
         <TextBlock
@@ -70,7 +70,7 @@
             Grid.Row="1"
             Grid.Column="1"
             Margin="0,0,0,10"
-            SelectedDate="{Binding RequestDate, Mode=TwoWay}" />
+            SelectedDate="{Binding CreationDate}" />
 
         <!--  Заказчик  -->
         <TextBlock
@@ -83,7 +83,7 @@
             Grid.Row="2"
             Grid.Column="1"
             Margin="0,0,0,10"
-            Text="{Binding Customer, Mode=TwoWay}" />
+            Text="{Binding Company}" />
 
         <!--  Объект  -->
         <TextBlock
@@ -96,7 +96,7 @@
             Grid.Row="3"
             Grid.Column="1"
             Margin="0,0,0,10"
-            Text="{Binding Object, Mode=TwoWay}" />
+            Text="{Binding Object}" />
 
         <!--  Количество стендов  -->
         <TextBlock
@@ -109,7 +109,7 @@
             Grid.Row="4"
             Grid.Column="1"
             Margin="0,0,0,10"
-            Text="{Binding StandCount, Mode=TwoWay}" />
+            Text="{Binding StandCount}" />
 
         <!--  Стоимость  -->
         <TextBlock
@@ -122,7 +122,7 @@
             Grid.Row="4"
             Grid.Column="3"
             Margin="0,0,0,10"
-            Text="{Binding Cost, Mode=TwoWay}" />
+            Text="{Binding Cost}" />
 
         <!--  Статус  -->
         <TextBlock
@@ -143,7 +143,7 @@
             Grid.Row="6"
             Grid.Column="1"
             Margin="0,0,0,10"
-            SelectedDate="{Binding ProjectStartDate, Mode=TwoWay}" />
+            SelectedDate="{Binding StartDate}" />
 
         <!--  Выход из производства  -->
         <TextBlock
@@ -156,7 +156,7 @@
             Grid.Row="6"
             Grid.Column="3"
             Margin="0,0,0,10"
-            SelectedDate="{Binding ProductionExitDate, Mode=TwoWay}" />
+            SelectedDate="{Binding OutOfProduction}" />
 
         <!--  Дата окончания договора  -->
         <TextBlock
@@ -169,7 +169,7 @@
             Grid.Row="7"
             Grid.Column="3"
             Margin="0,0,0,10"
-            SelectedDate="{Binding ContractEndDate, Mode=TwoWay}" />
+            SelectedDate="{Binding EndDate}" />
 
         <TextBlock
             Grid.Row="8"
@@ -177,6 +177,12 @@
             Margin="0,0,10,0"
             VerticalAlignment="Center"
             Text="Заказ покупателя:" />
+        <TextBox
+            Grid.Row="8"
+            Grid.ColumnSpan="2"
+            Margin="152,3,0,7"
+            Text="{Binding OrderCustomer}" />
+
         <ComboBox
             Grid.Row="5"
             Grid.Column="1"
@@ -195,20 +201,8 @@
             Grid.Row="8"
             Grid.Column="3"
             Margin="0,0,0,10"
-            Text="{Binding ProductionRequest, Mode=TwoWay}" />
+            Text="{Binding RequestProduction}" />
 
-        <TextBlock
-            Grid.Row="10"
-            Grid.Column="0"
-            Margin="0,0,10,0"
-            VerticalAlignment="Center"
-            Text="Комплектность:" />
-
-        <TextBox
-            Grid.Row="10"
-            Grid.Column="1"
-            Margin="0,0,0,10"
-            Text="{Binding Completeness, Mode=TwoWay}" />
 
         <TextBlock
             Grid.Row="10"
@@ -221,7 +215,7 @@
             Grid.Row="10"
             Grid.Column="3"
             Margin="0,0,0,10"
-            Text="{Binding LaborCosts, Mode=TwoWay}" />
+            Text="" />
 
         <TextBlock
             Grid.Row="11"
@@ -240,24 +234,25 @@
             Grid.Column="0"
             Margin="0,0,10,0"
             VerticalAlignment="Center"
-            Text="Маркировка:" />
+            Text="Маркировка+:" />
         <TextBox
             Grid.Row="12"
             Grid.Column="1"
-            Margin="0,0,0,10"
-            Text="{Binding Marking, Mode=TwoWay}" />
+            Grid.ColumnSpan="2"
+            Margin="1,4,164,6"
+            Text="{Binding MarkPlus}" />
 
+        <TextBlock
+            Grid.Row="12"
+            Grid.Column="2"
+            Margin="14,2,9,0"
+            VerticalAlignment="Top"
+            Text="Маркировка-:" />
         <TextBox
-            Grid.Row="13"
-            Grid.Column="1"
-            Margin="0,0,0,10"
-            Text="{Binding Packaging, Mode=TwoWay}" />
-
-        <TextBox
-            Grid.Row="13"
+            Grid.Row="12"
             Grid.Column="3"
-            Margin="0,0,0,10"
-            Text="{Binding Transport, Mode=TwoWay}" />
+            Margin="1,0,-1,6"
+            Text="{Binding MarkMinus}" />
 
         <CheckBox
             Grid.Row="13"
@@ -265,6 +260,13 @@
             Margin="2,13,8,0"
             VerticalAlignment="Top"
             Content="Оцинкование стендов"
-            IsChecked="{Binding GalvanizingStands, Mode=TwoWay}" />
+            IsChecked="{Binding IsGalvanized}" />
+
+        <Button
+            Grid.Row="13"
+            Grid.Column="2"
+            Margin="7,34,5,-34"
+            Command="{Binding CreateNewCardCommand}"
+            Content="Добавить" />
     </Grid>
 </UserControl>
