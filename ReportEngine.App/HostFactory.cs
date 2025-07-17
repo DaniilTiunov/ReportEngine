@@ -37,6 +37,7 @@ namespace ReportEngine.App
                     // Регистрация ViewModels
                     services.AddScoped<MainWindowViewModel>();
                     services.AddScoped<UsersViewModel>();
+                    services.AddScoped<ProjectViewModel>();
                     // Регистрация окон
                     services.AddSingleton(provider =>
                     {

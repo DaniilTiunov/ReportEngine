@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using ReportEngine.App.ViewModels;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -6,9 +7,12 @@ namespace ReportEngine.App.Views.Controls
 {
     public partial class TreeProjectView : UserControl
     {
-        public TreeProjectView()
+        private ProjectViewModel _projectViewModel;
+        public TreeProjectView(ProjectViewModel projectViewModel)
         {
             InitializeComponent();
+            _projectViewModel = projectViewModel;
+            DataContext = projectViewModel;
         }
         private void OpenCurrentView(object sender, MouseButtonEventArgs e)
         {
@@ -49,7 +53,7 @@ namespace ReportEngine.App.Views.Controls
 
                 UserControl control = tag switch
                 {
-                    "ProjectCard" => new ProjectCardView()
+                    "ProjectCard" => new ProjectCardView(_projectViewModel)
                 };
 
                 return control;

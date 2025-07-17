@@ -4,30 +4,115 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:ReportEngine.App.Views.Controls"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid>
-        <DataGrid x:Name="MainDataGrid">
+    <!--<UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>-->
+
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!--  Имя объекта  -->
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="0,0,10,0"
+            VerticalAlignment="Center"
+            Text="Имя объекта:" />
+        <TextBox
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="0,0,0,10"
+            Text="{Binding Prop1, Mode=TwoWay}" />
+
+        <!--  Имя заказчика  -->
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="0,0,10,0"
+            VerticalAlignment="Center"
+            Text="Имя заказчика:" />
+        <TextBox
+            Grid.Row="1"
+            Grid.Column="1"
+            Margin="0,0,0,10"
+            Text="{Binding Prop2, Mode=TwoWay}" />
+
+        <!--  Дата создания  -->
+        <TextBlock
+            Grid.Row="2"
+            Grid.Column="0"
+            Margin="0,0,10,0"
+            VerticalAlignment="Center"
+            Text="Дата создания:" />
+        <DatePicker
+            Grid.Row="2"
+            Grid.Column="1"
+            Margin="0,0,0,10" />
+
+        <!--  Дата старта  -->
+        <TextBlock
+            Grid.Row="3"
+            Grid.Column="0"
+            Margin="0,0,10,0"
+            VerticalAlignment="Center"
+            Text="Дата старта:" />
+        <DatePicker
+            Grid.Row="3"
+            Grid.Column="1"
+            Margin="0,0,0,10"
+            SelectedDate="{Binding Prop4, Mode=TwoWay}" />
+
+        <!--  Дата конца  -->
+        <TextBlock
+            Grid.Row="4"
+            Grid.Column="0"
+            Margin="0,0,10,0"
+            VerticalAlignment="Center"
+            Text="Дата конца:" />
+        <DatePicker
+            Grid.Row="4"
+            Grid.Column="1"
+            Margin="0,0,0,10"
+            SelectedDate="{Binding Prop5, Mode=TwoWay}" />
+
+        <!--  Таблица данных  -->
+        <DataGrid
+            Grid.Row="5"
+            Grid.ColumnSpan="2"
+            AutoGenerateColumns="False"
+            ItemsSource="{Binding DataItems}">
             <DataGrid.Columns>
                 <DataGridTextColumn
-                Width="*"
-                Binding="{Binding Property1}"
-                Header="Заказчик" />
+                    Width="*"
+                    Binding="{Binding Property1}"
+                    Header="Свойство 1" />
                 <DataGridTextColumn
-                Width="*"
-                Binding="{Binding Property1}"
-                Header="Заказчик" />
+                    Width="*"
+                    Binding="{Binding Property2}"
+                    Header="Свойство 2" />
             </DataGrid.Columns>
-          <DataGrid.Items>
-                <DataGridTextColumn />
-                <DataGridTextColumn />
-                <DataGridTextColumn />
-                <DataGridTextColumn />
-                <DataGridTextColumn />
-                <DataGridTextColumn />
-            </DataGrid.Items>
         </DataGrid>
     </Grid>
 </UserControl>
