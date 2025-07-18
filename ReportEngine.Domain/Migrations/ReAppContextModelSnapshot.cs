@@ -902,8 +902,8 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Company")
                         .HasColumnType("text");
 
-                    b.Property<float>("Cost")
-                        .HasColumnType("real");
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("numeric");
 
                     b.Property<DateOnly>("CreationDate")
                         .HasColumnType("date");

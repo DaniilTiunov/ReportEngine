@@ -15,7 +15,7 @@ namespace ReportEngine.Domain.Entities
         public string? Company { get; set; } //Заказчик
         public string? Object { get; set; } //Объект
         public int StandCount { get; set; } //Кол-во стендов
-        public float Cost { get; set; } //Стоимость
+        public decimal Cost { get; set; } //Стоимость
         public ProjectStatus Status { get; set; } //Статус
         public DateOnly StartDate { get; set; } //Старта проекта
         public DateOnly OutOfProduction { get; set; } //Выход из производства

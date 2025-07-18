@@ -70,7 +70,7 @@
             Grid.Row="1"
             Grid.Column="1"
             Margin="0,0,0,10"
-            SelectedDate="{Binding CreationDate}" />
+            SelectedDate="{Binding CreationDate, Mode=TwoWay}" />
 
         <!--  Заказчик  -->
         <TextBlock
@@ -143,7 +143,7 @@
             Grid.Row="6"
             Grid.Column="1"
             Margin="0,0,0,10"
-            SelectedDate="{Binding StartDate}" />
+            SelectedDate="{Binding StartDate, Mode=TwoWay}" />
 
         <!--  Выход из производства  -->
         <TextBlock
@@ -156,7 +156,7 @@
             Grid.Row="6"
             Grid.Column="3"
             Margin="0,0,0,10"
-            SelectedDate="{Binding OutOfProduction}" />
+            SelectedDate="{Binding OutOfProduction, Mode=TwoWay}" />
 
         <!--  Дата окончания договора  -->
         <TextBlock
@@ -169,7 +169,7 @@
             Grid.Row="7"
             Grid.Column="3"
             Margin="0,0,0,10"
-            SelectedDate="{Binding EndDate}" />
+            SelectedDate="{Binding EndDate, Mode=TwoWay}" />
 
         <TextBlock
             Grid.Row="8"

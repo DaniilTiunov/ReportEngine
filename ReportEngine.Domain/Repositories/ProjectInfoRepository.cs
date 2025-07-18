@@ -1,4 +1,5 @@
-﻿using ReportEngine.Domain.Database.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 
@@ -19,7 +20,9 @@ namespace ReportEngine.Domain.Repositories
         }
         public async Task<IEnumerable<ProjectInfo>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Set<ProjectInfo>()
+               .AsNoTracking()
+               .ToListAsync();
         }
         public async Task<ProjectInfo> GetByIdAsync(int id)
         {

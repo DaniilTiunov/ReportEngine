@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ReportEngine.Domain.Enums
+﻿namespace ReportEngine.Domain.Enums
 {
     public enum ProjectStatus
     {
-        Active,
-        Inactive,
-        Completed
+        ТКП = 0,
+        Завершен = 1
     }
 }

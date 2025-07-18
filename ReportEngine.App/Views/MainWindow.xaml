@@ -162,43 +162,50 @@
                 <ColumnDefinition Width="95*" />
             </Grid.ColumnDefinitions>
             <ContentControl x:Name="MainContentControl" Grid.ColumnSpan="2">
-                <DataGrid x:Name="MainDataGrid" Margin="5,43,10,0">
+                <DataGrid
+                    x:Name="MainDataGrid"
+                    Margin="5,43,10,0"
+                    ItemsSource="{Binding AllProjects}">
                     <DataGrid.Columns>
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding Property1}"
+                            Binding="{Binding Number}"
+                            Header="№п/п" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding Company}"
                             Header="Заказчик" />
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding Property2}"
+                            Binding="{Binding Object}"
                             Header="Объект" />
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding Property3}"
+                            Binding="{Binding StandCount}"
                             Header="Кол-во стендов" />
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding Property4}"
+                            Binding="{Binding Status}"
                             Header="Статус" />
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding Property5}"
+                            Binding="{Binding StartDate}"
                             Header="Старт проекта" />
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding Property6}"
+                            Binding="{Binding OutOfProduction}"
                             Header="Выход из производства" />
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding Property7}"
+                            Binding="{Binding EndDate}"
                             Header="Дата окончания договора" />
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding Property8}"
+                            Binding="{Binding OrderCustomer}"
                             Header="Заказ покупателя" />
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding Property9}"
+                            Binding="{Binding RequestProduction}"
                             Header="Заявка на производство" />
                         <DataGridTextColumn
                             Width="*"
@@ -213,14 +220,6 @@
                             Binding="{Binding Property12}"
                             Header="Ещё что-то" />
                     </DataGrid.Columns>
-                    <DataGrid.Items>
-                        <DataGridTextColumn />
-                        <DataGridTextColumn />
-                        <DataGridTextColumn />
-                        <DataGridTextColumn />
-                        <DataGridTextColumn />
-                        <DataGridTextColumn />
-                    </DataGrid.Items>
                 </DataGrid>
             </ContentControl>
         </Grid>

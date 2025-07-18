@@ -34,6 +34,7 @@ namespace ReportEngine.App
                     // Регистрация сервисов
                     services.AddScoped<ExcelCreator>();
                     services.AddSingleton<NavigationService>();
+                    services.AddSingleton<IServiceProvider>(provider => provider);
                     // Регистрация ViewModels
                     services.AddScoped<MainWindowViewModel>();
                     services.AddScoped<UsersViewModel>();
