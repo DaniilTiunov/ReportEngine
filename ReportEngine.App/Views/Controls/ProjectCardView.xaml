@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:ReportEngine.App.Views.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:Background="White"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -186,8 +187,10 @@
         <ComboBox
             Grid.Row="5"
             Grid.Column="1"
-            Margin="0,2,0,6">
-            <ComboBoxItem />
+            Margin="0,2,0,6"
+            SelectedItem="{Binding Status, Mode=TwoWay}">
+            <TextBlock>ТКП</TextBlock>
+            <TextBlock>Завершен</TextBlock>
         </ComboBox>
 
         <TextBlock

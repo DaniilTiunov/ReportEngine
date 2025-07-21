@@ -96,7 +96,7 @@ namespace ReportEngine.App.ViewModels
                     Object = Object,
                     StandCount = StandCount,
                     Cost = Cost,
-                    Status = Status,
+                    Status = Enum.GetValues(typeof(ProjectStatus)).Cast<ProjectStatus>().First(),
                     StartDate = DateOnly.FromDateTime(StartDate),
                     OutOfProduction = DateOnly.FromDateTime(OutOfProduction),
                     EndDate = DateOnly.FromDateTime(EndDate),
@@ -124,8 +124,6 @@ namespace ReportEngine.App.ViewModels
 
         public ICommand AddNewStandCommand { get; set; }
         public bool CanAddNewStandCommandExecute(object e) => true;
-
-
 
         public ICommand DeleteCardCommand { get; set; }        
     }

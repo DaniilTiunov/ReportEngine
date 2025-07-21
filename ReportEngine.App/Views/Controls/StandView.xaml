@@ -3,73 +3,242 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:ReportEngine.App.Views.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    d:DesignHeight="450"
+    d:Background="White"
+    d:DesignHeight="600"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid>
-        <Grid Margin="10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
 
-            <!--  Номер п/п  -->
-            <TextBlock
-                Grid.Row="0"
-                Grid.Column="0"
-                Margin="0,0,10,0"
-                VerticalAlignment="Center"
-                Text="№ п/п:" />
-            <TextBox
-                Grid.Row="0"
-                Grid.Column="1"
-                Margin="0,0,0,10"
-                Text="{Binding Number}" />
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <!--  Each form row  -->
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-            <!--  Код KKS  -->
-            <TextBlock
-                Grid.Row="0"
-                Grid.Column="2"
-                Margin="10,0,10,0"
-                VerticalAlignment="Center"
-                Text="KKS-код стенда:" />
-            <TextBox
-                Grid.Row="0"
-                Grid.Column="3"
-                Margin="0,0,0,10"
-                Text="{Binding KKSCode}" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="160" />
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="160" />
+            <ColumnDefinition Width="200" />
+        </Grid.ColumnDefinitions>
 
-            <!--  Обозначение стенда  -->
-            <TextBlock
-                Grid.Row="1"
-                Grid.Column="0"
-                Margin="0,0,10,0"
-                VerticalAlignment="Center"
-                Text="Обозначение стенда:" />
-            <TextBox
-                Grid.Row="1"
-                Grid.Column="1"
-                Grid.ColumnSpan="3"
-                Margin="0,0,0,10"
-                Text="{Binding Design}" />
+        <!--  № п/п и KKS-код стенда  -->
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="0,5"
+            VerticalAlignment="Center"
+            Text="№ п/п:" />
+        <TextBox
+            Grid.Row="0"
+            Grid.Column="1"
+            Width="50"
+            Margin="0,5,150,5" />
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="2"
+            Margin="10,5,0,5"
+            VerticalAlignment="Center"
+            Text="KKS-код стенда:" />
+        <TextBox
+            Grid.Row="0"
+            Grid.Column="3"
+            Margin="0,5" />
 
-            <!--  Кнопка сохранения  -->
+        <!--  Обозначение стенда  -->
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="0,5"
+            VerticalAlignment="Center"
+            Text="Обозначение стенда:" />
+        <TextBox
+            Grid.Row="1"
+            Grid.Column="1"
+            Grid.ColumnSpan="3"
+            Margin="0,5" />
+
+        <!--  Приборы и чекбокс  -->
+        <TextBlock
+            Grid.Row="2"
+            Grid.Column="0"
+            Margin="0,5"
+            VerticalAlignment="Center"
+            Text="Приборы:" />
+        <TextBox
+            Grid.Row="2"
+            Grid.Column="1"
+            Width="50"
+            Margin="0,5,150,5" />
+        <CheckBox
+            Grid.Row="2"
+            Grid.Column="2"
+            Grid.ColumnSpan="2"
+            Margin="10,5,0,5"
+            VerticalAlignment="Center"
+            Content="Шир. рама из 1-ой секции" />
+
+        <!--  Тип крепления датчика + кнопка  -->
+        <TextBlock
+            Grid.Row="3"
+            Grid.Column="0"
+            Margin="0,5"
+            VerticalAlignment="Center"
+            Text="Тип крепления датчика:" />
+        <ComboBox
+            Grid.Row="3"
+            Grid.Column="1"
+            Margin="0,5">
+            <ComboBoxItem Content="На кронштейне" />
+            <ComboBoxItem Content="Швеллер" />
+        </ComboBox>
+        <Button
+            Grid.Row="3"
+            Grid.Column="2"
+            Width="25"
+            Margin="10,5,0,5"
+            Content="..." />
+
+        <!--  Реком. ширина и ширина  -->
+        <TextBlock
+            Grid.Row="4"
+            Grid.Column="0"
+            Margin="0,5"
+            VerticalAlignment="Center"
+            Text="Рекоменд. ширина:" />
+        <TextBox
+            Grid.Row="4"
+            Grid.Column="1"
+            Width="100"
+            Margin="0,5,100,5" />
+        <TextBlock
+            Grid.Row="4"
+            Grid.Column="2"
+            Margin="10,5,0,5"
+            VerticalAlignment="Center"
+            Text="Ширина:" />
+        <TextBox
+            Grid.Row="4"
+            Grid.Column="3"
+            Width="100"
+            Margin="0,5,100,5" />
+
+        <!--  Серийный номер  -->
+        <TextBlock
+            Grid.Row="5"
+            Grid.Column="0"
+            Margin="0,5"
+            VerticalAlignment="Center"
+            Text="Серийный номер:" />
+        <TextBox
+            Grid.Row="5"
+            Grid.Column="1"
+            Grid.ColumnSpan="3"
+            Margin="0,5" />
+
+        <!--  Масса  -->
+        <TextBlock
+            Grid.Row="6"
+            Grid.Column="0"
+            Margin="0,5"
+            VerticalAlignment="Center"
+            Text="Масса:" />
+        <TextBox
+            Grid.Row="6"
+            Grid.Column="1"
+            Width="100"
+            Margin="0,5,100,5" />
+
+        <!--  Сумма стенда  -->
+        <TextBlock
+            Grid.Row="7"
+            Grid.Column="0"
+            Margin="0,5"
+            VerticalAlignment="Center"
+            Text="Сумма стенда:" />
+        <TextBox
+            Grid.Row="7"
+            Grid.Column="1"
+            Width="100"
+            Margin="0,5,100,5" />
+
+        <!--  № подпроекта  -->
+        <TextBlock
+            Grid.Row="8"
+            Grid.Column="0"
+            Margin="0,5"
+            VerticalAlignment="Center"
+            Text="№ подпроекта:" />
+        <StackPanel
+            Grid.Row="8"
+            Grid.Column="1"
+            Margin="0,5"
+            Orientation="Horizontal">
+            <TextBox Width="50" />
             <Button
-                Grid.Row="2"
-                Grid.Column="3"
-                Margin="0,10,0,0"
-                HorizontalAlignment="Right"
-                Command="{Binding SaveCommand}"
-                Content="Сохранить" />
-        </Grid>
+                Width="25"
+                Margin="5,0,0,0"
+                Content="..." />
+        </StackPanel>
+
+        <!--  Комментарии  -->
+        <TextBlock
+            Grid.Row="9"
+            Grid.Column="0"
+            Margin="0,5"
+            VerticalAlignment="Center"
+            Text="Комментарии:" />
+        <TextBox
+            Grid.Row="9"
+            Grid.Column="1"
+            Grid.ColumnSpan="3"
+            Margin="0,5" />
+
+        <!--  Примечание  -->
+        <TextBlock
+            Grid.Row="10"
+            Grid.Column="0"
+            Margin="0,5"
+            VerticalAlignment="Top"
+            Text="Примечание:" />
+        <TextBox
+            Grid.Row="10"
+            Grid.Column="1"
+            Grid.ColumnSpan="3"
+            Height="100"
+            Margin="0,5"
+            AcceptsReturn="True"
+            TextWrapping="Wrap" />
+
+        <!--  Кнопки  -->
+        <StackPanel
+            Grid.Row="12"
+            Grid.Column="0"
+            Grid.ColumnSpan="4"
+            Margin="0,10,0,0"
+            HorizontalAlignment="Left"
+            Orientation="Horizontal">
+            <Button
+                Width="80"
+                Margin="0,0,10,0"
+                Content="OK" />
+            <Button
+                Width="80"
+                Margin="0,0,10,0"
+                Content="Отмена" />
+            <Button Width="80" Content="Помощь" />
+        </StackPanel>
     </Grid>
 </UserControl>
