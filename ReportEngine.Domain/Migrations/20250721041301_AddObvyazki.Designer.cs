@@ -12,8 +12,8 @@ using ReportEngine.Domain.Database.Context;
 namespace ReportEngine.Domain.Migrations
 {
     [DbContext(typeof(ReAppContext))]
-    [Migration("20250718065917_UpdateProjectCost")]
-    partial class UpdateProjectCost
+    [Migration("20250721041301_AddObvyazki")]
+    partial class AddObvyazki
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -687,6 +687,53 @@ namespace ReportEngine.Domain.Migrations
                     b.ToTable("PillarEqiups");
                 });
 
+            modelBuilder.Entity("ReportEngine.Domain.Entities.Obvyazka", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("Clamp")
+                        .HasColumnType("real");
+
+                    b.Property<float>("HumanCost")
+                        .HasColumnType("real");
+
+                    b.Property<float>("LineLength")
+                        .HasColumnType("real");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OtherLineCount")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Sensor")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SensorType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<float>("TreeSocket")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Weight")
+                        .HasColumnType("real");
+
+                    b.Property<float>("WidthOnFrame")
+                        .HasColumnType("real");
+
+                    b.Property<float>("ZraCount")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Obvyazki");
+                });
+
             modelBuilder.Entity("ReportEngine.Domain.Entities.Other.Container", b =>
                 {
                     b.Property<int>("Id")
@@ -941,6 +988,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<int>("StandCount")
                         .HasColumnType("integer");
 
+                    b.Property<int>("StandId")
+                        .HasColumnType("integer");
+
                     b.Property<DateOnly>("StartDate")
                         .HasColumnType("date");
 
@@ -952,7 +1002,22 @@ namespace ReportEngine.Domain.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("StandId");
+
                     b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.Stand", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Stands");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.User", b =>
@@ -987,6 +1052,17 @@ namespace ReportEngine.Domain.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ProjectInfo", b =>
+                {
+                    b.HasOne("ReportEngine.Domain.Entities.Stand", "Stand")
+                        .WithMany()
+                        .HasForeignKey("StandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Stand");
                 });
 #pragma warning restore 612, 618
         }

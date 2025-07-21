@@ -36,10 +36,12 @@ namespace ReportEngine.Domain.Database.Context
         public DbSet<Heater> Heaters { get; set; } //Обогрев
         public DbSet<Other> Others { get; set; } //Прочие
         public DbSet<Container> Containers { get; set; } //Тара
+        public DbSet<Obvyazka> Obvyazki { get; set; } //Обвязки
 
         public DbSet<ProjectInfo> Projects { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Company> Companies { get; set; }
+        public DbSet<Stand> Stands { get; set; } 
 
         public ReAppContext(DbContextOptions<ReAppContext> options) : base(options)
         {
