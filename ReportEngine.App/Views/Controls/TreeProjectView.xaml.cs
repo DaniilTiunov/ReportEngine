@@ -55,6 +55,7 @@ namespace ReportEngine.App.Views.Controls
                 {
                     "ProjectCard" => new ProjectCardView(_projectViewModel),
                     "Stand" => new StandView(_projectViewModel),
+                    "StandObv" => new StandObvView(_projectViewModel),
                 };
 
                 return control;

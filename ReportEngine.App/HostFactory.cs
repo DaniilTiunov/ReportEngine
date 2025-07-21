@@ -31,6 +31,8 @@ namespace ReportEngine.App
                     //Регистрируем репозитории
                     services.AddScoped<IBaseRepository<User>, UserRepository>();
                     services.AddScoped<IBaseRepository<ProjectInfo>, ProjectInfoRepository>();
+                    services.AddScoped<ProjectInfoRepository>();
+
                     // Регистрация сервисов
                     services.AddScoped<ExcelCreator>();
                     services.AddSingleton<NavigationService>();

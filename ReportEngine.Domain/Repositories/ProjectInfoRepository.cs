@@ -28,13 +28,18 @@ namespace ReportEngine.Domain.Repositories
         {
             throw new NotImplementedException();
         }
-        public async Task UpdateAsync(ProjectInfo entity)
+        public async Task UpdateAsync(ProjectInfo project)
         {
-            throw new NotImplementedException();
+            _context.Entry(project).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
         }
-        public Task DeleteAsync(ProjectInfo entity)
+        public async Task DeleteAsync(ProjectInfo project)
         {
-            throw new NotImplementedException();
+            if (project != null)
+                _context.Set<ProjectInfo>().Remove(project);
+
+            await _context.SaveChangesAsync();
         }
         public async Task<int> DeleteByIdAsync(int id)
         {
@@ -45,6 +50,19 @@ namespace ReportEngine.Domain.Repositories
             _context.Set<ProjectInfo>().Remove(entityProjectInfo);
             await _context.SaveChangesAsync();
             return 1;
+        }
+        public async Task AddStandAsync(int projectId, Stand stand)
+        {
+            var project = await _context.Projects
+                .Include(p => p.Stands)
+                .FirstOrDefaultAsync(p => p.Id == projectId);
+
+            if (project != null)
+            {
+                stand.ProjectInfoId = projectId;
+                project.Stands.Add(stand);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using ReportEngine.App.Commands;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Enums;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Config.DebugConsol;
 using System.Collections.ObjectModel;
@@ -12,9 +13,11 @@ namespace ReportEngine.App.ViewModels
 {
     public class ProjectViewModel : BaseViewModel
     {
-        private readonly IBaseRepository<ProjectInfo> _projectRepository;
+        private readonly ProjectInfoRepository _projectRepository;
+
 
         #region Приватные поля
+
         private ObservableCollection<ProjectInfo> _allProjects;
 
         private int _number;//№п/п
@@ -50,7 +53,8 @@ namespace ReportEngine.App.ViewModels
         private bool _isGalvanized; //Оцинковка 
         #endregion
 
-        #region публичные свойства
+        #region Публичные свойства
+        public int CurrentProjectId;
         public int Number { get => _number; set => Set(ref _number, value); } //№п/п
         public string? Description { get => _description; set => Set(ref _description, value); } //Обозначение КД                               
         public DateTime CreationDate { get => _creationDate; set => Set(ref _creationDate, value); } //Дата запроса
@@ -70,9 +74,10 @@ namespace ReportEngine.App.ViewModels
         public ObservableCollection<ProjectInfo> AllProjects { get => _allProjects; set => Set(ref _allProjects, value); } 
         #endregion
 
-        public ProjectViewModel(IBaseRepository<ProjectInfo> projectRepository)
+        public ProjectViewModel(ProjectInfoRepository projectRepository)
         {
             CreateNewCardCommand = new RelayCommand(OnCreateNewCardCommandExecuted, CanCreateNewCardCommandExecute);
+            AddNewStandCommand = new RelayCommand(OnAddNewStandCommandExecuted, CanAddNewStandCommandExecute);
 
             _projectRepository = projectRepository;
 
@@ -107,24 +112,45 @@ namespace ReportEngine.App.ViewModels
                     isGalvanized = IsGalvanized
                 };
 
-                newProjectCard.Stands.Add(new Stand
-                {
-                    ProjectInfoId = newProjectCard.Id,
-                    Number = newProjectCard.Number,
-                    KKSCode = "Тестовый код для первого проекта",
-                    Design = "Тест связи"
-                });
 
                 await _projectRepository.AddAsync(newProjectCard);
-                
+
+                CurrentProjectId = newProjectCard.Id;
+
+                MessageBox.Show("Карточка проекта успешно создана!");
+
             }
             catch(Exception ex){MessageBox.Show(ex.Message);} 
-
         }
-
+        
         public ICommand AddNewStandCommand { get; set; }
         public bool CanAddNewStandCommandExecute(object e) => true;
+        public async void OnAddNewStandCommandExecuted(object e)
+        {
+            try
+            {
+                if (CurrentProjectId == 0)
+                {
+                    MessageBox.Show("Сначала создайте проект");
+                    return;
+                }
 
-        public ICommand DeleteCardCommand { get; set; }        
+                var newStand = new Stand
+                {
+                    ProjectInfoId = CurrentProjectId,
+                    Number = 288,
+                    KKSCode = "4",
+                    Design = "4"
+                };
+
+                await _projectRepository.AddStandAsync(CurrentProjectId, newStand);
+                MessageBox.Show("Стенд успешно добавлен!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при добавлении стенда: {ex.Message}");
+            }
+        }
+
     }
 }

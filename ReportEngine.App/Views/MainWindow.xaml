@@ -165,7 +165,10 @@
                 <DataGrid
                     x:Name="MainDataGrid"
                     Margin="5,43,10,0"
-                    ItemsSource="{Binding AllProjects}">
+                    ItemsSource="{Binding AllProjects}"
+                    SelectedItem="{Binding SelectedProject}"
+                    SelectionUnit="FullRow">
+
                     <DataGrid.Columns>
                         <DataGridTextColumn
                             Width="*"
@@ -223,7 +226,8 @@
                     <DataGrid.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Редактировать проект" />
-                            <MenuItem Header="Удалить проект" />
+                            <MenuItem Command="{Binding ShowAllProjectsCommand}" Header="Обновить" />
+                            <MenuItem Command="{Binding DeleteSelectedProjectCommand}" Header="Удалить проект" />
                         </ContextMenu>
                     </DataGrid.ContextMenu>
                 </DataGrid>

@@ -31,9 +31,11 @@ namespace ReportEngine.Domain.Repositories
                 .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
-        public Task UpdateAsync(User entity)
+        public async Task UpdateAsync(User user)
         {
-            throw new NotImplementedException();
+            _context.Entry(user).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
         }
         public async Task DeleteAsync(User user)
         {

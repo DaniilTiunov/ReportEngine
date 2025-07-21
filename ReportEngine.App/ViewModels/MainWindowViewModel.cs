@@ -6,9 +6,7 @@ using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
-using ReportEngine.Shared.Config.DebugConsol;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 
@@ -25,19 +23,25 @@ namespace ReportEngine.App.ViewModels
         #region Приватные поля
         private string _connectionStatusMessage;
         private ObservableCollection<ProjectInfo> _allProjects;
+        private ProjectInfo _selectedProject;
         #endregion
 
         #region Публичные поля для привязки
+        public ProjectInfo SelectedProject
+        {
+            get => _selectedProject;
+            set => Set(ref _selectedProject, value);
+        }
         public string ConnectionStatusMessage
         {
             get => _connectionStatusMessage;
             set => Set(ref _connectionStatusMessage, value);
         }
         public bool IsConnected { get; private set; }
-        public ObservableCollection<ProjectInfo> AllProjects 
-        { 
-            get => _allProjects; 
-            set => Set(ref _allProjects, value); 
+        public ObservableCollection<ProjectInfo> AllProjects
+        {
+            get => _allProjects;
+            set => Set(ref _allProjects, value);
         }
         #endregion
 
@@ -50,6 +54,7 @@ namespace ReportEngine.App.ViewModels
             ChekDbConnectionCommand = new RelayCommand(OnChekDbConnectionCommandExecuted, CanChekDbConnectionCommandExecute);
             OpenTreeViewCommand = new RelayCommand(OnOpenTreeViewCommandExecuted, CanOpenTreeViewCommandExecute);
             ShowAllProjectsCommand = new RelayCommand(OnShowAllProjectsCommandExecuted, CanShowAllProjectsCommandExecute);
+            DeleteSelectedProjectCommand = new RelayCommand(OnDeleteSelectedProjectExecuted, CanDeleteSelectedProjectExecute);
             #endregion
 
             _serviceProvider = serviceProvider;
@@ -66,11 +71,11 @@ namespace ReportEngine.App.ViewModels
             {
                 _navigation.ShowContent<TreeProjectView>();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-        } 
+        }
         public ICommand CloseAppCommand { get; }
         public bool CanCloseAppCommandExecute(object e) => true;
         public void OnCloseAppCommandExecuted(object e) => Application.Current.Shutdown();
@@ -93,8 +98,7 @@ namespace ReportEngine.App.ViewModels
             ConnectionStatusMessage = IsConnected ? "Соединение установлено" : "Соединение не установлено";
 
         }
-
-        public ICommand ShowAllProjectsCommand {  get; }
+        public ICommand ShowAllProjectsCommand { get; }
         public bool CanShowAllProjectsCommandExecute(object e) => true;
         public async void OnShowAllProjectsCommandExecuted(object e)
         {
@@ -109,10 +113,22 @@ namespace ReportEngine.App.ViewModels
 
                 MessageBox.Show(ex.Message);
             }
-            
+
         }
         #endregion
 
+        public ICommand DeleteSelectedProjectCommand { get; }
+        public bool CanDeleteSelectedProjectExecute(object e) => true;
+        public async void OnDeleteSelectedProjectExecuted(object e)
+        {
+            try
+            {
+                var currentProject = _selectedProject;
+
+                await _projectRepository.DeleteAsync(currentProject);
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
 
         #region Методы
 
