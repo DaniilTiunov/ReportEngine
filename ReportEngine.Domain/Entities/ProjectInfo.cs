@@ -26,9 +26,6 @@ namespace ReportEngine.Domain.Entities
         public string? MarkMinus { get; set; } //Маркировка -
         public bool isGalvanized { get; set; } //Оцинковка
 
-        // Внешний ключ для Stand
-        public int StandId { get; set; }
-        [ForeignKey("StandId")]
-        public Stand Stand { get; set; }
+        public virtual ICollection<Stand> Stands { get; set; } = new List<Stand>();
     }
 }

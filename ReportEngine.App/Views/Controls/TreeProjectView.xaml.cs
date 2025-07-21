@@ -53,7 +53,8 @@ namespace ReportEngine.App.Views.Controls
 
                 UserControl control = tag switch
                 {
-                    "ProjectCard" => new ProjectCardView(_projectViewModel)
+                    "ProjectCard" => new ProjectCardView(_projectViewModel),
+                    "Stand" => new StandView(_projectViewModel),
                 };
 
                 return control;

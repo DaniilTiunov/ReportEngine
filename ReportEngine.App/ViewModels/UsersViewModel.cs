@@ -168,9 +168,6 @@ namespace ReportEngine.App.ViewModels
             {
                 MessageBox.Show(ex.Message, "Ошибка при добавлении пользователя", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
-            
-
         }
     }
 }

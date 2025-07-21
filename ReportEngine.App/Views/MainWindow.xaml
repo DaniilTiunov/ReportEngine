@@ -220,6 +220,12 @@
                             Binding="{Binding Property12}"
                             Header="Ещё что-то" />
                     </DataGrid.Columns>
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Редактировать проект" />
+                            <MenuItem Header="Удалить проект" />
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
                 </DataGrid>
             </ContentControl>
         </Grid>

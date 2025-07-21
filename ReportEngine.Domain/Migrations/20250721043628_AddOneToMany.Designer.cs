@@ -12,8 +12,8 @@ using ReportEngine.Domain.Database.Context;
 namespace ReportEngine.Domain.Migrations
 {
     [DbContext(typeof(ReAppContext))]
-    [Migration("20250721041301_AddObvyazki")]
-    partial class AddObvyazki
+    [Migration("20250721043628_AddOneToMany")]
+    partial class AddOneToMany
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -988,9 +988,6 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<int>("StandCount")
                         .HasColumnType("integer");
 
-                    b.Property<int>("StandId")
-                        .HasColumnType("integer");
-
                     b.Property<DateOnly>("StartDate")
                         .HasColumnType("date");
 
@@ -1001,8 +998,6 @@ namespace ReportEngine.Domain.Migrations
                         .HasColumnType("boolean");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("StandId");
 
                     b.ToTable("Projects");
                 });
@@ -1015,7 +1010,12 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("ProjectInfoId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ProjectInfoId");
 
                     b.ToTable("Stands");
                 });
@@ -1054,15 +1054,20 @@ namespace ReportEngine.Domain.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("ReportEngine.Domain.Entities.ProjectInfo", b =>
+            modelBuilder.Entity("ReportEngine.Domain.Entities.Stand", b =>
                 {
-                    b.HasOne("ReportEngine.Domain.Entities.Stand", "Stand")
-                        .WithMany()
-                        .HasForeignKey("StandId")
+                    b.HasOne("ReportEngine.Domain.Entities.ProjectInfo", "Project")
+                        .WithMany("Stands")
+                        .HasForeignKey("ProjectInfoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Stand");
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ProjectInfo", b =>
+                {
+                    b.Navigation("Stands");
                 });
 #pragma warning restore 612, 618
         }

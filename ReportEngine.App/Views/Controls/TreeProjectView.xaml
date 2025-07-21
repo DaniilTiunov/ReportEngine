@@ -65,7 +65,7 @@
                     Header="Карточка проекта"
                     Tag="ProjectCard" />
                 <TreeViewItem Header="Создание нового стенда" Tag="BindingTypes">
-                    <TreeViewItem Header="Стенд" />
+                    <TreeViewItem Header="Стенд" Tag="Stand" />
                     <TreeViewItem Header="Создание обвязок стенда" />
                     <TreeViewItem Header="Выбор рамы" />
                     <TreeViewItem Header="Формирование дренажа" />

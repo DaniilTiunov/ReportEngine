@@ -106,13 +106,26 @@ namespace ReportEngine.App.ViewModels
                     MarkPlus = MarkPlus,
                     isGalvanized = IsGalvanized
                 };
-                DebugConsole.WriteLine($"{newProjectCard.EndDate}, {newProjectCard.StartDate}, {newProjectCard.CreationDate} ");
+
+                newProjectCard.Stands.Add(new Stand
+                {
+                    ProjectInfoId = newProjectCard.Id,
+                    Number = newProjectCard.Number,
+                    KKSCode = "Тестовый код для первого проекта",
+                    Design = "Тест связи"
+                });
+
                 await _projectRepository.AddAsync(newProjectCard);
                 
             }
             catch(Exception ex){MessageBox.Show(ex.Message);} 
 
         }
+
+        public ICommand AddNewStandCommand { get; set; }
+        public bool CanAddNewStandCommandExecute(object e) => true;
+
+
 
         public ICommand DeleteCardCommand { get; set; }        
     }
