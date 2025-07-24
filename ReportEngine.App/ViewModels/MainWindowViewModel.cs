@@ -4,8 +4,9 @@ using ReportEngine.App.Services;
 using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Database.Context;
-using ReportEngine.Shared.Config.DebugConsol;
-using System.Diagnostics;
+using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Repositories.Interfaces;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 
@@ -14,25 +15,61 @@ namespace ReportEngine.App.ViewModels
     public class MainWindowViewModel : BaseViewModel
     {
         #region DI сервисов
+        private readonly IBaseRepository<ProjectInfo> _projectRepository;
         private readonly NavigationService _navigation;
         private readonly IServiceProvider _serviceProvider;
         #endregion
 
         #region Приватные поля
         private string _connectionStatusMessage;
+        private ObservableCollection<ProjectInfo> _allProjects;
+        private ProjectInfo _selectedProject;
         #endregion
 
         #region Публичные поля для привязки
+        public ProjectInfo SelectedProject
+        {
+            get => _selectedProject;
+            set => Set(ref _selectedProject, value);
+        }
         public string ConnectionStatusMessage
         {
             get => _connectionStatusMessage;
             set => Set(ref _connectionStatusMessage, value);
         }
         public bool IsConnected { get; private set; }
+        public ObservableCollection<ProjectInfo> AllProjects
+        {
+            get => _allProjects;
+            set => Set(ref _allProjects, value);
+        }
+        #endregion
+
+        #region Конструктор
+        public MainWindowViewModel(IServiceProvider serviceProvider, NavigationService navigation, IBaseRepository<ProjectInfo> projectRepository)
+        {
+            _serviceProvider = serviceProvider;
+            _projectRepository = projectRepository;
+            _navigation = navigation;
+
+            InitializeCommands();
+        }
+        #endregion
+
+        #region Методы        
+        public void InitializeCommands() 
+        {
+            CloseAppCommand = new RelayCommand(OnCloseAppCommandExecuted, CanCloseAppCommandExecute);
+            OpenAllUsersCommand = new RelayCommand(OnOpenAllUsersCommandExecuted, CanOpenAllUsersCommandExecute);
+            ChekDbConnectionCommand = new RelayCommand(OnChekDbConnectionCommandExecuted, CanChekDbConnectionCommandExecute);
+            OpenTreeViewCommand = new RelayCommand(OnOpenTreeViewCommandExecuted, CanOpenTreeViewCommandExecute);
+            ShowAllProjectsCommand = new RelayCommand(OnShowAllProjectsCommandExecuted, CanShowAllProjectsCommandExecute);
+            DeleteSelectedProjectCommand = new RelayCommand(OnDeleteSelectedProjectExecuted, CanDeleteSelectedProjectExecute);
+        }
         #endregion
 
         #region Комманды
-        public ICommand OpenTreeViewCommand { get; }
+        public ICommand OpenTreeViewCommand { get; set; }
         public bool CanOpenTreeViewCommandExecute(object e) => true;
         public void OnOpenTreeViewCommandExecuted(object e)
         {
@@ -40,24 +77,23 @@ namespace ReportEngine.App.ViewModels
             {
                 _navigation.ShowContent<TreeProjectView>();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-        } 
-        public ICommand CloseAppCommand { get; }
+        }
+        public ICommand CloseAppCommand { get; set; }
         public bool CanCloseAppCommandExecute(object e) => true;
         public void OnCloseAppCommandExecuted(object e) => Application.Current.Shutdown();
 
-        public ICommand OpenAllUsersCommand { get; }
+        public ICommand OpenAllUsersCommand { get; set; }
         public bool CanOpenAllUsersCommandExecute(object e) => true;
         public void OnOpenAllUsersCommandExecuted(object e)
         {
             _navigation.ShowWindow<UsersView>();
         }
-
-        public ICommand ChekDbConnectionCommand { get; }
-        public bool CanChekDbConnectionCommandCommandExecute(object e) => true;
+        public ICommand ChekDbConnectionCommand { get; set; }
+        public bool CanChekDbConnectionCommandExecute(object e) => true;
         public void OnChekDbConnectionCommandExecuted(object e)
         {
             using var scope = _serviceProvider.CreateScope();
@@ -67,25 +103,35 @@ namespace ReportEngine.App.ViewModels
             ConnectionStatusMessage = IsConnected ? "Соединение установлено" : "Соединение не установлено";
 
         }
-        #endregion
-
-        #region Конструктор
-        public MainWindowViewModel(IServiceProvider serviceProvider, NavigationService navigation)
+        public ICommand ShowAllProjectsCommand { get; set; }
+        public bool CanShowAllProjectsCommandExecute(object e) => true;
+        public async void OnShowAllProjectsCommandExecuted(object e)
         {
-            #region Комманды
-            CloseAppCommand = new RelayCommand(OnCloseAppCommandExecuted, CanCloseAppCommandExecute);
-            OpenAllUsersCommand = new RelayCommand(OnOpenAllUsersCommandExecuted, CanOpenAllUsersCommandExecute);
-            ChekDbConnectionCommand = new RelayCommand(OnChekDbConnectionCommandExecuted, CanChekDbConnectionCommandCommandExecute);
-            OpenTreeViewCommand = new RelayCommand(OnOpenTreeViewCommandExecuted, CanOpenTreeViewCommandExecute);
-            #endregion
 
-            _serviceProvider = serviceProvider;
-            _navigation = navigation;
+            try
+            {
+                var projects = await _projectRepository.GetAllAsync();
+                AllProjects = new ObservableCollection<ProjectInfo>(projects);
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message);
+            }
+
         }
-        #endregion
+        public ICommand DeleteSelectedProjectCommand { get; set; }
+        public bool CanDeleteSelectedProjectExecute(object e) => true;
+        public async void OnDeleteSelectedProjectExecuted(object e)
+        {
+            try
+            {
+                var currentProject = _selectedProject;
 
-        #region Методы
-
+                await _projectRepository.DeleteAsync(currentProject);
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
         #endregion
     }
 }

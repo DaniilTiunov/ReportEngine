@@ -64,7 +64,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Page Update="Dictionaries\GigaChadUI.xaml">
+    <Page Update="Resources\Dictionaries\GigaChadUI.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
   </ItemGroup>  

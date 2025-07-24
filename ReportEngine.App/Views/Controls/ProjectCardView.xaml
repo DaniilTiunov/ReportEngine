@@ -5,29 +5,270 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:ReportEngine.App.Views.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    d:DesignHeight="450"
+    d:Background="White"
+    d:DesignHeight="1000"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid>
-        <DataGrid x:Name="MainDataGrid">
-            <DataGrid.Columns>
-                <DataGridTextColumn
-                Width="*"
-                Binding="{Binding Property1}"
-                Header="Заказчик" />
-                <DataGridTextColumn
-                Width="*"
-                Binding="{Binding Property1}"
-                Header="Заказчик" />
-            </DataGrid.Columns>
-          <DataGrid.Items>
-                <DataGridTextColumn />
-                <DataGridTextColumn />
-                <DataGridTextColumn />
-                <DataGridTextColumn />
-                <DataGridTextColumn />
-                <DataGridTextColumn />
-            </DataGrid.Items>
-        </DataGrid>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!--  Номер п/п  -->
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="0,0,10,0"
+            VerticalAlignment="Center"
+            Text="№ п/п:" />
+        <TextBox
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="0,0,0,10"
+            Text="{Binding CurrentProject.Number, Mode=TwoWay}" />
+
+        <!--  Обозначение КД  -->
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="2"
+            Margin="10,0,10,0"
+            VerticalAlignment="Center"
+            Text="Обозначение КД:" />
+        <TextBox
+            Grid.Row="0"
+            Grid.Column="3"
+            Margin="0,0,0,10"
+            Text="{Binding CurrentProject.Description}" />
+
+        <!--  Дата запроса  -->
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="0,0,10,0"
+            VerticalAlignment="Center"
+            Text="Дата запроса:" />
+        <DatePicker
+            Grid.Row="1"
+            Grid.Column="1"
+            Margin="0,0,0,10"
+            SelectedDate="{Binding CurrentProject.CreationDate, Mode=TwoWay}" />
+
+        <!--  Заказчик  -->
+        <TextBlock
+            Grid.Row="2"
+            Grid.Column="0"
+            Margin="0,0,10,0"
+            VerticalAlignment="Center"
+            Text="Заказчик:" />
+        <TextBox
+            Grid.Row="2"
+            Grid.Column="1"
+            Margin="0,0,0,10"
+            Text="{Binding CurrentProject.Company}" />
+
+        <!--  Объект  -->
+        <TextBlock
+            Grid.Row="3"
+            Grid.Column="0"
+            Margin="0,0,10,0"
+            VerticalAlignment="Center"
+            Text="Объект:" />
+        <TextBox
+            Grid.Row="3"
+            Grid.Column="1"
+            Margin="0,0,0,10"
+            Text="{Binding CurrentProject.Object}" />
+
+        <!--  Количество стендов  -->
+        <TextBlock
+            Grid.Row="4"
+            Grid.Column="0"
+            Margin="0,0,10,0"
+            VerticalAlignment="Center"
+            Text="Кол-во стендов:" />
+        <TextBox
+            Grid.Row="4"
+            Grid.Column="1"
+            Margin="0,0,0,10"
+            Text="{Binding CurrentProject.StandCount}" />
+
+        <!--  Стоимость  -->
+        <TextBlock
+            Grid.Row="4"
+            Grid.Column="2"
+            Margin="10,0,10,0"
+            VerticalAlignment="Center"
+            Text="Стоимость:" />
+        <TextBox
+            Grid.Row="4"
+            Grid.Column="3"
+            Margin="0,0,0,10"
+            Text="{Binding CurrentProject.Cost}" />
+
+        <!--  Статус  -->
+        <TextBlock
+            Grid.Row="5"
+            Grid.Column="0"
+            Margin="0,0,10,0"
+            VerticalAlignment="Center"
+            Text="Статус:" />
+
+        <!--  Старт проекта  -->
+        <TextBlock
+            Grid.Row="6"
+            Grid.Column="0"
+            Margin="0,0,10,0"
+            VerticalAlignment="Center"
+            Text="Старт проекта:" />
+        <DatePicker
+            Grid.Row="6"
+            Grid.Column="1"
+            Margin="0,0,0,10"
+            SelectedDate="{Binding CurrentProject.StartDate, Mode=TwoWay}" />
+
+        <!--  Выход из производства  -->
+        <TextBlock
+            Grid.Row="6"
+            Grid.Column="2"
+            Margin="10,0,10,0"
+            VerticalAlignment="Center"
+            Text="Выход из производства:" />
+        <DatePicker
+            Grid.Row="6"
+            Grid.Column="3"
+            Margin="0,0,0,10"
+            SelectedDate="{Binding CurrentProject.OutOfProduction, Mode=TwoWay}" />
+
+        <!--  Дата окончания договора  -->
+        <TextBlock
+            Grid.Row="7"
+            Grid.Column="2"
+            Margin="10,0,10,0"
+            VerticalAlignment="Center"
+            Text="Дата окончания договора:" />
+        <DatePicker
+            Grid.Row="7"
+            Grid.Column="3"
+            Margin="0,0,0,10"
+            SelectedDate="{Binding CurrentProject.EndDate, Mode=TwoWay}" />
+
+        <TextBlock
+            Grid.Row="8"
+            Grid.Column="0"
+            Margin="0,0,10,0"
+            VerticalAlignment="Center"
+            Text="Заказ покупателя:" />
+        <TextBox
+            Grid.Row="8"
+            Grid.ColumnSpan="2"
+            Margin="152,3,0,7"
+            Text="{Binding CurrentProject.OrderCustomer}" />
+
+        <ComboBox
+            x:Name="StatusComboBox"
+            Grid.Row="5"
+            Grid.Column="1"
+            Margin="0,2,0,6"
+            ItemsSource="{Binding CurrentProject.Statuses}"
+            SelectedItem="{Binding CurrentProject.Status, Mode=TwoWay}" />
+
+        <TextBlock
+            Grid.Row="8"
+            Grid.Column="2"
+            Margin="10,0,10,0"
+            VerticalAlignment="Center"
+            Text="Заявка на производство:" />
+
+        <TextBox
+            Grid.Row="8"
+            Grid.Column="3"
+            Margin="0,0,0,10"
+            Text="{Binding CurrentProject.RequestProduction}" />
+
+
+        <TextBlock
+            Grid.Row="10"
+            Grid.Column="2"
+            Margin="10,0,10,0"
+            VerticalAlignment="Center"
+            Text="Трудозатраты:" />
+
+        <TextBox
+            Grid.Row="10"
+            Grid.Column="3"
+            Margin="0,0,0,10"
+            Text="" />
+
+        <TextBlock
+            Grid.Row="11"
+            Grid.Column="0"
+            Margin="0,0,10,0"
+            VerticalAlignment="Center"
+            Text="Руководитель:" />
+        <TextBox
+            Grid.Row="11"
+            Grid.Column="1"
+            Margin="0,0,0,10"
+            Text="{Binding CurrentProject.Manager, Mode=TwoWay}" />
+
+        <TextBlock
+            Grid.Row="12"
+            Grid.Column="0"
+            Margin="0,0,10,0"
+            VerticalAlignment="Center"
+            Text="Маркировка+:" />
+        <TextBox
+            Grid.Row="12"
+            Grid.Column="1"
+            Grid.ColumnSpan="2"
+            Margin="1,4,164,6"
+            Text="{Binding CurrentProject.MarkPlus}" />
+
+        <TextBlock
+            Grid.Row="12"
+            Grid.Column="2"
+            Margin="14,2,9,0"
+            VerticalAlignment="Top"
+            Text="Маркировка-:" />
+        <TextBox
+            Grid.Row="12"
+            Grid.Column="3"
+            Margin="1,0,-1,6"
+            Text="{Binding CurrentProject.MarkMinus}" />
+
+        <CheckBox
+            Grid.Row="13"
+            Grid.Column="0"
+            Margin="2,13,8,0"
+            VerticalAlignment="Top"
+            Content="Оцинкование стендов"
+            IsChecked="{Binding CurrentProject.IsGalvanized}" />
+
+        <Button
+            Grid.Row="13"
+            Grid.Column="2"
+            Margin="7,34,5,-34"
+            Command="{Binding CreateNewCardCommand}"
+            Content="Добавить" />
     </Grid>
 </UserControl>

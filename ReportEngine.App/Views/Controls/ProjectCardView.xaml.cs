@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using ReportEngine.App.ViewModels;
+using System.Windows.Controls;
 
 namespace ReportEngine.App.Views.Controls
 {
@@ -7,9 +8,10 @@ namespace ReportEngine.App.Views.Controls
     /// </summary>
     public partial class ProjectCardView : UserControl
     {
-        public ProjectCardView()
+        public ProjectCardView(ProjectViewModel projectViewModel)
         {
             InitializeComponent();
+            DataContext = projectViewModel;
         }
     }
 }

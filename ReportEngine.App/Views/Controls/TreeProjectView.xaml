@@ -9,36 +9,75 @@
     mc:Ignorable="d">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="325" />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
         <!--  Разделительная линия  -->
         <Rectangle
             Grid.Column="0"
             Width="1"
-            HorizontalAlignment="Right"
+            Margin="249,0,0,0"
+            HorizontalAlignment="Left"
             Fill="#FFDDDDDD" />
 
         <TreeView
             x:Name="MainTree"
             Grid.Column="0"
+            FontSize="14"
             MouseDoubleClick="OpenCurrentView">
+            <TreeView.Resources>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="FontSize" Value="14" />
+                    <Setter Property="Foreground" Value="#333333" />
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Padding" Value="5" />
+                    <Setter Property="HeaderTemplate">
+                        <Setter.Value>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        FontWeight="Normal"
+                                        Text="{Binding}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#E0E0E0" />
+                            <Setter Property="FontWeight" Value="Bold" />
+                        </Trigger>
+                        <Trigger Property="IsExpanded" Value="True">
+                            <Setter Property="FontWeight" Value="Bold" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TreeView.Resources>
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="BorderThickness" Value="0" />
+                </Style>
+            </TreeView.ItemContainerStyle>
             <TreeViewItem Header="Проект" IsExpanded="True">
-                <TreeViewItem Header="Карточка проекта" Tag="ProjectCard" />
-                <TreeViewItem Header="Типы обвязок" Tag="BindingTypes" />
-                <TreeViewItem Header="Датчики" Tag="Sensors" />
-                <TreeViewItem Header="Заказчик" Tag="Customer" />
-                <TreeViewItem Header="Оборудование" Tag="Equipment" />
-                <TreeViewItem Header="Документация" Tag="Documentation" />
-                <TreeViewItem Header="Настройки" Tag="Settings" />
-                <TreeViewItem Header="Отчеты" Tag="Reports" />
+                <TreeViewItem
+                    x:Name="ProjectCard"
+                    Header="Карточка проекта"
+                    Tag="ProjectCard" />
+                <TreeViewItem Header="Создание нового стенда" Tag="BindingTypes">
+                    <TreeViewItem Header="Стенд" Tag="Stand" />
+                    <TreeViewItem Header="Создание обвязок стенда" Tag="StandObv" />
+                    <TreeViewItem Header="Выбор рамы" />
+                    <TreeViewItem Header="Формирование дренажа" />
+                    <TreeViewItem Header="Формирование электрической части" />
+                    <TreeViewItem Header="Дополнительные комплектующие" />
+                </TreeViewItem>
+                <TreeViewItem Header="Создание отчёта" Tag="Reports" />
             </TreeViewItem>
         </TreeView>
-        <ContentControl x:Name="MainContent" Grid.Column="1">
-            <TabControl x:Name="ProjectTabControl">
-                <TabItem />
-            </TabControl>
-        </ContentControl>
+        <TabControl x:Name="MainTabControl" Grid.Column="1">
+            <ContentControl x:Name="MainContent" Grid.Column="1" />
+        </TabControl>
     </Grid>
 </UserControl>

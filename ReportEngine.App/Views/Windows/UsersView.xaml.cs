@@ -12,6 +12,8 @@ namespace ReportEngine.App.Views.Windows
         {
             InitializeComponent();
             DataContext = usersViewModel;
+
+            usersViewModel.OnShowAllUsersCommandExecuted(null);
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {

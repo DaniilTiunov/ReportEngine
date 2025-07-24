@@ -13,7 +13,7 @@
     WindowStartupLocation="CenterScreen"
     WindowState="Maximized"
     mc:Ignorable="d">
-
+    <!--  Loaded="MainWindowLoaded"  -->
     <Window.Resources>
         <Image x:Key="refresh-button.png" Source="/Resources/Images/refresh-button.png" />
 
@@ -69,11 +69,49 @@
                 <MenuItem Header="Масштаб..." />
             </MenuItem>
             <MenuItem Header="Исходные данные">
-                <MenuItem Header="Таблица проектов" />
-                <MenuItem Header="Таблица контрагентов" />
-                <MenuItem Header="Таблица оборудования" />
+                <MenuItem Header="Сортамент труб">
+                    <MenuItem Header="Жарпрочная сталь" />
+                    <MenuItem Header="Нержавеющая сталь" />
+                    <MenuItem Header="Углеродистая сталь" />
+                </MenuItem>
+                <MenuItem Header="Запорные арматуры">
+                    <MenuItem Header="Жарпрочная сталь" />
+                    <MenuItem Header="Нержавеющая сталь" />
+                    <MenuItem Header="Углеродистая сталь" />
+                </MenuItem>
+                <MenuItem Header="Тройники и КМЧ">
+                    <MenuItem Header="Жарпрочная сталь" />
+                    <MenuItem Header="Нержавеющая сталь" />
+                    <MenuItem Header="Углеродистая сталь" />
+                </MenuItem>
                 <Separator />
-                <MenuItem Command="{Binding OpenAllUsersCommand}" Header="Таблица сотрудников" />
+                <MenuItem Header="Дренаж" />
+                <Separator />
+                <MenuItem Header="Рамные комплектующие">
+                    <MenuItem Header="Детали рамы" />
+                    <MenuItem Header="Комплектующие для стойки" />
+                    <MenuItem Header="Прокат" />
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Кронштейны">
+                    <MenuItem Header="Крепление датчиков" />
+                    <MenuItem Header="Крепление дренажа" />
+                    <MenuItem Header="Крепление клеммных коробок" />
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Электрические компоненты">
+                    <MenuItem Header="Кабельная продукция" />
+                    <MenuItem Header="Кабельные вводы" />
+                    <MenuItem Header="Клеммные коробки" />
+                    <MenuItem Header="Обогрев" />
+                    <MenuItem Header="Средства прокладки и защиты кабеля" />
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Прочие" />
+                <Separator />
+                <MenuItem Header="Тара" />
+                <Separator />
+                <MenuItem Command="{Binding OpenAllUsersCommand}" Header="Пользователи" />
             </MenuItem>
             <MenuItem Header="Инструменты">
                 <MenuItem Click="ShowCalculator" Header="Калькулятор" />
@@ -124,43 +162,53 @@
                 <ColumnDefinition Width="95*" />
             </Grid.ColumnDefinitions>
             <ContentControl x:Name="MainContentControl" Grid.ColumnSpan="2">
-                <DataGrid x:Name="MainDataGrid" Margin="5,43,10,0">
+                <DataGrid
+                    x:Name="MainDataGrid"
+                    Margin="5,43,10,0"
+                    ItemsSource="{Binding AllProjects}"
+                    SelectedItem="{Binding SelectedProject}"
+                    SelectionUnit="FullRow">
+
                     <DataGrid.Columns>
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding Property1}"
+                            Binding="{Binding Number}"
+                            Header="№п/п" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding Company}"
                             Header="Заказчик" />
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding Property2}"
+                            Binding="{Binding Object}"
                             Header="Объект" />
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding Property3}"
+                            Binding="{Binding StandCount}"
                             Header="Кол-во стендов" />
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding Property4}"
+                            Binding="{Binding Status}"
                             Header="Статус" />
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding Property5}"
+                            Binding="{Binding StartDate}"
                             Header="Старт проекта" />
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding Property6}"
+                            Binding="{Binding OutOfProduction}"
                             Header="Выход из производства" />
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding Property7}"
+                            Binding="{Binding EndDate}"
                             Header="Дата окончания договора" />
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding Property8}"
+                            Binding="{Binding OrderCustomer}"
                             Header="Заказ покупателя" />
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding Property9}"
+                            Binding="{Binding RequestProduction}"
                             Header="Заявка на производство" />
                         <DataGridTextColumn
                             Width="*"
@@ -175,14 +223,13 @@
                             Binding="{Binding Property12}"
                             Header="Ещё что-то" />
                     </DataGrid.Columns>
-                    <DataGrid.Items>
-                        <DataGridTextColumn />
-                        <DataGridTextColumn />
-                        <DataGridTextColumn />
-                        <DataGridTextColumn />
-                        <DataGridTextColumn />
-                        <DataGridTextColumn />
-                    </DataGrid.Items>
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Редактировать проект" />
+                            <MenuItem Command="{Binding ShowAllProjectsCommand}" Header="Обновить" />
+                            <MenuItem Command="{Binding DeleteSelectedProjectCommand}" Header="Удалить проект" />
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
                 </DataGrid>
             </ContentControl>
         </Grid>

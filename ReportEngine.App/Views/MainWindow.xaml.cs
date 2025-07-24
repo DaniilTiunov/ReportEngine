@@ -6,7 +6,6 @@ using ReportEngine.Shared.Config.JsonHelpers;
 using System.Diagnostics;
 using System.Windows;
 using AboutProgram = ReportEngine.App.Views.Windows.AboutProgram;
-using ReportEngine.App.Views.Controls;
 
 
 namespace ReportEngine.App
@@ -21,7 +20,9 @@ namespace ReportEngine.App
             InitializeComponent();
             DataContext = mainViewModel;
 
-        }
+            mainViewModel.OnShowAllProjectsCommandExecuted(null);
+            mainViewModel.OnChekDbConnectionCommandExecuted(null);
+        }       
         //Здесь реализованый методы, которые не требуют много времени на выполнение 
         private void CheckForUpdates(object sender, RoutedEventArgs e)
         {

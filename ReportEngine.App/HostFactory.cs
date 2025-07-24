@@ -31,12 +31,16 @@ namespace ReportEngine.App
                     //Регистрируем репозитории
                     services.AddScoped<IBaseRepository<User>, UserRepository>();
                     services.AddScoped<IBaseRepository<ProjectInfo>, ProjectInfoRepository>();
+                    services.AddScoped<ProjectInfoRepository>();
+
                     // Регистрация сервисов
                     services.AddScoped<ExcelCreator>();
                     services.AddSingleton<NavigationService>();
+                    services.AddSingleton<IServiceProvider>(provider => provider);
                     // Регистрация ViewModels
                     services.AddScoped<MainWindowViewModel>();
                     services.AddScoped<UsersViewModel>();
+                    services.AddScoped<ProjectViewModel>();
                     // Регистрация окон
                     services.AddSingleton(provider =>
                     {
@@ -45,14 +49,13 @@ namespace ReportEngine.App
 
                         var mainWindow = new MainWindow(viewModel);
                         var contentHost = mainWindow.FindName("MainContentControl") as ContentControl;
-
                         navService.InitializeContentHost(contentHost);
 
                         return mainWindow;
                     });
 
                     services.AddSingleton<App>();
-                    services.AddSingleton<UsersView>();
+                    services.AddTransient<UsersView>();
                     services.AddScoped<TreeProjectView>();
                 })
                 .ConfigureLogging(logging =>

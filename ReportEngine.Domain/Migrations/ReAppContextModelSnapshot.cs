@@ -22,6 +22,216 @@ namespace ReportEngine.Domain.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("ReportEngine.Domain.Entities.Armautre.CarbonArmature", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Depth")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("Height")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Measure")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<float>("Weight")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Width")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CarbonArmatures");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.Armautre.HeaterArmature", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Depth")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("Height")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Measure")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<float>("Weight")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Width")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HeaterArmatures");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.Armautre.StainlessArmature", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Depth")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("Height")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Measure")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<float>("Weight")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Width")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StainlessArmatures");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.Braces.BoxesBrace", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Measure")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BoxesBraces");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.Braces.DrainageBrace", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Measure")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DrainageBraces");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.Braces.SensorBrace", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Measure")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SensorsBraces");
+                });
+
             modelBuilder.Entity("ReportEngine.Domain.Entities.Company", b =>
                 {
                     b.Property<int>("Id")
@@ -41,6 +251,693 @@ namespace ReportEngine.Domain.Migrations
                     b.ToTable("Companies");
                 });
 
+            modelBuilder.Entity("ReportEngine.Domain.Entities.Drainage.Drainage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Depth")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("Height")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Measure")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<float>("Weight")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Width")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Drainages");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ElectricComponents.CabelBoxe", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Cabel")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CabelInput")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ElectricProtection")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Measure")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CabelBoxes");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ElectricComponents.CabelInput", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Cabel")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CabelInput")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ElectricProtection")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Measure")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CabelInputs");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ElectricComponents.CabelProduction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Cabel")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CabelInput")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ElectricProtection")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Measure")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CabelProductions");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ElectricComponents.CabelProtection", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Cabel")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CabelInput")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ElectricProtection")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Measure")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CabelProtections");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ElectricComponents.Heater", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Cabel")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CabelInput")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ElectricProtection")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Measure")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Heaters");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ElectricSockets.CarbonSocket", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Depth")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("Height")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Measure")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<float>("Weight")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Width")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CarbonSockets");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ElectricSockets.HeaterSocket", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Depth")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("Height")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Measure")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<float>("Weight")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Width")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HeaterSockets");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ElectricSockets.StainlessSocket", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Depth")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("Height")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Measure")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<float>("Weight")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Width")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StainlessSockets");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.Frame.FrameDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Measure")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FrameDetails");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.Frame.FrameRoll", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Measure")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FrameRolls");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.Frame.PillarEqiup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Measure")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PillarEqiups");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.Obvyazka", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("Clamp")
+                        .HasColumnType("real");
+
+                    b.Property<float>("HumanCost")
+                        .HasColumnType("real");
+
+                    b.Property<float>("LineLength")
+                        .HasColumnType("real");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OtherLineCount")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Sensor")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SensorType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<float>("TreeSocket")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Weight")
+                        .HasColumnType("real");
+
+                    b.Property<float>("WidthOnFrame")
+                        .HasColumnType("real");
+
+                    b.Property<float>("ZraCount")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Obvyazki");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.Other.Container", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Depth")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("Height")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Measure")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<float>("Weight")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Width")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Containers");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.Other.Other", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Depth")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("Height")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Measure")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<float>("Weight")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Width")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Others");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.Pipes.CarbonPipe", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Depth")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("Height")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Measure")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<float>("Weight")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Width")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CarbonPipes");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.Pipes.HeaterPipe", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Depth")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("Height")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Measure")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<float>("Weight")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Width")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HeaterPipes");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.Pipes.StainlessPipe", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Depth")
+                        .HasColumnType("real");
+
+                    b.Property<int>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("Height")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Measure")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<float>("Weight")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Width")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StainlessPipes");
+                });
+
             modelBuilder.Entity("ReportEngine.Domain.Entities.ProjectInfo", b =>
                 {
                     b.Property<int>("Id")
@@ -55,27 +952,80 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<decimal>("Cost")
                         .HasColumnType("numeric");
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("CreationDate")
+                        .HasColumnType("date");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("EndDate")
+                        .HasColumnType("date");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("MarkMinus")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<string>("MarkPlus")
+                        .HasColumnType("text");
 
-                    b.Property<bool>("isStarted")
+                    b.Property<int>("Number")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Object")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OrderCustomer")
+                        .HasColumnType("text");
+
+                    b.Property<DateOnly>("OutOfProduction")
+                        .HasColumnType("date");
+
+                    b.Property<string>("RequestProduction")
+                        .HasColumnType("text");
+
+                    b.Property<int>("StandCount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("isGalvanized")
                         .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
                     b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.Stand", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Design")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("KKSCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProjectInfoId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectInfoId");
+
+                    b.ToTable("Stands");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.User", b =>
@@ -110,6 +1060,22 @@ namespace ReportEngine.Domain.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.Stand", b =>
+                {
+                    b.HasOne("ReportEngine.Domain.Entities.ProjectInfo", "Project")
+                        .WithMany("Stands")
+                        .HasForeignKey("ProjectInfoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ProjectInfo", b =>
+                {
+                    b.Navigation("Stands");
                 });
 #pragma warning restore 612, 618
         }
