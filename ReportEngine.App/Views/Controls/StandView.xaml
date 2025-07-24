@@ -100,10 +100,8 @@
         <ComboBox
             Grid.Row="3"
             Grid.Column="1"
-            Margin="0,5">
-            <ComboBoxItem Content="На кронштейне" />
-            <ComboBoxItem Content="Швеллер" />
-        </ComboBox>
+            Margin="0,5"
+            ItemsSource="{Binding BraceSensor}" />
         <Button
             Grid.Row="3"
             Grid.Column="2"

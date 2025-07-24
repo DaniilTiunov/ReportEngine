@@ -16,11 +16,7 @@ namespace ReportEngine.App.ViewModels
     {
         private readonly ProjectInfoRepository _projectRepository;
 
-
         #region Приватные поля
-
-        private ObservableCollection<ProjectInfo> _allProjects;
-
         private int _number;//№п/п
 
         private string? _description;//Обозначение КД
@@ -55,6 +51,7 @@ namespace ReportEngine.App.ViewModels
         #endregion
 
         #region Публичные свойства
+        public IEnumerable<string> Statuses { get; set; } = new List<string>() { "ТКП", "Завершен" };
         public int CurrentProjectId;
         public int Number { get => _number; set => Set(ref _number, value); } //№п/п
         public string? Description { get => _description; set => Set(ref _description, value); } //Обозначение КД                               
@@ -72,10 +69,29 @@ namespace ReportEngine.App.ViewModels
         public string? MarkPlus { get => _markPlus; set => Set(ref _markPlus, value); } //Маркировка +
         public string? MarkMinus { get => _markMinus; set => Set(ref _markMinus, value); } //Маркировка -
         public bool IsGalvanized { get => _isGalvanized; set => Set(ref _isGalvanized, value); } //Оцинковка
-        public ObservableCollection<ProjectInfo> AllProjects { get => _allProjects; set => Set(ref _allProjects, value); } 
         #endregion
 
+        #region Привантые поля стендов
 
+        #endregion
+
+        #region Публичные свойства для стендов
+        public IEnumerable<string> BraceSensor { get; set; } = new List<string>() { "На кронштейне", "Швеллер" };
+        public string? KKSCode { get; set; } //Код ККС
+        public string? Design { get; set; } //Обозначение стэнда
+        public int Devices { get; set; } //Приборы
+        public string? BraceType { get; set; } //Тип крепления датчика
+        public float Width { get; set; } //Ширна
+        public string? SerialNumber { get; set; } //Серийный номер
+        public float Weight { get; set; } //Масса
+        public decimal StandSummCost { get; set; } //Сумма стенда
+        public int ObvyazkaType { get; set; } //Тип обвязки
+        public int NN { get; set; } //NN
+        public string? MaterialLine { get; set; } //Материал линии
+        public string? Armature { get; set; } // Араматура
+        public string? TreeScoket { get; set; } //Тройник
+        public string? KMCH { get; set; } //КМЧ
+        #endregion
         public ProjectViewModel(ProjectInfoRepository projectRepository)
         {          
             _projectRepository = projectRepository;
