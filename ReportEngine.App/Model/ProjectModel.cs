@@ -60,9 +60,5 @@ namespace ReportEngine.App.Model
         public bool IsGalvanized { get => _isGalvanized; set => Set(ref _isGalvanized, value); } //Оцинковка
         #endregion
 
-        private ProjectStatus ComboBoxChangedValue(string status)
-        {
-            return (ProjectStatus)Enum.Parse(typeof(ProjectStatus), status);
-        }
     }
 }
