@@ -48,22 +48,28 @@ namespace ReportEngine.App.ViewModels
         #region Конструктор
         public MainWindowViewModel(IServiceProvider serviceProvider, NavigationService navigation, IBaseRepository<ProjectInfo> projectRepository)
         {
-            #region Комманды
+            _serviceProvider = serviceProvider;
+            _projectRepository = projectRepository;
+            _navigation = navigation;
+
+            InitializeCommands();
+        }
+        #endregion
+
+        #region Методы        
+        public void InitializeCommands() 
+        {
             CloseAppCommand = new RelayCommand(OnCloseAppCommandExecuted, CanCloseAppCommandExecute);
             OpenAllUsersCommand = new RelayCommand(OnOpenAllUsersCommandExecuted, CanOpenAllUsersCommandExecute);
             ChekDbConnectionCommand = new RelayCommand(OnChekDbConnectionCommandExecuted, CanChekDbConnectionCommandExecute);
             OpenTreeViewCommand = new RelayCommand(OnOpenTreeViewCommandExecuted, CanOpenTreeViewCommandExecute);
             ShowAllProjectsCommand = new RelayCommand(OnShowAllProjectsCommandExecuted, CanShowAllProjectsCommandExecute);
             DeleteSelectedProjectCommand = new RelayCommand(OnDeleteSelectedProjectExecuted, CanDeleteSelectedProjectExecute);
-            #endregion
-
-            _serviceProvider = serviceProvider;
-            _projectRepository = projectRepository;
-            _navigation = navigation;
         }
         #endregion
+
         #region Комманды
-        public ICommand OpenTreeViewCommand { get; }
+        public ICommand OpenTreeViewCommand { get; set; }
         public bool CanOpenTreeViewCommandExecute(object e) => true;
         public void OnOpenTreeViewCommandExecuted(object e)
         {
@@ -76,18 +82,17 @@ namespace ReportEngine.App.ViewModels
                 MessageBox.Show(ex.Message);
             }
         }
-        public ICommand CloseAppCommand { get; }
+        public ICommand CloseAppCommand { get; set; }
         public bool CanCloseAppCommandExecute(object e) => true;
         public void OnCloseAppCommandExecuted(object e) => Application.Current.Shutdown();
 
-        public ICommand OpenAllUsersCommand { get; }
+        public ICommand OpenAllUsersCommand { get; set; }
         public bool CanOpenAllUsersCommandExecute(object e) => true;
         public void OnOpenAllUsersCommandExecuted(object e)
         {
             _navigation.ShowWindow<UsersView>();
         }
-
-        public ICommand ChekDbConnectionCommand { get; }
+        public ICommand ChekDbConnectionCommand { get; set; }
         public bool CanChekDbConnectionCommandExecute(object e) => true;
         public void OnChekDbConnectionCommandExecuted(object e)
         {
@@ -98,7 +103,7 @@ namespace ReportEngine.App.ViewModels
             ConnectionStatusMessage = IsConnected ? "Соединение установлено" : "Соединение не установлено";
 
         }
-        public ICommand ShowAllProjectsCommand { get; }
+        public ICommand ShowAllProjectsCommand { get; set; }
         public bool CanShowAllProjectsCommandExecute(object e) => true;
         public async void OnShowAllProjectsCommandExecuted(object e)
         {
@@ -115,9 +120,7 @@ namespace ReportEngine.App.ViewModels
             }
 
         }
-        #endregion
-
-        public ICommand DeleteSelectedProjectCommand { get; }
+        public ICommand DeleteSelectedProjectCommand { get; set; }
         public bool CanDeleteSelectedProjectExecute(object e) => true;
         public async void OnDeleteSelectedProjectExecuted(object e)
         {
@@ -129,9 +132,6 @@ namespace ReportEngine.App.ViewModels
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
-
-        #region Методы
-
         #endregion
     }
 }

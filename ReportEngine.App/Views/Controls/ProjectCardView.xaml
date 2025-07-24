@@ -185,6 +185,7 @@
             Text="{Binding OrderCustomer}" />
 
         <ComboBox
+            x:Name="StatusComboBox"
             Grid.Row="5"
             Grid.Column="1"
             Margin="0,2,0,6"

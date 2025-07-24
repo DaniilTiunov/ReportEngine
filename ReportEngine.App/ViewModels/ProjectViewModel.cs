@@ -7,6 +7,7 @@ using ReportEngine.Shared.Config.DebugConsol;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels
@@ -34,7 +35,7 @@ namespace ReportEngine.App.ViewModels
 
         private decimal _cost; //Стоимость
 
-        private ProjectStatus _status; //Статус
+        private string _status; //Статус
 
         private DateTime _startDate; //Старта проекта
 
@@ -62,7 +63,7 @@ namespace ReportEngine.App.ViewModels
         public string? Object { get => _object; set => Set(ref _object, value); } //Объект
         public int StandCount { get => _standCount; set => Set(ref _standCount, value); } //Кол-во стендов
         public decimal Cost { get => _cost; set => Set(ref _cost, value); } //Стоимость
-        public ProjectStatus Status { get => _status; set => Set(ref _status, value); } //Статус
+        public string Status { get => _status; set => Set(ref _status, value); } //Статус
         public DateTime StartDate { get => _startDate; set => Set(ref _startDate, value); } //Старта проекта
         public DateTime OutOfProduction { get => _outOfProduction; set => Set(ref _outOfProduction, value); } //Выход из производства
         public DateTime EndDate { get => _endDate; set => Set(ref _endDate, value); } //Окончание догвора
@@ -74,18 +75,36 @@ namespace ReportEngine.App.ViewModels
         public ObservableCollection<ProjectInfo> AllProjects { get => _allProjects; set => Set(ref _allProjects, value); } 
         #endregion
 
-        public ProjectViewModel(ProjectInfoRepository projectRepository)
-        {
-            CreateNewCardCommand = new RelayCommand(OnCreateNewCardCommandExecuted, CanCreateNewCardCommandExecute);
-            AddNewStandCommand = new RelayCommand(OnAddNewStandCommandExecuted, CanAddNewStandCommandExecute);
 
+        public ProjectViewModel(ProjectInfoRepository projectRepository)
+        {          
             _projectRepository = projectRepository;
 
+            InitializeCommands();
+            InitializeTime();
+        }
+
+        #region Методы
+        public void InitializeTime()
+        {
             CreationDate = DateTime.Now.Date;
             StartDate = DateTime.Now.Date;
             OutOfProduction = DateTime.Now.Date;
             EndDate = DateTime.Now.Date;
         }
+        public void InitializeCommands()
+        {
+            CreateNewCardCommand = new RelayCommand(OnCreateNewCardCommandExecuted, CanCreateNewCardCommandExecute);
+            AddNewStandCommand = new RelayCommand(OnAddNewStandCommandExecuted, CanAddNewStandCommandExecute);
+        }
+
+        public ProjectStatus ComboBoxChangedValue(string status)
+        {
+            return (ProjectStatus)Enum.Parse(typeof(ProjectStatus), status);
+        }
+        #endregion
+
+        #region Команды
         public ICommand CreateNewCardCommand { get; set; }
         public bool CanCreateNewCardCommandExecute(object e) => true;
         public async void OnCreateNewCardCommandExecuted(object e)
@@ -101,7 +120,7 @@ namespace ReportEngine.App.ViewModels
                     Object = Object,
                     StandCount = StandCount,
                     Cost = Cost,
-                    Status = Enum.GetValues(typeof(ProjectStatus)).Cast<ProjectStatus>().First(),
+                    Status = ComboBoxChangedValue(Status),
                     StartDate = DateOnly.FromDateTime(StartDate),
                     OutOfProduction = DateOnly.FromDateTime(OutOfProduction),
                     EndDate = DateOnly.FromDateTime(EndDate),
@@ -120,9 +139,9 @@ namespace ReportEngine.App.ViewModels
                 MessageBox.Show("Карточка проекта успешно создана!");
 
             }
-            catch(Exception ex){MessageBox.Show(ex.Message);} 
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
-        
+
         public ICommand AddNewStandCommand { get; set; }
         public bool CanAddNewStandCommandExecute(object e) => true;
         public async void OnAddNewStandCommandExecuted(object e)
@@ -150,7 +169,8 @@ namespace ReportEngine.App.ViewModels
             {
                 MessageBox.Show($"Ошибка при добавлении стенда: {ex.Message}");
             }
-        }
+        } 
+        #endregion
 
     }
 }
