@@ -28,8 +28,8 @@ namespace ReportEngine.App
                 var mainWindow = host.Services.GetService<MainWindow>(); //Получаем экземпляр окна
 
                 app.MainWindow = mainWindow;
-                app?.Run(); //Запускаем
                 mainWindow?.Show(); //Показываем главное окно приложения
+                app?.Run(); //Запускаем
             }
             catch (Exception ex)
             {
