@@ -59,7 +59,7 @@
             FontSize="14">
             <MenuItem Header="Файл">
                 <MenuItem Command="{Binding OpenTreeViewCommand}" Header="Новый проект" />
-                <MenuItem Click="OpenMainScreen" Header="На главный экран" />
+                <MenuItem Command="{Binding OpenMainWindowCommand}" Header="На главный экран" />
                 <Separator />
                 <MenuItem Click="OpenSettingsWindow" Header="Настройки" />
                 <Separator />

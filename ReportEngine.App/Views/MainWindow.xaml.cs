@@ -57,9 +57,9 @@ namespace ReportEngine.App
         {
             Process.Start("notepad.exe");
         }
-        private void OpenMainScreen(object sender, RoutedEventArgs e)
-        {
-            MainContentControl.Content = MainDataGrid;
-        }
+        //private void OpenMainScreen(object sender, RoutedEventArgs e)
+        //{
+            
+        //}
     }
 }

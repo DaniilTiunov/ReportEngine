@@ -8,6 +8,7 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels
@@ -65,10 +66,25 @@ namespace ReportEngine.App.ViewModels
             OpenTreeViewCommand = new RelayCommand(OnOpenTreeViewCommandExecuted, CanOpenTreeViewCommandExecute);
             ShowAllProjectsCommand = new RelayCommand(OnShowAllProjectsCommandExecuted, CanShowAllProjectsCommandExecute);
             DeleteSelectedProjectCommand = new RelayCommand(OnDeleteSelectedProjectExecuted, CanDeleteSelectedProjectExecute);
+            OpenMainWindowCommand = new RelayCommand(OnOpenMainWindowCommandExecuted, CanOpenMainWindowCommandExecute);
         }
         #endregion
-
         #region Комманды
+        public ICommand OpenMainWindowCommand { get; set; }
+        public bool CanOpenMainWindowCommandExecute(object e) => true;
+        public void OnOpenMainWindowCommandExecuted(object e)
+        {
+            try
+            {
+                _navigation.CloseContent();
+                var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+                mainWindow.MainContentControl.Content = mainWindow.MainDataGrid;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
         public ICommand OpenTreeViewCommand { get; set; }
         public bool CanOpenTreeViewCommandExecute(object e) => true;
         public void OnOpenTreeViewCommandExecuted(object e)

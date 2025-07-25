@@ -44,24 +44,38 @@ namespace ReportEngine.App.Services
         {
             if (_contentHost != null)
             {
-                _currentContent = _serviceProvider.GetRequiredService<T>();
-                _contentHost.Content = _currentContent;
+                if (_currentContent is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+
+                var content = _serviceProvider.GetRequiredService<T>();
+                _contentHost.Content = content;
+                _currentContent = content;
             }
         }
-
-        public void HideContent()
+        public void ClearContent<T>() where T : UserControl
         {
+            if (_currentContent is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
             if (_contentHost != null)
             {
                 _contentHost.Content = null;
+                _currentContent = null;
             }
         }
-
-        public void ClearContent()
+        public void CloseContent()
         {
+            if (_currentContent is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
             if (_contentHost != null)
             {
                 _contentHost.Content = null;
+                _currentContent = null;
             }
         }
         #endregion
