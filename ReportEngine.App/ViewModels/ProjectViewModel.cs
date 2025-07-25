@@ -82,7 +82,7 @@ namespace ReportEngine.App.ViewModels
 
                 CurrentProject.CurrentProjectId = newProjectCard.Id;
 
-                MessageBox.Show("Карточка проекта успешно создана!");
+                MessageBox.Show($"Проект создан! ID: {newProjectCard.Id}");
 
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
