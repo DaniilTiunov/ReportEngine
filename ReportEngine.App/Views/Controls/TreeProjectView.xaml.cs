@@ -5,8 +5,10 @@ using System.Windows.Input;
 
 namespace ReportEngine.App.Views.Controls
 {
-    public partial class TreeProjectView : UserControl
+    public partial class TreeProjectView : UserControl, IDisposable
     {
+        private bool _disposed;
+
         private ProjectViewModel _projectViewModel;
         public TreeProjectView(ProjectViewModel projectViewModel)
         {
@@ -65,6 +67,24 @@ namespace ReportEngine.App.Views.Controls
                 MessageBox.Show(ex.Message);
                 return null;
             }
+        }
+
+        public void Dispose()
+        {
+            if (_disposed) return;
+
+            DataContext = null;
+
+            if (this.Resources != null)
+            {
+                this.Resources.Clear();
+            }
+
+            _disposed = true;
+        }
+        ~TreeProjectView()
+        {
+            Dispose();
         }
     }
 }

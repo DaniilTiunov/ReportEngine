@@ -56,7 +56,7 @@ namespace ReportEngine.App
 
                     services.AddSingleton<App>();
                     services.AddTransient<UsersView>();
-                    services.AddScoped<TreeProjectView>();
+                    services.AddTransient<TreeProjectView>();
                 })
                 .ConfigureLogging(logging =>
                 {
