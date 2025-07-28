@@ -34,8 +34,7 @@
                 Margin="5"
                 Padding="10,2"
                 Command="{Binding DeleteEquipCommand}"
-                Content="Удалить"
-                IsEnabled="{Binding GenericEquipModel.SelectedBaseEquip}" />
+                Content="Удалить" />
         </StackPanel>
 
         <!--  DataGrid с контекстным меню  -->
@@ -54,7 +53,7 @@
                     <MenuItem
                         Command="{Binding DeleteEquipCommand}"
                         Header="Удалить оборудование"
-                        IsEnabled="{Binding CurrentModel.SelectedBaseEquip}" />
+                        IsEnabled="{Binding GenericEquipModel.SelectedBaseEquip}" />
                 </ContextMenu>
             </DataGrid.ContextMenu>
 
@@ -65,7 +64,7 @@
                     Header="Название" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Cost, StringFormat={}{0:N2}}"
+                    Binding="{Binding Cost}"
                     Header="Стоимость" />
                 <DataGridTextColumn
                     Width="*"
@@ -73,19 +72,19 @@
                     Header="Ед. измерения" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Height, StringFormat={}{0:N2}}"
+                    Binding="{Binding Height}"
                     Header="Высота" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Width, StringFormat={}{0:N2}}"
+                    Binding="{Binding Width}"
                     Header="Ширина" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Depth, StringFormat={}{0:N2}}"
+                    Binding="{Binding Depth}"
                     Header="Глубина" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Weight, StringFormat={}{0:N2}}"
+                    Binding="{Binding Weight}"
                     Header="Вес" />
                 <DataGridTextColumn
                     Width="*"

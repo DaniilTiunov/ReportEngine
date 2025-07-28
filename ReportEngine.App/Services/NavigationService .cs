@@ -27,7 +27,7 @@ namespace ReportEngine.App.Services
             _currentWindow.Show();
         }
 
-        public void ShowGenericWindow<T>() where T : BaseEquip
+        public void ShowGenericWindow<T>() where T : BaseEquip, new()
         {
             var factory = _serviceProvider.GetRequiredService<GenericEquipWindowFactory>();
             _currentWindow = factory.CreateWindow<T>();

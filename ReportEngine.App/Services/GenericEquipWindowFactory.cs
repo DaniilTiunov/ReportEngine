@@ -16,7 +16,7 @@ namespace ReportEngine.App.Services
             _serviceProvider = serviceProvider;
         }
 
-        public Window CreateWindow<TEquip>() where TEquip : BaseEquip
+        public Window CreateWindow<TEquip>() where TEquip : BaseEquip, new()
         {
             var repository = _serviceProvider.GetRequiredService<IGenericBaseRepository<TEquip>>();
             var viewModel = new GenericEquipViewModel<TEquip>(repository);

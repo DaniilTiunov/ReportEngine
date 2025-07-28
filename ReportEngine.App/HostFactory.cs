@@ -33,7 +33,7 @@ namespace ReportEngine.App
                     services.AddScoped<IBaseRepository<User>, UserRepository>();
                     services.AddScoped<IBaseRepository<ProjectInfo>, ProjectInfoRepository>();
                     services.AddScoped<ProjectInfoRepository>();
-                    services.AddTransient<IGenericBaseRepository<CarbonPipe>, GenericEquipRepository<CarbonPipe>>();
+                    services.AddScoped<IGenericBaseRepository<CarbonPipe>, GenericEquipRepository<CarbonPipe>>();
 
                     // Регистрация сервисов
                     services.AddScoped<ExcelCreator>();
@@ -44,6 +44,7 @@ namespace ReportEngine.App
                     services.AddScoped<MainWindowViewModel>();
                     services.AddScoped<UsersViewModel>();
                     services.AddScoped<ProjectViewModel>();
+                    services.AddScoped<GenericEquipViewModel<CarbonPipe>>();
                     // Регистрация окон
                     services.AddSingleton(provider =>
                     {
@@ -60,7 +61,7 @@ namespace ReportEngine.App
                     services.AddSingleton<App>();
                     services.AddTransient<UsersView>();
                     services.AddTransient<TreeProjectView>();
-
+                    services.AddTransient<GenericEquipView>();
                 })
                 .ConfigureLogging(logging =>
                 {

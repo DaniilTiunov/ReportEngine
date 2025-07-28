@@ -2,7 +2,9 @@
 using ReportEngine.App.Model;
 using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Shared.Config.DebugConsol;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 
@@ -32,6 +34,8 @@ namespace ReportEngine.App.ViewModels
             {
                 var items = await _genericEquipRepository.GetAllAsync();
                 GenericEquipModel.BaseEquips = new ObservableCollection<T>(items);
+
+                DebugConsole.WriteLine(GenericEquipModel.BaseEquips.Count);
             }
             catch (Exception ex)
             {
