@@ -16,12 +16,12 @@ namespace ReportEngine.App.ViewModels
 {
     public class ProjectViewModel : BaseViewModel
     {
-        private readonly ProjectInfoRepository _projectRepository;
+        private readonly IProjectInfoRepository _projectRepository;
         public StandModel CurrentStand { get; set; }
         public ProjectModel CurrentProject { get; set; }
         
  
-        public ProjectViewModel(ProjectInfoRepository projectRepository)
+        public ProjectViewModel(IProjectInfoRepository projectRepository)
         {          
             _projectRepository = projectRepository;
 
@@ -82,7 +82,7 @@ namespace ReportEngine.App.ViewModels
 
                 CurrentProject.CurrentProjectId = newProjectCard.Id;
 
-                MessageBox.Show("Карточка проекта успешно создана!");
+                MessageBox.Show($"Проект создан! ID: {newProjectCard.Id}");
 
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }

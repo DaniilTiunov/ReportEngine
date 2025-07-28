@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using ReportEngine.Shared.Config.DebugConsol;
+using ReportEngine.Domain.Entities.BaseEntities;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -25,6 +24,13 @@ namespace ReportEngine.App.Services
         public void ShowWindow<T>() where T : Window
         {
             _currentWindow = _serviceProvider.GetRequiredService<T>();
+            _currentWindow.Show();
+        }
+
+        public void ShowGenericWindow<T>() where T : BaseEquip, new()
+        {
+            var factory = _serviceProvider.GetRequiredService<GenericEquipWindowFactory>();
+            _currentWindow = factory.CreateWindow<T>();
             _currentWindow.Show();
         }
 

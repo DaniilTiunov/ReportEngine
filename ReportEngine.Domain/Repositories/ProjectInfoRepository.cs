@@ -5,7 +5,7 @@ using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.Domain.Repositories
 {
-    public class ProjectInfoRepository : IBaseRepository<ProjectInfo>
+    public class ProjectInfoRepository : IProjectInfoRepository
     {
         private readonly ReAppContext _context;
 

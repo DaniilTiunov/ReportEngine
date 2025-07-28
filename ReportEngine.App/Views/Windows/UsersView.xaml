@@ -64,9 +64,9 @@
             Grid.ColumnSpan="4"
             Margin="10,79,5,10"
             CanUserAddRows="True"
-            ItemsSource="{Binding AllUsers}"
+            ItemsSource="{Binding CurrentUser.AllUsers, Mode=OneWay}"
             RowHeaderWidth="40"
-            SelectedItem="{Binding SelectedUser}"
+            SelectedItem="{Binding CurrentUser.SelectedUser}"
             SelectionUnit="FullRow">
             <DataGrid.ContextMenu>
                 <ContextMenu>

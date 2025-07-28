@@ -1,0 +1,100 @@
+﻿<Window
+    x:Class="ReportEngine.App.Views.Windows.GenericEquipView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ReportEngine.App.Views.Windows"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="GenericEquipView"
+    Width="900"
+    Height="450"
+    mc:Ignorable="d">
+    <Grid Margin="5,5,0,5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--  Панель кнопок  -->
+        <StackPanel
+            Grid.Row="0"
+            Margin="0,0,0,5"
+            Orientation="Horizontal">
+            <Button
+                Margin="5"
+                Padding="10,2"
+                Command="{Binding ShowAllEquipCommand}"
+                Content="Обновить" />
+            <Button
+                Margin="5"
+                Padding="10,2"
+                Command="{Binding AddNewEquipCommand}"
+                Content="Добавить" />
+            <Button
+                Margin="5"
+                Padding="10,2"
+                Command="{Binding DeleteEquipCommand}"
+                Content="Удалить" />
+        </StackPanel>
+
+        <!--  DataGrid с контекстным меню  -->
+        <DataGrid
+            Grid.Row="1"
+            AutoGenerateColumns="False"
+            CanUserAddRows="False"
+            IsReadOnly="True"
+            ItemsSource="{Binding GenericEquipModel.BaseEquips}"
+            SelectedItem="{Binding GenericEquipModel.SelectedBaseEquip}"
+            SelectionUnit="FullRow">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding ShowAllEquipCommand}" Header="Обновить список" />
+                    <MenuItem Command="{Binding AddNewEquipCommand}" Header="Добавить оборудование" />
+                    <MenuItem
+                        Command="{Binding DeleteEquipCommand}"
+                        Header="Удалить оборудование"
+                        IsEnabled="{Binding GenericEquipModel.SelectedBaseEquip}" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Name}"
+                    Header="Название" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Cost}"
+                    Header="Стоимость" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Measure}"
+                    Header="Ед. измерения" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Height}"
+                    Header="Высота" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Width}"
+                    Header="Ширина" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Depth}"
+                    Header="Глубина" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Weight}"
+                    Header="Вес" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Type}"
+                    Header="Тип" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding ExportDays}"
+                    Header="Срок экспорта (дни)" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

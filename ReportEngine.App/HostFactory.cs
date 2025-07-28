@@ -8,6 +8,7 @@ using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork;
@@ -18,53 +19,78 @@ namespace ReportEngine.App
 {
     public class HostFactory
     {
-        public static IHost BuildHost(string connString) //Создание Host приложения
+        public static IHost BuildHost(string connString)
         {
-            return Host.CreateDefaultBuilder().
-                UseSerilog().//Конфигурация Host приложения 
-                ConfigureServices(services => //Регаем сервисы хуервисы 
+            return Host.CreateDefaultBuilder()
+                .UseSerilog()
+                .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddDbContext<ReAppContext>(options => //И контекст
-                    {
-                        options.UseNpgsql(connString); //Используем Npgsql
-                    });
-                    //Регистрируем репозитории
-                    services.AddScoped<IBaseRepository<User>, UserRepository>();
-                    services.AddScoped<IBaseRepository<ProjectInfo>, ProjectInfoRepository>();
-                    services.AddScoped<ProjectInfoRepository>();
-
-                    // Регистрация сервисов
-                    services.AddScoped<ExcelCreator>();
-                    services.AddSingleton<NavigationService>();
-                    services.AddSingleton<IServiceProvider>(provider => provider);
-                    // Регистрация ViewModels
-                    services.AddScoped<MainWindowViewModel>();
-                    services.AddScoped<UsersViewModel>();
-                    services.AddScoped<ProjectViewModel>();
-                    // Регистрация окон
-                    services.AddSingleton(provider =>
-                    {
-                        var navService = provider.GetRequiredService<NavigationService>();
-                        var viewModel = provider.GetRequiredService<MainWindowViewModel>();
-
-                        var mainWindow = new MainWindow(viewModel);
-                        var contentHost = mainWindow.FindName("MainContentControl") as ContentControl;
-                        navService.InitializeContentHost(contentHost);
-
-                        return mainWindow;
-                    });
+                    //Регистрация контекста БД
+                    ConfigureDatabase(services, connString);
+                    //Регистрация репозиториев
+                    ConfigureRepositories(services);
+                    //Регистрация сервисов приложения
+                    ConfigureApplicationServices(services);
+                    //Регистрация ViewModels
+                    ConfigureViewModels(services);
+                    //Регистрация окон и представлений
+                    ConfigureViews(services);
 
                     services.AddSingleton<App>();
-                    services.AddTransient<UsersView>();
-                    services.AddTransient<TreeProjectView>();
                 })
                 .ConfigureLogging(logging =>
                 {
-                    logging.ClearProviders(); //Очищаем провайдеры логирования
-                    logging.AddSerilog(); //Добавляем Serilog
-                    logging.SetMinimumLevel(LogLevel.Information); //Устанавливаем уровень логирования
+                    logging.ClearProviders()
+                          .AddSerilog()
+                          .SetMinimumLevel(LogLevel.Information);
                 })
-                .Build(); // Возвращаем собранный Host
+                .Build();
+        }
+        private static void ConfigureDatabase(IServiceCollection services, string connString)
+        {
+            services.AddDbContext<ReAppContext>(options =>
+                options.UseNpgsql(connString));
+        }
+
+        private static void ConfigureRepositories(IServiceCollection services)
+        {                      
+            // Обычные репозитории
+            services.AddScoped<IBaseRepository<User>, UserRepository>();
+            services.AddScoped<IProjectInfoRepository, ProjectInfoRepository>();
+            // Generic-репозитории
+            services.AddScoped<IGenericBaseRepository<CarbonPipe>, GenericEquipRepository<CarbonPipe>>();
+            services.AddScoped<IGenericBaseRepository<HeaterPipe>, GenericEquipRepository<HeaterPipe>>();
+            services.AddScoped<IGenericBaseRepository<StainlessPipe>, GenericEquipRepository<StainlessPipe>>();
+        }
+        private static void ConfigureApplicationServices(IServiceCollection services)
+        {
+            services.AddScoped<ExcelCreator>();
+            services.AddSingleton<GenericEquipWindowFactory>();
+            services.AddSingleton<NavigationService>();
+            services.AddSingleton<IServiceProvider>(provider => provider);
+        }
+        private static void ConfigureViewModels(IServiceCollection services)
+        {
+            services.AddScoped<MainWindowViewModel>();
+            services.AddScoped<UsersViewModel>();
+            services.AddScoped<ProjectViewModel>();
+            services.AddScoped(typeof(GenericEquipViewModel<>));
+        }
+        private static void ConfigureViews(IServiceCollection services)
+        {
+            // Главное окно
+            services.AddSingleton(provider =>
+            {
+                var navService = provider.GetRequiredService<NavigationService>();
+                var viewModel = provider.GetRequiredService<MainWindowViewModel>();
+                var mainWindow = new MainWindow(viewModel);
+
+                navService.InitializeContentHost(mainWindow.FindName("MainContentControl") as ContentControl);
+                return mainWindow;
+            });
+            services.AddTransient<UsersView>();
+            services.AddTransient<TreeProjectView>();
+            services.AddTransient<GenericEquipView>();
         }
     }
 }
