@@ -4,17 +4,16 @@ using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Model
 {
-    public class GenericEquipModel : BaseViewModel
+    public class GenericEquipModel<T> : BaseViewModel where T : BaseEquip
     {
-        private ObservableCollection<BaseEquip> _baseEquips;
-        private BaseEquip _selectedBaseEquip;
-
-        public ObservableCollection<BaseEquip> baseEquips
+        private ObservableCollection<T> _baseEquips;
+        private T _selectedBaseEquip;
+        public ObservableCollection<T> BaseEquips
         {
             get => _baseEquips;
             set => Set(ref _baseEquips, value);
         }
-        public BaseEquip SelectedBaseEquip
+        public T SelectedBaseEquip
         {
             get => _selectedBaseEquip;
             set => Set(ref _selectedBaseEquip, value);

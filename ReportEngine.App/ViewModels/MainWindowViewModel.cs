@@ -5,10 +5,11 @@ using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.ElectricComponents;
+using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
 using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels
@@ -58,8 +59,9 @@ namespace ReportEngine.App.ViewModels
         #endregion
 
         #region Методы        
-        public void InitializeCommands() 
+        public void InitializeCommands()
         {
+            OpenEquipCommand = new RelayCommand(OnOpenEquipCommandExecuted, CanOpenEquipCommandExecute);
             CloseAppCommand = new RelayCommand(OnCloseAppCommandExecuted, CanCloseAppCommandExecute);
             OpenAllUsersCommand = new RelayCommand(OnOpenAllUsersCommandExecuted, CanOpenAllUsersCommandExecute);
             ChekDbConnectionCommand = new RelayCommand(OnChekDbConnectionCommandExecuted, CanChekDbConnectionCommandExecute);
@@ -123,7 +125,6 @@ namespace ReportEngine.App.ViewModels
         public bool CanShowAllProjectsCommandExecute(object e) => true;
         public async void OnShowAllProjectsCommandExecuted(object e)
         {
-
             try
             {
                 var projects = await _projectRepository.GetAllAsync();
@@ -134,7 +135,6 @@ namespace ReportEngine.App.ViewModels
 
                 MessageBox.Show(ex.Message);
             }
-
         }
         public ICommand DeleteSelectedProjectCommand { get; set; }
         public bool CanDeleteSelectedProjectExecute(object e) => true;
@@ -147,6 +147,24 @@ namespace ReportEngine.App.ViewModels
                 await _projectRepository.DeleteAsync(currentProject);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+
+
+
+
+        public ICommand OpenEquipCommand { get; set; }
+        public bool CanOpenEquipCommandExecute(object e) => true;
+        public void OnOpenEquipCommandExecuted(object e)
+        {
+            try
+            {
+                _navigation.ShowGenericWindow<CarbonPipe>();
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message);
+            }
         }
         #endregion
     }

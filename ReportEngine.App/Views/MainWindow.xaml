@@ -70,7 +70,7 @@
             </MenuItem>
             <MenuItem Header="Исходные данные">
                 <MenuItem Header="Сортамент труб">
-                    <MenuItem Header="Жарпрочная сталь" />
+                    <MenuItem Command="{Binding OpenEquipCommand}" Header="Жарпрочная сталь" />
                     <MenuItem Header="Нержавеющая сталь" />
                     <MenuItem Header="Углеродистая сталь" />
                 </MenuItem>
