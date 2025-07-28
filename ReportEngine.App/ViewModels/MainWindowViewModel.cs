@@ -5,7 +5,7 @@ using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Entities.ElectricComponents;
+using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
 using System.Collections.ObjectModel;
@@ -17,7 +17,7 @@ namespace ReportEngine.App.ViewModels
     public class MainWindowViewModel : BaseViewModel
     {
         #region DI сервисов
-        private readonly IBaseRepository<ProjectInfo> _projectRepository;
+        private readonly IProjectInfoRepository _projectRepository;
         private readonly NavigationService _navigation;
         private readonly IServiceProvider _serviceProvider;
         #endregion
@@ -48,20 +48,20 @@ namespace ReportEngine.App.ViewModels
         #endregion
 
         #region Конструктор
-        public MainWindowViewModel(IServiceProvider serviceProvider, NavigationService navigation, IBaseRepository<ProjectInfo> projectRepository)
+        public MainWindowViewModel(IServiceProvider serviceProvider, NavigationService navigation, IProjectInfoRepository projectRepository)
         {
             _serviceProvider = serviceProvider;
             _projectRepository = projectRepository;
             _navigation = navigation;
 
             InitializeCommands();
+            InitializeGenericCommands();
         }
         #endregion
-
         #region Методы        
         public void InitializeCommands()
         {
-            OpenCarbonPipeCommand = new RelayCommand(OnOpenCarbonPipeCommandExecuted, CanOpenCarbonPipeCommandExecute);
+
             CloseAppCommand = new RelayCommand(OnCloseAppCommandExecuted, CanCloseAppCommandExecute);
             OpenAllUsersCommand = new RelayCommand(OnOpenAllUsersCommandExecuted, CanOpenAllUsersCommandExecute);
             ChekDbConnectionCommand = new RelayCommand(OnChekDbConnectionCommandExecuted, CanChekDbConnectionCommandExecute);
@@ -70,7 +70,14 @@ namespace ReportEngine.App.ViewModels
             DeleteSelectedProjectCommand = new RelayCommand(OnDeleteSelectedProjectExecuted, CanDeleteSelectedProjectExecute);
             OpenMainWindowCommand = new RelayCommand(OnOpenMainWindowCommandExecuted, CanOpenMainWindowCommandExecute);
         }
+        public void InitializeGenericCommands()
+        {
+            OpenHeaterPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<HeaterPipe>, CanOpenGenericWindowCommandExecute);
+            OpenCarbonPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<CarbonPipe>, CanOpenGenericWindowCommandExecute);
+            OpenStainlessPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<StainlessPipe>, CanOpenGenericWindowCommandExecute);
+        }
         #endregion
+
         #region Комманды
         public ICommand OpenMainWindowCommand { get; set; }
         public bool CanOpenMainWindowCommandExecute(object e) => true;
@@ -103,7 +110,6 @@ namespace ReportEngine.App.ViewModels
         public ICommand CloseAppCommand { get; set; }
         public bool CanCloseAppCommandExecute(object e) => true;
         public void OnCloseAppCommandExecuted(object e) => Application.Current.Shutdown();
-
         public ICommand OpenAllUsersCommand { get; set; }
         public bool CanOpenAllUsersCommandExecute(object e) => true;
         public void OnOpenAllUsersCommandExecuted(object e)
@@ -148,24 +154,24 @@ namespace ReportEngine.App.ViewModels
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
-
-
-
-
+        #endregion
+        #region Дженерик команды
         public ICommand OpenCarbonPipeCommand { get; set; }
-        public bool CanOpenCarbonPipeCommandExecute(object e) => true;
-        public void OnOpenCarbonPipeCommandExecuted(object e)
+        public ICommand OpenHeaterPipeCommand { get; set; }
+        public ICommand OpenStainlessPipeCommand { get; set; }
+        public ICommand OpenGenericWindowCommand { get; set; }
+        public bool CanOpenGenericWindowCommandExecute(object e) => true;
+        public void OnOpenGenericWindowCommandExecuted<T>(object e) where T : BaseEquip, new()
         {
             try
             {
-                _navigation.ShowGenericWindow<CarbonPipe>();
+                _navigation.ShowGenericWindow<T>();
             }
             catch (Exception ex)
             {
-
                 MessageBox.Show(ex.Message);
             }
-        }
+        } 
         #endregion
     }
 }

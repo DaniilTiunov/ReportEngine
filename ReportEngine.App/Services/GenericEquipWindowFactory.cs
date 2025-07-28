@@ -32,6 +32,8 @@ namespace ReportEngine.App.Services
             //Устанавливаем DataContext
             window.DataContext = viewModel;
 
+            viewModel.OnShowAllEquipCommandExecuted(null);
+
             return window;
         }
     }

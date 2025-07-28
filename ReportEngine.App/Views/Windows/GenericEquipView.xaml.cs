@@ -14,6 +14,7 @@ namespace ReportEngine.App.Views.Windows
         public GenericEquipView()
         {
             InitializeComponent();
+
         }
     }
 }

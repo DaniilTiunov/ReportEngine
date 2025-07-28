@@ -35,6 +35,8 @@ namespace ReportEngine.App
                     ConfigureViewModels(services);
                     //Регистрация окон и представлений
                     ConfigureViews(services);
+
+                    services.AddSingleton<App>();
                 })
                 .ConfigureLogging(logging =>
                 {
@@ -51,13 +53,14 @@ namespace ReportEngine.App
         }
 
         private static void ConfigureRepositories(IServiceCollection services)
-        {
+        {                      
             // Обычные репозитории
             services.AddScoped<IBaseRepository<User>, UserRepository>();
-            services.AddScoped<IBaseRepository<ProjectInfo>, ProjectInfoRepository>();
-            services.AddScoped<ProjectInfoRepository>();
+            services.AddScoped<IProjectInfoRepository, ProjectInfoRepository>();
             // Generic-репозитории
-            services.AddTransient<IGenericBaseRepository<CarbonPipe>, GenericEquipRepository<CarbonPipe>>();
+            services.AddScoped<IGenericBaseRepository<CarbonPipe>, GenericEquipRepository<CarbonPipe>>();
+            services.AddScoped<IGenericBaseRepository<HeaterPipe>, GenericEquipRepository<HeaterPipe>>();
+            services.AddScoped<IGenericBaseRepository<StainlessPipe>, GenericEquipRepository<StainlessPipe>>();
         }
         private static void ConfigureApplicationServices(IServiceCollection services)
         {
@@ -71,7 +74,7 @@ namespace ReportEngine.App
             services.AddScoped<MainWindowViewModel>();
             services.AddScoped<UsersViewModel>();
             services.AddScoped<ProjectViewModel>();
-            services.AddTransient(typeof(GenericEquipViewModel<>));
+            services.AddScoped(typeof(GenericEquipViewModel<>));
         }
         private static void ConfigureViews(IServiceCollection services)
         {
