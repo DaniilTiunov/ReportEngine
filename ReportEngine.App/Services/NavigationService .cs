@@ -1,10 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using ReportEngine.App.ViewModels;
-using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Entities.BaseEntities;
-using ReportEngine.Domain.Repositories.Interfaces;
-using ReportEngine.Shared.Config.DebugConsol;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -34,11 +29,9 @@ namespace ReportEngine.App.Services
 
         public void ShowGenericWindow<T>() where T : BaseEquip
         {
-            var repo = _serviceProvider.GetRequiredService<IGenericBaseRepository<BaseEquip>>();
-            var vm = new GenericEquipViewModel<BaseEquip>(repo);
-            var window = new GenericEquipView(vm);
-            _currentWindow = window;
-            window.Show();
+            var factory = _serviceProvider.GetRequiredService<GenericEquipWindowFactory>();
+            _currentWindow = factory.CreateWindow<T>();
+            _currentWindow.Show();
         }
 
         public void HideWindow()

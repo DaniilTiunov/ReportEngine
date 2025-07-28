@@ -35,7 +35,7 @@
                 Padding="10,2"
                 Command="{Binding DeleteEquipCommand}"
                 Content="Удалить"
-                IsEnabled="{Binding CurrentModel.SelectedBaseEquip}" />
+                IsEnabled="{Binding GenericEquipModel.SelectedBaseEquip}" />
         </StackPanel>
 
         <!--  DataGrid с контекстным меню  -->
@@ -44,8 +44,8 @@
             AutoGenerateColumns="False"
             CanUserAddRows="False"
             IsReadOnly="True"
-            ItemsSource="{Binding CurrentModel.BaseEquips}"
-            SelectedItem="{Binding CurrentModel.SelectedBaseEquip}"
+            ItemsSource="{Binding GenericEquipModel.BaseEquips}"
+            SelectedItem="{Binding GenericEquipModel.SelectedBaseEquip}"
             SelectionUnit="FullRow">
             <DataGrid.ContextMenu>
                 <ContextMenu>
@@ -54,7 +54,7 @@
                     <MenuItem
                         Command="{Binding DeleteEquipCommand}"
                         Header="Удалить оборудование"
-                        IsEnabled="{Binding CurrentModel.SelectedBaseEquip, Converter={StaticResource NullToFalseConverter}}" />
+                        IsEnabled="{Binding CurrentModel.SelectedBaseEquip}" />
                 </ContextMenu>
             </DataGrid.ContextMenu>
 

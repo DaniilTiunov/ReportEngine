@@ -70,9 +70,9 @@
             </MenuItem>
             <MenuItem Header="Исходные данные">
                 <MenuItem Header="Сортамент труб">
-                    <MenuItem Command="{Binding OpenEquipCommand}" Header="Жарпрочная сталь" />
+                    <MenuItem Header="Жарпрочная сталь" />
                     <MenuItem Header="Нержавеющая сталь" />
-                    <MenuItem Header="Углеродистая сталь" />
+                    <MenuItem Command="{Binding OpenCarbonPipeCommand}" Header="Углеродистая сталь" />
                 </MenuItem>
                 <MenuItem Header="Запорные арматуры">
                     <MenuItem Header="Жарпрочная сталь" />

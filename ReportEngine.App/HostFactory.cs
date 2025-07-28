@@ -37,13 +37,13 @@ namespace ReportEngine.App
 
                     // Регистрация сервисов
                     services.AddScoped<ExcelCreator>();
+                    services.AddSingleton<GenericEquipWindowFactory>();
                     services.AddSingleton<NavigationService>();
                     services.AddSingleton<IServiceProvider>(provider => provider);
                     // Регистрация ViewModels
                     services.AddScoped<MainWindowViewModel>();
                     services.AddScoped<UsersViewModel>();
                     services.AddScoped<ProjectViewModel>();
-                    services.AddTransient<GenericEquipViewModel<CarbonPipe>>();
                     // Регистрация окон
                     services.AddSingleton(provider =>
                     {
@@ -60,7 +60,6 @@ namespace ReportEngine.App
                     services.AddSingleton<App>();
                     services.AddTransient<UsersView>();
                     services.AddTransient<TreeProjectView>();
-                    services.AddTransient<GenericEquipView>();
 
                 })
                 .ConfigureLogging(logging =>

@@ -61,7 +61,7 @@ namespace ReportEngine.App.ViewModels
         #region Методы        
         public void InitializeCommands()
         {
-            OpenEquipCommand = new RelayCommand(OnOpenEquipCommandExecuted, CanOpenEquipCommandExecute);
+            OpenCarbonPipeCommand = new RelayCommand(OnOpenCarbonPipeCommandExecuted, CanOpenCarbonPipeCommandExecute);
             CloseAppCommand = new RelayCommand(OnCloseAppCommandExecuted, CanCloseAppCommandExecute);
             OpenAllUsersCommand = new RelayCommand(OnOpenAllUsersCommandExecuted, CanOpenAllUsersCommandExecute);
             ChekDbConnectionCommand = new RelayCommand(OnChekDbConnectionCommandExecuted, CanChekDbConnectionCommandExecute);
@@ -152,9 +152,9 @@ namespace ReportEngine.App.ViewModels
 
 
 
-        public ICommand OpenEquipCommand { get; set; }
-        public bool CanOpenEquipCommandExecute(object e) => true;
-        public void OnOpenEquipCommandExecuted(object e)
+        public ICommand OpenCarbonPipeCommand { get; set; }
+        public bool CanOpenCarbonPipeCommandExecute(object e) => true;
+        public void OnOpenCarbonPipeCommandExecuted(object e)
         {
             try
             {
