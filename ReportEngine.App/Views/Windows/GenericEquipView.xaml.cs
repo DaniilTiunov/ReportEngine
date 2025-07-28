@@ -11,14 +11,9 @@ namespace ReportEngine.App.Views.Windows
     /// </summary>
     public partial class GenericEquipView : Window 
     { 
-        public GenericEquipView(GenericEquipViewModel<BaseEquip> viewModel)
+        public GenericEquipView()
         {
             InitializeComponent();
-            DataContext = viewModel;
-
-            Loaded += (s, e) => {
-                DebugConsole.WriteLine($"DataContext type: {DataContext?.GetType().Name}");
-            };
         }
     }
 }

@@ -3,6 +3,8 @@ using ReportEngine.App.ViewModels;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Shared.Config.DebugConsol;
+using System.Diagnostics;
 using System.Windows;
 
 namespace ReportEngine.App.Services
@@ -18,10 +20,19 @@ namespace ReportEngine.App.Services
 
         public Window CreateWindow<TEquip>() where TEquip : BaseEquip, new()
         {
+            //Получаем репозиторий из DI
             var repository = _serviceProvider.GetRequiredService<IGenericBaseRepository<TEquip>>();
+
+            //Создаем ViewModel
             var viewModel = new GenericEquipViewModel<TEquip>(repository);
 
-            return new GenericEquipView(viewModel as GenericEquipViewModel<BaseEquip>);
+            //Создаем окно
+            var window = new GenericEquipView();
+
+            //Устанавливаем DataContext
+            window.DataContext = viewModel;
+
+            return window;
         }
     }
 }

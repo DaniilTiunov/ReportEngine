@@ -20,6 +20,7 @@ namespace ReportEngine.App.ViewModels
             InitializeCommands();
 
             _genericEquipRepository = genericEquipRepository;
+                     
         }
 
         public void InitializeCommands()
