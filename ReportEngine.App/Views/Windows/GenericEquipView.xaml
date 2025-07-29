@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:ReportEngine.App.Views.Windows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="GenericEquipView"
-    Width="900"
+    Width="1100"
     Height="450"
     mc:Ignorable="d">
     <Grid Margin="5,5,0,5">
@@ -14,28 +14,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-
-        <!--  Панель кнопок  -->
-        <StackPanel
-            Grid.Row="0"
-            Margin="0,0,0,5"
-            Orientation="Horizontal">
-            <Button
-                Margin="5"
-                Padding="10,2"
-                Command="{Binding ShowAllEquipCommand}"
-                Content="Обновить" />
-            <Button
-                Margin="5"
-                Padding="10,2"
-                Command="{Binding AddNewEquipCommand}"
-                Content="Добавить" />
-            <Button
-                Margin="5"
-                Padding="10,2"
-                Command="{Binding DeleteEquipCommand}"
-                Content="Удалить" />
-        </StackPanel>
 
         <!--  DataGrid с контекстным меню  -->
         <DataGrid
@@ -48,8 +26,11 @@
             SelectionUnit="FullRow">
             <DataGrid.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Command="{Binding ShowAllEquipCommand}" Header="Обновить список" />
+                    <MenuItem Command="{Binding ShowAllEquipCommand}" Header="Показать всё" />
+                    <Separator />
                     <MenuItem Command="{Binding AddNewEquipCommand}" Header="Добавить оборудование" />
+                    <MenuItem Command="{Binding SaveEquipCommand}" Header="Сохранить изменения" />
+                    <Separator />
                     <MenuItem
                         Command="{Binding DeleteEquipCommand}"
                         Header="Удалить оборудование"

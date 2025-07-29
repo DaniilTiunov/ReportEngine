@@ -65,9 +65,11 @@
             <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem Command="{Binding ShowAllUsersCommand}" Header="Показать всех" />
+                    <Separator />
                     <MenuItem Command="{Binding SaveUserCommand}" Header="Сохранить изменения" />
-                    <MenuItem Command="{Binding DeleteUserCommand}" Header="Удалить" />
                     <MenuItem Command="{Binding AddNewUserCommand}" Header="Добавить" />
+                    <Separator />
+                    <MenuItem Command="{Binding DeleteUserCommand}" Header="Удалить" />
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.Columns>
