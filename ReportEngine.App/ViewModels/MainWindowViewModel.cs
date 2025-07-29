@@ -58,6 +58,7 @@ namespace ReportEngine.App.ViewModels
             InitializeGenericCommands();
         }
         #endregion
+
         #region Методы        
         public void InitializeCommands()
         {
@@ -155,6 +156,7 @@ namespace ReportEngine.App.ViewModels
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
         #endregion
+
         #region Дженерик команды
         public ICommand OpenCarbonPipeCommand { get; set; }
         public ICommand OpenHeaterPipeCommand { get; set; }

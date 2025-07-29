@@ -35,15 +35,6 @@
         </Style>
     </Window.Resources>
 
-    <Window.ContextMenu>
-        <ContextMenu>
-            <MenuItem Command="{Binding ShowAllUsersCommand}" Header="Показать всех" />
-            <MenuItem Command="{Binding HideUsersCommand}" Header="Закрыть окно" />
-            <MenuItem Command="{Binding DeleteUserCommand}" Header="Удалить выбранного пользователя" />
-            <MenuItem Command="{Binding AddNewUserCommand}" Header="Добавить" />
-        </ContextMenu>
-    </Window.ContextMenu>
-
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="89*" />
@@ -64,6 +55,7 @@
             Grid.ColumnSpan="4"
             Margin="10,79,5,10"
             CanUserAddRows="True"
+            CellEditEnding="UserDataGrid_CallEditEnding"
             ItemsSource="{Binding CurrentUser.AllUsers, Mode=OneWay}"
             RowHeaderWidth="40"
             SelectedItem="{Binding CurrentUser.SelectedUser}"
@@ -78,31 +70,31 @@
             <DataGrid.Columns>
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding SecondName}"
+                    Binding="{Binding SecondName, UpdateSourceTrigger=PropertyChanged}"
                     Header="Фамилия" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Name}"
+                    Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
                     Header="Имя" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding LastName}"
+                    Binding="{Binding LastName, UpdateSourceTrigger=PropertyChanged}"
                     Header="Отчество" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Position}"
+                    Binding="{Binding Position, UpdateSourceTrigger=PropertyChanged}"
                     Header="Должность" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Cabinet}"
+                    Binding="{Binding Cabinet, UpdateSourceTrigger=PropertyChanged}"
                     Header="Кабинет" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Email}"
+                    Binding="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
                     Header="Почта" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding PhoneContact}"
+                    Binding="{Binding PhoneContact, UpdateSourceTrigger=PropertyChanged}"
                     Header="Номер для связи" />
             </DataGrid.Columns>
         </DataGrid>

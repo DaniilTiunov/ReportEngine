@@ -18,18 +18,19 @@ namespace ReportEngine.App.Services
             _serviceProvider = serviceProvider;
         }
 
-        public Window CreateWindow<TEquip>() where TEquip : BaseEquip, new()
+        public Window CreateWindow<TEquip>()
+            where TEquip : BaseEquip, new()
         {
-            //Получаем репозиторий из DI
+            // Получаем репозиторий из DI
             var repository = _serviceProvider.GetRequiredService<IGenericBaseRepository<TEquip>>();
 
-            //Создаем ViewModel
+            // Создаем ViewModel
             var viewModel = new GenericEquipViewModel<TEquip>(repository);
 
-            //Создаем окно
+            // Создаем окно
             var window = new GenericEquipView();
 
-            //Устанавливаем DataContext
+            // Устанавливаем DataContext
             window.DataContext = viewModel;
 
             viewModel.OnShowAllEquipCommandExecuted(null);

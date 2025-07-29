@@ -1,14 +1,29 @@
-﻿<Window x:Class="ReportEngine.App.Views.Settings.Subwindows.ConectionSettingsSubwindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ReportEngine.App.Views.Settings.Subwindows"
-        mc:Ignorable="d"
-        Title="ConectionSettingsSubwindow" Height="450" Width="800">
+﻿<Window
+    x:Class="ReportEngine.App.Views.Settings.Subwindows.ConectionSettingsSubwindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ReportEngine.App.Views.Settings.Subwindows"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="ConectionSettingsSubwindow"
+    Width="800"
+    Height="450"
+    mc:Ignorable="d">
     <Grid>
-        <Label Content="Адрес сервера БД:" HorizontalAlignment="Left" Margin="40,41,0,0" VerticalAlignment="Top" Cursor=""/>
-        <TextBox HorizontalAlignment="Left" Margin="156,46,0,0" TextWrapping="Wrap" Text="//192.168.0.228" VerticalAlignment="Top" Width="120" Cursor=""/>
+        <Label
+            Margin="40,41,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Content="Адрес сервера БД:"
+            Cursor="" />
+        <TextBox
+            Width="120"
+            Margin="156,46,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Cursor=""
+            Text="//192.168.0.228"
+            TextWrapping="Wrap" />
 
     </Grid>
 </Window>
