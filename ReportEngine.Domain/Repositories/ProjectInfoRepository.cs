@@ -24,24 +24,39 @@ namespace ReportEngine.Domain.Repositories
                .AsNoTracking()
                .ToListAsync();
         }
-        public async Task<ProjectInfo> GetByIdAsync(int id)
+        public async Task<ProjectInfo> GetByIdAsync(int id) // Не используется
         {
             throw new NotImplementedException();
         }
         public async Task UpdateAsync(ProjectInfo project)
         {
-            _context.Entry(project).State = EntityState.Modified;
+            var existingProject = await _context.Set<ProjectInfo>()
+                .Include(p => p.Stands)
+                .FirstOrDefaultAsync(p => p.Id == project.Id);
+
+            if (existingProject != null)
+            {
+                _context.Entry(existingProject).CurrentValues.SetValues(project);
+            }
 
             await _context.SaveChangesAsync();
         }
         public async Task DeleteAsync(ProjectInfo project)
         {
-            if (project != null)
-                _context.Set<ProjectInfo>().Remove(project);
+            if (project == null) return;
+
+            var existingProject = await _context.Set<ProjectInfo>()
+                .FirstOrDefaultAsync(p => p.Id == project.Id);
+
+            if (existingProject != null)
+            {
+                _context.Set<ProjectInfo>().Remove(existingProject);
+                await _context.SaveChangesAsync();
+            }
 
             await _context.SaveChangesAsync();
         }
-        public async Task<int> DeleteByIdAsync(int id)
+        public async Task<int> DeleteByIdAsync(int id) // Не используется
         {
             var entityProjectInfo = await _context.Set<ProjectInfo>().FindAsync(id);
             if (entityProjectInfo == null)
@@ -57,12 +72,17 @@ namespace ReportEngine.Domain.Repositories
                 .Include(p => p.Stands)
                 .FirstOrDefaultAsync(p => p.Id == projectId);
 
-            if (project != null)
+            if (project == null)
             {
-                stand.ProjectInfoId = projectId;
-                project.Stands.Add(stand);
-                await _context.SaveChangesAsync();
+                throw new ArgumentException($"Проект с ID: {projectId} не найден.");
             }
+
+            stand.ProjectInfoId = projectId;
+
+            project.Stands.Add(stand);
+
+            await _context.SaveChangesAsync();
+
         }
     }
 }

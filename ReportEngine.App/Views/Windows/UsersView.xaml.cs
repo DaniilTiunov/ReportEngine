@@ -21,10 +21,6 @@ namespace ReportEngine.App.Views.Windows
         {
             e.Cancel = true;
             Hide();
-        }
-        private void UserDataGrid_CallEditEnding(object sender, DataGridCellEditEndingEventArgs e)
-        {
-            User user = e.Row.Item as User;
-        }
+        }        
     }
 }

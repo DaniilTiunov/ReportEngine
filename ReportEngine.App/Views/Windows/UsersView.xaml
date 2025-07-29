@@ -55,46 +55,49 @@
             Grid.ColumnSpan="4"
             Margin="10,79,5,10"
             CanUserAddRows="True"
-            CellEditEnding="UserDataGrid_CallEditEnding"
-            ItemsSource="{Binding CurrentUser.AllUsers, Mode=OneWay}"
+            CanUserDeleteRows="True"
+            CanUserReorderColumns="True"
+            CanUserSortColumns="True"
+            ItemsSource="{Binding CurrentUser.AllUsers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             RowHeaderWidth="40"
-            SelectedItem="{Binding CurrentUser.SelectedUser}"
+            SelectedItem="{Binding CurrentUser.SelectedUser, Mode=TwoWay}"
             SelectionUnit="FullRow">
             <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem Command="{Binding ShowAllUsersCommand}" Header="Показать всех" />
-                    <MenuItem Command="{Binding DeleteUserCommand}" Header="Удалить выбранного пользователя" />
+                    <MenuItem Command="{Binding SaveUserCommand}" Header="Сохранить изменения" />
+                    <MenuItem Command="{Binding DeleteUserCommand}" Header="Удалить" />
                     <MenuItem Command="{Binding AddNewUserCommand}" Header="Добавить" />
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.Columns>
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding SecondName, UpdateSourceTrigger=PropertyChanged}"
+                    Binding="{Binding SecondName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     Header="Фамилия" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                    Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     Header="Имя" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding LastName, UpdateSourceTrigger=PropertyChanged}"
+                    Binding="{Binding LastName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     Header="Отчество" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Position, UpdateSourceTrigger=PropertyChanged}"
+                    Binding="{Binding Position, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     Header="Должность" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Cabinet, UpdateSourceTrigger=PropertyChanged}"
+                    Binding="{Binding Cabinet, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     Header="Кабинет" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
+                    Binding="{Binding Email, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     Header="Почта" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding PhoneContact, UpdateSourceTrigger=PropertyChanged}"
+                    Binding="{Binding PhoneContact, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     Header="Номер для связи" />
             </DataGrid.Columns>
         </DataGrid>

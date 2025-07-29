@@ -35,6 +35,7 @@ namespace ReportEngine.App.ViewModels
             CloseUsersCommand = new RelayCommand(OnCloseUsersCommandExecuted, CanCloseUsersCommandExecute);
             DeleteUserCommand = new RelayCommand(OnDeleteUserCommandExecuted, CanDeleteUserCommandExecute);
             AddNewUserCommand = new RelayCommand(OnAddNewUserCommandExecuted, CanAddNewUserCommandExecute);
+            SaveUserCommand = new RelayCommand(OnSaveUserCommandExecuted, CanSaveUserCommandExecute);
         }
         #endregion
         #region Комманды
@@ -102,6 +103,23 @@ namespace ReportEngine.App.ViewModels
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Ошибка при добавлении пользователя", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        public ICommand SaveUserCommand { get; set; }
+        public bool CanSaveUserCommandExecute(object e) => true;
+        public async void OnSaveUserCommandExecuted(object e)
+        {
+            try
+            {
+                if (CurrentUser.SelectedUser != null)
+                {
+                    await _userRepository.UpdateAsync(CurrentUser.SelectedUser);
+                    MessageBox.Show("Изменения сохранены");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка сохранения: {ex.Message}");
             }
         }
         #endregion

@@ -46,9 +46,9 @@
                     <MenuItem Command="{Binding OpenCarbonPipeCommand}" Header="Углеродистая сталь" />
                 </MenuItem>
                 <MenuItem Header="Запорные арматуры">
-                    <MenuItem Header="Жарпрочная сталь" />
-                    <MenuItem Header="Нержавеющая сталь" />
-                    <MenuItem Header="Углеродистая сталь" />
+                    <MenuItem Command="{Binding OpenHeaterArmatureCommand}" Header="Жарпрочная сталь" />
+                    <MenuItem Command="{Binding OpenStainlessArmatureCommand}" Header="Нержавеющая сталь" />
+                    <MenuItem Command="{Binding OpenCarbonArmatureCommand}" Header="Углеродистая сталь" />
                 </MenuItem>
                 <MenuItem Header="Тройники и КМЧ">
                     <MenuItem Header="Жарпрочная сталь" />

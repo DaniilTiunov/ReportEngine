@@ -5,6 +5,7 @@ using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
@@ -76,6 +77,9 @@ namespace ReportEngine.App.ViewModels
             OpenHeaterPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<HeaterPipe>, CanOpenGenericWindowCommandExecute);
             OpenCarbonPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<CarbonPipe>, CanOpenGenericWindowCommandExecute);
             OpenStainlessPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<StainlessPipe>, CanOpenGenericWindowCommandExecute);
+            OpenHeaterArmatureCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<HeaterArmature>, CanOpenGenericWindowCommandExecute);
+            OpenCarbonArmatureCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<CarbonArmature>, CanOpenGenericWindowCommandExecute);
+            OpenStainlessArmatureCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<StainlessArmature>, CanOpenGenericWindowCommandExecute);
         }
         #endregion
 
@@ -161,6 +165,9 @@ namespace ReportEngine.App.ViewModels
         public ICommand OpenCarbonPipeCommand { get; set; }
         public ICommand OpenHeaterPipeCommand { get; set; }
         public ICommand OpenStainlessPipeCommand { get; set; }
+        public ICommand OpenCarbonArmatureCommand { get; set; }
+        public ICommand OpenHeaterArmatureCommand { get; set; }
+        public ICommand OpenStainlessArmatureCommand { get; set; }
         public ICommand OpenGenericWindowCommand { get; set; }
         public bool CanOpenGenericWindowCommandExecute(object e) => true;
         public void OnOpenGenericWindowCommandExecuted<T>(object e) where T : BaseEquip, new()
@@ -173,7 +180,7 @@ namespace ReportEngine.App.ViewModels
             {
                 MessageBox.Show(ex.Message);
             }
-        } 
+        }
         #endregion
     }
 }

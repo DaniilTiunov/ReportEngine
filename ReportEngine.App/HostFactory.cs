@@ -8,6 +8,7 @@ using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
@@ -61,6 +62,9 @@ namespace ReportEngine.App
             services.AddScoped<IGenericBaseRepository<CarbonPipe>, GenericEquipRepository<CarbonPipe>>();
             services.AddScoped<IGenericBaseRepository<HeaterPipe>, GenericEquipRepository<HeaterPipe>>();
             services.AddScoped<IGenericBaseRepository<StainlessPipe>, GenericEquipRepository<StainlessPipe>>();
+            services.AddScoped<IGenericBaseRepository<CarbonArmature>, GenericEquipRepository<CarbonArmature>>();
+            services.AddScoped<IGenericBaseRepository<HeaterArmature>, GenericEquipRepository<HeaterArmature>>();
+            services.AddScoped<IGenericBaseRepository<StainlessArmature>, GenericEquipRepository<StainlessArmature>>();
         }
         private static void ConfigureApplicationServices(IServiceCollection services)
         {
