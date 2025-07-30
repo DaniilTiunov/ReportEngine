@@ -8,7 +8,9 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
+using ReportEngine.Domain.Entities.Drainage;
 using ReportEngine.Domain.Entities.ElectricSockets;
+using ReportEngine.Domain.Entities.Frame;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
 using System.Collections.ObjectModel;
@@ -87,6 +89,10 @@ namespace ReportEngine.App.ViewModels
             OpenCarbonSocketsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, CarbonSocket>, CanAllCommandsExecute);
             OpenStainlessSocketsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, StainlessSocket>, CanAllCommandsExecute);
             OpenHeaterSocketsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, HeaterSocket>, CanAllCommandsExecute);
+
+            OpenDrainageCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, Drainage>, CanAllCommandsExecute);
+
+            OpenFrameDetailsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, FrameDetail>, CanAllCommandsExecute);
         }
         #endregion
 
@@ -172,8 +178,9 @@ namespace ReportEngine.App.ViewModels
         public ICommand OpenCarbonSocketsCommand { get; set; }
         public ICommand OpenStainlessSocketsCommand { get; set; }
         public ICommand OpenHeaterSocketsCommand { get; set; }
-
+        public ICommand OpenDrainageCommand { get; set; }
         public ICommand OpenGenericWindowCommand { get; set; }
+        public ICommand OpenFrameDetailsCommand { get; set; }
         public void OnOpenGenericWindowCommandExecuted<T, TEquip>(object e)
             where T : IBaseEquip
             where TEquip : class, new()

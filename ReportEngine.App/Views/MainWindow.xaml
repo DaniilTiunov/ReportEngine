@@ -56,10 +56,10 @@
                     <MenuItem Command="{Binding OpenCarbonSocketsCommand}" Header="Углеродистая сталь" />
                 </MenuItem>
                 <Separator />
-                <MenuItem Header="Дренаж" />
+                <MenuItem Command="{Binding OpenDrainageCommand}" Header="Дренаж" />
                 <Separator />
                 <MenuItem Header="Рамные комплектующие">
-                    <MenuItem Header="Детали рамы" />
+                    <MenuItem Command="{Binding OpenFrameDetailsCommand}" Header="Детали рамы" />
                     <MenuItem Header="Комплектующие для стойки" />
                     <MenuItem Header="Прокат" />
                 </MenuItem>
