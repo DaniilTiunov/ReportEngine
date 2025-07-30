@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.Commands;
+using ReportEngine.App.Model;
 using ReportEngine.App.Services;
 using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Windows;
@@ -12,6 +13,7 @@ using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Frame;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Shared.Helpers;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -25,31 +27,8 @@ namespace ReportEngine.App.ViewModels
         private readonly NavigationService _navigation;
         private readonly IServiceProvider _serviceProvider;
         #endregion
-
-        #region Приватные поля
-        private string _connectionStatusMessage;
-        private ObservableCollection<ProjectInfo> _allProjects;
-        private ProjectInfo _selectedProject;
-        #endregion
-
-        #region Публичные поля для привязки
-        public ProjectInfo SelectedProject
-        {
-            get => _selectedProject;
-            set => Set(ref _selectedProject, value);
-        }
-        public string ConnectionStatusMessage
-        {
-            get => _connectionStatusMessage;
-            set => Set(ref _connectionStatusMessage, value);
-        }
-        public bool IsConnected { get; private set; }
-        public ObservableCollection<ProjectInfo> AllProjects
-        {
-            get => _allProjects;
-            set => Set(ref _allProjects, value);
-        }
-        #endregion
+        public MainWindowModel MainWindowModel { get; set; } = new();
+        public GenericEquipCommandProvider GenericEquipCommandProvider { get; set; } = new();
 
         #region Конструктор
         public MainWindowViewModel(IServiceProvider serviceProvider, NavigationService navigation, IProjectInfoRepository projectRepository)
@@ -58,15 +37,14 @@ namespace ReportEngine.App.ViewModels
             _projectRepository = projectRepository;
             _navigation = navigation;
 
-            InitializeCommands();
+            InitializeMainWindowCommands();
             InitializeGenericEquipCommands();
         }
         #endregion
 
         #region Методы        
-        public void InitializeCommands()
+        public void InitializeMainWindowCommands()
         {
-
             CloseAppCommand = new RelayCommand(OnCloseAppCommandExecuted, CanAllCommandsExecute);
             OpenAllUsersCommand = new RelayCommand(OnOpenAllUsersCommandExecuted, CanAllCommandsExecute);
             ChekDbConnectionCommand = new RelayCommand(OnChekDbConnectionCommandExecuted, CanAllCommandsExecute);
@@ -77,25 +55,25 @@ namespace ReportEngine.App.ViewModels
         }
         public void InitializeGenericEquipCommands()
         {
-            OpenHeaterPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, HeaterPipe>, CanAllCommandsExecute);
-            OpenCarbonPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, CarbonPipe>, CanAllCommandsExecute);
-            OpenStainlessPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, StainlessPipe>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenHeaterPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, HeaterPipe>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenCarbonPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, CarbonPipe>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenStainlessPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, StainlessPipe>, CanAllCommandsExecute);
 
-            OpenHeaterArmatureCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, HeaterArmature>, CanAllCommandsExecute);
-            OpenCarbonArmatureCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, CarbonArmature>, CanAllCommandsExecute);
-            OpenStainlessArmatureCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, StainlessArmature>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenHeaterArmatureCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, HeaterArmature>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenCarbonArmatureCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, CarbonArmature>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenStainlessArmatureCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, StainlessArmature>, CanAllCommandsExecute);
 
-            OpenCarbonSocketsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, CarbonSocket>, CanAllCommandsExecute);
-            OpenStainlessSocketsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, StainlessSocket>, CanAllCommandsExecute);
-            OpenHeaterSocketsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, HeaterSocket>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenCarbonSocketsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, CarbonSocket>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenStainlessSocketsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, StainlessSocket>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenHeaterSocketsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, HeaterSocket>, CanAllCommandsExecute);
 
-            OpenDrainageCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, Drainage>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenDrainageCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, Drainage>, CanAllCommandsExecute);
 
-            OpenFrameDetailsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, FrameDetail>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenFrameDetailsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, FrameDetail>, CanAllCommandsExecute);
         }
         #endregion
 
-        #region Комманды
+        #region Комманды главного окна
         public ICommand OpenMainWindowCommand { get; set; }
         public bool CanAllCommandsExecute(object e) => true;
         public void OnOpenMainWindowCommandExecuted(object e)
@@ -136,8 +114,8 @@ namespace ReportEngine.App.ViewModels
             using var scope = _serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ReAppContext>();
 
-            IsConnected = context.Database.CanConnect();
-            ConnectionStatusMessage = IsConnected ? "Соединение установлено" : "Соединение не установлено";
+            MainWindowModel.IsConnected = context.Database.CanConnect();
+            MainWindowModel.ConnectionStatusMessage = MainWindowModel.IsConnected ? "Соединение установлено" : "Соединение не установлено";
 
         }
         public ICommand ShowAllProjectsCommand { get; set; }
@@ -146,7 +124,7 @@ namespace ReportEngine.App.ViewModels
             try
             {
                 var projects = await _projectRepository.GetAllAsync();
-                AllProjects = new ObservableCollection<ProjectInfo>(projects);
+                MainWindowModel.AllProjects = new ObservableCollection<ProjectInfo>(projects);
             }
             catch (Exception ex)
             {
@@ -159,7 +137,7 @@ namespace ReportEngine.App.ViewModels
         {
             try
             {
-                var currentProject = _selectedProject;
+                var currentProject = MainWindowModel.SelectedProject;
 
                 await _projectRepository.DeleteAsync(currentProject);
             }
@@ -168,30 +146,11 @@ namespace ReportEngine.App.ViewModels
         #endregion
 
         #region Дженерик команды
-        public ICommand OpenCarbonPipeCommand { get; set; }
-        public ICommand OpenHeaterPipeCommand { get; set; }
-        public ICommand OpenStainlessPipeCommand { get; set; }
-        public ICommand OpenCarbonArmatureCommand { get; set; }
-        public ICommand OpenHeaterArmatureCommand { get; set; }
-        public ICommand OpenStainlessArmatureCommand { get; set; }
-        public ICommand OpenCarbonSocketsCommand { get; set; }
-        public ICommand OpenStainlessSocketsCommand { get; set; }
-        public ICommand OpenHeaterSocketsCommand { get; set; }
-        public ICommand OpenDrainageCommand { get; set; }
-        public ICommand OpenGenericWindowCommand { get; set; }
-        public ICommand OpenFrameDetailsCommand { get; set; }
         public void OnOpenGenericWindowCommandExecuted<T, TEquip>(object e)
             where T : IBaseEquip
             where TEquip : class, new()
         {
-            try
-            {
-                _navigation.ShowGenericWindow<T, TEquip>();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            ExceptionHelper.SafeExecute(() => _navigation.ShowGenericWindow<T, TEquip>());
         }
         #endregion
     }
