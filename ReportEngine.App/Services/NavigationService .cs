@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.Domain.Entities.BaseEntities;
+using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -28,11 +29,12 @@ namespace ReportEngine.App.Services
             _currentWindow.Show();
         }
 
-        public void ShowGenericWindow<T>()
-            where T : BaseEquip, new()
+        public void ShowGenericWindow<T, TEquip>()
+            where T : IBaseEquip
+            where TEquip : class, new()
         {
             var factory = _serviceProvider.GetRequiredService<GenericEquipWindowFactory>();
-            _currentWindow = factory.CreateWindow<T>();
+            _currentWindow = factory.CreateWindow<T, TEquip>();
             _currentWindow.Show();
         }
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.Views.Windows;
-using ReportEngine.Domain.Entities.BaseEntities;
+using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Config.DebugConsol;
 using System.Diagnostics;
@@ -18,14 +18,15 @@ namespace ReportEngine.App.Services
             _serviceProvider = serviceProvider;
         }
 
-        public Window CreateWindow<TEquip>()
-            where TEquip : BaseEquip, new()
+        public Window CreateWindow<T, TEquip>()
+            where T : IBaseEquip
+            where TEquip : class, new()
         {
             // Получаем репозиторий из DI
-            var repository = _serviceProvider.GetRequiredService<IGenericBaseRepository<TEquip>>();
+            var repository = _serviceProvider.GetRequiredService<IGenericBaseRepository<T, TEquip>>();
 
             // Создаем ViewModel
-            var viewModel = new GenericEquipViewModel<TEquip>(repository);
+            var viewModel = new GenericEquipViewModel<T, TEquip>(repository);
 
             // Создаем окно
             var window = new GenericEquipView();

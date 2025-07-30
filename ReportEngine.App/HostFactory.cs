@@ -9,6 +9,8 @@ using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
+using ReportEngine.Domain.Entities.BaseEntities;
+using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
@@ -59,12 +61,12 @@ namespace ReportEngine.App
             services.AddScoped<IBaseRepository<User>, UserRepository>();
             services.AddScoped<IProjectInfoRepository, ProjectInfoRepository>();
             // Generic-репозитории
-            services.AddScoped<IGenericBaseRepository<CarbonPipe>, GenericEquipRepository<CarbonPipe>>();
-            services.AddScoped<IGenericBaseRepository<HeaterPipe>, GenericEquipRepository<HeaterPipe>>();
-            services.AddScoped<IGenericBaseRepository<StainlessPipe>, GenericEquipRepository<StainlessPipe>>();
-            services.AddScoped<IGenericBaseRepository<CarbonArmature>, GenericEquipRepository<CarbonArmature>>();
-            services.AddScoped<IGenericBaseRepository<HeaterArmature>, GenericEquipRepository<HeaterArmature>>();
-            services.AddScoped<IGenericBaseRepository<StainlessArmature>, GenericEquipRepository<StainlessArmature>>();
+            services.AddScoped<IGenericBaseRepository<IBaseEquip, CarbonPipe>, GenericEquipRepository<IBaseEquip, CarbonPipe>>();
+            services.AddScoped<IGenericBaseRepository<IBaseEquip, HeaterPipe>, GenericEquipRepository<IBaseEquip, HeaterPipe>>();
+            services.AddScoped<IGenericBaseRepository<IBaseEquip, StainlessPipe>, GenericEquipRepository<IBaseEquip, StainlessPipe>>();
+            services.AddScoped<IGenericBaseRepository<IBaseEquip, CarbonArmature>, GenericEquipRepository<IBaseEquip, CarbonArmature>>();
+            services.AddScoped<IGenericBaseRepository<IBaseEquip, HeaterArmature>, GenericEquipRepository<IBaseEquip, HeaterArmature>>();
+            services.AddScoped<IGenericBaseRepository<IBaseEquip, StainlessArmature>, GenericEquipRepository<IBaseEquip, StainlessArmature>>();
         }
         private static void ConfigureApplicationServices(IServiceCollection services)
         {
@@ -78,7 +80,7 @@ namespace ReportEngine.App
             services.AddScoped<MainWindowViewModel>();
             services.AddScoped<UsersViewModel>();
             services.AddScoped<ProjectViewModel>();
-            services.AddScoped(typeof(GenericEquipViewModel<>));
+            services.AddScoped(typeof(GenericEquipViewModel<IBaseEquip, BaseEquip>));
         }
         private static void ConfigureViews(IServiceCollection services)
         {

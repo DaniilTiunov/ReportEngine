@@ -51,9 +51,9 @@
                     <MenuItem Command="{Binding OpenCarbonArmatureCommand}" Header="Углеродистая сталь" />
                 </MenuItem>
                 <MenuItem Header="Тройники и КМЧ">
-                    <MenuItem Header="Жарпрочная сталь" />
-                    <MenuItem Header="Нержавеющая сталь" />
-                    <MenuItem Header="Углеродистая сталь" />
+                    <MenuItem Command="{Binding OpenHeaterSocketsCommand}" Header="Жарпрочная сталь" />
+                    <MenuItem Command="{Binding OpenStainlessSocketsCommand}" Header="Нержавеющая сталь" />
+                    <MenuItem Command="{Binding OpenCarbonSocketsCommand}" Header="Углеродистая сталь" />
                 </MenuItem>
                 <Separator />
                 <MenuItem Header="Дренаж" />
