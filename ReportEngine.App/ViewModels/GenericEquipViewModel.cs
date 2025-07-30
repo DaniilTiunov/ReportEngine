@@ -9,46 +9,88 @@ using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels
 {
+    /// <summary>
+    /// Обобщенная ViewModel для управления оборудованием.
+    /// </summary>
+    /// <typeparam name="T">Тип, реализующий интерфейс IBaseEquip.</typeparam>
+    /// <typeparam name="TEquip">Тип оборудования, который является классом и имеет публичный конструктор без параметров.</typeparam>
     public class GenericEquipViewModel<T, TEquip> : BaseViewModel
-        where T : IBaseEquip
-        where TEquip : class, new()
+        where T : IBaseEquip // Ограничение: T должен реализовывать интерфейс IBaseEquip
+        where TEquip : class, new() // Ограничение: TEquip должен быть классом и иметь публичный конструктор без параметров
     {
-        private readonly IGenericBaseRepository<T, TEquip> _genericEquipRepository;
+        private readonly IGenericBaseRepository<T, TEquip> _genericEquipRepository; // Репозиторий для работы с данными оборудования
+
+        /// <summary>
+        /// Модель для управления коллекцией оборудования и выбранным элементом оборудования.
+        /// </summary>
         public GenericEquipModel<T, TEquip> GenericEquipModel { get; set; } = new GenericEquipModel<T, TEquip>();
 
+        /// <summary>
+        /// Инициализирует новый экземпляр класса GenericEquipViewModel.
+        /// </summary>
+        /// <param name="genericEquipRepository">Репозиторий для работы с данными оборудования.</param>
         public GenericEquipViewModel(IGenericBaseRepository<T, TEquip> genericEquipRepository)
         {
-            InitializeCommands();
-
-            _genericEquipRepository = genericEquipRepository;
-
+            InitializeCommands(); // Инициализируем команды
+            _genericEquipRepository = genericEquipRepository; // Устанавливаем репозиторий
         }
 
+        /// <summary>
+        /// Инициализирует команды для ViewModel.
+        /// </summary>
         public void InitializeCommands()
         {
+            // Инициализируем команду для отображения всего оборудования
             ShowAllEquipCommand = new RelayCommand(OnShowAllEquipCommandExecuted, CanShowAllEquipCommandExecute);
         }
+
+        /// <summary>
+        /// Команда для отображения всего оборудования.
+        /// </summary>
         public ICommand ShowAllEquipCommand { get; set; }
+
+        /// <summary>
+        /// Определяет, может ли команда для отображения всего оборудования быть выполнена.
+        /// </summary>
+        /// <param name="e">Параметр команды.</param>
+        /// <returns>Всегда возвращает true, указывая, что команда всегда может быть выполнена.</returns>
         public bool CanShowAllEquipCommandExecute(object e) => true;
+
+        /// <summary>
+        /// Выполняет команду для отображения всего оборудования.
+        /// </summary>
+        /// <param name="e">Параметр команды.</param>
         public async void OnShowAllEquipCommandExecuted(object e)
         {
             try
             {
+                // Получаем все элементы оборудования из репозитория
                 var items = await _genericEquipRepository.GetAllAsync();
 
+                // Преобразуем элементы в список типа T
                 var baseEquips = items.OfType<T>().ToList();
+
+                // Устанавливаем коллекцию оборудования в модели
                 GenericEquipModel.BaseEquips = new ObservableCollection<T>(baseEquips);
 
+                // Выводим количество элементов оборудования в консоль отладки
                 DebugConsole.WriteLine(GenericEquipModel.BaseEquips.Count);
             }
             catch (Exception ex)
             {
+                // Отображаем сообщение об ошибке, если произошла ошибка
                 MessageBox.Show(ex.Message);
             }
         }
 
-
+        /// <summary>
+        /// Команда для добавления нового оборудования.
+        /// </summary>
         public ICommand AddNewEquipCommand { get; set; }
+
+        /// <summary>
+        /// Команда для удаления оборудования.
+        /// </summary>
         public ICommand RemoveEquipCommand { get; set; }
     }
 }
