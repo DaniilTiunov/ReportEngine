@@ -9,6 +9,8 @@
     <UseWPF>true</UseWPF>
     <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
     <ApplicationIcon>Resources\Icons\estimate_cost_icon_213382.ico</ApplicationIcon>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <DocumentationFile>C:\Work\Prjs\ReportEngine\Documentation.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
