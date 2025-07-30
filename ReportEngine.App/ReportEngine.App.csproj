@@ -7,6 +7,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
+    <ApplicationIcon>Resources\Icons\estimate_cost_icon_213382.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

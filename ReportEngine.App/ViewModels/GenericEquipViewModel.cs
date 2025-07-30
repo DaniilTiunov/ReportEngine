@@ -1,26 +1,27 @@
 ﻿using ReportEngine.App.Commands;
 using ReportEngine.App.Model;
-using ReportEngine.Domain.Entities.BaseEntities;
+using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Config.DebugConsol;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels
 {
-    public class GenericEquipViewModel<T> : BaseViewModel where T : BaseEquip
+    public class GenericEquipViewModel<T, TEquip> : BaseViewModel
+        where T : IBaseEquip
+        where TEquip : class, new()
     {
-        private readonly IGenericBaseRepository<T> _genericEquipRepository;
-        public GenericEquipModel<T> GenericEquipModel { get; set; } = new GenericEquipModel<T>();
+        private readonly IGenericBaseRepository<T, TEquip> _genericEquipRepository;
+        public GenericEquipModel<T, TEquip> GenericEquipModel { get; set; } = new GenericEquipModel<T, TEquip>();
 
-        public GenericEquipViewModel(IGenericBaseRepository<T> genericEquipRepository)
+        public GenericEquipViewModel(IGenericBaseRepository<T, TEquip> genericEquipRepository)
         {
             InitializeCommands();
 
             _genericEquipRepository = genericEquipRepository;
-                     
+
         }
 
         public void InitializeCommands()
@@ -34,7 +35,9 @@ namespace ReportEngine.App.ViewModels
             try
             {
                 var items = await _genericEquipRepository.GetAllAsync();
-                GenericEquipModel.BaseEquips = new ObservableCollection<T>(items);
+
+                var baseEquips = items.OfType<T>().ToList();
+                GenericEquipModel.BaseEquips = new ObservableCollection<T>(baseEquips);
 
                 DebugConsole.WriteLine(GenericEquipModel.BaseEquips.Count);
             }

@@ -1,10 +1,13 @@
 ﻿using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities.BaseEntities;
+using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Model
 {
-    public class GenericEquipModel<T> : BaseViewModel where T : BaseEquip
+    public class GenericEquipModel<T, TEquip> : BaseViewModel 
+        where T : IBaseEquip
+        where TEquip : class, new()
     {
         private ObservableCollection<T> _baseEquips;
         private T _selectedBaseEquip;

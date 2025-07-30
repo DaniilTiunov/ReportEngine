@@ -23,7 +23,8 @@ namespace ReportEngine.App
             mainViewModel.OnShowAllProjectsCommandExecuted(null);
             mainViewModel.OnChekDbConnectionCommandExecuted(null);
         }       
-        //Здесь реализованый методы, которые не требуют много времени на выполнение 
+        //Здесь реализованый методы, которые не требуют много времени на выполнение
+        
         private void CheckForUpdates(object sender, RoutedEventArgs e)
         {
             try
@@ -57,9 +58,5 @@ namespace ReportEngine.App
         {
             Process.Start("notepad.exe");
         }
-        //private void OpenMainScreen(object sender, RoutedEventArgs e)
-        //{
-            
-        //}
     }
 }

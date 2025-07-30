@@ -5,7 +5,12 @@ using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.BaseEntities;
+using ReportEngine.Domain.Entities.BaseEntities.Interface;
+using ReportEngine.Domain.Entities.Drainage;
+using ReportEngine.Domain.Entities.ElectricSockets;
+using ReportEngine.Domain.Entities.Frame;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
 using System.Collections.ObjectModel;
@@ -55,32 +60,45 @@ namespace ReportEngine.App.ViewModels
             _navigation = navigation;
 
             InitializeCommands();
-            InitializeGenericCommands();
+            InitializeGenericEquipCommands();
         }
         #endregion
+
         #region Методы        
         public void InitializeCommands()
         {
 
-            CloseAppCommand = new RelayCommand(OnCloseAppCommandExecuted, CanCloseAppCommandExecute);
-            OpenAllUsersCommand = new RelayCommand(OnOpenAllUsersCommandExecuted, CanOpenAllUsersCommandExecute);
-            ChekDbConnectionCommand = new RelayCommand(OnChekDbConnectionCommandExecuted, CanChekDbConnectionCommandExecute);
-            OpenTreeViewCommand = new RelayCommand(OnOpenTreeViewCommandExecuted, CanOpenTreeViewCommandExecute);
-            ShowAllProjectsCommand = new RelayCommand(OnShowAllProjectsCommandExecuted, CanShowAllProjectsCommandExecute);
-            DeleteSelectedProjectCommand = new RelayCommand(OnDeleteSelectedProjectExecuted, CanDeleteSelectedProjectExecute);
-            OpenMainWindowCommand = new RelayCommand(OnOpenMainWindowCommandExecuted, CanOpenMainWindowCommandExecute);
+            CloseAppCommand = new RelayCommand(OnCloseAppCommandExecuted, CanAllCommandsExecute);
+            OpenAllUsersCommand = new RelayCommand(OnOpenAllUsersCommandExecuted, CanAllCommandsExecute);
+            ChekDbConnectionCommand = new RelayCommand(OnChekDbConnectionCommandExecuted, CanAllCommandsExecute);
+            OpenTreeViewCommand = new RelayCommand(OnOpenTreeViewCommandExecuted, CanAllCommandsExecute);
+            ShowAllProjectsCommand = new RelayCommand(OnShowAllProjectsCommandExecuted, CanAllCommandsExecute);
+            DeleteSelectedProjectCommand = new RelayCommand(OnDeleteSelectedProjectExecuted, CanAllCommandsExecute);
+            OpenMainWindowCommand = new RelayCommand(OnOpenMainWindowCommandExecuted, CanAllCommandsExecute);
         }
-        public void InitializeGenericCommands()
+        public void InitializeGenericEquipCommands()
         {
-            OpenHeaterPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<HeaterPipe>, CanOpenGenericWindowCommandExecute);
-            OpenCarbonPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<CarbonPipe>, CanOpenGenericWindowCommandExecute);
-            OpenStainlessPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<StainlessPipe>, CanOpenGenericWindowCommandExecute);
+            OpenHeaterPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, HeaterPipe>, CanAllCommandsExecute);
+            OpenCarbonPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, CarbonPipe>, CanAllCommandsExecute);
+            OpenStainlessPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, StainlessPipe>, CanAllCommandsExecute);
+
+            OpenHeaterArmatureCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, HeaterArmature>, CanAllCommandsExecute);
+            OpenCarbonArmatureCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, CarbonArmature>, CanAllCommandsExecute);
+            OpenStainlessArmatureCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, StainlessArmature>, CanAllCommandsExecute);
+
+            OpenCarbonSocketsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, CarbonSocket>, CanAllCommandsExecute);
+            OpenStainlessSocketsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, StainlessSocket>, CanAllCommandsExecute);
+            OpenHeaterSocketsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, HeaterSocket>, CanAllCommandsExecute);
+
+            OpenDrainageCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, Drainage>, CanAllCommandsExecute);
+
+            OpenFrameDetailsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, FrameDetail>, CanAllCommandsExecute);
         }
         #endregion
 
         #region Комманды
         public ICommand OpenMainWindowCommand { get; set; }
-        public bool CanOpenMainWindowCommandExecute(object e) => true;
+        public bool CanAllCommandsExecute(object e) => true;
         public void OnOpenMainWindowCommandExecuted(object e)
         {
             try
@@ -95,7 +113,6 @@ namespace ReportEngine.App.ViewModels
             }
         }
         public ICommand OpenTreeViewCommand { get; set; }
-        public bool CanOpenTreeViewCommandExecute(object e) => true;
         public void OnOpenTreeViewCommandExecuted(object e)
         {
             try
@@ -108,16 +125,13 @@ namespace ReportEngine.App.ViewModels
             }
         }
         public ICommand CloseAppCommand { get; set; }
-        public bool CanCloseAppCommandExecute(object e) => true;
         public void OnCloseAppCommandExecuted(object e) => Application.Current.Shutdown();
         public ICommand OpenAllUsersCommand { get; set; }
-        public bool CanOpenAllUsersCommandExecute(object e) => true;
         public void OnOpenAllUsersCommandExecuted(object e)
         {
             _navigation.ShowWindow<UsersView>();
         }
         public ICommand ChekDbConnectionCommand { get; set; }
-        public bool CanChekDbConnectionCommandExecute(object e) => true;
         public void OnChekDbConnectionCommandExecuted(object e)
         {
             using var scope = _serviceProvider.CreateScope();
@@ -128,7 +142,6 @@ namespace ReportEngine.App.ViewModels
 
         }
         public ICommand ShowAllProjectsCommand { get; set; }
-        public bool CanShowAllProjectsCommandExecute(object e) => true;
         public async void OnShowAllProjectsCommandExecuted(object e)
         {
             try
@@ -143,7 +156,6 @@ namespace ReportEngine.App.ViewModels
             }
         }
         public ICommand DeleteSelectedProjectCommand { get; set; }
-        public bool CanDeleteSelectedProjectExecute(object e) => true;
         public async void OnDeleteSelectedProjectExecuted(object e)
         {
             try
@@ -155,23 +167,33 @@ namespace ReportEngine.App.ViewModels
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
         #endregion
+
         #region Дженерик команды
         public ICommand OpenCarbonPipeCommand { get; set; }
         public ICommand OpenHeaterPipeCommand { get; set; }
         public ICommand OpenStainlessPipeCommand { get; set; }
+        public ICommand OpenCarbonArmatureCommand { get; set; }
+        public ICommand OpenHeaterArmatureCommand { get; set; }
+        public ICommand OpenStainlessArmatureCommand { get; set; }
+        public ICommand OpenCarbonSocketsCommand { get; set; }
+        public ICommand OpenStainlessSocketsCommand { get; set; }
+        public ICommand OpenHeaterSocketsCommand { get; set; }
+        public ICommand OpenDrainageCommand { get; set; }
         public ICommand OpenGenericWindowCommand { get; set; }
-        public bool CanOpenGenericWindowCommandExecute(object e) => true;
-        public void OnOpenGenericWindowCommandExecuted<T>(object e) where T : BaseEquip, new()
+        public ICommand OpenFrameDetailsCommand { get; set; }
+        public void OnOpenGenericWindowCommandExecuted<T, TEquip>(object e)
+            where T : IBaseEquip
+            where TEquip : class, new()
         {
             try
             {
-                _navigation.ShowGenericWindow<T>();
+                _navigation.ShowGenericWindow<T, TEquip>();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-        } 
+        }
         #endregion
     }
 }

@@ -1,36 +1,75 @@
 ﻿<Window
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ReportEngine.App.Views"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="ReportEngine.App.Views.SettingsWindow"
-        mc:Ignorable="d"
-        Title="Настройки приложения" Height="500" Width="546">
+    x:Class="ReportEngine.App.Views.SettingsWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ReportEngine.App.Views"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Настройки приложения"
+    Width="546"
+    Height="500"
+    mc:Ignorable="d">
     <Grid Margin="0,0,0,4">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="16*"/>
-            <ColumnDefinition Width="87*"/>
-            <ColumnDefinition Width="297*"/>
+            <ColumnDefinition Width="16*" />
+            <ColumnDefinition Width="87*" />
+            <ColumnDefinition Width="297*" />
         </Grid.ColumnDefinitions>
-        <ListBox Name="SettingsCategories"  Grid.Column="1" Margin="1,21,25,174" SelectionChanged="SettingsCategories_SelectionChanged" >
+        <ListBox
+            Name="SettingsCategories"
+            Grid.Column="1"
+            Margin="1,21,25,174"
+            SelectionChanged="SettingsCategories_SelectionChanged">
 
 
-            <materialDesign:TreeListViewItem  Content="Основные" IsSelected="True" Tag="GeneralSettings" />
-            <materialDesign:TreeListViewItem Content="Подключение" Tag="ConnectionSettings"/>
-            <materialDesign:TreeListViewItem  Content="Оформление" Tag="DesignSettings"/>
-            <materialDesign:TreeListViewItem  Tag="OtherSettings" Content="Другое"/>
+            <materialDesign:TreeListViewItem
+                Content="Основные"
+                IsSelected="True"
+                Tag="GeneralSettings" />
+            <materialDesign:TreeListViewItem Content="Подключение" Tag="ConnectionSettings" />
+            <materialDesign:TreeListViewItem Content="Оформление" Tag="DesignSettings" />
+            <materialDesign:TreeListViewItem Content="Другое" Tag="OtherSettings" />
 
         </ListBox>
 
 
-        <Button Grid.Column="2" Content="Ок" Margin="165,450,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="52"/>
-        <Button Grid.Column="2" Content="Применить" Margin="234,450,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="72" />
-        <Button Grid.Column="2" Content="Отмена" Margin="328,450,0,0" HorizontalAlignment="Left" Width="52" Height="20" VerticalAlignment="Top"/>
+        <Button
+            Grid.Column="2"
+            Width="52"
+            Height="20"
+            Margin="165,450,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Content="Ок" />
+        <Button
+            Grid.Column="2"
+            Width="72"
+            Height="20"
+            Margin="234,450,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Content="Применить" />
+        <Button
+            Grid.Column="2"
+            Width="52"
+            Height="20"
+            Margin="328,450,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Content="Отмена" />
 
 
-        <ContentControl x:Name="currentSubwindow" Grid.Column="2" Content="Тут конкретное окно" HorizontalAlignment="Left" Margin="0,25,0,0" VerticalAlignment="Top" Height="381" Width="380" />
-        <!-- в свойство Content пихаем подокно по смене выбранного элемента в ListBox-->
+        <ContentControl
+            x:Name="currentSubwindow"
+            Grid.Column="2"
+            Width="380"
+            Height="381"
+            Margin="0,25,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Content="Тут конкретное окно" />
+        <!--  в свойство Content пихаем подокно по смене выбранного элемента в ListBox  -->
 
 
 

@@ -13,43 +13,14 @@
     WindowStartupLocation="CenterScreen"
     WindowState="Maximized"
     mc:Ignorable="d">
-    <!--  Loaded="MainWindowLoaded"  -->
+
     <Window.Resources>
-        <Image x:Key="refresh-button.png" Source="/Resources/Images/refresh-button.png" />
-
-        <!--  Стили для DataGrid  -->
-        <Style TargetType="DataGrid">
-            <Setter Property="Background" Value="White" />
-            <Setter Property="BorderBrush" Value="LightGray" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="RowBackground" Value="#FFF5F5F5" />
-            <Setter Property="AlternatingRowBackground" Value="#FFE0E0E0" />
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="AutoGenerateColumns" Value="False" />
-            <Setter Property="CanUserAddRows" Value="False" />
-            <Setter Property="Margin" Value="10" />
-            <Setter Property="VerticalAlignment" Value="Top" />
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-        </Style>
-
-        <Style TargetType="DataGridColumnHeader">
-            <Setter Property="Background" Value="#FFDDDDDD" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="BorderBrush" Value="LightGray" />
-            <Setter Property="BorderThickness" Value="0,0,1,1" />
-            <Setter Property="Padding" Value="8,4" />
-        </Style>
-
-        <Style TargetType="DataGridCell">
-            <Setter Property="BorderBrush" Value="LightGray" />
-            <Setter Property="BorderThickness" Value="0,0,1,1" />
-            <Setter Property="Padding" Value="8,4" />
-        </Style>
-
-        <Style TargetType="MenuItem">
-            <Setter Property="FontSize" Value="14" />
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/Dictionaries/GigaChadUI.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Image x:Key="refresh-button.png" Source="/Resources/Images/refresh-button.png" />
+        </ResourceDictionary>
     </Window.Resources>
 
     <DockPanel>
@@ -75,20 +46,20 @@
                     <MenuItem Command="{Binding OpenCarbonPipeCommand}" Header="Углеродистая сталь" />
                 </MenuItem>
                 <MenuItem Header="Запорные арматуры">
-                    <MenuItem Header="Жарпрочная сталь" />
-                    <MenuItem Header="Нержавеющая сталь" />
-                    <MenuItem Header="Углеродистая сталь" />
+                    <MenuItem Command="{Binding OpenHeaterArmatureCommand}" Header="Жарпрочная сталь" />
+                    <MenuItem Command="{Binding OpenStainlessArmatureCommand}" Header="Нержавеющая сталь" />
+                    <MenuItem Command="{Binding OpenCarbonArmatureCommand}" Header="Углеродистая сталь" />
                 </MenuItem>
                 <MenuItem Header="Тройники и КМЧ">
-                    <MenuItem Header="Жарпрочная сталь" />
-                    <MenuItem Header="Нержавеющая сталь" />
-                    <MenuItem Header="Углеродистая сталь" />
+                    <MenuItem Command="{Binding OpenHeaterSocketsCommand}" Header="Жарпрочная сталь" />
+                    <MenuItem Command="{Binding OpenStainlessSocketsCommand}" Header="Нержавеющая сталь" />
+                    <MenuItem Command="{Binding OpenCarbonSocketsCommand}" Header="Углеродистая сталь" />
                 </MenuItem>
                 <Separator />
-                <MenuItem Header="Дренаж" />
+                <MenuItem Command="{Binding OpenDrainageCommand}" Header="Дренаж" />
                 <Separator />
                 <MenuItem Header="Рамные комплектующие">
-                    <MenuItem Header="Детали рамы" />
+                    <MenuItem Command="{Binding OpenFrameDetailsCommand}" Header="Детали рамы" />
                     <MenuItem Header="Комплектующие для стойки" />
                     <MenuItem Header="Прокат" />
                 </MenuItem>
@@ -168,7 +139,6 @@
                     ItemsSource="{Binding AllProjects}"
                     SelectedItem="{Binding SelectedProject}"
                     SelectionUnit="FullRow">
-
                     <DataGrid.Columns>
                         <DataGridTextColumn
                             Width="*"

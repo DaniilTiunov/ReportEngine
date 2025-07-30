@@ -45,6 +45,7 @@ namespace ReportEngine.App.Model
 
         #region Публичные свойства
         public IEnumerable<string> Statuses { get; set; } = new List<string>() { "ТКП", "Завершен" };
+
         public int CurrentProjectId;
         public int Number { get => _number; set => Set(ref _number, value); } //№п/п
         public string? Description { get => _description; set => Set(ref _description, value); } //Обозначение КД                               

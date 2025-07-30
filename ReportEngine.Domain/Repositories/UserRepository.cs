@@ -25,27 +25,38 @@ namespace ReportEngine.Domain.Repositories
                                     .AsNoTracking()
                                     .ToListAsync();
         }
-        public async Task<User?> GetByIdAsync(int id)
+        public async Task<User?> GetByIdAsync(int id) // Не используется
         {
             return await _context.Set<User>()
-                .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.Id == id);
+                            .FirstOrDefaultAsync(c => c.Id == id);
         }
         public async Task UpdateAsync(User user)
         {
-            _context.Entry(user).State = EntityState.Modified;
+            var existingEntity = await _context.Set<User>()
+                .FirstOrDefaultAsync(c => c.Id == user.Id);
+
+            if (existingEntity != null)
+            {
+                _context.Entry(existingEntity).CurrentValues.SetValues(user);
+            }
 
             await _context.SaveChangesAsync();
         }
         public async Task DeleteAsync(User user)
         {
+            if (user == null) return;
+
+            var existingEntity = await _context.Set<User>()
+                .FirstOrDefaultAsync(c => c.Id == user.Id);
+
             if (user != null)
-                _context.Set<User>().Remove(user);
+            {
+                _context.Set<User>().Remove(existingEntity);
+                await _context.SaveChangesAsync();
 
-            await _context.SaveChangesAsync();
-
+            }
         }
-        public async Task<int> DeleteByIdAsync(int id)
+        public async Task<int> DeleteByIdAsync(int id) // Не используется
         {
 
             var entity = await _context.Set<User>().FindAsync(id);

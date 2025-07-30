@@ -37,7 +37,7 @@ DisableProgramGroupPage=yes
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputBaseFilename=setup
-SetupIconFile=C:\Work\Prjs\ReportEngine\ReportEngine.App\Resources\install_line_icon_236048.ico
+SetupIconFile=C:\Work\Prjs\ReportEngine\ReportEngine.App\Resources\Icons\install_line_icon_236048.ico
 SolidCompression=yes
 WizardStyle=modern
 
@@ -50,7 +50,6 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "C:\Work\Prjs\ReportEngine\ReportEngine.App\bin\Release\net8.0-windows\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
-Source: "C:\Work\Prjs\ReportEngine\ReportEngine.App\Resources\estimate_cost_icon_213382.ico"; DestDir: "{app}"; Flags: ignoreversion
 
 [Registry]
 Root: HKA; Subkey: "Software\Classes\{#MyAppAssocExt}\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppAssocKey}"; ValueData: ""; Flags: uninsdeletevalue

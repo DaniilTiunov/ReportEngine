@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.Domain.Entities.BaseEntities;
+using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -21,16 +22,19 @@ namespace ReportEngine.App.Services
             _contentHost = contentHost ?? throw new ArgumentNullException(nameof(contentHost));
         }
         #region Методы открытия окон
-        public void ShowWindow<T>() where T : Window
+        public void ShowWindow<T>()
+            where T : Window
         {
             _currentWindow = _serviceProvider.GetRequiredService<T>();
             _currentWindow.Show();
         }
 
-        public void ShowGenericWindow<T>() where T : BaseEquip, new()
+        public void ShowGenericWindow<T, TEquip>()
+            where T : IBaseEquip
+            where TEquip : class, new()
         {
             var factory = _serviceProvider.GetRequiredService<GenericEquipWindowFactory>();
-            _currentWindow = factory.CreateWindow<T>();
+            _currentWindow = factory.CreateWindow<T, TEquip>();
             _currentWindow.Show();
         }
 
@@ -46,7 +50,8 @@ namespace ReportEngine.App.Services
         #endregion
 
         #region Методы отображения контента
-        public void ShowContent<T>() where T : UserControl
+        public void ShowContent<T>()
+            where T : UserControl
         {
             if (_contentHost != null)
             {
@@ -60,7 +65,8 @@ namespace ReportEngine.App.Services
                 _currentContent = content;
             }
         }
-        public void ClearContent<T>() where T : UserControl
+        public void ClearContent<T>()
+            where T : UserControl
         {
             if (_currentContent is IDisposable disposable)
             {
