@@ -83,8 +83,9 @@ namespace ReportEngine.App
             services.AddScoped<IGenericBaseRepository<IBaseEquip, StainlessSocket>, GenericEquipRepository<IBaseEquip, StainlessSocket>>();
             services.AddScoped<IGenericBaseRepository<IBaseEquip, Drainage>, GenericEquipRepository<IBaseEquip, Drainage>>();
             services.AddScoped<IGenericBaseRepository<IBaseEquip, FrameDetail>, GenericEquipRepository<IBaseEquip, FrameDetail>>();
+            services.AddScoped<IGenericBaseRepository<IBaseEquip, PillarEqiup>, GenericEquipRepository<IBaseEquip, PillarEqiup>>();
+            services.AddScoped<IGenericBaseRepository<IBaseEquip, FrameRoll>, GenericEquipRepository<IBaseEquip, FrameRoll>>();
         }
-
         private static void ConfigureApplicationServices(IServiceCollection services)
         {
             services.AddScoped<ExcelCreator>();

@@ -2,7 +2,6 @@
 using ReportEngine.App.Model;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Repositories.Interfaces;
-using ReportEngine.Shared.Config.DebugConsol;
 using ReportEngine.Shared.Helpers;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -41,7 +40,7 @@ namespace ReportEngine.App.ViewModels
         public void InitializeCommands()
         {
             // Инициализируем команду для отображения всего оборудования
-            ShowAllEquipCommand = new RelayCommand(OnShowAllEquipCommandExecuted, CanShowAllEquipCommandExecute);
+            ShowAllEquipCommand = new RelayCommand(OnShowAllEquipCommandExecuted, CanAllCommandsExecute);
         }
 
         /// <summary>
@@ -54,7 +53,7 @@ namespace ReportEngine.App.ViewModels
         /// </summary>
         /// <param name="e">Параметр команды.</param>
         /// <returns>Всегда возвращает true, указывая, что команда всегда может быть выполнена.</returns>
-        public bool CanShowAllEquipCommandExecute(object e) => true;
+        public bool CanAllCommandsExecute(object e) => true;
 
         /// <summary>
         /// Выполняет команду для отображения всего оборудования.

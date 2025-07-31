@@ -17,7 +17,6 @@ using ReportEngine.Shared.Helpers;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
-using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.App.ViewModels
 {
@@ -71,6 +70,9 @@ namespace ReportEngine.App.ViewModels
             GenericEquipCommandProvider.OpenDrainageCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, Drainage>, CanAllCommandsExecute);
 
             GenericEquipCommandProvider.OpenFrameDetailsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, FrameDetail>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenPillarEquipCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, PillarEqiup>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenFrameRollCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, FrameRoll>, CanAllCommandsExecute);
+
         }
         #endregion
         #region Комманды главного окна
