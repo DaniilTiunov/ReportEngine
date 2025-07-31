@@ -21,6 +21,11 @@ namespace ReportEngine.App.Commands
         public ICommand OpenBoxesBracesommand { get; set; }
         public ICommand OpenDrainageBracesCommand { get; set; }
         public ICommand OpenSensorsBracesCommand { get; set; }
+        public ICommand OpenCabelBoxeCommand { get; set; }
+        public ICommand OpenCabelInputCommand { get; set; }
+        public ICommand OpenCabelProductionCommand { get; set; }
+        public ICommand OpenCabelProtectionCommand { get; set; }
+        public ICommand OpenHeaterCommand { get; set; }
 
 
         public RelayCommand CreateCommand(Action<object> execute, Func<object, bool> canExecute = null)

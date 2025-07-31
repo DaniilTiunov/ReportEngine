@@ -13,6 +13,7 @@ using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.Braces;
 using ReportEngine.Domain.Entities.Drainage;
+using ReportEngine.Domain.Entities.ElectricComponents;
 using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Frame;
 using ReportEngine.Domain.Entities.Pipes;
@@ -89,7 +90,12 @@ namespace ReportEngine.App
                 typeof(FrameRoll),
                 typeof(BoxesBrace),
                 typeof(DrainageBrace),
-                typeof(SensorBrace)
+                typeof(SensorBrace),
+                typeof(CabelBoxe),
+                typeof(CabelInput),
+                typeof(CabelProduction),
+                typeof(CabelProtection),
+                typeof(Heater)
             };
             
             foreach(var type in types)
@@ -111,7 +117,9 @@ namespace ReportEngine.App
             services.AddScoped<MainWindowViewModel>();
             services.AddScoped<UsersViewModel>();
             services.AddScoped<ProjectViewModel>();
-            services.AddScoped(typeof(GenericEquipViewModel<IBaseEquip, BaseEquip>));
+            services.AddScoped(typeof(GenericEquipViewModel<BaseEquip>));
+            services.AddScoped(typeof(GenericEquipViewModel<BaseFrame>));
+
         }
         private static void ConfigureViews(IServiceCollection services)
         {

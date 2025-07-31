@@ -75,11 +75,10 @@
                 <ContextMenu>
                     <MenuItem Command="{Binding ShowAllEquipCommand}" Header="Показать всё" />
                     <Separator />
-                    <MenuItem Command="{Binding AddNewEquipCommand}" Header="Добавить оборудование" />
                     <MenuItem Command="{Binding SaveEquipCommand}" Header="Сохранить изменения" />
                     <Separator />
                     <MenuItem
-                        Command="{Binding DeleteEquipCommand}"
+                        Command="{Binding RemoveEquipCommand}"
                         Header="Удалить оборудование"
                         IsEnabled="{Binding GenericEquipModel.SelectedBaseEquip}" />
                 </ContextMenu>

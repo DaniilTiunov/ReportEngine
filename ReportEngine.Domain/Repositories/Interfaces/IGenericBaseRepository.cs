@@ -9,5 +9,6 @@ namespace ReportEngine.Domain.Repositories.Interfaces
         Task AddAsync(TEntity entity);
         Task DeleteAsync(TEntity entity);
         Task<IEnumerable<TEntity>> GetAllAsync();
+        Task UpdateAsync(TEntity entity);
     }
 }

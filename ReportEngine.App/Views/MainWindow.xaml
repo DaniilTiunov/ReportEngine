@@ -71,11 +71,11 @@
                 </MenuItem>
                 <Separator />
                 <MenuItem Header="Электрические компоненты">
-                    <MenuItem Header="Кабельная продукция" />
-                    <MenuItem Header="Кабельные вводы" />
-                    <MenuItem Header="Клеммные коробки" />
-                    <MenuItem Header="Обогрев" />
-                    <MenuItem Header="Средства прокладки и защиты кабеля" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCabelProductionCommand}" Header="Кабельная продукция" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCabelInputCommand}" Header="Кабельные вводы" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCabelBoxeCommand}" Header="Клеммные коробки" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenHeaterCommand}" Header="Обогрев" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCabelProtectionCommand}" Header="Средства прокладки и защиты кабеля" />
                 </MenuItem>
                 <Separator />
                 <MenuItem Header="Прочие" />

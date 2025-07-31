@@ -33,5 +33,10 @@ namespace ReportEngine.Domain.Repositories
                  .AsNoTracking()
                  .ToListAsync();
         }
+        public async Task UpdateAsync(TEntity entity)
+        {
+            _context.Set<TEntity>().Update(entity);
+            await _context.SaveChangesAsync();
+        }
     }
 }

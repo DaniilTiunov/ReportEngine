@@ -10,6 +10,7 @@ using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.Braces;
 using ReportEngine.Domain.Entities.Drainage;
+using ReportEngine.Domain.Entities.ElectricComponents;
 using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Frame;
 using ReportEngine.Domain.Entities.Pipes;
@@ -77,6 +78,13 @@ namespace ReportEngine.App.ViewModels
             GenericEquipCommandProvider.OpenBoxesBracesommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<BoxesBrace, BoxesBrace>, CanAllCommandsExecute);
             GenericEquipCommandProvider.OpenDrainageBracesCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<DrainageBrace, DrainageBrace>, CanAllCommandsExecute);
             GenericEquipCommandProvider.OpenSensorsBracesCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<SensorBrace, SensorBrace>, CanAllCommandsExecute);
+
+            GenericEquipCommandProvider.OpenCabelBoxeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<CabelBoxe, CabelBoxe>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenCabelInputCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<CabelInput, CabelInput>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenCabelProductionCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<CabelProduction, CabelProduction>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenCabelProtectionCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<CabelProtection, CabelProtection>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenHeaterCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<Heater, Heater>, CanAllCommandsExecute);
+
         }
         #endregion
         #region Комманды главного окна
