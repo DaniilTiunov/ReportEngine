@@ -41,25 +41,25 @@
             </MenuItem>
             <MenuItem Header="Исходные данные">
                 <MenuItem Header="Сортамент труб">
-                    <MenuItem Command="{Binding OpenHeaterPipeCommand}" Header="Жарпрочная сталь" />
-                    <MenuItem Command="{Binding OpenStainlessPipeCommand}" Header="Нержавеющая сталь" />
-                    <MenuItem Command="{Binding OpenCarbonPipeCommand}" Header="Углеродистая сталь" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenHeaterPipeCommand}" Header="Жарпрочная сталь" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenStainlessPipeCommand}" Header="Нержавеющая сталь" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCarbonPipeCommand}" Header="Углеродистая сталь" />
                 </MenuItem>
                 <MenuItem Header="Запорные арматуры">
-                    <MenuItem Command="{Binding OpenHeaterArmatureCommand}" Header="Жарпрочная сталь" />
-                    <MenuItem Command="{Binding OpenStainlessArmatureCommand}" Header="Нержавеющая сталь" />
-                    <MenuItem Command="{Binding OpenCarbonArmatureCommand}" Header="Углеродистая сталь" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenHeaterArmatureCommand}" Header="Жарпрочная сталь" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenStainlessArmatureCommand}" Header="Нержавеющая сталь" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCarbonArmatureCommand}" Header="Углеродистая сталь" />
                 </MenuItem>
                 <MenuItem Header="Тройники и КМЧ">
-                    <MenuItem Command="{Binding OpenHeaterSocketsCommand}" Header="Жарпрочная сталь" />
-                    <MenuItem Command="{Binding OpenStainlessSocketsCommand}" Header="Нержавеющая сталь" />
-                    <MenuItem Command="{Binding OpenCarbonSocketsCommand}" Header="Углеродистая сталь" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenHeaterSocketsCommand}" Header="Жарпрочная сталь" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenStainlessSocketsCommand}" Header="Нержавеющая сталь" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCarbonSocketsCommand}" Header="Углеродистая сталь" />
                 </MenuItem>
                 <Separator />
-                <MenuItem Command="{Binding OpenDrainageCommand}" Header="Дренаж" />
+                <MenuItem Command="{Binding GenericEquipCommandProvider.OpenDrainageCommand}" Header="Дренаж" />
                 <Separator />
                 <MenuItem Header="Рамные комплектующие">
-                    <MenuItem Command="{Binding OpenFrameDetailsCommand}" Header="Детали рамы" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenFrameDetailsCommand}" Header="Детали рамы" />
                     <MenuItem Header="Комплектующие для стойки" />
                     <MenuItem Header="Прокат" />
                 </MenuItem>
@@ -117,7 +117,7 @@
                     Grid.Column="1"
                     Margin="1555,0,9,0"
                     FontSize="14"
-                    Text="{Binding ConnectionStatusMessage}" />
+                    Text="{Binding MainWindowModel.ConnectionStatusMessage}" />
                 <Button
                     Grid.Column="1"
                     Margin="1287,-1,453,-2"
@@ -136,8 +136,8 @@
                 <DataGrid
                     x:Name="MainDataGrid"
                     Margin="5,43,10,0"
-                    ItemsSource="{Binding AllProjects}"
-                    SelectedItem="{Binding SelectedProject}"
+                    ItemsSource="{Binding MainWindowModel.AllProjects}"
+                    SelectedItem="{Binding MainWindowModel.SelectedProject}"
                     SelectionUnit="FullRow">
                     <DataGrid.Columns>
                         <DataGridTextColumn
@@ -180,18 +180,9 @@
                             Width="*"
                             Binding="{Binding RequestProduction}"
                             Header="Заявка на производство" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Property10}"
-                            Header="Ещё что-то" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Property11}"
-                            Header="Ещё что-то" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Property12}"
-                            Header="Ещё что-то" />
+                        <DataGridTextColumn Width="*" Header="Ещё что-то" />
+                        <DataGridTextColumn Width="*" Header="Ещё что-то" />
+                        <DataGridTextColumn Width="*" Header="Ещё что-то" />
                     </DataGrid.Columns>
                     <DataGrid.ContextMenu>
                         <ContextMenu>

@@ -24,7 +24,7 @@ namespace ReportEngine.Domain.Entities
         public string? RequestProduction { get; set; } //Заявка на производство
         public string? MarkPlus {  get; set; } //Маркировка +
         public string? MarkMinus { get; set; } //Маркировка -
-        public bool isGalvanized { get; set; } //Оцинковка
+        public bool IsGalvanized { get; set; } //Оцинковка
 
         public virtual ICollection<Stand> Stands { get; set; } = new List<Stand>();
     }

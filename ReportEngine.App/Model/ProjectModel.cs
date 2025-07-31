@@ -66,37 +66,7 @@ namespace ReportEngine.App.Model
         #endregion
 
         #region Методы
-        public async void CreateNewProjectCard(ProjectInfo newProjectCard, ProjectInfoRepository projectInfoRepository)
-        {
-            try
-            {
-                newProjectCard = new ProjectInfo
-                {
-                    Number = Number,
-                    Description = Description,
-                    CreationDate = DateOnly.FromDateTime(CreationDate),
-                    Company = Company,
-                    Object = Object,
-                    StandCount = StandCount,
-                    Cost = Cost,
-                    Status = ComboBoxHelper.ComboBoxChangedValue<ProjectStatus>(Status),
-                    StartDate = DateOnly.FromDateTime(StartDate),
-                    OutOfProduction = DateOnly.FromDateTime(OutOfProduction),
-                    EndDate = DateOnly.FromDateTime(EndDate),
-                    OrderCustomer = OrderCustomer,
-                    RequestProduction = RequestProduction,
-                    MarkMinus = MarkMinus,
-                    MarkPlus = MarkPlus,
-                    isGalvanized = IsGalvanized
-                };
-
-                await projectInfoRepository.AddAsync(newProjectCard);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        } 
+        
         #endregion
     }
 }
