@@ -28,23 +28,20 @@ namespace ReportEngine.App.Services
         /// Создает и возвращает новое окно для отображения оборудования.
         /// </summary>
         /// <typeparam name="T">Тип, реализующий интерфейс IBaseEquip.</typeparam>
-        /// <typeparam name="TEquip">Тип оборудования, для которого создается окно.</typeparam>
         /// <returns>Созданное окно с настроенным DataContext и сгенерированными столбцами.</returns>
-        public Window CreateWindow<T, TEquip>()
-            where T : class, IBaseEquip, new() // Ограничение: T должен реализовывать интерфейс IBaseEquip
-            //where TEquip : class, new() // Ограничение: TEquip должен быть классом и иметь публичный конструктор без параметров
+        public Window CreateWindow<T>() where T : class, IBaseEquip, new()
         {
             // Получаем репозиторий из DI
             var repository = _serviceProvider.GetRequiredService<IGenericBaseRepository<T, T>>();
             // Создаем ViewModel
-            var viewModel = new GenericEquipViewModel<T, T>(repository);
+            var viewModel = new GenericEquipViewModel<T>(repository);
             // Создаем окно
             var window = new GenericEquipView();
             // Устанавливаем DataContext окна на созданную ViewModel
             // Это позволяет окну использовать ViewModel для привязки данных
             window.DataContext = viewModel;
             // Генерируем столбцы для DataGrid в окне на основе свойств типа TEquip
-            GenerateDataGridColumns(viewModel, window);
+            GenerateDataGridColumns<T>(window);
             // Выполняем команду для отображения всего оборудования
             viewModel.OnShowAllEquipCommandExecuted(null);
             // Возвращаем созданное и настроенное окно
@@ -54,36 +51,22 @@ namespace ReportEngine.App.Services
         /// Генерирует столбцы для DataGrid на основе свойств обобщенного типа TEquip.
         /// </summary>
         /// <typeparam name="T">Тип, реализующий интерфейс IBaseEquip.</typeparam>
-        /// <typeparam name="TEquip">Тип оборудования, для которого генерируются столбцы.</typeparam>
         /// <param name="viewModel">ViewModel, содержащая данные для отображения.</param>
         /// <param name="window">Окно, содержащее DataGrid, для которого генерируются столбцы.</param>
-        private void GenerateDataGridColumns<T>(GenericEquipViewModel<T, T> viewModel, GenericEquipView window)
-            where T : class, IBaseEquip, new() // Ограничение: T должен реализовывать интерфейс IBaseEquip
-            //where TEquip : class, new() // Ограничение: TEquip должен быть классом и иметь публичный конструктор без параметров
+        private void GenerateDataGridColumns<T>(GenericEquipView window)
+            where T : class, IBaseEquip, new()
         {
-            // Очистка существующих столбцов в DataGrid
             window.GenericEquipDataGrid.Columns.Clear();
-            // Получение типа TEquip
-            var itemType = typeof(T);
-            // Получение всех свойств типа TEquip
-            var properties = itemType.GetProperties();
-            // Перебор всех свойств
+            var properties = typeof(T).GetProperties();
             foreach (var property in properties)
             {
-                // Пропускаем свойство с именем "Id", так как оно не нужно для отображения
                 if (property.Name == "Id")
                     continue;
-                // Создание нового столбца для DataGrid
-                DataGridColumn column;
-                // Создание текстового столбца
-                column = new DataGridTextColumn
+                DataGridColumn column = new DataGridTextColumn
                 {
-                    // Установка заголовка столбца на основе имени свойства
                     Header = GenericEquipMapper.GetColumnName(property.Name),
-                    // Привязка столбца к свойству объекта
                     Binding = new Binding(property.Name)
                 };
-                // Добавление созданного столбца в DataGrid
                 window.GenericEquipDataGrid.Columns.Add(column);
             }
         }

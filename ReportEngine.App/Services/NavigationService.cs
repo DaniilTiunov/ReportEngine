@@ -56,7 +56,7 @@ namespace ReportEngine.App.Services
             where T : class, IBaseEquip, new()
         {
             var factory = _serviceProvider.GetRequiredService<GenericEquipWindowFactory>(); // Получаем фабрику окон
-            _currentWindow = factory.CreateWindow<T, T>(); // Создаем окно с помощью фабрики
+            _currentWindow = factory.CreateWindow<T>(); // Создаем окно с помощью фабрики
             _currentWindow.Show(); // Отображаем окно
         }
 

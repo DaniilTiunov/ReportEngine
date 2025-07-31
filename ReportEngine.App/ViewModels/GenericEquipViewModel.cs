@@ -12,23 +12,20 @@ namespace ReportEngine.App.ViewModels
     /// Обобщенная ViewModel для управления оборудованием.
     /// </summary>
     /// <typeparam name="T">Тип, реализующий интерфейс IBaseEquip.</typeparam>
-    /// <typeparam name="TEquip">Тип оборудования, который является классом и имеет публичный конструктор без параметров.</typeparam>
-    public class GenericEquipViewModel<T, TEquip> : BaseViewModel
-        where T : IBaseEquip // Ограничение: T должен реализовывать интерфейс IBaseEquip
-        where TEquip : class, new() // Ограничение: TEquip должен быть классом и иметь публичный конструктор без параметров
+    public class GenericEquipViewModel<T> : BaseViewModel
+        where T : class, IBaseEquip, new() // Ограничение: T должен реализовывать интерфейс IBaseEquip
     {
-        private readonly IGenericBaseRepository<T, TEquip> _genericEquipRepository; // Репозиторий для работы с данными оборудования
+        private readonly IGenericBaseRepository<T, T> _genericEquipRepository; // Репозиторий для работы с данными оборудования
 
         /// <summary>
         /// Модель для управления коллекцией оборудования и выбранным элементом оборудования.
         /// </summary>
-        public GenericEquipModel<T, TEquip> GenericEquipModel { get; set; } = new GenericEquipModel<T, TEquip>();
-
+        public GenericEquipModel<T, T> GenericEquipModel { get; set; } = new GenericEquipModel<T, T>();
         /// <summary>
         /// Инициализирует новый экземпляр класса GenericEquipViewModel.
         /// </summary>
         /// <param name="genericEquipRepository">Репозиторий для работы с данными оборудования.</param>
-        public GenericEquipViewModel(IGenericBaseRepository<T, TEquip> genericEquipRepository)
+        public GenericEquipViewModel(IGenericBaseRepository<T, T> genericEquipRepository)
         {
             InitializeCommands(); // Инициализируем команды
             _genericEquipRepository = genericEquipRepository; // Устанавливаем репозиторий

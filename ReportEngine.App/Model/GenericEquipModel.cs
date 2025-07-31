@@ -10,7 +10,7 @@ namespace ReportEngine.App.Model
     /// <typeparam name="T">Тип, реализующий интерфейс IBaseEquip.</typeparam>
     /// <typeparam name="TEquip">Тип оборудования, который является классом и имеет публичный конструктор без параметров.</typeparam>
     public class GenericEquipModel<T, TEquip> : BaseViewModel
-        where T : class, IBaseEquip, new()
+    where T : class, IBaseEquip, new()
     {
         public ObservableCollection<T> BaseEquips { get; set; }
         public T SelectedBaseEquip { get; set; }

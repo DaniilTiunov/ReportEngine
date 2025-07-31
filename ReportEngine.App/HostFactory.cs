@@ -97,8 +97,8 @@ namespace ReportEngine.App
                 typeof(CabelProtection),
                 typeof(Heater)
             };
-            
-            foreach(var type in types)
+
+            foreach (var type in types)
             {
                 var repoInterface = typeof(IGenericBaseRepository<,>).MakeGenericType(type, type);
                 var repoType = typeof(GenericEquipRepository<,>).MakeGenericType(type, type);
