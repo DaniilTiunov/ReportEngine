@@ -18,6 +18,10 @@ namespace ReportEngine.App.Commands
         public ICommand OpenFrameDetailsCommand { get; set; }
         public ICommand OpenPillarEquipCommand {  get; set; }
         public ICommand OpenFrameRollCommand { get; set; }
+        public ICommand OpenBoxesBracesommand { get; set; }
+        public ICommand OpenDrainageBracesCommand { get; set; }
+        public ICommand OpenSensorsBracesCommand { get; set; }
+
 
         public RelayCommand CreateCommand(Action<object> execute, Func<object, bool> canExecute = null)
         {

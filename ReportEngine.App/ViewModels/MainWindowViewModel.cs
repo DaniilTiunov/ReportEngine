@@ -8,6 +8,7 @@ using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
+using ReportEngine.Domain.Entities.Braces;
 using ReportEngine.Domain.Entities.Drainage;
 using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Frame;
@@ -55,24 +56,27 @@ namespace ReportEngine.App.ViewModels
         }
         public void InitializeGenericEquipCommands()
         {
-            GenericEquipCommandProvider.OpenHeaterPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, HeaterPipe>, CanAllCommandsExecute);
-            GenericEquipCommandProvider.OpenCarbonPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, CarbonPipe>, CanAllCommandsExecute);
-            GenericEquipCommandProvider.OpenStainlessPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, StainlessPipe>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenHeaterPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<HeaterPipe, HeaterPipe>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenCarbonPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<CarbonPipe, CarbonPipe>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenStainlessPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<StainlessPipe, StainlessPipe>, CanAllCommandsExecute);
 
-            GenericEquipCommandProvider.OpenHeaterArmatureCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, HeaterArmature>, CanAllCommandsExecute);
-            GenericEquipCommandProvider.OpenCarbonArmatureCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, CarbonArmature>, CanAllCommandsExecute);
-            GenericEquipCommandProvider.OpenStainlessArmatureCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, StainlessArmature>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenHeaterArmatureCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<HeaterArmature, HeaterArmature>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenCarbonArmatureCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<CarbonArmature, CarbonArmature>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenStainlessArmatureCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<StainlessArmature, StainlessArmature>, CanAllCommandsExecute);
 
-            GenericEquipCommandProvider.OpenCarbonSocketsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, CarbonSocket>, CanAllCommandsExecute);
-            GenericEquipCommandProvider.OpenStainlessSocketsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, StainlessSocket>, CanAllCommandsExecute);
-            GenericEquipCommandProvider.OpenHeaterSocketsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, HeaterSocket>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenCarbonSocketsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<CarbonSocket, CarbonSocket>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenStainlessSocketsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<StainlessSocket, StainlessSocket>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenHeaterSocketsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<HeaterSocket, HeaterSocket>, CanAllCommandsExecute);
 
-            GenericEquipCommandProvider.OpenDrainageCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, Drainage>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenDrainageCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<Drainage, Drainage>, CanAllCommandsExecute);
 
-            GenericEquipCommandProvider.OpenFrameDetailsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, FrameDetail>, CanAllCommandsExecute);
-            GenericEquipCommandProvider.OpenPillarEquipCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, PillarEqiup>, CanAllCommandsExecute);
-            GenericEquipCommandProvider.OpenFrameRollCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, FrameRoll>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenFrameDetailsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<FrameDetail, FrameDetail>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenPillarEquipCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<PillarEqiup, PillarEqiup>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenFrameRollCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<FrameRoll, FrameRoll>, CanAllCommandsExecute);
 
+            GenericEquipCommandProvider.OpenBoxesBracesommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<BoxesBrace, BoxesBrace>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenDrainageBracesCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<DrainageBrace, DrainageBrace>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenSensorsBracesCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<SensorBrace, SensorBrace>, CanAllCommandsExecute);
         }
         #endregion
         #region Комманды главного окна
@@ -128,10 +132,9 @@ namespace ReportEngine.App.ViewModels
 
         #region Дженерик команды
         public void OnOpenGenericWindowCommandExecuted<T, TEquip>(object e)
-            where T : IBaseEquip
-            where TEquip : class, new()
+            where T : class, IBaseEquip, new()
         {
-            ExceptionHelper.SafeExecute(() => _navigation.ShowGenericWindow<T, TEquip>());
+            ExceptionHelper.SafeExecute(() => _navigation.ShowGenericWindow<T, T>());
         }
         #endregion
     }

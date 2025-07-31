@@ -65,7 +65,16 @@ namespace ReportEngine.App.ViewModels
             {
                 var items = await _genericEquipRepository.GetAllAsync();
                 var baseEquips = items.OfType<T>().ToList();
-                GenericEquipModel.BaseEquips = new ObservableCollection<T>(baseEquips);
+                if (GenericEquipModel.BaseEquips != null)
+                {
+                    GenericEquipModel.BaseEquips.Clear();
+                    foreach (var equip in baseEquips)
+                        GenericEquipModel.BaseEquips.Add(equip);
+                }
+                else
+                {
+                    GenericEquipModel.BaseEquips = new ObservableCollection<T>(baseEquips);
+                }
             });
         }
 

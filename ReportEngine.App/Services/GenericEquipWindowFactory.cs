@@ -31,13 +31,13 @@ namespace ReportEngine.App.Services
         /// <typeparam name="TEquip">Тип оборудования, для которого создается окно.</typeparam>
         /// <returns>Созданное окно с настроенным DataContext и сгенерированными столбцами.</returns>
         public Window CreateWindow<T, TEquip>()
-            where T : IBaseEquip // Ограничение: T должен реализовывать интерфейс IBaseEquip
-            where TEquip : class, new() // Ограничение: TEquip должен быть классом и иметь публичный конструктор без параметров
+            where T : class, IBaseEquip, new() // Ограничение: T должен реализовывать интерфейс IBaseEquip
+            //where TEquip : class, new() // Ограничение: TEquip должен быть классом и иметь публичный конструктор без параметров
         {
             // Получаем репозиторий из DI
-            var repository = _serviceProvider.GetRequiredService<IGenericBaseRepository<T, TEquip>>();
+            var repository = _serviceProvider.GetRequiredService<IGenericBaseRepository<T, T>>();
             // Создаем ViewModel
-            var viewModel = new GenericEquipViewModel<T, TEquip>(repository);
+            var viewModel = new GenericEquipViewModel<T, T>(repository);
             // Создаем окно
             var window = new GenericEquipView();
             // Устанавливаем DataContext окна на созданную ViewModel
@@ -57,14 +57,14 @@ namespace ReportEngine.App.Services
         /// <typeparam name="TEquip">Тип оборудования, для которого генерируются столбцы.</typeparam>
         /// <param name="viewModel">ViewModel, содержащая данные для отображения.</param>
         /// <param name="window">Окно, содержащее DataGrid, для которого генерируются столбцы.</param>
-        private void GenerateDataGridColumns<T, TEquip>(GenericEquipViewModel<T, TEquip> viewModel, GenericEquipView window)
-            where T : IBaseEquip // Ограничение: T должен реализовывать интерфейс IBaseEquip
-            where TEquip : class, new() // Ограничение: TEquip должен быть классом и иметь публичный конструктор без параметров
+        private void GenerateDataGridColumns<T>(GenericEquipViewModel<T, T> viewModel, GenericEquipView window)
+            where T : class, IBaseEquip, new() // Ограничение: T должен реализовывать интерфейс IBaseEquip
+            //where TEquip : class, new() // Ограничение: TEquip должен быть классом и иметь публичный конструктор без параметров
         {
             // Очистка существующих столбцов в DataGrid
             window.GenericEquipDataGrid.Columns.Clear();
             // Получение типа TEquip
-            var itemType = typeof(TEquip);
+            var itemType = typeof(T);
             // Получение всех свойств типа TEquip
             var properties = itemType.GetProperties();
             // Перебор всех свойств

@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ReportEngine.Domain.Entities.BaseEntities.Interface;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReportEngine.Domain.Entities.Other
 {
-    public class Container
+    public class Container : IBaseEquip
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

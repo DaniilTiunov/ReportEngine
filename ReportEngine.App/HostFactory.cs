@@ -11,6 +11,7 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
+using ReportEngine.Domain.Entities.Braces;
 using ReportEngine.Domain.Entities.Drainage;
 using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Frame;
@@ -59,32 +60,44 @@ namespace ReportEngine.App
             services.AddDbContext<ReAppContext>(options =>
                 options.UseNpgsql(connString));
         }
-
         private static void ConfigureRepositories(IServiceCollection services)
-        {                      
+        {
             // Обычные репозитории
             services.AddScoped<IBaseRepository<User>, UserRepository>();
             services.AddScoped<IProjectInfoRepository, ProjectInfoRepository>();
 
         }
-
         private static void ConfigureGenericRepositories(IServiceCollection services)
         {
             // Generic-репозитории
             services.AddScoped<IGenericBaseRepository<IBaseEquip, BaseEquip>, GenericEquipRepository<IBaseEquip, BaseEquip>>();
-            services.AddScoped<IGenericBaseRepository<IBaseEquip, CarbonPipe>, GenericEquipRepository<IBaseEquip, CarbonPipe>>();
-            services.AddScoped<IGenericBaseRepository<IBaseEquip, HeaterPipe>, GenericEquipRepository<IBaseEquip, HeaterPipe>>();
-            services.AddScoped<IGenericBaseRepository<IBaseEquip, StainlessPipe>, GenericEquipRepository<IBaseEquip, StainlessPipe>>();
-            services.AddScoped<IGenericBaseRepository<IBaseEquip, CarbonArmature>, GenericEquipRepository<IBaseEquip, CarbonArmature>>();
-            services.AddScoped<IGenericBaseRepository<IBaseEquip, HeaterArmature>, GenericEquipRepository<IBaseEquip, HeaterArmature>>();
-            services.AddScoped<IGenericBaseRepository<IBaseEquip, StainlessArmature>, GenericEquipRepository<IBaseEquip, StainlessArmature>>();
-            services.AddScoped<IGenericBaseRepository<IBaseEquip, CarbonSocket>, GenericEquipRepository<IBaseEquip, CarbonSocket>>();
-            services.AddScoped<IGenericBaseRepository<IBaseEquip, HeaterSocket>, GenericEquipRepository<IBaseEquip, HeaterSocket>>();
-            services.AddScoped<IGenericBaseRepository<IBaseEquip, StainlessSocket>, GenericEquipRepository<IBaseEquip, StainlessSocket>>();
-            services.AddScoped<IGenericBaseRepository<IBaseEquip, Drainage>, GenericEquipRepository<IBaseEquip, Drainage>>();
-            services.AddScoped<IGenericBaseRepository<IBaseEquip, FrameDetail>, GenericEquipRepository<IBaseEquip, FrameDetail>>();
-            services.AddScoped<IGenericBaseRepository<IBaseEquip, PillarEqiup>, GenericEquipRepository<IBaseEquip, PillarEqiup>>();
-            services.AddScoped<IGenericBaseRepository<IBaseEquip, FrameRoll>, GenericEquipRepository<IBaseEquip, FrameRoll>>();
+
+            var types = new[]
+            {
+                typeof(CarbonPipe),
+                typeof(HeaterPipe),
+                typeof(StainlessPipe),
+                typeof(CarbonArmature),
+                typeof(HeaterArmature),
+                typeof(StainlessArmature),
+                typeof(CarbonSocket),
+                typeof(HeaterSocket),
+                typeof(StainlessSocket),
+                typeof(Drainage),
+                typeof(FrameDetail),
+                typeof(PillarEqiup),
+                typeof(FrameRoll),
+                typeof(BoxesBrace),
+                typeof(DrainageBrace),
+                typeof(SensorBrace)
+            };
+            
+            foreach(var type in types)
+            {
+                var repoInterface = typeof(IGenericBaseRepository<,>).MakeGenericType(type, type);
+                var repoType = typeof(GenericEquipRepository<,>).MakeGenericType(type, type);
+                services.AddScoped(repoInterface, repoType);
+            }
         }
         private static void ConfigureApplicationServices(IServiceCollection services)
         {

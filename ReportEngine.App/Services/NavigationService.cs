@@ -53,11 +53,10 @@ namespace ReportEngine.App.Services
         /// <typeparam name="T">Тип, реализующий интерфейс IBaseEquip.</typeparam>
         /// <typeparam name="TEquip">Тип оборудования, для которого создается окно.</typeparam>
         public void ShowGenericWindow<T, TEquip>()
-            where T : IBaseEquip
-            where TEquip : class, new()
+            where T : class, IBaseEquip, new()
         {
             var factory = _serviceProvider.GetRequiredService<GenericEquipWindowFactory>(); // Получаем фабрику окон
-            _currentWindow = factory.CreateWindow<T, TEquip>(); // Создаем окно с помощью фабрики
+            _currentWindow = factory.CreateWindow<T, T>(); // Создаем окно с помощью фабрики
             _currentWindow.Show(); // Отображаем окно
         }
 
