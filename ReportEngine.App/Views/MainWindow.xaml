@@ -180,18 +180,9 @@
                             Width="*"
                             Binding="{Binding RequestProduction}"
                             Header="Заявка на производство" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Property10}"
-                            Header="Ещё что-то" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Property11}"
-                            Header="Ещё что-то" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Property12}"
-                            Header="Ещё что-то" />
+                        <DataGridTextColumn Width="*" Header="Ещё что-то" />
+                        <DataGridTextColumn Width="*" Header="Ещё что-то" />
+                        <DataGridTextColumn Width="*" Header="Ещё что-то" />
                     </DataGrid.Columns>
                     <DataGrid.ContextMenu>
                         <ContextMenu>

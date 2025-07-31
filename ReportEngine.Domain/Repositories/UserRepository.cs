@@ -49,7 +49,7 @@ namespace ReportEngine.Domain.Repositories
             var existingEntity = await _context.Set<User>()
                 .FirstOrDefaultAsync(c => c.Id == user.Id);
 
-            if (user != null)
+            if (existingEntity != null)
             {
                 _context.Set<User>().Remove(existingEntity);
                 await _context.SaveChangesAsync();

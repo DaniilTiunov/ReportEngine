@@ -71,6 +71,7 @@ namespace ReportEngine.App
         private static void ConfigureGenericRepositories(IServiceCollection services)
         {
             // Generic-репозитории
+            services.AddScoped<IGenericBaseRepository<IBaseEquip, BaseEquip>, GenericEquipRepository<IBaseEquip, BaseEquip>>();
             services.AddScoped<IGenericBaseRepository<IBaseEquip, CarbonPipe>, GenericEquipRepository<IBaseEquip, CarbonPipe>>();
             services.AddScoped<IGenericBaseRepository<IBaseEquip, HeaterPipe>, GenericEquipRepository<IBaseEquip, HeaterPipe>>();
             services.AddScoped<IGenericBaseRepository<IBaseEquip, StainlessPipe>, GenericEquipRepository<IBaseEquip, StainlessPipe>>();

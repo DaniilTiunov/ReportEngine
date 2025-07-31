@@ -74,7 +74,7 @@ namespace ReportEngine.App.ViewModels
                     RequestProduction = CurrentProject.RequestProduction,
                     MarkMinus = CurrentProject.MarkMinus,
                     MarkPlus = CurrentProject.MarkPlus,
-                    isGalvanized = CurrentProject.IsGalvanized
+                    IsGalvanized = CurrentProject.IsGalvanized
                 };
 
 

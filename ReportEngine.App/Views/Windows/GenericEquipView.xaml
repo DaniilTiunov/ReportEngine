@@ -9,7 +9,6 @@
     Title="Исходное оборудование"
     Width="1100"
     Height="450"
-    Loaded="OnWindowLoaded"
     mc:Ignorable="d">
 
     <Window.Resources>
