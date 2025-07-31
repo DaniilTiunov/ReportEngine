@@ -16,5 +16,12 @@ namespace ReportEngine.App.Commands
         public ICommand OpenDrainageCommand { get; set; }
         public ICommand OpenGenericWindowCommand { get; set; }
         public ICommand OpenFrameDetailsCommand { get; set; }
+        public ICommand OpenPillarEquipCommand {  get; set; }
+        public ICommand OpenFrameRollCommand { get; set; }
+
+        public RelayCommand CreateCommand(Action<object> execute, Func<object, bool> canExecute = null)
+        {
+            return new RelayCommand(execute, canExecute);
+        }
     }
 }
