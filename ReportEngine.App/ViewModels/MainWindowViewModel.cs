@@ -72,7 +72,6 @@ namespace ReportEngine.App.ViewModels
             GenericEquipCommandProvider.OpenFrameDetailsCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<IBaseEquip, FrameDetail>, CanAllCommandsExecute);
         }
         #endregion
-
         #region Комманды главного окна
         public ICommand OpenMainWindowCommand { get; set; }
         public bool CanAllCommandsExecute(object e) => true;
@@ -92,14 +91,7 @@ namespace ReportEngine.App.ViewModels
         public ICommand OpenTreeViewCommand { get; set; }
         public void OnOpenTreeViewCommandExecuted(object e)
         {
-            try
-            {
-                _navigation.ShowContent<TreeProjectView>();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            _navigation.ShowContent<TreeProjectView>();
         }
         public ICommand CloseAppCommand { get; set; }
         public static void OnCloseAppCommandExecuted(object e) => Application.Current.Shutdown();
@@ -116,32 +108,20 @@ namespace ReportEngine.App.ViewModels
 
             MainWindowModel.IsConnected = context.Database.CanConnect();
             MainWindowModel.ConnectionStatusMessage = MainWindowModel.IsConnected ? "Соединение установлено" : "Соединение не установлено";
-
         }
         public ICommand ShowAllProjectsCommand { get; set; }
         public async void OnShowAllProjectsCommandExecuted(object e)
         {
-            try
-            {
-                var projects = await _projectRepository.GetAllAsync();
-                MainWindowModel.AllProjects = new ObservableCollection<ProjectInfo>(projects);
-            }
-            catch (Exception ex)
-            {
-
-                MessageBox.Show(ex.Message);
-            }
+            await ExceptionHelper.SafeExecuteAsync(() => _projectRepository.GetAllAsync());
+            var projects = await _projectRepository.GetAllAsync();
+            MainWindowModel.AllProjects = new ObservableCollection<ProjectInfo>(projects);
         }
         public ICommand DeleteSelectedProjectCommand { get; set; }
         public async void OnDeleteSelectedProjectExecuted(object e)
         {
-            try
-            {
-                var currentProject = MainWindowModel.SelectedProject;
+            var currentProject = MainWindowModel.SelectedProject;
 
-                await _projectRepository.DeleteAsync(currentProject);
-            }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            await ExceptionHelper.SafeExecuteAsync(() => _projectRepository.DeleteAsync(currentProject));
         }
         #endregion
 
