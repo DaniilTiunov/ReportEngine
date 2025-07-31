@@ -1,4 +1,4 @@
-﻿using System.Windows;
+﻿using ReportEngine.App.Display;
 
 namespace ReportEngine.Shared.Helpers
 {
@@ -12,7 +12,7 @@ namespace ReportEngine.Shared.Helpers
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}");
             }
         }
         public static async Task SafeExecuteAsync(Func<Task> action)
@@ -23,7 +23,7 @@ namespace ReportEngine.Shared.Helpers
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}");
             }
         }
     }

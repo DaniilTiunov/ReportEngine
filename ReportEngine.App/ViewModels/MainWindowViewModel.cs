@@ -17,6 +17,7 @@ using ReportEngine.Shared.Helpers;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
+using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.App.ViewModels
 {
@@ -77,16 +78,12 @@ namespace ReportEngine.App.ViewModels
         public bool CanAllCommandsExecute(object e) => true;
         public void OnOpenMainWindowCommandExecuted(object e)
         {
-            try
+            ExceptionHelper.SafeExecute(() =>
             {
                 _navigation.CloseContent();
                 var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
                 mainWindow.MainContentControl.Content = mainWindow.MainDataGrid;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            });
         }
         public ICommand OpenTreeViewCommand { get; set; }
         public void OnOpenTreeViewCommandExecuted(object e)
@@ -112,9 +109,11 @@ namespace ReportEngine.App.ViewModels
         public ICommand ShowAllProjectsCommand { get; set; }
         public async void OnShowAllProjectsCommandExecuted(object e)
         {
-            await ExceptionHelper.SafeExecuteAsync(() => _projectRepository.GetAllAsync());
-            var projects = await _projectRepository.GetAllAsync();
-            MainWindowModel.AllProjects = new ObservableCollection<ProjectInfo>(projects);
+            await ExceptionHelper.SafeExecuteAsync(async () =>
+            {
+                var projects = await _projectRepository.GetAllAsync();
+                MainWindowModel.AllProjects = new ObservableCollection<ProjectInfo>(projects);
+            });
         }
         public ICommand DeleteSelectedProjectCommand { get; set; }
         public async void OnDeleteSelectedProjectExecuted(object e)

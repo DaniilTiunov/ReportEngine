@@ -3,8 +3,8 @@ using ReportEngine.App.Model;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Config.DebugConsol;
+using ReportEngine.Shared.Helpers;
 using System.Collections.ObjectModel;
-using System.Windows;
 using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels
@@ -62,25 +62,12 @@ namespace ReportEngine.App.ViewModels
         /// <param name="e">Параметр команды.</param>
         public async void OnShowAllEquipCommandExecuted(object e)
         {
-            try
+            await ExceptionHelper.SafeExecuteAsync(async () =>
             {
-                // Получаем все элементы оборудования из репозитория
                 var items = await _genericEquipRepository.GetAllAsync();
-
-                // Преобразуем элементы в список типа T
                 var baseEquips = items.OfType<T>().ToList();
-
-                // Устанавливаем коллекцию оборудования в модели
                 GenericEquipModel.BaseEquips = new ObservableCollection<T>(baseEquips);
-
-                // Выводим количество элементов оборудования в консоль отладки
-                DebugConsole.WriteLine(GenericEquipModel.BaseEquips.Count);
-            }
-            catch (Exception ex)
-            {
-                // Отображаем сообщение об ошибке, если произошла ошибка
-                MessageBox.Show(ex.Message);
-            }
+            });
         }
 
         /// <summary>

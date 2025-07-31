@@ -3,6 +3,7 @@ using ReportEngine.App.Views;
 using ReportEngine.App.Views.UpdateInformation;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Helpers;
 using System.Diagnostics;
 using System.Windows;
 using AboutProgram = ReportEngine.App.Views.Windows.AboutProgram;
@@ -23,20 +24,14 @@ namespace ReportEngine.App
             mainViewModel.OnShowAllProjectsCommandExecuted(null);
             mainViewModel.OnChekDbConnectionCommandExecuted(null);
         }       
-        //Здесь реализованый методы, которые не требуют много времени на выполнение
-        
+
         private void CheckForUpdates(object sender, RoutedEventArgs e)
         {
-            try
+            ExceptionHelper.SafeExecute(() =>
             {
-                string appSettingsConfigPath = DirectoryHelper.GetConfigPath(); //Тянется жысон
-
+                string appSettingsConfigPath = DirectoryHelper.GetConfigPath();
                 Updater.CheckForUpdate(JsonHandler.GetVersionOnServer(appSettingsConfigPath), JsonHandler.GetLocalVersion(appSettingsConfigPath));
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Критическая ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            });
         }
         private void ShowAboutProgram(object sender, RoutedEventArgs e) //Просто простые синхронные операции
         {
