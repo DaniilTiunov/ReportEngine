@@ -13,12 +13,13 @@ namespace ReportEngine.App.ViewModels
     {
         private readonly IObvyazkaRepository _obvyazkaRepository;
         private readonly NavigationService _navigation;
-        public ObvyazkaModel CurrentObvyazka { get; set; }
+        public ObvyazkaModel CurrentObvyazka { get; set; } = new();
 
         public ObvyazkaViewModel(IObvyazkaRepository obvyazkaRepository, NavigationService navigation)
         {
             _obvyazkaRepository = obvyazkaRepository;
             _navigation = navigation;
+            InitializeCommands();
         }
 
         public void InitializeCommands()
@@ -32,8 +33,8 @@ namespace ReportEngine.App.ViewModels
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
-                var obvyazkas = await _obvyazkaRepository.GetAllAsync();
-                CurrentObvyazka.Obvyazki = new ObservableCollection<Obvyazka>(obvyazkas);
+                var obvyazki = await _obvyazkaRepository.GetAllAsync();
+                CurrentObvyazka.Obvyazki = new ObservableCollection<Obvyazka>(obvyazki);
             });
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using ReportEngine.App.ViewModels;
+using System.Windows;
 
 namespace ReportEngine.App.Views.Windows
 {
@@ -7,10 +8,12 @@ namespace ReportEngine.App.Views.Windows
     /// </summary>
     public partial class ObvyazkiView : Window
     {
-        public ObvyazkiView(ObvyazkiViewModel obvyazkiViewModel)
+        public ObvyazkiView(ObvyazkaViewModel obvyazkiViewModel)
         {
             InitializeComponent();
             DataContext = obvyazkiViewModel;
+
+            obvyazkiViewModel.OnShowAllObvyazkiCommandExecuted(null);
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {

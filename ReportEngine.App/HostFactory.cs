@@ -119,7 +119,7 @@ namespace ReportEngine.App
             services.AddScoped<MainWindowViewModel>();
             services.AddScoped<UsersViewModel>();
             services.AddScoped<ProjectViewModel>();
-            services.AddScoped<ObvyazkiViewModel>();
+            services.AddScoped<ObvyazkaViewModel>();
 
         }
         private static void ConfigureViews(IServiceCollection services)

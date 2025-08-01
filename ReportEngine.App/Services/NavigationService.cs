@@ -41,7 +41,8 @@ namespace ReportEngine.App.Services
         /// Отображает окно указанного типа.
         /// </summary>
         /// <typeparam name="T">Тип окна, который нужно отобразить.</typeparam>
-        public void ShowWindow<T>() where T : Window
+        public void ShowWindow<T>()
+            where T : Window
         {
             _currentWindow = _serviceProvider.GetRequiredService<T>(); // Получаем экземпляр окна из провайдера сервисов
             _currentWindow.Show(); // Отображаем окно
@@ -84,7 +85,8 @@ namespace ReportEngine.App.Services
         /// Отображает пользовательский элемент управления указанного типа.
         /// </summary>
         /// <typeparam name="T">Тип пользовательского элемента управления, который нужно отобразить.</typeparam>
-        public void ShowContent<T>() where T : UserControl
+        public void ShowContent<T>()
+            where T : UserControl
         {
             if (_contentHost != null)
             {
@@ -104,7 +106,8 @@ namespace ReportEngine.App.Services
         /// <summary>
         /// Очищает текущий контент.
         /// </summary>
-        public void ClearContent<T>() where T : UserControl
+        public void ClearContent<T>()
+            where T : UserControl
         {
             // Освобождаем ресурсы текущего контента, если он реализует IDisposable
             if (_currentContent is IDisposable disposable)
