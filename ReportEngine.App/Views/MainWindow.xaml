@@ -92,8 +92,11 @@
             </MenuItem>
             <MenuItem Header="Справка">
                 <MenuItem Click="ShowAboutProgram" Header="О программе" />
+                <Separator />
                 <MenuItem Header="Открыть справку" />
+                <Separator />
                 <MenuItem Click="CheckForUpdates" Header="Проверить обновления" />
+                <Separator />
             </MenuItem>
         </Menu>
 
