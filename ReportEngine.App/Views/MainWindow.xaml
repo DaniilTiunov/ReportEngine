@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:ReportEngine.App"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="Кварта СКИП"
+    Title="Стенды КИП"
     Width="1920"
     Height="1080"
     Icon="/Resources/Icons/estimate_cost_icon_213382.ico"
@@ -29,16 +29,17 @@
             DockPanel.Dock="Top"
             FontSize="14">
             <MenuItem Header="Файл">
-                <MenuItem Command="{Binding OpenTreeViewCommand}" Header="Новый проект" />
-                <MenuItem Command="{Binding OpenMainWindowCommand}" Header="На главный экран" />
+                <MenuItem Command="{Binding MainWindowCommandProvider.OpenTreeViewCommand}" Header="Новый проект" />
+                <MenuItem Command="{Binding MainWindowCommandProvider.OpenMainWindowCommand}" Header="На главный экран" />
                 <Separator />
                 <MenuItem Click="OpenSettingsWindow" Header="Настройки" />
                 <Separator />
-                <MenuItem Command="{Binding CloseAppCommand}" Header="Выход" />
+                <MenuItem Command="{Binding MainWindowCommandProvider.CloseAppCommand}" Header="Выход" />
             </MenuItem>
             <MenuItem Header="Вид">
                 <MenuItem Header="Масштаб..." />
             </MenuItem>
+            <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllObvyazkiCommand}" Header="Обвязки" />
             <MenuItem Header="Исходные данные">
                 <MenuItem Header="Сортамент труб">
                     <MenuItem Command="{Binding GenericEquipCommandProvider.OpenHeaterPipeCommand}" Header="Жарпрочная сталь" />
@@ -82,7 +83,7 @@
                 <Separator />
                 <MenuItem Command="{Binding GenericEquipCommandProvider.OpenConteinersCommand}" Header="Тара" />
                 <Separator />
-                <MenuItem Command="{Binding OpenAllUsersCommand}" Header="Пользователи" />
+                <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllUsersCommand}" Header="Пользователи" />
             </MenuItem>
             <MenuItem Header="Инструменты">
                 <MenuItem Click="ShowCalculator" Header="Калькулятор" />
@@ -122,7 +123,7 @@
                     Grid.Column="1"
                     Margin="1287,-1,453,-2"
                     BorderThickness="0,0,0,0"
-                    Command="{Binding ChekDbConnectionCommand}"
+                    Command="{Binding MainWindowCommandProvider.ChekDbConnectionCommand}"
                     Content="{StaticResource refresh-button.png}" />
             </Grid>
         </StatusBar>
@@ -187,8 +188,8 @@
                     <DataGrid.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Редактировать проект" />
-                            <MenuItem Command="{Binding ShowAllProjectsCommand}" Header="Обновить" />
-                            <MenuItem Command="{Binding DeleteSelectedProjectCommand}" Header="Удалить проект" />
+                            <MenuItem Command="{Binding MainWindowCommandProvider.ShowAllProjectsCommand}" Header="Обновить" />
+                            <MenuItem Command="{Binding MainWindowCommandProvider.DeleteSelectedProjectCommand}" Header="Удалить проект" />
                         </ContextMenu>
                     </DataGrid.ContextMenu>
                 </DataGrid>

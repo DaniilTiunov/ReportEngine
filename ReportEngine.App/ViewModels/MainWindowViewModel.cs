@@ -19,6 +19,7 @@ using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels
@@ -32,6 +33,7 @@ namespace ReportEngine.App.ViewModels
         #endregion
         public MainWindowModel MainWindowModel { get; set; } = new();
         public GenericEquipCommandProvider GenericEquipCommandProvider { get; set; } = new();
+        public MainWindowCommandProvider MainWindowCommandProvider { get; set; } = new();
 
         #region Конструктор
         public MainWindowViewModel(IServiceProvider serviceProvider, NavigationService navigation, IProjectInfoRepository projectRepository)
@@ -48,13 +50,14 @@ namespace ReportEngine.App.ViewModels
         #region Методы        
         public void InitializeMainWindowCommands()
         {
-            CloseAppCommand = new RelayCommand(OnCloseAppCommandExecuted, CanAllCommandsExecute);
-            OpenAllUsersCommand = new RelayCommand(OnOpenAllUsersCommandExecuted, CanAllCommandsExecute);
-            ChekDbConnectionCommand = new RelayCommand(OnChekDbConnectionCommandExecuted, CanAllCommandsExecute);
-            OpenTreeViewCommand = new RelayCommand(OnOpenTreeViewCommandExecuted, CanAllCommandsExecute);
-            ShowAllProjectsCommand = new RelayCommand(OnShowAllProjectsCommandExecuted, CanAllCommandsExecute);
-            DeleteSelectedProjectCommand = new RelayCommand(OnDeleteSelectedProjectExecuted, CanAllCommandsExecute);
-            OpenMainWindowCommand = new RelayCommand(OnOpenMainWindowCommandExecuted, CanAllCommandsExecute);
+            MainWindowCommandProvider.CloseAppCommand = new RelayCommand(OnCloseAppCommandExecuted, CanAllCommandsExecute);
+            MainWindowCommandProvider.OpenAllUsersCommand = new RelayCommand(OpenOthersWindowCommandExecuted<UsersView>, CanAllCommandsExecute);
+            MainWindowCommandProvider.OpenAllObvyazkiCommand = new RelayCommand(OpenOthersWindowCommandExecuted<ObvyazkiView>, CanAllCommandsExecute);
+            MainWindowCommandProvider.OpenTreeViewCommand = new RelayCommand(OpenAnotherControlsCommandExecuted<TreeProjectView>, CanAllCommandsExecute);
+            MainWindowCommandProvider.ChekDbConnectionCommand = new RelayCommand(OnChekDbConnectionCommandExecuted, CanAllCommandsExecute);
+            MainWindowCommandProvider.ShowAllProjectsCommand = new RelayCommand(OnShowAllProjectsCommandExecuted, CanAllCommandsExecute);
+            MainWindowCommandProvider.DeleteSelectedProjectCommand = new RelayCommand(OnDeleteSelectedProjectExecuted, CanAllCommandsExecute);
+            MainWindowCommandProvider.OpenMainWindowCommand = new RelayCommand(OnOpenMainWindowCommandExecuted, CanAllCommandsExecute);
         }
         public void InitializeGenericEquipCommands()
         {
@@ -91,7 +94,6 @@ namespace ReportEngine.App.ViewModels
         }
         #endregion
         #region Комманды главного окна
-        public ICommand OpenMainWindowCommand { get; set; }
         public bool CanAllCommandsExecute(object e) => true;
         public void OnOpenMainWindowCommandExecuted(object e)
         {
@@ -102,19 +104,17 @@ namespace ReportEngine.App.ViewModels
                 mainWindow.MainContentControl.Content = mainWindow.MainDataGrid;
             });
         }
-        public ICommand OpenTreeViewCommand { get; set; }
-        public void OnOpenTreeViewCommandExecuted(object e)
+        public void OpenOthersWindowCommandExecuted<T>(object e)
+            where T : Window
         {
-            _navigation.ShowContent<TreeProjectView>();
+            ExceptionHelper.SafeExecute(() => _navigation.ShowWindow<T>());            
         }
-        public ICommand CloseAppCommand { get; set; }
+        public void OpenAnotherControlsCommandExecuted<T>(object e)
+            where T : UserControl
+        {
+            ExceptionHelper.SafeExecute(() =>  _navigation.ShowContent<T>());
+        }
         public static void OnCloseAppCommandExecuted(object e) => Application.Current.Shutdown();
-        public ICommand OpenAllUsersCommand { get; set; }
-        public void OnOpenAllUsersCommandExecuted(object e)
-        {
-            _navigation.ShowWindow<UsersView>();
-        }
-        public ICommand ChekDbConnectionCommand { get; set; }
         public void OnChekDbConnectionCommandExecuted(object e)
         {
             using var scope = _serviceProvider.CreateScope();
@@ -132,7 +132,6 @@ namespace ReportEngine.App.ViewModels
                 MainWindowModel.AllProjects = new ObservableCollection<ProjectInfo>(projects);
             });
         }
-        public ICommand DeleteSelectedProjectCommand { get; set; }
         public async void OnDeleteSelectedProjectExecuted(object e)
         {
             var currentProject = MainWindowModel.SelectedProject;

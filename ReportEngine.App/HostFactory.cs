@@ -67,6 +67,7 @@ namespace ReportEngine.App
             // Обычные репозитории
             services.AddScoped<IBaseRepository<User>, UserRepository>();
             services.AddScoped<IProjectInfoRepository, ProjectInfoRepository>();
+            services.AddScoped<IObvyazkaRepository, ObvyazkaRepository>();
 
         }
         private static void ConfigureGenericRepositories(IServiceCollection services)
@@ -118,6 +119,7 @@ namespace ReportEngine.App
             services.AddScoped<MainWindowViewModel>();
             services.AddScoped<UsersViewModel>();
             services.AddScoped<ProjectViewModel>();
+            services.AddScoped<ObvyazkiViewModel>();
 
         }
         private static void ConfigureViews(IServiceCollection services)
@@ -135,6 +137,7 @@ namespace ReportEngine.App
             services.AddTransient<UsersView>();
             services.AddTransient<TreeProjectView>();
             services.AddTransient<GenericEquipView>();
+            services.AddTransient<ObvyazkiView>();
         }
     }
 }
