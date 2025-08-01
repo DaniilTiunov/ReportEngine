@@ -2,5 +2,6 @@
 {
     public interface IBaseEquip
     {
+        int Id { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels
@@ -16,7 +17,6 @@ namespace ReportEngine.App.ViewModels
         where T : class, IBaseEquip, new() // Ограничение: T должен реализовывать интерфейс IBaseEquip
     {
         private readonly IGenericBaseRepository<T, T> _genericEquipRepository; // Репозиторий для работы с данными оборудования
-
         /// <summary>
         /// Модель для управления коллекцией оборудования и выбранным элементом оборудования.
         /// </summary>
@@ -30,7 +30,6 @@ namespace ReportEngine.App.ViewModels
             InitializeCommands(); // Инициализируем команды
             _genericEquipRepository = genericEquipRepository; // Устанавливаем репозиторий
         }
-
         /// <summary>
         /// Инициализирует команды для ViewModel.
         /// </summary>
@@ -39,19 +38,16 @@ namespace ReportEngine.App.ViewModels
             // Инициализируем команду для отображения всего оборудования
             ShowAllEquipCommand = new RelayCommand(OnShowAllEquipCommandExecuted, CanAllCommandsExecute);
         }
-
         /// <summary>
         /// Команда для отображения всего оборудования.
         /// </summary>
         public ICommand ShowAllEquipCommand { get; set; }
-
         /// <summary>
         /// Определяет, может ли команда для отображения всего оборудования быть выполнена.
         /// </summary>
         /// <param name="e">Параметр команды.</param>
         /// <returns>Всегда возвращает true, указывая, что команда всегда может быть выполнена.</returns>
         public bool CanAllCommandsExecute(object e) => true;
-
         /// <summary>
         /// Выполняет команду для отображения всего оборудования.
         /// </summary>
@@ -78,7 +74,25 @@ namespace ReportEngine.App.ViewModels
         /// <summary>
         /// Команда для добавления нового оборудования.
         /// </summary>
-        public ICommand AddNewEquipCommand { get; set; }
+        public ICommand SaveChangesEquipCommand { get; set; }
+        public async void OnSaveChangesCommandExecute(object e)
+        {
+            await ExceptionHelper.SafeExecuteAsync(async () =>
+            {
+                foreach (var equip in GenericEquipModel.BaseEquips)
+                {
+                    if (equip.Id == 0) // Если Id равен 0, значит это новый объект
+                    {
+                        await _genericEquipRepository.AddAsync(equip);
+                    }
+                    else // Иначе обновляем существующий объект
+                    {
+                        await _genericEquipRepository.UpdateAsync(equip);
+                    }
+                }
+                OnShowAllEquipCommandExecuted(null); // Обновить список
+            });
+        }
 
         /// <summary>
         /// Команда для удаления оборудования.
