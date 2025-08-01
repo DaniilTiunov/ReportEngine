@@ -26,7 +26,8 @@ namespace ReportEngine.App.Commands
         public ICommand OpenCabelProductionCommand { get; set; }
         public ICommand OpenCabelProtectionCommand { get; set; }
         public ICommand OpenHeaterCommand { get; set; }
-
+        public ICommand OpenConteinersCommand { get; set; }
+        public ICommand OpenOthersCommand { get; set; }
 
         public RelayCommand CreateCommand(Action<object> execute, Func<object, bool> canExecute = null)
         {

@@ -16,6 +16,7 @@ using ReportEngine.Domain.Entities.Drainage;
 using ReportEngine.Domain.Entities.ElectricComponents;
 using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Frame;
+using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
@@ -93,7 +94,9 @@ namespace ReportEngine.App
                 typeof(CabelInput),
                 typeof(CabelProduction),
                 typeof(CabelProtection),
-                typeof(Heater)
+                typeof(Heater),
+                typeof(Other),
+                typeof(Container)
             };
 
             foreach (var type in types)

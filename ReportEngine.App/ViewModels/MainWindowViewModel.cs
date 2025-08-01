@@ -13,6 +13,7 @@ using ReportEngine.Domain.Entities.Drainage;
 using ReportEngine.Domain.Entities.ElectricComponents;
 using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Frame;
+using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
@@ -85,6 +86,8 @@ namespace ReportEngine.App.ViewModels
             GenericEquipCommandProvider.OpenCabelProtectionCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<CabelProtection, CabelProtection>, CanAllCommandsExecute);
             GenericEquipCommandProvider.OpenHeaterCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<Heater, Heater>, CanAllCommandsExecute);
 
+            GenericEquipCommandProvider.OpenConteinersCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<Container, Container>, CanAllCommandsExecute);
+            GenericEquipCommandProvider.OpenOthersCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<Other, Other>, CanAllCommandsExecute);
         }
         #endregion
         #region Комманды главного окна

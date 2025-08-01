@@ -78,9 +78,9 @@
                     <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCabelProtectionCommand}" Header="Средства прокладки и защиты кабеля" />
                 </MenuItem>
                 <Separator />
-                <MenuItem Header="Прочие" />
+                <MenuItem Command="{Binding GenericEquipCommandProvider.OpenOthersCommand}" Header="Прочие" />
                 <Separator />
-                <MenuItem Header="Тара" />
+                <MenuItem Command="{Binding GenericEquipCommandProvider.OpenConteinersCommand}" Header="Тара" />
                 <Separator />
                 <MenuItem Command="{Binding OpenAllUsersCommand}" Header="Пользователи" />
             </MenuItem>
