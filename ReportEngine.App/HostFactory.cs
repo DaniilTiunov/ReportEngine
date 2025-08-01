@@ -71,8 +71,6 @@ namespace ReportEngine.App
         private static void ConfigureGenericRepositories(IServiceCollection services)
         {
             // Generic-репозитории
-            services.AddScoped<IGenericBaseRepository<IBaseEquip, BaseEquip>, GenericEquipRepository<IBaseEquip, BaseEquip>>();
-
             var types = new[]
             {
                 typeof(CarbonPipe),
@@ -117,8 +115,6 @@ namespace ReportEngine.App
             services.AddScoped<MainWindowViewModel>();
             services.AddScoped<UsersViewModel>();
             services.AddScoped<ProjectViewModel>();
-            services.AddScoped(typeof(GenericEquipViewModel<BaseEquip>));
-            services.AddScoped(typeof(GenericEquipViewModel<BaseFrame>));
 
         }
         private static void ConfigureViews(IServiceCollection services)
