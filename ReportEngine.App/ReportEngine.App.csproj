@@ -138,222 +138,222 @@
     <Resource Include="Resources\Images\logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resources\Images\Obvyazka\1.jpg">
+    <Content Include="Resources\Images\Obvyazka\1.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\10.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\10.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\11.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\11.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\12.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\12.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\13.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\13.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\14.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\14.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\15.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\15.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\16.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\16.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\17.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\17.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\18.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\18.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\19.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\19.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\2.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\2.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\20.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\20.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\21.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\21.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\22.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\22.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\23.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\23.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\24.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\24.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\25.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\25.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\26.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\26.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\27.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\27.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\28.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\28.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\29.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\29.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\3.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\3.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\30.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\30.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\31.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\31.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\32.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\32.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\33.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\33.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\34.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\34.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\35.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\35.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\36.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\36.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\37.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\37.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\38.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\38.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\39.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\39.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\4.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\4.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\40.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\40.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\41.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\41.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\42.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\42.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\43.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\43.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\44.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\44.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\45.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\45.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\46.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\46.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\47.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\47.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\48.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\48.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\49.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\49.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\5.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\5.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\50.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\50.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\51.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\51.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\52.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\52.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\53.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\53.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\54.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\54.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\55.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\55.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\56.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\56.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\57.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\57.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\58.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\58.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\59.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\59.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\6.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\6.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\60.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\60.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\61.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\61.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\62.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\62.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\63.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\63.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\64.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\64.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\65.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\65.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\66.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\66.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\67.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\67.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\68.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\68.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\69.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\69.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\7.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\7.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\70.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\70.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\71.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\71.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\73.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\73.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\8.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\8.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\Obvyazka\9.jpg">
+    </Content>
+    <Content Include="Resources\Images\Obvyazka\9.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    </Content>
     <Resource Include="Resources\Images\refresh-button.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>

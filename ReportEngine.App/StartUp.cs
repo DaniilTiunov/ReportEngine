@@ -4,6 +4,7 @@ using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
 using ReportEngine.Shared.Config.Logger;
 using Serilog;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace ReportEngine.App
@@ -31,6 +32,8 @@ namespace ReportEngine.App
                 mainWindow.Show();
 
                 app.Run();
+
+
             }
             catch (Exception ex)
             {

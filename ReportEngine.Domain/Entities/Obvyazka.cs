@@ -19,5 +19,6 @@ namespace ReportEngine.Domain.Entities
         public int OtherLineCount {  get; set; } //Колво др. линий
         public float Weight { get; set; } //Масса
         public float HumanCost {  get; set; } //Трудозатраты чел/час
+        public string ImageName {  get; set; } //Название картинки
     }
 }

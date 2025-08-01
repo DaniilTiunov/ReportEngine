@@ -14,5 +14,9 @@
         {
             return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", "log.txt");
         }
+        public static string GetImagesPath(string imageName)
+        {
+            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources","Images", "Obvyazka", imageName + ".jpg");
+        }
     }
 }
