@@ -1,4 +1,5 @@
 ﻿using ReportEngine.App.Commands;
+using ReportEngine.App.Display;
 using ReportEngine.App.Model;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Repositories.Interfaces;
@@ -36,7 +37,8 @@ namespace ReportEngine.App.ViewModels
         {
             // Инициализируем команду для отображения всего оборудования
             ShowAllEquipCommand = new RelayCommand(OnShowAllEquipCommandExecuted, CanAllCommandsExecute);
-            SaveChangesEquipCommand = new RelayCommand(OnSaveChangesCommandExecute, CanAllCommandsExecute);
+            SaveChangesEquipCommand = new RelayCommand(OnSaveChangesCommandExecuted, CanAllCommandsExecute);
+            RemoveEquipCommand = new RelayCommand(OnRemoveEquipCommandExecuted, CanAllCommandsExecute);
         }
         /// <summary>
         /// Команда для отображения всего оборудования.
@@ -74,7 +76,7 @@ namespace ReportEngine.App.ViewModels
         /// Команда для добавления нового оборудования.
         /// </summary>
         public ICommand SaveChangesEquipCommand { get; set; }
-        public async void OnSaveChangesCommandExecute(object e)
+        public async void OnSaveChangesCommandExecuted(object e)
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
@@ -92,10 +94,25 @@ namespace ReportEngine.App.ViewModels
                 //OnShowAllEquipCommandExecuted(null); // Обновить список
             });
         }
-
         /// <summary>
         /// Команда для удаления оборудования.
         /// </summary>
         public ICommand RemoveEquipCommand { get; set; }
+        public async void OnRemoveEquipCommandExecuted(object e)
+        {
+            await ExceptionHelper.SafeExecuteAsync(async () =>
+            {
+                var selectedEquip = GenericEquipModel.SelectedBaseEquip;
+                if(selectedEquip == null)
+                {
+                    MessageBoxHelper.ShowInfo("Пожалуйста, выберите оборудование для удаления.");
+                    return;
+                }
+                    
+                await _genericEquipRepository.DeleteAsync(selectedEquip);
+                GenericEquipModel.BaseEquips.Remove(selectedEquip); // Удаляем из коллекции
+                GenericEquipModel.SelectedBaseEquip = default; // Сбросить выбор
+            });
+        }
     }
 }
