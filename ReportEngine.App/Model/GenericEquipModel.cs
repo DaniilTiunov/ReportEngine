@@ -12,7 +12,7 @@ namespace ReportEngine.App.Model
     public class GenericEquipModel<T, TEquip> : BaseViewModel
     where T : class, IBaseEquip, new()
     {
-        public ObservableCollection<T> BaseEquips { get; set; }
+        public ObservableCollection<T> BaseEquips { get; set; } = new ObservableCollection<T>();
         public T SelectedBaseEquip { get; set; }
     }
 }

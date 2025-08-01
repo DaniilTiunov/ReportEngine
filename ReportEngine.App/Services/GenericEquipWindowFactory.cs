@@ -62,11 +62,17 @@ namespace ReportEngine.App.Services
             {
                 if (property.Name == "Id")
                     continue;
+
+
                 DataGridColumn column = new DataGridTextColumn
                 {
                     Header = GenericEquipMapper.GetColumnName(property.Name),
-                    Binding = new Binding(property.Name)
+                    Binding = new Binding(property.Name)                 
                 };
+
+                if (property == properties[properties.Length - 1]) // Растягивание последнего столбца, чтобы избежать появление
+                    column.Width = new DataGridLength(1, DataGridLengthUnitType.Star); // Пустого столбца
+
                 window.GenericEquipDataGrid.Columns.Add(column);
             }
         }
