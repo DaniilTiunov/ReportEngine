@@ -4,7 +4,6 @@ using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
 using System.Collections.ObjectModel;
-using System.Windows;
 using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels
@@ -37,6 +36,7 @@ namespace ReportEngine.App.ViewModels
         {
             // Инициализируем команду для отображения всего оборудования
             ShowAllEquipCommand = new RelayCommand(OnShowAllEquipCommandExecuted, CanAllCommandsExecute);
+            SaveChangesEquipCommand = new RelayCommand(OnSaveChangesCommandExecute, CanAllCommandsExecute);
         }
         /// <summary>
         /// Команда для отображения всего оборудования.
@@ -70,7 +70,6 @@ namespace ReportEngine.App.ViewModels
                 }
             });
         }
-
         /// <summary>
         /// Команда для добавления нового оборудования.
         /// </summary>
@@ -90,7 +89,7 @@ namespace ReportEngine.App.ViewModels
                         await _genericEquipRepository.UpdateAsync(equip);
                     }
                 }
-                OnShowAllEquipCommandExecuted(null); // Обновить список
+                //OnShowAllEquipCommandExecuted(null); // Обновить список
             });
         }
 

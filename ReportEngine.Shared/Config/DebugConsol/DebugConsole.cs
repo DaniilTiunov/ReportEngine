@@ -11,7 +11,6 @@ namespace ReportEngine.Shared.Config.DebugConsol
             Console.WriteLine($"[DEBUG] {message}");
             Console.ForegroundColor = oldColor;
 
-            // Дублируем в Serilog (если нужно)
             Log.Debug(message.ToString());
         }
     }

@@ -7,7 +7,7 @@ namespace ReportEngine.Domain.Repositories
 {
     public class GenericEquipRepository<T, TEntity> : IGenericBaseRepository<T, TEntity>
         where T : IBaseEquip
-        where TEntity : class
+        where TEntity : class, IBaseEquip
     {
         private readonly ReAppContext _context;
 
@@ -35,7 +35,12 @@ namespace ReportEngine.Domain.Repositories
         }
         public async Task UpdateAsync(TEntity entity)
         {
-            _context.Set<TEntity>().Update(entity);
+            var tracked = _context.Set<TEntity>().Local.FirstOrDefault(e => e.Id == entity.Id);
+            if (tracked != null && !ReferenceEquals(tracked, entity))
+            {
+                _context.Entry(tracked).State = EntityState.Detached;
+            }
+            _context.Entry(entity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
     }

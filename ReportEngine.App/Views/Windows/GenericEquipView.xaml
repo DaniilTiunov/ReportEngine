@@ -75,7 +75,7 @@
                 <ContextMenu>
                     <MenuItem Command="{Binding ShowAllEquipCommand}" Header="Показать всё" />
                     <Separator />
-                    <MenuItem Command="{Binding SaveEquipCommand}" Header="Сохранить изменения" />
+                    <MenuItem Command="{Binding SaveChangesEquipCommand}" Header="Сохранить изменения" />
                     <Separator />
                     <MenuItem
                         Command="{Binding RemoveEquipCommand}"

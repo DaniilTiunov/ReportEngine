@@ -1,4 +1,5 @@
 ﻿using ReportEngine.App.Display;
+using ReportEngine.Shared.Config.DebugConsol;
 
 namespace ReportEngine.Shared.Helpers
 {
@@ -23,6 +24,7 @@ namespace ReportEngine.Shared.Helpers
             }
             catch (Exception ex)
             {
+                DebugConsole.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
                 MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}");
             }
         }
