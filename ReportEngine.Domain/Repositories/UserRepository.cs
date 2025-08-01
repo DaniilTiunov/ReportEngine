@@ -53,7 +53,6 @@ namespace ReportEngine.Domain.Repositories
             {
                 _context.Set<User>().Remove(existingEntity);
                 await _context.SaveChangesAsync();
-
             }
         }
         public async Task<int> DeleteByIdAsync(int id) // Не используется

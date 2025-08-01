@@ -9,7 +9,7 @@ namespace ReportEngine.App.Model
     {
         #region Приватные поля
         private string _connectionStatusMessage;
-        private ObservableCollection<ProjectInfo> _allProjects;
+        private ObservableCollection<ProjectInfo> _allProjects = new();
         private ProjectInfo _selectedProject;
         #endregion
 

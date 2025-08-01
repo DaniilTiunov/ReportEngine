@@ -7,7 +7,7 @@ namespace ReportEngine.App.Model
     public class UserModel : BaseViewModel
     {
         #region Приватные свойства для хранения данных
-        private ObservableCollection<User> _allUsers;
+        private ObservableCollection<User> _allUsers = new();
         private User _selectedUser;
 
         public ObservableCollection<User> AllUsers

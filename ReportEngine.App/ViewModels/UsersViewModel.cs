@@ -3,7 +3,7 @@ using ReportEngine.App.Model;
 using ReportEngine.App.Services;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
-using ReportEngine.Shared.Config.DebugConsol;
+using ReportEngine.Shared.Helpers;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -46,43 +46,34 @@ namespace ReportEngine.App.ViewModels
         public ICommand CloseUsersCommand { get; set; }
         public bool CanCloseUsersCommandExecute(object e) => true;
         public void OnCloseUsersCommandExecuted(object e) => _navigation.CloseWindow();
-        
+
         public ICommand ShowAllUsersCommand { get; set; }
         public bool CanShowAllUsersCommandExecute(object p) => true;
         public async void OnShowAllUsersCommandExecuted(object p)
         {
-            try
+            await ExceptionHelper.SafeExecuteAsync(async () =>
             {
                 var users = await _userRepository.GetAllAsync();
-
                 CurrentUser.AllUsers = new ObservableCollection<User>(users);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка при полученни данных", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }       
+            });
+        }
         public ICommand DeleteUserCommand { get; set; }
         public bool CanDeleteUserCommandExecute(object e) => true;
         public async void OnDeleteUserCommandExecuted(object e)
         {
-            try
+            await ExceptionHelper.SafeExecuteAsync(async () =>
             {
                 if (CurrentUser.SelectedUser != null)
                 {
                     await _userRepository.DeleteAsync(CurrentUser.SelectedUser);
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка при удалении пользователя", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            });
         }
         public ICommand AddNewUserCommand { get; set; }
         public bool CanAddNewUserCommandExecute(object e) => true;
         public async void OnAddNewUserCommandExecuted(object p)
         {
-            try
+            await ExceptionHelper.SafeExecuteAsync(async () =>
             {
                 var newUser = new User
                 {
@@ -94,33 +85,22 @@ namespace ReportEngine.App.ViewModels
                     Position = CurrentUser.SelectedUser.Position,
                     PhoneContact = CurrentUser.SelectedUser.PhoneContact
                 };
-
-
-                CurrentUser.AllUsers.Add(newUser);               
-
+                CurrentUser.AllUsers.Add(newUser);
                 await _userRepository.AddAsync(newUser);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка при добавлении пользователя", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            });
         }
         public ICommand SaveUserCommand { get; set; }
         public bool CanSaveUserCommandExecute(object e) => true;
         public async void OnSaveUserCommandExecuted(object e)
         {
-            try
+            await ExceptionHelper.SafeExecuteAsync(async () =>
             {
                 if (CurrentUser.SelectedUser != null)
                 {
                     await _userRepository.UpdateAsync(CurrentUser.SelectedUser);
                     MessageBox.Show("Изменения сохранены");
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка сохранения: {ex.Message}");
-            }
+            });
         }
         #endregion
     }
