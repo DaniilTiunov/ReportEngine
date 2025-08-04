@@ -19,6 +19,7 @@ namespace ReportEngine.App.ViewModels
         private readonly IDialogService _dialogService;
         public StandModel CurrentStand { get; set; } = new();
         public ProjectModel CurrentProject { get; set; } = new();
+        public ProjectCommandProvider ProjectCommandProvider { get; set; } = new();
 
 
         public ProjectViewModel(IProjectInfoRepository projectRepository, IDialogService dialogService)
@@ -40,10 +41,10 @@ namespace ReportEngine.App.ViewModels
         }
         public void InitializeCommands()
         {
-            CreateNewCardCommand = new RelayCommand(OnCreateNewCardCommandExecuted, CanAllCommandsExecute);
-            AddNewStandCommand = new RelayCommand(OnAddNewStandCommandExecuted, CanAllCommandsExecute);
-            SaveChangesCommand = new RelayCommand(OnSaveChangesCommandExecuted, CanAllCommandsExecute);
-            SelectFromDialogCommand = new RelayCommand(OnSelectFromDialogCommandExecuted<HeaterPipe>, CanAllCommandsExecute);
+            ProjectCommandProvider.CreateNewCardCommand = new RelayCommand(OnCreateNewCardCommandExecuted, CanAllCommandsExecute);
+            ProjectCommandProvider.AddNewStandCommand = new RelayCommand(OnAddNewStandCommandExecuted, CanAllCommandsExecute);
+            ProjectCommandProvider.SaveChangesCommand = new RelayCommand(OnSaveChangesCommandExecuted, CanAllCommandsExecute);
+            ProjectCommandProvider.SelectFromDialogCommand = new RelayCommand(OnSelectFromDialogCommandExecuted<HeaterPipe>, CanAllCommandsExecute);
         }
         public void LoadProjectInfo(ProjectInfo projectInfo) // Загрузка карточки проекта для редактирования
         {
@@ -67,7 +68,6 @@ namespace ReportEngine.App.ViewModels
         }
         #endregion
         #region Команды
-        public ICommand SelectFromDialogCommand { get; set; }
         public void OnSelectFromDialogCommandExecuted<T>(object e)
             where T : class, IBaseEquip, new()
         {
@@ -75,7 +75,6 @@ namespace ReportEngine.App.ViewModels
 
             CurrentStand.MaterialLine = selectedEquipment.Name;
         }
-        public ICommand CreateNewCardCommand { get; set; }
         public bool CanAllCommandsExecute(object e) => true;
         public async void OnCreateNewCardCommandExecuted(object e) // Создание новой карточки проекта
         {
@@ -109,7 +108,6 @@ namespace ReportEngine.App.ViewModels
                 MessageBoxHelper.ShowInfo($"Новая карточка проекта успешно создана!\nId Преокта: {CurrentProject.CurrentProjectId}"); //Для отладки
             });
         }
-        public ICommand AddNewStandCommand { get; set; }
         public async void OnAddNewStandCommandExecuted(object e) // Добавление нового стенда с привязкой к проекту
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -143,7 +141,6 @@ namespace ReportEngine.App.ViewModels
                 MessageBoxHelper.ShowInfo("Стенд успешно добавлен!");
             });
         }
-        public ICommand SaveChangesCommand { get; set; }
         public async void OnSaveChangesCommandExecuted(object e) // Сохранение изменений для карточки преокта
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
