@@ -3,5 +3,6 @@
     public interface IBaseEquip
     {
         int Id { get; set; }
+        string Name { get; set; }
     }
 }

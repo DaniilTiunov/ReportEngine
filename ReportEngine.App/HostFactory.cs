@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ReportEngine.App.Services;
+using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Windows;
@@ -113,6 +114,7 @@ namespace ReportEngine.App
             services.AddSingleton<GenericEquipWindowFactory>();
             services.AddSingleton<NavigationService>();
             services.AddSingleton<IServiceProvider>(provider => provider);
+            services.AddSingleton<IDialogService, DialogService>();
         }
         private static void ConfigureViewModels(IServiceCollection services)
         {

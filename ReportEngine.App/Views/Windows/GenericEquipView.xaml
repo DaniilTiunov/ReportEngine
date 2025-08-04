@@ -56,13 +56,36 @@
     <Grid Margin="5,5,0,5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <!--  Панель кнопок  -->
+            <RowDefinition Height="Auto" />
+            <!--  Разделитель  -->
             <RowDefinition Height="*" />
+            <!--  DataGrid  -->
         </Grid.RowDefinitions>
+
+        <!--  Панель кнопок  -->
+        <StackPanel
+            Grid.Row="0"
+            Margin="0,0,0,5"
+            HorizontalAlignment="Left"
+            Orientation="Horizontal">
+
+            <!--  Кнопка "Выбрать"  -->
+            <Button
+                Width="100"
+                Margin="0,0,10,0"
+                Command="{Binding SelectCommand}"
+                Content="Выбрать" />
+
+        </StackPanel>
+
+        <!--  Разделительная линия  -->
+        <Separator Grid.Row="1" Margin="0,0,0,5" />
 
         <!--  DataGrid с контекстным меню  -->
         <DataGrid
             x:Name="GenericEquipDataGrid"
-            Grid.Row="1"
+            Grid.Row="2"
             AutoGenerateColumns="False"
             CanUserAddRows="True"
             CanUserDeleteRows="True"
@@ -71,6 +94,7 @@
             ItemsSource="{Binding GenericEquipModel.BaseEquips}"
             SelectedItem="{Binding GenericEquipModel.SelectedBaseEquip, Mode=TwoWay}"
             SelectionUnit="FullRow">
+
             <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem Command="{Binding ShowAllEquipCommand}" Header="Показать всё" />

@@ -16,6 +16,7 @@ namespace ReportEngine.App.ViewModels
     public class GenericEquipViewModel<T> : BaseViewModel
         where T : class, IBaseEquip, new() // Ограничение: T должен реализовывать интерфейс IBaseEquip
     {
+        public Action<T> SelectionHandler { get; set; }
         private readonly IGenericBaseRepository<T, T> _genericEquipRepository; // Репозиторий для работы с данными оборудования
         /// <summary>
         /// Модель для управления коллекцией оборудования и выбранным элементом оборудования.
@@ -36,6 +37,7 @@ namespace ReportEngine.App.ViewModels
         public void InitializeCommands()
         {
             // Инициализируем команду для отображения всего оборудования
+            SelectCommand = new RelayCommand(OnSelect, CanAllCommandsExecute);
             ShowAllEquipCommand = new RelayCommand(OnShowAllEquipCommandExecuted, CanAllCommandsExecute);
             SaveChangesEquipCommand = new RelayCommand(OnSaveChangesCommandExecuted, CanAllCommandsExecute);
             RemoveEquipCommand = new RelayCommand(OnRemoveEquipCommandExecuted, CanAllCommandsExecute);
@@ -71,6 +73,14 @@ namespace ReportEngine.App.ViewModels
                     GenericEquipModel.BaseEquips = new ObservableCollection<T>(baseEquips);
                 }
             });
+        }
+        public ICommand SelectCommand { get; set; }
+        private void OnSelect(object e)
+        {
+            if (GenericEquipModel.SelectedBaseEquip != null)
+            {
+                SelectionHandler?.Invoke(GenericEquipModel.SelectedBaseEquip);
+            }
         }
         /// <summary>
         /// Команда для добавления нового оборудования.

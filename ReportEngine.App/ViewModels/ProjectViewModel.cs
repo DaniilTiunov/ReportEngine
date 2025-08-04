@@ -1,7 +1,11 @@
 ﻿using ReportEngine.App.Commands;
 using ReportEngine.App.Display;
 using ReportEngine.App.Model;
+using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.BaseEntities.Interface;
+using ReportEngine.Domain.Entities.ElectricComponents;
+using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Enums;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
@@ -12,13 +16,15 @@ namespace ReportEngine.App.ViewModels
     public class ProjectViewModel : BaseViewModel
     {
         private readonly IProjectInfoRepository _projectRepository;
+        private readonly IDialogService _dialogService;
         public StandModel CurrentStand { get; set; } = new();
         public ProjectModel CurrentProject { get; set; } = new();
 
 
-        public ProjectViewModel(IProjectInfoRepository projectRepository)
+        public ProjectViewModel(IProjectInfoRepository projectRepository, IDialogService dialogService)
         {
             _projectRepository = projectRepository;
+            _dialogService = dialogService;
 
             InitializeCommands();
             InitializeTime();
@@ -37,6 +43,7 @@ namespace ReportEngine.App.ViewModels
             CreateNewCardCommand = new RelayCommand(OnCreateNewCardCommandExecuted, CanAllCommandsExecute);
             AddNewStandCommand = new RelayCommand(OnAddNewStandCommandExecuted, CanAllCommandsExecute);
             SaveChangesCommand = new RelayCommand(OnSaveChangesCommandExecuted, CanAllCommandsExecute);
+            SelectFromDialogCommand = new RelayCommand(OnSelectFromDialogCommandExecuted<HeaterPipe>, CanAllCommandsExecute);
         }
         public void LoadProjectInfo(ProjectInfo projectInfo) // Загрузка карточки проекта для редактирования
         {
@@ -57,17 +64,17 @@ namespace ReportEngine.App.ViewModels
             CurrentProject.MarkMinus = projectInfo.MarkMinus;
             CurrentProject.MarkPlus = projectInfo.MarkPlus;
             CurrentProject.IsGalvanized = projectInfo.IsGalvanized;
-
-            CurrentProject.Stands.Clear();
-            if (projectInfo.Stands != null)
-            {
-                foreach (var stand in projectInfo.Stands)
-                    CurrentProject.Stands.Add(stand);
-            }
-            OnPropertyChanged(nameof(CurrentProject));
         }
         #endregion
         #region Команды
+        public ICommand SelectFromDialogCommand { get; set; }
+        public void OnSelectFromDialogCommandExecuted<T>(object e)
+            where T : class, IBaseEquip, new()
+        {
+            var selectedEquipment = _dialogService.ShowEquipDialog<T>();
+
+            CurrentStand.MaterialLine = selectedEquipment.Name;
+        }
         public ICommand CreateNewCardCommand { get; set; }
         public bool CanAllCommandsExecute(object e) => true;
         public async void OnCreateNewCardCommandExecuted(object e) // Создание новой карточки проекта
