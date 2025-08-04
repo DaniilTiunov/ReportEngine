@@ -34,7 +34,6 @@
             <ColumnDefinition Width="200" />
         </Grid.ColumnDefinitions>
 
-        <!--  № п/п и KKS-код стенда  -->
         <TextBlock
             Grid.Row="0"
             Grid.Column="0"

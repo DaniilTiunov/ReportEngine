@@ -184,14 +184,27 @@
                             Width="*"
                             Binding="{Binding RequestProduction}"
                             Header="Заявка на производство" />
-                        <DataGridTextColumn Width="*" Header="Ещё что-то" />
-                        <DataGridTextColumn Width="*" Header="Ещё что-то" />
-                        <DataGridTextColumn Width="*" Header="Ещё что-то" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding HumanCost}"
+                            Header="Трудозатраты" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding Manager}"
+                            Header="Руководитель" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding MarkPlus}"
+                            Header="Маркировка +" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding MarkMinus}"
+                            Header="Маркировка -" />
                     </DataGrid.Columns>
                     <DataGrid.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Command="{Binding MainWindowCommandProvider.EditProjectCommand}" Header="Редактировать проек" />
-                            <MenuItem Command="{Binding MainWindowCommandProvider.ShowAllProjectsCommand}" Header="Обновить проекты" />
+                            <MenuItem Command="{Binding MainWindowCommandProvider.EditProjectCommand}" Header="Редактировать проект" />
+                            <MenuItem Command="{Binding MainWindowCommandProvider.ShowAllProjectsCommand}" Header="Обновить список проектов" />
                             <Separator />
                             <MenuItem Command="{Binding MainWindowCommandProvider.DeleteSelectedProjectCommand}" Header="Удалить проект" />
                         </ContextMenu>

@@ -41,7 +41,11 @@ namespace ReportEngine.App.Model
 
         private string? _markMinus; //Маркировка -
 
-        private bool _isGalvanized; //Оцинковка 
+        private bool _isGalvanized; //Оцинковка
+                                    //
+        private float _humanCost; //Трудозатраты
+
+        private string? _manager;
         #endregion
 
         #region Публичные свойства
@@ -58,6 +62,8 @@ namespace ReportEngine.App.Model
         public string? Object { get => _object; set => Set(ref _object, value); } //Объект
         public int StandCount { get => _standCount; set => Set(ref _standCount, value); } //Кол-во стендов
         public decimal Cost { get => _cost; set => Set(ref _cost, value); } //Стоимость
+        public float HumanCost { get => _humanCost; set => Set(ref _humanCost, value); } //Трудозатраты
+        public string Manager { get => _manager; set => Set(ref _manager, value); } // Руководитель
         public string Status { get => _status; set => Set(ref _status, value); } //Статус
         public DateTime StartDate { get => _startDate; set => Set(ref _startDate, value); } //Старта проекта
         public DateTime OutOfProduction { get => _outOfProduction; set => Set(ref _outOfProduction, value); } //Выход из производства
