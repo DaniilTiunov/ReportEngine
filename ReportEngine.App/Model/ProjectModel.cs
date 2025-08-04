@@ -3,6 +3,7 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Enums;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Shared.Helpers;
+using System.Collections.ObjectModel;
 using System.Windows;
 
 namespace ReportEngine.App.Model
@@ -45,8 +46,11 @@ namespace ReportEngine.App.Model
 
         #region Публичные свойства
         public IEnumerable<string> Statuses { get; set; } = new List<string>() { "ТКП", "Завершен" };
-
         public int CurrentProjectId;
+        public ObservableCollection<Stand> Stands { get; set; } = new();
+        public Stand? SelectedStand { get; set; }
+
+
         public int Number { get => _number; set => Set(ref _number, value); } //№п/п
         public string? Description { get => _description; set => Set(ref _description, value); } //Обозначение КД                               
         public DateTime CreationDate { get => _creationDate; set => Set(ref _creationDate, value); } //Дата запроса

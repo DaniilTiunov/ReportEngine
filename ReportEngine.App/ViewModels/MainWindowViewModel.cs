@@ -105,7 +105,7 @@ namespace ReportEngine.App.ViewModels
             {
                 var projectViewModel = _serviceProvider.GetRequiredService<ProjectViewModel>();
                 projectViewModel.LoadProjectInfo(MainWindowModel.SelectedProject);
-                _navigation.ShowContent<ProjectCardView>();
+                _navigation.ShowContent<TreeProjectView>();
             });
         }
         public void OnOpenMainWindowCommandExecuted(object e)

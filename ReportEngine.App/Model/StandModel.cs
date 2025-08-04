@@ -40,7 +40,6 @@ namespace ReportEngine.App.Model
         public string Armature { get => _armature; set => Set(ref _armature, value); }
         public string TreeScoket { get => _treeScoket; set => Set(ref _treeScoket, value); }
         public string KMCH { get => _kmch; set => Set(ref _kmch, value); }
-
-        
+       
     }
 }

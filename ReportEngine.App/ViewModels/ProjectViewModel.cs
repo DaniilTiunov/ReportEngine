@@ -3,14 +3,8 @@ using ReportEngine.App.Display;
 using ReportEngine.App.Model;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Enums;
-using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
-using ReportEngine.Shared.Config.DebugConsol;
 using ReportEngine.Shared.Helpers;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels
@@ -23,7 +17,7 @@ namespace ReportEngine.App.ViewModels
 
 
         public ProjectViewModel(IProjectInfoRepository projectRepository)
-        {          
+        {
             _projectRepository = projectRepository;
 
             InitializeCommands();
@@ -63,6 +57,14 @@ namespace ReportEngine.App.ViewModels
             CurrentProject.MarkMinus = projectInfo.MarkMinus;
             CurrentProject.MarkPlus = projectInfo.MarkPlus;
             CurrentProject.IsGalvanized = projectInfo.IsGalvanized;
+
+            CurrentProject.Stands.Clear();
+            if (projectInfo.Stands != null)
+            {
+                foreach (var stand in projectInfo.Stands)
+                    CurrentProject.Stands.Add(stand);
+            }
+            OnPropertyChanged(nameof(CurrentProject));
         }
         #endregion
         #region Команды
@@ -101,7 +103,7 @@ namespace ReportEngine.App.ViewModels
         public ICommand AddNewStandCommand { get; set; }
         public async void OnAddNewStandCommandExecuted(object e)
         {
-            await ExceptionHelper.SafeExecuteAsync(async () => 
+            await ExceptionHelper.SafeExecuteAsync(async () =>
             {
                 if (CurrentProject.CurrentProjectId == 0)
                 {
@@ -111,15 +113,26 @@ namespace ReportEngine.App.ViewModels
                 var newStand = new Stand
                 {
                     ProjectInfoId = CurrentProject.CurrentProjectId,
-                    Number = CurrentProject.CurrentProjectId,
-                    KKSCode = "4",
-                    Design = "4"
+                    Number = CurrentProject.Number,
+                    KKSCode = CurrentStand.KKSCode,
+                    Design = CurrentStand.Design,
+                    BraceType = CurrentStand.BraceType,
+                    Devices = CurrentStand.Devices,
+                    Width = CurrentStand.Width,
+                    SerialNumber = CurrentStand.SerialNumber,
+                    Weight = CurrentStand.Weight,
+                    StandSummCost = CurrentStand.StandSummCost,
+                    ObvyazkaType = CurrentStand.ObvyazkaType,
+                    NN = CurrentStand.NN,
+                    MaterialLine = CurrentStand.MaterialLine,
+                    Armature = CurrentStand.Armature,
+                    TreeScoket = CurrentStand.TreeScoket,
+                    KMCH = CurrentStand.KMCH
                 };
-
                 await _projectRepository.AddStandAsync(CurrentProject.CurrentProjectId, newStand);
+                CurrentProject.Stands.Add(newStand);
                 MessageBoxHelper.ShowInfo("Стенд успешно добавлен!");
             });
-            
         }
         public ICommand SaveChangesCommand { get; set; }
         public async void OnSaveChangesCommandExecuted(object e)

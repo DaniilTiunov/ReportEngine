@@ -190,7 +190,7 @@
                     </DataGrid.Columns>
                     <DataGrid.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Command="{Binding MainWindowCommandProvider.EditProjectCommand}" Header="Редактировать проект" />
+                            <MenuItem Command="{Binding MainWindowCommandProvider.EditProjectCommand}" Header="Редактировать проек" />
                             <MenuItem Command="{Binding MainWindowCommandProvider.ShowAllProjectsCommand}" Header="Обновить проекты" />
                             <Separator />
                             <MenuItem Command="{Binding MainWindowCommandProvider.DeleteSelectedProjectCommand}" Header="Удалить проект" />
