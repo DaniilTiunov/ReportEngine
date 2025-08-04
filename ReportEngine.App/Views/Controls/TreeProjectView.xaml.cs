@@ -1,4 +1,6 @@
 ﻿using ReportEngine.App.ViewModels;
+using ReportEngine.Shared.Config.DebugConsol;
+using ReportEngine.Shared.Helpers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -18,7 +20,7 @@ namespace ReportEngine.App.Views.Controls
         }
         private void OpenCurrentView(object sender, MouseButtonEventArgs e)
         {
-            try
+            ExceptionHelper.SafeExecute(() =>
             {
                 var treeViewItem = MainTree.SelectedItem as TreeViewItem;
                 if (treeViewItem?.Tag != null)
@@ -27,12 +29,11 @@ namespace ReportEngine.App.Views.Controls
                     string? tag = treeViewItem.Tag.ToString();
                     LoadTreeContent(tag, header);
                 }
-            }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            });
         }
         private void LoadTreeContent(string tag, string header)
         {
-            try
+            ExceptionHelper.SafeExecute(() =>
             {
                 if (string.IsNullOrEmpty(tag))
                     return;
@@ -41,10 +42,7 @@ namespace ReportEngine.App.Views.Controls
 
                 var tabControl = MainTabControl.Items
                                     .Add(new TabItem() { Header = header, Content = content });
-
-
-            }
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            });
         }
         private UserControl CreateCurrentContent(string tag)
         {
@@ -65,10 +63,10 @@ namespace ReportEngine.App.Views.Controls
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                DebugConsole.WriteLine(ex, ConsoleColor.Red);
                 return null;
             }
         }
-
         public void Dispose()
         {
             if (_disposed) return;

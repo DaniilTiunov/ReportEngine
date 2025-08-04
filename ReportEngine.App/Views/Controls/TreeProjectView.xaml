@@ -74,7 +74,7 @@
                         x:Name="ProjectCard"
                         Header="Карточка проекта"
                         Tag="ProjectCard" />
-                    <TreeViewItem Header="Создание нового стенда" Tag="BindingTypes">
+                    <TreeViewItem Header="Редактирование стенда" Tag="BindingTypes">
                         <TreeViewItem Header="Стенд" Tag="Stand" />
                         <TreeViewItem Header="Создание обвязок стенда" Tag="StandObv" />
                         <TreeViewItem Header="Выбор рамы" />

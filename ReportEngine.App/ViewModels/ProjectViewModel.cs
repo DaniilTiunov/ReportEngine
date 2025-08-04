@@ -38,7 +38,7 @@ namespace ReportEngine.App.ViewModels
             AddNewStandCommand = new RelayCommand(OnAddNewStandCommandExecuted, CanAllCommandsExecute);
             SaveChangesCommand = new RelayCommand(OnSaveChangesCommandExecuted, CanAllCommandsExecute);
         }
-        public void LoadProjectInfo(ProjectInfo projectInfo)
+        public void LoadProjectInfo(ProjectInfo projectInfo) // Загрузка карточки проекта для редактирования
         {
             CurrentProject.CurrentProjectId = projectInfo.Id;
             CurrentProject.Number = projectInfo.Number;
@@ -70,7 +70,7 @@ namespace ReportEngine.App.ViewModels
         #region Команды
         public ICommand CreateNewCardCommand { get; set; }
         public bool CanAllCommandsExecute(object e) => true;
-        public async void OnCreateNewCardCommandExecuted(object e)
+        public async void OnCreateNewCardCommandExecuted(object e) // Создание новой карточки проекта
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
@@ -103,7 +103,7 @@ namespace ReportEngine.App.ViewModels
             });
         }
         public ICommand AddNewStandCommand { get; set; }
-        public async void OnAddNewStandCommandExecuted(object e)
+        public async void OnAddNewStandCommandExecuted(object e) // Добавление нового стенда с привязкой к проекту
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
@@ -137,7 +137,7 @@ namespace ReportEngine.App.ViewModels
             });
         }
         public ICommand SaveChangesCommand { get; set; }
-        public async void OnSaveChangesCommandExecuted(object e)
+        public async void OnSaveChangesCommandExecuted(object e) // Сохранение изменений для карточки преокта
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {

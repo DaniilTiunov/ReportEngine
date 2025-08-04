@@ -13,6 +13,7 @@ namespace ReportEngine.Shared.Helpers
             }
             catch (Exception ex)
             {
+                DebugConsole.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
                 MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}");
             }
         }

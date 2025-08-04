@@ -9,111 +9,245 @@
     d:DesignHeight="1000"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid Margin="20,20,20,240">
+    <Grid Margin="20,20,20,20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-
         </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="160" />
-            <ColumnDefinition Width="200" />
-            <ColumnDefinition Width="160" />
-            <ColumnDefinition Width="200" />
-        </Grid.ColumnDefinitions>
+        <!--  Первый грид (обвязка)  -->
+        <Grid Grid.Row="0" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="160" />
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="160" />
+                <ColumnDefinition Width="200" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <TextBlock
-            Grid.Row="0"
-            Grid.Column="0"
-            Margin="0,5"
-            VerticalAlignment="Center"
-            Text="Тип обвязки:" />
-        <TextBox
-            Grid.Row="0"
-            Grid.Column="1"
-            Width="50"
-            Margin="0,5,150,5" />
-        <TextBlock
-            Grid.Row="0"
-            Grid.Column="2"
-            Margin="10,5,0,5"
-            VerticalAlignment="Center"
-            Text="NN:" />
-        <TextBox
-            Grid.Row="0"
-            Grid.Column="2"
-            Margin="35,5,5,5" />
+            <!--  Тип обвязки и NN  -->
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="0"
+                Margin="0,5"
+                VerticalAlignment="Center"
+                Text="Тип обвязки:" />
+            <TextBox
+                Grid.Row="0"
+                Grid.Column="1"
+                Margin="0,5,145,5" />
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="2"
+                Margin="10,5,0,5"
+                VerticalAlignment="Center"
+                Text="NN:" />
+            <TextBox
+                Grid.Row="0"
+                Grid.Column="2"
+                Margin="39,5,16,5" />
 
-        <TextBlock
-            Grid.Row="1"
-            Grid.Column="0"
-            Margin="0,5"
-            VerticalAlignment="Center"
-            Text="Материал линии:" />
-        <TextBox
-            Grid.Row="1"
-            Grid.Column="1"
-            Margin="0,5,60,5" />
+            <!--  Материал линии  -->
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="0"
+                Margin="0,5"
+                VerticalAlignment="Center"
+                Text="Материал линии:" />
+            <TextBox
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="0,5" />
+            <Button
+                Grid.Row="1"
+                Grid.Column="1"
+                Width="25"
+                Margin="160,5,0,5"
+                HorizontalAlignment="Right"
+                Content="..." />
 
-        <TextBlock
-            Grid.Row="2"
-            Grid.Column="0"
-            Margin="0,5"
-            VerticalAlignment="Center"
-            Text="Арматура:" />
-        <TextBox
-            Grid.Row="2"
-            Grid.Column="1"
-            Margin="0,5,60,5" />
+            <!--  Арматура  -->
+            <TextBlock
+                Grid.Row="2"
+                Grid.Column="0"
+                Margin="0,5"
+                VerticalAlignment="Center"
+                Text="Арматура:" />
+            <TextBox
+                Grid.Row="2"
+                Grid.Column="1"
+                Margin="0,5" />
+            <Button
+                Grid.Row="2"
+                Grid.Column="1"
+                Width="25"
+                Margin="160,5,0,5"
+                HorizontalAlignment="Right"
+                Content="..." />
 
-        <TextBlock
-            Grid.Row="3"
-            Grid.Column="0"
-            Margin="0,5"
-            VerticalAlignment="Center"
-            Text="Тройник:" />
-        <Button
-            Grid.Row="3"
-            Grid.Column="1"
-            Margin="160,2,20,3"
-            Content="..." />
+            <!--  Тройник  -->
+            <TextBlock
+                Grid.Row="3"
+                Grid.Column="0"
+                Margin="0,5"
+                VerticalAlignment="Center"
+                Text="Тройник:" />
+            <TextBox
+                Grid.Row="3"
+                Grid.Column="1"
+                Margin="0,5" />
+            <Button
+                Grid.Row="3"
+                Grid.Column="1"
+                Width="25"
+                Margin="160,5,0,5"
+                HorizontalAlignment="Right"
+                Content="..." />
 
-        <TextBlock
-            Grid.Row="4"
-            Grid.Column="0"
-            Margin="0,5"
-            VerticalAlignment="Center"
-            Text="Кмч:" />
-        <TextBox
-            Grid.Row="4"
-            Grid.Column="1"
-            Margin="0,5,60,5" />
-        <TextBox
-            Grid.Row="4"
-            Grid.Column="1"
-            Margin="0,5,60,5" />
-        <TextBox
-            Grid.Row="3"
-            Grid.Column="1"
-            Margin="0,2,60,6" />
-        <Button
-            Grid.Row="4"
-            Grid.Column="1"
-            Margin="160,4,20,3"
-            Content="..." />
-        <Button
-            Grid.Row="2"
-            Grid.Column="1"
-            Margin="160,3,20,4"
-            Content="..." />
-        <Button
-            Grid.Row="1"
-            Grid.Column="1"
-            Margin="160,4,20,3"
-            Content="..." />
+            <!--  Кмч  -->
+            <TextBlock
+                Grid.Row="4"
+                Grid.Column="0"
+                Margin="0,5"
+                VerticalAlignment="Center"
+                Text="Кмч:" />
+            <TextBox
+                Grid.Row="4"
+                Grid.Column="1"
+                Margin="0,5" />
+            <Button
+                Grid.Row="4"
+                Grid.Column="1"
+                Width="25"
+                Margin="160,5,0,5"
+                HorizontalAlignment="Right"
+                Content="..." />
+
+            <!--  Кнопка "Все обвязки"  -->
+            <Button
+                Grid.Column="1"
+                Width="120"
+                Margin="80,5,0,3"
+                HorizontalAlignment="Left"
+                Content="Все обвязки" />
+        </Grid>
+
+        <!--  Второй грид (датчики)  -->
+        <Grid Grid.Row="1" Margin="0,20,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!--  Заголовок  -->
+            <TextBlock
+                Grid.Row="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,0,10"
+                FontWeight="Bold"
+                Text="Датчик 1" />
+
+            <!--  Тип датчика  -->
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="0"
+                Margin="0,5"
+                VerticalAlignment="Center"
+                Text="Тип датчика:" />
+            <TextBox
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="5,5,380,5"
+                Text="" />
+
+            <!--  KKS-контура  -->
+            <TextBlock
+                Grid.Row="2"
+                Grid.Column="0"
+                Margin="0,5"
+                VerticalAlignment="Center"
+                Text="KKS-контура:" />
+            <TextBox
+                Grid.Row="2"
+                Grid.Column="1"
+                Margin="5,5,380,5"
+                Text="" />
+
+            <!--  Маркировка (+)  -->
+            <TextBlock
+                Grid.Row="3"
+                Grid.Column="0"
+                Margin="0,5"
+                VerticalAlignment="Center"
+                Text="Маркировка (+):" />
+            <TextBox
+                Grid.Row="3"
+                Grid.Column="1"
+                Margin="5,5,380,5" />
+
+            <!--  Маркировка (-)  -->
+            <TextBlock
+                Grid.Row="4"
+                Grid.Column="0"
+                Margin="0,5"
+                VerticalAlignment="Center"
+                Text="Маркировка (-):" />
+            <TextBox
+                Grid.Row="4"
+                Grid.Column="1"
+                Margin="5,5,380,5" />
+
+            <!--  Описание  -->
+            <TextBlock
+                Grid.Row="5"
+                Grid.Column="0"
+                Margin="0,5"
+                VerticalAlignment="Center"
+                Text="Описание:" />
+            <TextBox
+                Grid.Row="5"
+                Grid.Column="1"
+                Height="60"
+                Margin="5,5"
+                AcceptsReturn="True"
+                TextWrapping="Wrap" />
+
+            <!--  Кнопки  -->
+            <StackPanel
+                Grid.Row="6"
+                Grid.ColumnSpan="2"
+                Margin="0,15,0,0"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal">
+                <Button
+                    Width="80"
+                    Margin="5,0"
+                    Content="OK" />
+                <Button
+                    Width="80"
+                    Margin="5,0"
+                    Content="Отмена" />
+                <Button
+                    Width="80"
+                    Margin="5,0"
+                    Content="Помощь" />
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>
