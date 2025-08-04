@@ -264,6 +264,14 @@
             Padding="10,5"
             HorizontalAlignment="Right"
             Command="{Binding CreateNewCardCommand}"
-            Content="Добавить" />
+            Content="Добавить новый" />
+        <Button
+            Grid.Row="13"
+            Grid.Column="3"
+            Margin="0,8,166,2"
+            Padding="10,5"
+            HorizontalAlignment="Right"
+            Command="{Binding SaveChangesCommand}"
+            Content="Сохранить изменения" />
     </Grid>
 </UserControl>

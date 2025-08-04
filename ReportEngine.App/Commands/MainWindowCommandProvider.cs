@@ -12,6 +12,7 @@ namespace ReportEngine.App.Commands
         public ICommand ChekDbConnectionCommand { get; set; }
         public ICommand ShowAllProjectsCommand { get; set; }
         public ICommand DeleteSelectedProjectCommand { get; set; }
+        public ICommand EditProjectCommand { get; set; }
 
     }
 }

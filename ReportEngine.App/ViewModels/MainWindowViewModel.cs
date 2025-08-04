@@ -48,7 +48,7 @@ namespace ReportEngine.App.ViewModels
         #endregion
 
         #region Методы        
-        public void InitializeMainWindowCommands()
+        public void InitializeMainWindowCommands() // Нужно придумать как отрефакторить этого монстра 
         {
             MainWindowCommandProvider.CloseAppCommand = new RelayCommand(OnCloseAppCommandExecuted, CanAllCommandsExecute);
             MainWindowCommandProvider.OpenAllUsersCommand = new RelayCommand(OpenOthersWindowCommandExecuted<UsersView>, CanAllCommandsExecute);
@@ -58,8 +58,10 @@ namespace ReportEngine.App.ViewModels
             MainWindowCommandProvider.ShowAllProjectsCommand = new RelayCommand(OnShowAllProjectsCommandExecuted, CanAllCommandsExecute);
             MainWindowCommandProvider.DeleteSelectedProjectCommand = new RelayCommand(OnDeleteSelectedProjectExecuted, CanAllCommandsExecute);
             MainWindowCommandProvider.OpenMainWindowCommand = new RelayCommand(OnOpenMainWindowCommandExecuted, CanAllCommandsExecute);
+            MainWindowCommandProvider.EditProjectCommand = new RelayCommand(OnEditProjectCommandExecuted, CanAllCommandsExecute);
+
         }
-        public void InitializeGenericEquipCommands()
+        public void InitializeGenericEquipCommands() // Нужно придумать как отрефакторить этого монстра 
         {
             GenericEquipCommandProvider.OpenHeaterPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<HeaterPipe, HeaterPipe>, CanAllCommandsExecute);
             GenericEquipCommandProvider.OpenCarbonPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<CarbonPipe, CarbonPipe>, CanAllCommandsExecute);
@@ -95,6 +97,17 @@ namespace ReportEngine.App.ViewModels
         #endregion
         #region Комманды главного окна
         public bool CanAllCommandsExecute(object e) => true;
+        public void OnEditProjectCommandExecuted(object e)
+        {
+            if (MainWindowModel.SelectedProject == null) return;
+
+            ExceptionHelper.SafeExecute(() =>
+            {
+                var projectViewModel = _serviceProvider.GetRequiredService<ProjectViewModel>();
+                projectViewModel.LoadProjectInfo(MainWindowModel.SelectedProject);
+                _navigation.ShowContent<ProjectCardView>();
+            });
+        }
         public void OnOpenMainWindowCommandExecuted(object e)
         {
             ExceptionHelper.SafeExecute(() =>
@@ -123,7 +136,6 @@ namespace ReportEngine.App.ViewModels
             MainWindowModel.IsConnected = context.Database.CanConnect();
             MainWindowModel.ConnectionStatusMessage = MainWindowModel.IsConnected ? "Соединение установлено" : "Соединение не установлено";
         }
-        public ICommand ShowAllProjectsCommand { get; set; }
         public async void OnShowAllProjectsCommandExecuted(object e)
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>

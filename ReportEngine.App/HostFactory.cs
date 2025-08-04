@@ -138,6 +138,7 @@ namespace ReportEngine.App
             services.AddTransient<TreeProjectView>();
             services.AddTransient<GenericEquipView>();
             services.AddTransient<ObvyazkiView>();
+            services.AddTransient<ProjectCardView>();
         }
     }
 }
