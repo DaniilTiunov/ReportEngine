@@ -280,13 +280,13 @@
                     Width="100"
                     Height="40"
                     Margin="0,10,10,0"
-                    Command="{Binding AddNewStandCommand}"
+                    Command="{Binding ProjectCommandProvider.AddNewStandCommand}"
                     Content="Добавить" />
                 <Button
                     Width="100"
                     Height="37"
                     Margin="0,10,0,0"
-                    Command="{Binding SaveStandCommand}"
+                    Command="{Binding ProjectCommandProvider.SaveStandCommand}"
                     Content="Сохранить" />
             </StackPanel>
         </Grid>

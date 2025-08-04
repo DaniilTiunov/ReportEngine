@@ -3,8 +3,10 @@ using ReportEngine.App.Display;
 using ReportEngine.App.Model;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.ElectricComponents;
+using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Enums;
 using ReportEngine.Domain.Repositories.Interfaces;
@@ -29,8 +31,8 @@ namespace ReportEngine.App.ViewModels
 
             InitializeCommands();
             InitializeTime();
+            InitializeGenericCommands();
         }
-
         #region Методы
         public void InitializeTime()
         {
@@ -44,7 +46,13 @@ namespace ReportEngine.App.ViewModels
             ProjectCommandProvider.CreateNewCardCommand = new RelayCommand(OnCreateNewCardCommandExecuted, CanAllCommandsExecute);
             ProjectCommandProvider.AddNewStandCommand = new RelayCommand(OnAddNewStandCommandExecuted, CanAllCommandsExecute);
             ProjectCommandProvider.SaveChangesCommand = new RelayCommand(OnSaveChangesCommandExecuted, CanAllCommandsExecute);
-            ProjectCommandProvider.SelectFromDialogCommand = new RelayCommand(OnSelectFromDialogCommandExecuted<HeaterPipe>, CanAllCommandsExecute);
+        }
+        public void InitializeGenericCommands()
+        {
+            ProjectCommandProvider.SelectMaterialLineDialogCommand = new RelayCommand(OnSelectFromDialogCommandExecuted<HeaterPipe>, CanAllCommandsExecute);
+            ProjectCommandProvider.SelectArmatureDialogCommand = new RelayCommand(OnSelectFromDialogCommandExecuted<HeaterArmature>, CanAllCommandsExecute);
+            ProjectCommandProvider.SelectKMCHDialogCommand = new RelayCommand(OnSelectFromDialogCommandExecuted<HeaterSocket>, CanAllCommandsExecute);
+
         }
         public void LoadProjectInfo(ProjectInfo projectInfo) // Загрузка карточки проекта для редактирования
         {
@@ -74,6 +82,7 @@ namespace ReportEngine.App.ViewModels
             var selectedEquipment = _dialogService.ShowEquipDialog<T>();
 
             CurrentStand.MaterialLine = selectedEquipment.Name;
+            CurrentStand.Armature = selectedEquipment.Name;
         }
         public bool CanAllCommandsExecute(object e) => true;
         public async void OnCreateNewCardCommandExecuted(object e) // Создание новой карточки проекта

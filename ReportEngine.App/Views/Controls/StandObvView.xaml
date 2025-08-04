@@ -70,7 +70,7 @@
                 Width="24"
                 Margin="331,5,0,5"
                 HorizontalAlignment="Left"
-                Command="{Binding SelectFromDialogCommand}"
+                Command="{Binding ProjectCommandProvider.SelectMaterialLineDialogCommand}"
                 Content="..." />
 
             <!--  Арматура  -->
@@ -83,13 +83,15 @@
             <TextBox
                 Grid.Row="2"
                 Grid.Column="1"
-                Margin="0,5,100,5" />
+                Margin="0,5,100,5"
+                Text="{Binding CurrentStand.Armature}" />
             <Button
                 Grid.Row="2"
                 Grid.Column="1"
                 Width="24"
                 Margin="332,4,0,6"
                 HorizontalAlignment="Left"
+                Command="{Binding ProjectCommandProvider.SelectArmatureDialogCommand}"
                 Content="..." />
 
             <!--  Тройник  -->

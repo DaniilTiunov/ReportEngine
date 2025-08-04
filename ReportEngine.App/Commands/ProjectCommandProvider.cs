@@ -4,7 +4,12 @@ namespace ReportEngine.App.Commands
 {
     public class ProjectCommandProvider
     {
-        public ICommand SelectFromDialogCommand { get; set; }
+        public ICommand SelectMaterialLineDialogCommand { get; set; }
+        public ICommand SelectArmatureDialogCommand { get; set; }
+        public ICommand SelectTreeSocketDialogCommand { get; set; }
+        public ICommand SelectKMCHDialogCommand { get; set; }
+
+
         public ICommand CreateNewCardCommand { get; set; }
         public ICommand AddNewStandCommand { get; set; }
         public ICommand SaveChangesCommand { get; set; }

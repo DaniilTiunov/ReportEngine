@@ -265,7 +265,7 @@
             Margin="0,8,1,2"
             Padding="10,5"
             HorizontalAlignment="Right"
-            Command="{Binding CreateNewCardCommand}"
+            Command="{Binding ProjectCommandProvider.CreateNewCardCommand}"
             Content="Добавить новый" />
         <Button
             Grid.Row="13"
@@ -273,7 +273,7 @@
             Margin="0,8,166,2"
             Padding="10,5"
             HorizontalAlignment="Right"
-            Command="{Binding SaveChangesCommand}"
+            Command="{Binding ProjectCommandProvider.SaveChangesCommand}"
             Content="Сохранить изменения" />
     </Grid>
 </UserControl>
