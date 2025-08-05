@@ -1,6 +1,7 @@
 ﻿using ReportEngine.App.Commands;
 using ReportEngine.App.Model;
 using ReportEngine.App.Services;
+using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
@@ -11,14 +12,16 @@ namespace ReportEngine.App.ViewModels
 {
     public class ObvyazkaViewModel
     {
+        private readonly IDialogService _dialogService;
         private readonly IObvyazkaRepository _obvyazkaRepository;
         private readonly NavigationService _navigation;
         public ObvyazkaModel CurrentObvyazka { get; set; } = new();
 
-        public ObvyazkaViewModel(IObvyazkaRepository obvyazkaRepository, NavigationService navigation)
+        public ObvyazkaViewModel(IObvyazkaRepository obvyazkaRepository, NavigationService navigation, IDialogService dialogService)
         {
             _obvyazkaRepository = obvyazkaRepository;
             _navigation = navigation;
+            _dialogService = dialogService;
             InitializeCommands();
         }
 

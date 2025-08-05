@@ -18,9 +18,10 @@ namespace ReportEngine.App.Model
         private string _armature;
         private string _treeScoket;
         private string _kmch;
-        private string _sensor;
-        private string _markPlus;
-        private string _markMinus;
+        private string _firstSensorType;
+        private string _firstSensorMarkPlus;
+        private string _firsSensorKksCode;
+        private string _firstSensorMarkMinus;
         private string _designeStand;
 
 
@@ -40,10 +41,10 @@ namespace ReportEngine.App.Model
         public string Armature { get => _armature; set => Set(ref _armature, value); }
         public string TreeScoket { get => _treeScoket; set => Set(ref _treeScoket, value); }
         public string KMCH { get => _kmch; set => Set(ref _kmch, value); }
-        public string Sensor { get => _sensor; set => Set(ref _sensor, value); }
-        public string? KKSCounter { get => _kksCode; set => Set(ref _kksCode, value); }//ККС Контура
-        public string? MarkPlus { get => _markPlus; set => Set(ref _markPlus, value); } //Марикровка +
-        public string? MarkMinus { get => _markMinus; set => Set(ref _markMinus, value); } //Марикровка -
+        public string FirstSensorType { get => _firstSensorType; set => Set(ref _firstSensorType, value); }
+        public string? FirstSensorKKSCounter { get => _firsSensorKksCode; set => Set(ref _firsSensorKksCode, value); }//ККС Контура
+        public string? FirstSensorMarkPlus { get => _firstSensorMarkPlus; set => Set(ref _firstSensorMarkPlus, value); } //Марикровка +
+        public string? FirstSensorMarkMinus { get => _firstSensorMarkMinus; set => Set(ref _firstSensorMarkMinus, value); } //Марикровка -
         public string? DesigneStand { get => _designeStand; set => Set(ref _designeStand, value); } //Описание
 
     }

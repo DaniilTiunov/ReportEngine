@@ -28,10 +28,10 @@ namespace ReportEngine.Domain.Entities
         public string? Armature { get; set; } // Араматура
         public string? TreeScoket { get; set; } // Тройник
         public string? KMCH { get; set; } // КМЧ
-        public string? Sensor { get; set; } // Тип датчика
-        public string? KKSCounter { get; set; }//ККС Контура
-        public string? MarkPlus { get; set; } //Марикровка +
-        public string? MarkMinus { get; set; } //Марикровка -
+        public string? FirstSensorType { get; set; } // Тип датчика
+        public string? FirstSensorKKS { get; set; }//ККС Контура
+        public string? FirstSensorMarkPlus { get; set; } //Марикровка +
+        public string? FirstSensorMarkMinus { get; set; } //Марикровка -
         public string? DesigneStand { get; set; } //Описание
         public string? Comments { get; set; } // Комментарий 
 

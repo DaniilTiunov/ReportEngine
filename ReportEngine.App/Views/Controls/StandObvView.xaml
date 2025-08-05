@@ -8,72 +8,75 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:Background="White"
     d:DesignHeight="1000"
-    d:DesignWidth="800"
+    d:DesignWidth="1400"
+    FontSize="13"
     mc:Ignorable="d">
-    <Grid Margin="20,20,20,20">
+
+    <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="67.2" />
-            <RowDefinition Height="146.52" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!--  Первый грид (обвязка)  -->
+        <!--  Обвязка Section  -->
         <Grid Grid.Row="0" Margin="0,0,0,20">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="110" />
-                <ColumnDefinition Width="420" />
-                <ColumnDefinition Width="45" />
-            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-            <!--  Тип обвязки и NN  -->
+            <!--  Тип обвязки  -->
             <TextBlock
+                Grid.Row="0"
                 Grid.Column="0"
-                Height="16"
                 VerticalAlignment="Center"
                 Text="Тип обвязки:" />
             <TextBox
                 Grid.Row="0"
                 Grid.Column="1"
-                Margin="0,5,145,5"
+                Margin="5,5,1016,5"
                 Text="{Binding CurrentStand.ObvyazkaType}" />
+
+            <!--  NN  -->
             <TextBlock
-                Grid.Column="2"
-                Height="16"
-                Margin="10,0,0,0"
-                VerticalAlignment="Center"
+                Grid.Column="1"
+                Margin="413,5,820,0"
+                VerticalAlignment="Top"
                 Text="NN:" />
             <TextBox
                 Grid.Row="0"
-                Grid.Column="2"
-                Margin="39,5,-29,5"
+                Grid.Column="1"
+                Margin="445,6,755,4"
                 Text="{Binding CurrentStand.NN}" />
 
             <!--  Материал линии  -->
             <TextBlock
                 Grid.Row="1"
                 Grid.Column="0"
-                Height="16"
                 VerticalAlignment="Center"
                 Text="Материал линии:" />
             <TextBox
                 Grid.Row="1"
                 Grid.Column="1"
-                Margin="0,5,100,5"
+                Margin="5,5,766,5"
                 Text="{Binding CurrentStand.MaterialLine}" />
             <Button
                 Grid.Row="1"
                 Grid.Column="1"
                 Width="24"
-                Margin="331,5,0,5"
-                HorizontalAlignment="Left"
+                Margin="522,5,712,6"
                 Command="{Binding ProjectCommandProvider.SelectMaterialLineDialogCommand}"
                 Content="..." />
 
@@ -81,20 +84,18 @@
             <TextBlock
                 Grid.Row="2"
                 Grid.Column="0"
-                Height="16"
                 VerticalAlignment="Center"
                 Text="Арматура:" />
             <TextBox
                 Grid.Row="2"
                 Grid.Column="1"
-                Margin="0,5,100,5"
+                Margin="5,6,765,4"
                 Text="{Binding CurrentStand.Armature}" />
             <Button
                 Grid.Row="2"
                 Grid.Column="1"
                 Width="24"
-                Margin="332,4,0,6"
-                HorizontalAlignment="Left"
+                Margin="522,4,712,6"
                 Command="{Binding ProjectCommandProvider.SelectArmatureDialogCommand}"
                 Content="..." />
 
@@ -102,193 +103,313 @@
             <TextBlock
                 Grid.Row="3"
                 Grid.Column="0"
-                Height="16"
                 VerticalAlignment="Center"
                 Text="Тройник:" />
             <TextBox
                 Grid.Row="3"
                 Grid.Column="1"
-                Margin="0,5,100,5" />
+                Margin="5,5,766,5" />
             <Button
                 Grid.Row="3"
                 Grid.Column="1"
                 Width="24"
-                Margin="332,4,0,6"
-                HorizontalAlignment="Left"
+                Margin="522,4,712,5"
                 Content="..." />
 
             <!--  Кмч  -->
             <TextBlock
                 Grid.Row="4"
                 Grid.Column="0"
-                Height="16"
                 VerticalAlignment="Center"
                 Text="Кмч:" />
             <TextBox
                 Grid.Row="4"
                 Grid.Column="1"
-                Margin="0,5,100,5" />
+                Margin="5,5,766,5" />
             <Button
                 Grid.Row="4"
                 Grid.Column="1"
                 Width="24"
-                Margin="333,4,0,6"
-                HorizontalAlignment="Left"
+                Margin="522,5,712,5"
                 Content="..." />
 
             <!--  Кнопка "Все обвязки"  -->
             <Button
                 Grid.Column="1"
-                Width="120"
-                Margin="285,5,0,3"
+                Width="80"
+                Margin="254,3,0,2"
                 HorizontalAlignment="Left"
                 Content="Все обвязки" />
-            <!--  Решить проблему с привязкой  -->
-            <ComboBox
-                Grid.Row="1"
-                Grid.Column="1"
-                Width="35"
-                Height="20"
-                Margin="360,6,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top" />
-
         </Grid>
 
-        <!--  Второй грид (датчики)  -->
-        <Grid
-            Grid.Row="1"
-            Grid.RowSpan="2"
-            Margin="0,12,0,1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" MinWidth="189.72" />
-                <ColumnDefinition Width="Auto" MinWidth="397" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" MinHeight="27.96" />
-                <RowDefinition Height="Auto" MinHeight="34.96" />
-            </Grid.RowDefinitions>
+        <Separator Grid.Row="1" Margin="0,10" />
 
-            <!--  Заголовок  -->
-            <TextBlock
-                Grid.Row="0"
-                Grid.ColumnSpan="2"
-                Margin="0,0,0,10"
-                FontWeight="Bold"
-                Text="Датчик 1" />
+        <!--  Датчик 1 Section  -->
+        <Border
+            Grid.Row="2"
+            Padding="0,0,0,10"
+            BorderBrush="#DDDDDD"
+            BorderThickness="0,0,0,1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" MinWidth="189.72" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <!--  Тип датчика  -->
-            <TextBlock
-                Grid.Row="1"
-                Grid.Column="0"
-                Height="16"
-                Margin="0,0,99,0"
-                VerticalAlignment="Center"
-                Text="Тип датчика:" />
-            <TextBox
-                Grid.Row="1"
-                Grid.Column="1"
-                Margin="5,5,152,5"
-                Text="{Binding CurrentStand.Sensor}" />
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.ColumnSpan="2"
+                    Margin="0,0,0,10"
+                    FontWeight="Bold"
+                    Text="Датчик 1" />
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="Тип датчика:" />
+                <ComboBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="5,5,800,5"
+                    ItemsSource="{Binding SensorTypes}"
+                    SelectedItem="{Binding CurrentStand.FirstSensorType}" />
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="KKS-контура:" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Margin="5,5,800,5"
+                    Text="{Binding CurrentStand.FirstSensorKKSCounter}" />
+                <TextBlock
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="Маркировка (+):" />
+                <TextBox
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Margin="5,5,800,5"
+                    Text="{Binding CurrentStand.FirstSensorMarkPlus}" />
+                <TextBlock
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="Маркировка (-):" />
+                <TextBox
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    Margin="5,5,800,5"
+                    Text="{Binding CurrentStand.FirstSensorMarkMinus}" />
+                <TextBlock
+                    Grid.Row="5"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="Описание:" />
+                <TextBox
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    Height="60"
+                    Margin="5,5,590,5"
+                    AcceptsReturn="True"
+                    Text="{Binding CurrentStand.Sensor1.Description}"
+                    TextWrapping="Wrap" />
+            </Grid>
+        </Border>
 
-            <!--  KKS-контура  -->
-            <TextBlock
-                Grid.Row="2"
-                Grid.Column="0"
-                Height="16"
-                Margin="0,0,99,0"
-                VerticalAlignment="Center"
-                Text="KKS-контура:" />
-            <TextBox
-                Grid.Row="2"
-                Grid.Column="1"
-                Margin="5,5,152,5"
-                Text="" />
+        <!--  Датчик 2 Section  -->
+        <Border
+            Grid.Row="3"
+            Padding="0,0,0,10"
+            BorderBrush="#DDDDDD"
+            BorderThickness="0,0,0,1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" MinWidth="189.72" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <!--  Маркировка (+)  -->
-            <TextBlock
-                Grid.Row="3"
-                Grid.Column="0"
-                Height="16"
-                Margin="0,0,99,0"
-                VerticalAlignment="Center"
-                Text="Маркировка (+):" />
-            <TextBox
-                Grid.Row="3"
-                Grid.Column="1"
-                Margin="5,5,152,5" />
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.ColumnSpan="2"
+                    Margin="0,0,0,10"
+                    FontWeight="Bold"
+                    Text="Датчик 2" />
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="Тип датчика:" />
+                <ComboBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="5,5,800,5"
+                    ItemsSource="{Binding SensorTypes}"
+                    SelectedItem="{Binding CurrentStand.Sensor2.Type}" />
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="KKS-контура:" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Margin="5,5,800,5"
+                    Text="{Binding CurrentStand.Sensor2.KKSCircuit}" />
+                <TextBlock
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="Маркировка (+):" />
+                <TextBox
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Margin="5,5,800,5"
+                    Text="{Binding CurrentStand.Sensor2.MarkingPlus}" />
+                <TextBlock
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="Маркировка (-):" />
+                <TextBox
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    Margin="5,5,800,5"
+                    Text="{Binding CurrentStand.Sensor2.MarkingMinus}" />
+                <TextBlock
+                    Grid.Row="5"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="Описание:" />
+                <TextBox
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    Height="60"
+                    Margin="5,5,580,5"
+                    AcceptsReturn="True"
+                    Text="{Binding CurrentStand.Sensor2.Description}"
+                    TextWrapping="Wrap" />
+            </Grid>
+        </Border>
 
-            <!--  Маркировка (-)  -->
-            <TextBlock
-                Grid.Row="4"
-                Grid.Column="0"
-                Height="16"
-                Margin="0,0,99,0"
-                VerticalAlignment="Center"
-                Text="Маркировка (-):" />
-            <TextBox
-                Grid.Row="4"
-                Grid.Column="1"
-                Margin="5,5,152,5" />
+        <!--  Датчик 3 Section  -->
+        <Border
+            Grid.Row="4"
+            Padding="0,0,0,10"
+            BorderBrush="#DDDDDD"
+            BorderThickness="0,0,0,1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" MinWidth="189.72" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <!--  Описание  -->
-            <TextBlock
-                Grid.Row="5"
-                Grid.Column="0"
-                Height="16"
-                Margin="0,0,99,0"
-                VerticalAlignment="Center"
-                Text="Описание:" />
-            <TextBox
-                Grid.Row="5"
-                Grid.Column="1"
-                Margin="5,5,5,5"
-                AcceptsReturn="True"
-                TextWrapping="Wrap" />
-            <ComboBox
-                Grid.Row="1"
-                Grid.Column="1"
-                Height="20"
-                Margin="270,0,-93,0"
-                VerticalAlignment="Center"
-                ItemsSource="{Binding CurrentStand.SensorType}"
-                RenderTransformOrigin="0.5,0.5"
-                SelectedItem="{Binding CurrentStand.Sensor}">
-                <ComboBox.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform ScaleX="1" />
-                        <SkewTransform />
-                        <RotateTransform />
-                        <TranslateTransform />
-                    </TransformGroup>
-                </ComboBox.RenderTransform>
-            </ComboBox>
-            <!--  Кнопки  -->
-            <StackPanel
-                Grid.Row="6"
-                Grid.Column="1"
-                Width="270"
-                Margin="0,15,0,0"
-                HorizontalAlignment="Right"
-                Orientation="Horizontal">
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.ColumnSpan="2"
+                    Margin="0,0,0,10"
+                    FontWeight="Bold"
+                    Text="Датчик 3" />
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="Тип датчика:" />
+                <ComboBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="5,5,800,5"
+                    ItemsSource="{Binding SensorTypes}"
+                    SelectedItem="{Binding CurrentStand.Sensor3.Type}" />
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="KKS-контура:" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Margin="5,5,800,5"
+                    Text="{Binding CurrentStand.Sensor3.KKSCircuit}" />
+                <TextBlock
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="Маркировка (+):" />
+                <TextBox
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Margin="5,5,800,5"
+                    Text="{Binding CurrentStand.Sensor3.MarkingPlus}" />
+                <TextBlock
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="Маркировка (-):" />
+                <TextBox
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    Margin="5,5,800,5"
+                    Text="{Binding CurrentStand.Sensor3.MarkingMinus}" />
+                <TextBlock
+                    Grid.Row="5"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="Описание:" />
+                <TextBox
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    Height="60"
+                    Margin="5,5,580,5"
+                    AcceptsReturn="True"
+                    Text="{Binding CurrentStand.Sensor3.Description}"
+                    TextWrapping="Wrap" />
                 <Button
-                    Width="80"
-                    Margin="5,0"
-                    Content="OK" />
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    Margin="895,38,160,0"
+                    Command="{Binding AddObvCommand}"
+                    Content="Добавить обвязку" />
                 <Button
-                    Width="80"
-                    Margin="5,0"
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    Margin="1060,38,30,0"
+                    Command="{Binding CancelCommand}"
                     Content="Отмена" />
-                <Button
-                    Width="80"
-                    Margin="5,0"
-                    Content="Помощь" />
-            </StackPanel>
-        </Grid>
+            </Grid>
+        </Border>
+
+        <!--  Кнопки управления Section  -->
+        <StackPanel
+            Grid.Row="5"
+            Margin="0,15,0,0"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal" />
     </Grid>
 </UserControl>

@@ -186,8 +186,10 @@ namespace ReportEngine.App.ViewModels
                     MaterialLine = CurrentStand.MaterialLine,
                     Armature = CurrentStand.Armature,
                     TreeScoket = CurrentStand.TreeScoket,
-                    KMCH = CurrentStand.KMCH
+                    KMCH = CurrentStand.KMCH,
+                    FirstSensorType = CurrentStand.FirstSensorType
                 };
+
                 await _projectRepository.AddStandAsync(CurrentProject.CurrentProjectId, newStand);
                 CurrentProject.Stands.Add(newStand);
                 MessageBoxHelper.ShowInfo("Стенд успешно добавлен!");
