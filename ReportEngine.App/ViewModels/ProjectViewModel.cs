@@ -79,7 +79,8 @@ namespace ReportEngine.App.ViewModels
         public void OnSelectMaterialFromDialogCommandExecuted<T>(object e)
             where T : class, IBaseEquip, new()
         {
-            ExceptionHelper.SafeExecute(() => {
+            ExceptionHelper.SafeExecute(() =>
+            {
                 var materialLine = _dialogService.ShowEquipDialog<T>();
                 if (materialLine != null)
                     CurrentStand.MaterialLine = materialLine.Name;
@@ -89,7 +90,8 @@ namespace ReportEngine.App.ViewModels
         public void OnSelectArmatureFromDialogCommandExecuted<T>(object e)
             where T : class, IBaseEquip, new()
         {
-            ExceptionHelper.SafeExecute(() => {
+            ExceptionHelper.SafeExecute(() =>
+            {
                 var armature = _dialogService.ShowEquipDialog<T>();
                 if (armature != null)
                     CurrentStand.Armature = armature.Name;
@@ -98,7 +100,8 @@ namespace ReportEngine.App.ViewModels
         public void OnSelectTreeSocketFromDialogCommandExecuted<T>(object e)
             where T : class, IBaseEquip, new()
         {
-            ExceptionHelper.SafeExecute(() => {
+            ExceptionHelper.SafeExecute(() =>
+            {
                 var socket = _dialogService.ShowEquipDialog<T>();
                 if (socket != null)
                     CurrentStand.TreeScoket = socket.Name;
@@ -206,6 +209,34 @@ namespace ReportEngine.App.ViewModels
                 MessageBoxHelper.ShowInfo("Изменения успешно сохранены!");
             });
         }
-        #endregion
+        public async void OnUpdateStandCommandExecuted(object e)
+        {
+            if (CurrentProject.SelectedStand == null) return;
+
+            // Обновляем данные выбранного стенда из CurrentStand
+            var stand = CurrentProject.SelectedStand;
+
+            stand.KKSCode = CurrentStand.KKSCode;
+            stand.Design = CurrentStand.Design;
+            stand.BraceType = CurrentStand.BraceType;
+            stand.Devices = CurrentStand.Devices;
+            stand.Width = CurrentStand.Width;
+            stand.SerialNumber = CurrentStand.SerialNumber;
+            stand.Weight = CurrentStand.Weight;
+            stand.StandSummCost = CurrentStand.StandSummCost;
+            stand.ObvyazkaType = CurrentStand.ObvyazkaType;
+            stand.NN = CurrentStand.NN;
+            stand.MaterialLine = CurrentStand.MaterialLine;
+            stand.Armature = CurrentStand.Armature;
+            stand.TreeScoket = CurrentStand.TreeScoket;
+            stand.KMCH = CurrentStand.KMCH;
+            
+
+            // Сохраняем изменения в БД
+            await _projectRepository.UpdateStandAsync(stand);
+
+            MessageBoxHelper.ShowInfo("Стенд обновлён!");
+            #endregion
+        }
     }
 }

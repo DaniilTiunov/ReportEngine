@@ -33,6 +33,7 @@ namespace ReportEngine.Domain.Entities
         public string? MarkPlus { get; set; } //Марикровка +
         public string? MarkMinus { get; set; } //Марикровка -
         public string? DesigneStand { get; set; } //Описание
+        public string? Comments { get; set; } // Комментарий 
 
     }
 }

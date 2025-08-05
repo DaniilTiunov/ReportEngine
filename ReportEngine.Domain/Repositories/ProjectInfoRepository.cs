@@ -84,5 +84,18 @@ namespace ReportEngine.Domain.Repositories
             await _context.SaveChangesAsync();
 
         }
+        public async Task UpdateStandAsync(Stand stand)
+        {
+            var existingStand = await _context.Set<Stand>()
+               .Include(p => p.ProjectInfoId)
+               .FirstOrDefaultAsync(p => p.ProjectInfoId == stand.ProjectInfoId);
+
+            if (existingStand != null)
+            {
+                _context.Entry(existingStand).CurrentValues.SetValues(stand);
+            }
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

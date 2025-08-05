@@ -11,41 +11,16 @@
 
     <Grid Margin="20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <!--  Для панели выбора стенда  -->
             <RowDefinition Height="*" />
-            <!--  Для формы редактирования  -->
+            <!--  Форма редактирования  -->
+            <RowDefinition Height="Auto" />
+            <!--  Разделитель  -->
+            <RowDefinition Height="250" />
+            <!--  Список стендов  -->
         </Grid.RowDefinitions>
 
-        <!--  Секция выбора стенда  -->
-        <Border
-            Grid.Row="0"
-            Margin="0,0,0,10"
-            BorderBrush="#DDDDDD"
-            BorderThickness="1">
-            <Grid Margin="10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <ComboBox
-                    Grid.Column="0"
-                    Margin="0,0,10,0"
-                    DisplayMemberPath="KKSCode"
-                    ItemsSource="{Binding CurrentProject.Stands}"
-                    SelectedItem="{Binding CurrentProject.SelectedStand, Mode=TwoWay}" />
-
-                <Button
-                    Grid.Column="1"
-                    Width="150"
-                    Command="{Binding LoadStandToFormCommand}"
-                    Content="Загрузить в форму" />
-            </Grid>
-        </Border>
-
-        <!--  Секция формы редактирования  -->
-        <Grid Grid.Row="1">
+        <!--  Форма редактирования стенда  -->
+        <Grid Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -105,7 +80,7 @@
                 Grid.Column="1"
                 Grid.ColumnSpan="3"
                 Margin="0,5"
-                Text="{Binding CurrentStand.Designation, Mode=TwoWay}" />
+                Text="{Binding CurrentStand.Design, Mode=TwoWay}" />
 
             <!--  Приборы и чекбокс  -->
             <TextBlock
@@ -120,14 +95,6 @@
                 Width="50"
                 Margin="0,5,150,5"
                 Text="{Binding CurrentStand.Devices, Mode=TwoWay}" />
-            <CheckBox
-                Grid.Row="2"
-                Grid.Column="2"
-                Grid.ColumnSpan="2"
-                Margin="10,5,0,5"
-                VerticalAlignment="Center"
-                Content="Шир. рама из 1-ой секции"
-                IsChecked="{Binding CurrentStand.IsWideFrame, Mode=TwoWay}" />
 
             <!--  Тип крепления датчика + кнопка  -->
             <TextBlock
@@ -142,26 +109,7 @@
                 Margin="0,5"
                 ItemsSource="{Binding CurrentStand.BraceSensor}"
                 SelectedItem="{Binding CurrentStand.BraceType, Mode=TwoWay}" />
-            <Button
-                Grid.Row="3"
-                Grid.Column="2"
-                Width="25"
-                Margin="10,5,0,5"
-                Content="..." />
 
-            <!--  Реком. ширина и ширина  -->
-            <TextBlock
-                Grid.Row="4"
-                Grid.Column="0"
-                Margin="0,5"
-                VerticalAlignment="Center"
-                Text="Рекоменд. ширина:" />
-            <TextBox
-                Grid.Row="4"
-                Grid.Column="1"
-                Width="100"
-                Margin="0,5,100,5"
-                Text="{Binding CurrentStand.RecommendedWidth, Mode=TwoWay}" />
             <TextBlock
                 Grid.Row="4"
                 Grid.Column="2"
@@ -215,26 +163,7 @@
                 Grid.Column="1"
                 Width="100"
                 Margin="0,5,100,5"
-                Text="{Binding CurrentStand.TotalCost, Mode=TwoWay}" />
-
-            <!--  № подпроекта  -->
-            <TextBlock
-                Grid.Row="8"
-                Grid.Column="0"
-                Margin="0,5"
-                VerticalAlignment="Center"
-                Text="№ подпроекта:" />
-            <StackPanel
-                Grid.Row="8"
-                Grid.Column="1"
-                Margin="0,5"
-                Orientation="Horizontal">
-                <TextBox Width="50" Text="{Binding CurrentStand.SubprojectNumber, Mode=TwoWay}" />
-                <Button
-                    Width="25"
-                    Margin="5,0,0,0"
-                    Content="..." />
-            </StackPanel>
+                Text="{Binding CurrentStand.StandSummCost, Mode=TwoWay}" />
 
             <!--  Комментарии  -->
             <TextBlock
@@ -264,31 +193,78 @@
                 Height="100"
                 Margin="0,5"
                 AcceptsReturn="True"
-                Text="{Binding CurrentStand.Design, Mode=TwoWay}"
+                Text="{Binding CurrentStand.DesignStand, Mode=TwoWay}"
                 TextWrapping="Wrap" />
 
             <!--  Кнопки управления  -->
-            <StackPanel
-                Grid.Row="9"
-                Grid.RowSpan="2"
+
+            <Button
+                Grid.Row="10"
                 Grid.Column="3"
-                Width="225"
-                Margin="0,23,-635,15"
-                HorizontalAlignment="Right"
-                Orientation="Horizontal">
-                <Button
-                    Width="100"
-                    Height="40"
-                    Margin="0,10,10,0"
-                    Command="{Binding ProjectCommandProvider.AddNewStandCommand}"
-                    Content="Добавить" />
-                <Button
-                    Width="100"
-                    Height="37"
-                    Margin="0,10,0,0"
-                    Command="{Binding ProjectCommandProvider.SaveStandCommand}"
-                    Content="Сохранить" />
-            </StackPanel>
+                Width="100"
+                Height="20"
+                Margin="240,64,-140,26"
+                Command="{Binding ProjectCommandProvider.AddNewStandCommand}"
+                Content="Добавить" />
+            <Button
+                Grid.Row="10"
+                Grid.Column="3"
+                Margin="365,63,-265,21"
+                Command="{Binding ProjectCommandProvider.SaveStandCommand}"
+                Content="Сохранить" />
+
         </Grid>
+
+        <!--  Разделитель  -->
+        <Separator Grid.Row="1" Margin="0,10" />
+
+        <!--  Список стендов  -->
+        <Border
+            Grid.Row="2"
+            BorderBrush="#DDDDDD"
+            BorderThickness="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock
+                    Grid.Row="0"
+                    Margin="5"
+                    FontWeight="Bold"
+                    Text="Список стендов проекта" />
+
+                <ListView
+                    Grid.Row="1"
+                    ItemsSource="{Binding CurrentProject.Stands}"
+                    SelectedItem="{Binding CurrentProject.SelectedStand, Mode=TwoWay}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn
+                                Width="40"
+                                DisplayMemberBinding="{Binding Number}"
+                                Header="№" />
+                            <GridViewColumn
+                                Width="120"
+                                DisplayMemberBinding="{Binding KKSCode}"
+                                Header="KKS" />
+                            <GridViewColumn
+                                Width="200"
+                                DisplayMemberBinding="{Binding Design}"
+                                Header="Обозначение" />
+                            <GridViewColumn
+                                Width="100"
+                                DisplayMemberBinding="{Binding Devices}"
+                                Header="Приборы" />
+                            <GridViewColumn
+                                Width="80"
+                                DisplayMemberBinding="{Binding Width}"
+                                Header="Ширина" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>
