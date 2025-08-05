@@ -6,8 +6,8 @@
     xmlns:local="clr-namespace:ReportEngine.App.Views.Windows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="CompanyView"
-    Width="800"
-    Height="450"
+    Width="1000"
+    Height="600"
     mc:Ignorable="d">
     <Window.Resources>
         <Style TargetType="Button">
@@ -33,23 +33,21 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="89*" />
-            <ColumnDefinition Width="63*" />
-            <ColumnDefinition Width="43*" />
-            <ColumnDefinition Width="4*" />
+            <ColumnDefinition Width="90" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="90" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="40" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock
             Grid.Row="0"
-            Grid.Column="1"
-            Margin="30,9,0,11"
-            HorizontalAlignment="Left"
+            Grid.Column="2"
+            Margin="0,13,0,7"
+            HorizontalAlignment="Center"
             FontSize="16"
             FontWeight="Bold"
             Text="Заказчики" />
@@ -79,16 +77,16 @@
             </DataGrid.ContextMenu>
             <DataGrid.Columns>
                 <DataGridTextColumn
-                    Width="*"
-                    Binding="{Binding SecondName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                    Width="90"
+                    Binding="{Binding Number, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     Header="Номер" />
                 <DataGridTextColumn
                     Width="*"
                     Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     Header="Название организации" />
                 <DataGridTextColumn
-                    Width="*"
-                    Binding="{Binding LastName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                    Width="150"
+                    Binding="{Binding RegisterDate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     Header="Дата регистрации" />
             </DataGrid.Columns>
         </DataGrid>
