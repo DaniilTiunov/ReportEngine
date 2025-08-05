@@ -97,5 +97,12 @@ namespace ReportEngine.Domain.Repositories
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task<ProjectInfo> GetStandsByIdAsync(int projectId)
+        {
+            return await _context.Projects
+                .Include(p => p.Stands)
+                .FirstOrDefaultAsync(p => p.Id == projectId);
+        }
     }
 }

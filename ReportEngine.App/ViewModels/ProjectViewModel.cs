@@ -54,25 +54,43 @@ namespace ReportEngine.App.ViewModels
             ProjectCommandProvider.SelectKMCHDialogCommand = new RelayCommand(OnSelectTreeSocketFromDialogCommandExecuted<HeaterSocket>, CanAllCommandsExecute);
 
         }
-        public void LoadProjectInfo(ProjectInfo projectInfo) // Загрузка карточки проекта для редактирования
+        public async Task LoadProjectInfoAsync(int projectId) // Загрузка карточки проекта для редактирования
         {
-            CurrentProject.CurrentProjectId = projectInfo.Id;
-            CurrentProject.Number = projectInfo.Number;
-            CurrentProject.Description = projectInfo.Description;
-            CurrentProject.CreationDate = projectInfo.CreationDate.ToDateTime(TimeOnly.MinValue);
-            CurrentProject.Company = projectInfo.Company;
-            CurrentProject.Object = projectInfo.Object;
-            CurrentProject.StandCount = projectInfo.StandCount;
-            CurrentProject.Cost = projectInfo.Cost;
-            CurrentProject.Status = projectInfo.Status.ToString();
-            CurrentProject.StartDate = projectInfo.StartDate.ToDateTime(TimeOnly.MinValue);
-            CurrentProject.OutOfProduction = projectInfo.OutOfProduction.ToDateTime(TimeOnly.MinValue);
-            CurrentProject.EndDate = projectInfo.EndDate.ToDateTime(TimeOnly.MinValue);
-            CurrentProject.OrderCustomer = projectInfo.OrderCustomer;
-            CurrentProject.RequestProduction = projectInfo.RequestProduction;
-            CurrentProject.MarkMinus = projectInfo.MarkMinus;
-            CurrentProject.MarkPlus = projectInfo.MarkPlus;
-            CurrentProject.IsGalvanized = projectInfo.IsGalvanized;
+            await ExceptionHelper.SafeExecuteAsync(async() => 
+            { 
+                var projectInfo = await _projectRepository.GetStandsByIdAsync(projectId);
+                if(projectInfo == null) 
+                    return;
+
+                CurrentProject.CurrentProjectId = projectInfo.Id;
+                CurrentProject.Number = projectInfo.Number;
+                CurrentProject.Description = projectInfo.Description;
+                CurrentProject.CreationDate = projectInfo.CreationDate.ToDateTime(TimeOnly.MinValue);
+                CurrentProject.Company = projectInfo.Company;
+                CurrentProject.Object = projectInfo.Object;
+                CurrentProject.StandCount = projectInfo.StandCount;
+                CurrentProject.Cost = projectInfo.Cost;
+                CurrentProject.Status = projectInfo.Status.ToString();
+                CurrentProject.StartDate = projectInfo.StartDate.ToDateTime(TimeOnly.MinValue);
+                CurrentProject.OutOfProduction = projectInfo.OutOfProduction.ToDateTime(TimeOnly.MinValue);
+                CurrentProject.EndDate = projectInfo.EndDate.ToDateTime(TimeOnly.MinValue);
+                CurrentProject.OrderCustomer = projectInfo.OrderCustomer;
+                CurrentProject.RequestProduction = projectInfo.RequestProduction;
+                CurrentProject.MarkMinus = projectInfo.MarkMinus;
+                CurrentProject.MarkPlus = projectInfo.MarkPlus;
+                CurrentProject.IsGalvanized = projectInfo.IsGalvanized;
+
+                CurrentProject.Stands.Clear();
+                if (projectInfo.Stands != null)
+                {
+                    foreach (var stand in projectInfo.Stands)
+                        CurrentProject.Stands.Add(stand);
+                }
+
+                CurrentStand = new StandModel();
+                OnPropertyChanged(nameof(CurrentStand));
+                OnPropertyChanged(nameof(CurrentProject));
+            });
         }
         #endregion
         #region Команды
@@ -137,6 +155,9 @@ namespace ReportEngine.App.ViewModels
                 await _projectRepository.AddAsync(newProjectCard);
 
                 CurrentProject.CurrentProjectId = newProjectCard.Id;
+                CurrentProject.Stands.Clear();
+                CurrentStand = new StandModel();
+                OnPropertyChanged(nameof(CurrentStand));
 
                 MessageBoxHelper.ShowInfo($"Новая карточка проекта успешно создана!\nId Преокта: {CurrentProject.CurrentProjectId}"); //Для отладки
             });

@@ -97,14 +97,14 @@ namespace ReportEngine.App.ViewModels
         #endregion
         #region Комманды главного окна
         public bool CanAllCommandsExecute(object e) => true;
-        public void OnEditProjectCommandExecuted(object e)
+        public async void OnEditProjectCommandExecuted(object e)
         {
             if (MainWindowModel.SelectedProject == null) return;
 
-            ExceptionHelper.SafeExecute(() =>
+            await ExceptionHelper.SafeExecuteAsync(async() =>
             {
                 var projectViewModel = _serviceProvider.GetRequiredService<ProjectViewModel>();
-                projectViewModel.LoadProjectInfo(MainWindowModel.SelectedProject);
+                await projectViewModel.LoadProjectInfoAsync(MainWindowModel.SelectedProject.Id);
                 _navigation.ShowContent<TreeProjectView>();
             });
         }

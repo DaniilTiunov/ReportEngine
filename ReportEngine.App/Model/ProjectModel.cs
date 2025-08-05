@@ -46,13 +46,15 @@ namespace ReportEngine.App.Model
         private float _humanCost; //Трудозатраты
 
         private string? _manager;
+
+        private Stand? _stand;
         #endregion
 
         #region Публичные свойства
         public IEnumerable<string> Statuses { get; set; } = new List<string>() { "ТКП", "Завершен" };
         public int CurrentProjectId;
         public ObservableCollection<Stand> Stands { get; set; } = new();
-        public Stand? SelectedStand { get; set; }
+        public Stand? SelectedStand { get => _stand; set => Set(ref _stand, value); } //Выбранный стенд; }
 
 
         public int Number { get => _number; set => Set(ref _number, value); } //№п/п
