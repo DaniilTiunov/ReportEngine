@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:ReportEngine.App.Views.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:Background="White"
@@ -12,7 +13,8 @@
     <Grid Margin="20,20,20,20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="67.2" />
+            <RowDefinition Height="146.52" />
         </Grid.RowDefinitions>
 
         <!--  Первый грид (обвязка)  -->
@@ -40,7 +42,8 @@
             <TextBox
                 Grid.Row="0"
                 Grid.Column="1"
-                Margin="0,5,145,5" />
+                Margin="0,5,145,5"
+                Text="{Binding CurrentStand.ObvyazkaType}" />
             <TextBlock
                 Grid.Column="2"
                 Height="16"
@@ -50,7 +53,8 @@
             <TextBox
                 Grid.Row="0"
                 Grid.Column="2"
-                Margin="39,5,-29,5" />
+                Margin="39,5,-29,5"
+                Text="{Binding CurrentStand.NN}" />
 
             <!--  Материал линии  -->
             <TextBlock
@@ -139,13 +143,26 @@
                 Margin="285,5,0,3"
                 HorizontalAlignment="Left"
                 Content="Все обвязки" />
+            <!--  Решить проблему с привязкой  -->
+            <ComboBox
+                Grid.Row="1"
+                Grid.Column="1"
+                Width="35"
+                Height="20"
+                Margin="360,6,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top" />
+
         </Grid>
 
         <!--  Второй грид (датчики)  -->
-        <Grid Grid.Row="1" Margin="0,20,0,0">
+        <Grid
+            Grid.Row="1"
+            Grid.RowSpan="2"
+            Margin="0,12,0,1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" MinWidth="189.72" />
+                <ColumnDefinition Width="Auto" MinWidth="397" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -153,8 +170,8 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" MinHeight="27.96" />
+                <RowDefinition Height="Auto" MinHeight="34.96" />
             </Grid.RowDefinitions>
 
             <!--  Заголовок  -->
@@ -169,71 +186,93 @@
             <TextBlock
                 Grid.Row="1"
                 Grid.Column="0"
-                Margin="0,5"
+                Height="16"
+                Margin="0,0,99,0"
                 VerticalAlignment="Center"
                 Text="Тип датчика:" />
             <TextBox
                 Grid.Row="1"
                 Grid.Column="1"
-                Margin="5,5,380,5"
-                Text="" />
+                Margin="5,5,152,5"
+                Text="{Binding CurrentStand.Sensor}" />
 
             <!--  KKS-контура  -->
             <TextBlock
                 Grid.Row="2"
                 Grid.Column="0"
-                Margin="0,5"
+                Height="16"
+                Margin="0,0,99,0"
                 VerticalAlignment="Center"
                 Text="KKS-контура:" />
             <TextBox
                 Grid.Row="2"
                 Grid.Column="1"
-                Margin="5,5,380,5"
+                Margin="5,5,152,5"
                 Text="" />
 
             <!--  Маркировка (+)  -->
             <TextBlock
                 Grid.Row="3"
                 Grid.Column="0"
-                Margin="0,5"
+                Height="16"
+                Margin="0,0,99,0"
                 VerticalAlignment="Center"
                 Text="Маркировка (+):" />
             <TextBox
                 Grid.Row="3"
                 Grid.Column="1"
-                Margin="5,5,380,5" />
+                Margin="5,5,152,5" />
 
             <!--  Маркировка (-)  -->
             <TextBlock
                 Grid.Row="4"
                 Grid.Column="0"
-                Margin="0,5"
+                Height="16"
+                Margin="0,0,99,0"
                 VerticalAlignment="Center"
                 Text="Маркировка (-):" />
             <TextBox
                 Grid.Row="4"
                 Grid.Column="1"
-                Margin="5,5,380,5" />
+                Margin="5,5,152,5" />
 
             <!--  Описание  -->
             <TextBlock
                 Grid.Row="5"
                 Grid.Column="0"
-                Margin="0,5"
+                Height="16"
+                Margin="0,0,99,0"
                 VerticalAlignment="Center"
                 Text="Описание:" />
             <TextBox
                 Grid.Row="5"
                 Grid.Column="1"
-                Height="60"
-                Margin="5,5"
+                Margin="5,5,5,5"
                 AcceptsReturn="True"
                 TextWrapping="Wrap" />
-
+            <ComboBox
+                Grid.Row="1"
+                Grid.Column="1"
+                Height="20"
+                Margin="270,0,-93,0"
+                VerticalAlignment="Center"
+                ItemsSource="{Binding CurrentStand.SensorType}"
+                RenderTransformOrigin="0.5,0.5"
+                SelectedItem="{Binding CurrentStand.Sensor}">
+                <ComboBox.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="1" />
+                        <SkewTransform />
+                        <RotateTransform />
+                        <TranslateTransform />
+                    </TransformGroup>
+                </ComboBox.RenderTransform>
+            </ComboBox>
             <!--  Кнопки  -->
             <StackPanel
                 Grid.Row="6"
-                Grid.ColumnSpan="2"
+                Grid.Column="1"
+                Width="270"
                 Margin="0,15,0,0"
                 HorizontalAlignment="Right"
                 Orientation="Horizontal">

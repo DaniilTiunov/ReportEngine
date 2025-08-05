@@ -1,9 +1,4 @@
 ﻿using ReportEngine.App.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ReportEngine.App.Model
 {
@@ -23,9 +18,14 @@ namespace ReportEngine.App.Model
         private string _armature;
         private string _treeScoket;
         private string _kmch;
+        private string _sensor;
+        private string _markPlus;
+        private string _markMinus;
+        private string _designeStand;
 
 
         public IEnumerable<string> BraceSensor { get; } = new List<string> { "На кронштейне", "Швеллер" };
+        public IEnumerable<string> SensorType { get; } = new List<string> { "Датчик перепада давления", "Манометр", "Датчик абсолютного давления", "Манометр электрокомпактный" };
         public string KKSCode { get => _kksCode; set => Set(ref _kksCode, value); }
         public string Design { get => _design; set => Set(ref _design, value); }
         public int Devices { get => _devices; set => Set(ref _devices, value); }
@@ -40,6 +40,11 @@ namespace ReportEngine.App.Model
         public string Armature { get => _armature; set => Set(ref _armature, value); }
         public string TreeScoket { get => _treeScoket; set => Set(ref _treeScoket, value); }
         public string KMCH { get => _kmch; set => Set(ref _kmch, value); }
-       
+        public string Sensor { get => _sensor; set => Set(ref _sensor, value); }
+        public string? KKSCounter { get => _kksCode; set => Set(ref _kksCode, value); }//ККС Контура
+        public string? MarkPlus { get => _markPlus; set => Set(ref _markPlus, value); } //Марикровка +
+        public string? MarkMinus { get => _markMinus; set => Set(ref _markMinus, value); } //Марикровка -
+        public string? DesigneStand { get => _designeStand; set => Set(ref _designeStand, value); } //Описание
+
     }
 }

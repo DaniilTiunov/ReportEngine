@@ -49,9 +49,9 @@ namespace ReportEngine.App.ViewModels
         }
         public void InitializeGenericCommands()
         {
-            ProjectCommandProvider.SelectMaterialLineDialogCommand = new RelayCommand(OnSelectFromDialogCommandExecuted<HeaterPipe>, CanAllCommandsExecute);
-            ProjectCommandProvider.SelectArmatureDialogCommand = new RelayCommand(OnSelectFromDialogCommandExecuted<HeaterArmature>, CanAllCommandsExecute);
-            ProjectCommandProvider.SelectKMCHDialogCommand = new RelayCommand(OnSelectFromDialogCommandExecuted<HeaterSocket>, CanAllCommandsExecute);
+            ProjectCommandProvider.SelectMaterialLineDialogCommand = new RelayCommand(OnSelectMaterialFromDialogCommandExecuted<HeaterPipe>, CanAllCommandsExecute);
+            ProjectCommandProvider.SelectArmatureDialogCommand = new RelayCommand(OnSelectArmatureFromDialogCommandExecuted<HeaterArmature>, CanAllCommandsExecute);
+            ProjectCommandProvider.SelectKMCHDialogCommand = new RelayCommand(OnSelectTreeSocketFromDialogCommandExecuted<HeaterSocket>, CanAllCommandsExecute);
 
         }
         public void LoadProjectInfo(ProjectInfo projectInfo) // Загрузка карточки проекта для редактирования
@@ -76,14 +76,35 @@ namespace ReportEngine.App.ViewModels
         }
         #endregion
         #region Команды
-        public void OnSelectFromDialogCommandExecuted<T>(object e)
+        public void OnSelectMaterialFromDialogCommandExecuted<T>(object e)
             where T : class, IBaseEquip, new()
         {
-            var selectedEquipment = _dialogService.ShowEquipDialog<T>();
-
-            CurrentStand.MaterialLine = selectedEquipment.Name;
-            CurrentStand.Armature = selectedEquipment.Name;
+            ExceptionHelper.SafeExecute(() => {
+                var materialLine = _dialogService.ShowEquipDialog<T>();
+                if (materialLine != null)
+                    CurrentStand.MaterialLine = materialLine.Name;
+            });
         }
+
+        public void OnSelectArmatureFromDialogCommandExecuted<T>(object e)
+            where T : class, IBaseEquip, new()
+        {
+            ExceptionHelper.SafeExecute(() => {
+                var armature = _dialogService.ShowEquipDialog<T>();
+                if (armature != null)
+                    CurrentStand.Armature = armature.Name;
+            });
+        }
+        public void OnSelectTreeSocketFromDialogCommandExecuted<T>(object e)
+            where T : class, IBaseEquip, new()
+        {
+            ExceptionHelper.SafeExecute(() => {
+                var socket = _dialogService.ShowEquipDialog<T>();
+                if (socket != null)
+                    CurrentStand.TreeScoket = socket.Name;
+            });
+        }
+
         public bool CanAllCommandsExecute(object e) => true;
         public async void OnCreateNewCardCommandExecuted(object e) // Создание новой карточки проекта
         {
