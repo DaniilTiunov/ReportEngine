@@ -5,13 +5,11 @@ using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
-using ReportEngine.Domain.Entities.ElectricComponents;
 using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Enums;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
-using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels
 {
@@ -56,10 +54,10 @@ namespace ReportEngine.App.ViewModels
         }
         public async Task LoadProjectInfoAsync(int projectId) // Загрузка карточки проекта для редактирования
         {
-            await ExceptionHelper.SafeExecuteAsync(async() => 
-            { 
+            await ExceptionHelper.SafeExecuteAsync(async () =>
+            {
                 var projectInfo = await _projectRepository.GetStandsByIdAsync(projectId);
-                if(projectInfo == null) 
+                if (projectInfo == null)
                     return;
 
                 CurrentProject.CurrentProjectId = projectInfo.Id;
@@ -251,7 +249,7 @@ namespace ReportEngine.App.ViewModels
             stand.Armature = CurrentStand.Armature;
             stand.TreeScoket = CurrentStand.TreeScoket;
             stand.KMCH = CurrentStand.KMCH;
-            
+
 
             // Сохраняем изменения в БД
             await _projectRepository.UpdateStandAsync(stand);

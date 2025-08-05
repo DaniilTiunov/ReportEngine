@@ -83,6 +83,7 @@
                         <TreeViewItem Header="Дополнительные комплектующие" />
                     </TreeViewItem>
                     <TreeViewItem Header="Создание отчёта" Tag="Reports" />
+                    <TreeViewItem Header="Предварительный просмотр" Tag="Preview" />
                 </TreeViewItem>
             </TreeView>
         </Border>

@@ -202,8 +202,7 @@
                 Grid.Row="10"
                 Grid.Column="3"
                 Width="100"
-                Height="20"
-                Margin="240,64,-140,26"
+                Margin="240,64,-140,21"
                 Command="{Binding ProjectCommandProvider.AddNewStandCommand}"
                 Content="Добавить" />
             <Button
@@ -255,12 +254,16 @@
                                 Header="Обозначение" />
                             <GridViewColumn
                                 Width="100"
-                                DisplayMemberBinding="{Binding Devices}"
-                                Header="Приборы" />
+                                DisplayMemberBinding="{Binding BraceType}"
+                                Header="Тип крепления" />
                             <GridViewColumn
-                                Width="80"
-                                DisplayMemberBinding="{Binding Width}"
-                                Header="Ширина" />
+                                Width="100"
+                                DisplayMemberBinding="{Binding ObvyazkaType}"
+                                Header="Тип обвязки" />
+                            <GridViewColumn
+                                Width="100"
+                                DisplayMemberBinding="{Binding Sensor}"
+                                Header="Тип датчика" />
                         </GridView>
                     </ListView.View>
                 </ListView>

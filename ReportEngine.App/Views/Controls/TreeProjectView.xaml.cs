@@ -40,8 +40,14 @@ namespace ReportEngine.App.Views.Controls
 
                 var content = CreateCurrentContent(tag);
 
-                var tabControl = MainTabControl.Items
-                                    .Add(new TabItem() { Header = header, Content = content });
+                var tabControl = new TabItem()
+                {
+                    Header = header,
+                    Content = content
+                };
+
+                MainTabControl.Items.Add(tabControl);
+                MainTabControl.SelectedItem = tabControl;
             });
         }
         private UserControl CreateCurrentContent(string tag)
