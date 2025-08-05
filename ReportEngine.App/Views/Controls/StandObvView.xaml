@@ -47,7 +47,7 @@
                 Grid.Row="0"
                 Grid.Column="1"
                 Margin="5,5,1016,5"
-                Text="{Binding CurrentStand.ObvyazkaType}" />
+                Text="{Binding CurrentProject.SelectedStands.ObvyazkaType}" />
 
             <!--  NN  -->
             <TextBlock
@@ -59,7 +59,7 @@
                 Grid.Row="0"
                 Grid.Column="1"
                 Margin="445,6,755,4"
-                Text="{Binding CurrentStand.NN}" />
+                Text="{Binding CurrentProject.SelectedStands.NN}" />
 
             <!--  Материал линии  -->
             <TextBlock
@@ -70,13 +70,13 @@
             <TextBox
                 Grid.Row="1"
                 Grid.Column="1"
-                Margin="5,5,766,5"
-                Text="{Binding CurrentStand.MaterialLine}" />
+                Margin="5,5,925,5"
+                Text="{Binding CurrentProject.SelectedStands.MaterialLine}" />
             <Button
                 Grid.Row="1"
                 Grid.Column="1"
                 Width="24"
-                Margin="522,5,712,6"
+                Margin="503,3,731,4"
                 Command="{Binding ProjectCommandProvider.SelectMaterialLineDialogCommand}"
                 Content="..." />
 
@@ -89,13 +89,13 @@
             <TextBox
                 Grid.Row="2"
                 Grid.Column="1"
-                Margin="5,6,765,4"
+                Margin="5,6,924,4"
                 Text="{Binding CurrentStand.Armature}" />
             <Button
                 Grid.Row="2"
                 Grid.Column="1"
                 Width="24"
-                Margin="522,4,712,6"
+                Margin="503,3,731,5"
                 Command="{Binding ProjectCommandProvider.SelectArmatureDialogCommand}"
                 Content="..." />
 
@@ -108,12 +108,14 @@
             <TextBox
                 Grid.Row="3"
                 Grid.Column="1"
-                Margin="5,5,766,5" />
+                Margin="5,5,925,5" />
             <Button
                 Grid.Row="3"
                 Grid.Column="1"
                 Width="24"
-                Margin="522,4,712,5"
+                Height="21"
+                Margin="503,4,731,0"
+                VerticalAlignment="Top"
                 Content="..." />
 
             <!--  Кмч  -->
@@ -125,12 +127,12 @@
             <TextBox
                 Grid.Row="4"
                 Grid.Column="1"
-                Margin="5,5,766,5" />
+                Margin="5,5,925,5" />
             <Button
                 Grid.Row="4"
                 Grid.Column="1"
                 Width="24"
-                Margin="522,5,712,5"
+                Margin="503,2,731,2"
                 Content="..." />
 
             <!--  Кнопка "Все обвязки"  -->
@@ -180,7 +182,7 @@
                     Grid.Column="1"
                     Margin="5,5,800,5"
                     ItemsSource="{Binding SensorTypes}"
-                    SelectedItem="{Binding CurrentStand.FirstSensorType}" />
+                    SelectedItem="{Binding CurrentProject.SelectedStands.FirstSensorType}" />
                 <TextBlock
                     Grid.Row="2"
                     Grid.Column="0"
@@ -190,7 +192,7 @@
                     Grid.Row="2"
                     Grid.Column="1"
                     Margin="5,5,800,5"
-                    Text="{Binding CurrentStand.FirstSensorKKSCounter}" />
+                    Text="{Binding CurrentProject.SelectedStands.FirstSensorKKSCounter}" />
                 <TextBlock
                     Grid.Row="3"
                     Grid.Column="0"
@@ -200,7 +202,7 @@
                     Grid.Row="3"
                     Grid.Column="1"
                     Margin="5,5,800,5"
-                    Text="{Binding CurrentStand.FirstSensorMarkPlus}" />
+                    Text="{Binding CurrentProject.SelectedStands.FirstSensorMarkPlus}" />
                 <TextBlock
                     Grid.Row="4"
                     Grid.Column="0"
@@ -210,7 +212,7 @@
                     Grid.Row="4"
                     Grid.Column="1"
                     Margin="5,5,800,5"
-                    Text="{Binding CurrentStand.FirstSensorMarkMinus}" />
+                    Text="{Binding CurrentProject.SelectedStands.FirstSensorMarkMinus}" />
                 <TextBlock
                     Grid.Row="5"
                     Grid.Column="0"
@@ -394,7 +396,7 @@
                     Grid.Row="5"
                     Grid.Column="1"
                     Margin="895,38,160,0"
-                    Command="{Binding AddObvCommand}"
+                    Command="{Binding ProjectCommandProvider.SaveObvCommand}"
                     Content="Добавить обвязку" />
                 <Button
                     Grid.Row="5"

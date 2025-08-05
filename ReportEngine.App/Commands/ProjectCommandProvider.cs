@@ -8,8 +8,7 @@ namespace ReportEngine.App.Commands
         public ICommand SelectArmatureDialogCommand { get; set; }
         public ICommand SelectTreeSocketDialogCommand { get; set; }
         public ICommand SelectKMCHDialogCommand { get; set; }
-
-
+        public ICommand SaveObvCommand { get; set; }
         public ICommand CreateNewCardCommand { get; set; }
         public ICommand AddNewStandCommand { get; set; }
         public ICommand SaveChangesCommand { get; set; }

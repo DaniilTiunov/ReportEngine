@@ -1,10 +1,6 @@
 ﻿using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Enums;
-using ReportEngine.Domain.Repositories;
-using ReportEngine.Shared.Helpers;
 using System.Collections.ObjectModel;
-using System.Windows;
 
 namespace ReportEngine.App.Model
 {
@@ -78,7 +74,7 @@ namespace ReportEngine.App.Model
         #endregion
 
         #region Методы
-        
+
         #endregion
     }
 }

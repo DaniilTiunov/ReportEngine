@@ -50,7 +50,7 @@ namespace ReportEngine.App.ViewModels
             ProjectCommandProvider.SelectMaterialLineDialogCommand = new RelayCommand(OnSelectMaterialFromDialogCommandExecuted<HeaterPipe>, CanAllCommandsExecute);
             ProjectCommandProvider.SelectArmatureDialogCommand = new RelayCommand(OnSelectArmatureFromDialogCommandExecuted<HeaterArmature>, CanAllCommandsExecute);
             ProjectCommandProvider.SelectKMCHDialogCommand = new RelayCommand(OnSelectTreeSocketFromDialogCommandExecuted<HeaterSocket>, CanAllCommandsExecute);
-
+            ProjectCommandProvider.SaveObvCommand = new RelayCommand(OnSaveObvCommandExecuted, CanAllCommandsExecute);
         }
         public async Task LoadProjectInfoAsync(int projectId) // Загрузка карточки проекта для редактирования
         {
@@ -99,7 +99,7 @@ namespace ReportEngine.App.ViewModels
             {
                 var materialLine = _dialogService.ShowEquipDialog<T>();
                 if (materialLine != null)
-                    CurrentStand.MaterialLine = materialLine.Name;
+                    CurrentProject.SelectedStand.MaterialLine = materialLine.Name;
             });
         }
 
@@ -110,7 +110,7 @@ namespace ReportEngine.App.ViewModels
             {
                 var armature = _dialogService.ShowEquipDialog<T>();
                 if (armature != null)
-                    CurrentStand.Armature = armature.Name;
+                    CurrentProject.SelectedStand.Armature = armature.Name;
             });
         }
         public void OnSelectTreeSocketFromDialogCommandExecuted<T>(object e)
@@ -120,7 +120,7 @@ namespace ReportEngine.App.ViewModels
             {
                 var socket = _dialogService.ShowEquipDialog<T>();
                 if (socket != null)
-                    CurrentStand.TreeScoket = socket.Name;
+                    CurrentProject.SelectedStand.TreeScoket = socket.Name;
             });
         }
 
@@ -192,6 +192,7 @@ namespace ReportEngine.App.ViewModels
 
                 await _projectRepository.AddStandAsync(CurrentProject.CurrentProjectId, newStand);
                 CurrentProject.Stands.Add(newStand);
+                CurrentProject.SelectedStand = newStand;
                 MessageBoxHelper.ShowInfo("Стенд успешно добавлен!");
             });
         }
@@ -230,34 +231,18 @@ namespace ReportEngine.App.ViewModels
                 MessageBoxHelper.ShowInfo("Изменения успешно сохранены!");
             });
         }
-        public async void OnUpdateStandCommandExecuted(object e)
+
+        public async void OnSaveObvCommandExecuted(object e) // Сохранение изменений для обвязки
         {
-            if (CurrentProject.SelectedStand == null) return;
+            await ExceptionHelper.SafeExecuteAsync(async () =>
+            {
+                if (CurrentProject.SelectedStand == null)
+                    return;
 
-            // Обновляем данные выбранного стенда из CurrentStand
-            var stand = CurrentProject.SelectedStand;
-
-            stand.KKSCode = CurrentStand.KKSCode;
-            stand.Design = CurrentStand.Design;
-            stand.BraceType = CurrentStand.BraceType;
-            stand.Devices = CurrentStand.Devices;
-            stand.Width = CurrentStand.Width;
-            stand.SerialNumber = CurrentStand.SerialNumber;
-            stand.Weight = CurrentStand.Weight;
-            stand.StandSummCost = CurrentStand.StandSummCost;
-            stand.ObvyazkaType = CurrentStand.ObvyazkaType;
-            stand.NN = CurrentStand.NN;
-            stand.MaterialLine = CurrentStand.MaterialLine;
-            stand.Armature = CurrentStand.Armature;
-            stand.TreeScoket = CurrentStand.TreeScoket;
-            stand.KMCH = CurrentStand.KMCH;
-
-
-            // Сохраняем изменения в БД
-            await _projectRepository.UpdateStandAsync(stand);
-
-            MessageBoxHelper.ShowInfo("Стенд обновлён!");
-            #endregion
+                await _projectRepository.UpdateStandAsync(CurrentProject.SelectedStand);
+                MessageBoxHelper.ShowInfo("Изменения обвязки успешно сохранены!");
+            });
         }
+        #endregion
     }
 }
