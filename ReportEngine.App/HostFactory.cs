@@ -123,6 +123,7 @@ namespace ReportEngine.App
             services.AddScoped<UsersViewModel>();
             services.AddScoped<ProjectViewModel>();
             services.AddScoped<ObvyazkaViewModel>();
+            services.AddScoped<CompanyViewModel>();
 
         }
         private static void ConfigureViews(IServiceCollection services)
@@ -142,6 +143,7 @@ namespace ReportEngine.App
             services.AddTransient<GenericEquipView>();
             services.AddTransient<ObvyazkiView>();
             services.AddTransient<ProjectCardView>();
+            services.AddTransient<CompanyView>();
         }
     }
 }

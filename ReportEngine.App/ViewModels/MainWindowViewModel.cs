@@ -20,7 +20,6 @@ using ReportEngine.Shared.Helpers;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels
 {
@@ -52,6 +51,7 @@ namespace ReportEngine.App.ViewModels
         {
             MainWindowCommandProvider.CloseAppCommand = new RelayCommand(OnCloseAppCommandExecuted, CanAllCommandsExecute);
             MainWindowCommandProvider.OpenAllUsersCommand = new RelayCommand(OpenOthersWindowCommandExecuted<UsersView>, CanAllCommandsExecute);
+            MainWindowCommandProvider.OpenAllUsersCommand = new RelayCommand(OpenOthersWindowCommandExecuted<CompanyView>, CanAllCommandsExecute);
             MainWindowCommandProvider.OpenAllObvyazkiCommand = new RelayCommand(OpenOthersWindowCommandExecuted<ObvyazkiView>, CanAllCommandsExecute);
             MainWindowCommandProvider.OpenTreeViewCommand = new RelayCommand(OpenAnotherControlsCommandExecuted<TreeProjectView>, CanAllCommandsExecute);
             MainWindowCommandProvider.ChekDbConnectionCommand = new RelayCommand(OnChekDbConnectionCommandExecuted, CanAllCommandsExecute);
@@ -101,7 +101,7 @@ namespace ReportEngine.App.ViewModels
         {
             if (MainWindowModel.SelectedProject == null) return;
 
-            await ExceptionHelper.SafeExecuteAsync(async() =>
+            await ExceptionHelper.SafeExecuteAsync(async () =>
             {
                 var projectViewModel = _serviceProvider.GetRequiredService<ProjectViewModel>();
                 await projectViewModel.LoadProjectInfoAsync(MainWindowModel.SelectedProject.Id);
@@ -120,12 +120,12 @@ namespace ReportEngine.App.ViewModels
         public void OpenOthersWindowCommandExecuted<T>(object e)
             where T : Window
         {
-            ExceptionHelper.SafeExecute(() => _navigation.ShowWindow<T>());            
+            ExceptionHelper.SafeExecute(() => _navigation.ShowWindow<T>());
         }
         public void OpenAnotherControlsCommandExecuted<T>(object e)
             where T : UserControl
         {
-            ExceptionHelper.SafeExecute(() =>  _navigation.ShowContent<T>());
+            ExceptionHelper.SafeExecute(() => _navigation.ShowContent<T>());
         }
         public static void OnCloseAppCommandExecuted(object e) => Application.Current.Shutdown();
         public void OnChekDbConnectionCommandExecuted(object e)

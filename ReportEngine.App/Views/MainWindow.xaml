@@ -28,7 +28,7 @@
             Height="25"
             DockPanel.Dock="Top"
             FontSize="14">
-            <MenuItem Header="Файл">
+            <MenuItem Header="Проект">
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenTreeViewCommand}" Header="Новый проект" />
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenMainWindowCommand}" Header="На главный экран" />
                 <Separator />
@@ -39,7 +39,11 @@
             <MenuItem Header="Вид">
                 <MenuItem Header="Масштаб..." />
             </MenuItem>
-            <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllObvyazkiCommand}" Header="Обвязки" />
+            <MenuItem Header="Контакты">
+                <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllUsersCommand}" Header="Сотрудники" />
+                <Separator />
+                <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllUsersCommand}" Header="Заказчики" />
+            </MenuItem>
             <MenuItem Header="Исходные данные">
                 <MenuItem Header="Сортамент труб">
                     <MenuItem Command="{Binding GenericEquipCommandProvider.OpenHeaterPipeCommand}" Header="Жарпрочная сталь" />
@@ -83,7 +87,7 @@
                 <Separator />
                 <MenuItem Command="{Binding GenericEquipCommandProvider.OpenConteinersCommand}" Header="Тара" />
                 <Separator />
-                <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllUsersCommand}" Header="Пользователи" />
+                <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllObvyazkiCommand}" Header="Обвязки" />
             </MenuItem>
             <MenuItem Header="Инструменты">
                 <MenuItem Click="ShowCalculator" Header="Калькулятор" />

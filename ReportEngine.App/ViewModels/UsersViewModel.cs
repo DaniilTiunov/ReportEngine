@@ -31,8 +31,6 @@ namespace ReportEngine.App.ViewModels
         public void InitializeCommands()
         {
             ShowAllUsersCommand = new RelayCommand(OnShowAllUsersCommandExecuted, CanAllCommandsExecute);
-            HideUsersCommand = new RelayCommand(OnHideUsersCommandExecuted, CanAllCommandsExecute);
-            CloseUsersCommand = new RelayCommand(OnCloseUsersCommandExecuted, CanAllCommandsExecute);
             DeleteUserCommand = new RelayCommand(OnDeleteUserCommandExecuted, CanAllCommandsExecute);
             AddNewUserCommand = new RelayCommand(OnAddNewUserCommandExecuted, CanAllCommandsExecute);
             SaveUserCommand = new RelayCommand(OnSaveUserCommandExecuted, CanAllCommandsExecute);
@@ -41,9 +39,7 @@ namespace ReportEngine.App.ViewModels
         #region Комманды
         public ICommand HideUsersCommand { get; set; }
         public bool CanAllCommandsExecute(object p) => true;
-        public void OnHideUsersCommandExecuted(object p) => _navigation.HideWindow();
-        public ICommand CloseUsersCommand { get; set; }
-        public void OnCloseUsersCommandExecuted(object e) => _navigation.CloseWindow();
+
         public ICommand ShowAllUsersCommand { get; set; }
         public async void OnShowAllUsersCommandExecuted(object p)
         {
