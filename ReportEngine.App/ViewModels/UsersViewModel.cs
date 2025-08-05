@@ -30,25 +30,21 @@ namespace ReportEngine.App.ViewModels
         #region Методы
         public void InitializeCommands()
         {
-            ShowAllUsersCommand = new RelayCommand(OnShowAllUsersCommandExecuted, CanShowAllUsersCommandExecute);
-            HideUsersCommand = new RelayCommand(OnHideUsersCommandExecuted, CanHideUsersCommandExecute);
-            CloseUsersCommand = new RelayCommand(OnCloseUsersCommandExecuted, CanCloseUsersCommandExecute);
-            DeleteUserCommand = new RelayCommand(OnDeleteUserCommandExecuted, CanDeleteUserCommandExecute);
-            AddNewUserCommand = new RelayCommand(OnAddNewUserCommandExecuted, CanAddNewUserCommandExecute);
-            SaveUserCommand = new RelayCommand(OnSaveUserCommandExecuted, CanSaveUserCommandExecute);
+            ShowAllUsersCommand = new RelayCommand(OnShowAllUsersCommandExecuted, CanAllCommandsExecute);
+            HideUsersCommand = new RelayCommand(OnHideUsersCommandExecuted, CanAllCommandsExecute);
+            CloseUsersCommand = new RelayCommand(OnCloseUsersCommandExecuted, CanAllCommandsExecute);
+            DeleteUserCommand = new RelayCommand(OnDeleteUserCommandExecuted, CanAllCommandsExecute);
+            AddNewUserCommand = new RelayCommand(OnAddNewUserCommandExecuted, CanAllCommandsExecute);
+            SaveUserCommand = new RelayCommand(OnSaveUserCommandExecuted, CanAllCommandsExecute);
         }
         #endregion
         #region Комманды
         public ICommand HideUsersCommand { get; set; }
-        public bool CanHideUsersCommandExecute(object p) => true;
+        public bool CanAllCommandsExecute(object p) => true;
         public void OnHideUsersCommandExecuted(object p) => _navigation.HideWindow();
-
         public ICommand CloseUsersCommand { get; set; }
-        public bool CanCloseUsersCommandExecute(object e) => true;
         public void OnCloseUsersCommandExecuted(object e) => _navigation.CloseWindow();
-
         public ICommand ShowAllUsersCommand { get; set; }
-        public bool CanShowAllUsersCommandExecute(object p) => true;
         public async void OnShowAllUsersCommandExecuted(object p)
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -58,7 +54,6 @@ namespace ReportEngine.App.ViewModels
             });
         }
         public ICommand DeleteUserCommand { get; set; }
-        public bool CanDeleteUserCommandExecute(object e) => true;
         public async void OnDeleteUserCommandExecuted(object e)
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -70,7 +65,6 @@ namespace ReportEngine.App.ViewModels
             });
         }
         public ICommand AddNewUserCommand { get; set; }
-        public bool CanAddNewUserCommandExecute(object e) => true;
         public async void OnAddNewUserCommandExecuted(object p)
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -90,7 +84,6 @@ namespace ReportEngine.App.ViewModels
             });
         }
         public ICommand SaveUserCommand { get; set; }
-        public bool CanSaveUserCommandExecute(object e) => true;
         public async void OnSaveUserCommandExecuted(object e)
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>

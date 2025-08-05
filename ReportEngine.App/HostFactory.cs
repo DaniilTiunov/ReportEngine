@@ -67,6 +67,7 @@ namespace ReportEngine.App
         {
             // Обычные репозитории
             services.AddScoped<IBaseRepository<User>, UserRepository>();
+            services.AddScoped<IBaseRepository<Company>, CompanyRepository>();
             services.AddScoped<IProjectInfoRepository, ProjectInfoRepository>();
             services.AddScoped<IObvyazkaRepository, ObvyazkaRepository>();
 

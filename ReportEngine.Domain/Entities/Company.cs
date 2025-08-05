@@ -8,8 +8,9 @@ namespace ReportEngine.Domain.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string? Name { get; set; }
-        public string? Description { get; set; }
+        public int Number { get; set; } // Номер
+        public string? Name { get; set; } // Наименование
+        public DateOnly? RegisterDate { get; set; } // Дата регистрации
 
     }
 }
