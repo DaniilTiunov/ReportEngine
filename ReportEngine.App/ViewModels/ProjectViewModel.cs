@@ -1,4 +1,5 @@
-﻿using ReportEngine.App.Commands;
+﻿using Microsoft.EntityFrameworkCore;
+using ReportEngine.App.Commands;
 using ReportEngine.App.Convert;
 using ReportEngine.App.Display;
 using ReportEngine.App.Model;
@@ -18,8 +19,8 @@ namespace ReportEngine.App.ViewModels
     {
         private readonly IProjectInfoRepository _projectRepository;
         private readonly IDialogService _dialogService;
-        public StandModel CurrentStand { get; set; } = new();
-        public ProjectModel CurrentProject { get; set; } = new();
+        public StandModel CurrentStandModel { get; set; } = new();
+        public ProjectModel CurrentProjectModel { get; set; } = new();
         public ProjectCommandProvider ProjectCommandProvider { get; set; } = new();
 
         public ProjectViewModel(IProjectInfoRepository projectRepository, IDialogService dialogService)
@@ -34,10 +35,10 @@ namespace ReportEngine.App.ViewModels
         #region Методы
         public void InitializeTime()
         {
-            CurrentProject.CreationDate = DateTime.Now.Date;
-            CurrentProject.StartDate = DateTime.Now.Date;
-            CurrentProject.OutOfProduction = DateTime.Now.Date;
-            CurrentProject.EndDate = DateTime.Now.Date;
+            CurrentProjectModel.CreationDate = DateTime.Now.Date;
+            CurrentProjectModel.StartDate = DateTime.Now.Date;
+            CurrentProjectModel.OutOfProduction = DateTime.Now.Date;
+            CurrentProjectModel.EndDate = DateTime.Now.Date;
         }
         public void InitializeCommands()
         {
@@ -60,49 +61,48 @@ namespace ReportEngine.App.ViewModels
                 if (projectInfo == null)
                     return;
 
-                CurrentProject.CurrentProjectId = projectInfo.Id;
-                CurrentProject.Number = projectInfo.Number;
-                CurrentProject.Description = projectInfo.Description;
-                CurrentProject.CreationDate = projectInfo.CreationDate.ToDateTime(TimeOnly.MinValue);
-                CurrentProject.Company = projectInfo.Company;
-                CurrentProject.Object = projectInfo.Object;
-                CurrentProject.StandCount = projectInfo.StandCount;
-                CurrentProject.Cost = projectInfo.Cost;
-                CurrentProject.Status = projectInfo.Status.ToString();
-                CurrentProject.StartDate = projectInfo.StartDate.ToDateTime(TimeOnly.MinValue);
-                CurrentProject.OutOfProduction = projectInfo.OutOfProduction.ToDateTime(TimeOnly.MinValue);
-                CurrentProject.EndDate = projectInfo.EndDate.ToDateTime(TimeOnly.MinValue);
-                CurrentProject.OrderCustomer = projectInfo.OrderCustomer;
-                CurrentProject.RequestProduction = projectInfo.RequestProduction;
-                CurrentProject.MarkMinus = projectInfo.MarkMinus;
-                CurrentProject.MarkPlus = projectInfo.MarkPlus;
-                CurrentProject.IsGalvanized = projectInfo.IsGalvanized;
+                CurrentProjectModel.CurrentProjectId = projectInfo.Id;
+                CurrentProjectModel.Number = projectInfo.Number;
+                CurrentProjectModel.Description = projectInfo.Description;
+                CurrentProjectModel.CreationDate = projectInfo.CreationDate.ToDateTime(TimeOnly.MinValue);
+                CurrentProjectModel.Company = projectInfo.Company;
+                CurrentProjectModel.Object = projectInfo.Object;
+                CurrentProjectModel.StandCount = projectInfo.StandCount;
+                CurrentProjectModel.Cost = projectInfo.Cost;
+                CurrentProjectModel.Status = projectInfo.Status.ToString();
+                CurrentProjectModel.StartDate = projectInfo.StartDate.ToDateTime(TimeOnly.MinValue);
+                CurrentProjectModel.OutOfProduction = projectInfo.OutOfProduction.ToDateTime(TimeOnly.MinValue);
+                CurrentProjectModel.EndDate = projectInfo.EndDate.ToDateTime(TimeOnly.MinValue);
+                CurrentProjectModel.OrderCustomer = projectInfo.OrderCustomer;
+                CurrentProjectModel.RequestProduction = projectInfo.RequestProduction;
+                CurrentProjectModel.MarkMinus = projectInfo.MarkMinus;
+                CurrentProjectModel.MarkPlus = projectInfo.MarkPlus;
+                CurrentProjectModel.IsGalvanized = projectInfo.IsGalvanized;
 
-                CurrentProject.Stands.Clear();
+                CurrentProjectModel.Stands.Clear();
                 if (projectInfo.Stands != null)
                 {
                     foreach (var stand in projectInfo.Stands)
-                        CurrentProject.Stands.Add(StandDataConverter.ConvertToStandModel(stand));
+                        CurrentProjectModel.Stands.Add(StandDataConverter.ConvertToStandModel(stand));
                 }
-                CurrentProject.SelectedStand = CurrentProject.Stands.FirstOrDefault();
+                CurrentProjectModel.SelectedStand = CurrentProjectModel.Stands.FirstOrDefault();
 
-                CurrentStand = new StandModel();
-                OnPropertyChanged(nameof(CurrentStand));
-                OnPropertyChanged(nameof(CurrentProject));
+                CurrentStandModel = new StandModel();
+                OnPropertyChanged(nameof(CurrentStandModel));
+                OnPropertyChanged(nameof(CurrentProjectModel));
             });
         }
         #endregion
         #region Команды
+        public bool CanAllCommandsExecute(object e) => true;
         public void OnSelectMaterialFromDialogCommandExecuted<T>(object e)
             where T : class, IBaseEquip, new()
         {
             ExceptionHelper.SafeExecute(() =>
             {
                 var materialLine = _dialogService.ShowEquipDialog<T>();
-                if (materialLine != null && CurrentProject.SelectedStand != null)
-                    CurrentProject.SelectedStand.MaterialLine = materialLine.Name;
-
-                OnPropertyChanged(nameof(CurrentProject.SelectedStand.MaterialLine));
+                if (materialLine != null && CurrentProjectModel.SelectedStand != null)
+                    CurrentProjectModel.SelectedStand.MaterialLine = materialLine.Name;
             });
         }
 
@@ -112,10 +112,8 @@ namespace ReportEngine.App.ViewModels
             ExceptionHelper.SafeExecute(() =>
             {
                 var armature = _dialogService.ShowEquipDialog<T>();
-                if (armature != null && CurrentProject.SelectedStand != null)
-                    CurrentProject.SelectedStand.Armature = armature.Name;
-
-                OnPropertyChanged(nameof(CurrentProject.SelectedStand.Armature));
+                if (armature != null && CurrentProjectModel.SelectedStand != null)
+                    CurrentProjectModel.SelectedStand.Armature = armature.Name;
             });
         }
         public void OnSelectTreeSocketFromDialogCommandExecuted<T>(object e)
@@ -124,81 +122,61 @@ namespace ReportEngine.App.ViewModels
             ExceptionHelper.SafeExecute(() =>
             {
                 var socket = _dialogService.ShowEquipDialog<T>();
-                if (socket != null && CurrentProject.SelectedStand != null)
-                    CurrentProject.SelectedStand.TreeSocket = socket.Name;
-
-                OnPropertyChanged(nameof(CurrentProject.SelectedStand.TreeSocket));
+                if (socket != null && CurrentProjectModel.SelectedStand != null)
+                    CurrentProjectModel.SelectedStand.TreeSocket = socket.Name;
             });
         }
-        public bool CanAllCommandsExecute(object e) => true;
         public async void OnCreateNewCardCommandExecuted(object e) // Создание новой карточки проекта
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
-                var newProjectCard = new ProjectInfo
-                {
-                    Number = CurrentProject.Number,
-                    Description = CurrentProject.Description,
-                    CreationDate = DateOnly.FromDateTime(CurrentProject.CreationDate),
-                    Company = CurrentProject.Company,
-                    Object = CurrentProject.Object,
-                    StandCount = CurrentProject.StandCount,
-                    Cost = CurrentProject.Cost,
-                    HumanCost = CurrentProject.HumanCost,
-                    Manager = CurrentProject.Manager,
-                    Status = ComboBoxHelper.ComboBoxChangedValue<ProjectStatus>(CurrentProject.Status),
-                    StartDate = DateOnly.FromDateTime(CurrentProject.StartDate),
-                    OutOfProduction = DateOnly.FromDateTime(CurrentProject.OutOfProduction),
-                    EndDate = DateOnly.FromDateTime(CurrentProject.EndDate),
-                    OrderCustomer = CurrentProject.OrderCustomer,
-                    RequestProduction = CurrentProject.RequestProduction,
-                    MarkMinus = CurrentProject.MarkMinus,
-                    MarkPlus = CurrentProject.MarkPlus,
-                    IsGalvanized = CurrentProject.IsGalvanized
-                };
+                var newProjectCard = CurrentProjectModel.CreateNewProjectCard();
+                
                 await _projectRepository.AddAsync(newProjectCard);
 
-                CurrentProject.CurrentProjectId = newProjectCard.Id;
-                CurrentProject.Stands.Clear();
-                CurrentStand = new StandModel();
-                OnPropertyChanged(nameof(CurrentStand));
+                CurrentProjectModel.CurrentProjectId = newProjectCard.Id;
+                CurrentProjectModel.Stands.Clear();
+                CurrentStandModel = new StandModel();
 
-                MessageBoxHelper.ShowInfo($"Новая карточка проекта успешно создана!\nId Преокта: {CurrentProject.CurrentProjectId}"); //Для отладки
+                MessageBoxHelper.ShowInfo($"Новая карточка проекта успешно создана!\nId Преокта: {CurrentProjectModel.CurrentProjectId}"); //Для отладки
             });
         }
         public async void OnAddNewStandCommandExecuted(object e) // Добавление нового стенда с привязкой к проекту
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
-                if (CurrentProject.CurrentProjectId == 0)
+                if (CurrentProjectModel.CurrentProjectId == 0)
                 {
                     MessageBoxHelper.ShowInfo("Сначала создайте проект");
                     return;
                 }
                 var newStandModel = new StandModel
                 {
-                    KKSCode = CurrentStand.KKSCode,
-                    Design = CurrentStand.Design,
-                    BraceType = CurrentStand.BraceType,
-                    Devices = CurrentStand.Devices,
-                    Width = CurrentStand.Width,
-                    SerialNumber = CurrentStand.SerialNumber,
-                    Weight = CurrentStand.Weight,
-                    StandSummCost = CurrentStand.StandSummCost,
-                    ObvyazkaType = CurrentStand.ObvyazkaType,
-                    NN = CurrentStand.NN,
-                    MaterialLine = CurrentStand.MaterialLine,
-                    Armature = CurrentStand.Armature,
-                    TreeSocket = CurrentStand.TreeSocket,
-                    KMCH = CurrentStand.KMCH,
-                    FirstSensorType = CurrentStand.FirstSensorType
+                    KKSCode = CurrentStandModel.KKSCode,
+                    Design = CurrentStandModel.Design,
+                    BraceType = CurrentStandModel.BraceType,
+                    Devices = CurrentStandModel.Devices,
+                    Width = CurrentStandModel.Width,
+                    SerialNumber = CurrentStandModel.SerialNumber,
+                    Weight = CurrentStandModel.Weight,
+                    StandSummCost = CurrentStandModel.StandSummCost,
+                    ObvyazkaType = CurrentStandModel.ObvyazkaType,
+                    NN = CurrentStandModel.NN,
+                    MaterialLine = CurrentStandModel.MaterialLine,
+                    Armature = CurrentStandModel.Armature,
+                    TreeSocket = CurrentStandModel.TreeSocket,
+                    KMCH = CurrentStandModel.KMCH,
+                    FirstSensorType = CurrentStandModel.FirstSensorType
                 };
                 var newStandEntity = StandDataConverter.ConvertToStandEntity(newStandModel);
-                newStandEntity.ProjectInfoId = CurrentProject.CurrentProjectId;
-                await _projectRepository.AddStandAsync(CurrentProject.CurrentProjectId, newStandEntity);
-                CurrentProject.Stands.Add(newStandModel);
-                CurrentProject.SelectedStand = newStandModel;
-                OnPropertyChanged(nameof(CurrentProject));
+                var addedStandEntity = await _projectRepository.AddStandAsync(CurrentProjectModel.CurrentProjectId, newStandEntity);
+
+                newStandModel.Id = addedStandEntity.Id;
+                newStandModel.ProjectId = CurrentProjectModel.CurrentProjectId;
+
+                CurrentProjectModel.Stands.Add(newStandModel);
+                CurrentProjectModel.SelectedStand = newStandModel;
+
                 MessageBoxHelper.ShowInfo("Стенд успешно добавлен!");
             });
         }
@@ -206,32 +184,32 @@ namespace ReportEngine.App.ViewModels
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
-                if (CurrentProject.CurrentProjectId == 0)
+                if (CurrentProjectModel.CurrentProjectId == 0)
                 {
                     MessageBoxHelper.ShowInfo("Сначала создайте проект");
                     return;
                 }
                 var projectInfo = new ProjectInfo
                 {
-                    Id = CurrentProject.CurrentProjectId,
-                    Number = CurrentProject.Number,
-                    Description = CurrentProject.Description,
-                    CreationDate = DateOnly.FromDateTime(CurrentProject.CreationDate),
-                    Company = CurrentProject.Company,
-                    Object = CurrentProject.Object,
-                    StandCount = CurrentProject.StandCount,
-                    Cost = CurrentProject.Cost,
-                    HumanCost = CurrentProject.HumanCost,
-                    Manager = CurrentProject.Manager,
-                    Status = ComboBoxHelper.ComboBoxChangedValue<ProjectStatus>(CurrentProject.Status),
-                    StartDate = DateOnly.FromDateTime(CurrentProject.StartDate),
-                    OutOfProduction = DateOnly.FromDateTime(CurrentProject.OutOfProduction),
-                    EndDate = DateOnly.FromDateTime(CurrentProject.EndDate),
-                    OrderCustomer = CurrentProject.OrderCustomer,
-                    RequestProduction = CurrentProject.RequestProduction,
-                    MarkMinus = CurrentProject.MarkMinus,
-                    MarkPlus = CurrentProject.MarkPlus,
-                    IsGalvanized = CurrentProject.IsGalvanized
+                    Id = CurrentProjectModel.CurrentProjectId,
+                    Number = CurrentProjectModel.Number,
+                    Description = CurrentProjectModel.Description,
+                    CreationDate = DateOnly.FromDateTime(CurrentProjectModel.CreationDate),
+                    Company = CurrentProjectModel.Company,
+                    Object = CurrentProjectModel.Object,
+                    StandCount = CurrentProjectModel.StandCount,
+                    Cost = CurrentProjectModel.Cost,
+                    HumanCost = CurrentProjectModel.HumanCost,
+                    Manager = CurrentProjectModel.Manager,
+                    Status = ComboBoxHelper.ComboBoxChangedValue<ProjectStatus>(CurrentProjectModel.Status),
+                    StartDate = DateOnly.FromDateTime(CurrentProjectModel.StartDate),
+                    OutOfProduction = DateOnly.FromDateTime(CurrentProjectModel.OutOfProduction),
+                    EndDate = DateOnly.FromDateTime(CurrentProjectModel.EndDate),
+                    OrderCustomer = CurrentProjectModel.OrderCustomer,
+                    RequestProduction = CurrentProjectModel.RequestProduction,
+                    MarkMinus = CurrentProjectModel.MarkMinus,
+                    MarkPlus = CurrentProjectModel.MarkPlus,
+                    IsGalvanized = CurrentProjectModel.IsGalvanized
                 };
                 await _projectRepository.UpdateAsync(projectInfo);
                 MessageBoxHelper.ShowInfo("Изменения успешно сохранены!");
@@ -242,14 +220,24 @@ namespace ReportEngine.App.ViewModels
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
-                if (CurrentProject.SelectedStand == null)
+                if (CurrentProjectModel.SelectedStand == null)
                     return;
-                var standEntity = StandDataConverter.ConvertToStandEntity(CurrentProject.SelectedStand);
+
+                var standEntity = StandDataConverter.ConvertToStandEntity(CurrentProjectModel.SelectedStand);
+
                 await _projectRepository.UpdateStandAsync(standEntity);
-                OnPropertyChanged(nameof(CurrentProject.SelectedStand));
+
                 MessageBoxHelper.ShowInfo("Изменения обвязки успешно сохранены!");
             });
         }
         #endregion        
+
+        // Проект создаётся, создаётся стенд, добавляется обвязка.
+        // Если вернуться на главный экран и создать новый проект, то будет ошибка (см. log20250806_001)
+        // При редактировании проекта нет возможности отредачить стенд или обвязки появляется ошибка (см. log20250806_001)
+        // Нужно: 1. Создать новый проект. 
+        // 2. Добавить N кол-во стендов (Стенды могут быть одинаковые, могут быть разные, но пока нужно чтобы хотя бы один стенд отрабатывал) 
+        // 3. После добавления стенда, начать добавлять обвязки.
+        // 4. При возвращении на главный экран чтобы проект создавался снова, или при редактировании он подтягивался для редактирования
     }
 }

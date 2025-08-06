@@ -1,5 +1,8 @@
 ﻿using ReportEngine.App.ViewModels;
+using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Enums;
 using System.Collections.ObjectModel;
+using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.App.Model
 {
@@ -74,7 +77,32 @@ namespace ReportEngine.App.Model
         #endregion
 
         #region Методы
-
+        
+        public ProjectInfo CreateNewProjectCard()
+        {
+            return new ProjectInfo
+            {
+                Id = this.CurrentProjectId,
+                Number = this.Number,
+                Description = this.Description,
+                CreationDate = DateOnly.FromDateTime(this.CreationDate),
+                Company = this.Company,
+                Object = this.Object,
+                StandCount = this.StandCount,
+                Cost = this.Cost,
+                HumanCost = this.HumanCost,
+                Manager = this.Manager,
+                Status = ComboBoxHelper.ComboBoxChangedValue<ProjectStatus>(this.Status),
+                StartDate = DateOnly.FromDateTime(this.StartDate),
+                OutOfProduction = DateOnly.FromDateTime(this.OutOfProduction),
+                EndDate = DateOnly.FromDateTime(this.EndDate),
+                OrderCustomer = this.OrderCustomer,
+                RequestProduction = this.RequestProduction,
+                MarkMinus = this.MarkMinus,
+                MarkPlus = this.MarkPlus,
+                IsGalvanized = this.IsGalvanized
+            };
+        }
         #endregion
     }
 }

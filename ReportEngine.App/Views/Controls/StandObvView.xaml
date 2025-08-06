@@ -46,20 +46,20 @@
             <TextBox
                 Grid.Row="0"
                 Grid.Column="1"
-                Margin="5,5,1016,5"
-                Text="{Binding CurrentProject.SelectedStand.ObvyazkaType}" />
+                Margin="5,5,1225,5"
+                Text="{Binding CurrentProjectModel.SelectedStand.ObvyazkaType}" />
 
             <!--  NN  -->
             <TextBlock
                 Grid.Column="1"
-                Margin="413,5,820,0"
+                Margin="528,5,900,0"
                 VerticalAlignment="Top"
                 Text="NN:" />
             <TextBox
                 Grid.Row="0"
                 Grid.Column="1"
-                Margin="445,6,755,4"
-                Text="{Binding CurrentProject.SelectedStand.NN}" />
+                Margin="570,5,630,5"
+                Text="{Binding CurrentProjectModel.SelectedStand.NN}" />
 
             <!--  Материал линии  -->
             <TextBlock
@@ -71,7 +71,7 @@
                 Grid.Row="1"
                 Grid.Column="1"
                 Margin="5,5,925,5"
-                Text="{Binding CurrentProject.SelectedStand.MaterialLine, FallbackValue='BINDING_ERROR'}" />
+                Text="{Binding CurrentProjectModel.SelectedStand.MaterialLine, FallbackValue='BINDING_ERROR'}" />
             <Button
                 Grid.Row="1"
                 Grid.Column="1"
@@ -90,7 +90,7 @@
                 Grid.Row="2"
                 Grid.Column="1"
                 Margin="5,6,924,4"
-                Text="{Binding CurrentProject.SelectedStand.Armature}" />
+                Text="{Binding CurrentProjectModel.SelectedStand.Armature}" />
             <Button
                 Grid.Row="2"
                 Grid.Column="1"
@@ -181,8 +181,8 @@
                     Grid.Row="1"
                     Grid.Column="1"
                     Margin="5,5,800,5"
-                    ItemsSource="{Binding CurrentStand.SensorTypes}"
-                    SelectedItem="{Binding CurrentProject.SelectedStand.FirstSensorType}" />
+                    ItemsSource="{Binding CurrentProjectModel.SelectedStand.SensorType}"
+                    SelectedItem="{Binding CurrentProjectModel.SelectedStand.FirstSensorType, Mode=TwoWay}" />
                 <TextBlock
                     Grid.Row="2"
                     Grid.Column="0"
@@ -192,7 +192,7 @@
                     Grid.Row="2"
                     Grid.Column="1"
                     Margin="5,5,800,5"
-                    Text="{Binding CurrentProject.SelectedStand.FirstSensorKKSCounter}" />
+                    Text="{Binding CurrentProjectModel.SelectedStand.FirstSensorKKSCounter}" />
                 <TextBlock
                     Grid.Row="3"
                     Grid.Column="0"
@@ -202,7 +202,7 @@
                     Grid.Row="3"
                     Grid.Column="1"
                     Margin="5,5,800,5"
-                    Text="{Binding CurrentProject.SelectedStand.FirstSensorMarkPlus}" />
+                    Text="{Binding CurrentProjectModel.SelectedStand.FirstSensorMarkPlus}" />
                 <TextBlock
                     Grid.Row="4"
                     Grid.Column="0"
@@ -212,7 +212,7 @@
                     Grid.Row="4"
                     Grid.Column="1"
                     Margin="5,5,800,5"
-                    Text="{Binding CurrentProject.SelectedStand.FirstSensorMarkMinus}" />
+                    Text="{Binding CurrentProjectModel.SelectedStand.FirstSensorMarkMinus}" />
                 <TextBlock
                     Grid.Row="5"
                     Grid.Column="0"
@@ -224,7 +224,7 @@
                     Height="60"
                     Margin="5,5,590,5"
                     AcceptsReturn="True"
-                    Text="{Binding CurrentStand.Sensor1.Description}"
+                    Text="{Binding CurrentProjectModel.SelectedStand.Sensor1.Description}"
                     TextWrapping="Wrap" />
             </Grid>
         </Border>
@@ -265,7 +265,7 @@
                     Grid.Column="1"
                     Margin="5,5,800,5"
                     ItemsSource="{Binding SensorTypes}"
-                    SelectedItem="{Binding CurrentStand.Sensor2.Type}" />
+                    SelectedItem="{Binding CurrentProjectModel.SelectedStand.Sensor2.Type}" />
                 <TextBlock
                     Grid.Row="2"
                     Grid.Column="0"
@@ -275,7 +275,7 @@
                     Grid.Row="2"
                     Grid.Column="1"
                     Margin="5,5,800,5"
-                    Text="{Binding CurrentStand.Sensor2.KKSCircuit}" />
+                    Text="{Binding CurrentProjectModel.SelectedStand.Sensor2.KKSCircuit}" />
                 <TextBlock
                     Grid.Row="3"
                     Grid.Column="0"
@@ -285,7 +285,7 @@
                     Grid.Row="3"
                     Grid.Column="1"
                     Margin="5,5,800,5"
-                    Text="{Binding CurrentStand.Sensor2.MarkingPlus}" />
+                    Text="{Binding CurrentProjectModel.SelectedStand.Sensor2.MarkingPlus}" />
                 <TextBlock
                     Grid.Row="4"
                     Grid.Column="0"
@@ -295,7 +295,7 @@
                     Grid.Row="4"
                     Grid.Column="1"
                     Margin="5,5,800,5"
-                    Text="{Binding CurrentStand.Sensor2.MarkingMinus}" />
+                    Text="{Binding CurrentProjectModel.SelectedStand.Sensor2.MarkingMinus}" />
                 <TextBlock
                     Grid.Row="5"
                     Grid.Column="0"
@@ -307,7 +307,7 @@
                     Height="60"
                     Margin="5,5,580,5"
                     AcceptsReturn="True"
-                    Text="{Binding CurrentStand.Sensor2.Description}"
+                    Text="{Binding CurrentProjectModel.SelectedStand.Sensor2.Description}"
                     TextWrapping="Wrap" />
             </Grid>
         </Border>
@@ -347,8 +347,8 @@
                     Grid.Row="1"
                     Grid.Column="1"
                     Margin="5,5,800,5"
-                    ItemsSource="{Binding SensorTypes}"
-                    SelectedItem="{Binding CurrentStand.Sensor3.Type}" />
+                    ItemsSource="{Binding SensorType}"
+                    SelectedItem="{Binding CurrentProjectModel.SelectedStand.Sensor3.Type}" />
                 <TextBlock
                     Grid.Row="2"
                     Grid.Column="0"
@@ -358,7 +358,7 @@
                     Grid.Row="2"
                     Grid.Column="1"
                     Margin="5,5,800,5"
-                    Text="{Binding CurrentStand.Sensor3.KKSCircuit}" />
+                    Text="{Binding CurrentProjectModel.SelectedStand.Sensor3.KKSCircuit}" />
                 <TextBlock
                     Grid.Row="3"
                     Grid.Column="0"
@@ -368,7 +368,7 @@
                     Grid.Row="3"
                     Grid.Column="1"
                     Margin="5,5,800,5"
-                    Text="{Binding CurrentStand.Sensor3.MarkingPlus}" />
+                    Text="{Binding CurrentProjectModel.SelectedStand.Sensor3.MarkingPlus}" />
                 <TextBlock
                     Grid.Row="4"
                     Grid.Column="0"
@@ -378,7 +378,7 @@
                     Grid.Row="4"
                     Grid.Column="1"
                     Margin="5,5,800,5"
-                    Text="{Binding CurrentStand.Sensor3.MarkingMinus}" />
+                    Text="{Binding CurrentProjectModel.SelectedStand.Sensor3.MarkingMinus}" />
                 <TextBlock
                     Grid.Row="5"
                     Grid.Column="0"
@@ -390,18 +390,18 @@
                     Height="60"
                     Margin="5,5,580,5"
                     AcceptsReturn="True"
-                    Text="{Binding CurrentStand.Sensor3.Description}"
+                    Text="{Binding CurrentProjectModel.SelectedStand.Sensor3.Description}"
                     TextWrapping="Wrap" />
                 <Button
                     Grid.Row="5"
                     Grid.Column="1"
-                    Margin="895,38,160,0"
+                    Margin="895,38,340,0"
                     Command="{Binding ProjectCommandProvider.SaveObvCommand}"
                     Content="Добавить обвязку" />
                 <Button
                     Grid.Row="5"
                     Grid.Column="1"
-                    Margin="1060,38,30,0"
+                    Margin="1235,38,30,0"
                     Command="{Binding CancelCommand}"
                     Content="Отмена" />
             </Grid>

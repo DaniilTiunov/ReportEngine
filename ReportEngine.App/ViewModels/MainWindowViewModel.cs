@@ -149,6 +149,8 @@ namespace ReportEngine.App.ViewModels
             var currentProject = MainWindowModel.SelectedProject;
 
             await ExceptionHelper.SafeExecuteAsync(() => _projectRepository.DeleteAsync(currentProject));
+
+            OnShowAllProjectsCommandExecuted(e);
         }
         #endregion
 

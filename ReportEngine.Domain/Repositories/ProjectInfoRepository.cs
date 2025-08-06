@@ -2,6 +2,7 @@
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
+using System.Diagnostics;
 
 namespace ReportEngine.Domain.Repositories
 {
@@ -66,7 +67,7 @@ namespace ReportEngine.Domain.Repositories
             await _context.SaveChangesAsync();
             return 1;
         }
-        public async Task AddStandAsync(int projectId, Stand stand)
+        public async Task<Stand> AddStandAsync(int projectId, Stand stand)
         {
             var project = await _context.Projects
                 .Include(p => p.Stands)
@@ -83,11 +84,13 @@ namespace ReportEngine.Domain.Repositories
 
             await _context.SaveChangesAsync();
 
+            return stand;
+
         }
         public async Task UpdateStandAsync(Stand stand)
         {
             var existingStand = await _context.Set<Stand>()
-               .FirstOrDefaultAsync(p => p.ProjectInfoId == stand.ProjectInfoId);
+               .FirstOrDefaultAsync(p => p.Id == stand.Id);
 
             if (existingStand != null)
             {

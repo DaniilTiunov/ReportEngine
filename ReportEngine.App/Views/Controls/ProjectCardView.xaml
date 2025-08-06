@@ -63,7 +63,7 @@
         <TextBox
             Grid.Row="0"
             Grid.Column="1"
-            Text="{Binding CurrentProject.Number, Mode=TwoWay}" />
+            Text="{Binding CurrentProjectModel.Number, Mode=TwoWay}" />
 
         <!--  Обозначение КД  -->
         <TextBlock
@@ -74,7 +74,7 @@
         <TextBox
             Grid.Row="0"
             Grid.Column="3"
-            Text="{Binding CurrentProject.Description}" />
+            Text="{Binding CurrentProjectModel.Description}" />
 
         <!--  Дата запроса  -->
         <TextBlock
@@ -85,7 +85,7 @@
         <DatePicker
             Grid.Row="1"
             Grid.Column="1"
-            SelectedDate="{Binding CurrentProject.CreationDate, Mode=TwoWay}" />
+            SelectedDate="{Binding CurrentProjectModel.CreationDate, Mode=TwoWay}" />
 
         <!--  Заказчик  -->
         <TextBlock
@@ -96,7 +96,7 @@
         <TextBox
             Grid.Row="2"
             Grid.Column="1"
-            Text="{Binding CurrentProject.Company}" />
+            Text="{Binding CurrentProjectModel.Company}" />
 
         <!--  Объект  -->
         <TextBlock
@@ -107,7 +107,7 @@
         <TextBox
             Grid.Row="3"
             Grid.Column="1"
-            Text="{Binding CurrentProject.Object}" />
+            Text="{Binding CurrentProjectModel.Object}" />
 
         <!--  Количество стендов  -->
         <TextBlock
@@ -118,7 +118,7 @@
         <TextBox
             Grid.Row="4"
             Grid.Column="1"
-            Text="{Binding CurrentProject.StandCount}" />
+            Text="{Binding CurrentProjectModel.StandCount}" />
 
         <!--  Стоимость  -->
         <TextBlock
@@ -129,7 +129,7 @@
         <TextBox
             Grid.Row="4"
             Grid.Column="3"
-            Text="{Binding CurrentProject.Cost}" />
+            Text="{Binding CurrentProjectModel.Cost}" />
 
         <!--  Статус  -->
         <TextBlock
@@ -141,8 +141,8 @@
             x:Name="StatusComboBox"
             Grid.Row="5"
             Grid.Column="1"
-            ItemsSource="{Binding CurrentProject.Statuses}"
-            SelectedItem="{Binding CurrentProject.Status, Mode=TwoWay}" />
+            ItemsSource="{Binding CurrentProjectModel.Statuses}"
+            SelectedItem="{Binding CurrentProjectModel.Status, Mode=TwoWay}" />
 
         <!--  Старт проекта  -->
         <TextBlock
@@ -153,7 +153,7 @@
         <DatePicker
             Grid.Row="6"
             Grid.Column="1"
-            SelectedDate="{Binding CurrentProject.StartDate, Mode=TwoWay}" />
+            SelectedDate="{Binding CurrentProjectModel.StartDate, Mode=TwoWay}" />
 
         <!--  Выход из производства  -->
         <TextBlock
@@ -164,7 +164,7 @@
         <DatePicker
             Grid.Row="6"
             Grid.Column="3"
-            SelectedDate="{Binding CurrentProject.OutOfProduction, Mode=TwoWay}" />
+            SelectedDate="{Binding CurrentProjectModel.OutOfProduction, Mode=TwoWay}" />
 
         <!--  Дата окончания договора  -->
         <TextBlock
@@ -175,7 +175,7 @@
         <DatePicker
             Grid.Row="7"
             Grid.Column="3"
-            SelectedDate="{Binding CurrentProject.EndDate, Mode=TwoWay}" />
+            SelectedDate="{Binding CurrentProjectModel.EndDate, Mode=TwoWay}" />
 
         <!--  Заказ покупателя  -->
         <TextBlock
@@ -188,7 +188,7 @@
             Grid.RowSpan="2"
             Grid.Column="1"
             Margin="0,44,4,10"
-            Text="{Binding CurrentProject.OrderCustomer}" />
+            Text="{Binding CurrentProjectModel.OrderCustomer}" />
 
         <!--  Заявка на производство  -->
         <TextBlock
@@ -200,7 +200,7 @@
             Grid.Row="9"
             Grid.Column="3"
             Margin="0,12,0,3"
-            Text="{Binding CurrentProject.RequestProduction}" />
+            Text="{Binding CurrentProjectModel.RequestProduction}" />
 
         <!--  Трудозатраты  -->
         <TextBlock
@@ -212,7 +212,7 @@
             Grid.Row="10"
             Grid.Column="3"
             Margin="0,9,0,6"
-            Text="{Binding CurrentProject.HumanCost}" />
+            Text="{Binding CurrentProjectModel.HumanCost}" />
 
         <!--  Руководитель  -->
         <TextBlock
@@ -223,7 +223,7 @@
         <TextBox
             Grid.Row="11"
             Grid.Column="1"
-            Text="{Binding CurrentProject.Manager}" />
+            Text="{Binding CurrentProjectModel.Manager}" />
 
         <!--  Маркировка+  -->
         <TextBlock
@@ -235,7 +235,7 @@
             Grid.Row="12"
             Grid.Column="1"
             Margin="0,0,0,10"
-            Text="{Binding CurrentProject.MarkPlus}" />
+            Text="{Binding CurrentProjectModel.MarkPlus}" />
 
         <!--  Маркировка-  -->
         <TextBlock
@@ -247,7 +247,7 @@
             Grid.Row="12"
             Grid.Column="3"
             Margin="0,0,0,10"
-            Text="{Binding CurrentProject.MarkMinus}" />
+            Text="{Binding CurrentProjectModel.MarkMinus}" />
 
         <!--  Оцинкование стендов  -->
         <CheckBox
@@ -256,7 +256,7 @@
             Margin="2,13,8,0"
             VerticalAlignment="Top"
             Content="Оцинкование стендов"
-            IsChecked="{Binding CurrentProject.IsGalvanized}" />
+            IsChecked="{Binding CurrentProjectModel.IsGalvanized}" />
 
         <!--  Кнопка Добавить  -->
         <Button

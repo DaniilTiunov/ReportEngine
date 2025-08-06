@@ -9,6 +9,8 @@ namespace ReportEngine.App.Convert
         {
             return new StandModel
             {
+                Id = stand.Id,
+                ProjectId = stand.ProjectInfoId,
                 KKSCode = stand.KKSCode,
                 Design = stand.Design,
                 BraceType = stand.BraceType,
@@ -30,6 +32,8 @@ namespace ReportEngine.App.Convert
         {
             return new Stand
             {
+                Id = model.Id,
+                ProjectInfoId = model.ProjectId,
                 KKSCode = model.KKSCode,
                 Design = model.Design,
                 BraceType = model.BraceType,

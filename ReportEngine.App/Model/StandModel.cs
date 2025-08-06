@@ -4,6 +4,8 @@ namespace ReportEngine.App.Model
 {
     public class StandModel : BaseViewModel
     {
+        private int _id;
+        private int _projectId;
         private string _kksCode;
         private string _design;
         private int _devices;
@@ -27,6 +29,8 @@ namespace ReportEngine.App.Model
 
         public IEnumerable<string> BraceSensor { get; } = new List<string> { "На кронштейне", "Швеллер" };
         public IEnumerable<string> SensorType { get; } = new List<string> { "Датчик перепада давления", "Манометр", "Датчик абсолютного давления", "Манометр электрокомпактный" };
+        public int Id { get => _id; set => Set(ref _id, value); }
+        public int ProjectId { get => _projectId; set => Set(ref _projectId, value); }
         public string KKSCode { get => _kksCode; set => Set(ref _kksCode, value); }
         public string Design { get => _design; set => Set(ref _design, value); }
         public int Devices { get => _devices; set => Set(ref _devices, value); }

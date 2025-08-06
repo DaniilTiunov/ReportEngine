@@ -56,7 +56,7 @@
                 Grid.Column="1"
                 Width="50"
                 Margin="0,5,150,5"
-                Text="{Binding CurrentStand.Number, Mode=TwoWay}" />
+                Text="{Binding CurrentStandModel.Number, Mode=TwoWay}" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="2"
@@ -67,7 +67,7 @@
                 Grid.Row="0"
                 Grid.Column="3"
                 Margin="0,5"
-                Text="{Binding CurrentStand.KKSCode, Mode=TwoWay}" />
+                Text="{Binding CurrentStandModel.KKSCode, Mode=TwoWay}" />
 
             <!--  Обозначение стенда  -->
             <TextBlock
@@ -81,7 +81,7 @@
                 Grid.Column="1"
                 Grid.ColumnSpan="3"
                 Margin="0,5"
-                Text="{Binding CurrentStand.Design, Mode=TwoWay}" />
+                Text="{Binding CurrentStandModel.Design, Mode=TwoWay}" />
 
             <!--  Приборы и чекбокс  -->
             <TextBlock
@@ -95,7 +95,7 @@
                 Grid.Column="1"
                 Width="50"
                 Margin="0,5,150,5"
-                Text="{Binding CurrentStand.Devices, Mode=TwoWay}" />
+                Text="{Binding CurrentStandModel.Devices, Mode=TwoWay}" />
 
             <!--  Тип крепления датчика + кнопка  -->
             <TextBlock
@@ -108,8 +108,8 @@
                 Grid.Row="3"
                 Grid.Column="1"
                 Margin="0,5"
-                ItemsSource="{Binding CurrentStand.BraceSensor}"
-                SelectedItem="{Binding CurrentStand.BraceType, Mode=TwoWay}" />
+                ItemsSource="{Binding CurrentStandModel.BraceSensor}"
+                SelectedItem="{Binding CurrentStandModel.BraceType, Mode=TwoWay}" />
 
             <TextBlock
                 Grid.Row="4"
@@ -122,7 +122,7 @@
                 Grid.Column="3"
                 Width="100"
                 Margin="0,5,100,5"
-                Text="{Binding CurrentStand.Width, Mode=TwoWay}" />
+                Text="{Binding CurrentStandModel.Width, Mode=TwoWay}" />
 
             <!--  Серийный номер  -->
             <TextBlock
@@ -136,7 +136,7 @@
                 Grid.Column="1"
                 Grid.ColumnSpan="3"
                 Margin="0,5"
-                Text="{Binding CurrentStand.SerialNumber, Mode=TwoWay}" />
+                Text="{Binding CurrentStandModel.SerialNumber, Mode=TwoWay}" />
 
             <!--  Масса  -->
             <TextBlock
@@ -150,7 +150,7 @@
                 Grid.Column="1"
                 Width="100"
                 Margin="0,5,100,5"
-                Text="{Binding CurrentStand.Weight, Mode=TwoWay}" />
+                Text="{Binding CurrentStandModel.Weight, Mode=TwoWay}" />
 
             <!--  Сумма стенда  -->
             <TextBlock
@@ -164,7 +164,7 @@
                 Grid.Column="1"
                 Width="100"
                 Margin="0,5,100,5"
-                Text="{Binding CurrentStand.StandSummCost, Mode=TwoWay}" />
+                Text="{Binding CurrentStandModel.StandSummCost, Mode=TwoWay}" />
 
             <!--  Комментарии  -->
             <TextBlock
@@ -178,7 +178,7 @@
                 Grid.Column="1"
                 Grid.ColumnSpan="3"
                 Margin="0,5"
-                Text="{Binding CurrentStand.Comments, Mode=TwoWay}" />
+                Text="{Binding CurrentStandModel.Comments, Mode=TwoWay}" />
 
             <!--  Примечание  -->
             <TextBlock
@@ -194,7 +194,7 @@
                 Height="100"
                 Margin="0,5"
                 AcceptsReturn="True"
-                Text="{Binding CurrentStand.DesignStand, Mode=TwoWay}"
+                Text="{Binding CurrentStandModel.DesignStand, Mode=TwoWay}"
                 TextWrapping="Wrap" />
 
             <!--  Кнопки управления  -->
@@ -237,8 +237,8 @@
 
                 <ListView
                     Grid.Row="1"
-                    ItemsSource="{Binding CurrentProject.Stands}"
-                    SelectedItem="{Binding CurrentProject.SelectedStand, Mode=TwoWay}">
+                    ItemsSource="{Binding CurrentProjectModel.Stands}"
+                    SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn
