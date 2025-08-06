@@ -87,7 +87,6 @@ namespace ReportEngine.Domain.Repositories
         public async Task UpdateStandAsync(Stand stand)
         {
             var existingStand = await _context.Set<Stand>()
-               .Include(p => p.ProjectInfoId)
                .FirstOrDefaultAsync(p => p.ProjectInfoId == stand.ProjectInfoId);
 
             if (existingStand != null)

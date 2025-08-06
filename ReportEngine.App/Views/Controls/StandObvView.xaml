@@ -76,7 +76,7 @@
                 Grid.Row="1"
                 Grid.Column="1"
                 Width="24"
-                Margin="503,3,731,4"
+                Margin="443,1,791,7"
                 Command="{Binding ProjectCommandProvider.SelectMaterialLineDialogCommand}"
                 Content="..." />
 

@@ -123,6 +123,10 @@ namespace ReportEngine.App.ViewModels
                     CurrentProject.SelectedStand.TreeScoket = socket.Name;
             });
         }
+        public void OnSelectCompanyCommandExecuted(object e)
+        {
+            ExceptionHelper.SafeExecute(() => _dialogService.());
+        }
 
         public bool CanAllCommandsExecute(object e) => true;
         public async void OnCreateNewCardCommandExecuted(object e) // Создание новой карточки проекта
