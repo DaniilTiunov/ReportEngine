@@ -39,7 +39,7 @@ namespace ReportEngine.App.Model
         public int NN { get => _nn; set => Set(ref _nn, value); }
         public string MaterialLine { get => _materialLine; set => Set(ref _materialLine, value); }
         public string Armature { get => _armature; set => Set(ref _armature, value); }
-        public string TreeScoket { get => _treeScoket; set => Set(ref _treeScoket, value); }
+        public string TreeSocket { get => _treeScoket; set => Set(ref _treeScoket, value); }
         public string KMCH { get => _kmch; set => Set(ref _kmch, value); }
         public string FirstSensorType { get => _firstSensorType; set => Set(ref _firstSensorType, value); }
         public string? FirstSensorKKSCounter { get => _firsSensorKksCode; set => Set(ref _firsSensorKksCode, value); }//ККС Контура

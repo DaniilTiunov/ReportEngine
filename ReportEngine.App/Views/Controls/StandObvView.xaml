@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:Background="White"
     d:DesignHeight="1000"
-    d:DesignWidth="1400"
+    d:DesignWidth="1600"
     FontSize="13"
     mc:Ignorable="d">
 
@@ -47,7 +47,7 @@
                 Grid.Row="0"
                 Grid.Column="1"
                 Margin="5,5,1016,5"
-                Text="{Binding CurrentProject.SelectedStands.ObvyazkaType}" />
+                Text="{Binding CurrentProject.SelectedStand.ObvyazkaType}" />
 
             <!--  NN  -->
             <TextBlock
@@ -59,7 +59,7 @@
                 Grid.Row="0"
                 Grid.Column="1"
                 Margin="445,6,755,4"
-                Text="{Binding CurrentProject.SelectedStands.NN}" />
+                Text="{Binding CurrentProject.SelectedStand.NN}" />
 
             <!--  Материал линии  -->
             <TextBlock
@@ -71,7 +71,7 @@
                 Grid.Row="1"
                 Grid.Column="1"
                 Margin="5,5,925,5"
-                Text="{Binding CurrentProject.SelectedStands.MaterialLine}" />
+                Text="{Binding CurrentProject.SelectedStand.MaterialLine, FallbackValue='BINDING_ERROR'}" />
             <Button
                 Grid.Row="1"
                 Grid.Column="1"
@@ -90,7 +90,7 @@
                 Grid.Row="2"
                 Grid.Column="1"
                 Margin="5,6,924,4"
-                Text="{Binding CurrentStand.Armature}" />
+                Text="{Binding CurrentProject.SelectedStand.Armature}" />
             <Button
                 Grid.Row="2"
                 Grid.Column="1"
@@ -181,8 +181,8 @@
                     Grid.Row="1"
                     Grid.Column="1"
                     Margin="5,5,800,5"
-                    ItemsSource="{Binding SensorTypes}"
-                    SelectedItem="{Binding CurrentProject.SelectedStands.FirstSensorType}" />
+                    ItemsSource="{Binding CurrentStand.SensorTypes}"
+                    SelectedItem="{Binding CurrentProject.SelectedStand.FirstSensorType}" />
                 <TextBlock
                     Grid.Row="2"
                     Grid.Column="0"
@@ -192,7 +192,7 @@
                     Grid.Row="2"
                     Grid.Column="1"
                     Margin="5,5,800,5"
-                    Text="{Binding CurrentProject.SelectedStands.FirstSensorKKSCounter}" />
+                    Text="{Binding CurrentProject.SelectedStand.FirstSensorKKSCounter}" />
                 <TextBlock
                     Grid.Row="3"
                     Grid.Column="0"
@@ -202,7 +202,7 @@
                     Grid.Row="3"
                     Grid.Column="1"
                     Margin="5,5,800,5"
-                    Text="{Binding CurrentProject.SelectedStands.FirstSensorMarkPlus}" />
+                    Text="{Binding CurrentProject.SelectedStand.FirstSensorMarkPlus}" />
                 <TextBlock
                     Grid.Row="4"
                     Grid.Column="0"
@@ -212,7 +212,7 @@
                     Grid.Row="4"
                     Grid.Column="1"
                     Margin="5,5,800,5"
-                    Text="{Binding CurrentProject.SelectedStands.FirstSensorMarkMinus}" />
+                    Text="{Binding CurrentProject.SelectedStand.FirstSensorMarkMinus}" />
                 <TextBlock
                     Grid.Row="5"
                     Grid.Column="0"

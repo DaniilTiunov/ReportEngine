@@ -1,4 +1,5 @@
 ﻿using ReportEngine.App.Commands;
+using ReportEngine.App.Convert;
 using ReportEngine.App.Display;
 using ReportEngine.App.Model;
 using ReportEngine.App.Services.Interfaces;
@@ -20,7 +21,6 @@ namespace ReportEngine.App.ViewModels
         public StandModel CurrentStand { get; set; } = new();
         public ProjectModel CurrentProject { get; set; } = new();
         public ProjectCommandProvider ProjectCommandProvider { get; set; } = new();
-
 
         public ProjectViewModel(IProjectInfoRepository projectRepository, IDialogService dialogService)
         {
@@ -82,8 +82,9 @@ namespace ReportEngine.App.ViewModels
                 if (projectInfo.Stands != null)
                 {
                     foreach (var stand in projectInfo.Stands)
-                        CurrentProject.Stands.Add(stand);
+                        CurrentProject.Stands.Add(StandDataConverter.ConvertToStandModel(stand));
                 }
+                CurrentProject.SelectedStand = CurrentProject.Stands.FirstOrDefault();
 
                 CurrentStand = new StandModel();
                 OnPropertyChanged(nameof(CurrentStand));
@@ -98,8 +99,10 @@ namespace ReportEngine.App.ViewModels
             ExceptionHelper.SafeExecute(() =>
             {
                 var materialLine = _dialogService.ShowEquipDialog<T>();
-                if (materialLine != null)
+                if (materialLine != null && CurrentProject.SelectedStand != null)
                     CurrentProject.SelectedStand.MaterialLine = materialLine.Name;
+
+                OnPropertyChanged(nameof(CurrentProject.SelectedStand.MaterialLine));
             });
         }
 
@@ -109,8 +112,10 @@ namespace ReportEngine.App.ViewModels
             ExceptionHelper.SafeExecute(() =>
             {
                 var armature = _dialogService.ShowEquipDialog<T>();
-                if (armature != null)
+                if (armature != null && CurrentProject.SelectedStand != null)
                     CurrentProject.SelectedStand.Armature = armature.Name;
+
+                OnPropertyChanged(nameof(CurrentProject.SelectedStand.Armature));
             });
         }
         public void OnSelectTreeSocketFromDialogCommandExecuted<T>(object e)
@@ -119,15 +124,12 @@ namespace ReportEngine.App.ViewModels
             ExceptionHelper.SafeExecute(() =>
             {
                 var socket = _dialogService.ShowEquipDialog<T>();
-                if (socket != null)
-                    CurrentProject.SelectedStand.TreeScoket = socket.Name;
+                if (socket != null && CurrentProject.SelectedStand != null)
+                    CurrentProject.SelectedStand.TreeSocket = socket.Name;
+
+                OnPropertyChanged(nameof(CurrentProject.SelectedStand.TreeSocket));
             });
         }
-        public void OnSelectCompanyCommandExecuted(object e)
-        {
-            ExceptionHelper.SafeExecute(() => _dialogService.());
-        }
-
         public bool CanAllCommandsExecute(object e) => true;
         public async void OnCreateNewCardCommandExecuted(object e) // Создание новой карточки проекта
         {
@@ -173,10 +175,8 @@ namespace ReportEngine.App.ViewModels
                     MessageBoxHelper.ShowInfo("Сначала создайте проект");
                     return;
                 }
-                var newStand = new Stand
+                var newStandModel = new StandModel
                 {
-                    ProjectInfoId = CurrentProject.CurrentProjectId,
-                    Number = CurrentProject.Number,
                     KKSCode = CurrentStand.KKSCode,
                     Design = CurrentStand.Design,
                     BraceType = CurrentStand.BraceType,
@@ -189,14 +189,16 @@ namespace ReportEngine.App.ViewModels
                     NN = CurrentStand.NN,
                     MaterialLine = CurrentStand.MaterialLine,
                     Armature = CurrentStand.Armature,
-                    TreeScoket = CurrentStand.TreeScoket,
+                    TreeSocket = CurrentStand.TreeSocket,
                     KMCH = CurrentStand.KMCH,
                     FirstSensorType = CurrentStand.FirstSensorType
                 };
-
-                await _projectRepository.AddStandAsync(CurrentProject.CurrentProjectId, newStand);
-                CurrentProject.Stands.Add(newStand);
-                CurrentProject.SelectedStand = newStand;
+                var newStandEntity = StandDataConverter.ConvertToStandEntity(newStandModel);
+                newStandEntity.ProjectInfoId = CurrentProject.CurrentProjectId;
+                await _projectRepository.AddStandAsync(CurrentProject.CurrentProjectId, newStandEntity);
+                CurrentProject.Stands.Add(newStandModel);
+                CurrentProject.SelectedStand = newStandModel;
+                OnPropertyChanged(nameof(CurrentProject));
                 MessageBoxHelper.ShowInfo("Стенд успешно добавлен!");
             });
         }
@@ -242,11 +244,12 @@ namespace ReportEngine.App.ViewModels
             {
                 if (CurrentProject.SelectedStand == null)
                     return;
-
-                await _projectRepository.UpdateStandAsync(CurrentProject.SelectedStand);
+                var standEntity = StandDataConverter.ConvertToStandEntity(CurrentProject.SelectedStand);
+                await _projectRepository.UpdateStandAsync(standEntity);
+                OnPropertyChanged(nameof(CurrentProject.SelectedStand));
                 MessageBoxHelper.ShowInfo("Изменения обвязки успешно сохранены!");
             });
         }
-        #endregion
+        #endregion        
     }
 }

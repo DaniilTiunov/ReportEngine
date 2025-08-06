@@ -26,7 +26,7 @@ namespace ReportEngine.Domain.Entities
         public int NN { get; set; } //NN
         public string? MaterialLine { get; set; } //Материал линии
         public string? Armature { get; set; } // Араматура
-        public string? TreeScoket { get; set; } // Тройник
+        public string? TreeSocket { get; set; } // Тройник
         public string? KMCH { get; set; } // КМЧ
         public string? FirstSensorType { get; set; } // Тип датчика
         public string? FirstSensorKKS { get; set; }//ККС Контура

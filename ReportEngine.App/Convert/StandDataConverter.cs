@@ -1,0 +1,51 @@
+﻿using ReportEngine.App.Model;
+using ReportEngine.Domain.Entities;
+
+namespace ReportEngine.App.Convert
+{
+    public static class StandDataConverter
+    {
+        public static StandModel ConvertToStandModel(Stand stand)
+        {
+            return new StandModel
+            {
+                KKSCode = stand.KKSCode,
+                Design = stand.Design,
+                BraceType = stand.BraceType,
+                Devices = stand.Devices,
+                Width = stand.Width,
+                SerialNumber = stand.SerialNumber,
+                Weight = stand.Weight,
+                StandSummCost = stand.StandSummCost,
+                ObvyazkaType = stand.ObvyazkaType,
+                NN = stand.NN,
+                MaterialLine = stand.MaterialLine,
+                Armature = stand.Armature,
+                TreeSocket = stand.TreeSocket,
+                KMCH = stand.KMCH,
+                FirstSensorType = stand.FirstSensorType
+            };
+        }
+        public static Stand ConvertToStandEntity(StandModel model)
+        {
+            return new Stand
+            {
+                KKSCode = model.KKSCode,
+                Design = model.Design,
+                BraceType = model.BraceType,
+                Devices = model.Devices,
+                Width = model.Width,
+                SerialNumber = model.SerialNumber,
+                Weight = model.Weight,
+                StandSummCost = model.StandSummCost,
+                ObvyazkaType = model.ObvyazkaType,
+                NN = model.NN,
+                MaterialLine = model.MaterialLine,
+                Armature = model.Armature,
+                TreeSocket = model.TreeSocket,
+                KMCH = model.KMCH,
+                FirstSensorType = model.FirstSensorType
+            };
+        }
+    }
+}

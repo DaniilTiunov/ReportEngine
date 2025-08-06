@@ -1,5 +1,4 @@
 ﻿using ReportEngine.App.ViewModels;
-using ReportEngine.Domain.Entities;
 using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Model
@@ -43,14 +42,15 @@ namespace ReportEngine.App.Model
 
         private string? _manager;
 
-        private Stand? _stand;
+        private StandModel? _stand;
         #endregion
 
         #region Публичные свойства
         public IEnumerable<string> Statuses { get; set; } = new List<string>() { "ТКП", "Завершен" };
+
         public int CurrentProjectId;
-        public ObservableCollection<Stand> Stands { get; set; } = new();
-        public Stand? SelectedStand { get => _stand; set => Set(ref _stand, value); } //Выбранный стенд; }
+        public ObservableCollection<StandModel> Stands { get; set; } = new();
+        public StandModel? SelectedStand { get => _stand; set => Set(ref _stand, value); } //Выбранный стенд; 
 
 
         public int Number { get => _number; set => Set(ref _number, value); } //№п/п
