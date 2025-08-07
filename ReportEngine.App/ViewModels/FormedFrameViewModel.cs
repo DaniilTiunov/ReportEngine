@@ -1,8 +1,11 @@
-﻿using ReportEngine.App.Model;
+﻿using ReportEngine.App.Commands;
+using ReportEngine.App.Model;
+using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Frame;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels
 {
@@ -27,13 +30,40 @@ namespace ReportEngine.App.ViewModels
             _formedFrameRepository = formedFrameRepository;
 
             LoadDetailsData();
+            InitializeCommands();
         }
 
         public async void LoadDetailsData()
         {
             await ExceptionHelper.SafeExecuteAsync( async () => {
-                var details = await _frameDetailRepository.GetAllAsync();
-                FormedFrameModel.FrameDetails = new ObservableCollection<FrameDetail>(details);
+                FormedFrameModel.FrameDetails = new ObservableCollection<FrameDetail>(await _frameDetailRepository.GetAllAsync());
+                FormedFrameModel.FrameRolls = new ObservableCollection<FrameRoll>(await _frameRollRepository.GetAllAsync());
+                FormedFrameModel.PillarEqiups = new ObservableCollection<PillarEqiup>(await _pillarEqiupRepository.GetAllAsync());
+            });
+        }
+
+        public void InitializeCommands() => AddNewFrameCommand = new RelayCommand(OnAddNewFrameExecuted, CanAllCommandsExecute);
+
+        public ICommand AddNewFrameCommand { get; set; }
+        public bool CanAllCommandsExecute(object p) => true;
+        public async void OnAddNewFrameExecuted(object p)
+        {
+            await ExceptionHelper.SafeExecuteAsync(async () => 
+            {
+                var newFrame = new FormedFrame
+                {
+                    Name = FormedFrameModel.SelectedFrame.Name,
+                    Weight = FormedFrameModel.SelectedFrame.Weight,
+                    Depth = FormedFrameModel.SelectedFrame.Depth,
+                    Width = FormedFrameModel.SelectedFrame.Width,
+                    Height = FormedFrameModel.SelectedFrame.Height,
+                    Designe = FormedFrameModel.SelectedFrame.Designe
+                };
+
+                await _formedFrameRepository.AddAsync(newFrame);
+
+                FormedFrameModel.AllFrames.Add(newFrame);
+
             });
         }
     }

@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:ReportEngine.App.Views.Windows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Создание и редактирование рам"
-    Width="1200"
+    Width="1400"
     Height="700"
     mc:Ignorable="d">
     <Grid>
@@ -28,7 +28,22 @@
                 Grid.Row="0"
                 Margin="10"
                 Header="Список рам">
-                <ListBox Height="300" Margin="5" />
+                <DataGrid
+                    Height="300"
+                    Margin="5"
+                    ItemsSource="{Binding FormedFrameModel.AllFrames}"
+                    SelectedItem="{Binding FormedFrameModel.SelectedFrame}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
+                        <DataGridTextColumn Binding="{Binding FrameType}" Header="Тип" />
+                        <DataGridTextColumn Binding="{Binding Width}" Header="Ширина" />
+                        <DataGridTextColumn Binding="{Binding Height}" Header="Высота" />
+                        <DataGridTextColumn Binding="{Binding Depth}" Header="Глубина" />
+                        <DataGridTextColumn Binding="{Binding Weight}" Header="Масса" />
+                        <DataGridTextColumn Binding="{Binding Designe}" Header="Описание по КД" />
+                        <DataGridTextColumn Binding="{Binding FrameDetails}" Header="Детали рамы" />
+                    </DataGrid.Columns>
+                </DataGrid>
             </GroupBox>
 
             <!--  Параметры рамы  -->
@@ -60,7 +75,8 @@
                     <TextBox
                         Grid.Row="0"
                         Grid.Column="1"
-                        Margin="5" />
+                        Margin="5"
+                        Text="{Binding FormedFrameModel.SelectedFrame.Name}" />
 
                     <TextBlock
                         Grid.Row="1"
@@ -72,7 +88,8 @@
                     <TextBox
                         Grid.Row="1"
                         Grid.Column="1"
-                        Margin="5" />
+                        Margin="5"
+                        Text="{Binding FormedFrameModel.SelectedFrame.Width}" />
 
                     <TextBlock
                         Grid.Row="2"
@@ -84,7 +101,8 @@
                     <TextBox
                         Grid.Row="2"
                         Grid.Column="1"
-                        Margin="5" />
+                        Margin="5"
+                        Text="{Binding FormedFrameModel.SelectedFrame.Height}" />
 
                     <TextBlock
                         Grid.Row="3"
@@ -96,7 +114,8 @@
                     <TextBox
                         Grid.Row="3"
                         Grid.Column="1"
-                        Margin="5" />
+                        Margin="5"
+                        Text="{Binding FormedFrameModel.SelectedFrame.Depth}" />
 
                     <TextBlock
                         Grid.Row="4"
@@ -108,7 +127,8 @@
                     <TextBox
                         Grid.Row="4"
                         Grid.Column="1"
-                        Margin="5" />
+                        Margin="5"
+                        Text="{Binding FormedFrameModel.SelectedFrame.Weight}" />
 
                     <TextBlock
                         Grid.Row="5"
@@ -120,7 +140,8 @@
                     <TextBox
                         Grid.Row="5"
                         Grid.Column="1"
-                        Margin="5" />
+                        Margin="5"
+                        Text="{Binding FormedFrameModel.SelectedFrame.Designe}" />
                 </Grid>
             </GroupBox>
 
@@ -133,6 +154,7 @@
                 <Button
                     Width="100"
                     Margin="5"
+                    Command="{Binding AddNewFrameCommand}"
                     Content="Добавить" />
                 <Button
                     Width="150"
@@ -154,6 +176,7 @@
                     <DataGrid
                         Margin="5"
                         AutoGenerateColumns="False"
+                        CanUserAddRows="False"
                         ItemsSource="{Binding FormedFrameModel.FrameDetails}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
@@ -163,20 +186,28 @@
                     </DataGrid>
                 </TabItem>
                 <TabItem Header="Комплектующие для стойки">
-                    <DataGrid Margin="5" AutoGenerateColumns="False">
+                    <DataGrid
+                        Margin="5"
+                        AutoGenerateColumns="False"
+                        CanUserAddRows="False"
+                        ItemsSource="{Binding FormedFrameModel.FrameRolls}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
-                            <DataGridTextColumn Binding="{Binding Unit}" Header="Ед. изм." />
-                            <DataGridTextColumn Binding="{Binding Quantity}" Header="Кол-во" />
+                            <DataGridTextColumn Binding="{Binding Cost}" Header="Цена" />
+                            <DataGridTextColumn Binding="{Binding Measure}" Header="Единица измерения" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>
                 <TabItem Header="Прокат">
-                    <DataGrid Margin="5" AutoGenerateColumns="False">
+                    <DataGrid
+                        Margin="5"
+                        AutoGenerateColumns="False"
+                        CanUserAddRows="False"
+                        ItemsSource="{Binding FormedFrameModel.PillarEqiups}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
-                            <DataGridTextColumn Binding="{Binding Unit}" Header="Ед. изм." />
-                            <DataGridTextColumn Binding="{Binding Quantity}" Header="Кол-во" />
+                            <DataGridTextColumn Binding="{Binding Cost}" Header="Цена" />
+                            <DataGridTextColumn Binding="{Binding Measure}" Header="Единица измерения" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>
