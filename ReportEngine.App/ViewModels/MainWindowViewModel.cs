@@ -62,7 +62,7 @@ namespace ReportEngine.App.ViewModels
             MainWindowCommandProvider.EditProjectCommand = new RelayCommand(OnEditProjectCommandExecuted, CanAllCommandsExecute);
 
         }
-        public void InitializeGenericEquipCommands() // Нужно придумать как отрефакторить этого монстра 
+        public void InitializeGenericEquipCommands() // Нужно придумать как отрефакторить этого монстра
         {
             GenericEquipCommandProvider.OpenHeaterPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<HeaterPipe, HeaterPipe>, CanAllCommandsExecute);
             GenericEquipCommandProvider.OpenCarbonPipeCommand = new RelayCommand(OnOpenGenericWindowCommandExecuted<CarbonPipe, CarbonPipe>, CanAllCommandsExecute);
