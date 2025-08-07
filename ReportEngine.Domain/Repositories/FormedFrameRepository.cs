@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Repositories.Interfaces;
 
@@ -24,13 +25,27 @@ namespace ReportEngine.Domain.Repositories
         public async Task AddComponentAsync(int frameId, IBaseEquip component)
         {
             var frame = await GetByIdAsync(frameId);
-            if (frame != null)
-            {
-                frame.Components.Add(component);
-                await _context.SaveChangesAsync();
-            }
-        }
+            if (frame == null)
+                return;
 
+            switch (component)
+            {
+                case BaseFrame baseFrame:
+                    frame.BaseFrameComponents.Add(baseFrame);
+                    break;
+                case BaseEquip baseEquip:
+                    frame.BaseEquipComponents.Add(baseEquip);
+                    break;
+                case BaseElectricComponent baseElectricComponent:
+                    frame.BaseElectricComponents.Add(baseElectricComponent);
+                    break;
+                default:
+                    throw new ArgumentException($"Не поддерживаемый компонент: {component.GetType().Name}");
+            }
+
+            await _context.SaveChangesAsync();
+            
+        }
         public Task DeleteAsync(FormedFrame entity)
         {
             if (entity != null)
@@ -52,19 +67,23 @@ namespace ReportEngine.Domain.Repositories
             }
             return 0;
         }
-
         public async Task<IEnumerable<FormedFrame>> GetAllAsync()
         {
             return await _context.Set<FormedFrame>()
-                .Include(f => f.Components)
-                .ToListAsync();
+                        .Include(f => f.BaseFrameComponents)
+                        .Include(f => f.BaseEquipComponents)
+                        .Include(f => f.BaseElectricComponents)
+                        .AsNoTracking()
+                        .ToListAsync();
         }
 
         public async Task<FormedFrame> GetByIdAsync(int id)
         {
             return await _context.Set<FormedFrame>()
-                .Include(f => f.Components)
-                .FirstOrDefaultAsync(f => f.Id == id);
+                        .Include(f => f.BaseFrameComponents)
+                        .Include(f => f.BaseEquipComponents)
+                        .Include(f => f.BaseElectricComponents)
+                        .FirstOrDefaultAsync(f => f.Id == id);
         }
 
         public async Task UpdateAsync(FormedFrame entity)

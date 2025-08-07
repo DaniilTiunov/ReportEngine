@@ -70,6 +70,7 @@ namespace ReportEngine.App
             services.AddScoped<IBaseRepository<Company>, CompanyRepository>();
             services.AddScoped<IProjectInfoRepository, ProjectInfoRepository>();
             services.AddScoped<IObvyazkaRepository, ObvyazkaRepository>();
+            services.AddScoped<IFrameRepository, FormedFrameRepository>();
 
         }
         private static void ConfigureGenericRepositories(IServiceCollection services)
@@ -99,7 +100,8 @@ namespace ReportEngine.App
                 typeof(CabelProtection),
                 typeof(Heater),
                 typeof(Other),
-                typeof(Container)
+                typeof(Container),
+                typeof(FormedFrame)
             };
 
             foreach (var type in types)
