@@ -231,6 +231,14 @@ namespace ReportEngine.App.ViewModels
                 MessageBoxHelper.ShowInfo("Изменения обвязки успешно сохранены!");
             });
         }
+        public void ResetProject()
+        {
+            CurrentProjectModel = new ProjectModel();
+            CurrentStandModel = new StandModel();
+            InitializeTime();
+            OnPropertyChanged(nameof(CurrentProjectModel));
+            OnPropertyChanged(nameof(CurrentStandModel));
+        }
         #endregion        
 
         // Проект создаётся, создаётся стенд, добавляется обвязка.
