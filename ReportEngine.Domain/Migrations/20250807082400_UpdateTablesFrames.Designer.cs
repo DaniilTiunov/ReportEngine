@@ -12,8 +12,8 @@ using ReportEngine.Domain.Database.Context;
 namespace ReportEngine.Domain.Migrations
 {
     [DbContext(typeof(ReAppContext))]
-    [Migration("20250807074659_AddFormedFrameTable2")]
-    partial class AddFormedFrameTable2
+    [Migration("20250807082400_UpdateTablesFrames")]
+    partial class UpdateTablesFrames
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,51 @@ namespace ReportEngine.Domain.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("FormedFrameFrameDetail", b =>
+                {
+                    b.Property<int>("FormedFramesId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("FrameDetailsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("FormedFramesId", "FrameDetailsId");
+
+                    b.HasIndex("FrameDetailsId");
+
+                    b.ToTable("FormedFrameFrameDetail");
+                });
+
+            modelBuilder.Entity("FormedFrameFrameRoll", b =>
+                {
+                    b.Property<int>("FormedFramesId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("FrameRollsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("FormedFramesId", "FrameRollsId");
+
+                    b.HasIndex("FrameRollsId");
+
+                    b.ToTable("FormedFrameFrameRoll");
+                });
+
+            modelBuilder.Entity("FormedFramePillarEqiup", b =>
+                {
+                    b.Property<int>("FormedFramesId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PillarEqiupsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("FormedFramesId", "PillarEqiupsId");
+
+                    b.HasIndex("PillarEqiupsId");
+
+                    b.ToTable("FormedFramePillarEqiup");
+                });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.Armautre.CarbonArmature", b =>
                 {
@@ -660,7 +705,7 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<int>("ExportDays")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("FormedFrameId")
+                    b.Property<int>("FormedFrameId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Measure")
@@ -672,8 +717,6 @@ namespace ReportEngine.Domain.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FormedFrameId");
 
                     b.ToTable("FrameDetails");
                 });
@@ -692,7 +735,7 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<int>("ExportDays")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("FormedFrameId")
+                    b.Property<int>("FormedFrameId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Measure")
@@ -704,8 +747,6 @@ namespace ReportEngine.Domain.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FormedFrameId");
 
                     b.ToTable("FrameRolls");
                 });
@@ -724,7 +765,7 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<int>("ExportDays")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("FormedFrameId")
+                    b.Property<int>("FormedFrameId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Measure")
@@ -736,8 +777,6 @@ namespace ReportEngine.Domain.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FormedFrameId");
 
                     b.ToTable("PillarEqiups");
                 });
@@ -1182,25 +1221,49 @@ namespace ReportEngine.Domain.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("ReportEngine.Domain.Entities.Frame.FrameDetail", b =>
+            modelBuilder.Entity("FormedFrameFrameDetail", b =>
                 {
                     b.HasOne("ReportEngine.Domain.Entities.FormedFrame", null)
-                        .WithMany("FrameDetails")
-                        .HasForeignKey("FormedFrameId");
+                        .WithMany()
+                        .HasForeignKey("FormedFramesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ReportEngine.Domain.Entities.Frame.FrameDetail", null)
+                        .WithMany()
+                        .HasForeignKey("FrameDetailsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("ReportEngine.Domain.Entities.Frame.FrameRoll", b =>
+            modelBuilder.Entity("FormedFrameFrameRoll", b =>
                 {
                     b.HasOne("ReportEngine.Domain.Entities.FormedFrame", null)
-                        .WithMany("FrameRolls")
-                        .HasForeignKey("FormedFrameId");
+                        .WithMany()
+                        .HasForeignKey("FormedFramesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ReportEngine.Domain.Entities.Frame.FrameRoll", null)
+                        .WithMany()
+                        .HasForeignKey("FrameRollsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("ReportEngine.Domain.Entities.Frame.PillarEqiup", b =>
+            modelBuilder.Entity("FormedFramePillarEqiup", b =>
                 {
                     b.HasOne("ReportEngine.Domain.Entities.FormedFrame", null)
-                        .WithMany("PillarEqiups")
-                        .HasForeignKey("FormedFrameId");
+                        .WithMany()
+                        .HasForeignKey("FormedFramesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ReportEngine.Domain.Entities.Frame.PillarEqiup", null)
+                        .WithMany()
+                        .HasForeignKey("PillarEqiupsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.Stand", b =>
@@ -1212,15 +1275,6 @@ namespace ReportEngine.Domain.Migrations
                         .IsRequired();
 
                     b.Navigation("Project");
-                });
-
-            modelBuilder.Entity("ReportEngine.Domain.Entities.FormedFrame", b =>
-                {
-                    b.Navigation("FrameDetails");
-
-                    b.Navigation("FrameRolls");
-
-                    b.Navigation("PillarEqiups");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.ProjectInfo", b =>
