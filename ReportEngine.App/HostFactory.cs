@@ -100,8 +100,8 @@ namespace ReportEngine.App
                 typeof(CabelProtection),
                 typeof(Heater),
                 typeof(Other),
-                typeof(Container),
-                typeof(FormedFrame)
+                typeof(Container)
+
             };
 
             foreach (var type in types)

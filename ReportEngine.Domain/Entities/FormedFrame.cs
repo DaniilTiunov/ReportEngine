@@ -1,6 +1,5 @@
 ﻿using ReportEngine.Domain.Entities.BaseEntities;
-using ReportEngine.Domain.Entities.BaseEntities.Interface;
-using System.ComponentModel;
+using ReportEngine.Domain.Entities.Frame;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -11,24 +10,16 @@ namespace ReportEngine.Domain.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [Description("Название рамы")]
         public string Name { get; set; }
-        [Description("Тип рамы")]
-        public string FrameType { get; set; } 
-        [Description("Ширина рамы в м")]
-        public float Width { get; set; } 
-        [Description("Высота рамы")]
+        public string FrameType { get; set; }
+        public float Width { get; set; }
         public float Height { get; set; }
-        [Description("Глубина рамы")]
         public float Depth { get; set; }
-        [Description("Масса рамы")]
         public float Weight { get; set; }
-        [Description("Обозначение по КД рамы")]
         public string Designe { get; set; }
-        [Description("Рамные комплектующие")]
-        public virtual ICollection<BaseFrame> BaseFrameComponents { get; set; } = new List<BaseFrame>(); // Компоненты рамы
-        public virtual ICollection<BaseEquip> BaseEquipComponents { get; set; } = new List<BaseEquip>(); // Возможные компоненты рамы
-        public virtual ICollection<BaseElectricComponent> BaseElectricComponents { get; set; } = new List<BaseElectricComponent>(); // Возможные компоненты рамы
+        public virtual ICollection<FrameDetail> FrameDetails { get; set; } = new List<FrameDetail>(); // Компоненты рамы
+        public virtual ICollection<FrameRoll> FrameRolls { get; set; } = new List<FrameRoll>(); // Возможные компоненты рамы
+        public virtual ICollection<PillarEqiup> PillarEqiups { get; set; } = new List<PillarEqiup>(); // Возможные компоненты рамы
 
 
     }
