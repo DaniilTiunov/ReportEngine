@@ -43,12 +43,5 @@ namespace ReportEngine.App.Services
                 return null;
             }
         }
-        public Window ShowWindowAsDialog<T>()
-            where T : Window
-        {
-            var window = _serviceProvider.GetRequiredService<T>();
-            window.ShowDialog();
-            return window;
-        }
     }
 }

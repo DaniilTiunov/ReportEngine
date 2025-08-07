@@ -7,6 +7,7 @@ namespace ReportEngine.App.Commands
         public ICommand OpenMainWindowCommand { get; set; }
         public ICommand OpenAllObvyazkiCommand { get; set; }
         public ICommand OpenTreeViewCommand { get; set; }
+        public ICommand OpenFormedFramesCommand { get; set; }
         public ICommand CloseAppCommand { get; set; }
         public ICommand OpenAllUsersCommand { get; set; }
         public ICommand OpenAllCompaniesCommand { get; set; }

@@ -87,6 +87,10 @@
                 <Separator />
                 <MenuItem Command="{Binding GenericEquipCommandProvider.OpenConteinersCommand}" Header="Тара" />
                 <Separator />
+            </MenuItem>
+            <MenuItem Header="Рамы и обвязки">
+                <MenuItem Command="{Binding MainWindowCommandProvider.OpenFormedFramesCommand}" Header="Создание и редактировние рам" />
+                <Separator />
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllObvyazkiCommand}" Header="Обвязки" />
             </MenuItem>
             <MenuItem Header="Инструменты">

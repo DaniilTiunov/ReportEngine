@@ -10,8 +10,6 @@ using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
-using ReportEngine.Domain.Entities.BaseEntities;
-using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.Braces;
 using ReportEngine.Domain.Entities.Drainage;
 using ReportEngine.Domain.Entities.ElectricComponents;
@@ -126,7 +124,7 @@ namespace ReportEngine.App
             services.AddScoped<ProjectViewModel>();
             services.AddScoped<ObvyazkaViewModel>();
             services.AddScoped<CompanyViewModel>();
-
+            services.AddScoped<FormedFrameViewModel>();
         }
         private static void ConfigureViews(IServiceCollection services)
         {
@@ -146,6 +144,7 @@ namespace ReportEngine.App
             services.AddTransient<ObvyazkiView>();
             services.AddTransient<ProjectCardView>();
             services.AddTransient<CompanyView>();
+            services.AddTransient<FormedFrameView>();
         }
     }
 }

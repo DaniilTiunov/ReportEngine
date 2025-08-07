@@ -51,10 +51,9 @@ namespace ReportEngine.App.ViewModels
         {
             MainWindowCommandProvider.CloseAppCommand = new RelayCommand(OnCloseAppCommandExecuted, CanAllCommandsExecute);
             MainWindowCommandProvider.OpenAllUsersCommand = new RelayCommand(OpenOthersWindowCommandExecuted<UsersView>, CanAllCommandsExecute);
-            MainWindowCommandProvider.OpenAllUsersCommand = new RelayCommand(OpenOthersWindowCommandExecuted<CompanyView>, CanAllCommandsExecute);
             MainWindowCommandProvider.OpenAllObvyazkiCommand = new RelayCommand(OpenOthersWindowCommandExecuted<ObvyazkiView>, CanAllCommandsExecute);
             MainWindowCommandProvider.OpenAllCompaniesCommand = new RelayCommand(OpenOthersWindowCommandExecuted<CompanyView>, CanAllCommandsExecute);
-            MainWindowCommandProvider.OpenAllObvyazkiCommand = new RelayCommand(OpenOthersWindowCommandExecuted<ObvyazkiView>, CanAllCommandsExecute);
+            MainWindowCommandProvider.OpenFormedFramesCommand = new RelayCommand(OpenOthersWindowCommandExecuted<FormedFrameView>, CanAllCommandsExecute);
             MainWindowCommandProvider.OpenTreeViewCommand = new RelayCommand(OpenAnotherControlsCommandExecuted<TreeProjectView>, CanAllCommandsExecute);
             MainWindowCommandProvider.ChekDbConnectionCommand = new RelayCommand(OnChekDbConnectionCommandExecuted, CanAllCommandsExecute);
             MainWindowCommandProvider.ShowAllProjectsCommand = new RelayCommand(OnShowAllProjectsCommandExecuted, CanAllCommandsExecute);
