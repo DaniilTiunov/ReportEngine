@@ -44,5 +44,10 @@ namespace ReportEngine.App.Model
         public FrameDetail SelectedFrameDetail { get; set; }
         public FrameRoll SelectedFrameRoll { get; set; }
         public PillarEqiup SelectedPillarEqiup { get; set; }
+
+        public FormedFrameModel()
+        {
+            SelectedFrame = new FormedFrame();
+        }
     }
 }

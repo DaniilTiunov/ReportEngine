@@ -36,6 +36,7 @@ namespace ReportEngine.App.ViewModels
         public async void LoadDetailsData()
         {
             await ExceptionHelper.SafeExecuteAsync( async () => {
+                FormedFrameModel.AllFrames = new ObservableCollection<FormedFrame>(await _formedFrameRepository.GetAllAsync());
                 FormedFrameModel.FrameDetails = new ObservableCollection<FrameDetail>(await _frameDetailRepository.GetAllAsync());
                 FormedFrameModel.FrameRolls = new ObservableCollection<FrameRoll>(await _frameRollRepository.GetAllAsync());
                 FormedFrameModel.PillarEqiups = new ObservableCollection<PillarEqiup>(await _pillarEqiupRepository.GetAllAsync());
@@ -50,10 +51,14 @@ namespace ReportEngine.App.ViewModels
         {
             await ExceptionHelper.SafeExecuteAsync(async () => 
             {
+                if (FormedFrameModel.SelectedFrame == null)
+                    FormedFrameModel.SelectedFrame = new FormedFrame();
+
                 var newFrame = new FormedFrame
                 {
                     Name = FormedFrameModel.SelectedFrame.Name,
                     Weight = FormedFrameModel.SelectedFrame.Weight,
+                    FrameType = FormedFrameModel.SelectedFrame.FrameType,
                     Depth = FormedFrameModel.SelectedFrame.Depth,
                     Width = FormedFrameModel.SelectedFrame.Width,
                     Height = FormedFrameModel.SelectedFrame.Height,
@@ -63,7 +68,7 @@ namespace ReportEngine.App.ViewModels
                 await _formedFrameRepository.AddAsync(newFrame);
 
                 FormedFrameModel.AllFrames.Add(newFrame);
-
+                FormedFrameModel.SelectedFrame = new FormedFrame();
             });
         }
     }
