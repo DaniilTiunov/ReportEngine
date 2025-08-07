@@ -62,6 +62,10 @@ namespace ReportEngine.App.Services
             {
                 if (property.Name == "Id")
                     continue;
+                if (property.Name == "FormedFrameId")
+                    continue;
+                if (property.Name == "FormedFrame")
+                    continue;
 
 
                 DataGridColumn column = new DataGridTextColumn

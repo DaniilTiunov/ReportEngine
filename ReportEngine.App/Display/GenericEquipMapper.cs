@@ -22,6 +22,7 @@
             ["ElectricProtection"] = "Электро безопасность",
             ["CabelInput"] = "Кабельный ввод",
             ["ExportDays"] = "Срок поставки",
+            ["FormedFrames"] = "Используется в рамах"
         };
 
         /// <summary>
