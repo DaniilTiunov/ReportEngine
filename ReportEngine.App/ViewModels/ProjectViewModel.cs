@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ReportEngine.App.Commands;
+﻿using ReportEngine.App.Commands;
 using ReportEngine.App.Convert;
 using ReportEngine.App.Display;
 using ReportEngine.App.Model;
@@ -93,7 +92,7 @@ namespace ReportEngine.App.ViewModels
         #endregion
         #region Команды
         public bool CanAllCommandsExecute(object e) => true;
-        public void OnSelectMaterialFromDialogCommandExecuted<T>(object e)
+        public void OnSelectMaterialFromDialogCommandExecuted<T>(object e) //Выбор материала из диалога
             where T : class, IBaseEquip, new()
         {
             ExceptionHelper.SafeExecute(() =>
@@ -104,7 +103,7 @@ namespace ReportEngine.App.ViewModels
             });
         }
 
-        public void OnSelectArmatureFromDialogCommandExecuted<T>(object e)
+        public void OnSelectArmatureFromDialogCommandExecuted<T>(object e) //Выбор материала из диалога
             where T : class, IBaseEquip, new()
         {
             ExceptionHelper.SafeExecute(() =>
@@ -114,7 +113,7 @@ namespace ReportEngine.App.ViewModels
                     CurrentProjectModel.SelectedStand.Armature = armature.Name;
             });
         }
-        public void OnSelectTreeSocketFromDialogCommandExecuted<T>(object e)
+        public void OnSelectTreeSocketFromDialogCommandExecuted<T>(object e) //Выбор материала из диалога
             where T : class, IBaseEquip, new()
         {
             ExceptionHelper.SafeExecute(() =>
@@ -129,7 +128,7 @@ namespace ReportEngine.App.ViewModels
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
                 var newProjectCard = CurrentProjectModel.CreateNewProjectCard();
-                
+
                 await _projectRepository.AddAsync(newProjectCard);
 
                 CurrentProjectModel.CurrentProjectId = newProjectCard.Id;
@@ -165,7 +164,7 @@ namespace ReportEngine.App.ViewModels
                     TreeSocket = CurrentStandModel.TreeSocket,
                     KMCH = CurrentStandModel.KMCH,
                     FirstSensorType = CurrentStandModel.FirstSensorType,
-                    ProjectId = CurrentProjectModel.CurrentProjectId // ВАЖНО: присваиваем ProjectId
+                    ProjectId = CurrentProjectModel.CurrentProjectId 
                 };
                 var newStandEntity = StandDataConverter.ConvertToStandEntity(newStandModel);
                 var addedStandEntity = await _projectRepository.AddStandAsync(CurrentProjectModel.CurrentProjectId, newStandEntity);
@@ -231,7 +230,7 @@ namespace ReportEngine.App.ViewModels
                 MessageBoxHelper.ShowInfo("Изменения обвязки успешно сохранены!");
             });
         }
-        public void ResetProject()
+        public void ResetProject() // Сброс проекта для создания нового 
         {
             CurrentProjectModel = new ProjectModel();
             CurrentStandModel = new StandModel();
@@ -240,18 +239,5 @@ namespace ReportEngine.App.ViewModels
             OnPropertyChanged(nameof(CurrentStandModel));
         }
         #endregion        
-
-        // Проект создаётся, создаётся стенд, добавляется обвязка.
-        // Если вернуться на главный экран и создать новый проект, то будет ошибка (см. log20250806_001)
-        // При редактировании проекта нет возможности отредачить стенд или обвязки появляется ошибка (см. log20250806_001)
-        // Нужно: 1. Создать новый проект. 
-        // 2. Добавить N кол-во стендов (Стенды могут быть одинаковые, могут быть разные, но пока нужно чтобы хотя бы один стенд отрабатывал) 
-        // 3. После добавления стенда, начать добавлять обвязки.
-        // 4. При возвращении на главный экран чтобы проект создавался снова, или при редактировании он подтягивался для редактирования
-        // 5. Например на StandView есть ListView, там хранятся стенды проекта, сделать возможность от туда тянуть для редактирования стенда
-        // Если запустить приложение и перейти к редактированию проекта, то она корректно загрузится в форму и отредактируется в БД
-        // 
-        // возможные реализации, если много одинаковых стендов, то сделать возможность их увеличить кол-во.
-        // но и чтобы была возможность добавлять друие стенды
     }
 }
