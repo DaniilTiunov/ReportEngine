@@ -164,13 +164,14 @@ namespace ReportEngine.App.ViewModels
                     Armature = CurrentStandModel.Armature,
                     TreeSocket = CurrentStandModel.TreeSocket,
                     KMCH = CurrentStandModel.KMCH,
-                    FirstSensorType = CurrentStandModel.FirstSensorType
+                    FirstSensorType = CurrentStandModel.FirstSensorType,
+                    ProjectId = CurrentProjectModel.CurrentProjectId // ВАЖНО: присваиваем ProjectId
                 };
                 var newStandEntity = StandDataConverter.ConvertToStandEntity(newStandModel);
                 var addedStandEntity = await _projectRepository.AddStandAsync(CurrentProjectModel.CurrentProjectId, newStandEntity);
 
                 newStandModel.Id = addedStandEntity.Id;
-                newStandModel.ProjectId = CurrentProjectModel.CurrentProjectId;
+                newStandModel.ProjectId = addedStandEntity.ProjectInfoId;
 
                 CurrentProjectModel.Stands.Add(newStandModel);
                 CurrentProjectModel.SelectedStand = newStandModel;
@@ -221,6 +222,8 @@ namespace ReportEngine.App.ViewModels
                 if (CurrentProjectModel.SelectedStand == null)
                     return;
 
+                // Убедимся, что ProjectId всегда актуален
+                CurrentProjectModel.SelectedStand.ProjectId = CurrentProjectModel.CurrentProjectId;
                 var standEntity = StandDataConverter.ConvertToStandEntity(CurrentProjectModel.SelectedStand);
 
                 await _projectRepository.UpdateStandAsync(standEntity);
