@@ -92,8 +92,11 @@ namespace ReportEngine.App.ViewModels
                 var selectedDetail = FormedFrameModel.SelectedFrameDetail;
                 if (selectedFrame != null && selectedDetail != null && !selectedFrame.FrameDetails.Contains(selectedDetail))
                 {
-                    selectedFrame.FrameDetails.Add(selectedDetail);
-                    OnPropertyChanged(nameof(FormedFrameModel.SelectedFrame));
+                    if (!selectedFrame.FrameDetails.Any(d => d.Id == selectedDetail.Id))
+                    {
+                        selectedFrame.FrameDetails.Add(selectedDetail);
+                        await _formedFrameRepository.UpdateAsync(selectedFrame);
+                    }
                 }
             });
         }

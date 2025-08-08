@@ -317,7 +317,8 @@
                         Margin="5"
                         AutoGenerateColumns="False"
                         CanUserAddRows="False"
-                        ItemsSource="{Binding FormedFrameModel.FrameDetails}">
+                        ItemsSource="{Binding FormedFrameModel.FrameDetails}"
+                        SelectedItem="{Binding FormedFrameModel.SelectedFrameDetail}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
                             <DataGridTextColumn Binding="{Binding Cost}" Header="Цена" />
@@ -361,6 +362,7 @@
                 <Button
                     Width="180"
                     Margin="5"
+                    Command="{Binding AddDetailsCommand}"
                     Content="Добавить комплектующую" />
             </StackPanel>
         </Grid>
