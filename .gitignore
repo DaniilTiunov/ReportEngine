@@ -367,3 +367,4 @@ ReportEngine.Shared/Config/Logger/LoggerConfig.cs
 /ReportEngine.Shared/Config/Logger/LoggerConfig.cs
 .editorconfig
 Documentation.xml
+ReportEngine.Shared/Config/appsettings.json
