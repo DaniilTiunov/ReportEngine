@@ -10,7 +10,9 @@
     Width="1400"
     Height="900"
     mc:Ignorable="d">
-
+    <Window.Resources>
+        <conv:FrameDetailsToNameConverter x:Key="DetailsConverter" />
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
@@ -47,7 +49,11 @@
                         <DataGridTextColumn Binding="{Binding Depth}" Header="Глубина" />
                         <DataGridTextColumn Binding="{Binding Weight}" Header="Масса" />
                         <DataGridTextColumn Binding="{Binding Designe}" Header="Описание по КД" />
-                        <DataGridTextColumn Binding="{Binding FrameDetailsNames}" Header="Детали рамы" />
+                        <DataGridTextColumn Header="Детали рамы">
+                            <DataGridTextColumn.Binding>
+                                <Binding Converter="{StaticResource DetailsConverter}" Path="FrameDetails" />
+                            </DataGridTextColumn.Binding>
+                        </DataGridTextColumn>
                     </DataGrid.Columns>
                 </DataGrid>
             </GroupBox>

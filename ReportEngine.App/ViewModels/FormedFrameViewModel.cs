@@ -7,6 +7,7 @@ using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels
@@ -38,10 +39,22 @@ namespace ReportEngine.App.ViewModels
         public async void LoadDetailsData()
         {
             await ExceptionHelper.SafeExecuteAsync( async () => {
-                FormedFrameModel.AllFrames = new ObservableCollection<FormedFrame>(await _formedFrameRepository.GetAllAsync());
-                FormedFrameModel.FrameDetails = new ObservableCollection<FrameDetail>(await _frameDetailRepository.GetAllAsync());
-                FormedFrameModel.FrameRolls = new ObservableCollection<FrameRoll>(await _frameRollRepository.GetAllAsync());
-                FormedFrameModel.PillarEqiups = new ObservableCollection<PillarEqiup>(await _pillarEqiupRepository.GetAllAsync());
+                var frames = await _formedFrameRepository.GetAllAsync();
+                var details = await _frameDetailRepository.GetAllAsync();
+                var rolls = await _frameRollRepository.GetAllAsync();
+                var eqiups = await _pillarEqiupRepository.GetAllAsync();
+
+                FormedFrameModel.AllFrames.Clear();
+                foreach (var f in frames) FormedFrameModel.AllFrames.Add(f);
+
+                FormedFrameModel.FrameDetails.Clear();
+                foreach (var d in details) FormedFrameModel.FrameDetails.Add(d);
+
+                FormedFrameModel.FrameRolls.Clear();
+                foreach (var r in rolls) FormedFrameModel.FrameRolls.Add(r);
+
+                FormedFrameModel.PillarEqiups.Clear();
+                foreach (var p in eqiups) FormedFrameModel.PillarEqiups.Add(p);
             });
         }
 
@@ -90,16 +103,24 @@ namespace ReportEngine.App.ViewModels
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
-                var selectedFrame = FormedFrameModel.SelectedFrame;
-                var selectedDetail = FormedFrameModel.SelectedFrameDetail;
-                if (selectedFrame != null && selectedDetail != null && !selectedFrame.FrameDetails.Contains(selectedDetail))
+                await ExceptionHelper.SafeExecuteAsync(async () =>
                 {
-                    if (!selectedFrame.FrameDetails.Any(d => d.Id == selectedDetail.Id))
+                    var selectedFrame = FormedFrameModel.SelectedFrame;
+                    var selectedDetail = FormedFrameModel.SelectedFrameDetail;
+                    if (selectedFrame != null && selectedDetail != null)
                     {
-                        selectedFrame.FrameDetails.Add(selectedDetail);
-                        await _formedFrameRepository.UpdateAsync(selectedFrame);
+                        var freshFrame = await _formedFrameRepository.GetByIdAsync(selectedFrame.Id);
+                        if (!freshFrame.FrameDetails.Any(d => d.Id == selectedDetail.Id))
+                        {
+                            await _formedFrameRepository.AddComponentAsync(freshFrame.Id, selectedDetail);
+                            FormedFrameModel.SelectedFrame = await _formedFrameRepository.GetByIdAsync(freshFrame.Id);
+                        }
+                        else
+                        {
+                            MessageBoxHelper.ShowInfo("Деталь уже добавлена к раме.");
+                        }
                     }
-                }
+                });
             });
         }
         public async void OnDeleteFrameExecuted(object p)
