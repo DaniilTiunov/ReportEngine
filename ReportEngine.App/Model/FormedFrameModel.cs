@@ -10,12 +10,21 @@ namespace ReportEngine.App.Model
         private ObservableCollection<FrameDetail> _frameDetails  = new();
         private ObservableCollection<FrameRoll> _frameRolls  = new();
         private ObservableCollection<PillarEqiup> _pillarEqiups  = new();
-        private FormedFrame _selectedFrame;
         private ObservableCollection<FormedFrame> _allFrames = new();
+        private FormedFrame _selectedFrame = new();
+        private FrameDetail _selectedFrameDetail = new();
+        private FormedFrame _newFrame = new();
+
         public ObservableCollection<FormedFrame> AllFrames
         {
             get => _allFrames;
             set => Set(ref _allFrames, value);
+        }
+
+        public FormedFrame NewFrame 
+        { 
+            get => _newFrame;
+            set => Set(ref _newFrame, value);
         }
 
         public FormedFrame SelectedFrame
@@ -41,13 +50,31 @@ namespace ReportEngine.App.Model
             set => Set(ref _pillarEqiups, value);
         }
 
-        public FrameDetail SelectedFrameDetail { get; set; }
+        public FrameDetail SelectedFrameDetail 
+        { 
+            get => _selectedFrameDetail; 
+            set => Set(ref _selectedFrameDetail, value); 
+        }
         public FrameRoll SelectedFrameRoll { get; set; }
         public PillarEqiup SelectedPillarEqiup { get; set; }
 
         public FormedFrameModel()
         {
             SelectedFrame = new FormedFrame();
+        }
+
+        public FormedFrame CreateNewFrame()
+        {
+            return new FormedFrame
+            {
+                Name = NewFrame.Name,
+                Weight = NewFrame.Weight,
+                FrameType = NewFrame.FrameType,
+                Depth = NewFrame.Depth,
+                Width = NewFrame.Width,
+                Height = NewFrame.Height,
+                Designe = NewFrame.Designe,
+            };
         }
     }
 }

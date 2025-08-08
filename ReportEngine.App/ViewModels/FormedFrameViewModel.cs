@@ -43,32 +43,54 @@ namespace ReportEngine.App.ViewModels
             });
         }
 
-        public void InitializeCommands() => AddNewFrameCommand = new RelayCommand(OnAddNewFrameExecuted, CanAllCommandsExecute);
+        public void InitializeCommands()
+        {
+            AddNewFrameCommand = new RelayCommand(OnAddNewFrameExecuted, CanAllCommandsExecute);
+            SaveChangesCommand = new RelayCommand(OnSaveChangesExecuted, CanAllCommandsExecute);
+            AddDetailsCommand = new RelayCommand(OnAddDetailsExecuted, CanAllCommandsExecute);
+        }
 
         public ICommand AddNewFrameCommand { get; set; }
+        public ICommand SaveChangesCommand { get; set; }
+        public ICommand AddDetailsCommand { get; set; }
         public bool CanAllCommandsExecute(object p) => true;
         public async void OnAddNewFrameExecuted(object p)
         {
-            await ExceptionHelper.SafeExecuteAsync(async () => 
+            await ExceptionHelper.SafeExecuteAsync(async () =>
             {
-                if (FormedFrameModel.SelectedFrame == null)
-                    FormedFrameModel.SelectedFrame = new FormedFrame();
-
-                var newFrame = new FormedFrame
-                {
-                    Name = FormedFrameModel.SelectedFrame.Name,
-                    Weight = FormedFrameModel.SelectedFrame.Weight,
-                    FrameType = FormedFrameModel.SelectedFrame.FrameType,
-                    Depth = FormedFrameModel.SelectedFrame.Depth,
-                    Width = FormedFrameModel.SelectedFrame.Width,
-                    Height = FormedFrameModel.SelectedFrame.Height,
-                    Designe = FormedFrameModel.SelectedFrame.Designe
-                };
+                var newFrame = FormedFrameModel.CreateNewFrame();
 
                 await _formedFrameRepository.AddAsync(newFrame);
 
-                FormedFrameModel.AllFrames.Add(newFrame);
-                FormedFrameModel.SelectedFrame = new FormedFrame();
+                var addedFrame = await _formedFrameRepository.GetByIdAsync(newFrame.Id);
+                FormedFrameModel.AllFrames.Add(addedFrame);
+
+                FormedFrameModel.NewFrame = new FormedFrame();
+
+                FormedFrameModel.SelectedFrame = addedFrame;
+
+                // OnPropertyChanged(nameof(FormedFrameModel.NewFrame));
+            });
+        }
+        public async void OnSaveChangesExecuted(object p)
+        {
+            await ExceptionHelper.SafeExecuteAsync(async () =>
+            {
+                if (FormedFrameModel.SelectedFrame != null)
+                    await _formedFrameRepository.UpdateAsync(FormedFrameModel.SelectedFrame);
+            });
+        }
+        public async void OnAddDetailsExecuted(object p)
+        {
+            await ExceptionHelper.SafeExecuteAsync(async () =>
+            {
+                var selectedFrame = FormedFrameModel.SelectedFrame;
+                var selectedDetail = FormedFrameModel.SelectedFrameDetail;
+                if (selectedFrame != null && selectedDetail != null && !selectedFrame.FrameDetails.Contains(selectedDetail))
+                {
+                    selectedFrame.FrameDetails.Add(selectedDetail);
+                    OnPropertyChanged(nameof(FormedFrameModel.SelectedFrame));
+                }
             });
         }
     }
