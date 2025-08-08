@@ -1,0 +1,21 @@
+﻿using ReportEngine.Domain.Entities.Frame;
+using System.Globalization;
+using System.Windows.Data;
+
+namespace ReportEngine.App.Convert
+{
+    class FrameDetailsToNameConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is IEnumerable<FrameDetail> details && details.Any())
+                return string.Join(", ", details.Select(d => d.Name));
+            return "Нет деталей";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}

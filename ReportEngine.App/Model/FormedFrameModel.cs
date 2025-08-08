@@ -15,6 +15,11 @@ namespace ReportEngine.App.Model
         private FrameDetail _selectedFrameDetail = new();
         private FormedFrame _newFrame = new();
 
+        public string FrameDetailsNames =>
+        FrameDetails != null && FrameDetails.Any()
+            ? string.Join(", ", FrameDetails.Select(d => d.Name))
+            : "Нет деталей";
+
         public ObservableCollection<FormedFrame> AllFrames
         {
             get => _allFrames;

@@ -18,7 +18,7 @@ namespace ReportEngine.App.ViewModels
         private readonly IGenericBaseRepository<FrameRoll, FrameRoll> _frameRollRepository;
         private readonly IGenericBaseRepository<PillarEqiup, PillarEqiup> _pillarEqiupRepository;
 
-        public FormedFrameModel FormedFrameModel { get; } = new();
+        public FormedFrameModel FormedFrameModel { get; } = new();       
 
         public FormedFrameViewModel(
             IFrameRepository formedFrameRepository,
@@ -50,11 +50,13 @@ namespace ReportEngine.App.ViewModels
             AddNewFrameCommand = new RelayCommand(OnAddNewFrameExecuted, CanAllCommandsExecute);
             SaveChangesCommand = new RelayCommand(OnSaveChangesExecuted, CanAllCommandsExecute);
             AddDetailsCommand = new RelayCommand(OnAddDetailsExecuted, CanAllCommandsExecute);
+            DeleteFrameCommand = new RelayCommand(OnDeleteFrameExecuted, CanAllCommandsExecute);
         }
 
         public ICommand AddNewFrameCommand { get; set; }
         public ICommand SaveChangesCommand { get; set; }
         public ICommand AddDetailsCommand { get; set; }
+        public ICommand DeleteFrameCommand { get; set; }
         public bool CanAllCommandsExecute(object p) => true;
         public async void OnAddNewFrameExecuted(object p)
         {
@@ -71,7 +73,7 @@ namespace ReportEngine.App.ViewModels
 
                 FormedFrameModel.SelectedFrame = addedFrame;
 
-                MessageBoxHelper.ShowInfo($"Рама {addedFrame.Name} успешно создана!");
+                MessageBoxHelper.ShowInfo($"{addedFrame.Name} успешно создана!");
             });
         }
         public async void OnSaveChangesExecuted(object p)
@@ -97,6 +99,21 @@ namespace ReportEngine.App.ViewModels
                         selectedFrame.FrameDetails.Add(selectedDetail);
                         await _formedFrameRepository.UpdateAsync(selectedFrame);
                     }
+                }
+            });
+        }
+        public async void OnDeleteFrameExecuted(object p)
+        {
+            await ExceptionHelper.SafeExecuteAsync(async () =>
+            {
+                var selectedFrame = FormedFrameModel.SelectedFrame;
+                if (selectedFrame != null)
+                {
+                    await _formedFrameRepository.DeleteAsync(selectedFrame);
+                    FormedFrameModel.AllFrames.Remove(selectedFrame);
+
+
+                    MessageBoxHelper.ShowInfo($"{selectedFrame.Name} успешно удалена!");
                 }
             });
         }
