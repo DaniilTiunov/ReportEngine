@@ -1,10 +1,12 @@
 ﻿using ReportEngine.App.Commands;
+using ReportEngine.App.Display;
 using ReportEngine.App.Model;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Frame;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels
@@ -69,7 +71,7 @@ namespace ReportEngine.App.ViewModels
 
                 FormedFrameModel.SelectedFrame = addedFrame;
 
-                // OnPropertyChanged(nameof(FormedFrameModel.NewFrame));
+                MessageBoxHelper.ShowInfo($"Рама {addedFrame.Name} успешно создана!");
             });
         }
         public async void OnSaveChangesExecuted(object p)
@@ -78,6 +80,8 @@ namespace ReportEngine.App.ViewModels
             {
                 if (FormedFrameModel.SelectedFrame != null)
                     await _formedFrameRepository.UpdateAsync(FormedFrameModel.SelectedFrame);
+
+                MessageBoxHelper.ShowInfo("Изменения сохранены");
             });
         }
         public async void OnAddDetailsExecuted(object p)
