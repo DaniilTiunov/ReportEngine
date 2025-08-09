@@ -335,59 +335,72 @@
             <!--  Вкладки для различных категорий комплектующих  -->
             <TabControl Grid.Row="0" Margin="10">
                 <TabItem Header="Детали рамы">
-                    <DataGrid
-                        Margin="0,0,5,0"
-                        AutoGenerateColumns="False"
-                        CanUserAddRows="False"
-                        ItemsSource="{Binding FormedFrameModel.FrameDetails}"
-                        SelectedItem="{Binding FormedFrameModel.SelectedFrameDetail}">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
-                            <DataGridTextColumn Binding="{Binding Cost}" Header="Цена" />
-                            <DataGridTextColumn Binding="{Binding Measure}" Header="Единица измерения" />
-                        </DataGrid.Columns>
-                    </DataGrid>
+                    <StackPanel>
+                        <DataGrid
+                            Margin="0,0,5,0"
+                            AutoGenerateColumns="False"
+                            CanUserAddRows="False"
+                            ItemsSource="{Binding FormedFrameModel.FrameDetails}"
+                            SelectedItem="{Binding FormedFrameModel.SelectedFrameDetail}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
+                                <DataGridTextColumn Binding="{Binding Cost}" Header="Цена" />
+                                <DataGridTextColumn Binding="{Binding Measure}" Header="Единица измерения" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Button
+                            Width="180"
+                            Margin="5"
+                            Command="{Binding AddDetailsCommand}"
+                            CommandParameter="FrameDetail"
+                            Content="Добавить комплектующую" />
+                    </StackPanel>
                 </TabItem>
                 <TabItem Header="Комплектующие для стойки">
-                    <DataGrid
-                        Margin="5"
-                        AutoGenerateColumns="False"
-                        CanUserAddRows="False"
-                        ItemsSource="{Binding FormedFrameModel.FrameRolls}">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
-                            <DataGridTextColumn Binding="{Binding Cost}" Header="Цена" />
-                            <DataGridTextColumn Binding="{Binding Measure}" Header="Единица измерения" />
-                        </DataGrid.Columns>
-                    </DataGrid>
+                    <StackPanel>
+                        <DataGrid
+                            Margin="5"
+                            AutoGenerateColumns="False"
+                            CanUserAddRows="False"
+                            ItemsSource="{Binding FormedFrameModel.PillarEqiups}"
+                            SelectedItem="{Binding FormedFrameModel.SelectedPillarEqiup}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
+                                <DataGridTextColumn Binding="{Binding Cost}" Header="Цена" />
+                                <DataGridTextColumn Binding="{Binding Measure}" Header="Единица измерения" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Button
+                            Width="180"
+                            Margin="5"
+                            Command="{Binding AddDetailsCommand}"
+                            CommandParameter="PillarEqiup"
+                            Content="Добавить комплектующую" />
+                    </StackPanel>
                 </TabItem>
                 <TabItem Header="Прокат">
-                    <DataGrid
-                        Margin="5"
-                        AutoGenerateColumns="False"
-                        CanUserAddRows="False"
-                        ItemsSource="{Binding FormedFrameModel.PillarEqiups}">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
-                            <DataGridTextColumn Binding="{Binding Cost}" Header="Цена" />
-                            <DataGridTextColumn Binding="{Binding Measure}" Header="Единица измерения" />
-                        </DataGrid.Columns>
-                    </DataGrid>
+                    <StackPanel>
+                        <DataGrid
+                            Margin="5"
+                            AutoGenerateColumns="False"
+                            CanUserAddRows="False"
+                            ItemsSource="{Binding FormedFrameModel.FrameRolls}"
+                            SelectedItem="{Binding FormedFrameModel.SelectedFrameRoll}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
+                                <DataGridTextColumn Binding="{Binding Cost}" Header="Цена" />
+                                <DataGridTextColumn Binding="{Binding Measure}" Header="Единица измерения" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Button
+                            Width="180"
+                            Margin="5"
+                            Command="{Binding AddDetailsCommand}"
+                            CommandParameter="FrameRoll"
+                            Content="Добавить комплектующую" />
+                    </StackPanel>
                 </TabItem>
             </TabControl>
-
-            <!--  Кнопки управления  -->
-            <StackPanel
-                Grid.Row="1"
-                Margin="10"
-                HorizontalAlignment="Center"
-                Orientation="Horizontal">
-                <Button
-                    Width="180"
-                    Margin="5"
-                    Command="{Binding AddDetailsCommand}"
-                    Content="Добавить комплектующую" />
-            </StackPanel>
         </Grid>
     </Grid>
 </Window>

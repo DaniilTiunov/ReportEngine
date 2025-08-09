@@ -2,6 +2,7 @@
 using ReportEngine.App.Display;
 using ReportEngine.App.Model;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.Frame;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
@@ -103,24 +104,38 @@ namespace ReportEngine.App.ViewModels
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
-                await ExceptionHelper.SafeExecuteAsync(async () =>
+                var selectedFrame = FormedFrameModel.SelectedFrame;
+                if (selectedFrame == null) return;
+
+                object selected = p switch
                 {
-                    var selectedFrame = FormedFrameModel.SelectedFrame;
-                    var selectedDetail = FormedFrameModel.SelectedFrameDetail;
-                    if (selectedFrame != null && selectedDetail != null)
-                    {
-                        var freshFrame = await _formedFrameRepository.GetByIdAsync(selectedFrame.Id);
-                        if (!freshFrame.FrameDetails.Any(d => d.Id == selectedDetail.Id))
-                        {
-                            await _formedFrameRepository.AddComponentAsync(freshFrame.Id, selectedDetail);
-                            FormedFrameModel.SelectedFrame = await _formedFrameRepository.GetByIdAsync(freshFrame.Id);
-                        }
-                        else
-                        {
-                            MessageBoxHelper.ShowInfo("Деталь уже добавлена к раме.");
-                        }
-                    }
-                });
+                    "FrameDetail" => FormedFrameModel.SelectedFrameDetail,
+                    "FrameRoll" => FormedFrameModel.SelectedFrameRoll,
+                    "PillarEqiup" => FormedFrameModel.SelectedPillarEqiup,
+                    _ => null
+                };
+
+                if (selected is null) return;
+
+                var freshFrame = await _formedFrameRepository.GetByIdAsync(selectedFrame.Id);
+
+                bool alreadyExists = selected switch
+                {
+                    FrameDetail detail => freshFrame.FrameDetails.Any(d => d.Id == detail.Id),
+                    FrameRoll roll => freshFrame.FrameRolls.Any(r => r.Id == roll.Id),
+                    PillarEqiup eqiup => freshFrame.PillarEqiups.Any(e => e.Id == eqiup.Id),
+                    _ => false
+                };
+
+                if (!alreadyExists)
+                {
+                    await _formedFrameRepository.AddComponentAsync(freshFrame.Id, (IBaseEquip)selected);
+                    FormedFrameModel.SelectedFrame = await _formedFrameRepository.GetByIdAsync(freshFrame.Id);
+                }
+                else
+                {
+                    MessageBoxHelper.ShowInfo("Комплектующая уже добавлена к раме.");
+                }
             });
         }
         public async void OnDeleteFrameExecuted(object p)
