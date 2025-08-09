@@ -369,3 +369,4 @@ ReportEngine.Shared/Config/Logger/LoggerConfig.cs
 Documentation.xml
 ReportEngine.Shared/Config/appsettings.json
 ReportEngine.Shared/Config/appsettings.json
+/ReportEngine.Shared/Config/appsettings.json
