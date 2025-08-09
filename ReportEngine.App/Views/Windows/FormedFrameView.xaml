@@ -59,12 +59,12 @@
                     <GroupBox
                         Grid.Column="1"
                         Margin="5"
-                        Header="Детали рамы">
+                        Header="Комплектующие рамы">
                         <DataGrid
-                            Margin="5"
+                            Margin="5" 
                             AutoGenerateColumns="False"
                             CanUserAddRows="False"
-                            ItemsSource="{Binding FormedFrameModel.SelectedFrame.FrameDetails}">
+                            ItemsSource="{Binding FormedFrameModel.AllSelectedComponents}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
                             </DataGrid.Columns>

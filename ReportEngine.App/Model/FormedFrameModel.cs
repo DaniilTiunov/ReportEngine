@@ -12,6 +12,7 @@ namespace ReportEngine.App.Model
         private ObservableCollection<FrameRoll> _frameRolls = new();
         private ObservableCollection<PillarEqiup> _pillarEqiups = new();
         private ObservableCollection<FormedFrame> _allFrames = new();
+        private ObservableCollection<IBaseEquip> _allComponents = new(); // <IBaseEquip> _
 
         private FormedFrame _selectedFrame = new();
         private FrameDetail _selectedFrameDetail = new();
@@ -20,6 +21,12 @@ namespace ReportEngine.App.Model
         private IBaseEquip _selectedEquip;
 
         private FormedFrame _newFrame = new();
+        public IEnumerable<IBaseEquip> AllSelectedComponents =>
+            SelectedFrame == null
+                ? Enumerable.Empty<IBaseEquip>()
+                : SelectedFrame.FrameDetails.Cast<IBaseEquip>()
+                    .Concat(SelectedFrame.FrameRolls)
+                    .Concat(SelectedFrame.PillarEqiups);
         public ObservableCollection<FormedFrame> AllFrames
         {
             get => _allFrames;
@@ -35,7 +42,11 @@ namespace ReportEngine.App.Model
         public FormedFrame SelectedFrame
         {
             get => _selectedFrame;
-            set => Set(ref _selectedFrame, value);
+            set
+            {
+                Set(ref _selectedFrame, value);
+                OnPropertyChanged(nameof(AllSelectedComponents));
+            }
         }
 
         public ObservableCollection<FrameDetail> FrameDetails
@@ -54,7 +65,11 @@ namespace ReportEngine.App.Model
             get => _pillarEqiups;
             set => Set(ref _pillarEqiups, value);
         }
-
+        public ObservableCollection<IBaseEquip> AllComponents
+        {
+            get => _allComponents;
+            set => Set(ref _allComponents, value);
+        }
         public FrameDetail SelectedFrameDetail
         {
             get => _selectedFrameDetail;
@@ -81,6 +96,7 @@ namespace ReportEngine.App.Model
         }
         public FormedFrame CreateNewFrame()
         {
+
             return new FormedFrame
             {
                 Name = NewFrame.Name,
