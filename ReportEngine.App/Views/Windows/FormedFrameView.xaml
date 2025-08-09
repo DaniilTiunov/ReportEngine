@@ -7,8 +7,8 @@
     xmlns:local="clr-namespace:ReportEngine.App.Views.Windows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Создание и редактирование рам"
-    Width="1400"
-    Height="900"
+    Width="1600"
+    Height="890"
     mc:Ignorable="d">
     <Window.Resources>
         <conv:FrameDetailsToNameConverter x:Key="DetailsConverter" />
@@ -61,12 +61,23 @@
                         Margin="5"
                         Header="Комплектующие рамы">
                         <DataGrid
-                            Margin="5" 
+                            Margin="5"
                             AutoGenerateColumns="False"
                             CanUserAddRows="False"
-                            ItemsSource="{Binding FormedFrameModel.AllSelectedComponents}">
+                            ItemsSource="{Binding FormedFrameModel.AllSelectedComponents}"
+                            SelectedItem="{Binding FormedFrameModel.SelectedComponent}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
+                                <DataGridTemplateColumn Header="Действия">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button
+                                                Command="{Binding DataContext.RemoveComponentCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding}"
+                                                Content="Удалить" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                     </GroupBox>

@@ -6,9 +6,6 @@ using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.Frame;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
-using System.Collections.ObjectModel;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels
@@ -20,7 +17,7 @@ namespace ReportEngine.App.ViewModels
         private readonly IGenericBaseRepository<FrameRoll, FrameRoll> _frameRollRepository;
         private readonly IGenericBaseRepository<PillarEqiup, PillarEqiup> _pillarEqiupRepository;
 
-        public FormedFrameModel FormedFrameModel { get; } = new();       
+        public FormedFrameModel FormedFrameModel { get; } = new();
 
         public FormedFrameViewModel(
             IFrameRepository formedFrameRepository,
@@ -39,7 +36,8 @@ namespace ReportEngine.App.ViewModels
 
         public async void LoadDetailsData()
         {
-            await ExceptionHelper.SafeExecuteAsync( async () => {
+            await ExceptionHelper.SafeExecuteAsync(async () =>
+            {
                 var frames = await _formedFrameRepository.GetAllAsync();
                 var details = await _frameDetailRepository.GetAllAsync();
                 var rolls = await _frameRollRepository.GetAllAsync();
@@ -65,12 +63,14 @@ namespace ReportEngine.App.ViewModels
             SaveChangesCommand = new RelayCommand(OnSaveChangesExecuted, CanAllCommandsExecute);
             AddDetailsCommand = new RelayCommand(OnAddDetailsExecuted, CanAllCommandsExecute);
             DeleteFrameCommand = new RelayCommand(OnDeleteFrameExecuted, CanAllCommandsExecute);
+            RemoveComponentCommand = new RelayCommand(OnRemoveComponentExecuted, CanAllCommandsExecute);
         }
 
         public ICommand AddNewFrameCommand { get; set; }
         public ICommand SaveChangesCommand { get; set; }
         public ICommand AddDetailsCommand { get; set; }
         public ICommand DeleteFrameCommand { get; set; }
+        public ICommand RemoveComponentCommand { get; set; }
         public bool CanAllCommandsExecute(object p) => true;
         public async void OnAddNewFrameExecuted(object p)
         {
@@ -150,6 +150,43 @@ namespace ReportEngine.App.ViewModels
 
 
                     MessageBoxHelper.ShowInfo($"{selectedFrame.Name} успешно удалена!");
+                }
+            });
+        }
+        public async void OnRemoveComponentExecuted(object p)
+        {
+            if (p is not IBaseEquip component || FormedFrameModel.SelectedFrame == null)
+                return;
+
+            await ExceptionHelper.SafeExecuteAsync(async () =>
+            {
+                // Получаем свежий экземпляр рамы с трекингом и включёнными комплектующими
+                var frame = await _formedFrameRepository.GetByIdAsync(FormedFrameModel.SelectedFrame.Id);
+                if (frame == null) return;
+
+                bool removed = false;
+                switch (component)
+                {
+                    case FrameDetail detail:
+                        removed = frame.FrameDetails.Remove(frame.FrameDetails.FirstOrDefault(d => d.Id == detail.Id));
+                        break;
+                    case FrameRoll roll:
+                        removed = frame.FrameRolls.Remove(frame.FrameRolls.FirstOrDefault(r => r.Id == roll.Id));
+                        break;
+                    case PillarEqiup eqiup:
+                        removed = frame.PillarEqiups.Remove(frame.PillarEqiups.FirstOrDefault(e => e.Id == eqiup.Id));
+                        break;
+                    default:
+                        return;
+                }
+                if (removed)
+                {
+                    await _formedFrameRepository.UpdateAsync(frame);
+                    FormedFrameModel.SelectedFrame = await _formedFrameRepository.GetByIdAsync(frame.Id);
+                }
+                else
+                {
+                    MessageBoxHelper.ShowInfo("Комплектующая не найдена в раме.");
                 }
             });
         }
