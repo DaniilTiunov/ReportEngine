@@ -4,30 +4,58 @@ using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.Frame;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ReportEngine.App.Model
 {
+    public class ComponentWithCount
+    {
+        public IBaseEquip Component { get; set; }
+        public int Count { get; set; }
+    }
+
     public class FormedFrameModel : BaseViewModel
     {
         private ObservableCollection<FrameDetail> _frameDetails = new();
         private ObservableCollection<FrameRoll> _frameRolls = new();
         private ObservableCollection<PillarEqiup> _pillarEqiups = new();
         private ObservableCollection<FormedFrame> _allFrames = new();
-        private ObservableCollection<IBaseEquip> _allComponents = new(); // <IBaseEquip> _
+        private ObservableCollection<IBaseEquip> _allComponents = new();
 
         private FormedFrame _selectedFrame = new();
         private FrameDetail _selectedFrameDetail = new();
         private FrameRoll _selectedFrameRoll = new();
         private PillarEqiup _selectedPillarEqiup = new();
         private IBaseEquip _selectedEquip;
-
         private FormedFrame _newFrame = new();
+
         public IEnumerable<IBaseEquip> AllSelectedComponents =>
             SelectedFrame == null
                 ? Enumerable.Empty<IBaseEquip>()
                 : SelectedFrame.FrameDetails.Cast<IBaseEquip>()
                     .Concat(SelectedFrame.FrameRolls)
                     .Concat(SelectedFrame.PillarEqiups);
+
+        public IEnumerable<ComponentWithCount> AllSelectedComponentsWithCount
+        {
+            get
+            {
+                if (SelectedFrame == null)
+                    return Enumerable.Empty<ComponentWithCount>();
+                var all = SelectedFrame.FrameDetails.Cast<IBaseEquip>()
+                    .Concat(SelectedFrame.FrameRolls)
+                    .Concat(SelectedFrame.PillarEqiups);
+                return all
+                    .GroupBy(c => c.Id)
+                    .Select(g => new ComponentWithCount
+                    {
+                        Component = g.First(),
+                        Count = g.Count()
+                    })
+                    .ToList();
+            }
+        }
+
         public ObservableCollection<FormedFrame> AllFrames
         {
             get => _allFrames;
@@ -47,6 +75,7 @@ namespace ReportEngine.App.Model
             {
                 Set(ref _selectedFrame, value);
                 OnPropertyChanged(nameof(AllSelectedComponents));
+                OnPropertyChanged(nameof(AllSelectedComponentsWithCount));
             }
         }
 
@@ -121,7 +150,8 @@ namespace ReportEngine.App.Model
             OnPropertyChanged(nameof(FrameDetailCounts));
             OnPropertyChanged(nameof(FrameRollCounts));
             OnPropertyChanged(nameof(PillarEqiupCounts));
-            OnPropertyChanged(nameof(AllSelectedComponents)); // Гарантируем обновление UI
+            OnPropertyChanged(nameof(AllSelectedComponents));
+            OnPropertyChanged(nameof(AllSelectedComponentsWithCount));
         }
     }
 }

@@ -148,6 +148,7 @@ namespace ReportEngine.App.ViewModels
                 // Перезапрашиваем раму с комплектующими
                 FormedFrameModel.SelectedFrame = await _formedFrameRepository.GetByIdAsync(selectedFrame.Id);
                 FormedFrameModel.NotifyCountsChanged();
+                OnPropertyChanged(nameof(FormedFrameModel.AllSelectedComponentsWithCount));
                 OnPropertyChanged(nameof(FormedFrameModel.AllSelectedComponents));
             });
         }
@@ -232,13 +233,14 @@ namespace ReportEngine.App.ViewModels
                     await _formedFrameRepository.UpdateAsync(frame);
                     FormedFrameModel.SelectedFrame = await _formedFrameRepository.GetByIdAsync(frame.Id);
                     FormedFrameModel.NotifyCountsChanged();
-
+                    OnPropertyChanged(nameof(FormedFrameModel.AllSelectedComponentsWithCount));
                 }
                 else
                 {
                     MessageBoxHelper.ShowInfo("Комплектующая не найдена в раме.");
                 }
                 OnPropertyChanged(nameof(FormedFrameModel.AllSelectedComponents));
+                OnPropertyChanged(nameof(FormedFrameModel.AllSelectedComponentsWithCount));
             });
         }
     }

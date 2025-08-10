@@ -65,19 +65,11 @@
                             Margin="5"
                             AutoGenerateColumns="False"
                             CanUserAddRows="False"
-                            ItemsSource="{Binding FormedFrameModel.AllSelectedComponents}"
+                            ItemsSource="{Binding FormedFrameModel.AllSelectedComponentsWithCount}"
                             SelectedItem="{Binding FormedFrameModel.SelectedComponent}">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
-                                <DataGridTextColumn Header="Кол-во">
-                                    <DataGridTextColumn.Binding>
-                                        <MultiBinding Converter="{StaticResource CountConverter}">
-                                            <Binding Path="Id" />
-                                            <Binding Path="DataContext.FormedFrameModel" RelativeSource="{RelativeSource AncestorType=Window}" />
-                                            <Binding Path="." />
-                                        </MultiBinding>
-                                    </DataGridTextColumn.Binding>
-                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Component.Name}" Header="Наименование" />
+                                <DataGridTextColumn Binding="{Binding Count}" Header="Кол-во" />
                                 <DataGridTemplateColumn Header="Действия">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
