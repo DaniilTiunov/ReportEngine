@@ -12,21 +12,20 @@ namespace ReportEngine.App.ViewModels
 {
     public class UsersViewModel : BaseViewModel
     {
-        private readonly NavigationService _navigation;
         private readonly IBaseRepository<User> _userRepository;
 
         public UserModel CurrentUser { get; set; } = new UserModel();
 
         #region Конструктор
-        public UsersViewModel(IBaseRepository<User> userRepository, NavigationService navigation)
+        public UsersViewModel(IBaseRepository<User> userRepository)
         {
             InitializeCommands();
 
             _userRepository = userRepository;
-            _navigation = navigation;
+
+            LoadAllUsersAsync();
         }
         #endregion
-
         #region Методы
         public void InitializeCommands()
         {
@@ -38,10 +37,30 @@ namespace ReportEngine.App.ViewModels
         #endregion
         #region Комманды
         public ICommand HideUsersCommand { get; set; }
-        public bool CanAllCommandsExecute(object p) => true;
-
         public ICommand ShowAllUsersCommand { get; set; }
+        public ICommand AddNewUserCommand { get; set; }
+        public ICommand SaveUserCommand { get; set; }
+        public bool CanAllCommandsExecute(object p) => true;
         public async void OnShowAllUsersCommandExecuted(object p)
+        {
+            await LoadAllUsersAsync();
+        }
+        public ICommand DeleteUserCommand { get; set; }
+        public async void OnDeleteUserCommandExecuted(object e)
+        {
+            await DeleteSelectedUserAsync();
+        }
+        public async void OnAddNewUserCommandExecuted(object p)
+        {
+            await AddNewUserAsync();
+        }
+        public async void OnSaveUserCommandExecuted(object e)
+        {
+           await SaveUsersChangesAsync();
+        }
+        #endregion
+        #region Методы
+        private async Task LoadAllUsersAsync()
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
@@ -49,31 +68,28 @@ namespace ReportEngine.App.ViewModels
                 CurrentUser.AllUsers = new ObservableCollection<User>(users);
             });
         }
-        public ICommand DeleteUserCommand { get; set; }
-        public async void OnDeleteUserCommandExecuted(object e)
+        private async Task DeleteSelectedUserAsync()
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
                 if (CurrentUser.SelectedUser != null)
                 {
                     await _userRepository.DeleteAsync(CurrentUser.SelectedUser);
+                    CurrentUser.AllUsers.Remove(CurrentUser.SelectedUser);
+                    CurrentUser.SelectedUser = null;
                 }
             });
         }
-        public ICommand AddNewUserCommand { get; set; }
-        public async void OnAddNewUserCommandExecuted(object p)
+        private async Task AddNewUserAsync()
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
                 var newUser = CurrentUser.CreateNewUser();
-                
                 CurrentUser.AllUsers.Add(newUser);
-
                 await _userRepository.AddAsync(newUser);
             });
         }
-        public ICommand SaveUserCommand { get; set; }
-        public async void OnSaveUserCommandExecuted(object e)
+        private async Task SaveUsersChangesAsync()
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
