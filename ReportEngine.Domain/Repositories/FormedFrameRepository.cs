@@ -31,17 +31,7 @@ namespace ReportEngine.Domain.Repositories
 
             switch (component)
             {
-                case FrameDetail frameDetail:
-                    frame.FrameDetails.Add(frameDetail);
-                    break;
-                case FrameRoll frameRoll:
-                    frame.FrameRolls.Add(frameRoll);
-                    break;
-                case PillarEqiup pillarEqiup:
-                    frame.PillarEqiups.Add(pillarEqiup);
-                    break;
-                default:
-                    throw new ArgumentException($"Не поддерживаемый компонент: {component.GetType().Name}");
+
             }
 
             await _context.SaveChangesAsync();
@@ -71,9 +61,6 @@ namespace ReportEngine.Domain.Repositories
         public async Task<IEnumerable<FormedFrame>> GetAllAsync()
         {
             return await _context.Set<FormedFrame>()
-                        .Include(f => f.FrameDetails)
-                        .Include(f => f.FrameRolls)
-                        .Include(f => f.PillarEqiups)
                         .AsNoTracking()
                         .ToListAsync();
         }
@@ -81,9 +68,6 @@ namespace ReportEngine.Domain.Repositories
         public async Task<FormedFrame> GetByIdAsync(int id)
         {
             return await _context.Set<FormedFrame>()
-                        .Include(f => f.FrameDetails)
-                        .Include(f => f.FrameRolls)
-                        .Include(f => f.PillarEqiups)
                         .FirstOrDefaultAsync(f => f.Id == id);
         }
 

@@ -17,10 +17,7 @@ namespace ReportEngine.Domain.Entities
         public float Depth { get; set; }
         public float Weight { get; set; }
         public string Designe { get; set; }
-        public virtual ICollection<FrameDetail> FrameDetails { get; set; } = new List<FrameDetail>(); // Компоненты рамы
-        public virtual ICollection<FrameRoll> FrameRolls { get; set; } = new List<FrameRoll>(); // Возможные компоненты рамы
-        public virtual ICollection<PillarEqiup> PillarEqiups { get; set; } = new List<PillarEqiup>(); // Возможные компоненты рамы
 
-
+        public virtual ICollection<FrameComponent> Components { get; set; } = new List<FrameComponent>();
     }
 }

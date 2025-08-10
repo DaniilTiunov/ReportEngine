@@ -29,33 +29,7 @@ namespace ReportEngine.App.Model
         private IBaseEquip _selectedEquip;
         private FormedFrame _newFrame = new();
 
-        public IEnumerable<IBaseEquip> AllSelectedComponents =>
-            SelectedFrame == null
-                ? Enumerable.Empty<IBaseEquip>()
-                : SelectedFrame.FrameDetails.Cast<IBaseEquip>()
-                    .Concat(SelectedFrame.FrameRolls)
-                    .Concat(SelectedFrame.PillarEqiups);
-
-        public IEnumerable<ComponentWithCount> AllSelectedComponentsWithCount
-        {
-            get
-            {
-                if (SelectedFrame == null)
-                    return Enumerable.Empty<ComponentWithCount>();
-                var all = SelectedFrame.FrameDetails.Cast<IBaseEquip>()
-                    .Concat(SelectedFrame.FrameRolls)
-                    .Concat(SelectedFrame.PillarEqiups);
-                return all
-                    .GroupBy(c => c.Id)
-                    .Select(g => new ComponentWithCount
-                    {
-                        Component = g.First(),
-                        Count = g.Count()
-                    })
-                    .ToList();
-            }
-        }
-
+        
         public ObservableCollection<FormedFrame> AllFrames
         {
             get => _allFrames;
@@ -74,8 +48,7 @@ namespace ReportEngine.App.Model
             set
             {
                 Set(ref _selectedFrame, value);
-                OnPropertyChanged(nameof(AllSelectedComponents));
-                OnPropertyChanged(nameof(AllSelectedComponentsWithCount));
+
             }
         }
 
@@ -150,8 +123,7 @@ namespace ReportEngine.App.Model
             OnPropertyChanged(nameof(FrameDetailCounts));
             OnPropertyChanged(nameof(FrameRollCounts));
             OnPropertyChanged(nameof(PillarEqiupCounts));
-            OnPropertyChanged(nameof(AllSelectedComponents));
-            OnPropertyChanged(nameof(AllSelectedComponentsWithCount));
+
         }
     }
 }

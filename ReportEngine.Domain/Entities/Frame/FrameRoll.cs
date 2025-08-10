@@ -6,6 +6,5 @@ namespace ReportEngine.Domain.Entities.Frame
     public class FrameRoll : BaseFrame //Таблица прокат
     {
         
-        public virtual ICollection<FormedFrame> FormedFrames { get; set; } = new List<FormedFrame>();
     }
 }

@@ -8,7 +8,7 @@ namespace ReportEngine.Domain.Database.Context
         public ReAppContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ReAppContext>();
-            optionsBuilder.UseNpgsql("Host=127.0.0.1;Port=5432;Database=reportengine;Username=postgres;Password=postgres");
+            optionsBuilder.UseNpgsql("Host=127.0.0.1;Port=5433;Database=reportengine;Username=postgres;Password=postgres");
             return new ReAppContext(optionsBuilder.Options);
         }
     }
