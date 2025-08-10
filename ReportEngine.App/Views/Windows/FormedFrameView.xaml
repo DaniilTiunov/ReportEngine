@@ -10,10 +10,6 @@
     Width="1600"
     Height="890"
     mc:Ignorable="d">
-    <Window.Resources>
-        <conv:FrameDetailsToNameConverter x:Key="DetailsConverter" />
-        <conv:ComponentCountConverter x:Key="CountConverter" />
-    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="173*" />
@@ -65,7 +61,7 @@
                             Margin="5"
                             AutoGenerateColumns="False"
                             CanUserAddRows="False"
-                            ItemsSource="{Binding FormedFrameModel.AllSelectedComponentsWithCount}"
+                            ItemsSource="{Binding FormedFrameModel.DisplayedComponents}"
                             SelectedItem="{Binding FormedFrameModel.SelectedComponent}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Component.Name}" Header="Наименование" />
@@ -354,7 +350,7 @@
                             AutoGenerateColumns="False"
                             CanUserAddRows="False"
                             ItemsSource="{Binding FormedFrameModel.FrameDetails}"
-                            SelectedItem="{Binding FormedFrameModel.SelectedFrameDetail}">
+                            SelectedItem="{Binding FormedFrameModel.SelectedComponent}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
                                 <DataGridTextColumn Binding="{Binding Cost}" Header="Цена" />
@@ -376,7 +372,7 @@
                             AutoGenerateColumns="False"
                             CanUserAddRows="False"
                             ItemsSource="{Binding FormedFrameModel.PillarEqiups}"
-                            SelectedItem="{Binding FormedFrameModel.SelectedPillarEqiup}">
+                            SelectedItem="{Binding FormedFrameModel.SelectedComponent}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
                                 <DataGridTextColumn Binding="{Binding Cost}" Header="Цена" />
@@ -398,7 +394,7 @@
                             AutoGenerateColumns="False"
                             CanUserAddRows="False"
                             ItemsSource="{Binding FormedFrameModel.FrameRolls}"
-                            SelectedItem="{Binding FormedFrameModel.SelectedFrameRoll}">
+                            SelectedItem="{Binding FormedFrameModel.SelectedComponent}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
                                 <DataGridTextColumn Binding="{Binding Cost}" Header="Цена" />

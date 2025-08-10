@@ -1,63 +1,41 @@
-﻿using ReportEngine.App.ViewModels;
+﻿using ReportEngine.App.Convert;
+using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.Frame;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace ReportEngine.App.Model
 {
-    public class ComponentWithCount
-    {
-        public IBaseEquip Component { get; set; }
-        public int Count { get; set; }
-    }
-
     public class FormedFrameModel : BaseViewModel
     {
-        private ObservableCollection<FrameDetail> _frameDetails = new();
+        private ObservableCollection<FrameDetail> _frameDetails = new(); //Коллекции комплектующих
         private ObservableCollection<FrameRoll> _frameRolls = new();
         private ObservableCollection<PillarEqiup> _pillarEqiups = new();
         private ObservableCollection<FormedFrame> _allFrames = new();
-        private ObservableCollection<IBaseEquip> _allComponents = new();
+        private ObservableCollection<DisplayedComponent> _displayedComponents = new(); //Коллекция для отображения комплектующих в UI
+        private IBaseEquip _selectedComponent;
 
-        private FormedFrame _selectedFrame = new();
-        private FrameDetail _selectedFrameDetail = new();
-        private FrameRoll _selectedFrameRoll = new();
-        private PillarEqiup _selectedPillarEqiup = new();
-        private IBaseEquip _selectedEquip;
-        private FormedFrame _newFrame = new();
+        private FormedFrame _selectedFrame = new(); //Свойства для выбранного элемента на UI
+        private FormedFrame _newFrame = new(); // для создания новой рамы
 
-        
+        public ObservableCollection<DisplayedComponent> DisplayedComponents 
+        { 
+            get => _displayedComponents;
+            set => Set(ref _displayedComponents, value);
+        }
         public ObservableCollection<FormedFrame> AllFrames
         {
             get => _allFrames;
             set => Set(ref _allFrames, value);
         }
-
-        public FormedFrame NewFrame
-        {
-            get => _newFrame;
-            set => Set(ref _newFrame, value);
-        }
-
-        public FormedFrame SelectedFrame
-        {
-            get => _selectedFrame;
-            set
-            {
-                Set(ref _selectedFrame, value);
-
-            }
-        }
-
         public ObservableCollection<FrameDetail> FrameDetails
         {
             get => _frameDetails;
             set => Set(ref _frameDetails, value);
         }
-
         public ObservableCollection<FrameRoll> FrameRolls
         {
             get => _frameRolls;
@@ -68,35 +46,31 @@ namespace ReportEngine.App.Model
             get => _pillarEqiups;
             set => Set(ref _pillarEqiups, value);
         }
-        public ObservableCollection<IBaseEquip> AllComponents
+        public IBaseEquip SelectedComponent // Выбранный комплектующий
         {
-            get => _allComponents;
-            set => Set(ref _allComponents, value);
+            get => _selectedComponent;
+            set => Set(ref _selectedComponent, value);
         }
-        public FrameDetail SelectedFrameDetail
+        public FormedFrame NewFrame // Новая рама
         {
-            get => _selectedFrameDetail;
-            set => Set(ref _selectedFrameDetail, value);
+            get => _newFrame;
+            set => Set(ref _newFrame, value);
         }
-        public FrameRoll SelectedFrameRoll
+
+        public FormedFrame SelectedFrame // Выбранная рама
         {
-            get => _selectedFrameRoll;
-            set => Set(ref _selectedFrameRoll, value);
-        }
-        public PillarEqiup SelectedPillarEqiup
-        {
-            get => _selectedPillarEqiup;
-            set => Set(ref _selectedPillarEqiup, value);
-        }
-        public IBaseEquip SelectedComponent
-        {
-            get => _selectedEquip;
-            set => Set(ref _selectedEquip, value);
+            get => _selectedFrame;
+            set
+            {
+                Set(ref _selectedFrame, value);
+                UpdateDisplayedComponents();
+            }
         }
         public FormedFrameModel()
         {
             SelectedFrame = new FormedFrame();
         }
+
         public FormedFrame CreateNewFrame()
         {
 
@@ -111,19 +85,23 @@ namespace ReportEngine.App.Model
                 Designe = NewFrame.Designe,
             };
         }
-
-        // Словари для хранения количества каждой комплектующей по Id
-        public Dictionary<int, int> FrameDetailCounts { get; set; } = new Dictionary<int, int>();
-        public Dictionary<int, int> FrameRollCounts { get; set; } = new Dictionary<int, int>();
-        public Dictionary<int, int> PillarEqiupCounts { get; set; } = new Dictionary<int, int>();
-        public Dictionary<int, int> ComponentCounts { get; set; } = new Dictionary<int, int>(); // Общий словарь для всех типов
-
-        public void NotifyCountsChanged()
+        public void UpdateDisplayedComponents()
         {
-            OnPropertyChanged(nameof(FrameDetailCounts));
-            OnPropertyChanged(nameof(FrameRollCounts));
-            OnPropertyChanged(nameof(PillarEqiupCounts));
+            DisplayedComponents.Clear();
+            if (SelectedFrame?.Components == null) return;
 
+            foreach (var frameComponent in SelectedFrame.Components)
+            {
+                IBaseEquip component = frameComponent.ComponentType switch
+                {
+                    nameof(FrameDetail) => FrameDetails.FirstOrDefault(d => d.Id == frameComponent.ComponentId),
+                    nameof(FrameRoll) => FrameRolls.FirstOrDefault(r => r.Id == frameComponent.ComponentId),
+                    nameof(PillarEqiup) => PillarEqiups.FirstOrDefault(p => p.Id == frameComponent.ComponentId),
+                    _ => null
+                };
+                if (component != null)
+                    DisplayedComponents.Add(new DisplayedComponent { Component = component, Count = frameComponent.Count });
+            }
         }
     }
 }

@@ -41,7 +41,7 @@ namespace ReportEngine.App.ViewModels
                 var details = await _frameDetailRepository.GetAllAsync();
                 var rolls = await _frameRollRepository.GetAllAsync();
                 var eqiups = await _pillarEqiupRepository.GetAllAsync();
-
+         
                 FormedFrameModel.AllFrames.Clear();
                 foreach (var f in frames) FormedFrameModel.AllFrames.Add(f);
 
@@ -99,10 +99,6 @@ namespace ReportEngine.App.ViewModels
                 MessageBoxHelper.ShowInfo("Изменения сохранены");
             });
         }
-        public async void OnAddDetailsExecuted(object p)
-        {
-
-        }
         public async void OnDeleteFrameExecuted(object p)
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -116,6 +112,22 @@ namespace ReportEngine.App.ViewModels
 
                     MessageBoxHelper.ShowInfo($"{selectedFrame.Name} успешно удалена!");
                 }
+            });
+        }
+        public async void OnAddDetailsExecuted(object p)
+        {
+            await ExceptionHelper.SafeExecuteAsync(async () =>
+            {
+                var frame = FormedFrameModel.SelectedFrame;
+                var component = FormedFrameModel.SelectedComponent;
+                if (frame == null || component == null) return;
+
+                await _formedFrameRepository.AddComponentAsync(frame.Id, component);
+
+                var updatedFrame = await _formedFrameRepository.GetByIdAsync(frame.Id);
+                FormedFrameModel.SelectedFrame = updatedFrame;
+
+                FormedFrameModel.UpdateDisplayedComponents();
             });
         }
         public async void OnRemoveComponentExecuted(object p)
