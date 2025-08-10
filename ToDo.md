@@ -28,7 +28,7 @@
 - [ ] Рефакторинг ViewModel's
   - [ ] Извлечь методы, оставить только вызов в командах
 	- [x] `UserViewModel.cs`
-	- [ ] `CompaniesViewModels.cs`
+	- [x] `CompaniesViewModels.cs`
 	- [ ] `StandViewModel` и `ProjectViewModel`
 	- [ ] `FormedFrameViewModel.cs`
   - [ ] Обновить провайдеры комманд, чтобы облегчить ViewModel's

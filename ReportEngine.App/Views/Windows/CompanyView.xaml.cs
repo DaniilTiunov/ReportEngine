@@ -13,7 +13,7 @@ namespace ReportEngine.App.Views.Windows
             InitializeComponent();
             DataContext = companyViewModel;
 
-            companyViewModel.OnShowAllCompaniesExecuted(null);
+            companyViewModel.OnLoadAllCompaniesExecuted(null);
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
