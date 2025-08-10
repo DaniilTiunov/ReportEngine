@@ -67,12 +67,12 @@
             SelectionUnit="FullRow">
             <DataGrid.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Command="{Binding ShowAllUsersCommand}" Header="Показать всех" />
+                    <MenuItem Command="{Binding LoadAllCompaniesCommand}" Header="Показать всех" />
                     <Separator />
-                    <MenuItem Command="{Binding SaveUserCommand}" Header="Сохранить изменения" />
-                    <MenuItem Command="{Binding AddNewUserCommand}" Header="Добавить" />
+                    <MenuItem Command="{Binding SaveChangesCommand}" Header="Сохранить изменения" />
+                    <MenuItem Command="{Binding AddNewCompanyCommand}" Header="Добавить" />
                     <Separator />
-                    <MenuItem Command="{Binding DeleteUserCommand}" Header="Удалить" />
+                    <MenuItem Command="{Binding DeleteCompanyCommand}" Header="Удалить" />
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.Columns>
