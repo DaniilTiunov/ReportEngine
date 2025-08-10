@@ -3,6 +3,7 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.Frame;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
 
 namespace ReportEngine.App.Model
 {
@@ -107,6 +108,20 @@ namespace ReportEngine.App.Model
                 Height = NewFrame.Height,
                 Designe = NewFrame.Designe,
             };
+        }
+
+        // Словари для хранения количества каждой комплектующей по Id
+        public Dictionary<int, int> FrameDetailCounts { get; set; } = new Dictionary<int, int>();
+        public Dictionary<int, int> FrameRollCounts { get; set; } = new Dictionary<int, int>();
+        public Dictionary<int, int> PillarEqiupCounts { get; set; } = new Dictionary<int, int>();
+        public Dictionary<int, int> ComponentCounts { get; set; } = new Dictionary<int, int>(); // Общий словарь для всех типов
+
+        public void NotifyCountsChanged()
+        {
+            OnPropertyChanged(nameof(FrameDetailCounts));
+            OnPropertyChanged(nameof(FrameRollCounts));
+            OnPropertyChanged(nameof(PillarEqiupCounts));
+            OnPropertyChanged(nameof(AllSelectedComponents)); // Гарантируем обновление UI
         }
     }
 }

@@ -12,6 +12,7 @@
     mc:Ignorable="d">
     <Window.Resources>
         <conv:FrameDetailsToNameConverter x:Key="DetailsConverter" />
+        <conv:ComponentCountConverter x:Key="CountConverter" />
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -68,6 +69,15 @@
                             SelectedItem="{Binding FormedFrameModel.SelectedComponent}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
+                                <DataGridTextColumn Header="Кол-во">
+                                    <DataGridTextColumn.Binding>
+                                        <MultiBinding Converter="{StaticResource CountConverter}">
+                                            <Binding Path="Id" />
+                                            <Binding Path="DataContext.FormedFrameModel" RelativeSource="{RelativeSource AncestorType=Window}" />
+                                            <Binding Path="." />
+                                        </MultiBinding>
+                                    </DataGridTextColumn.Binding>
+                                </DataGridTextColumn>
                                 <DataGridTemplateColumn Header="Действия">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>

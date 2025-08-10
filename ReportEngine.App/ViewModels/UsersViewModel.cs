@@ -65,17 +65,10 @@ namespace ReportEngine.App.ViewModels
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
-                var newUser = new User
-                {
-                    SecondName = CurrentUser.SelectedUser.SecondName,
-                    Name = CurrentUser.SelectedUser.Name,
-                    LastName = CurrentUser.SelectedUser.LastName,
-                    Email = CurrentUser.SelectedUser.Email,
-                    Cabinet = CurrentUser.SelectedUser.Cabinet,
-                    Position = CurrentUser.SelectedUser.Position,
-                    PhoneContact = CurrentUser.SelectedUser.PhoneContact
-                };
+                var newUser = CurrentUser.CreateNewUser();
+                
                 CurrentUser.AllUsers.Add(newUser);
+
                 await _userRepository.AddAsync(newUser);
             });
         }

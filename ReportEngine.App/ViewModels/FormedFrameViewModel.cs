@@ -117,25 +117,38 @@ namespace ReportEngine.App.ViewModels
 
                 if (selected is null) return;
 
-                var freshFrame = await _formedFrameRepository.GetByIdAsync(selectedFrame.Id);
+                // Добавляем компонент в базу и коллекцию рамы
+                await _formedFrameRepository.AddComponentAsync(selectedFrame.Id, (IBaseEquip)selected);
 
-                bool alreadyExists = selected switch
+                // Обновляем словарь количества
+                switch (selected)
                 {
-                    FrameDetail detail => freshFrame.FrameDetails.Any(d => d.Id == detail.Id),
-                    FrameRoll roll => freshFrame.FrameRolls.Any(r => r.Id == roll.Id),
-                    PillarEqiup eqiup => freshFrame.PillarEqiups.Any(e => e.Id == eqiup.Id),
-                    _ => false
-                };
+                    case FrameDetail detail:
+                        if (FormedFrameModel.FrameDetailCounts.ContainsKey(detail.Id))
+                            FormedFrameModel.FrameDetailCounts[detail.Id]++;
+                        else
+                            FormedFrameModel.FrameDetailCounts[detail.Id] = 1;
+                        break;
+                    case FrameRoll roll:
+                        if (FormedFrameModel.FrameRollCounts.ContainsKey(roll.Id))
+                            FormedFrameModel.FrameRollCounts[roll.Id]++;
+                        else
+                            FormedFrameModel.FrameRollCounts[roll.Id] = 1;
+                        break;
+                    case PillarEqiup eqiup:
+                        if (FormedFrameModel.PillarEqiupCounts.ContainsKey(eqiup.Id))
+                            FormedFrameModel.PillarEqiupCounts[eqiup.Id]++;
+                        else
+                            FormedFrameModel.PillarEqiupCounts[eqiup.Id] = 1;
+                        break;
+                    default:
+                        return;
+                }
 
-                if (!alreadyExists)
-                {
-                    await _formedFrameRepository.AddComponentAsync(freshFrame.Id, (IBaseEquip)selected);
-                    FormedFrameModel.SelectedFrame = await _formedFrameRepository.GetByIdAsync(freshFrame.Id);
-                }
-                else
-                {
-                    MessageBoxHelper.ShowInfo("Комплектующая уже добавлена к раме.");
-                }
+                // Перезапрашиваем раму с комплектующими
+                FormedFrameModel.SelectedFrame = await _formedFrameRepository.GetByIdAsync(selectedFrame.Id);
+                FormedFrameModel.NotifyCountsChanged();
+                OnPropertyChanged(nameof(FormedFrameModel.AllSelectedComponents));
             });
         }
         public async void OnDeleteFrameExecuted(object p)
@@ -160,7 +173,6 @@ namespace ReportEngine.App.ViewModels
 
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
-                // Получаем свежий экземпляр рамы с трекингом и включёнными комплектующими
                 var frame = await _formedFrameRepository.GetByIdAsync(FormedFrameModel.SelectedFrame.Id);
                 if (frame == null) return;
 
@@ -168,13 +180,49 @@ namespace ReportEngine.App.ViewModels
                 switch (component)
                 {
                     case FrameDetail detail:
-                        removed = frame.FrameDetails.Remove(frame.FrameDetails.FirstOrDefault(d => d.Id == detail.Id));
+                        if (FormedFrameModel.FrameDetailCounts.ContainsKey(detail.Id))
+                        {
+                            FormedFrameModel.FrameDetailCounts[detail.Id]--;
+                            if (FormedFrameModel.FrameDetailCounts[detail.Id] <= 0)
+                            {
+                                removed = frame.FrameDetails.Remove(frame.FrameDetails.FirstOrDefault(d => d.Id == detail.Id));
+                                FormedFrameModel.FrameDetailCounts.Remove(detail.Id);
+                            }
+                            else
+                            {
+                                removed = true;
+                            }
+                        }
                         break;
                     case FrameRoll roll:
-                        removed = frame.FrameRolls.Remove(frame.FrameRolls.FirstOrDefault(r => r.Id == roll.Id));
+                        if (FormedFrameModel.FrameRollCounts.ContainsKey(roll.Id))
+                        {
+                            FormedFrameModel.FrameRollCounts[roll.Id]--;
+                            if (FormedFrameModel.FrameRollCounts[roll.Id] <= 0)
+                            {
+                                removed = frame.FrameRolls.Remove(frame.FrameRolls.FirstOrDefault(r => r.Id == roll.Id));
+                                FormedFrameModel.FrameRollCounts.Remove(roll.Id);
+                            }
+                            else
+                            {
+                                removed = true;
+                            }
+                        }
                         break;
                     case PillarEqiup eqiup:
-                        removed = frame.PillarEqiups.Remove(frame.PillarEqiups.FirstOrDefault(e => e.Id == eqiup.Id));
+                        if (FormedFrameModel.PillarEqiupCounts.ContainsKey(eqiup.Id))
+                        {
+                            FormedFrameModel.PillarEqiupCounts[eqiup.Id]--;
+                            if (FormedFrameModel.PillarEqiupCounts[eqiup.Id] <= 0)
+                            {
+                                removed = frame.PillarEqiups.Remove(frame.PillarEqiups.FirstOrDefault(e => e.Id == eqiup.Id));
+                                FormedFrameModel.PillarEqiupCounts.Remove(eqiup.Id);
+                            }
+                            else
+                            {
+                                removed = true;
+                            }
+                        }
                         break;
                     default:
                         return;
@@ -183,11 +231,14 @@ namespace ReportEngine.App.ViewModels
                 {
                     await _formedFrameRepository.UpdateAsync(frame);
                     FormedFrameModel.SelectedFrame = await _formedFrameRepository.GetByIdAsync(frame.Id);
+                    FormedFrameModel.NotifyCountsChanged();
+
                 }
                 else
                 {
                     MessageBoxHelper.ShowInfo("Комплектующая не найдена в раме.");
                 }
+                OnPropertyChanged(nameof(FormedFrameModel.AllSelectedComponents));
             });
         }
     }

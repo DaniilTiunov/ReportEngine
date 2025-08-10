@@ -22,5 +22,19 @@ namespace ReportEngine.App.Model
             set => Set(ref _selectedUser, value);
         }
         #endregion
+
+        public User CreateNewUser()
+        {
+            return new User
+            {
+                SecondName = SelectedUser.SecondName,
+                Name = SelectedUser.Name,
+                LastName = SelectedUser.LastName,
+                Email = SelectedUser.Email,
+                Cabinet = SelectedUser.Cabinet,
+                Position = SelectedUser.Position,
+                PhoneContact = SelectedUser.PhoneContact
+            };
+        }
     }
 }
