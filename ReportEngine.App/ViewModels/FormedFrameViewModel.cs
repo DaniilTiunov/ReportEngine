@@ -119,20 +119,38 @@ namespace ReportEngine.App.ViewModels
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
                 var frame = FormedFrameModel.SelectedFrame;
-                var component = FormedFrameModel.SelectedComponent;
+                var component = FormedFrameModel.SelectedComponentForAdd;
                 if (frame == null || component == null) return;
 
                 await _formedFrameRepository.AddComponentAsync(frame.Id, component);
 
                 var updatedFrame = await _formedFrameRepository.GetByIdAsync(frame.Id);
-                FormedFrameModel.SelectedFrame = updatedFrame;
+                var idx = FormedFrameModel.AllFrames.IndexOf(FormedFrameModel.AllFrames.FirstOrDefault(f => f.Id == updatedFrame.Id));
+                if (idx >= 0)
+                    FormedFrameModel.AllFrames[idx] = updatedFrame;
 
+                FormedFrameModel.SelectedFrame = updatedFrame;
                 FormedFrameModel.UpdateDisplayedComponents();
             });
         }
         public async void OnRemoveComponentExecuted(object p)
         {
+            await ExceptionHelper.SafeExecuteAsync(async () =>
+            {
+                var frame = FormedFrameModel.SelectedFrame;
+                var frameComponent = FormedFrameModel.SelectedComponentInFrame;
+                if (frame == null || frameComponent == null) return;
 
+                await _formedFrameRepository.RemoveComponentAsync(frame.Id, frameComponent.Component);
+
+                var updatedFrame = await _formedFrameRepository.GetByIdAsync(frame.Id);
+                var idx = FormedFrameModel.AllFrames.IndexOf(FormedFrameModel.AllFrames.FirstOrDefault(f => f.Id == updatedFrame.Id));
+                if (idx >= 0)
+                    FormedFrameModel.AllFrames[idx] = updatedFrame;
+
+                FormedFrameModel.SelectedFrame = updatedFrame;
+                FormedFrameModel.UpdateDisplayedComponents();
+            });
         }
     }
 }

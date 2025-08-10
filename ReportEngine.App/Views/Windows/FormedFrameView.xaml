@@ -62,7 +62,7 @@
                             AutoGenerateColumns="False"
                             CanUserAddRows="False"
                             ItemsSource="{Binding FormedFrameModel.DisplayedComponents}"
-                            SelectedItem="{Binding FormedFrameModel.SelectedComponent}">
+                            SelectedItem="{Binding FormedFrameModel.SelectedComponentInFrame}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Component.Name}" Header="Наименование" />
                                 <DataGridTextColumn Binding="{Binding Count}" Header="Кол-во" />
@@ -350,7 +350,7 @@
                             AutoGenerateColumns="False"
                             CanUserAddRows="False"
                             ItemsSource="{Binding FormedFrameModel.FrameDetails}"
-                            SelectedItem="{Binding FormedFrameModel.SelectedComponent}">
+                            SelectedItem="{Binding FormedFrameModel.SelectedComponentForAdd}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
                                 <DataGridTextColumn Binding="{Binding Cost}" Header="Цена" />
@@ -372,7 +372,7 @@
                             AutoGenerateColumns="False"
                             CanUserAddRows="False"
                             ItemsSource="{Binding FormedFrameModel.PillarEqiups}"
-                            SelectedItem="{Binding FormedFrameModel.SelectedComponent}">
+                            SelectedItem="{Binding FormedFrameModel.SelectedComponentForAdd}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
                                 <DataGridTextColumn Binding="{Binding Cost}" Header="Цена" />
@@ -394,7 +394,7 @@
                             AutoGenerateColumns="False"
                             CanUserAddRows="False"
                             ItemsSource="{Binding FormedFrameModel.FrameRolls}"
-                            SelectedItem="{Binding FormedFrameModel.SelectedComponent}">
+                            SelectedItem="{Binding FormedFrameModel.SelectedComponentForAdd}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
                                 <DataGridTextColumn Binding="{Binding Cost}" Header="Цена" />

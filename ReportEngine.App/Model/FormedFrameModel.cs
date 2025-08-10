@@ -16,7 +16,8 @@ namespace ReportEngine.App.Model
         private ObservableCollection<PillarEqiup> _pillarEqiups = new();
         private ObservableCollection<FormedFrame> _allFrames = new();
         private ObservableCollection<DisplayedComponent> _displayedComponents = new(); //Коллекция для отображения комплектующих в UI
-        private IBaseEquip _selectedComponent;
+        private IBaseEquip _selectedComponentForAdd;
+        private DisplayedComponent _selectedComponentInFrame;
 
         private FormedFrame _selectedFrame = new(); //Свойства для выбранного элемента на UI
         private FormedFrame _newFrame = new(); // для создания новой рамы
@@ -46,17 +47,21 @@ namespace ReportEngine.App.Model
             get => _pillarEqiups;
             set => Set(ref _pillarEqiups, value);
         }
-        public IBaseEquip SelectedComponent // Выбранный комплектующий
+        public IBaseEquip SelectedComponentForAdd // Выбранное комплектующее
         {
-            get => _selectedComponent;
-            set => Set(ref _selectedComponent, value);
+            get => _selectedComponentForAdd;
+            set => Set(ref _selectedComponentForAdd, value);
         }
         public FormedFrame NewFrame // Новая рама
         {
             get => _newFrame;
             set => Set(ref _newFrame, value);
         }
-
+        public DisplayedComponent SelectedComponentInFrame
+        {
+            get => _selectedComponentInFrame;
+            set => Set(ref _selectedComponentInFrame, value);
+        }
         public FormedFrame SelectedFrame // Выбранная рама
         {
             get => _selectedFrame;
