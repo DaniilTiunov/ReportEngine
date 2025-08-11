@@ -30,6 +30,7 @@ namespace ReportEngine.App.ViewModels
         {
             InitializeCommands(); // Инициализируем команды
             _genericEquipRepository = genericEquipRepository; // Устанавливаем репозиторий
+
         }
         /// <summary>
         /// Инициализирует команды для ViewModel.
@@ -41,7 +42,10 @@ namespace ReportEngine.App.ViewModels
             ShowAllEquipCommand = new RelayCommand(OnShowAllEquipCommandExecuted, CanAllCommandsExecute);
             SaveChangesEquipCommand = new RelayCommand(OnSaveChangesCommandExecuted, CanAllCommandsExecute);
             RemoveEquipCommand = new RelayCommand(OnRemoveEquipCommandExecuted, CanAllCommandsExecute);
+            AddNewEquipCommand = new RelayCommand(OnAddNewEquipCommandExecuted, CanAllCommandsExecute);
         }
+        #region Команды для работы с оборудованием
+        public ICommand AddNewEquipCommand { get; set; }
         /// <summary>
         /// Команда для отображения всего оборудования.
         /// </summary>
@@ -57,6 +61,44 @@ namespace ReportEngine.App.ViewModels
         /// </summary>
         /// <param name="e">Параметр команды.</param>
         public async void OnShowAllEquipCommandExecuted(object e)
+        {
+            await LoadAllBaseEquipsAsync();
+        }
+        public ICommand SelectCommand { get; set; }
+        private void OnSelect(object e)
+        {
+            if (GenericEquipModel.SelectedBaseEquip != null)
+            {
+                SelectionHandler?.Invoke(GenericEquipModel.SelectedBaseEquip);
+            }
+        }
+        /// <summary>
+        /// Команда для добавления нового оборудования.
+        /// </summary>
+        public ICommand SaveChangesEquipCommand { get; set; }
+        public async void OnSaveChangesCommandExecuted(object e)
+        {
+            await SaveChangesAsync();
+        }
+        /// <summary>
+        /// Команда для удаления оборудования.
+        /// </summary>
+        public ICommand RemoveEquipCommand { get; set; }
+        public async void OnRemoveEquipCommandExecuted(object e)
+        {
+            await RemoveSelectedBaseEquipAsync();
+        }
+        public async void OnAddNewEquipCommandExecuted(object e)
+        {
+            await AddBaseEquipAsync();
+        }
+        #endregion
+
+        #region Методы для работы с оборудованием
+        /// <summary>
+        /// Метод для загрузки всего оборудования.
+        /// </summary>
+        private async Task LoadAllBaseEquipsAsync()
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
@@ -74,55 +116,59 @@ namespace ReportEngine.App.ViewModels
                 }
             });
         }
-        public ICommand SelectCommand { get; set; }
-        private void OnSelect(object e)
+        /// <summary>
+        /// Метод для добавления.
+        /// </summary>
+        private async Task AddBaseEquipAsync()
         {
-            if (GenericEquipModel.SelectedBaseEquip != null)
+            await ExceptionHelper.SafeExecuteAsync(async () =>
             {
-                SelectionHandler?.Invoke(GenericEquipModel.SelectedBaseEquip);
-            }
+                var newEquip = new T();
+                GenericEquipModel.BaseEquips.Add(newEquip);
+                GenericEquipModel.SelectedBaseEquip = newEquip;
+            });
         }
         /// <summary>
-        /// Команда для добавления нового оборудования.
+        /// Метод для сохранения изменений.
         /// </summary>
-        public ICommand SaveChangesEquipCommand { get; set; }
-        public async void OnSaveChangesCommandExecuted(object e)
+        private async Task SaveChangesAsync()
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
                 foreach (var equip in GenericEquipModel.BaseEquips)
                 {
-                    if (equip.Id == 0) // Если Id равен 0, значит это новый объект
+                    // Проверяем обязательные поля
+                    if (string.IsNullOrWhiteSpace(equip.Name))
                     {
+                        MessageBoxHelper.ShowInfo("Поле 'Name' обязательно для заполнения.");
+                        continue;
+                    }
+
+                    if (equip.Id == 0)
                         await _genericEquipRepository.AddAsync(equip);
-                    }
-                    else // Иначе обновляем существующий объект
-                    {
+                    else
                         await _genericEquipRepository.UpdateAsync(equip);
-                    }
                 }
-                //OnShowAllEquipCommandExecuted(null); // Обновить список
             });
         }
         /// <summary>
-        /// Команда для удаления оборудования.
+        /// Метод для удаления выбранного оборудования.
         /// </summary>
-        public ICommand RemoveEquipCommand { get; set; }
-        public async void OnRemoveEquipCommandExecuted(object e)
+        private async Task RemoveSelectedBaseEquipAsync()
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
                 var selectedEquip = GenericEquipModel.SelectedBaseEquip;
-                if(selectedEquip == null)
+                if (selectedEquip == null)
                 {
                     MessageBoxHelper.ShowInfo("Пожалуйста, выберите оборудование для удаления.");
                     return;
                 }
-                    
                 await _genericEquipRepository.DeleteAsync(selectedEquip);
                 GenericEquipModel.BaseEquips.Remove(selectedEquip); // Удаляем из коллекции
                 GenericEquipModel.SelectedBaseEquip = default; // Сбросить выбор
             });
         }
+        #endregion
     }
 }
