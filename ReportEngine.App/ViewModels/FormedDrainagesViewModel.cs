@@ -1,5 +1,8 @@
 ﻿using ReportEngine.App.Commands;
+using ReportEngine.App.Model;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.Drainage;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
 using System.Collections.ObjectModel;
@@ -10,12 +13,18 @@ namespace ReportEngine.App.ViewModels
     public class FormedDrainagesViewModel
     {
         private readonly IFormedDrainagesRepository _formedDrainagesRepository;
+        private readonly IGenericBaseRepository<Drainage, Drainage> _genericEquipRepository;
         public FormedDrainagesModel FormedDrainagesModel { get; set; } = new();
 
-        public FormedDrainagesViewModel(IFormedDrainagesRepository formedDrainagesRepository)
+        public FormedDrainagesViewModel(
+            IFormedDrainagesRepository formedDrainagesRepository, 
+            IGenericBaseRepository<Drainage, Drainage> genericEquipRepository)
         {
             _formedDrainagesRepository = formedDrainagesRepository;
+            _genericEquipRepository = genericEquipRepository;
             InitializeCommands();
+
+            LoadDataAsync();
         }
 
         public void InitializeCommands()
@@ -25,6 +34,17 @@ namespace ReportEngine.App.ViewModels
             DeleteFormedDrainageCommand = new RelayCommand(OnDeleteFormedDrainageCommandExecuted, CanAllCommandsExecute);
             AddPurposeCommand = new RelayCommand(OnAddPurposeCommandExecuted, CanAllCommandsExecute);
             DeletePurposeCommand = new RelayCommand(OnDeletePurposeCommandExecuted, CanAllCommandsExecute);
+        }
+
+        public async void LoadDataAsync()
+        {
+            await ExceptionHelper.SafeExecuteAsync(async () =>
+            {
+                var details = await _genericEquipRepository.GetAllAsync();
+
+                FormedDrainagesModel.DrainageDetails.Clear();
+                foreach (var d in details) FormedDrainagesModel.DrainageDetails.Add(d);
+            });
         }
 
         public ICommand ShowAllFormedDrainagesCommand { get; set; }

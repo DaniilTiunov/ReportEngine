@@ -8,14 +8,19 @@ public class FormedDrainagesModel : BaseViewModel
 {
     private ObservableCollection<Drainage> _drainageDetails = new();
     private ObservableCollection<FormedDrainage> _allFormedDrainage = new();
-    private FormedDrainage _selectedFormedDrainage = new();
     private ObservableCollection<DrainagePurpose> _purposes = new();
+    private FormedDrainage _selectedFormedDrainage = new();
     private DrainagePurpose _selectedPurpose = new();
 
     public ObservableCollection<FormedDrainage> AllFormedDrainage
     {
         get => _allFormedDrainage;
         set => Set(ref _allFormedDrainage, value);
+    }
+    public ObservableCollection<Drainage> DrainageDetails
+    {
+        get => _drainageDetails;
+        set => Set(ref _drainageDetails, value);
     }
     public FormedDrainage SelectedFormedDrainage
     {

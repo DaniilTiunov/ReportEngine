@@ -119,13 +119,13 @@
         <!--  Правая часть: Справочник дренажей  -->
         <Grid Grid.Column="1">
             <TabControl Margin="10">
-                <TabItem Header="Справочник дренажей">
+                <TabItem Header="Комплектующие">
                     <DataGrid
                         Margin="5"
                         AutoGenerateColumns="False"
                         CanUserAddRows="False"
-                        ItemsSource="{Binding DrainagesModel.AllDrainages}"
-                        SelectedItem="{Binding DrainagesModel.SelectedDrainage}">
+                        ItemsSource="{Binding FormedDrainagesModel.DrainageDetails}"
+                        SelectedItem="{Binding FormedDrainagesModel.SelectedFormedDrainage}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
                             <DataGridTextColumn Binding="{Binding Cost}" Header="Цена" />
