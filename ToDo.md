@@ -30,11 +30,11 @@
 	- [x] `UserViewModel.cs`
 	- [x] `CompaniesViewModels.cs`
 	- [ ] `StandViewModel` и `ProjectViewModel`
-	- [ ] `FormedFrameViewModel.cs`
+	- [x] `FormedFrameViewModel.cs`
   - [ ] Обновить провайдеры комманд, чтобы облегчить ViewModel's
 
 ## UI слой
-- [ ] Изменить вёрстки в `TreeView` и `UserControl's` чтобы было всё ровно и не разваливалось
+- [x] Изменить вёрстки в `TreeView` и `UserControl's` чтобы было всё ровно и не разваливалось
 - [ ] Единый стиль для всех окон
 ## Желательно
 - [ ] Изменения строки подключения

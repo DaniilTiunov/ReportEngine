@@ -41,7 +41,11 @@ namespace ReportEngine.Domain.Entities
         public string? ThirdSensorMarkPlus { get; set; } //Марикровка +
         public string? ThirdSensorMarkMinus { get; set; } //Марикровка -
         public string? DesigneStand { get; set; } //Описание
-        public string? Comments { get; set; } // Комментарий 
+        public string? Comments { get; set; } // Комментарий
+
+        public virtual ICollection<FormedFrame> FormedFrames { get; set; } = new List<FormedFrame>();
+        public virtual ICollection<Obvyazka> Obvyazki { get; set; } = new List<Obvyazka>();
+        public virtual ICollection<FormedDrainage> FormedDrainages { get; set; } = new List<FormedDrainage>();
 
     }
 }

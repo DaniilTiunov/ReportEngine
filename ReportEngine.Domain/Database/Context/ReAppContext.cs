@@ -39,6 +39,7 @@ namespace ReportEngine.Domain.Database.Context
         public DbSet<Obvyazka> Obvyazki { get; set; } //Обвязки
         public DbSet<FormedFrame> FormedFrames { get; set; } //Сформированные рамы
         public DbSet<FrameComponent> FrameComponents { get; set; } //Компоненты рамы
+        public DbSet<FormedDrainage> FormedDrainages { get; set; }
         public DbSet<ProjectInfo> Projects { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Company> Companies { get; set; }
