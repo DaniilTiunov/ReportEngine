@@ -15,5 +15,6 @@ namespace ReportEngine.Domain.Entities
         public int ComponentId { get; set; }
         public string ComponentType { get; set; } 
         public int Count { get; set; }
+        public float? Length { get; set; } // Метраж
     }
 }

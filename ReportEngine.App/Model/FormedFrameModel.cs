@@ -1,6 +1,7 @@
 ﻿using ReportEngine.App.Convert;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.Frame;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace ReportEngine.App.Model
         private ObservableCollection<DisplayedComponent> _displayedComponents = new(); //Коллекция для отображения комплектующих в UI
         private IBaseEquip _selectedComponentForAdd;
         private DisplayedComponent _selectedComponentInFrame;
+        private float? _componentLength;
 
         private FormedFrame _selectedFrame = new(); //Свойства для выбранного элемента на UI
         private FormedFrame _newFrame = new(); // для создания новой рамы
@@ -71,6 +73,11 @@ namespace ReportEngine.App.Model
                 UpdateDisplayedComponents();
             }
         }
+        public float? ComponentLength
+        {
+            get => _componentLength;
+            set => Set(ref _componentLength, value);
+        }
         public FormedFrameModel()
         {
             SelectedFrame = new FormedFrame();
@@ -105,7 +112,12 @@ namespace ReportEngine.App.Model
                     _ => null
                 };
                 if (component != null)
-                    DisplayedComponents.Add(new DisplayedComponent { Component = component, Count = frameComponent.Count });
+                {
+                    var displayed = new DisplayedComponent { Component = component, Count = frameComponent.Count };
+                    if (component is BaseFrame baseFrame && baseFrame.Measure == "м")
+                        displayed.Length = frameComponent.Length ?? 0;
+                    DisplayedComponents.Add(displayed);
+                }
             }
         }
     }

@@ -60,11 +60,13 @@
                             Margin="5"
                             AutoGenerateColumns="False"
                             CanUserAddRows="False"
+                            IsReadOnly="False"
                             ItemsSource="{Binding FormedFrameModel.DisplayedComponents}"
                             SelectedItem="{Binding FormedFrameModel.SelectedComponentInFrame}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Component.Name}" Header="Наименование" />
                                 <DataGridTextColumn Binding="{Binding Count}" Header="Кол-во" />
+                                <DataGridTextColumn Binding="{Binding Length, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Длина (м)" />
                                 <DataGridTemplateColumn Header="Действия">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
@@ -351,6 +353,13 @@
                                 <DataGridTextColumn Binding="{Binding Measure}" Header="Единица измерения" />
                             </DataGrid.Columns>
                         </DataGrid>
+                        <StackPanel Margin="5,0,0,5" Orientation="Horizontal">
+                            <TextBlock
+                                Margin="0,0,5,0"
+                                VerticalAlignment="Center"
+                                Text="Длина (м):" />
+                            <TextBox Width="60" Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
                         <Button
                             Margin="5"
                             Command="{Binding AddDetailsCommand}"
@@ -372,6 +381,13 @@
                                 <DataGridTextColumn Binding="{Binding Measure}" Header="Единица измерения" />
                             </DataGrid.Columns>
                         </DataGrid>
+                        <StackPanel Margin="5,0,0,5" Orientation="Horizontal">
+                            <TextBlock
+                                Margin="0,0,5,0"
+                                VerticalAlignment="Center"
+                                Text="Длина (м):" />
+                            <TextBox Width="60" Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
                         <Button
                             Margin="5"
                             Command="{Binding AddDetailsCommand}"
@@ -393,6 +409,13 @@
                                 <DataGridTextColumn Binding="{Binding Measure}" Header="Единица измерения" />
                             </DataGrid.Columns>
                         </DataGrid>
+                        <StackPanel Margin="5,0,0,5" Orientation="Horizontal">
+                            <TextBlock
+                                Margin="0,0,5,0"
+                                VerticalAlignment="Center"
+                                Text="Длина (м):" />
+                            <TextBox Width="60" Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
                         <Button
                             Margin="5"
                             Command="{Binding AddDetailsCommand}"

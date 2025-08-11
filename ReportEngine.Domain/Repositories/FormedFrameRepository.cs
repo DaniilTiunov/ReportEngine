@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Repositories.Interfaces;
 
@@ -20,8 +21,7 @@ namespace ReportEngine.Domain.Repositories
             await _context.Set<FormedFrame>().AddAsync(entity);
             await _context.SaveChangesAsync();
         }
-
-        public async Task AddComponentAsync(int frameId, IBaseEquip component)
+        public async Task AddComponentAsync(int frameId, IBaseEquip component, float? length = null)
         {
             var frame = await _context.FormedFrames
                 .Include(f => f.Components)
@@ -37,7 +37,10 @@ namespace ReportEngine.Domain.Repositories
 
             if (exisingComponent != null)
             {
-                exisingComponent.Count++;
+                if (component is BaseFrame baseFrame && baseFrame.Measure == "м" && length.HasValue)
+                    exisingComponent.Length += length.Value;
+                else
+                    exisingComponent.Count++;
                 _context.FrameComponents.Update(exisingComponent);
             }
             else
@@ -47,13 +50,13 @@ namespace ReportEngine.Domain.Repositories
                     FormedFrameId = frameId,
                     ComponentId = component.Id,
                     ComponentType = type,
-                    Count = 1
+                    Count = (component is BaseFrame baseFrame && baseFrame.Measure == "м") ? 0 : 1,
+                    Length = (component is BaseFrame baseFrame2 && baseFrame2.Measure == "м") ? length : null
                 };
                 await _context.FrameComponents.AddAsync(newComponent);
             }
 
             await _context.SaveChangesAsync();
-
         }
         public async Task DeleteAsync(FormedFrame entity)
         {

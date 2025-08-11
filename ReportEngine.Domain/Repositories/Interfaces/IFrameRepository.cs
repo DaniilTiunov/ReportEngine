@@ -5,7 +5,7 @@ namespace ReportEngine.Domain.Repositories.Interfaces
 {
     public interface IFrameRepository : IBaseRepository<FormedFrame>
     {
-        Task AddComponentAsync(int frameId, IBaseEquip component);
+        Task AddComponentAsync(int frameId, IBaseEquip component, float? length = null);
         Task RemoveComponentAsync(int frameId, IBaseEquip component);
     }
 }

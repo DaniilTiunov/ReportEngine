@@ -2,6 +2,7 @@
 using ReportEngine.App.Display;
 using ReportEngine.App.Model;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.Frame;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
@@ -64,7 +65,6 @@ namespace ReportEngine.App.ViewModels
             DeleteFrameCommand = new RelayCommand(OnDeleteFrameExecuted, CanAllCommandsExecute);
             RemoveComponentCommand = new RelayCommand(OnRemoveComponentExecuted, CanAllCommandsExecute);
         }
-
         public ICommand AddNewFrameCommand { get; set; }
         public ICommand SaveChangesCommand { get; set; }
         public ICommand AddDetailsCommand { get; set; }
@@ -73,65 +73,19 @@ namespace ReportEngine.App.ViewModels
         public bool CanAllCommandsExecute(object p) => true;
         public async void OnAddNewFrameExecuted(object p)
         {
-            await ExceptionHelper.SafeExecuteAsync(async () =>
-            {
-                var newFrame = FormedFrameModel.CreateNewFrame();
-
-                await _formedFrameRepository.AddAsync(newFrame);
-
-                var addedFrame = await _formedFrameRepository.GetByIdAsync(newFrame.Id);
-                FormedFrameModel.AllFrames.Add(addedFrame);
-
-                FormedFrameModel.NewFrame = new FormedFrame();
-
-                FormedFrameModel.SelectedFrame = addedFrame;
-
-                MessageBoxHelper.ShowInfo($"{addedFrame.Name} успешно создана!");
-            });
+            await CreateNewFrameAsync();
         }
         public async void OnSaveChangesExecuted(object p)
         {
-            await ExceptionHelper.SafeExecuteAsync(async () =>
-            {
-                if (FormedFrameModel.SelectedFrame != null)
-                    await _formedFrameRepository.UpdateAsync(FormedFrameModel.SelectedFrame);
-
-                MessageBoxHelper.ShowInfo("Изменения сохранены");
-            });
+            await SaveChangesAsync();
         }
         public async void OnDeleteFrameExecuted(object p)
         {
-            await ExceptionHelper.SafeExecuteAsync(async () =>
-            {
-                var selectedFrame = FormedFrameModel.SelectedFrame;
-                if (selectedFrame != null)
-                {
-                    await _formedFrameRepository.DeleteAsync(selectedFrame);
-                    FormedFrameModel.AllFrames.Remove(selectedFrame);
-
-
-                    MessageBoxHelper.ShowInfo($"{selectedFrame.Name} успешно удалена!");
-                }
-            });
+            await DeleteFrameAsync();
         }
         public async void OnAddDetailsExecuted(object p)
         {
-            await ExceptionHelper.SafeExecuteAsync(async () =>
-            {
-                var frame = FormedFrameModel.SelectedFrame;
-                var component = FormedFrameModel.SelectedComponentForAdd;
-                if (frame == null || component == null) return;
-
-                await _formedFrameRepository.AddComponentAsync(frame.Id, component);
-
-                var updatedFrame = await _formedFrameRepository.GetByIdAsync(frame.Id);
-                var idx = FormedFrameModel.AllFrames.IndexOf(FormedFrameModel.AllFrames.FirstOrDefault(f => f.Id == updatedFrame.Id));
-                if (idx >= 0)
-                    FormedFrameModel.AllFrames[idx] = updatedFrame;
-
-                FormedFrameModel.SelectedFrame = updatedFrame;
-                FormedFrameModel.UpdateDisplayedComponents();
-            });
+            await AddDetailsToFrame();
         }
         public async void OnRemoveComponentExecuted(object p)
         {
@@ -150,6 +104,77 @@ namespace ReportEngine.App.ViewModels
 
                 FormedFrameModel.SelectedFrame = updatedFrame;
                 FormedFrameModel.UpdateDisplayedComponents();
+            });
+        }
+        private async Task CreateNewFrameAsync()
+        {
+            await ExceptionHelper.SafeExecuteAsync(async () =>
+            {
+                var newFrame = FormedFrameModel.CreateNewFrame();
+
+                await _formedFrameRepository.AddAsync(newFrame);
+
+                var addedFrame = await _formedFrameRepository.GetByIdAsync(newFrame.Id);
+                FormedFrameModel.AllFrames.Add(addedFrame);
+
+                FormedFrameModel.NewFrame = new FormedFrame();
+
+                FormedFrameModel.SelectedFrame = addedFrame;
+
+                MessageBoxHelper.ShowInfo($"{addedFrame.Name} успешно создана!");
+            });
+        }
+        private async Task SaveChangesAsync()
+        {
+            await ExceptionHelper.SafeExecuteAsync(async () =>
+            {
+                if (FormedFrameModel.SelectedFrame != null)
+                    await _formedFrameRepository.UpdateAsync(FormedFrameModel.SelectedFrame);
+
+                MessageBoxHelper.ShowInfo("Изменения сохранены");
+            });
+        }
+
+        private async Task DeleteFrameAsync()
+        {
+            await ExceptionHelper.SafeExecuteAsync(async () =>
+            {
+                var selectedFrame = FormedFrameModel.SelectedFrame;
+                if (selectedFrame != null)
+                {
+                    await _formedFrameRepository.DeleteAsync(selectedFrame);
+                    FormedFrameModel.AllFrames.Remove(selectedFrame);
+
+
+                    MessageBoxHelper.ShowInfo($"{selectedFrame.Name} успешно удалена!");
+                }
+            });
+        }
+        private async Task AddDetailsToFrame()
+        {
+            await ExceptionHelper.SafeExecuteAsync(async () =>
+            {
+                var frame = FormedFrameModel.SelectedFrame;
+                var component = FormedFrameModel.SelectedComponentForAdd;
+                var length = FormedFrameModel.ComponentLength;
+
+                if (frame == null || component == null) return;
+
+                // Проверяем, нужно ли передавать длину
+                var isMeter = (component is BaseFrame baseFrame) && baseFrame.Measure == "м";
+                await _formedFrameRepository.AddComponentAsync(frame.Id, component, isMeter ? length : null);
+
+                var updatedFrame = await _formedFrameRepository.GetByIdAsync(frame.Id);
+                var idx = FormedFrameModel.AllFrames.IndexOf(FormedFrameModel.AllFrames.FirstOrDefault(f => f.Id == updatedFrame.Id));
+                if (idx >= 0)
+                    FormedFrameModel.AllFrames[idx] = updatedFrame;
+
+                FormedFrameModel.SelectedFrame = updatedFrame;
+                FormedFrameModel.UpdateDisplayedComponents();
+
+                // Сбросить длину после добавления
+                if (isMeter)
+                    FormedFrameModel.ComponentLength = null;
             });
         }
     }
