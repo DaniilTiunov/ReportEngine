@@ -1,5 +1,4 @@
 ﻿using ReportEngine.App.Commands;
-using ReportEngine.App.Model;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
@@ -12,55 +11,82 @@ namespace ReportEngine.App.ViewModels
     {
         private readonly IFormedDrainagesRepository _formedDrainagesRepository;
         public FormedDrainagesModel FormedDrainagesModel { get; set; } = new();
+
         public FormedDrainagesViewModel(IFormedDrainagesRepository formedDrainagesRepository)
         {
             _formedDrainagesRepository = formedDrainagesRepository;
+            InitializeCommands();
         }
 
         public void InitializeCommands()
         {
             ShowAllFormedDrainagesCommand = new RelayCommand(OnShowAllFormedDrainagesCommandExecuted, CanAllCommandsExecute);
-            AddFormedDrainagesCommand = new RelayCommand(OnAddFormedDrainagesCommandExecuted, CanAllCommandsExecute);
-            DeleteFormedDrainagesCommand = new RelayCommand(OnDeleteFormedDrainagesCommandExecuted, CanAllCommandsExecute);
-            UpdateFormedDrainagesCommand = new RelayCommand(OnUpdateFormedDrainagesCommandExecuted, CanAllCommandsExecute);
-        }
-        public ICommand ShowAllFormedDrainagesCommand { get; set; }
-        public ICommand AddFormedDrainagesCommand { get; set; }
-        public ICommand DeleteFormedDrainagesCommand { get; set; }
-        public ICommand UpdateFormedDrainagesCommand { get; set; }
-        public bool CanAllCommandsExecute(object arg) => true;
-        public async void OnShowAllFormedDrainagesCommandExecuted(object obj)
-        {
-            await LoadAllFormedDrainagesAsync();
-        }
-        public async void OnAddFormedDrainagesCommandExecuted(object obj)
-        {
-            await AddNewFormedDrainagesAsync();
-        }
-        public async void OnDeleteFormedDrainagesCommandExecuted(object obj)
-        {
-            throw new NotImplementedException();
-        }
-        public async void OnUpdateFormedDrainagesCommandExecuted(object obj)
-        {
-            throw new NotImplementedException();
+            AddFormedDrainageCommand = new RelayCommand(OnAddFormedDrainageCommandExecuted, CanAllCommandsExecute);
+            DeleteFormedDrainageCommand = new RelayCommand(OnDeleteFormedDrainageCommandExecuted, CanAllCommandsExecute);
+            AddPurposeCommand = new RelayCommand(OnAddPurposeCommandExecuted, CanAllCommandsExecute);
+            DeletePurposeCommand = new RelayCommand(OnDeletePurposeCommandExecuted, CanAllCommandsExecute);
         }
 
-        private async Task LoadAllFormedDrainagesAsync()
+        public ICommand ShowAllFormedDrainagesCommand { get; set; }
+        public ICommand AddFormedDrainageCommand { get; set; }
+        public ICommand DeleteFormedDrainageCommand { get; set; }
+        public ICommand AddPurposeCommand { get; set; }
+        public ICommand DeletePurposeCommand { get; set; }
+        public bool CanAllCommandsExecute(object arg) => true;
+
+        public async void OnShowAllFormedDrainagesCommandExecuted(object obj)
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
-                var formedDrainages = await _formedDrainagesRepository.GetAllAsync();
+                var formedDrainages = await _formedDrainagesRepository.GetAllWithPurposesAsync();
                 FormedDrainagesModel.AllFormedDrainage = new ObservableCollection<FormedDrainage>(formedDrainages);
             });
         }
-        private async Task AddNewFormedDrainagesAsync()
+
+        public async void OnAddFormedDrainageCommandExecuted(object obj)
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
-                var newFormedDrainages = FormedDrainagesModel.CreateNewFormedDrainages();
-                FormedDrainagesModel.AllFormedDrainage.Add(newFormedDrainages);
-                await _formedDrainagesRepository.AddAsync(newFormedDrainages);
+                var newDrainage = FormedDrainagesModel.CreateNewFormedDrainage("Новый дренаж");
+                await _formedDrainagesRepository.AddAsync(newDrainage);
+                FormedDrainagesModel.AllFormedDrainage.Add(newDrainage);
+            });
+        }
+
+        public async void OnDeleteFormedDrainageCommandExecuted(object obj)
+        {
+            await ExceptionHelper.SafeExecuteAsync(async () =>
+            {
+                var selected = FormedDrainagesModel.SelectedFormedDrainage;
+                if (selected == null) return;
+                await _formedDrainagesRepository.DeleteAsync(selected);
+                FormedDrainagesModel.AllFormedDrainage.Remove(selected);
+            });
+        }
+
+        public async void OnAddPurposeCommandExecuted(object obj)
+        {
+            await ExceptionHelper.SafeExecuteAsync(async () =>
+            {
+                var drainage = FormedDrainagesModel.SelectedFormedDrainage;
+                if (drainage == null) return;
+                var newPurpose = FormedDrainagesModel.CreateNewPurpose("Новое назначение", "", null);
+                drainage.Purposes.Add(newPurpose);
+                FormedDrainagesModel.Purposes.Add(newPurpose);
+                await _formedDrainagesRepository.UpdateAsync(drainage);
+            });
+        }
+
+        public async void OnDeletePurposeCommandExecuted(object obj)
+        {
+            await ExceptionHelper.SafeExecuteAsync(async () =>
+            {
+                var drainage = FormedDrainagesModel.SelectedFormedDrainage;
+                var purpose = FormedDrainagesModel.SelectedPurpose;
+                if (drainage == null || purpose == null) return;
+                drainage.Purposes.Remove(purpose);
+                FormedDrainagesModel.Purposes.Remove(purpose);
+                await _formedDrainagesRepository.UpdateAsync(drainage);
             });
         }
     }
