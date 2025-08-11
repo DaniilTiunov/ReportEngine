@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ReportEngine.Domain.Database.Context;
@@ -11,9 +12,11 @@ using ReportEngine.Domain.Database.Context;
 namespace ReportEngine.Domain.Migrations
 {
     [DbContext(typeof(ReAppContext))]
-    partial class ReAppContextModelSnapshot : ModelSnapshot
+    [Migration("20250811102259_DopedStandLinks")]
+    partial class DopedStandLinks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -295,28 +298,6 @@ namespace ReportEngine.Domain.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Drainages");
-                });
-
-            modelBuilder.Entity("ReportEngine.Domain.Entities.DrainagePurpose", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("FormedDrainageId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Purpose")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FormedDrainageId");
-
-                    b.ToTable("DrainagePurpose");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.ElectricComponents.CabelBoxe", b =>
@@ -637,12 +618,14 @@ namespace ReportEngine.Domain.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Material")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Purpose")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<float?>("Quantity")
+                    b.Property<float>("Quantity")
                         .HasColumnType("real");
 
                     b.Property<int?>("StandId")
@@ -1278,17 +1261,6 @@ namespace ReportEngine.Domain.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("ReportEngine.Domain.Entities.DrainagePurpose", b =>
-                {
-                    b.HasOne("ReportEngine.Domain.Entities.FormedDrainage", "FormedDrainage")
-                        .WithMany("Purposes")
-                        .HasForeignKey("FormedDrainageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("FormedDrainage");
-                });
-
             modelBuilder.Entity("ReportEngine.Domain.Entities.FormedDrainage", b =>
                 {
                     b.HasOne("ReportEngine.Domain.Entities.Stand", null)
@@ -1330,11 +1302,6 @@ namespace ReportEngine.Domain.Migrations
                         .IsRequired();
 
                     b.Navigation("Project");
-                });
-
-            modelBuilder.Entity("ReportEngine.Domain.Entities.FormedDrainage", b =>
-                {
-                    b.Navigation("Purposes");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.FormedFrame", b =>
