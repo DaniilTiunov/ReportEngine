@@ -34,7 +34,7 @@
                         AutoGenerateColumns="False"
                         CanUserAddRows="False"
                         ItemsSource="{Binding FormedDrainagesModel.AllFormedDrainage}"
-                        SelectedItem="{Binding FormedDrainagesModel.SelectedFormedDrainage}">
+                        SelectedItem="{Binding FormedDrainagesModel.SelectedFormedDrainage, Mode=TwoWay}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
                         </DataGrid.Columns>
@@ -49,11 +49,11 @@
                                 AutoGenerateColumns="False"
                                 CanUserAddRows="False"
                                 ItemsSource="{Binding FormedDrainagesModel.Purposes}"
-                                SelectedItem="{Binding FormedDrainagesModel.SelectedPurpose}">
+                                SelectedItem="{Binding FormedDrainagesModel.SelectedPurpose, Mode=TwoWay}">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
-                                    <DataGridTextColumn Binding="{Binding Material}" Header="Материал" />
-                                    <DataGridTextColumn Binding="{Binding Quantity}" Header="Кол-во" />
+                                    <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Назначение" />
+                                    <DataGridTextColumn Binding="{Binding Material, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Материал" />
+                                    <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Длина (м)" />
                                 </DataGrid.Columns>
                             </DataGrid>
                             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
@@ -65,6 +65,10 @@
                                     Margin="5"
                                     Command="{Binding DeletePurposeCommand}"
                                     Content="Удалить назначение" />
+                                <Button
+                                    Margin="5"
+                                    Command="{Binding InsertMaterialCommand}"
+                                    Content="Вставить материал из справочника" />
                             </StackPanel>
                         </StackPanel>
                     </GroupBox>
@@ -119,13 +123,13 @@
         <!--  Правая часть: Справочник дренажей  -->
         <Grid Grid.Column="1">
             <TabControl Margin="10">
-                <TabItem Header="Комплектующие">
+                <TabItem Header="Справочник дренажей">
                     <DataGrid
                         Margin="5"
                         AutoGenerateColumns="False"
                         CanUserAddRows="False"
                         ItemsSource="{Binding FormedDrainagesModel.DrainageDetails}"
-                        SelectedItem="{Binding FormedDrainagesModel.SelectedFormedDrainage}">
+                        SelectedItem="{Binding FormedDrainagesModel.SelectedDrainageDetail, Mode=TwoWay}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
                             <DataGridTextColumn Binding="{Binding Cost}" Header="Цена" />
