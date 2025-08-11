@@ -60,6 +60,7 @@ namespace ReportEngine.App.ViewModels
             MainWindowCommandProvider.DeleteSelectedProjectCommand = new RelayCommand(OnDeleteSelectedProjectExecuted, CanAllCommandsExecute);
             MainWindowCommandProvider.OpenMainWindowCommand = new RelayCommand(OnOpenMainWindowCommandExecuted, CanAllCommandsExecute);
             MainWindowCommandProvider.EditProjectCommand = new RelayCommand(OnEditProjectCommandExecuted, CanAllCommandsExecute);
+            MainWindowCommandProvider.OpenAllDrainagesCommand = new RelayCommand(OpenOthersWindowCommandExecuted<FormedDrainagesView>, CanAllCommandsExecute);
 
         }
         public void InitializeGenericEquipCommands() // Нужно придумать как отрефакторить этого монстра

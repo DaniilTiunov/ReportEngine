@@ -15,6 +15,7 @@ namespace ReportEngine.App.Commands
         public ICommand ShowAllProjectsCommand { get; set; }
         public ICommand DeleteSelectedProjectCommand { get; set; }
         public ICommand EditProjectCommand { get; set; }
+        public ICommand OpenAllDrainagesCommand { get; set; }
 
     }
 }

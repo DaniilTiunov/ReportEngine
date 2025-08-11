@@ -69,6 +69,7 @@ namespace ReportEngine.App
             services.AddScoped<IProjectInfoRepository, ProjectInfoRepository>();
             services.AddScoped<IObvyazkaRepository, ObvyazkaRepository>();
             services.AddScoped<IFrameRepository, FormedFrameRepository>();
+            services.AddScoped<IFormedDrainagesRepository, FormedDrainagesRepository>();
 
         }
         private static void ConfigureGenericRepositories(IServiceCollection services)
@@ -125,6 +126,7 @@ namespace ReportEngine.App
             services.AddScoped<ObvyazkaViewModel>();
             services.AddScoped<CompanyViewModel>();
             services.AddScoped<FormedFrameViewModel>();
+            services.AddScoped<FormedDrainagesViewModel>();
         }
         private static void ConfigureViews(IServiceCollection services)
         {
@@ -145,6 +147,7 @@ namespace ReportEngine.App
             services.AddTransient<ProjectCardView>();
             services.AddTransient<CompanyView>();
             services.AddTransient<FormedFrameView>();
+            services.AddTransient<FormedDrainagesView>();
         }
     }
 }

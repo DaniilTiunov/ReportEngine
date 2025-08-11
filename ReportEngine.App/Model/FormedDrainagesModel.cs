@@ -1,9 +1,12 @@
 ﻿using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.Drainage;
+using ReportEngine.Domain.Entities.Frame;
 using System.Collections.ObjectModel;
 
 public class FormedDrainagesModel : BaseViewModel
 {
+    private ObservableCollection<Drainage> _drainageDetails = new();
     private ObservableCollection<FormedDrainage> _allFormedDrainage = new();
     private FormedDrainage _selectedFormedDrainage = new();
     private ObservableCollection<DrainagePurpose> _purposes = new();
@@ -54,3 +57,4 @@ public class FormedDrainagesModel : BaseViewModel
             Quantity = quantity
         };
     }
+}
