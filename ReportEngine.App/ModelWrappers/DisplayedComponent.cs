@@ -1,7 +1,7 @@
 ﻿using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using System.ComponentModel;
 
-namespace ReportEngine.App.Convert
+namespace ReportEngine.App.ModelWrappers
 {
     public class DisplayedComponent : INotifyPropertyChanged
     {

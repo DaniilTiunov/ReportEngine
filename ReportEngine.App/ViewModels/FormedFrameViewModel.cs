@@ -65,6 +65,7 @@ namespace ReportEngine.App.ViewModels
             DeleteFrameCommand = new RelayCommand(OnDeleteFrameExecuted, CanAllCommandsExecute);
             RemoveComponentCommand = new RelayCommand(OnRemoveComponentExecuted, CanAllCommandsExecute);
         }
+        #region Команды
         public ICommand AddNewFrameCommand { get; set; }
         public ICommand SaveChangesCommand { get; set; }
         public ICommand AddDetailsCommand { get; set; }
@@ -89,23 +90,10 @@ namespace ReportEngine.App.ViewModels
         }
         public async void OnRemoveComponentExecuted(object p)
         {
-            await ExceptionHelper.SafeExecuteAsync(async () =>
-            {
-                var frame = FormedFrameModel.SelectedFrame;
-                var frameComponent = FormedFrameModel.SelectedComponentInFrame;
-                if (frame == null || frameComponent == null) return;
-
-                await _formedFrameRepository.RemoveComponentAsync(frame.Id, frameComponent.Component);
-
-                var updatedFrame = await _formedFrameRepository.GetByIdAsync(frame.Id);
-                var idx = FormedFrameModel.AllFrames.IndexOf(FormedFrameModel.AllFrames.FirstOrDefault(f => f.Id == updatedFrame.Id));
-                if (idx >= 0)
-                    FormedFrameModel.AllFrames[idx] = updatedFrame;
-
-                FormedFrameModel.SelectedFrame = updatedFrame;
-                FormedFrameModel.UpdateDisplayedComponents();
-            });
+            await RemoveDetailsFromFrameAsync();
         }
+        #endregion
+        #region Методы
         private async Task CreateNewFrameAsync()
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -156,7 +144,7 @@ namespace ReportEngine.App.ViewModels
             {
                 var frame = FormedFrameModel.SelectedFrame;
                 var component = FormedFrameModel.SelectedComponentForAdd;
-                var length = FormedFrameModel.ComponentLength;
+                var length = float.Parse(FormedFrameModel.ComponentLength);
 
                 if (frame == null || component == null) return;
 
@@ -177,5 +165,25 @@ namespace ReportEngine.App.ViewModels
                     FormedFrameModel.ComponentLength = null;
             });
         }
+        private async Task RemoveDetailsFromFrameAsync()
+        {
+            await ExceptionHelper.SafeExecuteAsync(async () =>
+            {
+                var frame = FormedFrameModel.SelectedFrame;
+                var frameComponent = FormedFrameModel.SelectedComponentInFrame;
+                if (frame == null || frameComponent == null) return;
+
+                await _formedFrameRepository.RemoveComponentAsync(frame.Id, frameComponent.Component);
+
+                var updatedFrame = await _formedFrameRepository.GetByIdAsync(frame.Id);
+                var idx = FormedFrameModel.AllFrames.IndexOf(FormedFrameModel.AllFrames.FirstOrDefault(f => f.Id == updatedFrame.Id));
+                if (idx >= 0)
+                    FormedFrameModel.AllFrames[idx] = updatedFrame;
+
+                FormedFrameModel.SelectedFrame = updatedFrame;
+                FormedFrameModel.UpdateDisplayedComponents();
+            });
+        } 
+        #endregion
     }
 }

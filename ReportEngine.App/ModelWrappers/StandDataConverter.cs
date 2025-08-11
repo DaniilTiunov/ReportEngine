@@ -1,7 +1,7 @@
 ﻿using ReportEngine.App.Model;
 using ReportEngine.Domain.Entities;
 
-namespace ReportEngine.App.Convert
+namespace ReportEngine.App.ModelWrappers
 {
     public static class StandDataConverter
     {
