@@ -13,16 +13,11 @@
     WindowStartupLocation="CenterScreen"
     WindowState="Maximized"
     mc:Ignorable="d">
-
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/Dictionaries/GigaChadUI.xaml" />
-            </ResourceDictionary.MergedDictionaries>
             <Image x:Key="refresh-button.png" Source="/Resources/Images/refresh-button.png" />
         </ResourceDictionary>
     </Window.Resources>
-
     <DockPanel>
         <Menu
             Height="25"
@@ -36,8 +31,23 @@
                 <Separator />
                 <MenuItem Command="{Binding MainWindowCommandProvider.CloseAppCommand}" Header="Выход" />
             </MenuItem>
-            <MenuItem Header="Вид">
-                <MenuItem Header="Масштаб..." />
+            <MenuItem Header="Вид" Tag="ThemeItemChanger">
+                <MenuItem
+                    Click="ChangeDarkTheme"
+                    Header="Тёмная тема"
+                    Tag="Dark" />
+                <MenuItem
+                    Click="ChangeLightTheme"
+                    Header="Светлая тема"
+                    Tag="Light" />
+                <MenuItem
+                    Click="StandartTheme"
+                    Header="Гигачад тема"
+                    Tag="Standart" />
+                <MenuItem
+                    Click="TestTheme"
+                    Header="Тестовая тема"
+                    Tag="Test" />
             </MenuItem>
             <MenuItem Header="Контакты">
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllUsersCommand}" Header="Сотрудники" />
@@ -86,7 +96,6 @@
                 <MenuItem Command="{Binding GenericEquipCommandProvider.OpenOthersCommand}" Header="Прочие" />
                 <Separator />
                 <MenuItem Command="{Binding GenericEquipCommandProvider.OpenConteinersCommand}" Header="Тара" />
-                <Separator />
             </MenuItem>
             <MenuItem Header="Формирование комплектующих">
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenFormedFramesCommand}" Header="Создание и редактировние рам" />
@@ -98,7 +107,6 @@
             <MenuItem Header="Инструменты">
                 <MenuItem Click="ShowCalculator" Header="Калькулятор" />
                 <MenuItem Click="ShowNotepad" Header="Блокнот" />
-                <Separator />
             </MenuItem>
             <MenuItem Header="Справка">
                 <MenuItem Click="ShowAboutProgram" Header="О программе" />
@@ -106,16 +114,13 @@
                 <MenuItem Header="Открыть справку" />
                 <Separator />
                 <MenuItem Click="CheckForUpdates" Header="Проверить обновления" />
-                <Separator />
             </MenuItem>
         </Menu>
-
         <StatusBar Height="30" DockPanel.Dock="Bottom">
-            <Grid Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=StatusBar}}">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <TextBlock
@@ -123,104 +128,100 @@
                     FontSize="14"
                     Text="Текущий пользователь:" />
                 <TextBlock
-                    Grid.Column="1"
-                    Margin="1335,0,184,0"
+                    Grid.Column="2"
+                    Margin="265,-1,0,1"
+                    HorizontalAlignment="Left"
                     FontSize="14"
                     Text="Статус подключения к серверу:" />
                 <TextBlock
-                    Grid.Column="1"
-                    Margin="1555,0,9,0"
+                    Grid.Column="2"
+                    Width="270"
+                    Margin="470,1,0,0"
+                    HorizontalAlignment="Left"
                     FontSize="14"
                     Text="{Binding MainWindowModel.ConnectionStatusMessage}" />
-                <Button
-                    Grid.Column="1"
-                    Margin="1287,-1,453,-2"
-                    BorderThickness="0,0,0,0"
-                    Command="{Binding MainWindowCommandProvider.ChekDbConnectionCommand}"
-                    Content="{StaticResource refresh-button.png}" />
             </Grid>
+            <Button
+                Height="24"
+                HorizontalAlignment="Left"
+                BorderThickness="0"
+                Command="{Binding MainWindowCommandProvider.ChekDbConnectionCommand}"
+                Content="{StaticResource refresh-button.png}" />
         </StatusBar>
-
-        <Grid DockPanel.Dock="Top">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="95*" />
-            </Grid.ColumnDefinitions>
-            <ContentControl x:Name="MainContentControl" Grid.ColumnSpan="2">
-                <DataGrid
-                    x:Name="MainDataGrid"
-                    Margin="5,43,10,0"
-                    ItemsSource="{Binding MainWindowModel.AllProjects}"
-                    SelectedItem="{Binding MainWindowModel.SelectedProject}"
-                    SelectionUnit="FullRow">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Number}"
-                            Header="№п/п" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Company}"
-                            Header="Заказчик" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Object}"
-                            Header="Объект" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding StandCount}"
-                            Header="Кол-во стендов" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Status}"
-                            Header="Статус" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding StartDate}"
-                            Header="Старт проекта" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding OutOfProduction}"
-                            Header="Выход из производства" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding EndDate}"
-                            Header="Дата окончания договора" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding OrderCustomer}"
-                            Header="Заказ покупателя" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding RequestProduction}"
-                            Header="Заявка на производство" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding HumanCost}"
-                            Header="Трудозатраты" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Manager}"
-                            Header="Руководитель" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding MarkPlus}"
-                            Header="Маркировка +" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding MarkMinus}"
-                            Header="Маркировка -" />
-                    </DataGrid.Columns>
-                    <DataGrid.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Command="{Binding MainWindowCommandProvider.EditProjectCommand}" Header="Редактировать проект" />
-                            <MenuItem Command="{Binding MainWindowCommandProvider.ShowAllProjectsCommand}" Header="Обновить список проектов" />
-                            <Separator />
-                            <MenuItem Command="{Binding MainWindowCommandProvider.DeleteSelectedProjectCommand}" Header="Удалить проект" />
-                        </ContextMenu>
-                    </DataGrid.ContextMenu>
-                </DataGrid>
-            </ContentControl>
-        </Grid>
+        <ContentControl x:Name="MainContentControl" Margin="10,0,10,10">
+            <DataGrid
+                x:Name="MainDataGrid"
+                Margin="10,30,10,10"
+                ItemsSource="{Binding MainWindowModel.AllProjects}"
+                SelectedItem="{Binding MainWindowModel.SelectedProject}"
+                SelectionUnit="FullRow">
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Number}"
+                        Header="№п/п" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Company}"
+                        Header="Заказчик" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Object}"
+                        Header="Объект" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding StandCount}"
+                        Header="Кол-во стендов" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Status}"
+                        Header="Статус" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding StartDate}"
+                        Header="Старт проекта" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding OutOfProduction}"
+                        Header="Выход из производства" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding EndDate}"
+                        Header="Дата окончания договора" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding OrderCustomer}"
+                        Header="Заказ покупателя" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding RequestProduction}"
+                        Header="Заявка на производство" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding HumanCost}"
+                        Header="Трудозатраты" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Manager}"
+                        Header="Руководитель" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding MarkPlus}"
+                        Header="Маркировка +" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding MarkMinus}"
+                        Header="Маркировка -" />
+                </DataGrid.Columns>
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="{Binding MainWindowCommandProvider.EditProjectCommand}" Header="Редактировать проект" />
+                        <MenuItem Command="{Binding MainWindowCommandProvider.ShowAllProjectsCommand}" Header="Обновить список проектов" />
+                        <Separator />
+                        <MenuItem Command="{Binding MainWindowCommandProvider.DeleteSelectedProjectCommand}" Header="Удалить проект" />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+            </DataGrid>
+        </ContentControl>
     </DockPanel>
 </Window>
