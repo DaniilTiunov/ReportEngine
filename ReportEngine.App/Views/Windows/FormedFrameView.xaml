@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:ReportEngine.App.Views.Windows"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Создание и редактирование рам"
     FontSize="13"
@@ -70,7 +71,7 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <Button
-                                                Command="{Binding DataContext.RemoveComponentCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                Command="{Binding DataContext.RemoveComponentCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                                 CommandParameter="{Binding}"
                                                 Content="Удалить" />
                                         </DataTemplate>
@@ -106,9 +107,7 @@
                         Grid.Row="0"
                         Grid.Column="0"
                         Margin="5"
-                        VerticalAlignment="Center">
-                        Наименование:
-                    </TextBlock>
+                        VerticalAlignment="Center"><Run Text="Наименование:" /></TextBlock>
                     <TextBox
                         Grid.Row="0"
                         Grid.Column="1"
@@ -119,9 +118,7 @@
                         Grid.Row="1"
                         Grid.Column="0"
                         Margin="5"
-                        VerticalAlignment="Center">
-                        Тип:
-                    </TextBlock>
+                        VerticalAlignment="Center"><Run Text="Тип:" /></TextBlock>
                     <TextBox
                         Grid.Row="1"
                         Grid.Column="1"
@@ -132,9 +129,7 @@
                         Grid.Row="2"
                         Grid.Column="0"
                         Margin="5"
-                        VerticalAlignment="Center">
-                        Ширина:
-                    </TextBlock>
+                        VerticalAlignment="Center"><Run Text="Ширина:" /></TextBlock>
                     <TextBox
                         Grid.Row="2"
                         Grid.Column="1"
@@ -145,9 +140,7 @@
                         Grid.Row="3"
                         Grid.Column="0"
                         Margin="5"
-                        VerticalAlignment="Center">
-                        Высота:
-                    </TextBlock>
+                        VerticalAlignment="Center"><Run Text="Высота:" /></TextBlock>
                     <TextBox
                         Grid.Row="3"
                         Grid.Column="1"
@@ -158,9 +151,7 @@
                         Grid.Row="4"
                         Grid.Column="0"
                         Margin="5"
-                        VerticalAlignment="Center">
-                        Глубина:
-                    </TextBlock>
+                        VerticalAlignment="Center"><Run Text="Глубина:" /></TextBlock>
                     <TextBox
                         Grid.Row="4"
                         Grid.Column="1"
@@ -171,9 +162,7 @@
                         Grid.Row="5"
                         Grid.Column="0"
                         Margin="5"
-                        VerticalAlignment="Center">
-                        Масса:
-                    </TextBlock>
+                        VerticalAlignment="Center"><Run Text="Масса:" /></TextBlock>
                     <TextBox
                         Grid.Row="5"
                         Grid.Column="1"
@@ -184,9 +173,7 @@
                         Grid.Row="6"
                         Grid.Column="0"
                         Margin="5"
-                        VerticalAlignment="Center">
-                        Обозначение по КД:
-                    </TextBlock>
+                        VerticalAlignment="Center"><Run Text="Обозначение по КД:" /></TextBlock>
                     <TextBox
                         Grid.Row="6"
                         Grid.Column="1"
@@ -219,9 +206,7 @@
                         Grid.Row="0"
                         Grid.Column="0"
                         Margin="5"
-                        VerticalAlignment="Center">
-                        Наименование:
-                    </TextBlock>
+                        VerticalAlignment="Center"><Run Text="Наименование:" /></TextBlock>
                     <TextBox
                         Grid.Row="0"
                         Grid.Column="1"
@@ -232,9 +217,7 @@
                         Grid.Row="1"
                         Grid.Column="0"
                         Margin="5"
-                        VerticalAlignment="Center">
-                        Тип:
-                    </TextBlock>
+                        VerticalAlignment="Center"><Run Text="Тип:" /></TextBlock>
                     <TextBox
                         Grid.Row="1"
                         Grid.Column="1"
@@ -245,9 +228,7 @@
                         Grid.Row="2"
                         Grid.Column="0"
                         Margin="5"
-                        VerticalAlignment="Center">
-                        Ширина:
-                    </TextBlock>
+                        VerticalAlignment="Center"><Run Text="Ширина:" /></TextBlock>
                     <TextBox
                         Grid.Row="2"
                         Grid.Column="1"
@@ -258,9 +239,7 @@
                         Grid.Row="3"
                         Grid.Column="0"
                         Margin="5"
-                        VerticalAlignment="Center">
-                        Высота:
-                    </TextBlock>
+                        VerticalAlignment="Center"><Run Text="Высота:" /></TextBlock>
                     <TextBox
                         Grid.Row="3"
                         Grid.Column="1"
@@ -271,9 +250,7 @@
                         Grid.Row="4"
                         Grid.Column="0"
                         Margin="5"
-                        VerticalAlignment="Center">
-                        Глубина:
-                    </TextBlock>
+                        VerticalAlignment="Center"><Run Text="Глубина:" /></TextBlock>
                     <TextBox
                         Grid.Row="4"
                         Grid.Column="1"
@@ -284,9 +261,7 @@
                         Grid.Row="5"
                         Grid.Column="0"
                         Margin="5"
-                        VerticalAlignment="Center">
-                        Масса:
-                    </TextBlock>
+                        VerticalAlignment="Center"><Run Text="Масса:" /></TextBlock>
                     <TextBox
                         Grid.Row="5"
                         Grid.Column="1"
@@ -297,9 +272,7 @@
                         Grid.Row="6"
                         Grid.Column="0"
                         Margin="5"
-                        VerticalAlignment="Center">
-                        Обозначение по КД:
-                    </TextBlock>
+                        VerticalAlignment="Center"><Run Text="Обозначение по КД:" /></TextBlock>
                     <TextBox
                         Grid.Row="6"
                         Grid.Column="1"

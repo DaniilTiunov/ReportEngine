@@ -5,6 +5,7 @@
     Title="Создание и редактирование дренажей"
     FontSize="13"
     WindowState="Maximized">
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
