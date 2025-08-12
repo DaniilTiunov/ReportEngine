@@ -58,31 +58,19 @@ namespace ReportEngine.App
 
         private void ChangeDarkTheme(object sender, RoutedEventArgs e)
         {
-            var uri = new Uri("/Resources/Dictionaries/DarkTheme.xaml", UriKind.Relative);
-            ResourceDictionary resourceDict = Application.LoadComponent(uri) as ResourceDictionary;
-            Application.Current.Resources.Clear();
-            Application.Current.Resources.MergedDictionaries.Add(resourceDict);
+
         }
         private void ChangeLightTheme(object sender, RoutedEventArgs e)
         {
-            var uri = new Uri("/Resources/Dictionaries/LightTheme.xaml", UriKind.Relative);
-            ResourceDictionary resourceDict = Application.LoadComponent(uri) as ResourceDictionary;
-            Application.Current.Resources.Clear();
-            Application.Current.Resources.MergedDictionaries.Add(resourceDict);
+
         }
         private void StandartTheme(object sender, RoutedEventArgs e)
         {
-            var uri = new Uri("/Resources/Dictionaries/GigaChadUI.xaml", UriKind.Relative);
-            ResourceDictionary resourceDict = Application.LoadComponent(uri) as ResourceDictionary;
-            Application.Current.Resources.Clear();
-            Application.Current.Resources.MergedDictionaries.Add(resourceDict);
+
         }
         private void TestTheme(object sender, RoutedEventArgs e)
         {
-            var uri = new Uri("/Resources/Dictionaries/TestTheme.xaml", UriKind.Relative);
-            ResourceDictionary resourceDict = Application.LoadComponent(uri) as ResourceDictionary;
-            Application.Current.Resources.Clear();
-            Application.Current.Resources.MergedDictionaries.Add(resourceDict);
+
         }
     }
 }

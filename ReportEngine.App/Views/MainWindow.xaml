@@ -6,6 +6,7 @@
     xmlns:local="clr-namespace:ReportEngine.App"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="Стенды КИП"
     Width="1920"
     Height="1080"
@@ -15,6 +16,11 @@
     mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ui:ThemesDictionary Theme="Dark" />
+                <ui:ControlsDictionary />
+            </ResourceDictionary.MergedDictionaries>
+
             <Image x:Key="refresh-button.png" Source="/Resources/Images/refresh-button.png" />
         </ResourceDictionary>
     </Window.Resources>
@@ -23,14 +29,14 @@
             Height="25"
             DockPanel.Dock="Top"
             FontSize="14">
-            <MenuItem Header="Проект">
-                <MenuItem Command="{Binding MainWindowCommandProvider.OpenTreeViewCommand}" Header="Создать новый проект" />
-                <MenuItem Command="{Binding MainWindowCommandProvider.OpenMainWindowCommand}" Header="На главный экран" />
+            <ui:MenuItem Header="Проект">
+                <ui:MenuItem Command="{Binding MainWindowCommandProvider.OpenTreeViewCommand}" Header="Создать новый проект" />
+                <ui:MenuItem Command="{Binding MainWindowCommandProvider.OpenMainWindowCommand}" Header="На главный экран" />
                 <Separator />
-                <MenuItem Click="OpenSettingsWindow" Header="Настройки" />
+                <ui:MenuItem Click="OpenSettingsWindow" Header="Настройки" />
                 <Separator />
-                <MenuItem Command="{Binding MainWindowCommandProvider.CloseAppCommand}" Header="Выход" />
-            </MenuItem>
+                <ui:MenuItem Command="{Binding MainWindowCommandProvider.CloseAppCommand}" Header="Выход" />
+            </ui:MenuItem>
             <MenuItem Header="Вид" Tag="ThemeItemChanger">
                 <MenuItem
                     Click="ChangeDarkTheme"
@@ -147,6 +153,7 @@
                 BorderThickness="0"
                 Command="{Binding MainWindowCommandProvider.ChekDbConnectionCommand}"
                 Content="{StaticResource refresh-button.png}" />
+            <ui:Button Width="75" Content="Button" />
         </StatusBar>
         <ContentControl x:Name="MainContentControl" Margin="10,0,10,10">
             <DataGrid
