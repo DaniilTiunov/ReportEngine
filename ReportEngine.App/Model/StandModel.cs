@@ -26,21 +26,14 @@ namespace ReportEngine.App.Model
         private string _firsSensorKksCode;
         private string _firstSensorMarkMinus;
         private string _designeStand;
-        private ObservableCollection<ObvyazkaModel> _obvyazki;
-        private ObvyazkaModel? _selectedObvyazka;
+        private StandObvyazkaModel _selectedObvyazka;
+
+        private ObservableCollection<StandObvyazkaModel> _obvyazki = new();
 
 
-        public ObservableCollection<ObvyazkaModel> Obvyazki 
-        { 
-            get => _obvyazki;
-            set => Set(ref _obvyazki, value);
-        }
-        public ObvyazkaModel? SelectedObvyazka
-        {
-            get => _selectedObvyazka;
-            set => Set(ref _selectedObvyazka, value);
-        }
+        public ObservableCollection<StandObvyazkaModel> Obvyazki { get => _obvyazki; set => Set(ref _obvyazki, value); }
 
+        public StandObvyazkaModel SelectedObvyazka { get => _selectedObvyazka; set => Set(ref _selectedObvyazka, value); }
         public IEnumerable<string> BraceSensor { get; } = new List<string> { "На кронштейне", "Швеллер" };
         public IEnumerable<string> SensorType { get; } = new List<string> { "Датчик перепада давления", "Манометр", "Датчик абсолютного давления", "Манометр электрокомпактный" };
         public int Id { get => _id; set => Set(ref _id, value); }

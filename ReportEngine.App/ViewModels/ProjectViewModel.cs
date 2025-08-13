@@ -140,9 +140,37 @@ namespace ReportEngine.App.ViewModels
             if (CurrentProjectModel.SelectedStand == null)
                 return;
 
+            var newObvyazka = new StandObvyazkaModel
+            {
+                ObvyazkaId = CurrentProjectModel.SelectedStand.ObvyazkaType,
+                ObvyazkaName = "Обвязка",
+                MaterialLine = CurrentProjectModel.SelectedStand.MaterialLine,
+                TreeSocket = CurrentProjectModel.SelectedStand.TreeSocket,
+                KMCH = "КМЧ",
+                FirstSensorType = CurrentProjectModel.SelectedStand.FirstSensorType,
+                FirstSensorKKS = CurrentProjectModel.SelectedStand.FirstSensorKKSCounter,
+                FirstSensorMarkPlus = CurrentProjectModel.SelectedStand.FirstSensorMarkPlus,
+                FirstSensorMarkMinus = CurrentProjectModel.SelectedStand.FirstSensorMarkMinus,
+                
+            };
 
+            CurrentStandModel.Obvyazki.Add(newObvyazka);
 
-            MessageBoxHelper.ShowInfo("Изменения обвязки успешно сохранены!");
+            var entity = new ObvyazkaInStand
+            {
+                StandId = CurrentProjectModel.SelectedStand.Id,
+                ObvyazkaId = newObvyazka.ObvyazkaId,
+                MaterialLine = newObvyazka.MaterialLine,
+                TreeSocket = newObvyazka.TreeSocket,
+                KMCH = newObvyazka.KMCH,
+                FirstSensorType = newObvyazka.FirstSensorType,
+                FirstSensorKKS = newObvyazka.FirstSensorKKS,
+                FirstSensorMarkPlus = newObvyazka.FirstSensorMarkPlus,
+                FirstSensorMarkMinus = newObvyazka.FirstSensorMarkMinus,
+            };
+            await _projectRepository.AddStandObvyazkaAsync(CurrentProjectModel.SelectedStand.Id, entity);
+
+            MessageBoxHelper.ShowInfo("Обвязка успешно добавлена!");
         }
         private async Task SaveProjectChangesAsync()
         {
