@@ -32,13 +32,19 @@ namespace ReportEngine.App.ViewModels
 
         public bool CanAllCommandsExecute(object e) => true;
         public ICommand ShowAllObvyazkaCommand { get; set; }
+        #region Команды
         public async void OnShowAllObvyazkiCommandExecuted(object p)
         {
-            await ExceptionHelper.SafeExecuteAsync(async () =>
-            {
-                var obvyazki = await _obvyazkaRepository.GetAllAsync();
-                CurrentObvyazka.Obvyazki = new ObservableCollection<Obvyazka>(obvyazki);
-            });
+            await ExceptionHelper.SafeExecuteAsync(ShowAllObvyazkiAsync);
+        } 
+        #endregion
+
+        #region Методы
+        private async Task ShowAllObvyazkiAsync()
+        {
+            var obvyazki = await _obvyazkaRepository.GetAllAsync();
+            CurrentObvyazka.Obvyazki = new ObservableCollection<Obvyazka>(obvyazki);
         }
+        #endregion
     }
 }

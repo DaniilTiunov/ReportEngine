@@ -71,7 +71,7 @@
                 Grid.Row="1"
                 Grid.Column="1"
                 Margin="5,5,925,5"
-                Text="{Binding CurrentProjectModel.SelectedStand.MaterialLine, FallbackValue='BINDING_ERROR'}" />
+                Text="{Binding CurrentProjectModel.SelectedStand.MaterialLine}" />
             <Button
                 Grid.Row="1"
                 Grid.Column="1"
@@ -95,7 +95,7 @@
                 Grid.Row="2"
                 Grid.Column="1"
                 Width="24"
-                Margin="503,3,731,5"
+                Margin="544,3,890,5"
                 Command="{Binding ProjectCommandProvider.SelectArmatureDialogCommand}"
                 Content="..." />
 
@@ -114,8 +114,8 @@
                 Grid.Column="1"
                 Width="24"
                 Height="21"
-                Margin="503,4,731,0"
-                VerticalAlignment="Top"
+                Margin="544,0,890,0"
+                VerticalAlignment="Center"
                 Content="..." />
 
             <!--  Кмч  -->
@@ -132,7 +132,7 @@
                 Grid.Row="4"
                 Grid.Column="1"
                 Width="24"
-                Margin="503,2,731,2"
+                Margin="544,3,890,1"
                 Content="..." />
 
             <!--  Кнопка "Все обвязки"  -->

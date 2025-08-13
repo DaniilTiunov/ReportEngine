@@ -1,12 +1,8 @@
 global using Moq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.EntityFrameworkCore;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
 
 namespace ReportEngine.Tests.DomainTests
 {

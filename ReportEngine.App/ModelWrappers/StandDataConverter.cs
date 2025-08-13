@@ -25,7 +25,6 @@ namespace ReportEngine.App.ModelWrappers
                 Armature = stand.Armature,
                 TreeSocket = stand.TreeSocket,
                 KMCH = stand.KMCH,
-                FirstSensorType = stand.FirstSensorType
             };
         }
         public static Stand ConvertToStandEntity(StandModel model)
@@ -48,7 +47,6 @@ namespace ReportEngine.App.ModelWrappers
                 Armature = model.Armature,
                 TreeSocket = model.TreeSocket,
                 KMCH = model.KMCH,
-                FirstSensorType = model.FirstSensorType
             };
         }
     }
