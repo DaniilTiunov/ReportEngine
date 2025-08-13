@@ -7,7 +7,7 @@ using ReportEngine.Shared.Helpers;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
-namespace ReportEngine.App.ViewModels
+namespace ReportEngine.App.ViewModels.FormedEquips
 {
     public class FormedDrainagesViewModel : BaseViewModel
     {

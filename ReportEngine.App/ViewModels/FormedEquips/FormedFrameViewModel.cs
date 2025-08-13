@@ -8,7 +8,7 @@ using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
 using System.Windows.Input;
 
-namespace ReportEngine.App.ViewModels
+namespace ReportEngine.App.ViewModels.FormedEquips
 {
     public class FormedFrameViewModel : BaseViewModel
     {
