@@ -150,6 +150,7 @@ namespace ReportEngine.App
             services.AddTransient<CompanyView>();
             services.AddTransient<FormedFrameView>();
             services.AddTransient<FormedDrainagesView>();
+            services.AddTransient<FrameDrainagesView>();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using ReportEngine.App.Commands;
 using ReportEngine.App.Display;
 using ReportEngine.App.Model;
+using ReportEngine.App.Model.FormedEquipsModels;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
 using ReportEngine.App.Services.Interfaces;
@@ -12,27 +13,34 @@ using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Enums;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
+using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.ViewModels
 {
     public class ProjectViewModel : BaseViewModel
     {
         private readonly IProjectInfoRepository _projectRepository;
+        private readonly IFrameRepository _formedFrameRepository;
         private readonly IDialogService _dialogService;
         public StandModel CurrentStandModel { get; set; } = new();
         public ProjectModel CurrentProjectModel { get; set; } = new();
         public ProjectCommandProvider ProjectCommandProvider { get; set; } = new();
-
-        public ProjectViewModel(IProjectInfoRepository projectRepository, IDialogService dialogService)
+        public ObservableCollection<StandFrameModel> StandFrames { get; set; } = new();
+        public ObservableCollection<FormedFrame> AllAvailableFrames { get; set; } = new();
+        public ObservableCollection<StandDrainageModel> StandDrainages { get; set; } = new();
+        public ProjectViewModel(IProjectInfoRepository projectRepository, IDialogService dialogService, IFrameRepository formedFrameRepository)
         {
             _projectRepository = projectRepository;
             _dialogService = dialogService;
+            _formedFrameRepository = formedFrameRepository;
 
             InitializeCommands();
             InitializeTime();
             InitializeGenericCommands();
+            LoadFramesAsync();
         }
-        #region Методы
+
+        #region Инициализация
         public void InitializeTime()
         {
             CurrentProjectModel.CreationDate = DateTime.Now.Date;
@@ -52,6 +60,62 @@ namespace ReportEngine.App.ViewModels
             ProjectCommandProvider.SelectArmatureDialogCommand = new RelayCommand(OnSelectArmatureFromDialogCommandExecuted<HeaterArmature>, CanAllCommandsExecute);
             ProjectCommandProvider.SelectKMCHDialogCommand = new RelayCommand(OnSelectTreeSocketFromDialogCommandExecuted<HeaterSocket>, CanAllCommandsExecute);
             ProjectCommandProvider.SaveObvCommand = new RelayCommand(OnSaveObvCommandExecuted, CanAllCommandsExecute);
+        } 
+        #endregion
+
+        #region Команды
+        public bool CanAllCommandsExecute(object e) => true;
+        public void OnSelectMaterialFromDialogCommandExecuted<T>(object e) //Выбор материала из диалога
+            where T : class, IBaseEquip, new()
+        {
+            SelectEquipment<T>(name => CurrentProjectModel.SelectedStand.MaterialLine = name);
+        }
+
+        public void OnSelectArmatureFromDialogCommandExecuted<T>(object e) //Выбор материала из диалога
+            where T : class, IBaseEquip, new()
+        {
+            SelectEquipment<T>(name => CurrentProjectModel.SelectedStand.Armature = name);
+        }
+        public void OnSelectTreeSocketFromDialogCommandExecuted<T>(object e) //Выбор материала из диалога
+            where T : class, IBaseEquip, new()
+        {
+            SelectEquipment<T>(name => CurrentProjectModel.SelectedStand.TreeSocket = name);
+        }
+        public async void OnCreateNewCardCommandExecuted(object e) // Создание новой карточки проекта
+        {
+            await ExceptionHelper.SafeExecuteAsync(CreateNewProjectCardAsync);
+        }
+        public async void OnAddNewStandCommandExecuted(object e) // Добавление нового стенда с привязкой к проекту
+        {
+            await ExceptionHelper.SafeExecuteAsync(AddNewStandToProjectAsync);
+        }
+        public async void OnSaveChangesCommandExecuted(object e) // Сохранение изменений для карточки преокта
+        {
+            await ExceptionHelper.SafeExecuteAsync(SaveProjectChangesAsync);
+        }
+
+        public async void OnSaveObvCommandExecuted(object e) // Сохранение изменений для обвязки
+        {
+            await ExceptionHelper.SafeExecuteAsync(AddObvAsync);
+        }
+        #endregion
+
+        #region Методы
+        public void ResetProject() // Сброс проекта для создания нового
+        {
+            CurrentProjectModel = new ProjectModel();
+            CurrentStandModel = new StandModel();
+            InitializeTime();
+            OnPropertyChanged(nameof(CurrentProjectModel));
+            OnPropertyChanged(nameof(CurrentStandModel));
+        }
+        public async Task LoadFramesAsync()
+        {
+            await ExceptionHelper.SafeExecuteAsync(async () =>
+            {
+                var frames = await _formedFrameRepository.GetAllAsync();
+                AllAvailableFrames = new ObservableCollection<FormedFrame>(frames);
+            });
         }
         public async Task LoadProjectInfoAsync(int projectId) // Загрузка карточки проекта для редактирования
         {
@@ -89,51 +153,6 @@ namespace ReportEngine.App.ViewModels
 
                 CurrentStandModel = new StandModel();
             });
-        }
-        #endregion
-        #region Команды
-        public bool CanAllCommandsExecute(object e) => true;
-        public void OnSelectMaterialFromDialogCommandExecuted<T>(object e) //Выбор материала из диалога
-            where T : class, IBaseEquip, new()
-        {
-            SelectEquipment<T>(name => CurrentProjectModel.SelectedStand.MaterialLine = name);
-        }
-
-        public void OnSelectArmatureFromDialogCommandExecuted<T>(object e) //Выбор материала из диалога
-            where T : class, IBaseEquip, new()
-        {
-            SelectEquipment<T>(name => CurrentProjectModel.SelectedStand.Armature = name);
-        }
-        public void OnSelectTreeSocketFromDialogCommandExecuted<T>(object e) //Выбор материала из диалога
-            where T : class, IBaseEquip, new()
-        {
-            SelectEquipment<T>(name => CurrentProjectModel.SelectedStand.TreeSocket = name);
-        }
-        public async void OnCreateNewCardCommandExecuted(object e) // Создание новой карточки проекта
-        {
-            await ExceptionHelper.SafeExecuteAsync(CreateNewProjectCardAsync);
-        }
-        public async void OnAddNewStandCommandExecuted(object e) // Добавление нового стенда с привязкой к проекту
-        {
-            await ExceptionHelper.SafeExecuteAsync(AddNewStandToProjectAsync);
-        }
-        public async void OnSaveChangesCommandExecuted(object e) // Сохранение изменений для карточки преокта
-        {
-            await ExceptionHelper.SafeExecuteAsync(SaveProjectChangesAsync);
-        }
-
-        public async void OnSaveObvCommandExecuted(object e) // Сохранение изменений для обвязки
-        {
-            await ExceptionHelper.SafeExecuteAsync(AddObvAsync);
-        }
-
-        public void ResetProject() // Сброс проекта для создания нового
-        {
-            CurrentProjectModel = new ProjectModel();
-            CurrentStandModel = new StandModel();
-            InitializeTime();
-            OnPropertyChanged(nameof(CurrentProjectModel));
-            OnPropertyChanged(nameof(CurrentStandModel));
         }
 
         private async Task AddObvAsync()
@@ -265,7 +284,7 @@ namespace ReportEngine.App.ViewModels
                     setProperty(equipment.Name);
                 }
             });
-        }
-        #endregion        
+        } 
+        #endregion
     }
 }

@@ -104,8 +104,7 @@
                     <TreeViewItem Header="Редактирование стенда" Tag="BindingTypes">
                         <TreeViewItem Header="Стенд" Tag="Stand" />
                         <TreeViewItem Header="Создание обвязок стенда" Tag="StandObv" />
-                        <TreeViewItem Header="Выбор рамы" />
-                        <TreeViewItem Header="Формирование дренажа" />
+                        <TreeViewItem Header="Рамы и дренажи" Tag="FrameDrainages" />
                         <TreeViewItem Header="Формирование электрической части" />
                         <TreeViewItem Header="Дополнительные комплектующие" />
                     </TreeViewItem>

@@ -29,8 +29,7 @@ namespace ReportEngine.App.Model.StandsModel
         private StandObvyazkaModel _selectedObvyazka;
 
         private ObservableCollection<StandObvyazkaModel> _obvyazki = new();
-
-
+        public StandFrameDrainageModel FrameDrainage { get; set; } = new();
         public ObservableCollection<StandObvyazkaModel> Obvyazki { get => _obvyazki; set => Set(ref _obvyazki, value); }
 
         public StandObvyazkaModel SelectedObvyazka { get => _selectedObvyazka; set => Set(ref _selectedObvyazka, value); }
