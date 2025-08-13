@@ -121,7 +121,7 @@
                     Grid.Row="4"
                     Grid.Column="1"
                     Margin="0,0,5,0"
-                    Text="{Binding CurrentProjectModel.SelectedStand.TreeSocket}" />
+                    Text="{Binding CurrentProjectModel.SelectedStand.KMCH}" />
                 <Button
                     Grid.Row="4"
                     Grid.Column="3"
@@ -375,8 +375,20 @@
                         Header="Материал" />
                     <GridViewColumn
                         Width="100"
+                        DisplayMemberBinding="{Binding Armature}"
+                        Header="Арматура" />
+                    <GridViewColumn
+                        Width="100"
                         DisplayMemberBinding="{Binding TreeSocket}"
                         Header="Тройник" />
+                    <GridViewColumn
+                        Width="100"
+                        DisplayMemberBinding="{Binding KMCH}"
+                        Header="КМЧ" />
+                    <GridViewColumn
+                        Width="100"
+                        DisplayMemberBinding="{Binding FirstSensorType}"
+                        Header="Датчик 1" />
                 </GridView>
             </ListView.View>
         </ListView>

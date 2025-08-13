@@ -6,7 +6,7 @@ using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.Frame;
 using System.Collections.ObjectModel;
 
-namespace ReportEngine.App.Model
+namespace ReportEngine.App.Model.FormedEquipsModels
 {
     public class FormedFrameModel : BaseViewModel
     {

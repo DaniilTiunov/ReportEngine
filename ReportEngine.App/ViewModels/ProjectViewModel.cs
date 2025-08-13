@@ -1,7 +1,8 @@
 ﻿using ReportEngine.App.Commands;
-using ReportEngine.App.ModelWrappers;
 using ReportEngine.App.Display;
 using ReportEngine.App.Model;
+using ReportEngine.App.Model.StandsModel;
+using ReportEngine.App.ModelWrappers;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
@@ -95,18 +96,18 @@ namespace ReportEngine.App.ViewModels
         public void OnSelectMaterialFromDialogCommandExecuted<T>(object e) //Выбор материала из диалога
             where T : class, IBaseEquip, new()
         {
-            SelectEquipment<T>(name =>  CurrentProjectModel.SelectedStand.MaterialLine = name);
+            SelectEquipment<T>(name => CurrentProjectModel.SelectedStand.MaterialLine = name);
         }
 
         public void OnSelectArmatureFromDialogCommandExecuted<T>(object e) //Выбор материала из диалога
             where T : class, IBaseEquip, new()
         {
-            SelectEquipment<T>(name =>  CurrentProjectModel.SelectedStand.Armature = name);
+            SelectEquipment<T>(name => CurrentProjectModel.SelectedStand.Armature = name);
         }
         public void OnSelectTreeSocketFromDialogCommandExecuted<T>(object e) //Выбор материала из диалога
             where T : class, IBaseEquip, new()
         {
-            SelectEquipment<T>(name =>  CurrentProjectModel.SelectedStand.TreeSocket = name);
+            SelectEquipment<T>(name => CurrentProjectModel.SelectedStand.TreeSocket = name);
         }
         public async void OnCreateNewCardCommandExecuted(object e) // Создание новой карточки проекта
         {
@@ -143,15 +144,15 @@ namespace ReportEngine.App.ViewModels
             var newObvyazka = new StandObvyazkaModel
             {
                 ObvyazkaId = CurrentProjectModel.SelectedStand.ObvyazkaType,
-                ObvyazkaName = "Обвязка",
-                MaterialLine = CurrentProjectModel.SelectedStand.MaterialLine,
+                ObvyazkaName = "Обвязка" + CurrentProjectModel.SelectedStand.ObvyazkaType,
+                Armature = CurrentProjectModel.SelectedStand.Armature,
                 TreeSocket = CurrentProjectModel.SelectedStand.TreeSocket,
-                KMCH = "КМЧ",
+                KMCH = CurrentProjectModel.SelectedStand.KMCH,
                 FirstSensorType = CurrentProjectModel.SelectedStand.FirstSensorType,
                 FirstSensorKKS = CurrentProjectModel.SelectedStand.FirstSensorKKSCounter,
                 FirstSensorMarkPlus = CurrentProjectModel.SelectedStand.FirstSensorMarkPlus,
                 FirstSensorMarkMinus = CurrentProjectModel.SelectedStand.FirstSensorMarkMinus,
-                
+
             };
 
             CurrentStandModel.Obvyazki.Add(newObvyazka);

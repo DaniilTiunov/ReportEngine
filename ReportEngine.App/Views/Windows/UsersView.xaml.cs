@@ -1,7 +1,5 @@
-﻿using ReportEngine.App.ViewModels;
-using ReportEngine.Domain.Entities;
+﻿using ReportEngine.App.ViewModels.Contacts;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace ReportEngine.App.Views.Windows
 {
@@ -19,6 +17,6 @@ namespace ReportEngine.App.Views.Windows
         {
             e.Cancel = true;
             Hide();
-        }        
+        }
     }
 }

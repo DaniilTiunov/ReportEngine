@@ -1,4 +1,4 @@
-﻿using ReportEngine.App.ViewModels;
+﻿using ReportEngine.App.ViewModels.Contacts;
 using System.Windows;
 
 namespace ReportEngine.App.Views.Windows

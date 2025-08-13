@@ -113,5 +113,21 @@ namespace ReportEngine.Domain.Repositories
             stand.ObvyazkiInStand.Add(standObvyazka);
             await _context.SaveChangesAsync();
         }
+        public async Task AddFrameToStandAsync(int standId, FormedFrame frame)
+        {
+            var stand = await _context.Stands.Include(s => s.FormedFrames).FirstOrDefaultAsync(s => s.Id == standId);
+            if (stand == null) throw new ArgumentException($"Стенд с ID: {standId} не найден.");
+
+            stand.FormedFrames.Add(frame);
+            await _context.SaveChangesAsync();
+        }
+        public async Task AddDrainageToStandAsync(int standId, FormedDrainage drainage)
+        {
+            var stand = await _context.Stands.Include(s => s.FormedDrainages).FirstOrDefaultAsync(s => s.Id == standId);
+            if (stand == null) throw new ArgumentException($"Стенд с ID: {standId} не найден.");
+
+            stand.FormedDrainages.Add(drainage);
+            await _context.SaveChangesAsync();
+        }
     }
 }

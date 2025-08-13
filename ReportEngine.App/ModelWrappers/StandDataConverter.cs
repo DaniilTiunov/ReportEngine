@@ -1,4 +1,5 @@
 ﻿using ReportEngine.App.Model;
+using ReportEngine.App.Model.StandsModel;
 using ReportEngine.Domain.Entities;
 
 namespace ReportEngine.App.ModelWrappers

@@ -2,7 +2,7 @@
 using ReportEngine.Domain.Entities;
 using System.Collections.ObjectModel;
 
-namespace ReportEngine.App.Model
+namespace ReportEngine.App.Model.Contacts
 {
     public class CompanyModel : BaseViewModel
     {

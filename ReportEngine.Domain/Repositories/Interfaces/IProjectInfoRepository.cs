@@ -8,5 +8,7 @@ namespace ReportEngine.Domain.Repositories.Interfaces
         Task UpdateStandAsync(Stand stand);
         Task<ProjectInfo> GetStandsByIdAsync(int projectId);
         Task AddStandObvyazkaAsync(int standId, ObvyazkaInStand standObvyazka);
+        Task AddFrameToStandAsync(int standId, FormedFrame frame);
+        Task AddDrainageToStandAsync(int standId, FormedDrainage drainage);
     }
 }

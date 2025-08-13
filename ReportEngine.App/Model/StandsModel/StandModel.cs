@@ -1,7 +1,7 @@
 ﻿using ReportEngine.App.ViewModels;
 using System.Collections.ObjectModel;
 
-namespace ReportEngine.App.Model
+namespace ReportEngine.App.Model.StandsModel
 {
     public class StandModel : BaseViewModel
     {

@@ -1,8 +1,9 @@
-﻿using ReportEngine.App.ViewModels;
+﻿using ReportEngine.App.Model.StandsModel;
+using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Enums;
-using System.Collections.ObjectModel;
 using ReportEngine.Shared.Helpers;
+using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Model
 {
@@ -77,7 +78,7 @@ namespace ReportEngine.App.Model
         #endregion
 
         #region Методы
-        
+
         public ProjectInfo CreateNewProjectCard()
         {
             return new ProjectInfo

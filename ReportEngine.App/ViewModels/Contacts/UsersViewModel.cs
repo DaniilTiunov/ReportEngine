@@ -1,6 +1,5 @@
 ﻿using ReportEngine.App.Commands;
-using ReportEngine.App.Model;
-using ReportEngine.App.Services;
+using ReportEngine.App.Model.Contacts;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
@@ -8,7 +7,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 
-namespace ReportEngine.App.ViewModels
+namespace ReportEngine.App.ViewModels.Contacts
 {
     public class UsersViewModel : BaseViewModel
     {
@@ -56,7 +55,7 @@ namespace ReportEngine.App.ViewModels
         }
         public async void OnSaveUserCommandExecuted(object e)
         {
-           await SaveUsersChangesAsync();
+            await SaveUsersChangesAsync();
         }
         #endregion
         #region Методы

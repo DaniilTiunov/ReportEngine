@@ -1,0 +1,92 @@
+﻿<UserControl
+    x:Class="ReportEngine.App.Views.Controls.FrameDrainagesView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="800"
+    d:DesignWidth="1200"
+    mc:Ignorable="d">
+
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+
+        <!--  Левая часть: Добавление рамы и дренажа к стенду  -->
+        <StackPanel Grid.Column="0" Margin="10">
+            <!--  Выбор рамы  -->
+            <GroupBox Margin="0,0,0,10" Header="Добавить раму к стенду">
+                <StackPanel>
+                    <ComboBox
+                        Margin="0,0,0,5"
+                        DisplayMemberPath="Name"
+                        ItemsSource="{Binding AvailableFrames}"
+                        SelectedItem="{Binding SelectedFrame}" />
+                    <Button
+                        Margin="0,0,0,5"
+                        Command="{Binding AddFrameToStandCommand}"
+                        Content="Добавить раму" />
+                </StackPanel>
+            </GroupBox>
+
+            <!--  Выбор или создание дренажа  -->
+            <GroupBox Header="Добавить дренаж к стенду">
+                <TabControl>
+                    <!--  Вкладка: выбрать готовый дренаж  -->
+                    <TabItem Header="Готовый дренаж">
+                        <StackPanel>
+                            <ComboBox
+                                Margin="0,0,0,5"
+                                DisplayMemberPath="Name"
+                                ItemsSource="{Binding AvailableDrainages}"
+                                SelectedItem="{Binding SelectedDrainage}" />
+                            <Button
+                                Margin="0,0,0,5"
+                                Command="{Binding AddDrainageToStandCommand}"
+                                Content="Добавить дренаж" />
+                        </StackPanel>
+                    </TabItem>
+                    <!--  Вкладка: собрать дренаж вручную  -->
+                    <TabItem Header="Собрать дренаж">
+                        <StackPanel>
+                            <TextBox Margin="0,0,0,5" Text="{Binding NewDrainage.Name}" />
+                            <DataGrid
+                                Margin="0,0,0,5"
+                                AutoGenerateColumns="False"
+                                CanUserAddRows="True"
+                                ItemsSource="{Binding NewDrainage.Purposes}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Назначение" />
+                                    <DataGridTextColumn Binding="{Binding Material, Mode=TwoWay}" Header="Материал" />
+                                    <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay}" Header="Длина (м)" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <Button
+                                Margin="0,0,0,5"
+                                Command="{Binding AddCustomDrainageToStandCommand}"
+                                Content="Добавить собранный дренаж" />
+                        </StackPanel>
+                    </TabItem>
+                </TabControl>
+            </GroupBox>
+        </StackPanel>
+
+        <!--  Правая часть: Список рам и дренажей в стенде  -->
+        <StackPanel Grid.Column="1" Margin="10">
+            <GroupBox Margin="0,0,0,10" Header="Рамы в стенде">
+                <ListView
+                    DisplayMemberPath="Name"
+                    ItemsSource="{Binding StandFrames}"
+                    SelectedItem="{Binding SelectedStandFrame}" />
+            </GroupBox>
+            <GroupBox Header="Дренажи в стенде">
+                <ListView
+                    DisplayMemberPath="Name"
+                    ItemsSource="{Binding StandDrainages}"
+                    SelectedItem="{Binding SelectedStandDrainage}" />
+            </GroupBox>
+        </StackPanel>
+    </Grid>
+</UserControl>

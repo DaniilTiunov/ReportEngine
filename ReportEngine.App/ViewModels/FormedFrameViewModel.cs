@@ -1,6 +1,6 @@
 ﻿using ReportEngine.App.Commands;
 using ReportEngine.App.Display;
-using ReportEngine.App.Model;
+using ReportEngine.App.Model.FormedEquipsModels;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.Frame;
