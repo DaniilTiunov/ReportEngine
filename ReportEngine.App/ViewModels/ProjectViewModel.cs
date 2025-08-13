@@ -95,148 +95,147 @@ namespace ReportEngine.App.ViewModels
         public void OnSelectMaterialFromDialogCommandExecuted<T>(object e) //Выбор материала из диалога
             where T : class, IBaseEquip, new()
         {
-            ExceptionHelper.SafeExecute(() =>
-            {
-                var materialLine = _dialogService.ShowEquipDialog<T>();
-                if (materialLine != null && CurrentProjectModel.SelectedStand != null)
-                    CurrentProjectModel.SelectedStand.MaterialLine = materialLine.Name;
-            });
+            SelectEquipment<T>(name =>  CurrentProjectModel.SelectedStand.MaterialLine = name);
         }
 
         public void OnSelectArmatureFromDialogCommandExecuted<T>(object e) //Выбор материала из диалога
             where T : class, IBaseEquip, new()
         {
-            ExceptionHelper.SafeExecute(() =>
-            {
-                var armature = _dialogService.ShowEquipDialog<T>();
-                if (armature != null && CurrentProjectModel.SelectedStand != null)
-                    CurrentProjectModel.SelectedStand.Armature = armature.Name;
-            });
+            SelectEquipment<T>(name =>  CurrentProjectModel.SelectedStand.Armature = name);
         }
         public void OnSelectTreeSocketFromDialogCommandExecuted<T>(object e) //Выбор материала из диалога
             where T : class, IBaseEquip, new()
         {
-            ExceptionHelper.SafeExecute(() =>
-            {
-                var socket = _dialogService.ShowEquipDialog<T>();
-                if (socket != null && CurrentProjectModel.SelectedStand != null)
-                    CurrentProjectModel.SelectedStand.TreeSocket = socket.Name;
-            });
+            SelectEquipment<T>(name =>  CurrentProjectModel.SelectedStand.TreeSocket = name);
         }
         public async void OnCreateNewCardCommandExecuted(object e) // Создание новой карточки проекта
         {
-            await ExceptionHelper.SafeExecuteAsync(async () =>
-            {
-                var newProjectCard = CurrentProjectModel.CreateNewProjectCard();
-
-                await _projectRepository.AddAsync(newProjectCard);
-
-                CurrentProjectModel.CurrentProjectId = newProjectCard.Id;
-                CurrentProjectModel.Stands.Clear();
-                CurrentStandModel = new StandModel();
-
-                MessageBoxHelper.ShowInfo($"Новая карточка проекта успешно создана!\nId Преокта: {CurrentProjectModel.CurrentProjectId}"); //Для отладки
-            });
+            await ExceptionHelper.SafeExecuteAsync(CreateNewProjectCardAsync);
         }
         public async void OnAddNewStandCommandExecuted(object e) // Добавление нового стенда с привязкой к проекту
         {
-            await ExceptionHelper.SafeExecuteAsync(async () =>
-            {
-                if (CurrentProjectModel.CurrentProjectId == 0)
-                {
-                    MessageBoxHelper.ShowInfo("Сначала создайте проект");
-                    return;
-                }
-                var newStandModel = new StandModel
-                {
-                    KKSCode = CurrentStandModel.KKSCode,
-                    Design = CurrentStandModel.Design,
-                    BraceType = CurrentStandModel.BraceType,
-                    Devices = CurrentStandModel.Devices,
-                    Width = CurrentStandModel.Width,
-                    SerialNumber = CurrentStandModel.SerialNumber,
-                    Weight = CurrentStandModel.Weight,
-                    StandSummCost = CurrentStandModel.StandSummCost,
-                    ObvyazkaType = CurrentStandModel.ObvyazkaType,
-                    NN = CurrentStandModel.NN,
-                    MaterialLine = CurrentStandModel.MaterialLine,
-                    Armature = CurrentStandModel.Armature,
-                    TreeSocket = CurrentStandModel.TreeSocket,
-                    KMCH = CurrentStandModel.KMCH,
-                    FirstSensorType = CurrentStandModel.FirstSensorType,
-                    ProjectId = CurrentProjectModel.CurrentProjectId 
-                };
-                var newStandEntity = StandDataConverter.ConvertToStandEntity(newStandModel);
-                var addedStandEntity = await _projectRepository.AddStandAsync(CurrentProjectModel.CurrentProjectId, newStandEntity);
-
-                newStandModel.Id = addedStandEntity.Id;
-                newStandModel.ProjectId = addedStandEntity.ProjectInfoId;
-
-                CurrentProjectModel.Stands.Add(newStandModel);
-                CurrentProjectModel.SelectedStand = newStandModel;
-
-                MessageBoxHelper.ShowInfo("Стенд успешно добавлен!");
-            });
+            await ExceptionHelper.SafeExecuteAsync(AddNewStandToProjectAsync);
         }
         public async void OnSaveChangesCommandExecuted(object e) // Сохранение изменений для карточки преокта
         {
-            await ExceptionHelper.SafeExecuteAsync(async () =>
-            {
-                if (CurrentProjectModel.CurrentProjectId == 0)
-                {
-                    MessageBoxHelper.ShowInfo("Сначала создайте проект");
-                    return;
-                }
-                var projectInfo = new ProjectInfo
-                {
-                    Id = CurrentProjectModel.CurrentProjectId,
-                    Number = CurrentProjectModel.Number,
-                    Description = CurrentProjectModel.Description,
-                    CreationDate = DateOnly.FromDateTime(CurrentProjectModel.CreationDate),
-                    Company = CurrentProjectModel.Company,
-                    Object = CurrentProjectModel.Object,
-                    StandCount = CurrentProjectModel.StandCount,
-                    Cost = CurrentProjectModel.Cost,
-                    HumanCost = CurrentProjectModel.HumanCost,
-                    Manager = CurrentProjectModel.Manager,
-                    Status = ComboBoxHelper.ComboBoxChangedValue<ProjectStatus>(CurrentProjectModel.Status),
-                    StartDate = DateOnly.FromDateTime(CurrentProjectModel.StartDate),
-                    OutOfProduction = DateOnly.FromDateTime(CurrentProjectModel.OutOfProduction),
-                    EndDate = DateOnly.FromDateTime(CurrentProjectModel.EndDate),
-                    OrderCustomer = CurrentProjectModel.OrderCustomer,
-                    RequestProduction = CurrentProjectModel.RequestProduction,
-                    MarkMinus = CurrentProjectModel.MarkMinus,
-                    MarkPlus = CurrentProjectModel.MarkPlus,
-                    IsGalvanized = CurrentProjectModel.IsGalvanized
-                };
-                await _projectRepository.UpdateAsync(projectInfo);
-                MessageBoxHelper.ShowInfo("Изменения успешно сохранены!");
-            });
+            await ExceptionHelper.SafeExecuteAsync(SaveProjectChangesAsync);
         }
 
         public async void OnSaveObvCommandExecuted(object e) // Сохранение изменений для обвязки
         {
-            await ExceptionHelper.SafeExecuteAsync(async () =>
-            {
-                if (CurrentProjectModel.SelectedStand == null)
-                    return;
-
-                // Убедимся, что ProjectId всегда актуален
-                CurrentProjectModel.SelectedStand.ProjectId = CurrentProjectModel.CurrentProjectId;
-                var standEntity = StandDataConverter.ConvertToStandEntity(CurrentProjectModel.SelectedStand);
-
-                await _projectRepository.UpdateStandAsync(standEntity);
-
-                MessageBoxHelper.ShowInfo("Изменения обвязки успешно сохранены!");
-            });
+            await ExceptionHelper.SafeExecuteAsync(AddObvAsync);
         }
-        public void ResetProject() // Сброс проекта для создания нового 
+
+        public void ResetProject() // Сброс проекта для создания нового
         {
             CurrentProjectModel = new ProjectModel();
             CurrentStandModel = new StandModel();
             InitializeTime();
             OnPropertyChanged(nameof(CurrentProjectModel));
             OnPropertyChanged(nameof(CurrentStandModel));
+        }
+
+        private async Task AddObvAsync()
+        {
+            if (CurrentProjectModel.SelectedStand == null)
+                return;
+
+
+
+            MessageBoxHelper.ShowInfo("Изменения обвязки успешно сохранены!");
+        }
+        private async Task SaveProjectChangesAsync()
+        {
+            if (CurrentProjectModel.CurrentProjectId == 0)
+            {
+                MessageBoxHelper.ShowInfo("Сначала создайте проект");
+                return;
+            }
+            var projectInfo = new ProjectInfo
+            {
+                Id = CurrentProjectModel.CurrentProjectId,
+                Number = CurrentProjectModel.Number,
+                Description = CurrentProjectModel.Description,
+                CreationDate = DateOnly.FromDateTime(CurrentProjectModel.CreationDate),
+                Company = CurrentProjectModel.Company,
+                Object = CurrentProjectModel.Object,
+                StandCount = CurrentProjectModel.StandCount,
+                Cost = CurrentProjectModel.Cost,
+                HumanCost = CurrentProjectModel.HumanCost,
+                Manager = CurrentProjectModel.Manager,
+                Status = ComboBoxHelper.ComboBoxChangedValue<ProjectStatus>(CurrentProjectModel.Status),
+                StartDate = DateOnly.FromDateTime(CurrentProjectModel.StartDate),
+                OutOfProduction = DateOnly.FromDateTime(CurrentProjectModel.OutOfProduction),
+                EndDate = DateOnly.FromDateTime(CurrentProjectModel.EndDate),
+                OrderCustomer = CurrentProjectModel.OrderCustomer,
+                RequestProduction = CurrentProjectModel.RequestProduction,
+                MarkMinus = CurrentProjectModel.MarkMinus,
+                MarkPlus = CurrentProjectModel.MarkPlus,
+                IsGalvanized = CurrentProjectModel.IsGalvanized
+            };
+            await _projectRepository.UpdateAsync(projectInfo);
+            MessageBoxHelper.ShowInfo("Изменения успешно сохранены!");
+        }
+        private async Task AddNewStandToProjectAsync()
+        {
+            if (CurrentProjectModel.CurrentProjectId == 0)
+            {
+                MessageBoxHelper.ShowInfo("Сначала создайте проект");
+                return;
+            }
+            var newStandModel = new StandModel
+            {
+                KKSCode = CurrentStandModel.KKSCode,
+                Design = CurrentStandModel.Design,
+                BraceType = CurrentStandModel.BraceType,
+                Devices = CurrentStandModel.Devices,
+                Width = CurrentStandModel.Width,
+                SerialNumber = CurrentStandModel.SerialNumber,
+                Weight = CurrentStandModel.Weight,
+                StandSummCost = CurrentStandModel.StandSummCost,
+                ObvyazkaType = CurrentStandModel.ObvyazkaType,
+                NN = CurrentStandModel.NN,
+                MaterialLine = CurrentStandModel.MaterialLine,
+                Armature = CurrentStandModel.Armature,
+                TreeSocket = CurrentStandModel.TreeSocket,
+                KMCH = CurrentStandModel.KMCH,
+                FirstSensorType = CurrentStandModel.FirstSensorType,
+                ProjectId = CurrentProjectModel.CurrentProjectId
+            };
+            var newStandEntity = StandDataConverter.ConvertToStandEntity(newStandModel);
+            var addedStandEntity = await _projectRepository.AddStandAsync(CurrentProjectModel.CurrentProjectId, newStandEntity);
+
+            newStandModel.Id = addedStandEntity.Id;
+            newStandModel.ProjectId = addedStandEntity.ProjectInfoId;
+
+            CurrentProjectModel.Stands.Add(newStandModel);
+            CurrentProjectModel.SelectedStand = newStandModel;
+
+            MessageBoxHelper.ShowInfo("Стенд успешно добавлен!");
+        }
+        private async Task CreateNewProjectCardAsync()
+        {
+            var newProjectCard = CurrentProjectModel.CreateNewProjectCard();
+
+            await _projectRepository.AddAsync(newProjectCard);
+
+            CurrentProjectModel.CurrentProjectId = newProjectCard.Id;
+            CurrentProjectModel.Stands.Clear();
+            CurrentStandModel = new StandModel();
+
+            MessageBoxHelper.ShowInfo($"Новая карточка проекта успешно создана!\nId Преокта: {CurrentProjectModel.CurrentProjectId}"); //Для отладки
+        }
+        private void SelectEquipment<T>(Action<string> setProperty)
+            where T : class, IBaseEquip, new()
+        {
+            ExceptionHelper.SafeExecute(() =>
+            {
+                var equipment = _dialogService.ShowEquipDialog<T>();
+                if (equipment != null && CurrentProjectModel.SelectedStand != null)
+                {
+                    setProperty(equipment.Name);
+                }
+            });
         }
         #endregion        
     }

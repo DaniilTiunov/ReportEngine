@@ -37,6 +37,7 @@ namespace ReportEngine.Domain.Database.Context
         public DbSet<Other> Others { get; set; } //Прочие
         public DbSet<Container> Containers { get; set; } //Тара
         public DbSet<Obvyazka> Obvyazki { get; set; } //Обвязки
+        public DbSet<ObvyazkaInStand> ObvyazkiInStands { get; set; } // Обвязки в стендах
         public DbSet<FormedFrame> FormedFrames { get; set; } //Сформированные рамы
         public DbSet<FrameComponent> FrameComponents { get; set; } //Компоненты рамы
         public DbSet<FormedDrainage> FormedDrainages { get; set; }
@@ -47,6 +48,7 @@ namespace ReportEngine.Domain.Database.Context
 
         public ReAppContext(DbContextOptions<ReAppContext> options) : base(options)
         {
+
         }
 
     }

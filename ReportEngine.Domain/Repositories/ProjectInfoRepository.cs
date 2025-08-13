@@ -99,12 +99,19 @@ namespace ReportEngine.Domain.Repositories
 
             await _context.SaveChangesAsync();
         }
-
         public async Task<ProjectInfo> GetStandsByIdAsync(int projectId)
         {
             return await _context.Projects
                 .Include(p => p.Stands)
                 .FirstOrDefaultAsync(p => p.Id == projectId);
+        }
+        public async Task AddStandObvyazkaAsync(int standId, ObvyazkaInStand standObvyazka)
+        {
+            var stand = await _context.Stands.Include(s => s.ObvyazkiInStand).FirstOrDefaultAsync(s => s.Id == standId);
+            if (stand == null) throw new ArgumentException($"Стенд с ID: {standId} не найден.");
+
+            stand.ObvyazkiInStand.Add(standObvyazka);
+            await _context.SaveChangesAsync();
         }
     }
 }

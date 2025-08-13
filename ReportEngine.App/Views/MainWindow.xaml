@@ -59,7 +59,7 @@
                 <Separator />
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllCompaniesCommand}" Header="Заказчики" />
             </MenuItem>
-            <MenuItem Header="Исходные данные">
+            <MenuItem Header="Сортаменты">
                 <MenuItem Header="Сортамент труб">
                     <MenuItem Command="{Binding GenericEquipCommandProvider.OpenHeaterPipeCommand}" Header="Жарпрочная сталь" />
                     <MenuItem Command="{Binding GenericEquipCommandProvider.OpenStainlessPipeCommand}" Header="Нержавеющая сталь" />

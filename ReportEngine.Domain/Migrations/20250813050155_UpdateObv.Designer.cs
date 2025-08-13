@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ReportEngine.Domain.Database.Context;
@@ -11,9 +12,11 @@ using ReportEngine.Domain.Database.Context;
 namespace ReportEngine.Domain.Migrations
 {
     [DbContext(typeof(ReAppContext))]
-    partial class ReAppContextModelSnapshot : ModelSnapshot
+    [Migration("20250813050155_UpdateObv")]
+    partial class UpdateObv
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -820,6 +823,18 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float>("Clamp")
                         .HasColumnType("real");
 
+                    b.Property<string>("FirstSensorKKS")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FirstSensorMarkMinus")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FirstSensorMarkPlus")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FirstSensorType")
+                        .HasColumnType("text");
+
                     b.Property<float>("HumanCost")
                         .HasColumnType("real");
 
@@ -836,11 +851,38 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<int>("OtherLineCount")
                         .HasColumnType("integer");
 
+                    b.Property<string>("SecondSensorKKS")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SecondSensorMarkMinus")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SecondSensorMarkPlus")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SecondSensorType")
+                        .HasColumnType("text");
+
                     b.Property<int>("Sensor")
                         .HasColumnType("integer");
 
                     b.Property<string>("SensorType")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("StandId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ThirdSensorKKS")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ThirdSensorMarkMinus")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ThirdSensorMarkPlus")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ThirdSensorType")
                         .HasColumnType("text");
 
                     b.Property<float>("TreeSocket")
@@ -857,78 +899,9 @@ namespace ReportEngine.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Obvyazki");
-                });
-
-            modelBuilder.Entity("ReportEngine.Domain.Entities.ObvyazkaInStand", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FirstSensorKKS")
-                        .HasColumnType("text");
-
-                    b.Property<string>("FirstSensorMarkMinus")
-                        .HasColumnType("text");
-
-                    b.Property<string>("FirstSensorMarkPlus")
-                        .HasColumnType("text");
-
-                    b.Property<string>("FirstSensorType")
-                        .HasColumnType("text");
-
-                    b.Property<string>("KMCH")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("MaterialLine")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("ObvyazkaId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("SecondSensorKKS")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SecondSensorMarkMinus")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SecondSensorMarkPlus")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SecondSensorType")
-                        .HasColumnType("text");
-
-                    b.Property<int>("StandId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ThirdSensorKKS")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ThirdSensorMarkMinus")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ThirdSensorMarkPlus")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ThirdSensorType")
-                        .HasColumnType("text");
-
-                    b.Property<string>("TreeSocket")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ObvyazkaId");
-
                     b.HasIndex("StandId");
 
-                    b.ToTable("ObvyazkiInStands");
+                    b.ToTable("Obvyazki");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.Other.Container", b =>
@@ -1344,23 +1317,11 @@ namespace ReportEngine.Domain.Migrations
                     b.Navigation("FormedFrame");
                 });
 
-            modelBuilder.Entity("ReportEngine.Domain.Entities.ObvyazkaInStand", b =>
+            modelBuilder.Entity("ReportEngine.Domain.Entities.Obvyazka", b =>
                 {
-                    b.HasOne("ReportEngine.Domain.Entities.Obvyazka", "Obvyazka")
-                        .WithMany()
-                        .HasForeignKey("ObvyazkaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ReportEngine.Domain.Entities.Stand", "Stand")
-                        .WithMany("ObvyazkiInStand")
-                        .HasForeignKey("StandId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Obvyazka");
-
-                    b.Navigation("Stand");
+                    b.HasOne("ReportEngine.Domain.Entities.Stand", null)
+                        .WithMany("Obvyazki")
+                        .HasForeignKey("StandId");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.Stand", b =>
@@ -1395,7 +1356,7 @@ namespace ReportEngine.Domain.Migrations
 
                     b.Navigation("FormedFrames");
 
-                    b.Navigation("ObvyazkiInStand");
+                    b.Navigation("Obvyazki");
                 });
 #pragma warning restore 612, 618
         }

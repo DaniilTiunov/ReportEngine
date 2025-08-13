@@ -32,7 +32,7 @@ namespace ReportEngine.Domain.Entities
         public string? Comments { get; set; } // Комментарий
 
         public virtual ICollection<FormedFrame> FormedFrames { get; set; } = new List<FormedFrame>();
-        public virtual ICollection<Obvyazka> Obvyazki { get; set; } = new List<Obvyazka>();
+        public virtual ICollection<ObvyazkaInStand> ObvyazkiInStand { get; set; } = new List<ObvyazkaInStand>();
         public virtual ICollection<FormedDrainage> FormedDrainages { get; set; } = new List<FormedDrainage>();
 
     }
