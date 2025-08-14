@@ -129,5 +129,26 @@ namespace ReportEngine.Domain.Repositories
             stand.FormedDrainages.Add(drainage);
             await _context.SaveChangesAsync();
         }
+        public async Task<IEnumerable<FormedFrame>> GetAllFramesInStandAsync(int standId)
+        {
+            var stand = await _context.Stands
+                .Include(s => s.FormedFrames)
+                .FirstOrDefaultAsync(s => s.Id == standId);
+
+            return stand?.FormedFrames ?? Enumerable.Empty<FormedFrame>();
+        }
+
+        public async Task<IEnumerable<FormedDrainage>> GetAllDrainagesInStandAsync(int standId)
+        {
+            var stand = await _context.Stands
+                .Include(s => s.FormedDrainages)
+                .FirstOrDefaultAsync(s => s.Id == standId);
+
+            return stand?.FormedDrainages ?? Enumerable.Empty<FormedDrainage>();
+        }
+        public Task<IEnumerable<ObvyazkaInStand>> GetAllObvyazkiInStandAsync(int standId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

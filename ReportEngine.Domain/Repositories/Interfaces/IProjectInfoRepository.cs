@@ -10,5 +10,8 @@ namespace ReportEngine.Domain.Repositories.Interfaces
         Task AddStandObvyazkaAsync(int standId, ObvyazkaInStand standObvyazka);
         Task AddFrameToStandAsync(int standId, FormedFrame frame);
         Task AddDrainageToStandAsync(int standId, FormedDrainage drainage);
+        Task<IEnumerable<FormedFrame>> GetAllFramesInStandAsync(int standId);
+        Task<IEnumerable<FormedDrainage>> GetAllDrainagesInStandAsync(int standId);
+        Task<IEnumerable<ObvyazkaInStand>> GetAllObvyazkiInStandAsync(int standId);
     }
 }

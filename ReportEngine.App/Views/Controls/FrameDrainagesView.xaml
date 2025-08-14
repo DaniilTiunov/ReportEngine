@@ -19,6 +19,9 @@
                     <DataGrid ItemsSource="{Binding CurrentStandModel.AllAvailableFrames}" SelectedItem="{Binding CurrentStandModel.SelectedFrame}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay}" Header="Название" />
+                            <DataGridTextColumn Binding="{Binding FrameType, Mode=TwoWay}" Header="Тип" />
+                            <DataGridTextColumn Binding="{Binding Depth, Mode=TwoWay}" Header="Глубина" />
+                            <DataGridTextColumn Binding="{Binding Width, Mode=TwoWay}" Header="Ширина" />
                         </DataGrid.Columns>
                     </DataGrid>
                     <Button
@@ -27,18 +30,18 @@
                         Content="Добавить раму" />
                 </StackPanel>
             </GroupBox>
-
             <GroupBox Header="Дренажи">
                 <TabControl>
-                    <TabItem Header="Готовый дренаж">
+                    <TabItem Header="Готовые дренажи">
                         <StackPanel>
-                            <ComboBox
-                                DisplayMemberPath="Name"
-                                ItemsSource="{Binding CurrentStandModel.FrameDrainage.AllAvailableDrainages}"
-                                SelectedItem="{Binding CurrentStandModel.FrameDrainage.SelectedDrainage}" />
+                            <DataGrid ItemsSource="{Binding CurrentStandModel.AllAvailableDrainages}" SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay}" Header="Название" />
+                                </DataGrid.Columns>
+                            </DataGrid>
                             <Button
                                 Margin="5"
-                                Command="{Binding AddDrainageToStandCommand}"
+                                Command="{Binding ProjectCommandProvider.AddDrainageToStandCommand}"
                                 Content="Добавить дренаж" />
                         </StackPanel>
                     </TabItem>
@@ -77,8 +80,8 @@
             <GroupBox Header="Дренажи в стенде">
                 <ListView
                     DisplayMemberPath="Name"
-                    ItemsSource="{Binding CurrentStandModel.FrameDrainage.Drainages}"
-                    SelectedItem="{Binding CurrentStandModel.FrameDrainage.SelectedStandDrainage}" />
+                    ItemsSource="{Binding CurrentStandModel.DrainagesInStand}"
+                    SelectedItem="{Binding CurrentStandModel.SelectedDrainage}" />
             </GroupBox>
         </StackPanel>
     </Grid>

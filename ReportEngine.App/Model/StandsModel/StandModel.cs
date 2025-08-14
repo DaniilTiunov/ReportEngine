@@ -59,8 +59,11 @@ namespace ReportEngine.App.Model.StandsModel
 
 
         private ObservableCollection<FormedFrame> _framesInStand = new();
-
+        private ObservableCollection<FormedDrainage> _drainagesInStand = new();
         private ObservableCollection<FormedFrame> _allAvailableFrames = new();
+        private ObservableCollection<FormedDrainage> _allAvailableDrainages = new();
+
+        private FormedDrainage _selectedDrainage;
         private FormedFrame _selectedFrame;
         public ObservableCollection<FormedFrame> AllAvailableFrames
         { 
@@ -72,13 +75,25 @@ namespace ReportEngine.App.Model.StandsModel
             get => _framesInStand; 
             set => Set(ref _framesInStand, value); 
         }
+        public ObservableCollection<FormedDrainage> AllAvailableDrainages
+        {
+            get => _allAvailableDrainages;
+            set => Set(ref _allAvailableDrainages, value);
+        }
+        public ObservableCollection<FormedDrainage> DrainagesInStand
+        {
+            get => _drainagesInStand;
+            set => Set(ref _drainagesInStand, value);
+        }
+        public FormedDrainage SelectedDrainage
+        {
+            get => _selectedDrainage;
+            set => Set(ref _selectedDrainage, value);
+        }
         public FormedFrame SelectedFrame
         {
             get => _selectedFrame;
             set => Set(ref _selectedFrame, value);
         }
-
-
-
     }
 }

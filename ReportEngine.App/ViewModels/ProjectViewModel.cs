@@ -57,7 +57,7 @@ namespace ReportEngine.App.ViewModels
             ProjectCommandProvider.SaveChangesCommand = new RelayCommand(OnSaveChangesCommandExecuted, CanAllCommandsExecute);
 
             ProjectCommandProvider.AddFrameToStandCommand = new RelayCommand(OnAddFrameToStandExecuted, CanAllCommandsExecute);
-            //ProjectCommandProvider.AddDrainageToStandCommand = new RelayCommand(OnAddDrainageToStandExecuted, CanAllCommandsExecute);
+            ProjectCommandProvider.AddDrainageToStandCommand = new RelayCommand(OnAddDrainageToStandExecuted, CanAllCommandsExecute);
             //ProjectCommandProvider.AddCustomDrainageToStandCommand = new RelayCommand(OnAddCustomDrainageToStandExecuted, CanAllCommandsExecute);
         }
         public void InitializeGenericCommands()
@@ -121,7 +121,13 @@ namespace ReportEngine.App.ViewModels
             {
                 var frames = await _formedFrameRepository.GetAllAsync();
                 var drainages = await _formedDrainagesRepository.GetAllAsync();
+                var framesInStand = await _projectRepository.GetAllFramesInStandAsync(CurrentStandModel.Id);
+                var drainagesInStand = await _projectRepository.GetAllDrainagesInStandAsync(CurrentStandModel.Id);
+
+                CurrentStandModel.FramesInStand = new ObservableCollection<FormedFrame>(framesInStand);
+                CurrentStandModel.DrainagesInStand = new ObservableCollection<FormedDrainage>(drainagesInStand);
                 CurrentStandModel.AllAvailableFrames = new ObservableCollection<FormedFrame>(frames);
+                CurrentStandModel.AllAvailableDrainages = new ObservableCollection<FormedDrainage>(drainages);
             });
         }
         public async Task LoadProjectInfoAsync(int projectId) // Загрузка карточки проекта для редактирования
@@ -308,26 +314,39 @@ namespace ReportEngine.App.ViewModels
 
         public async void OnAddFrameToStandExecuted(object p)
         {
-            var frame = CurrentStandModel.SelectedFrame;
-            if (frame != null)
+            try
             {
-                CurrentStandModel.FramesInStand.Add(frame);
-                await _projectRepository.AddFrameToStandAsync(CurrentStandModel.Id, frame);
-                OnPropertyChanged(nameof(CurrentStandModel.FramesInStand));
-                MessageBoxHelper.ShowInfo("Рама добавлена в СТЭНД))");
+                var frame = CurrentStandModel.SelectedFrame;
+                if (frame != null)
+                {
+                    CurrentStandModel.FramesInStand.Add(frame);
+                    await _projectRepository.AddFrameToStandAsync(CurrentStandModel.Id, frame);
+                    OnPropertyChanged(nameof(CurrentStandModel.FramesInStand));
+                    MessageBoxHelper.ShowInfo("Рама добавлена");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBoxHelper.ShowError(ex.Message);
             }
         }
 
-        //public async void OnAddDrainageToStandExecuted(object p)
-        //{
-        //    var drainage = CurrentStandModel.FrameDrainage.SelectedDrainage;
-        //    if (drainage != null)
-        //    {
-        //        CurrentStandModel.FrameDrainage.Drainages.Add(drainage);
-        //        var entity = new FormedDrainage { Id = drainage.Id, Name = drainage.Name };
-        //        await _projectRepository.AddDrainageToStandAsync(CurrentStandModel.Id, entity);
-        //    }
-        //}
+        public async void OnAddDrainageToStandExecuted(object p)
+        {
+            try
+            {
+                var drainage = CurrentStandModel.SelectedDrainage;
+                if (drainage != null)
+                {
+                    CurrentStandModel.DrainagesInStand.Add(drainage);
+                    await _projectRepository.AddDrainageToStandAsync(CurrentStandModel.Id, drainage);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBoxHelper.ShowError(ex.Message);
+            }
+        }
 
         //public async void OnAddCustomDrainageToStandExecuted(object p)
         //{
