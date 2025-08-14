@@ -13,5 +13,8 @@ namespace ReportEngine.App.Commands
         public ICommand AddNewStandCommand { get; set; }
         public ICommand SaveChangesCommand { get; set; }
 
+        public ICommand AddFrameToStandCommand {  get; set; }
+        public ICommand AddDrainageToStandCommand { get; set; }
+        public ICommand AddCustomDrainageToStandCommand { get; set; }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using ReportEngine.App.Commands;
 using ReportEngine.App.Display;
 using ReportEngine.App.Model;
-using ReportEngine.App.Model.FormedEquipsModels;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
 using ReportEngine.App.Services.Interfaces;
@@ -21,23 +20,26 @@ namespace ReportEngine.App.ViewModels
     {
         private readonly IProjectInfoRepository _projectRepository;
         private readonly IFrameRepository _formedFrameRepository;
+        private readonly IFormedDrainagesRepository _formedDrainagesRepository;
         private readonly IDialogService _dialogService;
         public StandModel CurrentStandModel { get; set; } = new();
         public ProjectModel CurrentProjectModel { get; set; } = new();
         public ProjectCommandProvider ProjectCommandProvider { get; set; } = new();
-        public ObservableCollection<StandFrameModel> StandFrames { get; set; } = new();
-        public ObservableCollection<FormedFrame> AllAvailableFrames { get; set; } = new();
-        public ObservableCollection<StandDrainageModel> StandDrainages { get; set; } = new();
-        public ProjectViewModel(IProjectInfoRepository projectRepository, IDialogService dialogService, IFrameRepository formedFrameRepository)
+
+
+        public ProjectViewModel(IProjectInfoRepository projectRepository,
+            IDialogService dialogService,
+            IFrameRepository formedFrameRepository,
+            IFormedDrainagesRepository formedDrainagesRepository)
         {
             _projectRepository = projectRepository;
             _dialogService = dialogService;
             _formedFrameRepository = formedFrameRepository;
+            _formedDrainagesRepository = formedDrainagesRepository;
 
             InitializeCommands();
             InitializeTime();
             InitializeGenericCommands();
-            LoadFramesAsync();
         }
 
         #region Инициализация
@@ -53,6 +55,10 @@ namespace ReportEngine.App.ViewModels
             ProjectCommandProvider.CreateNewCardCommand = new RelayCommand(OnCreateNewCardCommandExecuted, CanAllCommandsExecute);
             ProjectCommandProvider.AddNewStandCommand = new RelayCommand(OnAddNewStandCommandExecuted, CanAllCommandsExecute);
             ProjectCommandProvider.SaveChangesCommand = new RelayCommand(OnSaveChangesCommandExecuted, CanAllCommandsExecute);
+
+            ProjectCommandProvider.AddFrameToStandCommand = new RelayCommand(OnAddFrameToStandExecuted, CanAllCommandsExecute);
+            //ProjectCommandProvider.AddDrainageToStandCommand = new RelayCommand(OnAddDrainageToStandExecuted, CanAllCommandsExecute);
+            //ProjectCommandProvider.AddCustomDrainageToStandCommand = new RelayCommand(OnAddCustomDrainageToStandExecuted, CanAllCommandsExecute);
         }
         public void InitializeGenericCommands()
         {
@@ -60,7 +66,7 @@ namespace ReportEngine.App.ViewModels
             ProjectCommandProvider.SelectArmatureDialogCommand = new RelayCommand(OnSelectArmatureFromDialogCommandExecuted<HeaterArmature>, CanAllCommandsExecute);
             ProjectCommandProvider.SelectKMCHDialogCommand = new RelayCommand(OnSelectTreeSocketFromDialogCommandExecuted<HeaterSocket>, CanAllCommandsExecute);
             ProjectCommandProvider.SaveObvCommand = new RelayCommand(OnSaveObvCommandExecuted, CanAllCommandsExecute);
-        } 
+        }
         #endregion
 
         #region Команды
@@ -109,12 +115,13 @@ namespace ReportEngine.App.ViewModels
             OnPropertyChanged(nameof(CurrentProjectModel));
             OnPropertyChanged(nameof(CurrentStandModel));
         }
-        public async Task LoadFramesAsync()
+        public void LoadFrames()
         {
-            await ExceptionHelper.SafeExecuteAsync(async () =>
+            ExceptionHelper.SafeExecute(async () =>
             {
                 var frames = await _formedFrameRepository.GetAllAsync();
-                AllAvailableFrames = new ObservableCollection<FormedFrame>(frames);
+                var drainages = await _formedDrainagesRepository.GetAllAsync();
+                CurrentStandModel.AllAvailableFrames = new ObservableCollection<FormedFrame>(frames);
             });
         }
         public async Task LoadProjectInfoAsync(int projectId) // Загрузка карточки проекта для редактирования
@@ -147,11 +154,23 @@ namespace ReportEngine.App.ViewModels
                 if (projectInfo.Stands != null)
                 {
                     foreach (var stand in projectInfo.Stands)
-                        CurrentProjectModel.Stands.Add(StandDataConverter.ConvertToStandModel(stand));
+                    {
+                        var standModel = StandDataConverter.ConvertToStandModel(stand);
+
+                        standModel.FramesInStand = new ObservableCollection<FormedFrame>(stand.FormedFrames ?? new List<FormedFrame>());
+                        CurrentProjectModel.Stands.Add(standModel);
+                    }
+
+
                 }
                 CurrentProjectModel.SelectedStand = CurrentProjectModel.Stands.FirstOrDefault();
 
-                CurrentStandModel = new StandModel();
+                if (CurrentProjectModel.SelectedStand != null)
+                    CurrentStandModel = CurrentProjectModel.SelectedStand;
+                else
+                    CurrentStandModel = new StandModel();
+
+                OnPropertyChanged(nameof(CurrentStandModel));
             });
         }
 
@@ -164,6 +183,7 @@ namespace ReportEngine.App.ViewModels
             {
                 ObvyazkaId = CurrentProjectModel.SelectedStand.ObvyazkaType,
                 ObvyazkaName = "Обвязка" + CurrentProjectModel.SelectedStand.ObvyazkaType,
+                MaterialLine = CurrentProjectModel.SelectedStand.MaterialLine,
                 Armature = CurrentProjectModel.SelectedStand.Armature,
                 TreeSocket = CurrentProjectModel.SelectedStand.TreeSocket,
                 KMCH = CurrentProjectModel.SelectedStand.KMCH,
@@ -284,7 +304,50 @@ namespace ReportEngine.App.ViewModels
                     setProperty(equipment.Name);
                 }
             });
-        } 
+        }
+
+        public async void OnAddFrameToStandExecuted(object p)
+        {
+            var frame = CurrentStandModel.SelectedFrame;
+            if (frame != null)
+            {
+                CurrentStandModel.FramesInStand.Add(frame);
+                await _projectRepository.AddFrameToStandAsync(CurrentStandModel.Id, frame);
+                OnPropertyChanged(nameof(CurrentStandModel.FramesInStand));
+                MessageBoxHelper.ShowInfo("Рама добавлена в СТЭНД))");
+            }
+        }
+
+        //public async void OnAddDrainageToStandExecuted(object p)
+        //{
+        //    var drainage = CurrentStandModel.FrameDrainage.SelectedDrainage;
+        //    if (drainage != null)
+        //    {
+        //        CurrentStandModel.FrameDrainage.Drainages.Add(drainage);
+        //        var entity = new FormedDrainage { Id = drainage.Id, Name = drainage.Name };
+        //        await _projectRepository.AddDrainageToStandAsync(CurrentStandModel.Id, entity);
+        //    }
+        //}
+
+        //public async void OnAddCustomDrainageToStandExecuted(object p)
+        //{
+        //    var customDrainage = CurrentStandModel.FrameDrainage.NewDrainage;
+        //    if (!string.IsNullOrWhiteSpace(customDrainage.Name))
+        //    {
+        //        CurrentStandModel.FrameDrainage.Drainages.Add(customDrainage);
+        //        var entity = new FormedDrainage
+        //        {
+        //            Name = customDrainage.Name,
+        //            Purposes = customDrainage.Purposes.Select(p => new DrainagePurpose
+        //            {
+        //                Purpose = p.Purpose,
+        //                Material = p.Material,
+        //                Quantity = p.Quantity
+        //            }).ToList()
+        //        };
+        //        await _projectRepository.AddDrainageToStandAsync(CurrentStandModel.Id, entity);
+        //    }
+        //}
         #endregion
     }
 }

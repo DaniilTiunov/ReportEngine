@@ -1,4 +1,5 @@
 ﻿using ReportEngine.App.ViewModels;
+using ReportEngine.Domain.Entities;
 using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Model.StandsModel
@@ -29,7 +30,6 @@ namespace ReportEngine.App.Model.StandsModel
         private StandObvyazkaModel _selectedObvyazka;
 
         private ObservableCollection<StandObvyazkaModel> _obvyazki = new();
-        public StandFrameDrainageModel FrameDrainage { get; set; } = new();
         public ObservableCollection<StandObvyazkaModel> Obvyazki { get => _obvyazki; set => Set(ref _obvyazki, value); }
 
         public StandObvyazkaModel SelectedObvyazka { get => _selectedObvyazka; set => Set(ref _selectedObvyazka, value); }
@@ -56,6 +56,29 @@ namespace ReportEngine.App.Model.StandsModel
         public string? FirstSensorMarkPlus { get => _firstSensorMarkPlus; set => Set(ref _firstSensorMarkPlus, value); } //Марикровка +
         public string? FirstSensorMarkMinus { get => _firstSensorMarkMinus; set => Set(ref _firstSensorMarkMinus, value); } //Марикровка -
         public string? DesigneStand { get => _designeStand; set => Set(ref _designeStand, value); } //Описание
+
+
+        private ObservableCollection<FormedFrame> _framesInStand = new();
+
+        private ObservableCollection<FormedFrame> _allAvailableFrames = new();
+        private FormedFrame _selectedFrame;
+        public ObservableCollection<FormedFrame> AllAvailableFrames
+        { 
+            get => _allAvailableFrames; 
+            set => Set(ref _allAvailableFrames, value); 
+        }
+        public ObservableCollection<FormedFrame> FramesInStand 
+        { 
+            get => _framesInStand; 
+            set => Set(ref _framesInStand, value); 
+        }
+        public FormedFrame SelectedFrame
+        {
+            get => _selectedFrame;
+            set => Set(ref _selectedFrame, value);
+        }
+
+
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ReportEngine.App.ViewModels;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace ReportEngine.App.Views.Controls
@@ -12,6 +13,14 @@ namespace ReportEngine.App.Views.Controls
         {
             InitializeComponent();
             DataContext = viewModel;
+        }
+
+        private void FrameDrainagesView_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is ProjectViewModel viewModel)
+            {
+                viewModel.LoadFrames();
+            }
         }
     }
 }
