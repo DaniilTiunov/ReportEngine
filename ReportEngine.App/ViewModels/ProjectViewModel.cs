@@ -20,6 +20,7 @@ namespace ReportEngine.App.ViewModels
     {
         private readonly IProjectInfoRepository _projectRepository;
         private readonly IFrameRepository _formedFrameRepository;
+        private readonly INotificationService _notificationService;
         private readonly IFormedDrainagesRepository _formedDrainagesRepository;
         private readonly IDialogService _dialogService;
         public StandModel CurrentStandModel { get; set; } = new();
@@ -29,6 +30,7 @@ namespace ReportEngine.App.ViewModels
 
         public ProjectViewModel(IProjectInfoRepository projectRepository,
             IDialogService dialogService,
+            INotificationService notificationService,
             IFrameRepository formedFrameRepository,
             IFormedDrainagesRepository formedDrainagesRepository)
         {
@@ -36,6 +38,7 @@ namespace ReportEngine.App.ViewModels
             _dialogService = dialogService;
             _formedFrameRepository = formedFrameRepository;
             _formedDrainagesRepository = formedDrainagesRepository;
+            _notificationService = notificationService;
 
             InitializeCommands();
             InitializeTime();
@@ -95,7 +98,7 @@ namespace ReportEngine.App.ViewModels
         {
             await ExceptionHelper.SafeExecuteAsync(AddNewStandToProjectAsync);
         }
-        public async void OnSaveChangesCommandExecuted(object e) // Сохранение изменений для карточки преокта
+        public async void OnSaveChangesCommandExecuted(object e) // Сохранение изменений для карточки проекта
         {
             await ExceptionHelper.SafeExecuteAsync(SaveProjectChangesAsync);
         }
@@ -214,13 +217,13 @@ namespace ReportEngine.App.ViewModels
             };
             await _projectRepository.AddStandObvyazkaAsync(CurrentProjectModel.SelectedStand.Id, entity);
 
-            MessageBoxHelper.ShowInfo("Обвязка успешно добавлена!");
+            _notificationService.ShowInfo("Обвязка успешно добавлена!");
         }
         private async Task SaveProjectChangesAsync()
         {
             if (CurrentProjectModel.CurrentProjectId == 0)
             {
-                MessageBoxHelper.ShowInfo("Сначала создайте проект");
+                _notificationService.ShowInfo("Сначала создайте проект");
                 return;
             }
             var projectInfo = new ProjectInfo
@@ -246,13 +249,13 @@ namespace ReportEngine.App.ViewModels
                 IsGalvanized = CurrentProjectModel.IsGalvanized
             };
             await _projectRepository.UpdateAsync(projectInfo);
-            MessageBoxHelper.ShowInfo("Изменения успешно сохранены!");
+            _notificationService.ShowInfo("Изменения успешно сохранены!");
         }
         private async Task AddNewStandToProjectAsync()
         {
             if (CurrentProjectModel.CurrentProjectId == 0)
             {
-                MessageBoxHelper.ShowInfo("Сначала создайте проект");
+                _notificationService.ShowInfo("Сначала создайте проект");
                 return;
             }
             var newStandModel = new StandModel
@@ -283,7 +286,7 @@ namespace ReportEngine.App.ViewModels
             CurrentProjectModel.Stands.Add(newStandModel);
             CurrentProjectModel.SelectedStand = newStandModel;
 
-            MessageBoxHelper.ShowInfo("Стенд успешно добавлен!");
+            _notificationService.ShowInfo("Стенд успешно добавлен!");
         }
         private async Task CreateNewProjectCardAsync()
         {
@@ -295,7 +298,7 @@ namespace ReportEngine.App.ViewModels
             CurrentProjectModel.Stands.Clear();
             CurrentStandModel = new StandModel();
 
-            MessageBoxHelper.ShowInfo($"Новая карточка проекта успешно создана!\nId Преокта: {CurrentProjectModel.CurrentProjectId}"); //Для отладки
+            _notificationService.ShowInfo($"Новая карточка проекта успешно создана!\nId Проекта: {CurrentProjectModel.CurrentProjectId}"); //Для отладки
         }
         private void SelectEquipment<T>(Action<string> setProperty)
             where T : class, IBaseEquip, new()
@@ -320,12 +323,12 @@ namespace ReportEngine.App.ViewModels
                     CurrentStandModel.FramesInStand.Add(frame);
                     await _projectRepository.AddFrameToStandAsync(CurrentStandModel.Id, frame);
                     OnPropertyChanged(nameof(CurrentStandModel.FramesInStand));
-                    MessageBoxHelper.ShowInfo("Рама добавлена");
+                    _notificationService.ShowInfo("Рама добавлена");
                 }
             }
             catch (Exception ex)
             {
-                MessageBoxHelper.ShowError(ex.Message);
+                _notificationService.ShowError(ex.Message);
             }
         }
 
@@ -342,7 +345,7 @@ namespace ReportEngine.App.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBoxHelper.ShowError(ex.Message);
+                _notificationService.ShowError(ex.Message);
             }
         }
 
@@ -375,7 +378,7 @@ namespace ReportEngine.App.ViewModels
             }
             catch (Exception e)
             {
-                MessageBoxHelper.ShowError(e.Message);
+                _notificationService.ShowError(e.Message);
             }
         }
         #endregion

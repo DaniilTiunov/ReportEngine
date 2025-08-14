@@ -119,6 +119,7 @@ namespace ReportEngine.App
             services.AddSingleton<NavigationService>();
             services.AddSingleton<IServiceProvider>(provider => provider);
             services.AddSingleton<IDialogService, DialogService>();
+            services.AddSingleton<INotificationService, NotificationService>();
         }
         private static void ConfigureViewModels(IServiceCollection services)
         {
