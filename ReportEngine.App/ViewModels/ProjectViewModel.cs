@@ -18,6 +18,7 @@ namespace ReportEngine.App.ViewModels
 {
     public class ProjectViewModel : BaseViewModel
     {
+        private readonly IStandService _standService;
         private readonly IProjectInfoRepository _projectRepository;
         private readonly IFrameRepository _formedFrameRepository;
         private readonly INotificationService _notificationService;
@@ -32,13 +33,15 @@ namespace ReportEngine.App.ViewModels
             IDialogService dialogService,
             INotificationService notificationService,
             IFrameRepository formedFrameRepository,
-            IFormedDrainagesRepository formedDrainagesRepository)
+            IFormedDrainagesRepository formedDrainagesRepository,
+            IStandService standService)
         {
             _projectRepository = projectRepository;
             _dialogService = dialogService;
             _formedFrameRepository = formedFrameRepository;
             _formedDrainagesRepository = formedDrainagesRepository;
             _notificationService = notificationService;
+            _standService = standService;
 
             InitializeCommands();
             InitializeTime();
@@ -107,8 +110,19 @@ namespace ReportEngine.App.ViewModels
         {
             await ExceptionHelper.SafeExecuteAsync(AddObvAsync);
         }
+        public async void OnAddCustomDrainageToStandExecuted(object p) // Добавление собранного стенда с UI
+        {
+            await ExceptionHelper.SafeExecuteAsync(AddCustomDrainageToStandAsync);
+        }
+        public async void OnAddDrainageToStandExecuted(object p) // Добавление существующего стенда
+        {
+            await ExceptionHelper.SafeExecuteAsync(AddDrainageToStandAsync);
+        }
+        public async void OnAddFrameToStandExecuted(object p) // Добавление рамы
+        {
+            await ExceptionHelper.SafeExecuteAsync(AddFrameToStandAsync);
+        }
         #endregion
-
         #region Методы
         public void ResetProject() // Сброс проекта для создания нового
         {
@@ -118,19 +132,21 @@ namespace ReportEngine.App.ViewModels
             OnPropertyChanged(nameof(CurrentProjectModel));
             OnPropertyChanged(nameof(CurrentStandModel));
         }
-        public void LoadFrames()
+        public async Task LoadDataAsync()
         {
-            ExceptionHelper.SafeExecute(async () =>
+            
+            await ExceptionHelper.SafeExecuteAsync(async () =>
             {
-                var frames = await _formedFrameRepository.GetAllAsync();
-                var drainages = await _formedDrainagesRepository.GetAllWithPurposesAsync();
-                var framesInStand = await _projectRepository.GetAllFramesInStandAsync(CurrentStandModel.Id);
-                var drainagesInStand = await _projectRepository.GetAllDrainagesInStandAsync(CurrentStandModel.Id);
-                
-                CurrentStandModel.FramesInStand = new ObservableCollection<FormedFrame>(framesInStand);
-                CurrentStandModel.DrainagesInStand = new ObservableCollection<FormedDrainage>(drainagesInStand);
-                CurrentStandModel.AllAvailableFrames = new ObservableCollection<FormedFrame>(frames);
-                CurrentStandModel.AllAvailableDrainages = new ObservableCollection<FormedDrainage>(drainages);
+                await _standService.LoadStandDataAsync(CurrentStandModel);
+                // var frames = await _formedFrameRepository.GetAllAsync();
+                // var drainages = await _formedDrainagesRepository.GetAllWithPurposesAsync();
+                // var framesInStand = await _projectRepository.GetAllFramesInStandAsync(CurrentStandModel.Id);
+                // var drainagesInStand = await _projectRepository.GetAllDrainagesInStandAsync(CurrentStandModel.Id);
+                //
+                // CurrentStandModel.FramesInStand = new ObservableCollection<FormedFrame>(framesInStand);
+                // CurrentStandModel.DrainagesInStand = new ObservableCollection<FormedDrainage>(drainagesInStand);
+                // CurrentStandModel.AllAvailableFrames = new ObservableCollection<FormedFrame>(frames);
+                // CurrentStandModel.AllAvailableDrainages = new ObservableCollection<FormedDrainage>(drainages);
             });
         }
         public async Task LoadProjectInfoAsync(int projectId) // Загрузка карточки проекта для редактирования
@@ -312,73 +328,40 @@ namespace ReportEngine.App.ViewModels
                 }
             });
         }
-
-        public async void OnAddFrameToStandExecuted(object p)
+        private async Task AddFrameToStandAsync()
         {
-            try
+            if (CurrentStandModel.SelectedFrame != null)
             {
-                var frame = CurrentStandModel.SelectedFrame;
-                if (frame != null)
-                {
-                    CurrentStandModel.FramesInStand.Add(frame);
-                    await _projectRepository.AddFrameToStandAsync(CurrentStandModel.Id, frame);
-                    OnPropertyChanged(nameof(CurrentStandModel.FramesInStand));
-                    _notificationService.ShowInfo("Рама добавлена");
-                }
-            }
-            catch (Exception ex)
-            {
-                _notificationService.ShowError(ex.Message);
-            }
-        }
-
-        public async void OnAddDrainageToStandExecuted(object p)
-        {
-            try
-            {
-                var drainage = CurrentStandModel.SelectedDrainage;
-                if (drainage != null)
-                {
-                    CurrentStandModel.DrainagesInStand.Add(drainage);
-                    await _projectRepository.AddDrainageToStandAsync(CurrentStandModel.Id, drainage);
-                }
-            }
-            catch (Exception ex)
-            {
-                _notificationService.ShowError(ex.Message);
-            }
-        }
-
-        public async void OnAddCustomDrainageToStandExecuted(object p)
-        {
-            try
-            {
-                var customDrainage = CurrentStandModel.NewDrainage;
-                if (!string.IsNullOrWhiteSpace(customDrainage.Name))
-                {
-                    CurrentStandModel.AllAvailableDrainages.Add(customDrainage);
-                    var entity = new FormedDrainage
-                    {
-                        Name = customDrainage.Name,
-                        Purposes = customDrainage.Purposes.Select(p => new DrainagePurpose
-                        {
-                            Purpose = p.Purpose,
-                            Material = p.Material,
-                            Quantity = p.Quantity
-                        }).ToList()
-                    };
-                    await _projectRepository.AddDrainageToStandAsync(CurrentStandModel.Id, entity);
-                    MessageBoxHelper.ShowInfo("Пользовательский дренаж успешно добавлен!");
-                    await _formedDrainagesRepository.AddAsync(entity);
-                    CurrentStandModel.NewDrainage = new FormedDrainage(); // Сбросить
+                await _standService.AddFrameToStandAsync(
+                    CurrentStandModel.Id,
+                    CurrentStandModel.SelectedFrame);
                     
-                    OnPropertyChanged(nameof(CurrentStandModel.AllAvailableDrainages));
-                    OnPropertyChanged(nameof(CurrentStandModel.DrainagesInStand));
-                }
+                CurrentStandModel.FramesInStand.Add(CurrentStandModel.SelectedFrame);
+                OnPropertyChanged(nameof(CurrentStandModel.FramesInStand));
             }
-            catch (Exception e)
+        }
+        private async Task AddDrainageToStandAsync()
+        {
+            if (CurrentStandModel.SelectedDrainage != null)
             {
-                _notificationService.ShowError(e.Message);
+                await _standService.AddDrainageToStandAsync(
+                    CurrentStandModel.Id,
+                    CurrentStandModel.SelectedDrainage);
+                    
+                CurrentStandModel.DrainagesInStand.Add(CurrentStandModel.SelectedDrainage);
+            }
+        }
+        private async Task AddCustomDrainageToStandAsync()
+        {
+            if (!string.IsNullOrWhiteSpace(CurrentStandModel.NewDrainage.Name))
+            {
+                await _standService.AddCustomDrainageAsync(
+                    CurrentStandModel.Id,
+                    CurrentStandModel.NewDrainage);
+                    
+                CurrentStandModel.AllAvailableDrainages.Add(CurrentStandModel.NewDrainage);
+                CurrentStandModel.NewDrainage = new FormedDrainage();
+                OnPropertyChanged(nameof(CurrentStandModel.AllAvailableDrainages));
             }
         }
         #endregion

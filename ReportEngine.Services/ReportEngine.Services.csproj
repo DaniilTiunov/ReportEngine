@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ReportEngine.App\ReportEngine.App.csproj" />
     <ProjectReference Include="..\ReportEngine.Domain\ReportEngine.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Interfaces\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>
