@@ -1,6 +1,8 @@
 ﻿using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
 using System.Collections.ObjectModel;
+using ReportEngine.App.Model.FormedEquipsModels;
+using ReportEngine.App.ModelWrappers;
 
 namespace ReportEngine.App.Model.StandsModel
 {
@@ -62,7 +64,8 @@ namespace ReportEngine.App.Model.StandsModel
         private ObservableCollection<FormedDrainage> _drainagesInStand = new();
         private ObservableCollection<FormedFrame> _allAvailableFrames = new();
         private ObservableCollection<FormedDrainage> _allAvailableDrainages = new();
-
+        
+        private FormedDrainage _newDrainage = new();
         private FormedDrainage _selectedDrainage;
         private FormedFrame _selectedFrame;
         public ObservableCollection<FormedFrame> AllAvailableFrames
@@ -94,6 +97,18 @@ namespace ReportEngine.App.Model.StandsModel
         {
             get => _selectedFrame;
             set => Set(ref _selectedFrame, value);
+        }
+        public FormedDrainage NewDrainage
+        {
+            get => _newDrainage;
+            set => Set(ref _newDrainage, value);
+        }
+        
+        private FormedFrameModel _formedFrameComponents = new();
+        public FormedFrameModel FormedFrameComponents
+        {
+            get => _formedFrameComponents;
+            set => Set(ref _formedFrameComponents, value);
         }
     }
 }

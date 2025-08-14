@@ -12,7 +12,6 @@ namespace ReportEngine.App.Commands
         public ICommand CreateNewCardCommand { get; set; }
         public ICommand AddNewStandCommand { get; set; }
         public ICommand SaveChangesCommand { get; set; }
-
         public ICommand AddFrameToStandCommand {  get; set; }
         public ICommand AddDrainageToStandCommand { get; set; }
         public ICommand AddCustomDrainageToStandCommand { get; set; }

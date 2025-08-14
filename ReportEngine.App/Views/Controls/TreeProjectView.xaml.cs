@@ -39,6 +39,8 @@ namespace ReportEngine.App.Views.Controls
                     return;
 
                 var content = CreateCurrentContent(tag);
+                if (content == null)
+                    return; // Не добавлять вкладку, если контент не создан
 
                 var tabControl = new TabItem()
                 {

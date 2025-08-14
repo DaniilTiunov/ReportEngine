@@ -16,13 +16,24 @@
         <StackPanel Grid.Column="0" Margin="10">
             <GroupBox Header="Доступные рамы">
                 <StackPanel>
-                    <DataGrid ItemsSource="{Binding CurrentStandModel.AllAvailableFrames}" SelectedItem="{Binding CurrentStandModel.SelectedFrame}">
+                    <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding CurrentStandModel.AllAvailableFrames}" SelectedItem="{Binding CurrentStandModel.SelectedFrame}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay}" Header="Название" />
                             <DataGridTextColumn Binding="{Binding FrameType, Mode=TwoWay}" Header="Тип" />
                             <DataGridTextColumn Binding="{Binding Depth, Mode=TwoWay}" Header="Глубина" />
                             <DataGridTextColumn Binding="{Binding Width, Mode=TwoWay}" Header="Ширина" />
                         </DataGrid.Columns>
+                        <DataGrid.RowDetailsTemplate>
+                            <DataTemplate>
+                                <DataGrid ItemsSource="{Binding CurrentStandModel.FormedFrameComponents.DisplayedComponents}" AutoGenerateColumns="True" HeadersVisibility="Column">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Binding="{Binding Component.Name}" Header="Наименование" />
+                                        <DataGridTextColumn Binding="{Binding Count}" Header="ШТ" />
+                                        <DataGridTextColumn Binding="{Binding Length}" Header="М" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </DataTemplate>
+                        </DataGrid.RowDetailsTemplate>
                     </DataGrid>
                     <Button
                         Margin="5"
@@ -34,10 +45,21 @@
                 <TabControl>
                     <TabItem Header="Готовые дренажи">
                         <StackPanel>
-                            <DataGrid ItemsSource="{Binding CurrentStandModel.AllAvailableDrainages}" SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
+                            <DataGrid ItemsSource="{Binding CurrentStandModel.AllAvailableDrainages}" SelectedItem="{Binding CurrentStandModel.SelectedDrainage}" AutoGenerateColumns="False">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay}" Header="Название" />
+                                    <DataGridTextColumn Binding="{Binding Name}" Header="Название" />
                                 </DataGrid.Columns>
+                                <DataGrid.RowDetailsTemplate>
+                                    <DataTemplate>
+                                        <DataGrid ItemsSource="{Binding Purposes}" AutoGenerateColumns="False" HeadersVisibility="Column">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
+                                                <DataGridTextColumn Binding="{Binding Material}" Header="Материал" />
+                                                <DataGridTextColumn Binding="{Binding Quantity}" Header="Длина" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </DataTemplate>
+                                </DataGrid.RowDetailsTemplate>
                             </DataGrid>
                             <Button
                                 Margin="5"
@@ -47,12 +69,12 @@
                     </TabItem>
                     <TabItem Header="Собрать дренаж">
                         <StackPanel>
-                            <TextBox Margin="5" Text="{Binding CurrentStandModel.FrameDrainage.NewDrainage.Name, Mode=TwoWay}" />
+                            <TextBox Margin="5" Text="{Binding CurrentStandModel.NewDrainage.Name, Mode=TwoWay}" />
                             <DataGrid
                                 Margin="5"
                                 AutoGenerateColumns="False"
                                 CanUserAddRows="True"
-                                ItemsSource="{Binding CurrentStandModel.FrameDrainage.NewDrainage.Purposes}">
+                                ItemsSource="{Binding CurrentStandModel.NewDrainage.Purposes}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Назначение" />
                                     <DataGridTextColumn Binding="{Binding Material, Mode=TwoWay}" Header="Материал" />
@@ -61,7 +83,7 @@
                             </DataGrid>
                             <Button
                                 Margin="5"
-                                Command="{Binding AddCustomDrainageToStandCommand}"
+                                Command="{Binding ProjectCommandProvider.AddCustomDrainageToStandCommand}"
                                 Content="Добавить собранный дренаж" />
                         </StackPanel>
                     </TabItem>

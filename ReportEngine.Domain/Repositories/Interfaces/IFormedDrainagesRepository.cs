@@ -6,5 +6,7 @@ namespace ReportEngine.Domain.Repositories.Interfaces
     {
         Task<IEnumerable<FormedDrainage>> GetAllWithPurposesAsync();
         Task<FormedDrainage> GetByIdWithPurposesAsync(int id);
+        
+        
     }
 }
