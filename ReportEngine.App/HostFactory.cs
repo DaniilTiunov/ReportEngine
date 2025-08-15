@@ -24,6 +24,7 @@ using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork;
 using Serilog;
 using System.Windows.Controls;
+using ReportEngine.App.Services.Core;
 
 namespace ReportEngine.App
 {
@@ -120,6 +121,8 @@ namespace ReportEngine.App
             services.AddSingleton<IServiceProvider>(provider => provider);
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton<INotificationService, NotificationService>();
+            services.AddScoped<IStandService, StandService>();
+            services.AddScoped<IProjectService, ProjectService>();
         }
         private static void ConfigureViewModels(IServiceCollection services)
         {

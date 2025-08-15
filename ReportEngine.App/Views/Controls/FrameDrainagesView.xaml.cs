@@ -19,7 +19,7 @@ namespace ReportEngine.App.Views.Controls
         {
             if (DataContext is ProjectViewModel viewModel)
             {
-                viewModel.LoadDataAsync().GetAwaiter().GetResult();
+                viewModel.LoadDataAsync();
             }
         }
     }
