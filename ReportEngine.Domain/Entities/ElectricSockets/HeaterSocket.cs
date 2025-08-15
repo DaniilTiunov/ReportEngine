@@ -1,8 +1,7 @@
 ﻿using ReportEngine.Domain.Entities.BaseEntities;
 
-namespace ReportEngine.Domain.Entities.ElectricSockets
+namespace ReportEngine.Domain.Entities.ElectricSockets;
+
+public class HeaterSocket : BaseEquip // Таблица Тройники и КМЧ жаропрочные
 {
-    public class HeaterSocket : BaseEquip // Таблица Тройники и КМЧ жаропрочные
-    {
-    }
 }

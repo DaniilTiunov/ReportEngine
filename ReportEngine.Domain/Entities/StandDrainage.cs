@@ -3,14 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReportEngine.Domain.Entities;
 
-public class StandFrame
+public class StandDrainage
 {
     [Key] public int Id { get; set; }
 
     public int StandId { get; set; }
-    public int FrameId { get; set; }
+    public int DrainageId { get; set; }
 
     [ForeignKey(nameof(StandId))] public virtual Stand Stand { get; set; }
 
-    [ForeignKey(nameof(FrameId))] public virtual FormedFrame Frame { get; set; }
+    [ForeignKey(nameof(DrainageId))] public virtual FormedDrainage Drainage { get; set; }
 }

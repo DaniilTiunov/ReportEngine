@@ -1,93 +1,107 @@
-﻿using ReportEngine.App.Commands;
+﻿using System.Collections.ObjectModel;
+using System.Windows.Input;
+using ReportEngine.App.Commands;
 using ReportEngine.App.Display;
 using ReportEngine.App.Model.Contacts;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
 
-namespace ReportEngine.App.ViewModels.Contacts
+namespace ReportEngine.App.ViewModels.Contacts;
+
+public class CompanyViewModel
 {
-    public class CompanyViewModel
+    private readonly IBaseRepository<Company> _companyRepository;
+
+    public CompanyViewModel(IBaseRepository<Company> companyRepository)
     {
-        private readonly IBaseRepository<Company> _companyRepository;
-        public CompanyModel CurrentCompany { get; set; } = new();
-        public CompanyViewModel(IBaseRepository<Company> companyRepository)
-        {
-            InitializeCommands();
+        InitializeCommands();
 
-            _companyRepository = companyRepository;
+        _companyRepository = companyRepository;
 
-            LoadAllCompaniesAsync();
-        }
-        public void InitializeCommands()
+        LoadAllCompaniesAsync();
+    }
+
+    public CompanyModel CurrentCompany { get; set; } = new();
+    public ICommand LoadAllCompaniesCommand { get; set; }
+    public ICommand AddNewCompanyCommand { get; set; }
+    public ICommand SaveChangesCommand { get; set; }
+    public ICommand DeleteCompanyCommand { get; set; }
+
+    public void InitializeCommands()
+    {
+        LoadAllCompaniesCommand = new RelayCommand(OnLoadAllCompaniesExecuted, CanAllCommandsExecute);
+        AddNewCompanyCommand = new RelayCommand(OnAddNewCompanyCommandExecuted, CanAllCommandsExecute);
+        SaveChangesCommand = new RelayCommand(OnSaveChangesCommandExecuted, CanAllCommandsExecute);
+        DeleteCompanyCommand = new RelayCommand(OnDeleteCompanyCommandExecuted, CanAllCommandsExecute);
+    }
+
+    public bool CanAllCommandsExecute(object e)
+    {
+        return true;
+    }
+
+    public async void OnLoadAllCompaniesExecuted(object p)
+    {
+        await LoadAllCompaniesAsync();
+    }
+
+    public async void OnAddNewCompanyCommandExecuted(object p)
+    {
+        await AddNewCompanyAsync();
+    }
+
+    public async void OnSaveChangesCommandExecuted(object p)
+    {
+        await SaveChangesAsync();
+    }
+
+    public async void OnDeleteCompanyCommandExecuted(object p)
+    {
+        await DeleteSelectedCompanyAsync();
+    }
+
+    private async Task LoadAllCompaniesAsync()
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            LoadAllCompaniesCommand = new RelayCommand(OnLoadAllCompaniesExecuted, CanAllCommandsExecute);
-            AddNewCompanyCommand = new RelayCommand(OnAddNewCompanyCommandExecuted, CanAllCommandsExecute);
-            SaveChangesCommand = new RelayCommand(OnSaveChangesCommandExecuted, CanAllCommandsExecute);
-            DeleteCompanyCommand = new RelayCommand(OnDeleteCompanyCommandExecuted, CanAllCommandsExecute);
-        }
-        public ICommand LoadAllCompaniesCommand { get; set; }
-        public ICommand AddNewCompanyCommand { get; set; }
-        public ICommand SaveChangesCommand { get; set; }
-        public ICommand DeleteCompanyCommand { get; set; }
-        public bool CanAllCommandsExecute(object e) => true;
-        public async void OnLoadAllCompaniesExecuted(object p)
+            var companies = await _companyRepository.GetAllAsync();
+            CurrentCompany.AllCompanies = new ObservableCollection<Company>(companies);
+        });
+    }
+
+    private async Task AddNewCompanyAsync()
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            await LoadAllCompaniesAsync();
-        }
-        public async void OnAddNewCompanyCommandExecuted(object p)
+            var newCompany = CurrentCompany.CreateNewCompany();
+            CurrentCompany.AllCompanies.Add(newCompany);
+            await _companyRepository.AddAsync(newCompany);
+        });
+    }
+
+    private async Task SaveChangesAsync()
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            await AddNewCompanyAsync();
-        }
-        public async void OnSaveChangesCommandExecuted(object p)
-        {
-            await SaveChangesAsync();
-        }
-        public async void OnDeleteCompanyCommandExecuted(object p)
-        {
-            await DeleteSelectedCompanyAsync();
-        }
-        private async Task LoadAllCompaniesAsync()
-        {
-            await ExceptionHelper.SafeExecuteAsync(async () =>
+            if (CurrentCompany.SelectedCompany != null)
             {
-                var companies = await _companyRepository.GetAllAsync();
-                CurrentCompany.AllCompanies = new ObservableCollection<Company>(companies);
-            });
-        }
-        private async Task AddNewCompanyAsync()
+                await _companyRepository.UpdateAsync(CurrentCompany.SelectedCompany);
+                MessageBoxHelper.ShowInfo("Изменения сохранены");
+            }
+        });
+    }
+
+    private async Task DeleteSelectedCompanyAsync()
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            await ExceptionHelper.SafeExecuteAsync(async () =>
+            if (CurrentCompany.SelectedCompany != null)
             {
-                var newCompany = CurrentCompany.CreateNewCompany();
-                CurrentCompany.AllCompanies.Add(newCompany);
-                await _companyRepository.AddAsync(newCompany);
-            });
-        }
-        private async Task SaveChangesAsync()
-        {
-            await ExceptionHelper.SafeExecuteAsync(async () =>
-            {
-                if (CurrentCompany.SelectedCompany != null)
-                {
-                    await _companyRepository.UpdateAsync(CurrentCompany.SelectedCompany);
-                    MessageBoxHelper.ShowInfo("Изменения сохранены");
-                }
-            });
-        }
-        private async Task DeleteSelectedCompanyAsync()
-        {
-            await ExceptionHelper.SafeExecuteAsync(async () =>
-            {
-                if (CurrentCompany.SelectedCompany != null)
-                {
-                    await _companyRepository.DeleteAsync(CurrentCompany.SelectedCompany);
-                    CurrentCompany.AllCompanies.Remove(CurrentCompany.SelectedCompany);
-                    CurrentCompany.SelectedCompany = null;
-                }
-            });
-        }
+                await _companyRepository.DeleteAsync(CurrentCompany.SelectedCompany);
+                CurrentCompany.AllCompanies.Remove(CurrentCompany.SelectedCompany);
+                CurrentCompany.SelectedCompany = null;
+            }
+        });
     }
 }

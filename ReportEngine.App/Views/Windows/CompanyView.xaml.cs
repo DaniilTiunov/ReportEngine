@@ -1,23 +1,23 @@
-﻿using ReportEngine.App.ViewModels.Contacts;
+﻿using System.ComponentModel;
 using System.Windows;
+using ReportEngine.App.ViewModels.Contacts;
 
-namespace ReportEngine.App.Views.Windows
+namespace ReportEngine.App.Views.Windows;
+
+/// <summary>
+///     Логика взаимодействия для CompanyView.xaml
+/// </summary>
+public partial class CompanyView : Window
 {
-    /// <summary>
-    /// Логика взаимодействия для CompanyView.xaml
-    /// </summary>
-    public partial class CompanyView : Window
+    public CompanyView(CompanyViewModel companyViewModel)
     {
-        public CompanyView(CompanyViewModel companyViewModel)
-        {
-            InitializeComponent();
-            DataContext = companyViewModel;
+        InitializeComponent();
+        DataContext = companyViewModel;
+    }
 
-        }
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            e.Cancel = true;
-            Hide();
-        }
+    private void Window_Closing(object sender, CancelEventArgs e)
+    {
+        e.Cancel = true;
+        Hide();
     }
 }

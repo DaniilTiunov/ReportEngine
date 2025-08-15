@@ -1,17 +1,16 @@
-﻿using ReportEngine.App.ViewModels;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
+using ReportEngine.App.ViewModels;
 
-namespace ReportEngine.App.Views.Controls
+namespace ReportEngine.App.Views.Controls;
+
+/// <summary>
+///     Логика взаимодействия для ProjectCardView.xaml
+/// </summary>
+public partial class ProjectCardView : UserControl
 {
-    /// <summary>
-    /// Логика взаимодействия для ProjectCardView.xaml
-    /// </summary>
-    public partial class ProjectCardView : UserControl
+    public ProjectCardView(ProjectViewModel projectViewModel)
     {
-        public ProjectCardView(ProjectViewModel projectViewModel)
-        {
-            InitializeComponent();
-            DataContext = projectViewModel;
-        }
+        InitializeComponent();
+        DataContext = projectViewModel;
     }
 }

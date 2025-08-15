@@ -8,15 +8,15 @@ namespace ReportEngine.App.Services.Core;
 
 public class StandService : IStandService
 {
-    private readonly IProjectInfoRepository _projectRepository;
-    private readonly IFrameRepository _formedFrameRepository;
     private readonly IFormedDrainagesRepository _formedDrainagesRepository;
+    private readonly IFrameRepository _formedFrameRepository;
     private readonly INotificationService _notificationService;
+    private readonly IProjectInfoRepository _projectRepository;
 
     public StandService(IProjectInfoRepository projectRepository,
-                        IFrameRepository frameRepository,
-                        IFormedDrainagesRepository drainagesRepository,
-                        INotificationService notificationService)
+        IFrameRepository frameRepository,
+        IFormedDrainagesRepository drainagesRepository,
+        INotificationService notificationService)
     {
         _projectRepository = projectRepository;
         _formedFrameRepository = frameRepository;
@@ -29,13 +29,14 @@ public class StandService : IStandService
         var frames = await _formedFrameRepository.GetAllAsync();
         var drainages = await _formedDrainagesRepository.GetAllWithPurposesAsync();
         var standFrames = await _projectRepository.GetAllFramesInStandAsync(standModel.Id);
-        var drainagesInStand = await _projectRepository.GetAllDrainagesInStandAsync(standModel.Id);
+        var standDrainages = await _projectRepository.GetAllDrainagesInStandAsync(standModel.Id);
 
-        // Получаем рамы из StandFrame
         standModel.FramesInStand = new ObservableCollection<FormedFrame>(
             standFrames.Select(sf => sf.Frame)
         );
-        standModel.DrainagesInStand = new ObservableCollection<FormedDrainage>(drainagesInStand);
+        standModel.DrainagesInStand = new ObservableCollection<FormedDrainage>(
+            standDrainages.Select(sd => sd.Drainage)
+        );
         standModel.AllAvailableFrames = new ObservableCollection<FormedFrame>(frames);
         standModel.AllAvailableDrainages = new ObservableCollection<FormedDrainage>(drainages);
     }
@@ -52,10 +53,10 @@ public class StandService : IStandService
         _notificationService.ShowInfo("Рама успешно добавлена в стенд.");
     }
 
-    public async Task AddDrainageToStandAsync(int standId, FormedDrainage drainage)
+    public async Task AddDrainageToStandAsync(int standId, int drainageId)
     {
-        await _projectRepository.AddDrainageToStandAsync(standId, drainage);
-        _notificationService.ShowInfo("Выбранный дренаж успешно добавлен в стенд.");
+        await _projectRepository.AddDrainageToStandAsync(standId, drainageId);
+        _notificationService.ShowInfo("Дренаж успешно добавлен в стенд.");
     }
 
     public async Task AddCustomDrainageAsync(int standId, FormedDrainage customDrainage)
@@ -71,8 +72,8 @@ public class StandService : IStandService
             }).ToList()
         };
 
-        await _projectRepository.AddDrainageToStandAsync(standId, entity);
         await _formedDrainagesRepository.AddAsync(entity);
+        await _projectRepository.AddDrainageToStandAsync(standId, entity.Id);
         _notificationService.ShowInfo("Собранный дренаж успешно добавлен!");
     }
 

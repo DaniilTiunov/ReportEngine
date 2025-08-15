@@ -1,8 +1,7 @@
 ﻿using ReportEngine.Domain.Entities.BaseEntities;
 
-namespace ReportEngine.Domain.Entities.Braces
+namespace ReportEngine.Domain.Entities.Braces;
+
+public class DrainageBrace : BaseFrame //Таблица Крепление дренажа
 {
-    public class DrainageBrace : BaseFrame //Таблица Крепление дренажа
-    {
-    }
 }

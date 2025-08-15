@@ -6,36 +6,35 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ReportEngine.Domain.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateFrames : Migration
+    public partial class UpdateDrainages : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-
             migrationBuilder.DropColumn(
                 name: "StandId",
-                table: "FormedFrames");
+                table: "FormedDrainages");
 
             migrationBuilder.CreateTable(
-                name: "StandFrames",
+                name: "StandDrainage",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     StandId = table.Column<int>(type: "integer", nullable: false),
-                    FrameId = table.Column<int>(type: "integer", nullable: false)
+                    DrainageId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StandFrames", x => x.Id);
+                    table.PrimaryKey("PK_StandDrainage", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_StandFrames_FormedFrames_FrameId",
-                        column: x => x.FrameId,
-                        principalTable: "FormedFrames",
+                        name: "FK_StandDrainage_FormedDrainages_DrainageId",
+                        column: x => x.DrainageId,
+                        principalTable: "FormedDrainages",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_StandFrames_Stands_StandId",
+                        name: "FK_StandDrainage_Stands_StandId",
                         column: x => x.StandId,
                         principalTable: "Stands",
                         principalColumn: "Id",
@@ -43,13 +42,13 @@ namespace ReportEngine.Domain.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_StandFrames_FrameId",
-                table: "StandFrames",
-                column: "FrameId");
+                name: "IX_StandDrainage_DrainageId",
+                table: "StandDrainage",
+                column: "DrainageId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StandFrames_StandId",
-                table: "StandFrames",
+                name: "IX_StandDrainage_StandId",
+                table: "StandDrainage",
                 column: "StandId");
         }
 
@@ -57,22 +56,22 @@ namespace ReportEngine.Domain.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "StandFrames");
+                name: "StandDrainage");
 
             migrationBuilder.AddColumn<int>(
                 name: "StandId",
-                table: "FormedFrames",
+                table: "FormedDrainages",
                 type: "integer",
                 nullable: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_FormedFrames_StandId",
-                table: "FormedFrames",
+                name: "IX_FormedDrainages_StandId",
+                table: "FormedDrainages",
                 column: "StandId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_FormedFrames_Stands_StandId",
-                table: "FormedFrames",
+                name: "FK_FormedDrainages_Stands_StandId",
+                table: "FormedDrainages",
                 column: "StandId",
                 principalTable: "Stands",
                 principalColumn: "Id");

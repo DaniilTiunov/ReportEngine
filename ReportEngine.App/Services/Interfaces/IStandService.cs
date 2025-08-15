@@ -6,8 +6,8 @@ namespace ReportEngine.App.Services.Interfaces;
 public interface IStandService
 {
     Task LoadStandDataAsync(StandModel standModel);
-    Task AddFrameToStandAsync(int standId, int frameId); // теперь принимаем id рамы
-    Task AddDrainageToStandAsync(int standId, FormedDrainage drainage);
+    Task AddFrameToStandAsync(int standId, int frameId);
+    Task AddDrainageToStandAsync(int standId, int drainageId);
     Task AddCustomDrainageAsync(int standId, FormedDrainage customDrainage);
     Task AddObvyazkaToStandAsync(int standId, ObvyazkaInStand obvyazka);
     Task LoadObvyazkiInStandAsync(StandModel standModel);

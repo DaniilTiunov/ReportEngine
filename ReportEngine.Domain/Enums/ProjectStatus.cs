@@ -1,8 +1,7 @@
-﻿namespace ReportEngine.Domain.Enums
+﻿namespace ReportEngine.Domain.Enums;
+
+public enum ProjectStatus
 {
-    public enum ProjectStatus
-    {
-        ТКП = 0,
-        Завершен = 1
-    }
+    ТКП = 0,
+    Завершен = 1
 }

@@ -1,23 +1,23 @@
-﻿using ReportEngine.App.ViewModels;
+﻿using System.Collections.ObjectModel;
+using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
-using System.Collections.ObjectModel;
 
-namespace ReportEngine.App.Model
+namespace ReportEngine.App.Model;
+
+public class ObvyazkaModel : BaseViewModel
 {
-    public class ObvyazkaModel : BaseViewModel
-    {
-        private ObservableCollection<Obvyazka> _obvyazki = new();
-        private Obvyazka _selectedObvyazka;
+    private ObservableCollection<Obvyazka> _obvyazki = new();
+    private Obvyazka _selectedObvyazka;
 
-        public ObservableCollection<Obvyazka> Obvyazki 
-        {
-            get => _obvyazki;
-            set => Set(ref _obvyazki, value);
-        }
-        public Obvyazka SelectedObvyazka
-        {
-            get => _selectedObvyazka;
-            set => Set(ref _selectedObvyazka, value);
-        }
+    public ObservableCollection<Obvyazka> Obvyazki
+    {
+        get => _obvyazki;
+        set => Set(ref _obvyazki, value);
+    }
+
+    public Obvyazka SelectedObvyazka
+    {
+        get => _selectedObvyazka;
+        set => Set(ref _selectedObvyazka, value);
     }
 }

@@ -1,8 +1,7 @@
 ﻿using ReportEngine.Domain.Entities;
 
-namespace ReportEngine.Domain.Repositories.Interfaces
+namespace ReportEngine.Domain.Repositories.Interfaces;
+
+public interface IObvyazkaRepository : IBaseRepository<Obvyazka>
 {
-    public interface IObvyazkaRepository : IBaseRepository<Obvyazka>
-    {
-    }
 }

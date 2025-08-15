@@ -1,19 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ReportEngine.Domain.Entities
+namespace ReportEngine.Domain.Entities;
+
+public class User
 {
-    public class User
-    {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        public string? Name { get; set; }
-        public string? SecondName { get; set; }
-        public string? LastName { get; set; }
-        public string? PhoneContact { get; set; }
-        public string? Email { get; set; }
-        public string? Position { get; set; }
-        public string? Cabinet { get; set; }
-    }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
+
+    public string? Name { get; set; }
+    public string? SecondName { get; set; }
+    public string? LastName { get; set; }
+    public string? PhoneContact { get; set; }
+    public string? Email { get; set; }
+    public string? Position { get; set; }
+    public string? Cabinet { get; set; }
 }

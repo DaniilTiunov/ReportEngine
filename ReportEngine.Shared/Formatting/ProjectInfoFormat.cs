@@ -1,9 +1,5 @@
-﻿using ReportEngine.Domain.Entities;
+﻿namespace ReportEngine.Shared.Formatting;
 
-namespace ReportEngine.Shared.Formatting
+public class ProjectInfoFormat
 {
-    public class ProjectInfoFormat
-    {
-
-    }
 }

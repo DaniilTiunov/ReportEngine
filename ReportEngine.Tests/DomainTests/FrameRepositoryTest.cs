@@ -1,19 +1,17 @@
-﻿namespace ReportEngine.Tests.DomainTests
+﻿namespace ReportEngine.Tests.DomainTests;
+
+[TestClass]
+public class FrameRepositoryTest
 {
-    [TestClass]
-    public class FrameRepositoryTest
+    [TestMethod]
+    public void CanRepoSave_WhenCalled_ShouldSaveObject()
     {
-        [TestMethod]
-        public void CanRepoSave_WhenCalled_ShouldSaveObject()
-        {
-            // Arrange
+        // Arrange
 
 
-            // Act
+        // Act
 
 
-            // Assert
-
-        }
+        // Assert
     }
 }

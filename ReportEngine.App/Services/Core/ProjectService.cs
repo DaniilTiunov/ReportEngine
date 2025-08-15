@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using ReportEngine.App.Model;
+﻿using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
 using ReportEngine.App.Services.Interfaces;
@@ -12,9 +11,9 @@ namespace ReportEngine.App.Services.Core;
 
 public class ProjectService : IProjectService
 {
-    private readonly IProjectInfoRepository _projectRepository;
     private readonly INotificationService _notificationService;
-    
+    private readonly IProjectInfoRepository _projectRepository;
+
     public ProjectService(
         IProjectInfoRepository projectRepository,
         INotificationService notificationService)
@@ -22,14 +21,14 @@ public class ProjectService : IProjectService
         _projectRepository = projectRepository;
         _notificationService = notificationService;
     }
-    
+
     public async Task CreateProjectAsync(ProjectModel projectModel)
     {
         var project = projectModel.CreateNewProjectCard();
-        
+
         await _projectRepository.AddAsync(project);
         projectModel.CurrentProjectId = project.Id;
-        
+
         _notificationService.ShowInfo($"Новая карточка проекта создана! ID: {project.Id}");
     }
 
@@ -58,15 +57,15 @@ public class ProjectService : IProjectService
             IsGalvanized = projectModel.IsGalvanized
         };
         await _projectRepository.UpdateAsync(projectInfo);
-        
+
         _notificationService.ShowInfo("Изменения успешно сохранены!");
     }
-    
+
     public async Task AddStandToProjectAsync(int projectId, StandModel standModel)
     {
         var standEntity = StandDataConverter.ConvertToStandEntity(standModel);
         var addedStand = await _projectRepository.AddStandAsync(projectId, standEntity);
-        
+
         standModel.Id = addedStand.Id;
         standModel.ProjectId = addedStand.ProjectInfoId;
         _notificationService.ShowInfo("Стенд добавлен");

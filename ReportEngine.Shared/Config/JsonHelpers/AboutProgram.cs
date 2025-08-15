@@ -1,9 +1,8 @@
-﻿namespace ReportEngine.Shared.Config.JsonHelpers
-{
-    public class AboutProgram
-    {
-        public string Version { get; set; }
+﻿namespace ReportEngine.Shared.Config.JsonHelpers;
 
-        public string VersionOnServerPath { get; set; }
-    }
+public class AboutProgram
+{
+    public string Version { get; set; }
+
+    public string VersionOnServerPath { get; set; }
 }

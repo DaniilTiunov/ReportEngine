@@ -16,7 +16,8 @@
         <StackPanel Grid.Column="0" Margin="10">
             <GroupBox Header="Доступные рамы">
                 <StackPanel>
-                    <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding CurrentStandModel.AllAvailableFrames}" SelectedItem="{Binding CurrentStandModel.SelectedFrame}">
+                    <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding CurrentStandModel.AllAvailableFrames}"
+                              SelectedItem="{Binding CurrentStandModel.SelectedFrame}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay}" Header="Название" />
                             <DataGridTextColumn Binding="{Binding FrameType, Mode=TwoWay}" Header="Тип" />
@@ -25,7 +26,9 @@
                         </DataGrid.Columns>
                         <DataGrid.RowDetailsTemplate>
                             <DataTemplate>
-                                <DataGrid ItemsSource="{Binding CurrentStandModel.FormedFrameComponents.DisplayedComponents}" AutoGenerateColumns="True" HeadersVisibility="Column">
+                                <DataGrid
+                                    ItemsSource="{Binding CurrentStandModel.FormedFrameComponents.DisplayedComponents}"
+                                    AutoGenerateColumns="True" HeadersVisibility="Column">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding Component.Name}" Header="Наименование" />
                                         <DataGridTextColumn Binding="{Binding Count}" Header="ШТ" />
@@ -45,13 +48,16 @@
                 <TabControl>
                     <TabItem Header="Готовые дренажи">
                         <StackPanel>
-                            <DataGrid ItemsSource="{Binding CurrentStandModel.AllAvailableDrainages}" SelectedItem="{Binding CurrentStandModel.SelectedDrainage}" AutoGenerateColumns="False">
+                            <DataGrid ItemsSource="{Binding CurrentStandModel.AllAvailableDrainages}"
+                                      SelectedItem="{Binding CurrentStandModel.SelectedDrainage}"
+                                      AutoGenerateColumns="False">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Binding="{Binding Name}" Header="Название" />
                                 </DataGrid.Columns>
                                 <DataGrid.RowDetailsTemplate>
                                     <DataTemplate>
-                                        <DataGrid ItemsSource="{Binding Purposes}" AutoGenerateColumns="False" HeadersVisibility="Column">
+                                        <DataGrid ItemsSource="{Binding Purposes}" AutoGenerateColumns="False"
+                                                  HeadersVisibility="Column">
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
                                                 <DataGridTextColumn Binding="{Binding Material}" Header="Материал" />

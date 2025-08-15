@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Windows.Controls;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ReportEngine.App.Services;
+using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.Contacts;
@@ -23,138 +25,139 @@ using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork;
 using Serilog;
-using System.Windows.Controls;
-using ReportEngine.App.Services.Core;
 
-namespace ReportEngine.App
+namespace ReportEngine.App;
+
+public class HostFactory
 {
-    public class HostFactory
+    public static IHost BuildHost(string connString)
     {
-        public static IHost BuildHost(string connString)
-        {
-            return Host.CreateDefaultBuilder()
-                .UseSerilog()
-                .ConfigureServices((hostContext, services) =>
-                {
-                    //Регистрация контекста БД
-                    ConfigureDatabase(services, connString);
-                    //Регистрация репозиториев
-                    ConfigureRepositories(services);
-                    //Регистрация обощённых репозиториев
-                    ConfigureGenericRepositories(services);
-                    //Регистрация сервисов приложения
-                    ConfigureApplicationServices(services);
-                    //Регистрация ViewModels
-                    ConfigureViewModels(services);
-                    //Регистрация окон и представлений
-                    ConfigureViews(services);
-
-                    services.AddSingleton<App>();
-                })
-                .ConfigureLogging(logging =>
-                {
-                    logging.ClearProviders()
-                          .AddSerilog()
-                          .SetMinimumLevel(LogLevel.Information);
-                })
-                .Build();
-        }
-        private static void ConfigureDatabase(IServiceCollection services, string connString)
-        {
-            services.AddDbContext<ReAppContext>(options =>
-                options.UseNpgsql(connString));
-        }
-        private static void ConfigureRepositories(IServiceCollection services)
-        {
-            // Обычные репозитории
-            services.AddScoped<IBaseRepository<User>, UserRepository>();
-            services.AddScoped<IBaseRepository<Company>, CompanyRepository>();
-            services.AddScoped<IProjectInfoRepository, ProjectInfoRepository>();
-            services.AddScoped<IObvyazkaRepository, ObvyazkaRepository>();
-            services.AddScoped<IFrameRepository, FormedFrameRepository>();
-            services.AddScoped<IFormedDrainagesRepository, FormedDrainagesRepository>();
-
-        }
-        private static void ConfigureGenericRepositories(IServiceCollection services)
-        {
-            // Generic-репозитории
-            var types = new[]
+        return Host.CreateDefaultBuilder()
+            .UseSerilog()
+            .ConfigureServices((hostContext, services) =>
             {
-                typeof(CarbonPipe),
-                typeof(HeaterPipe),
-                typeof(StainlessPipe),
-                typeof(CarbonArmature),
-                typeof(HeaterArmature),
-                typeof(StainlessArmature),
-                typeof(CarbonSocket),
-                typeof(HeaterSocket),
-                typeof(StainlessSocket),
-                typeof(Drainage),
-                typeof(FrameDetail),
-                typeof(PillarEqiup),
-                typeof(FrameRoll),
-                typeof(BoxesBrace),
-                typeof(DrainageBrace),
-                typeof(SensorBrace),
-                typeof(CabelBoxe),
-                typeof(CabelInput),
-                typeof(CabelProduction),
-                typeof(CabelProtection),
-                typeof(Heater),
-                typeof(Other),
-                typeof(Container)
+                //Регистрация контекста БД
+                ConfigureDatabase(services, connString);
+                //Регистрация репозиториев
+                ConfigureRepositories(services);
+                //Регистрация обощённых репозиториев
+                ConfigureGenericRepositories(services);
+                //Регистрация сервисов приложения
+                ConfigureApplicationServices(services);
+                //Регистрация ViewModels
+                ConfigureViewModels(services);
+                //Регистрация окон и представлений
+                ConfigureViews(services);
 
-            };
-
-            foreach (var type in types)
+                services.AddSingleton<App>();
+            })
+            .ConfigureLogging(logging =>
             {
-                var repoInterface = typeof(IGenericBaseRepository<,>).MakeGenericType(type, type);
-                var repoType = typeof(GenericEquipRepository<,>).MakeGenericType(type, type);
-                services.AddScoped(repoInterface, repoType);
-            }
-        }
-        private static void ConfigureApplicationServices(IServiceCollection services)
-        {
-            services.AddScoped<ExcelCreator>();
-            services.AddSingleton<GenericEquipWindowFactory>();
-            services.AddSingleton<NavigationService>();
-            services.AddSingleton<IServiceProvider>(provider => provider);
-            services.AddSingleton<IDialogService, DialogService>();
-            services.AddSingleton<INotificationService, NotificationService>();
-            services.AddScoped<IStandService, StandService>();
-            services.AddScoped<IProjectService, ProjectService>();
-        }
-        private static void ConfigureViewModels(IServiceCollection services)
-        {
-            services.AddScoped<MainWindowViewModel>();
-            services.AddScoped<UsersViewModel>();
-            services.AddScoped<ProjectViewModel>();
-            services.AddScoped<ObvyazkaViewModel>();
-            services.AddScoped<CompanyViewModel>();
-            services.AddScoped<FormedFrameViewModel>();
-            services.AddScoped<FormedDrainagesViewModel>();
-        }
-        private static void ConfigureViews(IServiceCollection services)
-        {
-            // Главное окно
-            services.AddSingleton(provider =>
-            {
-                var navService = provider.GetRequiredService<NavigationService>();
-                var viewModel = provider.GetRequiredService<MainWindowViewModel>();
-                var mainWindow = new MainWindow(viewModel);
+                logging.ClearProviders()
+                    .AddSerilog()
+                    .SetMinimumLevel(LogLevel.Information);
+            })
+            .Build();
+    }
 
-                navService.InitializeContentHost(mainWindow.FindName("MainContentControl") as ContentControl);
-                return mainWindow;
-            });
-            services.AddTransient<UsersView>();
-            services.AddTransient<TreeProjectView>();
-            services.AddTransient<GenericEquipView>();
-            services.AddTransient<ObvyazkiView>();
-            services.AddTransient<ProjectCardView>();
-            services.AddTransient<CompanyView>();
-            services.AddTransient<FormedFrameView>();
-            services.AddTransient<FormedDrainagesView>();
-            services.AddTransient<FrameDrainagesView>();
+    private static void ConfigureDatabase(IServiceCollection services, string connString)
+    {
+        services.AddDbContext<ReAppContext>(options =>
+            options.UseNpgsql(connString));
+    }
+
+    private static void ConfigureRepositories(IServiceCollection services)
+    {
+        // Обычные репозитории
+        services.AddScoped<IBaseRepository<User>, UserRepository>();
+        services.AddScoped<IBaseRepository<Company>, CompanyRepository>();
+        services.AddScoped<IProjectInfoRepository, ProjectInfoRepository>();
+        services.AddScoped<IObvyazkaRepository, ObvyazkaRepository>();
+        services.AddScoped<IFrameRepository, FormedFrameRepository>();
+        services.AddScoped<IFormedDrainagesRepository, FormedDrainagesRepository>();
+    }
+
+    private static void ConfigureGenericRepositories(IServiceCollection services)
+    {
+        // Generic-репозитории
+        var types = new[]
+        {
+            typeof(CarbonPipe),
+            typeof(HeaterPipe),
+            typeof(StainlessPipe),
+            typeof(CarbonArmature),
+            typeof(HeaterArmature),
+            typeof(StainlessArmature),
+            typeof(CarbonSocket),
+            typeof(HeaterSocket),
+            typeof(StainlessSocket),
+            typeof(Drainage),
+            typeof(FrameDetail),
+            typeof(PillarEqiup),
+            typeof(FrameRoll),
+            typeof(BoxesBrace),
+            typeof(DrainageBrace),
+            typeof(SensorBrace),
+            typeof(CabelBoxe),
+            typeof(CabelInput),
+            typeof(CabelProduction),
+            typeof(CabelProtection),
+            typeof(Heater),
+            typeof(Other),
+            typeof(Container)
+        };
+
+        foreach (var type in types)
+        {
+            var repoInterface = typeof(IGenericBaseRepository<,>).MakeGenericType(type, type);
+            var repoType = typeof(GenericEquipRepository<,>).MakeGenericType(type, type);
+            services.AddScoped(repoInterface, repoType);
         }
+    }
+
+    private static void ConfigureApplicationServices(IServiceCollection services)
+    {
+        services.AddScoped<ExcelCreator>();
+        services.AddSingleton<GenericEquipWindowFactory>();
+        services.AddSingleton<NavigationService>();
+        services.AddSingleton<IServiceProvider>(provider => provider);
+        services.AddSingleton<IDialogService, DialogService>();
+        services.AddSingleton<INotificationService, NotificationService>();
+        services.AddScoped<IStandService, StandService>();
+        services.AddScoped<IProjectService, ProjectService>();
+    }
+
+    private static void ConfigureViewModels(IServiceCollection services)
+    {
+        services.AddScoped<MainWindowViewModel>();
+        services.AddScoped<UsersViewModel>();
+        services.AddScoped<ProjectViewModel>();
+        services.AddScoped<ObvyazkaViewModel>();
+        services.AddScoped<CompanyViewModel>();
+        services.AddScoped<FormedFrameViewModel>();
+        services.AddScoped<FormedDrainagesViewModel>();
+    }
+
+    private static void ConfigureViews(IServiceCollection services)
+    {
+        // Главное окно
+        services.AddSingleton(provider =>
+        {
+            var navService = provider.GetRequiredService<NavigationService>();
+            var viewModel = provider.GetRequiredService<MainWindowViewModel>();
+            var mainWindow = new MainWindow(viewModel);
+
+            navService.InitializeContentHost(mainWindow.FindName("MainContentControl") as ContentControl);
+            return mainWindow;
+        });
+        services.AddTransient<UsersView>();
+        services.AddTransient<TreeProjectView>();
+        services.AddTransient<GenericEquipView>();
+        services.AddTransient<ObvyazkiView>();
+        services.AddTransient<ProjectCardView>();
+        services.AddTransient<CompanyView>();
+        services.AddTransient<FormedFrameView>();
+        services.AddTransient<FormedDrainagesView>();
+        services.AddTransient<FrameDrainagesView>();
     }
 }

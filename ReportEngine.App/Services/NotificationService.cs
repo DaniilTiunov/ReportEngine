@@ -17,6 +17,7 @@ public class NotificationService : INotificationService
 
     public bool ShowConfirmation(string message, string title = "Подтверждение")
     {
-        return MessageBox.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
+        return MessageBox.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Question) ==
+               MessageBoxResult.Yes;
     }
 }

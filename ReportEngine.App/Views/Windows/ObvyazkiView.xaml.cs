@@ -1,24 +1,25 @@
-﻿using ReportEngine.App.ViewModels;
+﻿using System.ComponentModel;
 using System.Windows;
+using ReportEngine.App.ViewModels;
 
-namespace ReportEngine.App.Views.Windows
+namespace ReportEngine.App.Views.Windows;
+
+/// <summary>
+///     Логика взаимодействия для ObvyazkiView.xaml
+/// </summary>
+public partial class ObvyazkiView : Window
 {
-    /// <summary>
-    /// Логика взаимодействия для ObvyazkiView.xaml
-    /// </summary>
-    public partial class ObvyazkiView : Window
+    public ObvyazkiView(ObvyazkaViewModel obvyazkiViewModel)
     {
-        public ObvyazkiView(ObvyazkaViewModel obvyazkiViewModel)
-        {
-            InitializeComponent();
-            DataContext = obvyazkiViewModel;
+        InitializeComponent();
+        DataContext = obvyazkiViewModel;
 
-            obvyazkiViewModel.OnShowAllObvyazkiCommandExecuted(null);
-        }
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            e.Cancel = true;
-            Hide();
-        }
+        obvyazkiViewModel.OnShowAllObvyazkiCommandExecuted(null);
+    }
+
+    private void Window_Closing(object sender, CancelEventArgs e)
+    {
+        e.Cancel = true;
+        Hide();
     }
 }

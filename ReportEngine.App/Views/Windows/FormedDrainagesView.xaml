@@ -54,9 +54,15 @@
                                 ItemsSource="{Binding FormedDrainagesModel.Purposes}"
                                 SelectedItem="{Binding FormedDrainagesModel.SelectedPurpose, Mode=TwoWay}">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Назначение" />
-                                    <DataGridTextColumn Binding="{Binding Material, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Материал" />
-                                    <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Длина (м)" />
+                                    <DataGridTextColumn
+                                        Binding="{Binding Purpose, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        Header="Назначение" />
+                                    <DataGridTextColumn
+                                        Binding="{Binding Material, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        Header="Материал" />
+                                    <DataGridTextColumn
+                                        Binding="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        Header="Длина (м)" />
                                 </DataGrid.Columns>
                             </DataGrid>
                             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">

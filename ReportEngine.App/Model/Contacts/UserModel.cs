@@ -1,40 +1,41 @@
-﻿using ReportEngine.App.ViewModels;
+﻿using System.Collections.ObjectModel;
+using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
-using System.Collections.ObjectModel;
 
-namespace ReportEngine.App.Model.Contacts
+namespace ReportEngine.App.Model.Contacts;
+
+public class UserModel : BaseViewModel
 {
-    public class UserModel : BaseViewModel
+    public User CreateNewUser()
     {
-        #region Приватные свойства для хранения данных
-        private ObservableCollection<User> _allUsers = new();
-        private User _selectedUser;
-
-        public ObservableCollection<User> AllUsers
+        return new User
         {
-            get => _allUsers;
-            set => Set(ref _allUsers, value);
-        }
-
-        public User SelectedUser
-        {
-            get => _selectedUser;
-            set => Set(ref _selectedUser, value);
-        }
-        #endregion
-
-        public User CreateNewUser()
-        {
-            return new User
-            {
-                SecondName = SelectedUser.SecondName,
-                Name = SelectedUser.Name,
-                LastName = SelectedUser.LastName,
-                Email = SelectedUser.Email,
-                Cabinet = SelectedUser.Cabinet,
-                Position = SelectedUser.Position,
-                PhoneContact = SelectedUser.PhoneContact
-            };
-        }
+            SecondName = SelectedUser.SecondName,
+            Name = SelectedUser.Name,
+            LastName = SelectedUser.LastName,
+            Email = SelectedUser.Email,
+            Cabinet = SelectedUser.Cabinet,
+            Position = SelectedUser.Position,
+            PhoneContact = SelectedUser.PhoneContact
+        };
     }
+
+    #region Приватные свойства для хранения данных
+
+    private ObservableCollection<User> _allUsers = new();
+    private User _selectedUser;
+
+    public ObservableCollection<User> AllUsers
+    {
+        get => _allUsers;
+        set => Set(ref _allUsers, value);
+    }
+
+    public User SelectedUser
+    {
+        get => _selectedUser;
+        set => Set(ref _selectedUser, value);
+    }
+
+    #endregion
 }

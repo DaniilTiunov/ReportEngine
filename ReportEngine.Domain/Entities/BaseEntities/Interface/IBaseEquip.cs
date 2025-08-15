@@ -1,8 +1,7 @@
-﻿namespace ReportEngine.Domain.Entities.BaseEntities.Interface
+﻿namespace ReportEngine.Domain.Entities.BaseEntities.Interface;
+
+public interface IBaseEquip
 {
-    public interface IBaseEquip
-    {
-        int Id { get; set; }
-        string Name { get; set; }
-    }
+    int Id { get; set; }
+    string Name { get; set; }
 }

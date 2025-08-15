@@ -1,27 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
-namespace ReportEngine.App.Views.Settings
+namespace ReportEngine.App.Views.Settings;
+
+/// <summary>
+///     Логика взаимодействия для MainSettingsSubwindow.xaml
+/// </summary>
+public partial class MainSettingsSubwindow : Window
 {
-    /// <summary>
-    /// Логика взаимодействия для MainSettingsSubwindow.xaml
-    /// </summary>
-    public partial class MainSettingsSubwindow : Window
+    public MainSettingsSubwindow()
     {
-        public MainSettingsSubwindow()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

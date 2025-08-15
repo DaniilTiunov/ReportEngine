@@ -1,98 +1,98 @@
-﻿using ReportEngine.App.ViewModels;
-using ReportEngine.Shared.Config.DebugConsol;
-using ReportEngine.Shared.Helpers;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using ReportEngine.App.ViewModels;
+using ReportEngine.Shared.Config.DebugConsol;
+using ReportEngine.Shared.Helpers;
 
-namespace ReportEngine.App.Views.Controls
+namespace ReportEngine.App.Views.Controls;
+
+public partial class TreeProjectView : UserControl, IDisposable
 {
-    public partial class TreeProjectView : UserControl, IDisposable
+    private readonly ProjectViewModel _projectViewModel;
+    private bool _disposed;
+
+    public TreeProjectView(ProjectViewModel projectViewModel)
     {
-        private bool _disposed;
+        InitializeComponent();
+        _projectViewModel = projectViewModel;
+        DataContext = projectViewModel;
+    }
 
-        private ProjectViewModel _projectViewModel;
-        public TreeProjectView(ProjectViewModel projectViewModel)
+    public void Dispose()
+    {
+        if (_disposed) return;
+
+        DataContext = null;
+
+        if (Resources != null) Resources.Clear();
+
+        _disposed = true;
+    }
+
+    private void OpenCurrentView(object sender, MouseButtonEventArgs e)
+    {
+        ExceptionHelper.SafeExecute(() =>
         {
-            InitializeComponent();
-            _projectViewModel = projectViewModel;
-            DataContext = projectViewModel;
-        }
-        private void OpenCurrentView(object sender, MouseButtonEventArgs e)
-        {
-            ExceptionHelper.SafeExecute(() =>
+            var treeViewItem = MainTree.SelectedItem as TreeViewItem;
+            if (treeViewItem?.Tag != null)
             {
-                var treeViewItem = MainTree.SelectedItem as TreeViewItem;
-                if (treeViewItem?.Tag != null)
-                {
-                    string? header = treeViewItem.Header.ToString();
-                    string? tag = treeViewItem.Tag.ToString();
-                    LoadTreeContent(tag, header);
-                }
-            });
-        }
-        private void LoadTreeContent(string tag, string header)
-        {
-            ExceptionHelper.SafeExecute(() =>
-            {
-                if (string.IsNullOrEmpty(tag))
-                    return;
-
-                var content = CreateCurrentContent(tag);
-                if (content == null)
-                    return; // Не добавлять вкладку, если контент не создан
-
-                var tabControl = new TabItem()
-                {
-                    Header = header,
-                    Content = content
-                };
-
-                MainTabControl.Items.Add(tabControl);
-                MainTabControl.SelectedItem = tabControl;
-            });
-        }
-        private UserControl CreateCurrentContent(string tag)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(tag))
-                    return null;
-
-                UserControl control = tag switch
-                {
-                    "ProjectCard" => new ProjectCardView(_projectViewModel),
-                    "Stand" => new StandView(_projectViewModel),
-                    "StandObv" => new StandObvView(_projectViewModel),
-                    "FrameDrainages" => new FrameDrainagesView(_projectViewModel),
-                };
-
-                return control;
+                var header = treeViewItem.Header.ToString();
+                var tag = treeViewItem.Tag.ToString();
+                LoadTreeContent(tag, header);
             }
-            catch (Exception ex)
+        });
+    }
+
+    private void LoadTreeContent(string tag, string header)
+    {
+        ExceptionHelper.SafeExecute(() =>
+        {
+            if (string.IsNullOrEmpty(tag))
+                return;
+
+            var content = CreateCurrentContent(tag);
+            if (content == null)
+                return; // Не добавлять вкладку, если контент не создан
+
+            var tabControl = new TabItem
             {
-                MessageBox.Show(ex.Message);
-                DebugConsole.WriteLine(ex, ConsoleColor.Red);
+                Header = header,
+                Content = content
+            };
+
+            MainTabControl.Items.Add(tabControl);
+            MainTabControl.SelectedItem = tabControl;
+        });
+    }
+
+    private UserControl CreateCurrentContent(string tag)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(tag))
                 return null;
-            }
-        }
-        public void Dispose()
-        {
-            if (_disposed) return;
 
-            DataContext = null;
-
-            if (this.Resources != null)
+            UserControl control = tag switch
             {
-                this.Resources.Clear();
-            }
+                "ProjectCard" => new ProjectCardView(_projectViewModel),
+                "Stand" => new StandView(_projectViewModel),
+                "StandObv" => new StandObvView(_projectViewModel),
+                "FrameDrainages" => new FrameDrainagesView(_projectViewModel)
+            };
 
-            _disposed = true;
+            return control;
         }
-        ~TreeProjectView()
+        catch (Exception ex)
         {
-            Dispose();
+            MessageBox.Show(ex.Message);
+            DebugConsole.WriteLine(ex, ConsoleColor.Red);
+            return null;
         }
     }
-}
 
+    ~TreeProjectView()
+    {
+        Dispose();
+    }
+}

@@ -1,10 +1,9 @@
 ﻿using ReportEngine.Domain.Entities.BaseEntities.Interface;
 
-namespace ReportEngine.App.Services.Interfaces
+namespace ReportEngine.App.Services.Interfaces;
+
+public interface IDialogService
 {
-    public interface IDialogService
-    {
-        T? ShowEquipDialog<T>()
-            where T : class, IBaseEquip, new();
-    }
+    T? ShowEquipDialog<T>()
+        where T : class, IBaseEquip, new();
 }
