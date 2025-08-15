@@ -10,4 +10,5 @@ public interface IStandService
     Task AddDrainageToStandAsync(int standId, FormedDrainage drainage);
     Task AddCustomDrainageAsync(int standId, FormedDrainage customDrainage);
     Task AddObvyazkaToStandAsync(int standId, ObvyazkaInStand obvyazka);
+    Task LoadObvyazkiInStandAsync(StandModel standModel);
 }

@@ -1,4 +1,5 @@
-﻿using ReportEngine.App.ViewModels;
+﻿using System.Windows;
+using ReportEngine.App.ViewModels;
 using System.Windows.Controls;
 
 namespace ReportEngine.App.Views.Controls
@@ -13,5 +14,12 @@ namespace ReportEngine.App.Views.Controls
             InitializeComponent();
             DataContext = projectViewModel;
         }
+        private void StandObvView_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is ProjectViewModel viewModel)
+            {
+                viewModel.LoadObvyazkiAsync();
+            }
+        } 
     }
 }

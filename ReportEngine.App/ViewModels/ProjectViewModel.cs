@@ -20,9 +20,7 @@ namespace ReportEngine.App.ViewModels
     {
         private readonly IStandService _standService;
         private readonly IProjectInfoRepository _projectRepository;
-        private readonly IFrameRepository _formedFrameRepository;
         private readonly INotificationService _notificationService;
-        private readonly IFormedDrainagesRepository _formedDrainagesRepository;
         private readonly IDialogService _dialogService;
         public StandModel CurrentStandModel { get; set; } = new();
         public ProjectModel CurrentProjectModel { get; set; } = new();
@@ -38,8 +36,6 @@ namespace ReportEngine.App.ViewModels
         {
             _projectRepository = projectRepository;
             _dialogService = dialogService;
-            _formedFrameRepository = formedFrameRepository;
-            _formedDrainagesRepository = formedDrainagesRepository;
             _notificationService = notificationService;
             _standService = standService;
 
@@ -108,7 +104,7 @@ namespace ReportEngine.App.ViewModels
 
         public async void OnSaveObvCommandExecuted(object e) // Сохранение изменений для обвязки
         {
-            await ExceptionHelper.SafeExecuteAsync(AddObvAsync);
+            await ExceptionHelper.SafeExecuteAsync(AddObvToStandAsync);
         }
         public async void OnAddCustomDrainageToStandExecuted(object p) // Добавление собранного стенда с UI
         {
@@ -134,19 +130,17 @@ namespace ReportEngine.App.ViewModels
         }
         public async Task LoadDataAsync()
         {
-            
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
                 await _standService.LoadStandDataAsync(CurrentStandModel);
-                // var frames = await _formedFrameRepository.GetAllAsync();
-                // var drainages = await _formedDrainagesRepository.GetAllWithPurposesAsync();
-                // var framesInStand = await _projectRepository.GetAllFramesInStandAsync(CurrentStandModel.Id);
-                // var drainagesInStand = await _projectRepository.GetAllDrainagesInStandAsync(CurrentStandModel.Id);
-                //
-                // CurrentStandModel.FramesInStand = new ObservableCollection<FormedFrame>(framesInStand);
-                // CurrentStandModel.DrainagesInStand = new ObservableCollection<FormedDrainage>(drainagesInStand);
-                // CurrentStandModel.AllAvailableFrames = new ObservableCollection<FormedFrame>(frames);
-                // CurrentStandModel.AllAvailableDrainages = new ObservableCollection<FormedDrainage>(drainages);
+            });
+        }
+
+        public async Task LoadObvyazkiAsync()
+        {
+            await ExceptionHelper.SafeExecuteAsync(async () =>
+            {
+                await _standService.LoadObvyazkiInStandAsync(CurrentStandModel);
             });
         }
         public async Task LoadProjectInfoAsync(int projectId) // Загрузка карточки проекта для редактирования
@@ -196,44 +190,29 @@ namespace ReportEngine.App.ViewModels
                 OnPropertyChanged(nameof(CurrentStandModel));
             });
         }
-
-        private async Task AddObvAsync()
+        private async Task AddObvToStandAsync()
         {
             if (CurrentProjectModel.SelectedStand == null)
                 return;
 
-            var newObvyazka = new StandObvyazkaModel
+            var entity = new ObvyazkaInStand
             {
+                StandId = CurrentProjectModel.SelectedStand.Id,
                 ObvyazkaId = CurrentProjectModel.SelectedStand.ObvyazkaType,
-                ObvyazkaName = "Обвязка" + CurrentProjectModel.SelectedStand.ObvyazkaType,
+                NN = CurrentProjectModel.SelectedStand.NN,
                 MaterialLine = CurrentProjectModel.SelectedStand.MaterialLine,
                 Armature = CurrentProjectModel.SelectedStand.Armature,
                 TreeSocket = CurrentProjectModel.SelectedStand.TreeSocket,
-                KMCH = CurrentProjectModel.SelectedStand.KMCH,
+                KMCH =CurrentProjectModel.SelectedStand.KMCH,
                 FirstSensorType = CurrentProjectModel.SelectedStand.FirstSensorType,
                 FirstSensorKKS = CurrentProjectModel.SelectedStand.FirstSensorKKSCounter,
                 FirstSensorMarkPlus = CurrentProjectModel.SelectedStand.FirstSensorMarkPlus,
                 FirstSensorMarkMinus = CurrentProjectModel.SelectedStand.FirstSensorMarkMinus,
-
             };
 
-            CurrentStandModel.Obvyazki.Add(newObvyazka);
+            await _standService.AddObvyazkaToStandAsync(CurrentProjectModel.SelectedStand.Id, entity);
 
-            var entity = new ObvyazkaInStand
-            {
-                StandId = CurrentProjectModel.SelectedStand.Id,
-                ObvyazkaId = newObvyazka.ObvyazkaId,
-                MaterialLine = newObvyazka.MaterialLine,
-                TreeSocket = newObvyazka.TreeSocket,
-                KMCH = newObvyazka.KMCH,
-                FirstSensorType = newObvyazka.FirstSensorType,
-                FirstSensorKKS = newObvyazka.FirstSensorKKS,
-                FirstSensorMarkPlus = newObvyazka.FirstSensorMarkPlus,
-                FirstSensorMarkMinus = newObvyazka.FirstSensorMarkMinus,
-            };
-            await _projectRepository.AddStandObvyazkaAsync(CurrentProjectModel.SelectedStand.Id, entity);
-
-            _notificationService.ShowInfo("Обвязка успешно добавлена!");
+            OnPropertyChanged(nameof(CurrentProjectModel.SelectedStand.ObvyazkiInStand));
         }
         private async Task SaveProjectChangesAsync()
         {
@@ -302,7 +281,7 @@ namespace ReportEngine.App.ViewModels
             CurrentProjectModel.Stands.Add(newStandModel);
             CurrentProjectModel.SelectedStand = newStandModel;
 
-            _notificationService.ShowInfo("Стенд успешно добавлен!");
+            _notificationService.ShowInfo($"Стенд успешно добавлен! {addedStandEntity.Id}");
         }
         private async Task CreateNewProjectCardAsync()
         {
@@ -333,7 +312,7 @@ namespace ReportEngine.App.ViewModels
             if (CurrentStandModel.SelectedFrame != null)
             {
                 await _standService.AddFrameToStandAsync(
-                    CurrentStandModel.Id,
+                    CurrentProjectModel.SelectedStand.Id,
                     CurrentStandModel.SelectedFrame);
                     
                 CurrentStandModel.FramesInStand.Add(CurrentStandModel.SelectedFrame);
@@ -345,7 +324,7 @@ namespace ReportEngine.App.ViewModels
             if (CurrentStandModel.SelectedDrainage != null)
             {
                 await _standService.AddDrainageToStandAsync(
-                    CurrentStandModel.Id,
+                    CurrentProjectModel.SelectedStand.Id,
                     CurrentStandModel.SelectedDrainage);
                     
                 CurrentStandModel.DrainagesInStand.Add(CurrentStandModel.SelectedDrainage);
@@ -356,7 +335,7 @@ namespace ReportEngine.App.ViewModels
             if (!string.IsNullOrWhiteSpace(CurrentStandModel.NewDrainage.Name))
             {
                 await _standService.AddCustomDrainageAsync(
-                    CurrentStandModel.Id,
+                    CurrentProjectModel.SelectedStand.Id,
                     CurrentStandModel.NewDrainage);
                     
                 CurrentStandModel.AllAvailableDrainages.Add(CurrentStandModel.NewDrainage);

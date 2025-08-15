@@ -30,8 +30,4 @@
     <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>

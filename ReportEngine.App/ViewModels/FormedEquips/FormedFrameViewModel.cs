@@ -42,9 +42,13 @@ namespace ReportEngine.App.ViewModels.FormedEquips
                 var details = await _frameDetailRepository.GetAllAsync();
                 var rolls = await _frameRollRepository.GetAllAsync();
                 var eqiups = await _pillarEqiupRepository.GetAllAsync();
-
+                
+                
                 FormedFrameModel.AllFrames.Clear();
-                foreach (var f in frames) FormedFrameModel.AllFrames.Add(f);
+                foreach (var f in frames)
+                {
+                    FormedFrameModel.AllFrames.Add(f);
+                }
 
                 FormedFrameModel.FrameDetails.Clear();
                 foreach (var d in details) FormedFrameModel.FrameDetails.Add(d);

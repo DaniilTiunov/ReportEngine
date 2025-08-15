@@ -48,6 +48,7 @@ namespace ReportEngine.Domain.Repositories
 
             var existingProject = await _context.Set<ProjectInfo>()
                 .FirstOrDefaultAsync(p => p.Id == project.Id);
+            
 
             if (existingProject != null)
             {
@@ -62,7 +63,7 @@ namespace ReportEngine.Domain.Repositories
             var entityProjectInfo = await _context.Set<ProjectInfo>().FindAsync(id);
             if (entityProjectInfo == null)
                 return 0;
-
+            
             _context.Set<ProjectInfo>().Remove(entityProjectInfo);
             await _context.SaveChangesAsync();
             return 1;
@@ -146,9 +147,13 @@ namespace ReportEngine.Domain.Repositories
 
             return stand?.FormedDrainages ?? Enumerable.Empty<FormedDrainage>();
         }
-        public Task<IEnumerable<ObvyazkaInStand>> GetAllObvyazkiInStandAsync(int standId)
+        public async Task<IEnumerable<ObvyazkaInStand>> GetAllObvyazkiInStandAsync(int standId)
         {
-            throw new NotImplementedException();
+            var stand = await _context.Stands
+                .Include(s => s.ObvyazkiInStand)
+                .FirstOrDefaultAsync(s => s.Id == standId);
+
+            return stand?.ObvyazkiInStand ?? Enumerable.Empty<ObvyazkaInStand>();
         }
     }
 }

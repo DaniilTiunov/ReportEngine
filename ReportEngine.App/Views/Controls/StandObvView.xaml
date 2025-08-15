@@ -6,8 +6,8 @@
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:ReportEngine.App.Views.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Width="1350"
-    Height="950"
+    Loaded="StandObvView_Loaded"
+    
     d:Background="White"
     FontSize="12"
     mc:Ignorable="d">
@@ -361,7 +361,7 @@
             Margin="0,10,0,0"
             BorderBrush="#DDDDDD"
             BorderThickness="1"
-            ItemsSource="{Binding CurrentStandModel.Obvyazki}"
+            ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}"
             SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazka}">
             <ListView.View>
                 <GridView>

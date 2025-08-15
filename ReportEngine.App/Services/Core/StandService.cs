@@ -36,7 +36,12 @@ public class StandService : IStandService // BUSINESS_LOGIC
         standModel.AllAvailableFrames = new ObservableCollection<FormedFrame>(frames);
         standModel.AllAvailableDrainages = new ObservableCollection<FormedDrainage>(drainages);
     }
-    
+
+    public async Task LoadObvyazkiInStandAsync(StandModel standModel)
+    {
+        var obvyazkiInStand = await _projectRepository.GetAllObvyazkiInStandAsync(standModel.Id);
+        standModel.ObvyazkiInStand = new ObservableCollection<ObvyazkaInStand>(obvyazkiInStand);
+    }
     public async Task AddFrameToStandAsync(int standId, FormedFrame frame) // Добавление рамы в стенд
     {
         await _projectRepository.AddFrameToStandAsync(standId, frame);
@@ -66,7 +71,6 @@ public class StandService : IStandService // BUSINESS_LOGIC
         await _formedDrainagesRepository.AddAsync(entity);
         _notificationService.ShowInfo("Собранный дренаж успешно добавлен!");
     }
-
     public async Task AddObvyazkaToStandAsync(int standId, ObvyazkaInStand obvyazka)
     {
         await _projectRepository.AddStandObvyazkaAsync(standId, obvyazka);

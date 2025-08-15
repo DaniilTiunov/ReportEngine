@@ -1,6 +1,5 @@
 ﻿using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
-using Excel = Microsoft.Office.Interop.Excel;
 
 namespace ReportEngine.Export.ExcelWork
 {

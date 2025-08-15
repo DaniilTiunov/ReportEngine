@@ -13,7 +13,6 @@ namespace ReportEngine.App.Views.Windows
         {
             InitializeComponent();
             DataContext = viewModel;
-            _viewModel = viewModel;
         }
     }
 }
