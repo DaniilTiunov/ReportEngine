@@ -160,7 +160,7 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            await _standService.LoadStandDataAsync(CurrentStandModel);
+            await _standService.LoadStandsDataAsync(CurrentProjectModel.Stands);
         });
     }
 
@@ -246,8 +246,8 @@ public class ProjectViewModel : BaseViewModel
         };
 
         await _standService.AddObvyazkaToStandAsync(CurrentProjectModel.SelectedStand.Id, entity);
-
-        OnPropertyChanged(nameof(CurrentProjectModel.SelectedStand.ObvyazkiInStand));
+        CurrentStandModel.ObvyazkiInStand.Add(entity);
+        CurrentProjectModel.SelectedStand.ObvyazkiInStand.Add(entity);
     }
 
     private async Task SaveProjectChangesAsync()
@@ -358,6 +358,7 @@ public class ProjectViewModel : BaseViewModel
             );
 
             CurrentStandModel.FramesInStand.Add(CurrentStandModel.SelectedFrame);
+            CurrentProjectModel.SelectedStand.FramesInStand.Add(CurrentStandModel.SelectedFrame);
             OnPropertyChanged(nameof(CurrentStandModel.FramesInStand));
         }
     }
@@ -371,6 +372,7 @@ public class ProjectViewModel : BaseViewModel
                 CurrentStandModel.SelectedDrainage.Id);
 
             CurrentStandModel.DrainagesInStand.Add(CurrentStandModel.SelectedDrainage);
+            CurrentProjectModel.SelectedStand.DrainagesInStand.Add(CurrentStandModel.SelectedDrainage);
         }
     }
 
@@ -383,10 +385,10 @@ public class ProjectViewModel : BaseViewModel
                 CurrentStandModel.NewDrainage);
 
             CurrentStandModel.AllAvailableDrainages.Add(CurrentStandModel.NewDrainage);
+            CurrentProjectModel.SelectedStand.DrainagesInStand.Add(CurrentStandModel.NewDrainage);
+            
             CurrentStandModel.NewDrainage = new FormedDrainage();
-            OnPropertyChanged(nameof(CurrentStandModel.AllAvailableDrainages));
         }
     }
-
     #endregion
 }

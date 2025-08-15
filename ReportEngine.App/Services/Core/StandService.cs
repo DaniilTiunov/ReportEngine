@@ -24,21 +24,25 @@ public class StandService : IStandService
         _notificationService = notificationService;
     }
 
-    public async Task LoadStandDataAsync(StandModel standModel)
+    public async Task LoadStandsDataAsync(IEnumerable<StandModel> standModels)
     {
         var frames = await _formedFrameRepository.GetAllAsync();
         var drainages = await _formedDrainagesRepository.GetAllWithPurposesAsync();
-        var standFrames = await _projectRepository.GetAllFramesInStandAsync(standModel.Id);
-        var standDrainages = await _projectRepository.GetAllDrainagesInStandAsync(standModel.Id);
 
-        standModel.FramesInStand = new ObservableCollection<FormedFrame>(
-            standFrames.Select(sf => sf.Frame)
-        );
-        standModel.DrainagesInStand = new ObservableCollection<FormedDrainage>(
-            standDrainages.Select(sd => sd.Drainage)
-        );
-        standModel.AllAvailableFrames = new ObservableCollection<FormedFrame>(frames);
-        standModel.AllAvailableDrainages = new ObservableCollection<FormedDrainage>(drainages);
+        foreach (var standModel in standModels)
+        {
+            var standFrames = await _projectRepository.GetAllFramesInStandAsync(standModel.Id);
+            var standDrainages = await _projectRepository.GetAllDrainagesInStandAsync(standModel.Id);
+
+            standModel.FramesInStand = new ObservableCollection<FormedFrame>(
+                standFrames.Select(sf => sf.Frame)
+            );
+            standModel.DrainagesInStand = new ObservableCollection<FormedDrainage>(
+                standDrainages.Select(sd => sd.Drainage)
+            );
+            standModel.AllAvailableFrames = new ObservableCollection<FormedFrame>(frames);
+            standModel.AllAvailableDrainages = new ObservableCollection<FormedDrainage>(drainages);
+        }
     }
 
     public async Task LoadObvyazkiInStandAsync(StandModel standModel)
@@ -50,13 +54,13 @@ public class StandService : IStandService
     public async Task AddFrameToStandAsync(int standId, int frameId)
     {
         await _projectRepository.AddFrameToStandAsync(standId, frameId);
-        _notificationService.ShowInfo("Рама успешно добавлена в стенд.");
+        _notificationService.ShowInfo($"Рама успешно добавлена в стенд. {standId}");
     }
 
     public async Task AddDrainageToStandAsync(int standId, int drainageId)
     {
         await _projectRepository.AddDrainageToStandAsync(standId, drainageId);
-        _notificationService.ShowInfo("Дренаж успешно добавлен в стенд.");
+        _notificationService.ShowInfo($"Дренаж успешно добавлен в стенд. {standId}");
     }
 
     public async Task AddCustomDrainageAsync(int standId, FormedDrainage customDrainage)
@@ -74,12 +78,12 @@ public class StandService : IStandService
 
         await _formedDrainagesRepository.AddAsync(entity);
         await _projectRepository.AddDrainageToStandAsync(standId, entity.Id);
-        _notificationService.ShowInfo("Собранный дренаж успешно добавлен!");
+        _notificationService.ShowInfo($"Собранный дренаж успешно добавлен! Id {standId}");
     }
 
     public async Task AddObvyazkaToStandAsync(int standId, ObvyazkaInStand obvyazka)
     {
         await _projectRepository.AddStandObvyazkaAsync(standId, obvyazka);
-        _notificationService.ShowInfo("Обвязка успешно добавлена в стенд.");
+        _notificationService.ShowInfo($"Обвязка успешно добавлена в стенд. Id{standId} ");
     }
 }
