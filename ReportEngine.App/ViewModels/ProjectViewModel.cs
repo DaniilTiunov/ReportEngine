@@ -26,7 +26,6 @@ namespace ReportEngine.App.ViewModels
         public ProjectModel CurrentProjectModel { get; set; } = new();
         public ProjectCommandProvider ProjectCommandProvider { get; set; } = new();
 
-
         public ProjectViewModel(IProjectInfoRepository projectRepository,
             IDialogService dialogService,
             INotificationService notificationService,
@@ -73,54 +72,54 @@ namespace ReportEngine.App.ViewModels
 
         #region Команды
         public bool CanAllCommandsExecute(object e) => true;
-        public void OnSelectMaterialFromDialogCommandExecuted<T>(object e) //Выбор материала из диалога
+        public void OnSelectMaterialFromDialogCommandExecuted<T>(object e)
             where T : class, IBaseEquip, new()
         {
             SelectEquipment<T>(name => CurrentProjectModel.SelectedStand.MaterialLine = name);
         }
 
-        public void OnSelectArmatureFromDialogCommandExecuted<T>(object e) //Выбор материала из диалога
+        public void OnSelectArmatureFromDialogCommandExecuted<T>(object e)
             where T : class, IBaseEquip, new()
         {
             SelectEquipment<T>(name => CurrentProjectModel.SelectedStand.Armature = name);
         }
-        public void OnSelectTreeSocketFromDialogCommandExecuted<T>(object e) //Выбор материала из диалога
+        public void OnSelectTreeSocketFromDialogCommandExecuted<T>(object e)
             where T : class, IBaseEquip, new()
         {
             SelectEquipment<T>(name => CurrentProjectModel.SelectedStand.TreeSocket = name);
         }
-        public async void OnCreateNewCardCommandExecuted(object e) // Создание новой карточки проекта
+        public async void OnCreateNewCardCommandExecuted(object e)
         {
             await ExceptionHelper.SafeExecuteAsync(CreateNewProjectCardAsync);
         }
-        public async void OnAddNewStandCommandExecuted(object e) // Добавление нового стенда с привязкой к проекту
+        public async void OnAddNewStandCommandExecuted(object e)
         {
             await ExceptionHelper.SafeExecuteAsync(AddNewStandToProjectAsync);
         }
-        public async void OnSaveChangesCommandExecuted(object e) // Сохранение изменений для карточки проекта
+        public async void OnSaveChangesCommandExecuted(object e)
         {
             await ExceptionHelper.SafeExecuteAsync(SaveProjectChangesAsync);
         }
 
-        public async void OnSaveObvCommandExecuted(object e) // Сохранение изменений для обвязки
+        public async void OnSaveObvCommandExecuted(object e)
         {
             await ExceptionHelper.SafeExecuteAsync(AddObvToStandAsync);
         }
-        public async void OnAddCustomDrainageToStandExecuted(object p) // Добавление собранного стенда с UI
+        public async void OnAddCustomDrainageToStandExecuted(object p)
         {
             await ExceptionHelper.SafeExecuteAsync(AddCustomDrainageToStandAsync);
         }
-        public async void OnAddDrainageToStandExecuted(object p) // Добавление существующего стенда
+        public async void OnAddDrainageToStandExecuted(object p)
         {
             await ExceptionHelper.SafeExecuteAsync(AddDrainageToStandAsync);
         }
-        public async void OnAddFrameToStandExecuted(object p) // Добавление рамы
+        public async void OnAddFrameToStandExecuted(object p)
         {
             await ExceptionHelper.SafeExecuteAsync(AddFrameToStandAsync);
         }
         #endregion
         #region Методы
-        public void ResetProject() // Сброс проекта для создания нового
+        public void ResetProject()
         {
             CurrentProjectModel = new ProjectModel();
             CurrentStandModel = new StandModel();
@@ -143,7 +142,7 @@ namespace ReportEngine.App.ViewModels
                 await _standService.LoadObvyazkiInStandAsync(CurrentStandModel);
             });
         }
-        public async Task LoadProjectInfoAsync(int projectId) // Загрузка карточки проекта для редактирования
+        public async Task LoadProjectInfoAsync(int projectId)
         {
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
@@ -176,7 +175,17 @@ namespace ReportEngine.App.ViewModels
                     {
                         var standModel = StandDataConverter.ConvertToStandModel(stand);
 
-                        standModel.FramesInStand = new ObservableCollection<FormedFrame>(stand.FormedFrames ?? new List<FormedFrame>());
+                        // Получаем рамы через StandFrame
+                        if (stand.StandFrames != null)
+                        {
+                            standModel.FramesInStand = new ObservableCollection<FormedFrame>(
+                                stand.StandFrames.Select(sf => sf.Frame)
+                            );
+                        }
+                        else
+                        {
+                            standModel.FramesInStand = new ObservableCollection<FormedFrame>();
+                        }
                         CurrentProjectModel.Stands.Add(standModel);
                     }
                 }
@@ -293,7 +302,7 @@ namespace ReportEngine.App.ViewModels
             CurrentProjectModel.Stands.Clear();
             CurrentStandModel = new StandModel();
 
-            _notificationService.ShowInfo($"Новая карточка проекта успешно создана!\nId Проекта: {CurrentProjectModel.CurrentProjectId}"); //Для отладки
+            _notificationService.ShowInfo($"Новая карточка проекта успешно создана!\nId Проекта: {CurrentProjectModel.CurrentProjectId}");
         }
         private void SelectEquipment<T>(Action<string> setProperty)
             where T : class, IBaseEquip, new()
@@ -313,8 +322,9 @@ namespace ReportEngine.App.ViewModels
             {
                 await _standService.AddFrameToStandAsync(
                     CurrentProjectModel.SelectedStand.Id,
-                    CurrentStandModel.SelectedFrame);
-                    
+                    CurrentStandModel.SelectedFrame.Id // теперь передаём только Id рамы
+                );
+
                 CurrentStandModel.FramesInStand.Add(CurrentStandModel.SelectedFrame);
                 OnPropertyChanged(nameof(CurrentStandModel.FramesInStand));
             }
@@ -326,7 +336,7 @@ namespace ReportEngine.App.ViewModels
                 await _standService.AddDrainageToStandAsync(
                     CurrentProjectModel.SelectedStand.Id,
                     CurrentStandModel.SelectedDrainage);
-                    
+
                 CurrentStandModel.DrainagesInStand.Add(CurrentStandModel.SelectedDrainage);
             }
         }
@@ -337,7 +347,7 @@ namespace ReportEngine.App.ViewModels
                 await _standService.AddCustomDrainageAsync(
                     CurrentProjectModel.SelectedStand.Id,
                     CurrentStandModel.NewDrainage);
-                    
+
                 CurrentStandModel.AllAvailableDrainages.Add(CurrentStandModel.NewDrainage);
                 CurrentStandModel.NewDrainage = new FormedDrainage();
                 OnPropertyChanged(nameof(CurrentStandModel.AllAvailableDrainages));

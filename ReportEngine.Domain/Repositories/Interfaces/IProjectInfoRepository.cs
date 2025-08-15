@@ -8,9 +8,13 @@ namespace ReportEngine.Domain.Repositories.Interfaces
         Task UpdateStandAsync(Stand stand);
         Task<ProjectInfo> GetStandsByIdAsync(int projectId);
         Task AddStandObvyazkaAsync(int standId, ObvyazkaInStand standObvyazka);
-        Task AddFrameToStandAsync(int standId, FormedFrame frame);
+
+        // Теперь добавляем связь через StandFrame
+        Task AddFrameToStandAsync(int standId, int frameId);
         Task AddDrainageToStandAsync(int standId, FormedDrainage drainage);
-        Task<IEnumerable<FormedFrame>> GetAllFramesInStandAsync(int standId);
+
+        // Получаем связи StandFrame, а не сами рамы
+        Task<IEnumerable<StandFrame>> GetAllFramesInStandAsync(int standId);
         Task<IEnumerable<FormedDrainage>> GetAllDrainagesInStandAsync(int standId);
         Task<IEnumerable<ObvyazkaInStand>> GetAllObvyazkiInStandAsync(int standId);
     }

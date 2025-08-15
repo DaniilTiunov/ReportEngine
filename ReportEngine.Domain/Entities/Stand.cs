@@ -31,7 +31,7 @@ namespace ReportEngine.Domain.Entities
         public string? DesigneStand { get; set; } //Описание
         public string? Comments { get; set; } // Комментарий
 
-        public virtual ICollection<FormedFrame> FormedFrames { get; set; } = new List<FormedFrame>();
+        public virtual ICollection<StandFrame> StandFrames { get; set; } = new List<StandFrame>();
         public virtual ICollection<ObvyazkaInStand> ObvyazkiInStand { get; set; } = new List<ObvyazkaInStand>();
         public virtual ICollection<FormedDrainage> FormedDrainages { get; set; } = new List<FormedDrainage>();
 
