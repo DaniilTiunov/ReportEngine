@@ -68,6 +68,8 @@ public class ProjectService : IProjectService
 
         standModel.Id = addedStand.Id;
         standModel.ProjectId = addedStand.ProjectInfoId;
+        
+        
         _notificationService.ShowInfo("Стенд добавлен");
     }
 }

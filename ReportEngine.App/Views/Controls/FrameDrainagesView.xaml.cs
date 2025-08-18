@@ -19,7 +19,8 @@ public partial class FrameDrainagesView : UserControl
     {
         if (DataContext is ProjectViewModel viewModel)
         {
-            viewModel.LoadDataAsync();
+            viewModel.LoadDrainagesAsync();
+            viewModel.LoadFramesAsync();
         }
     }
 }

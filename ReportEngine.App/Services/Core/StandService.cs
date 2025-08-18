@@ -23,28 +23,16 @@ public class StandService : IStandService
         _formedDrainagesRepository = drainagesRepository;
         _notificationService = notificationService;
     }
-
-    public async Task LoadStandsDataAsync(IEnumerable<StandModel> standModels)
+    public async Task<IEnumerable<FormedFrame>> LoadAllAvailableFrameAsync()
     {
-        var frames = await _formedFrameRepository.GetAllAsync();
-        var drainages = await _formedDrainagesRepository.GetAllWithPurposesAsync();
-
-        foreach (var standModel in standModels)
-        {
-            var standFrames = await _projectRepository.GetAllFramesInStandAsync(standModel.Id);
-            var standDrainages = await _projectRepository.GetAllDrainagesInStandAsync(standModel.Id);
-
-            standModel.FramesInStand = new ObservableCollection<FormedFrame>(
-                standFrames.Select(sf => sf.Frame)
-            );
-            standModel.DrainagesInStand = new ObservableCollection<FormedDrainage>(
-                standDrainages.Select(sd => sd.Drainage)
-            );
-            standModel.AllAvailableFrames = new ObservableCollection<FormedFrame>(frames);
-            standModel.AllAvailableDrainages = new ObservableCollection<FormedDrainage>(drainages);
-        }
+        var frames = _formedFrameRepository.GetAllAsync();
+        return await frames;
     }
-
+    public async Task<IEnumerable<FormedDrainage>> LoadAllAvailableDrainagesAsync()
+    {
+        var drainages = _formedDrainagesRepository.GetAllWithPurposesAsync();
+        return await drainages;
+    }
     public async Task LoadObvyazkiInStandsAsync(IEnumerable<StandModel> standModels)
     {
         foreach (var standModel in standModels)
@@ -53,7 +41,22 @@ public class StandService : IStandService
             standModel.ObvyazkiInStand = new ObservableCollection<ObvyazkaInStand>(obvyazkiInStand);
         }
     }
+    public async Task LoadStandsDataAsync(IEnumerable<StandModel> standModels)
+    {
+        foreach (var standModel in standModels)
+        {
+            var standFrames = await _projectRepository.GetAllFramesInStandAsync(standModel.Id);
+            var standDrainages = await _projectRepository.GetAllDrainagesInStandAsync(standModel.Id);
 
+            standModel.FramesInStand.Clear();
+            foreach (var frame in standFrames.Select(sf => sf.Frame))
+                standModel.FramesInStand.Add(frame);
+
+            standModel.DrainagesInStand.Clear();
+            foreach (var drainage in standDrainages.Select(sd => sd.Drainage))
+                standModel.DrainagesInStand.Add(drainage);
+        }
+    }
     public async Task AddFrameToStandAsync(int standId, int frameId)
     {
         await _projectRepository.AddFrameToStandAsync(standId, frameId);

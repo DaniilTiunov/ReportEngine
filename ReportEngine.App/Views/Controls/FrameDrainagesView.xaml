@@ -17,7 +17,7 @@
         <StackPanel Grid.Column="0" Margin="10">
             <GroupBox Header="Доступные рамы">
                 <StackPanel>
-                    <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding CurrentStandModel.AllAvailableFrames}"
+                    <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding AllAvailableFrames}"
                               SelectedItem="{Binding CurrentStandModel.SelectedFrame}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay}" Header="Название" />
@@ -45,7 +45,7 @@
                 <TabControl>
                     <TabItem Header="Готовые дренажи">
                         <StackPanel>
-                            <DataGrid ItemsSource="{Binding CurrentStandModel.AllAvailableDrainages}"
+                            <DataGrid ItemsSource="{Binding AllAvailableDrainages}"
                                       SelectedItem="{Binding CurrentStandModel.SelectedDrainage}"
                                       AutoGenerateColumns="False">
                                 <DataGrid.Columns>

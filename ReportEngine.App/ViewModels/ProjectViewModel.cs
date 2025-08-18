@@ -38,7 +38,10 @@ public class ProjectViewModel : BaseViewModel
         InitializeTime();
         InitializeGenericCommands();
     }
-
+    
+    public ObservableCollection<FormedFrame> AllAvailableFrames { get; set; }
+    public ObservableCollection<FormedDrainage> AllAvailableDrainages { get; set; }
+    
     public StandModel CurrentStandModel { get; set; } = new();
     public ProjectModel CurrentProjectModel { get; set; } = new();
     public ProjectCommandProvider ProjectCommandProvider { get; set; } = new();
@@ -155,15 +158,13 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(CurrentProjectModel));
         OnPropertyChanged(nameof(CurrentStandModel));
     }
-
-    public async Task LoadDataAsync()
+    public async Task LoadStandsDataAsync()
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await _standService.LoadStandsDataAsync(CurrentProjectModel.Stands);
         });
     }
-
     public async Task LoadObvyazkiAsync()
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -171,7 +172,18 @@ public class ProjectViewModel : BaseViewModel
             await _standService.LoadObvyazkiInStandsAsync(CurrentProjectModel.Stands);
         });
     }
-
+    public async Task LoadFramesAsync()
+    {
+        var frames = await _standService.LoadAllAvailableFrameAsync();
+        AllAvailableFrames = new ObservableCollection<FormedFrame>(frames);
+        OnPropertyChanged(nameof(AllAvailableFrames));
+    }
+    public async Task LoadDrainagesAsync()
+    {
+        var drainages = await _standService.LoadAllAvailableDrainagesAsync();
+        AllAvailableDrainages = new ObservableCollection<FormedDrainage>(drainages);
+        OnPropertyChanged(nameof(AllAvailableDrainages));
+    }
     public async Task LoadProjectInfoAsync(int projectId)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -246,7 +258,6 @@ public class ProjectViewModel : BaseViewModel
         };
 
         await _standService.AddObvyazkaToStandAsync(CurrentProjectModel.SelectedStand.Id, entity);
-        CurrentStandModel.ObvyazkiInStand.Add(entity);
         CurrentProjectModel.SelectedStand.ObvyazkiInStand.Add(entity);
     }
 
@@ -320,7 +331,7 @@ public class ProjectViewModel : BaseViewModel
 
         CurrentProjectModel.Stands.Add(newStandModel);
         CurrentProjectModel.SelectedStand = newStandModel;
-
+        
         _notificationService.ShowInfo($"Стенд успешно добавлен! {addedStandEntity.Id}");
     }
 
@@ -381,8 +392,10 @@ public class ProjectViewModel : BaseViewModel
                 CurrentProjectModel.SelectedStand.Id,
                 CurrentStandModel.NewDrainage);
 
-            CurrentStandModel.AllAvailableDrainages.Add(CurrentStandModel.NewDrainage);
+            AllAvailableDrainages.Add(CurrentStandModel.NewDrainage);
             CurrentProjectModel.SelectedStand.DrainagesInStand.Add(CurrentStandModel.NewDrainage);
+            
+            OnPropertyChanged(nameof(AllAvailableDrainages));
             
             CurrentStandModel.NewDrainage = new FormedDrainage();
         }

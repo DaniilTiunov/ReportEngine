@@ -123,7 +123,7 @@
                 <Separator />
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllObvyazkiCommand}" Header="Обвязки" />
                 <Separator />
-                <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllDrainagesCommand}" Header="Дренжи" />
+                <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllDrainagesCommand}" Header="Дренажи" />
             </MenuItem>
             <MenuItem Header="Инструменты">
                 <MenuItem Click="ShowCalculator" Header="Калькулятор" />
