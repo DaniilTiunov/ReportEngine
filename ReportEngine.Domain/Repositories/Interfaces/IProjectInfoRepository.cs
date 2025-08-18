@@ -16,4 +16,12 @@ public interface IProjectInfoRepository : IBaseRepository<ProjectInfo>
     Task<IEnumerable<StandDrainage>> GetAllDrainagesInStandAsync(int standId);
 
     Task<IEnumerable<ObvyazkaInStand>> GetAllObvyazkiInStandAsync(int standId);
+
+    Task AddAdditionalEquipToStandAsync(int standId, int additionalEquipId);
+
+    Task AddElectricalComponentToStandAsync(int standId, int electricalComponentId);
+
+    Task<IEnumerable<StandElectricalComponent>> GetAllElectricalComponentsInStandAsync(int standId);
+
+    Task<IEnumerable<StandAdditionalEquip>> GetAllAdditionalEquipsInStandAsync(int standId);
 }

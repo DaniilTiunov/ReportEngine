@@ -8,13 +8,14 @@
     mc:Ignorable="av">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*" /> <!-- Справочник рам и дренажей -->
-            <ColumnDefinition Width="1*" /> <!-- Добавленные рамы и дренажи -->
+            <ColumnDefinition Width="2*" /> <!-- Справочник рам, дренажей и дополнительные секции -->
+            <ColumnDefinition Width="1*" /> <!-- Добавленные к стенду рамы и дренажи -->
             <ColumnDefinition Width="300" /> <!-- Список стендов -->
         </Grid.ColumnDefinitions>
 
-        <!-- Справочник рам и дренажей -->
+        <!-- Справочник рам, дренажей и дополнительные секции -->
         <StackPanel Grid.Column="0" Margin="10">
+            <!-- Доступные рамы -->
             <GroupBox Header="Доступные рамы">
                 <StackPanel>
                     <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding AllAvailableFrames}"
@@ -41,6 +42,8 @@
                     <Button Margin="5" Command="{Binding ProjectCommandProvider.AddFrameToStandCommand}" Content="Добавить раму" />
                 </StackPanel>
             </GroupBox>
+
+            <!-- Дренажи -->
             <GroupBox Header="Дренажи">
                 <TabControl>
                     <TabItem Header="Готовые дренажи">
@@ -82,6 +85,92 @@
                     </TabItem>
                 </TabControl>
             </GroupBox>
+
+            <!-- Дополнительные комплектующие -->
+            <GroupBox Header="Дополнительные комплектующие">
+                <TabControl>
+                    <TabItem Header="Готовые">
+                        <StackPanel>
+                            <DataGrid ItemsSource="{Binding AllAvailableElectricalComponents}"
+                                      SelectedItem="{Binding CurrentStandModel.SelectedDrainage}"
+                                      AutoGenerateColumns="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Binding="{Binding Name}" Header="Название" />
+                                </DataGrid.Columns>
+                                <DataGrid.RowDetailsTemplate>
+                                    <DataTemplate>
+                                        <DataGrid ItemsSource="{Binding Purposes}" AutoGenerateColumns="False" HeadersVisibility="Column">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
+                                                <DataGridTextColumn Binding="{Binding Material}" Header="Материал" />
+                                                <DataGridTextColumn Binding="{Binding Quantity}" Header="Длина" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </DataTemplate>
+                                </DataGrid.RowDetailsTemplate>
+                            </DataGrid>
+                            <Button Margin="5" Command="{Binding ProjectCommandProvider.AddDrainageToStandCommand}" Content="Добавить дренаж" />
+                        </StackPanel>
+                    </TabItem>
+                    <TabItem Header="Собрать">
+                        <StackPanel>
+                            <TextBox Margin="5" Text="{Binding CurrentStandModel.NewDrainage.Name, Mode=TwoWay}" />
+                            <DataGrid Margin="5" AutoGenerateColumns="False" CanUserAddRows="True"
+                                      ItemsSource="{Binding CurrentStandModel.NewDrainage.Purposes}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Назначение" />
+                                    <DataGridTextColumn Binding="{Binding Material, Mode=TwoWay}" Header="Материал" />
+                                    <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay}" Header="Длина (м)" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <Button Margin="5" Command="{Binding ProjectCommandProvider.AddCustomDrainageToStandCommand}" Content="Добавить собранный дренаж" />
+                        </StackPanel>
+                    </TabItem>
+                </TabControl>
+            </GroupBox>
+
+            <!-- Электрические компоненты -->
+            <GroupBox Header="Электрические компоненты">
+                <TabControl>
+                    <TabItem Header="Готовые">
+                        <StackPanel>
+                            <DataGrid ItemsSource="{Binding AllAvailableAdditionalEquips}"
+                                      SelectedItem="{Binding CurrentStandModel.SelectedDrainage}"
+                                      AutoGenerateColumns="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Binding="{Binding Name}" Header="Название" />
+                                </DataGrid.Columns>
+                                <DataGrid.RowDetailsTemplate>
+                                    <DataTemplate>
+                                        <DataGrid ItemsSource="{Binding Purposes}" AutoGenerateColumns="False" HeadersVisibility="Column">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
+                                                <DataGridTextColumn Binding="{Binding Material}" Header="Материал" />
+                                                <DataGridTextColumn Binding="{Binding Quantity}" Header="Длина" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </DataTemplate>
+                                </DataGrid.RowDetailsTemplate>
+                            </DataGrid>
+                            <Button Margin="5" Command="{Binding ProjectCommandProvider.AddDrainageToStandCommand}" Content="Добавить дренаж" />
+                        </StackPanel>
+                    </TabItem>
+                    <TabItem Header="Собрать">
+                        <StackPanel>
+                            <TextBox Margin="5" Text="{Binding CurrentStandModel.NewDrainage.Name, Mode=TwoWay}" />
+                            <DataGrid Margin="5" AutoGenerateColumns="False" CanUserAddRows="True"
+                                      ItemsSource="{Binding CurrentStandModel.NewDrainage.Purposes}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Назначение" />
+                                    <DataGridTextColumn Binding="{Binding Material, Mode=TwoWay}" Header="Материал" />
+                                    <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay}" Header="Длина (м)" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <Button Margin="5" Command="{Binding ProjectCommandProvider.AddCustomDrainageToStandCommand}" Content="Добавить собранный дренаж" />
+                        </StackPanel>
+                    </TabItem>
+                </TabControl>
+            </GroupBox>
         </StackPanel>
 
         <!-- Добавленные к стенду рамы и дренажи -->
@@ -92,6 +181,16 @@
                           SelectedItem="{Binding CurrentStandModel.SelectedFrame}" />
             </GroupBox>
             <GroupBox Header="Дренажи в стенде">
+                <ListView DisplayMemberPath="Name"
+                          ItemsSource="{Binding CurrentProjectModel.SelectedStand.DrainagesInStand}"
+                          SelectedItem="{Binding CurrentStandModel.SelectedDrainage}" />
+            </GroupBox>
+            <GroupBox Header="Электрические компоненты">
+                <ListView DisplayMemberPath="Name"
+                          ItemsSource="{Binding CurrentProjectModel.SelectedStand.DrainagesInStand}"
+                          SelectedItem="{Binding CurrentStandModel.SelectedDrainage}" />
+            </GroupBox>
+            <GroupBox Header="Доп. комплектующие">
                 <ListView DisplayMemberPath="Name"
                           ItemsSource="{Binding CurrentProjectModel.SelectedStand.DrainagesInStand}"
                           SelectedItem="{Binding CurrentStandModel.SelectedDrainage}" />
@@ -110,10 +209,10 @@
                           SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}">
                     <ListView.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Header="Создать копию на основе прототипа" 
+                            <MenuItem Header="Создать копию на основе прототипа"
                                       Command="{Binding EditStandCommand}"/>
                             <Separator />
-                            <MenuItem Header = "Удалить "></MenuItem>
+                            <MenuItem Header="Удалить"></MenuItem>
                         </ContextMenu>
                     </ListView.ContextMenu>
                     <ListView.View>

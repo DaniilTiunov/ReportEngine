@@ -27,4 +27,18 @@ public class FormedAdditionalEquipsRepository : IFormedAdditionalEquipsRepositor
         await _context.FormedAdditionalEquips.AddAsync(entity);
         await _context.SaveChangesAsync();
     }
+    public async Task<IEnumerable<FormedAdditionalEquip>> GetAllWithPurposesAsync()
+    {
+        return await _context.FormedAdditionalEquips
+            .Include(ae => ae.Purposes)
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
+    public async Task<FormedAdditionalEquip> GetByIdWithPurposesAsync(int id)
+    {
+        return await _context.FormedAdditionalEquips
+            .Include(ae => ae.Purposes)
+            .FirstOrDefaultAsync(ae => ae.Id == id);
+    }
 }

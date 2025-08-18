@@ -161,7 +161,44 @@ public class ProjectInfoRepository : IProjectInfoRepository
         await _context.Set<StandDrainage>().AddAsync(standDrainage);
         await _context.SaveChangesAsync();
     }
+    public async Task AddElectricalComponentToStandAsync(int standId, int electricalComponentId)
+    {
+        var stand = await _context.Stands.FirstOrDefaultAsync(s => s.Id == standId);
+        var electricalComponent = await _context.FormedElectricalComponents.FirstOrDefaultAsync(e => e.Id == electricalComponentId);
 
+        if (stand == null) throw new ArgumentException($"Стенд с ID: {standId} не найден.");
+        if (electricalComponent == null) throw new ArgumentException($"Электрокомпонент с ID: {electricalComponentId} не найден.");
+
+        var standElectricalComponent = new StandElectricalComponent
+        {
+            StandId = standId,
+            ElectricalComponentId = electricalComponentId,
+            Stand = stand,
+            ElectricalComponent = electricalComponent
+        };
+        
+        await _context.StandElectricalComponents.AddAsync(standElectricalComponent);
+        await _context.SaveChangesAsync();
+    }
+    public async Task AddAdditionalEquipToStandAsync(int standId, int additionalEquipId)
+    {
+        var stand = await _context.Stands.FirstOrDefaultAsync(s => s.Id == standId);
+        var additionalEquip = await _context.FormedAdditionalEquips.FirstOrDefaultAsync(a => a.Id == additionalEquipId);
+
+        if (stand == null) throw new ArgumentException($"Стенд с ID: {standId} не найден.");
+        if (additionalEquip == null) throw new ArgumentException($"Комплектующее с ID: {additionalEquipId} не найдено.");
+
+        var standAdditionalEquip = new StandAdditionalEquip
+        {
+            StandId = standId,
+            AdditionalEquipId = additionalEquipId,
+            Stand = stand,
+            AdditionalEquip = additionalEquip
+        };
+
+        await _context.StandAdditionalEquips.AddAsync(standAdditionalEquip);
+        await _context.SaveChangesAsync();
+    }
     public async Task<IEnumerable<StandDrainage>> GetAllDrainagesInStandAsync(int standId)
     {
         return await _context.Set<StandDrainage>()
@@ -177,5 +214,21 @@ public class ProjectInfoRepository : IProjectInfoRepository
             .FirstOrDefaultAsync(s => s.Id == standId);
 
         return stand?.ObvyazkiInStand ?? Enumerable.Empty<ObvyazkaInStand>();
+    }
+    
+    public async Task<IEnumerable<StandElectricalComponent>> GetAllElectricalComponentsInStandAsync(int standId)
+    {
+        return await _context.StandElectricalComponents
+            .Include(sec => sec.ElectricalComponent)
+            .Where(sec => sec.StandId == standId)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<StandAdditionalEquip>> GetAllAdditionalEquipsInStandAsync(int standId)
+    {
+        return await _context.StandAdditionalEquips
+            .Include(sae => sae.AdditionalEquip)
+            .Where(sae => sae.StandId == standId)
+            .ToListAsync();
     }
 }

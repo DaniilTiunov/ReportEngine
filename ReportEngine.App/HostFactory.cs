@@ -75,6 +75,8 @@ public class HostFactory
         services.AddScoped<IObvyazkaRepository, ObvyazkaRepository>();
         services.AddScoped<IFrameRepository, FormedFrameRepository>();
         services.AddScoped<IFormedDrainagesRepository, FormedDrainagesRepository>();
+        services.AddScoped<IFormedAdditionalEquipsRepository, FormedAdditionalEquipsRepository>();
+        services.AddScoped<IFormedElectricalRepository, FormedElectricalRepository>();
     }
 
     private static void ConfigureGenericRepositories(IServiceCollection services)

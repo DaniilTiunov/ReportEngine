@@ -27,4 +27,18 @@ public class FormedElectricalRepository : IFormedElectricalRepository
         await _context.FormedElectricalComponents.AddAsync(entity);
         await _context.SaveChangesAsync();
     }
+    public async Task<IEnumerable<FormedElectricalComponent>> GetAllWithPurposesAsync()
+    {
+        return await _context.FormedElectricalComponents
+            .Include(ec => ec.Purposes)
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
+    public async Task<FormedElectricalComponent> GetByIdWithPurposesAsync(int id)
+    {
+        return await _context.FormedElectricalComponents
+            .Include(ec => ec.Purposes)
+            .FirstOrDefaultAsync(ec => ec.Id == id);
+    }
 }

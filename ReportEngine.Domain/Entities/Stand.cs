@@ -36,5 +36,5 @@ public class Stand
     public virtual ICollection<ObvyazkaInStand> ObvyazkiInStand { get; set; } = new List<ObvyazkaInStand>();
     public virtual ICollection<StandDrainage> StandDrainages { get; set; } = new List<StandDrainage>();
     public virtual ICollection<StandAdditionalEquip> StandAdditionalEquips { get; set; } = new List<StandAdditionalEquip>();
-    public virtual ICollection<StandElectricalComponent> StandDevices { get; set; } = new List<StandElectricalComponent>();
+    public virtual ICollection<StandElectricalComponent> StandElectricalComponent { get; set; } = new List<StandElectricalComponent>();
 }

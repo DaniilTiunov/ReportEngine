@@ -39,9 +39,10 @@ public class ProjectViewModel : BaseViewModel
         InitializeGenericCommands();
     }
     
-    public ObservableCollection<FormedFrame> AllAvailableFrames { get; set; }
-    public ObservableCollection<FormedDrainage> AllAvailableDrainages { get; set; }
-    
+    public ObservableCollection<FormedFrame> AllAvailableFrames { get; set; } = new();
+    public ObservableCollection<FormedDrainage> AllAvailableDrainages { get; set; } = new();
+    public ObservableCollection<FormedElectricalComponent> AllAvailableElectricalComponents { get; set; } = new();
+    public ObservableCollection<FormedAdditionalEquip> AllAvailableAdditionalEquips { get; set; } = new();
     public StandModel CurrentStandModel { get; set; } = new();
     public ProjectModel CurrentProjectModel { get; set; } = new();
     public ProjectCommandProvider ProjectCommandProvider { get; set; } = new();
@@ -71,6 +72,10 @@ public class ProjectViewModel : BaseViewModel
             new RelayCommand(OnAddDrainageToStandExecuted, CanAllCommandsExecute);
         ProjectCommandProvider.AddCustomDrainageToStandCommand =
             new RelayCommand(OnAddCustomDrainageToStandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.AddCustomElectricalComponentToStandCommand =
+            new RelayCommand(OnAddCustomElectricalComponentToStandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.AddCustomAdditionalEquipToStandCommand =
+            new RelayCommand(OnAddCustomAdditionalEquipToStandExecuted, CanAllCommandsExecute);
     }
 
     public void InitializeGenericCommands()
@@ -145,7 +150,15 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(AddFrameToStandAsync);
     }
+    public async void OnAddCustomElectricalComponentToStandExecuted(object p)
+    {
+        await ExceptionHelper.SafeExecuteAsync(AddCustomElectricalComponentToStandAsync);
+    }
 
+    public async void OnAddCustomAdditionalEquipToStandExecuted(object p)
+    {
+        await ExceptionHelper.SafeExecuteAsync(AddCustomAdditionalEquipToStandAsync);
+    }
     #endregion
 
     #region Методы
@@ -183,6 +196,18 @@ public class ProjectViewModel : BaseViewModel
         var drainages = await _standService.LoadAllAvailableDrainagesAsync();
         AllAvailableDrainages = new ObservableCollection<FormedDrainage>(drainages);
         OnPropertyChanged(nameof(AllAvailableDrainages));
+    }
+    public async Task LoadElectricalComponentsAsync()
+    {
+        var electricalComponents = await _standService.LoadAllAvailableElectricalComponentsAsync();
+        AllAvailableElectricalComponents = new ObservableCollection<FormedElectricalComponent>(electricalComponents);
+        OnPropertyChanged(nameof(AllAvailableElectricalComponents));
+    }
+    public async Task LoadAdditionalEquipsAsync()
+    {
+        var additionalEquips = await _standService.LoadAllAvailableAdditionalEquipsAsync();
+        AllAvailableAdditionalEquips = new ObservableCollection<FormedAdditionalEquip>(additionalEquips);
+        OnPropertyChanged(nameof(AllAvailableAdditionalEquips));
     }
     public async Task LoadProjectInfoAsync(int projectId)
     {
@@ -398,6 +423,38 @@ public class ProjectViewModel : BaseViewModel
             OnPropertyChanged(nameof(AllAvailableDrainages));
             
             CurrentStandModel.NewDrainage = new FormedDrainage();
+        }
+    }
+    
+    private async Task AddCustomElectricalComponentToStandAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(CurrentStandModel.NewElectricalComponent.Name))
+        {
+            await _standService.AddCustomElectricalComponentAsync(
+                CurrentProjectModel.SelectedStand.Id,
+                CurrentStandModel.NewElectricalComponent);
+
+            AllAvailableElectricalComponents.Add(CurrentStandModel.NewElectricalComponent);
+            CurrentProjectModel.SelectedStand.ElectricalComponentsInStand.Add(CurrentStandModel.NewElectricalComponent);
+
+            OnPropertyChanged(nameof(AllAvailableElectricalComponents));
+            CurrentStandModel.NewElectricalComponent = new FormedElectricalComponent();
+        }
+    }
+
+    private async Task AddCustomAdditionalEquipToStandAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(CurrentStandModel.NewAdditionalEquip.Name))
+        {
+            await _standService.AddCustomAdditionalEquipAsync(
+                CurrentProjectModel.SelectedStand.Id,
+                CurrentStandModel.NewAdditionalEquip);
+
+            AllAvailableAdditionalEquips.Add(CurrentStandModel.NewAdditionalEquip);
+            CurrentProjectModel.SelectedStand.AdditionalEquipsInStand.Add(CurrentStandModel.NewAdditionalEquip);
+
+            OnPropertyChanged(nameof(AllAvailableAdditionalEquips));
+            CurrentStandModel.NewAdditionalEquip = new FormedAdditionalEquip();
         }
     }
     #endregion

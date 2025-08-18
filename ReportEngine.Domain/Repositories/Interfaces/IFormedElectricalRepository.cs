@@ -5,6 +5,7 @@ namespace ReportEngine.Domain.Repositories.Interfaces;
 public interface IFormedElectricalRepository
 {
     Task<IEnumerable<FormedElectricalComponent>> GetAllAsync();
-    
     Task AddAsync(FormedElectricalComponent entity);
+    Task<IEnumerable<FormedElectricalComponent>> GetAllWithPurposesAsync();
+    Task<FormedElectricalComponent> GetByIdWithPurposesAsync(int id);
 }

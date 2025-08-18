@@ -235,10 +235,54 @@ public class StandModel : BaseViewModel
         get => _newDrainage;
         set => Set(ref _newDrainage, value);
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    private ObservableCollection<FormedElectricalComponent> _electricalComponentsInStand = new();
+    private ObservableCollection<FormedAdditionalEquip> _additionalEquipsInStand = new();
+    private FormedElectricalComponent _selectedElectricalComponent;
+    private FormedAdditionalEquip _selectedAdditionalEquip;
+    private FormedElectricalComponent _newElectricalComponent = new();
+    private FormedAdditionalEquip _newAdditionalEquip = new();
 
-    public FormedFrameModel FormedFrameComponents
+    public ObservableCollection<FormedElectricalComponent> ElectricalComponentsInStand
     {
-        get => _formedFrameComponents;
-        set => Set(ref _formedFrameComponents, value);
+        get => _electricalComponentsInStand;
+        set => Set(ref _electricalComponentsInStand, value);
+    }
+
+    public ObservableCollection<FormedAdditionalEquip> AdditionalEquipsInStand
+    {
+        get => _additionalEquipsInStand;
+        set => Set(ref _additionalEquipsInStand, value);
+    }
+
+    public FormedElectricalComponent SelectedElectricalComponent
+    {
+        get => _selectedElectricalComponent;
+        set => Set(ref _selectedElectricalComponent, value);
+    }
+
+    public FormedAdditionalEquip SelectedAdditionalEquip
+    {
+        get => _selectedAdditionalEquip;
+        set => Set(ref _selectedAdditionalEquip, value);
+    }
+
+    public FormedElectricalComponent NewElectricalComponent
+    {
+        get => _newElectricalComponent;
+        set => Set(ref _newElectricalComponent, value);
+    }
+
+    public FormedAdditionalEquip NewAdditionalEquip
+    {
+        get => _newAdditionalEquip;
+        set => Set(ref _newAdditionalEquip, value);
     }
 }

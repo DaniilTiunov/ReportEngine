@@ -21,6 +21,8 @@ public partial class FrameDrainagesView : UserControl
         {
             viewModel.LoadDrainagesAsync();
             viewModel.LoadFramesAsync();
+            viewModel.LoadAdditionalEquipsAsync();
+            viewModel.LoadElectricalComponentsAsync();
         }
     }
 }
