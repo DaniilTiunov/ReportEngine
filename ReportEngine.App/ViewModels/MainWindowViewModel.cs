@@ -78,7 +78,7 @@ public class MainWindowViewModel : BaseViewModel
         MainWindowCommandProvider.OpenTreeViewCommand =
             new RelayCommand(OpenAnotherControlsCommandExecuted<TreeProjectView>, CanAllCommandsExecute);
         MainWindowCommandProvider.ChekDbConnectionCommand =
-            new RelayCommand(OnChekDbConnectionCommandExecuted, CanAllCommandsExecute);
+            new RelayCommand(OnCheckDbConnectionCommandExecuted, CanAllCommandsExecute);
         MainWindowCommandProvider.ShowAllProjectsCommand =
             new RelayCommand(OnShowAllProjectsCommandExecuted, CanAllCommandsExecute);
         MainWindowCommandProvider.DeleteSelectedProjectCommand =
@@ -207,7 +207,7 @@ public class MainWindowViewModel : BaseViewModel
         Application.Current.Shutdown();
     }
 
-    public void OnChekDbConnectionCommandExecuted(object e)
+    public void OnCheckDbConnectionCommandExecuted(object e)
     {
         using var scope = _serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<ReAppContext>();
@@ -230,9 +230,11 @@ public class MainWindowViewModel : BaseViewModel
     {
         var currentProject = MainWindowModel.SelectedProject;
 
-        await ExceptionHelper.SafeExecuteAsync(() => _projectRepository.DeleteAsync(currentProject));
-
-        OnShowAllProjectsCommandExecuted(e);
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await _projectRepository.DeleteAsync(currentProject);
+            OnShowAllProjectsCommandExecuted(e);
+        });
     }
 
     #endregion
