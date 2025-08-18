@@ -45,10 +45,13 @@ public class StandService : IStandService
         }
     }
 
-    public async Task LoadObvyazkiInStandAsync(StandModel standModel)
+    public async Task LoadObvyazkiInStandsAsync(IEnumerable<StandModel> standModels)
     {
-        var obvyazkiInStand = await _projectRepository.GetAllObvyazkiInStandAsync(standModel.Id);
-        standModel.ObvyazkiInStand = new ObservableCollection<ObvyazkaInStand>(obvyazkiInStand);
+        foreach (var standModel in standModels)
+        {
+            var obvyazkiInStand = await _projectRepository.GetAllObvyazkiInStandAsync(standModel.Id);
+            standModel.ObvyazkiInStand = new ObservableCollection<ObvyazkaInStand>(obvyazkiInStand);
+        }
     }
 
     public async Task AddFrameToStandAsync(int standId, int frameId)

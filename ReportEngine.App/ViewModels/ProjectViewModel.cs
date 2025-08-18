@@ -168,7 +168,7 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            await _standService.LoadObvyazkiInStandAsync(CurrentStandModel);
+            await _standService.LoadObvyazkiInStandsAsync(CurrentProjectModel.Stands);
         });
     }
 
@@ -354,12 +354,10 @@ public class ProjectViewModel : BaseViewModel
         {
             await _standService.AddFrameToStandAsync(
                 CurrentProjectModel.SelectedStand.Id,
-                CurrentStandModel.SelectedFrame.Id // теперь передаём только Id рамы
+                CurrentStandModel.SelectedFrame.Id
             );
 
-            CurrentStandModel.FramesInStand.Add(CurrentStandModel.SelectedFrame);
             CurrentProjectModel.SelectedStand.FramesInStand.Add(CurrentStandModel.SelectedFrame);
-            OnPropertyChanged(nameof(CurrentStandModel.FramesInStand));
         }
     }
 
@@ -371,7 +369,6 @@ public class ProjectViewModel : BaseViewModel
                 CurrentProjectModel.SelectedStand.Id,
                 CurrentStandModel.SelectedDrainage.Id);
 
-            CurrentStandModel.DrainagesInStand.Add(CurrentStandModel.SelectedDrainage);
             CurrentProjectModel.SelectedStand.DrainagesInStand.Add(CurrentStandModel.SelectedDrainage);
         }
     }

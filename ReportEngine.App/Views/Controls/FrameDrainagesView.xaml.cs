@@ -17,6 +17,9 @@ public partial class FrameDrainagesView : UserControl
 
     private void FrameDrainagesView_Loaded(object sender, RoutedEventArgs e)
     {
-        if (DataContext is ProjectViewModel viewModel) viewModel.LoadDataAsync();
+        if (DataContext is ProjectViewModel viewModel)
+        {
+            viewModel.LoadDataAsync();
+        }
     }
 }
