@@ -33,6 +33,7 @@ public class StandService : IStandService
         var drainages = _formedDrainagesRepository.GetAllWithPurposesAsync();
         return await drainages;
     }
+    
     public async Task LoadObvyazkiInStandsAsync(IEnumerable<StandModel> standModels)
     {
         foreach (var standModel in standModels)

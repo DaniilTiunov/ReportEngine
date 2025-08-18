@@ -13,4 +13,8 @@ public interface IStandService
     Task LoadObvyazkiInStandsAsync(IEnumerable<StandModel> standModels);
     Task<IEnumerable<FormedFrame>> LoadAllAvailableFrameAsync();
     Task<IEnumerable<FormedDrainage>> LoadAllAvailableDrainagesAsync();
+    Task<IEnumerable<FormedElectricalComponent>> LoadAllAvailableElectricalComponentsAsync();
+    Task<IEnumerable<FormedAdditionalEquip>> LoadAllAvailableAdditionalEquipsAsync();
+    Task AddElectricalComponentToStandAsync(int standId, int electricalComponentId);
+    Task AddAdditionalEquipToStandAsync(int standId, int additionalEquipId);
 }
