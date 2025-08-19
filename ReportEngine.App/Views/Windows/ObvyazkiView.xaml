@@ -15,127 +15,97 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="3*" /> <!-- Область для списка картинок -->
+            <ColumnDefinition Width="Auto" /> <!-- Разделитель -->
+            <ColumnDefinition Width="1.5*" /> <!-- Область для деталей выбранной картинки -->
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
 
-        <!--  Заголовок  -->
-        <TextBlock
-            Grid.Row="0"
-            Grid.Column="0"
-            Margin="10"
-            HorizontalAlignment="Center"
-            FontSize="16"
-            FontWeight="Bold"
-            Text="Список обвязок" />
+        <!-- Список больших картинок (слева) -->
+        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
+            <ItemsControl
+                Margin="10"
+                ItemsSource="{Binding CurrentObvyazka.Obvyazki}"
+                >
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border
+                            Margin="10"
+                            Background="WhiteSmoke"
+                            BorderBrush="LightGray"
+                            BorderThickness="1"
+                            CornerRadius="5">
+                            <Image
+                                Width="250"
+                                Height="250"
+                                Source="{Binding ImageName, Converter={StaticResource ObvyazkaImagePathConverter}}"
+                                Stretch="Uniform"/>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
 
-        <!--  Основная таблица  -->
-        <DataGrid
-            x:Name="ObyazkiDataGrid"
-            Grid.Row="1"
-            Grid.Column="0"
-            Margin="10"
-            AutoGenerateColumns="False"
-            CanUserAddRows="True"
-            CanUserDeleteRows="True"
-            CanUserReorderColumns="False"
-            CanUserSortColumns="True"
-            FontSize="14"
-            HorizontalScrollBarVisibility="Auto"
-            ItemsSource="{Binding CurrentObvyazka.Obvyazki, Mode=TwoWay}"
-            RowHeaderWidth="0"
-            RowHeight="100"
-            SelectedItem="{Binding CurrentObvyazka.SelectedObvyazka, Mode=TwoWay}"
-            SelectionUnit="FullRow"
-            VerticalScrollBarVisibility="Auto">
+        <!-- Разделитель -->
+        <GridSplitter
+            Grid.Column="1"
+            Width="5"
+            Background="LightGray"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch" />
 
-            <DataGrid.Columns>
-                <!--  Столбец с изображением  -->
-                <DataGridTemplateColumn
-                    Width="200"
-                    Header="Изображение"
-                    IsReadOnly="True">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Border
-                                Margin="1"
-                                Background="WhiteSmoke"
-                                BorderBrush="LightGray"
-                                BorderThickness="1"
-                                CornerRadius="5">
-                                <Image
-                                    Width="80"
-                                    Height="240"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Source="{Binding ImageName, Converter={StaticResource ObvyazkaImagePathConverter}}"
-                                    Stretch="Uniform" />
-                            </Border>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+        <!-- Детали выбранной обвязки (справа) -->
+        <Border Grid.Column="2" Margin="10" Background="WhiteSmoke">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <!-- Уменьшенная картинка -->
+                <Image Grid.Row="0"
+                       Margin="10"
+                       Width="200"
+                       Height="200"
+                       Source="{Binding CurrentObvyazka.SelectedObvyazka.ImageName, Converter={StaticResource ObvyazkaImagePathConverter}}"
+                       Stretch="Uniform"
+                       HorizontalAlignment="Center"/>
+                
+                <!-- Детали обвязки -->
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="10">
+                        <StackPanel.Resources>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="FontSize" Value="14" />
+                                <Setter Property="Margin" Value="0,5" />
+                            </Style>
+                        </StackPanel.Resources>
 
-                <!--  Остальные столбцы  -->
-                <DataGridTextColumn
-                    Width="Auto"
-                    Binding="{Binding Number}"
-                    Header="Номер" />
-                <DataGridTextColumn
-                    Width="Auto"
-                    Binding="{Binding LineLength}"
-                    Header="Длина линии" />
-                <DataGridTextColumn
-                    Width="Auto"
-                    Binding="{Binding ZraCount}"
-                    Header="Кол-во ЗРА" />
-                <DataGridTextColumn
-                    Width="Auto"
-                    Binding="{Binding TreeSocket}"
-                    Header="Тройники" />
-                <DataGridTextColumn
-                    Width="Auto"
-                    Binding="{Binding Sensor}"
-                    Header="Датчики" />
-                <DataGridTextColumn
-                    Width="Auto"
-                    Binding="{Binding SensorType}"
-                    Header="Тип датчиков" />
-                <DataGridTextColumn
-                    Width="Auto"
-                    Binding="{Binding Clamp}"
-                    Header="Хомуты" />
-                <DataGridTextColumn
-                    Width="Auto"
-                    Binding="{Binding WidthOnFrame}"
-                    Header="Длина на раме" />
-                <DataGridTextColumn
-                    Width="Auto"
-                    Binding="{Binding OtherLineCount}"
-                    Header="Др. линии" />
-                <DataGridTextColumn
-                    Width="Auto"
-                    Binding="{Binding Weight}"
-                    Header="Масса" />
-                <DataGridTextColumn
-                    Width="Auto"
-                    Binding="{Binding HumanCost}"
-                    Header="Трудозатраты" />
-            </DataGrid.Columns>
-            <DataGrid.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Command="{Binding ShowAllObvyazkaCommand}" Header="Показать всех" />
-                    <Separator />
-                    <MenuItem Command="{Binding SaveUserCommand}" Header="Сохранить изменения" />
-                    <MenuItem Command="{Binding AddNewUserCommand}" Header="Добавить" />
-                    <Separator />
-                    <MenuItem Command="{Binding DeleteUserCommand}" Header="Удалить" />
-                </ContextMenu>
-            </DataGrid.ContextMenu>
-        </DataGrid>
+                        <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.Number, StringFormat='Номер: {0}'}" />
+                        <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.LineLength, StringFormat='Длина линии: {0}'}" />
+                        <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.ZraCount, StringFormat='Кол-во ЗРА: {0}'}" />
+                        <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.TreeSocket, StringFormat='Тройники: {0}'}" />
+                        <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.Sensor, StringFormat='Датчики: {0}'}" />
+                        <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.SensorType, StringFormat='Тип датчиков: {0}'}" />
+                        <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.Clamp, StringFormat='Хомуты: {0}'}" />
+                        <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.WidthOnFrame, StringFormat='Длина на раме: {0}'}" />
+                        <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.OtherLineCount, StringFormat='Др. линии: {0}'}" />
+                        <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.Weight, StringFormat='Масса: {0}'}" />
+                        <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.HumanCost, StringFormat='Трудозатраты: {0}'}" />
+                    </StackPanel>
+                </ScrollViewer>
+                
+                <!-- Кнопки действий -->
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10">
+                    <Button Content="Сохранить" Command="{Binding SaveUserCommand}" Margin="5" Padding="10,5"/>
+                    <Button Content="Удалить" Command="{Binding DeleteUserCommand}" Margin="5" Padding="10,5"/>
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </Window>

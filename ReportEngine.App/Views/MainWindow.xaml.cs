@@ -29,11 +29,8 @@ public partial class MainWindow : Window //Это так называемый "C
 
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
-        {
-            await _mainViewModel.ShowAllProjectsAsync();
-            await _mainViewModel.CheckDbConnectionAsync();
-        });
+        await _mainViewModel.ShowAllProjectsAsync();
+        await _mainViewModel.CheckDbConnectionAsync();
     }
     private void CheckForUpdates(object sender, RoutedEventArgs e)
     {

@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Views.Windows;
@@ -16,7 +18,7 @@ public partial class ObvyazkiView : Window
 
         obvyazkiViewModel.OnShowAllObvyazkiCommandExecuted(null);
     }
-
+    
     private void Window_Closing(object sender, CancelEventArgs e)
     {
         e.Cancel = true;
