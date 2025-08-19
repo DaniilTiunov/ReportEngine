@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Windows;
+using Microsoft.Extensions.Configuration;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.Views;
 using ReportEngine.App.Views.UpdateInformation;
@@ -16,15 +17,24 @@ namespace ReportEngine.App;
 /// </summary>
 public partial class MainWindow : Window //Это так называемый "Code Behind" файл для MainWindow.xaml
 {
+    private readonly MainWindowViewModel _mainViewModel;
     public MainWindow(MainWindowViewModel mainViewModel)
     {
         InitializeComponent();
         DataContext = mainViewModel;
+        _mainViewModel = mainViewModel;
 
-        mainViewModel.OnShowAllProjectsCommandExecuted(null);
-        mainViewModel.OnCheckDbConnectionCommandExecuted(null);
+        Loaded += MainWindow_Loaded;
     }
 
+    private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await _mainViewModel.ShowAllProjectsAsync();
+            await _mainViewModel.CheckDbConnectionAsync();
+        });
+    }
     private void CheckForUpdates(object sender, RoutedEventArgs e)
     {
         ExceptionHelper.SafeExecute(() =>

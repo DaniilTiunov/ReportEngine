@@ -19,7 +19,7 @@ public abstract class BaseViewModel : INotifyPropertyChanged
     ///     Вызывает событие PropertyChanged для уведомления об изменении свойства.
     /// </summary>
     /// <param name="propertyName">Имя свойства, которое изменилось. Автоматически определяется компилятором.</param>
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
     {
         // Вызываем событие PropertyChanged, передавая имя изменившегося свойства
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -33,7 +33,7 @@ public abstract class BaseViewModel : INotifyPropertyChanged
     /// <param name="value">Новое значение для поля.</param>
     /// <param name="propertyName">Имя свойства, которое изменилось. Автоматически определяется компилятором.</param>
     /// <returns>Возвращает true, если значение было изменено; в противном случае — false.</returns>
-    protected virtual bool Set<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+    public virtual bool Set<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
     {
         // Проверяем, равно ли текущее значение поля новому значению
         if (Equals(field, value))

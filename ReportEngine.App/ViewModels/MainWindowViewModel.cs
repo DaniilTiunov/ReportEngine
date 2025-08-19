@@ -207,35 +207,37 @@ public class MainWindowViewModel : BaseViewModel
         Application.Current.Shutdown();
     }
 
-    public void OnCheckDbConnectionCommandExecuted(object e)
+    public async void OnCheckDbConnectionCommandExecuted(object e)
     {
-        using var scope = _serviceProvider.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<ReAppContext>();
-
-        MainWindowModel.IsConnected = context.Database.CanConnect();
-        MainWindowModel.ConnectionStatusMessage =
-            MainWindowModel.IsConnected ? "Соединение установлено" : "Соединение не установлено";
+        await ExceptionHelper.SafeExecuteAsync(CheckDbConnectionAsync);
     }
 
     public async void OnShowAllProjectsCommandExecuted(object e)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
-        {
-            var projects = await _projectRepository.GetAllAsync();
-            MainWindowModel.AllProjects = new ObservableCollection<ProjectInfo>(projects);
-        });
+        await ExceptionHelper.SafeExecuteAsync(ShowAllProjectsAsync);
     }
 
     public async void OnDeleteSelectedProjectExecuted(object e)
     {
-        var currentProject = MainWindowModel.SelectedProject;
-
-        await ExceptionHelper.SafeExecuteAsync(async () =>
-        {
-            await _projectRepository.DeleteAsync(currentProject);
-            OnShowAllProjectsCommandExecuted(e);
-        });
+        await ExceptionHelper.SafeExecuteAsync(DeleteSelectedProjectAsync);
     }
-
+    public async Task CheckDbConnectionAsync()
+    {
+        var context = _serviceProvider.GetRequiredService<ReAppContext>();
+        MainWindowModel.IsConnected = context.Database.CanConnect();
+        MainWindowModel.ConnectionStatusMessage =
+            MainWindowModel.IsConnected ? "Соединение установлено" : "Соединение не установлено";
+    }
+    public async Task ShowAllProjectsAsync()
+    {
+        var projects = await _projectRepository.GetAllAsync();
+        MainWindowModel.AllProjects = new ObservableCollection<ProjectInfo>(projects);
+    }
+    public async Task DeleteSelectedProjectAsync()
+    {
+        var currentProject = MainWindowModel.SelectedProject;
+        await _projectRepository.DeleteAsync(currentProject);
+        await ShowAllProjectsAsync();
+    }
     #endregion
 }

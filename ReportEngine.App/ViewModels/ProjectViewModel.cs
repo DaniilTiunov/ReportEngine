@@ -21,18 +21,22 @@ public class ProjectViewModel : BaseViewModel
     private readonly INotificationService _notificationService;
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IStandService _standService;
+    private readonly IProjectService _projectService;
+    private readonly IProjectDataLoaderService _projectDataLoaderService;
 
     public ProjectViewModel(IProjectInfoRepository projectRepository,
         IDialogService dialogService,
         INotificationService notificationService,
-        IFrameRepository formedFrameRepository,
-        IFormedDrainagesRepository formedDrainagesRepository,
-        IStandService standService)
+        IStandService standService,
+        IProjectService projectService,
+        IProjectDataLoaderService projectDataLoaderService)
     {
         _projectRepository = projectRepository;
         _dialogService = dialogService;
         _notificationService = notificationService;
         _standService = standService;
+        _projectService = projectService;
+        _projectDataLoaderService = projectDataLoaderService;
 
         InitializeCommands();
         InitializeTime();
@@ -173,7 +177,7 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(CurrentProjectModel));
         OnPropertyChanged(nameof(CurrentStandModel));
     }
-
+    
     public async Task LoadStandsDataAsync()
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -190,32 +194,12 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async Task LoadFramesAsync()
+    public async Task LoadAllAvaileDataAsync()
     {
-        var frames = await _standService.LoadAllAvailableFrameAsync();
-        AllAvailableFrames = new ObservableCollection<FormedFrame>(frames);
-        OnPropertyChanged(nameof(AllAvailableFrames));
-    }
-
-    public async Task LoadDrainagesAsync()
-    {
-        var drainages = await _standService.LoadAllAvailableDrainagesAsync();
-        AllAvailableDrainages = new ObservableCollection<FormedDrainage>(drainages);
-        OnPropertyChanged(nameof(AllAvailableDrainages));
-    }
-
-    public async Task LoadElectricalComponentsAsync()
-    {
-        var electricalComponents = await _standService.LoadAllAvailableElectricalComponentsAsync();
-        AllAvailableElectricalComponents = new ObservableCollection<FormedElectricalComponent>(electricalComponents);
-        OnPropertyChanged(nameof(AllAvailableElectricalComponents));
-    }
-
-    public async Task LoadAdditionalEquipsAsync()
-    {
-        var additionalEquips = await _standService.LoadAllAvailableAdditionalEquipsAsync();
-        AllAvailableAdditionalEquips = new ObservableCollection<FormedAdditionalEquip>(additionalEquips);
-        OnPropertyChanged(nameof(AllAvailableAdditionalEquips));
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await _projectDataLoaderService.LoadAllAvailDataToViewModel(this);
+        });
     }
 
     public async Task LoadProjectInfoAsync(int projectId)
@@ -302,31 +286,8 @@ public class ProjectViewModel : BaseViewModel
             _notificationService.ShowInfo("Сначала создайте проект");
             return;
         }
-
-        var projectInfo = new ProjectInfo
-        {
-            Id = CurrentProjectModel.CurrentProjectId,
-            Number = CurrentProjectModel.Number,
-            Description = CurrentProjectModel.Description,
-            CreationDate = DateOnly.FromDateTime(CurrentProjectModel.CreationDate),
-            Company = CurrentProjectModel.Company,
-            Object = CurrentProjectModel.Object,
-            StandCount = CurrentProjectModel.StandCount,
-            Cost = CurrentProjectModel.Cost,
-            HumanCost = CurrentProjectModel.HumanCost,
-            Manager = CurrentProjectModel.Manager,
-            Status = ComboBoxHelper.ComboBoxChangedValue<ProjectStatus>(CurrentProjectModel.Status),
-            StartDate = DateOnly.FromDateTime(CurrentProjectModel.StartDate),
-            OutOfProduction = DateOnly.FromDateTime(CurrentProjectModel.OutOfProduction),
-            EndDate = DateOnly.FromDateTime(CurrentProjectModel.EndDate),
-            OrderCustomer = CurrentProjectModel.OrderCustomer,
-            RequestProduction = CurrentProjectModel.RequestProduction,
-            MarkMinus = CurrentProjectModel.MarkMinus,
-            MarkPlus = CurrentProjectModel.MarkPlus,
-            IsGalvanized = CurrentProjectModel.IsGalvanized
-        };
-        await _projectRepository.UpdateAsync(projectInfo);
-        _notificationService.ShowInfo("Изменения успешно сохранены!");
+        
+        await _projectService.UpdateProjectAsync(CurrentProjectModel);
     }
 
     private async Task AddNewStandToProjectAsync()
@@ -371,16 +332,12 @@ public class ProjectViewModel : BaseViewModel
 
     private async Task CreateNewProjectCardAsync()
     {
-        var newProjectCard = CurrentProjectModel.CreateNewProjectCard();
-
-        await _projectRepository.AddAsync(newProjectCard);
-
-        CurrentProjectModel.CurrentProjectId = newProjectCard.Id;
+        // Вызов сервиса вместо репозитория
+        await _projectService.CreateProjectAsync(CurrentProjectModel);
+    
+        // Остальная логика остается без изменений
         CurrentProjectModel.Stands.Clear();
         CurrentStandModel = new StandModel();
-
-        _notificationService.ShowInfo(
-            $"Новая карточка проекта успешно создана!\nId Проекта: {CurrentProjectModel.CurrentProjectId}");
     }
 
     private void SelectEquipment<T>(Action<string> setProperty)

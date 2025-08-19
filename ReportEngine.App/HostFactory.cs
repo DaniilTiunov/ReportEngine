@@ -127,6 +127,7 @@ public class HostFactory
         services.AddSingleton<INotificationService, NotificationService>();
         services.AddScoped<IStandService, StandService>();
         services.AddScoped<IProjectService, ProjectService>();
+        services.AddScoped<IProjectDataLoaderService, ProjectDataLoaderSerive>();
     }
 
     private static void ConfigureViewModels(IServiceCollection services)
