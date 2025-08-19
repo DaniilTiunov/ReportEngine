@@ -13,5 +13,6 @@ public class FormedElectricalComponent
 
     public virtual ICollection<ElectricalPurpose> Purposes { get; set; } = new List<ElectricalPurpose>();
 
-    public virtual ICollection<StandElectricalComponent> StandElectricalComponents { get; set; } = new List<StandElectricalComponent>();
+    public virtual ICollection<StandElectricalComponent> StandElectricalComponents { get; set; } =
+        new List<StandElectricalComponent>();
 }

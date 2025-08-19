@@ -13,5 +13,6 @@ public class FormedAdditionalEquip
 
     public virtual ICollection<AdditionalEquipPurpose> Purposes { get; set; } = new List<AdditionalEquipPurpose>();
 
-    public virtual ICollection<StandAdditionalEquip> StandAdditionalEquips { get; set; } = new List<StandAdditionalEquip>();
+    public virtual ICollection<StandAdditionalEquip> StandAdditionalEquips { get; set; } =
+        new List<StandAdditionalEquip>();
 }

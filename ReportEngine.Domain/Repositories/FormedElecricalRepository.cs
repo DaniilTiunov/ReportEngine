@@ -27,6 +27,7 @@ public class FormedElectricalRepository : IFormedElectricalRepository
         await _context.FormedElectricalComponents.AddAsync(entity);
         await _context.SaveChangesAsync();
     }
+
     public async Task<IEnumerable<FormedElectricalComponent>> GetAllWithPurposesAsync()
     {
         return await _context.FormedElectricalComponents

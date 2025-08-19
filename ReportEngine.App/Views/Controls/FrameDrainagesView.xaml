@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:av="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModels="clr-namespace:ReportEngine.App.ViewModels"
     Loaded="FrameDrainagesView_Loaded"
     mc:Ignorable="av">
     <Grid Margin="10">
@@ -29,8 +28,9 @@
                         </DataGrid.Columns>
                         <DataGrid.RowDetailsTemplate>
                             <DataTemplate>
-                                <DataGrid ItemsSource="{Binding CurrentStandModel.FormedFrameComponents.DisplayedComponents}"
-                                          AutoGenerateColumns="True" HeadersVisibility="Column">
+                                <DataGrid
+                                    ItemsSource="{Binding CurrentStandModel.FormedFrameComponents.DisplayedComponents}"
+                                    AutoGenerateColumns="True" HeadersVisibility="Column">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding Component.Name}" Header="Наименование" />
                                         <DataGridTextColumn Binding="{Binding Count}" Header="ШТ" />
@@ -40,7 +40,8 @@
                             </DataTemplate>
                         </DataGrid.RowDetailsTemplate>
                     </DataGrid>
-                    <Button Margin="5" Command="{Binding ProjectCommandProvider.AddFrameToStandCommand}" Content="Добавить раму" />
+                    <Button Margin="5" Command="{Binding ProjectCommandProvider.AddFrameToStandCommand}"
+                            Content="Добавить раму" />
                 </StackPanel>
             </GroupBox>
 
@@ -57,7 +58,8 @@
                                 </DataGrid.Columns>
                                 <DataGrid.RowDetailsTemplate>
                                     <DataTemplate>
-                                        <DataGrid ItemsSource="{Binding Purposes}" AutoGenerateColumns="False" HeadersVisibility="Column">
+                                        <DataGrid ItemsSource="{Binding Purposes}" AutoGenerateColumns="False"
+                                                  HeadersVisibility="Column">
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
                                                 <DataGridTextColumn Binding="{Binding Material}" Header="Материал" />
@@ -67,7 +69,8 @@
                                     </DataTemplate>
                                 </DataGrid.RowDetailsTemplate>
                             </DataGrid>
-                            <Button Margin="5" Command="{Binding ProjectCommandProvider.AddDrainageToStandCommand}" Content="Добавить дренаж" />
+                            <Button Margin="5" Command="{Binding ProjectCommandProvider.AddDrainageToStandCommand}"
+                                    Content="Добавить дренаж" />
                         </StackPanel>
                     </TabItem>
                     <TabItem Header="Собрать дренаж">
@@ -81,7 +84,9 @@
                                     <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay}" Header="Длина (м)" />
                                 </DataGrid.Columns>
                             </DataGrid>
-                            <Button Margin="5" Command="{Binding ProjectCommandProvider.AddCustomDrainageToStandCommand}" Content="Добавить собранный дренаж" />
+                            <Button Margin="5"
+                                    Command="{Binding ProjectCommandProvider.AddCustomDrainageToStandCommand}"
+                                    Content="Добавить собранный дренаж" />
                         </StackPanel>
                     </TabItem>
                 </TabControl>
@@ -100,7 +105,8 @@
                                 </DataGrid.Columns>
                                 <DataGrid.RowDetailsTemplate>
                                     <DataTemplate>
-                                        <DataGrid ItemsSource="{Binding Purposes}" AutoGenerateColumns="False" HeadersVisibility="Column">
+                                        <DataGrid ItemsSource="{Binding Purposes}" AutoGenerateColumns="False"
+                                                  HeadersVisibility="Column">
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
                                                 <DataGridTextColumn Binding="{Binding Material}" Header="Материал" />
@@ -110,7 +116,9 @@
                                     </DataTemplate>
                                 </DataGrid.RowDetailsTemplate>
                             </DataGrid>
-                            <Button Margin="5" Command="{Binding ProjectCommandProvider.AddCustomAdditionalEquipToStandCommand }" Content="Добавить дренаж" />
+                            <Button Margin="5"
+                                    Command="{Binding ProjectCommandProvider.AddCustomAdditionalEquipToStandCommand }"
+                                    Content="Добавить дренаж" />
                         </StackPanel>
                     </TabItem>
                     <TabItem Header="Собрать">
@@ -124,7 +132,9 @@
                                     <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay}" Header="Длина (м)" />
                                 </DataGrid.Columns>
                             </DataGrid>
-                            <Button Margin="5" Command="{Binding ProjectCommandProvider.AddCustomAdditionalEquipToStandCommand}" Content="Добавить собранный дренаж" />
+                            <Button Margin="5"
+                                    Command="{Binding ProjectCommandProvider.AddCustomAdditionalEquipToStandCommand}"
+                                    Content="Добавить собранный дренаж" />
                         </StackPanel>
                     </TabItem>
                 </TabControl>
@@ -143,7 +153,8 @@
                                 </DataGrid.Columns>
                                 <DataGrid.RowDetailsTemplate>
                                     <DataTemplate>
-                                        <DataGrid ItemsSource="{Binding Purposes}" AutoGenerateColumns="False" HeadersVisibility="Column">
+                                        <DataGrid ItemsSource="{Binding Purposes}" AutoGenerateColumns="False"
+                                                  HeadersVisibility="Column">
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
                                                 <DataGridTextColumn Binding="{Binding Material}" Header="Материал" />
@@ -153,12 +164,15 @@
                                     </DataTemplate>
                                 </DataGrid.RowDetailsTemplate>
                             </DataGrid>
-                            <Button Margin="5" Command="{Binding ProjectCommandProvider.AddCustomElectricalComponentToStandCommand}" Content="Добавить дренаж" />
+                            <Button Margin="5"
+                                    Command="{Binding ProjectCommandProvider.AddCustomElectricalComponentToStandCommand}"
+                                    Content="Добавить дренаж" />
                         </StackPanel>
                     </TabItem>
                     <TabItem Header="Собрать">
                         <StackPanel>
-                            <TextBox Margin="5" Text="{Binding CurrentStandModel.NewElectricalComponent.Name, Mode=TwoWay}" />
+                            <TextBox Margin="5"
+                                     Text="{Binding CurrentStandModel.NewElectricalComponent.Name, Mode=TwoWay}" />
                             <DataGrid Margin="5" AutoGenerateColumns="False" CanUserAddRows="True"
                                       ItemsSource="{Binding CurrentStandModel.NewElectricalComponent.Purposes}">
                                 <DataGrid.Columns>
@@ -167,7 +181,9 @@
                                     <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay}" Header="Длина (м)" />
                                 </DataGrid.Columns>
                             </DataGrid>
-                            <Button Margin="5" Command="{Binding ProjectCommandProvider.AddCustomElectricalComponentToStandCommand}" Content="Добавить собранный дренаж" />
+                            <Button Margin="5"
+                                    Command="{Binding ProjectCommandProvider.AddCustomElectricalComponentToStandCommand}"
+                                    Content="Добавить собранный дренаж" />
                         </StackPanel>
                     </TabItem>
                 </TabControl>
@@ -211,9 +227,9 @@
                     <ListView.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Создать копию на основе прототипа"
-                                      Command="{Binding EditStandCommand}"/>
+                                      Command="{Binding EditStandCommand}" />
                             <Separator />
-                            <MenuItem Header="Удалить"></MenuItem>
+                            <MenuItem Header="Удалить" />
                         </ContextMenu>
                     </ListView.ContextMenu>
                     <ListView.View>

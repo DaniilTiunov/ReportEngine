@@ -47,28 +47,36 @@
 
                     <!-- Тип обвязки -->
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Тип обвязки:" />
-                    <TextBox Grid.Row="0" Grid.Column="1" Margin="0,0,5,0" Text="{Binding CurrentProjectModel.SelectedStand.ObvyazkaType}" />
+                    <TextBox Grid.Row="0" Grid.Column="1" Margin="0,0,5,0"
+                             Text="{Binding CurrentProjectModel.SelectedStand.ObvyazkaType}" />
                     <TextBlock Grid.Row="0" Grid.Column="2" Margin="5,0,0,0" Text="NN:" />
-                    <TextBox Grid.Row="0" Grid.Column="3" Width="80" Text="{Binding CurrentProjectModel.SelectedStand.NN}" />
+                    <TextBox Grid.Row="0" Grid.Column="3" Width="80"
+                             Text="{Binding CurrentProjectModel.SelectedStand.NN}" />
 
                     <!-- Материал линии -->
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Материал линии:" />
-                    <TextBox Grid.Row="1" Grid.Column="1" Margin="0,0,5,0" Text="{Binding CurrentProjectModel.SelectedStand.MaterialLine}" />
-                    <Button Grid.Row="1" Grid.Column="3" Width="24" Command="{Binding ProjectCommandProvider.SelectMaterialLineDialogCommand}" Content="..." />
+                    <TextBox Grid.Row="1" Grid.Column="1" Margin="0,0,5,0"
+                             Text="{Binding CurrentProjectModel.SelectedStand.MaterialLine}" />
+                    <Button Grid.Row="1" Grid.Column="3" Width="24"
+                            Command="{Binding ProjectCommandProvider.SelectMaterialLineDialogCommand}" Content="..." />
 
                     <!-- Арматура -->
                     <TextBlock Grid.Row="2" Grid.Column="0" Text="Арматура:" />
-                    <TextBox Grid.Row="2" Grid.Column="1" Margin="0,0,5,0" Text="{Binding CurrentProjectModel.SelectedStand.Armature}" />
-                    <Button Grid.Row="2" Grid.Column="3" Width="24" Command="{Binding ProjectCommandProvider.SelectArmatureDialogCommand}" Content="..." />
+                    <TextBox Grid.Row="2" Grid.Column="1" Margin="0,0,5,0"
+                             Text="{Binding CurrentProjectModel.SelectedStand.Armature}" />
+                    <Button Grid.Row="2" Grid.Column="3" Width="24"
+                            Command="{Binding ProjectCommandProvider.SelectArmatureDialogCommand}" Content="..." />
 
                     <!-- Тройник -->
                     <TextBlock Grid.Row="3" Grid.Column="0" Text="Тройник:" />
-                    <TextBox Grid.Row="3" Grid.Column="1" Margin="0,0,5,0" Text="{Binding CurrentProjectModel.SelectedStand.TreeSocket}" />
+                    <TextBox Grid.Row="3" Grid.Column="1" Margin="0,0,5,0"
+                             Text="{Binding CurrentProjectModel.SelectedStand.TreeSocket}" />
                     <Button Grid.Row="3" Grid.Column="3" Width="24" Content="..." />
 
                     <!-- КМЧ -->
                     <TextBlock Grid.Row="4" Grid.Column="0" Text="КМЧ:" />
-                    <TextBox Grid.Row="4" Grid.Column="1" Margin="0,0,5,0" Text="{Binding CurrentProjectModel.SelectedStand.KMCH}" />
+                    <TextBox Grid.Row="4" Grid.Column="1" Margin="0,0,5,0"
+                             Text="{Binding CurrentProjectModel.SelectedStand.KMCH}" />
                     <Button Grid.Row="4" Grid.Column="3" Width="24" Content="..." />
                 </Grid>
             </GroupBox>
@@ -94,16 +102,20 @@
                               SelectedItem="{Binding CurrentProjectModel.SelectedStand.FirstSensorType, Mode=TwoWay}" />
 
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="KKS-контура:" />
-                    <TextBox Grid.Row="1" Grid.Column="1" Margin="0,0,5,0" Text="{Binding CurrentProjectModel.SelectedStand.FirstSensorKKSCounter}" />
+                    <TextBox Grid.Row="1" Grid.Column="1" Margin="0,0,5,0"
+                             Text="{Binding CurrentProjectModel.SelectedStand.FirstSensorKKSCounter}" />
 
                     <TextBlock Grid.Row="2" Grid.Column="0" Text="Маркировка (+):" />
-                    <TextBox Grid.Row="2" Grid.Column="1" Margin="0,0,5,0" Text="{Binding CurrentProjectModel.SelectedStand.FirstSensorMarkPlus}" />
+                    <TextBox Grid.Row="2" Grid.Column="1" Margin="0,0,5,0"
+                             Text="{Binding CurrentProjectModel.SelectedStand.FirstSensorMarkPlus}" />
 
                     <TextBlock Grid.Row="3" Grid.Column="0" Text="Маркировка (-):" />
-                    <TextBox Grid.Row="3" Grid.Column="1" Margin="0,0,5,0" Text="{Binding CurrentProjectModel.SelectedStand.FirstSensorMarkMinus}" />
+                    <TextBox Grid.Row="3" Grid.Column="1" Margin="0,0,5,0"
+                             Text="{Binding CurrentProjectModel.SelectedStand.FirstSensorMarkMinus}" />
 
                     <TextBlock Grid.Row="4" Grid.Column="0" Text="Описание:" />
-                    <TextBox Grid.Row="4" Grid.Column="1" Height="40" Margin="0,0,5,0" AcceptsReturn="True" TextWrapping="Wrap"
+                    <TextBox Grid.Row="4" Grid.Column="1" Height="40" Margin="0,0,5,0" AcceptsReturn="True"
+                             TextWrapping="Wrap"
                              Text="{Binding CurrentProjectModel.SelectedStand.Sensor1.Description}" />
                 </Grid>
             </GroupBox>
@@ -128,16 +140,20 @@
                               SelectedItem="{Binding CurrentProjectModel.SelectedStand.Sensor2.Type}" />
 
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="KKS-контура:" />
-                    <TextBox Grid.Row="1" Grid.Column="1" Margin="0,0,5,0" Text="{Binding CurrentProjectModel.SelectedStand.Sensor2.KKSCircuit}" />
+                    <TextBox Grid.Row="1" Grid.Column="1" Margin="0,0,5,0"
+                             Text="{Binding CurrentProjectModel.SelectedStand.Sensor2.KKSCircuit}" />
 
                     <TextBlock Grid.Row="2" Grid.Column="0" Text="Маркировка (+):" />
-                    <TextBox Grid.Row="2" Grid.Column="1" Margin="0,0,5,0" Text="{Binding CurrentProjectModel.SelectedStand.Sensor2.MarkingPlus}" />
+                    <TextBox Grid.Row="2" Grid.Column="1" Margin="0,0,5,0"
+                             Text="{Binding CurrentProjectModel.SelectedStand.Sensor2.MarkingPlus}" />
 
                     <TextBlock Grid.Row="3" Grid.Column="0" Text="Маркировка (-):" />
-                    <TextBox Grid.Row="3" Grid.Column="1" Margin="0,0,5,0" Text="{Binding CurrentProjectModel.SelectedStand.Sensor2.MarkingMinus}" />
+                    <TextBox Grid.Row="3" Grid.Column="1" Margin="0,0,5,0"
+                             Text="{Binding CurrentProjectModel.SelectedStand.Sensor2.MarkingMinus}" />
 
                     <TextBlock Grid.Row="4" Grid.Column="0" Text="Описание:" />
-                    <TextBox Grid.Row="4" Grid.Column="1" Height="40" Margin="0,0,5,0" AcceptsReturn="True" TextWrapping="Wrap"
+                    <TextBox Grid.Row="4" Grid.Column="1" Height="40" Margin="0,0,5,0" AcceptsReturn="True"
+                             TextWrapping="Wrap"
                              Text="{Binding CurrentProjectModel.SelectedStand.Sensor2.Description}" />
                 </Grid>
             </GroupBox>
@@ -162,16 +178,20 @@
                               SelectedItem="{Binding CurrentProjectModel.SelectedStand.Sensor3.Type}" />
 
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="KKS-контура:" />
-                    <TextBox Grid.Row="1" Grid.Column="1" Margin="0,0,5,0" Text="{Binding CurrentProjectModel.SelectedStand.Sensor3.KKSCircuit}" />
+                    <TextBox Grid.Row="1" Grid.Column="1" Margin="0,0,5,0"
+                             Text="{Binding CurrentProjectModel.SelectedStand.Sensor3.KKSCircuit}" />
 
                     <TextBlock Grid.Row="2" Grid.Column="0" Text="Маркировка (+):" />
-                    <TextBox Grid.Row="2" Grid.Column="1" Margin="0,0,5,0" Text="{Binding CurrentProjectModel.SelectedStand.Sensor3.MarkingPlus}" />
+                    <TextBox Grid.Row="2" Grid.Column="1" Margin="0,0,5,0"
+                             Text="{Binding CurrentProjectModel.SelectedStand.Sensor3.MarkingPlus}" />
 
                     <TextBlock Grid.Row="3" Grid.Column="0" Text="Маркировка (-):" />
-                    <TextBox Grid.Row="3" Grid.Column="1" Margin="0,0,5,0" Text="{Binding CurrentProjectModel.SelectedStand.Sensor3.MarkingMinus}" />
+                    <TextBox Grid.Row="3" Grid.Column="1" Margin="0,0,5,0"
+                             Text="{Binding CurrentProjectModel.SelectedStand.Sensor3.MarkingMinus}" />
 
                     <TextBlock Grid.Row="4" Grid.Column="0" Text="Описание:" />
-                    <TextBox Grid.Row="4" Grid.Column="1" Height="40" Margin="0,0,5,0" AcceptsReturn="True" TextWrapping="Wrap"
+                    <TextBox Grid.Row="4" Grid.Column="1" Height="40" Margin="0,0,5,0" AcceptsReturn="True"
+                             TextWrapping="Wrap"
                              Text="{Binding CurrentProjectModel.SelectedStand.Sensor3.Description}" />
                 </Grid>
             </GroupBox>
@@ -194,7 +214,8 @@
 
             <!-- Кнопки управления -->
             <StackPanel Grid.Row="5" HorizontalAlignment="Right" Margin="0,10,0,0">
-                <Button Width="120" Height="30" Content="Добавить" Command="{Binding ProjectCommandProvider.SaveObvCommand}" />
+                <Button Width="120" Height="30" Content="Добавить"
+                        Command="{Binding ProjectCommandProvider.SaveObvCommand}" />
             </StackPanel>
         </Grid>
 

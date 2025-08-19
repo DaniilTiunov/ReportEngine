@@ -5,13 +5,14 @@ namespace ReportEngine.Domain.Entities;
 
 public class AdditionalEquipPurpose
 {
-    [Key]
-    public int Id { get; set; }
+    [Key] public int Id { get; set; }
+
     public string Purpose { get; set; }
     public string? Material { get; set; }
     public float? Quantity { get; set; }
 
     public int FormedAdditionalEquipId { get; set; }
+
     [ForeignKey(nameof(FormedAdditionalEquipId))]
     public virtual FormedAdditionalEquip FormedAdditionalEquip { get; set; }
 }

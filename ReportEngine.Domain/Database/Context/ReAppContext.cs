@@ -16,6 +16,7 @@ public class ReAppContext : DbContext
     public ReAppContext(DbContextOptions<ReAppContext> options) : base(options)
     {
     }
+
     //Сортаменты
     public DbSet<CarbonPipe> CarbonPipes { get; set; } //Сортамент труб Труба углеродистая сталь
     public DbSet<HeaterPipe> HeaterPipes { get; set; } //Труба нержавеющая сталь
@@ -39,26 +40,38 @@ public class ReAppContext : DbContext
     public DbSet<CabelProtection> CabelProtections { get; set; } //Средства прокладки и защиты кабеля
     public DbSet<Heater> Heaters { get; set; } //Обогрев
     public DbSet<Other> Others { get; set; } //Прочие
+
     public DbSet<Container> Containers { get; set; } //Тара
+
     //Обвязки
     public DbSet<Obvyazka> Obvyazki { get; set; } //Обвязки
+
     public DbSet<ObvyazkaInStand> ObvyazkiInStands { get; set; } // Обвязки в стендах
+
     //Сформированные рамы
     public DbSet<FormedFrame> FormedFrames { get; set; } //Сформированные рамы
     public DbSet<FrameComponent> FrameComponents { get; set; } //Компоненты рамы
+
     public DbSet<StandFrame> StandFrames { get; set; }
+
     //Сформированные дренажи
     public DbSet<FormedDrainage> FormedDrainages { get; set; }
     public DbSet<DrainagePurpose> DrainagePurposes { get; set; }
+
     public DbSet<StandDrainage> StandDrainages { get; set; }
+
     // Электрические компоненты
     public DbSet<FormedElectricalComponent> FormedElectricalComponents { get; set; }
     public DbSet<ElectricalPurpose> ElectricalPurposes { get; set; }
+
     public DbSet<StandElectricalComponent> StandElectricalComponents { get; set; }
+
     // Дополнительные комплектующие
     public DbSet<FormedAdditionalEquip> FormedAdditionalEquips { get; set; }
     public DbSet<AdditionalEquipPurpose> AdditionalEquipPurposes { get; set; }
+
     public DbSet<StandAdditionalEquip> StandAdditionalEquips { get; set; }
+
     //Остальные сущности
     public DbSet<ProjectInfo> Projects { get; set; }
     public DbSet<User> Users { get; set; }

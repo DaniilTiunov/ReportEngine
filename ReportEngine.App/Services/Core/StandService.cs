@@ -9,8 +9,8 @@ namespace ReportEngine.App.Services.Core;
 public class StandService : IStandService
 {
     private readonly IFormedAdditionalEquipsRepository _formedAdditionalEquipsRepository;
-    private readonly IFormedElectricalRepository _formedElectricalRepository;
     private readonly IFormedDrainagesRepository _formedDrainagesRepository;
+    private readonly IFormedElectricalRepository _formedElectricalRepository;
     private readonly IFrameRepository _formedFrameRepository;
     private readonly INotificationService _notificationService;
     private readonly IProjectInfoRepository _projectRepository;
@@ -29,14 +29,17 @@ public class StandService : IStandService
         _formedAdditionalEquipsRepository = formedAdditionalEquipsRepository;
         _formedElectricalRepository = formedElectricalRepository;
     }
+
     public async Task<IEnumerable<FormedFrame>> LoadAllAvailableFrameAsync()
     {
         return await _formedFrameRepository.GetAllAsync();
     }
+
     public async Task<IEnumerable<FormedDrainage>> LoadAllAvailableDrainagesAsync()
     {
         return await _formedDrainagesRepository.GetAllWithPurposesAsync();
     }
+
     public async Task<IEnumerable<FormedElectricalComponent>> LoadAllAvailableElectricalComponentsAsync()
     {
         return await _formedElectricalRepository.GetAllAsync();
@@ -46,6 +49,7 @@ public class StandService : IStandService
     {
         return await _formedAdditionalEquipsRepository.GetAllAsync();
     }
+
     public async Task LoadObvyazkiInStandsAsync(IEnumerable<StandModel> standModels)
     {
         foreach (var standModel in standModels)
@@ -54,6 +58,7 @@ public class StandService : IStandService
             standModel.ObvyazkiInStand = new ObservableCollection<ObvyazkaInStand>(obvyazkiInStand);
         }
     }
+
     public async Task LoadStandsDataAsync(IEnumerable<StandModel> standModels)
     {
         foreach (var standModel in standModels)
@@ -80,16 +85,19 @@ public class StandService : IStandService
                 standModel.AdditionalEquipsInStand.Add(additional);
         }
     }
+
     public async Task AddFrameToStandAsync(int standId, int frameId)
     {
         await _projectRepository.AddFrameToStandAsync(standId, frameId);
         _notificationService.ShowInfo($"Рама успешно добавлена в стенд. {standId}");
     }
+
     public async Task AddDrainageToStandAsync(int standId, int drainageId)
     {
         await _projectRepository.AddDrainageToStandAsync(standId, drainageId);
         _notificationService.ShowInfo($"Дренаж успешно добавлен в стенд. {standId}");
     }
+
     public async Task AddCustomDrainageAsync(int standId, FormedDrainage customDrainage)
     {
         var entity = new FormedDrainage
@@ -107,11 +115,13 @@ public class StandService : IStandService
         await _projectRepository.AddDrainageToStandAsync(standId, entity.Id);
         _notificationService.ShowInfo($"Собранный дренаж успешно добавлен! Id {standId}");
     }
+
     public async Task AddObvyazkaToStandAsync(int standId, ObvyazkaInStand obvyazka)
     {
         await _projectRepository.AddStandObvyazkaAsync(standId, obvyazka);
         _notificationService.ShowInfo($"Обвязка успешно добавлена в стенд. Id{standId} ");
     }
+
     public async Task AddCustomElectricalComponentAsync(int standId, FormedElectricalComponent customElectrical)
     {
         var entity = new FormedElectricalComponent

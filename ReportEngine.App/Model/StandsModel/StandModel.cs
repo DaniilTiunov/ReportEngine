@@ -7,6 +7,7 @@ namespace ReportEngine.App.Model.StandsModel;
 
 public class StandModel : BaseViewModel
 {
+    private ObservableCollection<FormedAdditionalEquip> _additionalEquipsInStand = new();
     private ObservableCollection<FormedDrainage> _allAvailableDrainages = new();
     private ObservableCollection<FormedFrame> _allAvailableFrames = new();
     private string _armature;
@@ -15,6 +16,9 @@ public class StandModel : BaseViewModel
     private string _designeStand;
     private int _devices;
     private ObservableCollection<FormedDrainage> _drainagesInStand = new();
+
+
+    private ObservableCollection<FormedElectricalComponent> _electricalComponentsInStand = new();
     private string _firsSensorKksCode;
     private string _firstSensorMarkMinus;
     private string _firstSensorMarkPlus;
@@ -28,15 +32,19 @@ public class StandModel : BaseViewModel
     private string _kksCode;
     private string _kmch;
     private string _materialLine;
+    private FormedAdditionalEquip _newAdditionalEquip = new();
 
     private FormedDrainage _newDrainage = new();
+    private FormedElectricalComponent _newElectricalComponent = new();
     private int _nn;
     private int _obvyazkaType;
 
     private ObservableCollection<StandObvyazkaModel> _obvyazki = new();
     private ObservableCollection<ObvyazkaInStand> _obvyazkiInStand = new();
     private int _projectId;
+    private FormedAdditionalEquip _selectedAdditionalEquip;
     private FormedDrainage _selectedDrainage;
+    private FormedElectricalComponent _selectedElectricalComponent;
     private FormedFrame _selectedFrame;
     private StandObvyazkaModel _selectedObvyazka;
     private string _serialNumber;
@@ -235,20 +243,6 @@ public class StandModel : BaseViewModel
         get => _newDrainage;
         set => Set(ref _newDrainage, value);
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    private ObservableCollection<FormedElectricalComponent> _electricalComponentsInStand = new();
-    private ObservableCollection<FormedAdditionalEquip> _additionalEquipsInStand = new();
-    private FormedElectricalComponent _selectedElectricalComponent;
-    private FormedAdditionalEquip _selectedAdditionalEquip;
-    private FormedElectricalComponent _newElectricalComponent = new();
-    private FormedAdditionalEquip _newAdditionalEquip = new();
 
     public ObservableCollection<FormedElectricalComponent> ElectricalComponentsInStand
     {

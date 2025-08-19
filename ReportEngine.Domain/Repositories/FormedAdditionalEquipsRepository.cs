@@ -27,6 +27,7 @@ public class FormedAdditionalEquipsRepository : IFormedAdditionalEquipsRepositor
         await _context.FormedAdditionalEquips.AddAsync(entity);
         await _context.SaveChangesAsync();
     }
+
     public async Task<IEnumerable<FormedAdditionalEquip>> GetAllWithPurposesAsync()
     {
         return await _context.FormedAdditionalEquips

@@ -6,7 +6,6 @@ using ReportEngine.App.Views.UpdateInformation;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
 using ReportEngine.Shared.Helpers;
-using Wpf.Ui.Appearance;
 using AboutProgram = ReportEngine.App.Views.Windows.AboutProgram;
 
 
@@ -24,7 +23,6 @@ public partial class MainWindow : Window //Это так называемый "C
 
         mainViewModel.OnShowAllProjectsCommandExecuted(null);
         mainViewModel.OnCheckDbConnectionCommandExecuted(null);
-        
     }
 
     private void CheckForUpdates(object sender, RoutedEventArgs e)

@@ -38,7 +38,7 @@ public class ProjectViewModel : BaseViewModel
         InitializeTime();
         InitializeGenericCommands();
     }
-    
+
     public ObservableCollection<FormedFrame> AllAvailableFrames { get; set; } = new();
     public ObservableCollection<FormedDrainage> AllAvailableDrainages { get; set; } = new();
     public ObservableCollection<FormedElectricalComponent> AllAvailableElectricalComponents { get; set; } = new();
@@ -150,6 +150,7 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(AddFrameToStandAsync);
     }
+
     public async void OnAddCustomElectricalComponentToStandExecuted(object p)
     {
         await ExceptionHelper.SafeExecuteAsync(AddCustomElectricalComponentToStandAsync);
@@ -159,6 +160,7 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(AddCustomAdditionalEquipToStandAsync);
     }
+
     #endregion
 
     #region Методы
@@ -171,6 +173,7 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(CurrentProjectModel));
         OnPropertyChanged(nameof(CurrentStandModel));
     }
+
     public async Task LoadStandsDataAsync()
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -178,6 +181,7 @@ public class ProjectViewModel : BaseViewModel
             await _standService.LoadStandsDataAsync(CurrentProjectModel.Stands);
         });
     }
+
     public async Task LoadObvyazkiAsync()
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -185,30 +189,35 @@ public class ProjectViewModel : BaseViewModel
             await _standService.LoadObvyazkiInStandsAsync(CurrentProjectModel.Stands);
         });
     }
+
     public async Task LoadFramesAsync()
     {
         var frames = await _standService.LoadAllAvailableFrameAsync();
         AllAvailableFrames = new ObservableCollection<FormedFrame>(frames);
         OnPropertyChanged(nameof(AllAvailableFrames));
     }
+
     public async Task LoadDrainagesAsync()
     {
         var drainages = await _standService.LoadAllAvailableDrainagesAsync();
         AllAvailableDrainages = new ObservableCollection<FormedDrainage>(drainages);
         OnPropertyChanged(nameof(AllAvailableDrainages));
     }
+
     public async Task LoadElectricalComponentsAsync()
     {
         var electricalComponents = await _standService.LoadAllAvailableElectricalComponentsAsync();
         AllAvailableElectricalComponents = new ObservableCollection<FormedElectricalComponent>(electricalComponents);
         OnPropertyChanged(nameof(AllAvailableElectricalComponents));
     }
+
     public async Task LoadAdditionalEquipsAsync()
     {
         var additionalEquips = await _standService.LoadAllAvailableAdditionalEquipsAsync();
         AllAvailableAdditionalEquips = new ObservableCollection<FormedAdditionalEquip>(additionalEquips);
         OnPropertyChanged(nameof(AllAvailableAdditionalEquips));
     }
+
     public async Task LoadProjectInfoAsync(int projectId)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -356,7 +365,7 @@ public class ProjectViewModel : BaseViewModel
 
         CurrentProjectModel.Stands.Add(newStandModel);
         CurrentProjectModel.SelectedStand = newStandModel;
-        
+
         _notificationService.ShowInfo($"Стенд успешно добавлен! {addedStandEntity.Id}");
     }
 
@@ -419,13 +428,13 @@ public class ProjectViewModel : BaseViewModel
 
             AllAvailableDrainages.Add(CurrentStandModel.NewDrainage);
             CurrentProjectModel.SelectedStand.DrainagesInStand.Add(CurrentStandModel.NewDrainage);
-            
+
             OnPropertyChanged(nameof(AllAvailableDrainages));
-            
+
             CurrentStandModel.NewDrainage = new FormedDrainage();
         }
     }
-    
+
     private async Task AddCustomElectricalComponentToStandAsync()
     {
         if (!string.IsNullOrWhiteSpace(CurrentStandModel.NewElectricalComponent.Name))
@@ -457,5 +466,6 @@ public class ProjectViewModel : BaseViewModel
             CurrentStandModel.NewAdditionalEquip = new FormedAdditionalEquip();
         }
     }
+
     #endregion
 }
