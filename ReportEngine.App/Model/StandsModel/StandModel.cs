@@ -279,13 +279,28 @@ public class StandModel : BaseViewModel
         get => _newAdditionalEquip;
         set => Set(ref _newAdditionalEquip, value);
     }
+
+    private ObservableCollection<DrainagePurpose> _allDrainagePurposesInStand = new();
+    private ObservableCollection<ElectricalPurpose> _allElectricalPurposesInStand = new();
+    private ObservableCollection<AdditionalEquipPurpose> _allAdditionalEquipPurposesInStand = new();
     
-    public IEnumerable<DrainagePurpose> AllDrainagePurposes =>
-        DrainagesInStand?.SelectMany(d => d.Purposes ?? Enumerable.Empty<DrainagePurpose>()) ?? Enumerable.Empty<DrainagePurpose>();
+    
+    public ObservableCollection<DrainagePurpose> AllDrainagePurposesInStand
+    {
+        get => _allDrainagePurposesInStand;
+        set => Set(ref _allDrainagePurposesInStand, value);
+    }
 
-    public IEnumerable<ElectricalPurpose> AllElectricalPurposes =>
-        ElectricalComponentsInStand?.SelectMany(e => e.Purposes ?? Enumerable.Empty<ElectricalPurpose>()) ?? Enumerable.Empty<ElectricalPurpose>();
+    public ObservableCollection<ElectricalPurpose> AllElectricalPurposesInStand
+    {
+        get => _allElectricalPurposesInStand;
+        set => Set(ref _allElectricalPurposesInStand, value);
+    }
+        
 
-    public IEnumerable<AdditionalEquipPurpose> AllAdditionalEquipPurposes =>
-        AdditionalEquipsInStand?.SelectMany(a => a.Purposes ?? Enumerable.Empty<AdditionalEquipPurpose>()) ?? Enumerable.Empty<AdditionalEquipPurpose>();
+    public ObservableCollection<AdditionalEquipPurpose> AllAdditionalEquipPurposesInStand
+    {
+        get => _allAdditionalEquipPurposesInStand;
+        set => Set(ref _allAdditionalEquipPurposesInStand, value);
+    }
 }

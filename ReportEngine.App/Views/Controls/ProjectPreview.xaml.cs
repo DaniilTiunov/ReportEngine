@@ -13,10 +13,10 @@ public partial class ProjectPreview : UserControl
         
         InitializeData(viewModel);
     }
-    
     private async void InitializeData(ProjectViewModel viewModel)
     {
         await viewModel.LoadObvyazkiAsync();
         await viewModel.LoadStandsDataAsync();
+        await viewModel.LoadPurposesInStandsAsync();
     }
 }

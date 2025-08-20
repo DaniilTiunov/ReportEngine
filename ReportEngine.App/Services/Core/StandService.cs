@@ -85,7 +85,20 @@ public class StandService : IStandService
                 standModel.AdditionalEquipsInStand.Add(additional);
         }
     }
+    public void LoadPurposesInStands(IEnumerable<StandModel> stands)
+    {
+        foreach (var stand in stands)
+        {
+            stand.AllDrainagePurposesInStand = new ObservableCollection<DrainagePurpose>(
+                stand.DrainagesInStand?.SelectMany(d => d.Purposes ?? Enumerable.Empty<DrainagePurpose>()) ?? Enumerable.Empty<DrainagePurpose>());
 
+            stand.AllElectricalPurposesInStand = new ObservableCollection<ElectricalPurpose>(
+                stand.ElectricalComponentsInStand?.SelectMany(e => e.Purposes ?? Enumerable.Empty<ElectricalPurpose>()) ?? Enumerable.Empty<ElectricalPurpose>());
+
+            stand.AllAdditionalEquipPurposesInStand = new ObservableCollection<AdditionalEquipPurpose>(
+                stand.AdditionalEquipsInStand?.SelectMany(a => a.Purposes ?? Enumerable.Empty<AdditionalEquipPurpose>()) ?? Enumerable.Empty<AdditionalEquipPurpose>());
+        }
+    }
     public async Task AddFrameToStandAsync(int standId, int frameId)
     {
         await _projectRepository.AddFrameToStandAsync(standId, frameId);

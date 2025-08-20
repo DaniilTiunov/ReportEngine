@@ -17,4 +17,5 @@ public interface IStandService
     Task<IEnumerable<FormedAdditionalEquip>> LoadAllAvailableAdditionalEquipsAsync();
     Task AddCustomElectricalComponentAsync(int standId, FormedElectricalComponent customElectrical);
     Task AddCustomAdditionalEquipAsync(int standId, FormedAdditionalEquip customEquip);
+    void LoadPurposesInStands(IEnumerable<StandModel> stands);
 }

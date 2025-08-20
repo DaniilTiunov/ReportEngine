@@ -140,7 +140,7 @@
             Padding="5"
             Header="Дренаж в стенде">
             <ListView 
-                ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllDrainagePurposes}"
+                ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand}"
                 SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
                 <ListView.View>
                     <GridView>
@@ -160,7 +160,7 @@
             Padding="5"
             Header="Электрические компоненты">
             <ListView 
-                ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposes}"
+                ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}"
                 SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
                 <ListView.View>
                     <GridView>
@@ -180,7 +180,7 @@
             Padding="5"
             Header="Доп комплектующие">
             <ListView 
-                ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposes}"
+                ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand}"
                 SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
                 <ListView.View>
                     <GridView>

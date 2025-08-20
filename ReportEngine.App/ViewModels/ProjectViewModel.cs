@@ -185,7 +185,14 @@ public class ProjectViewModel : BaseViewModel
             await _standService.LoadStandsDataAsync(CurrentProjectModel.Stands);
         });
     }
-
+    public async Task LoadPurposesInStandsAsync()
+    {
+        await ExceptionHelper.SafeExecuteAsync(() =>
+        {
+            _standService.LoadPurposesInStands(CurrentProjectModel.Stands);
+            return Task.CompletedTask;
+        });
+    }
     public async Task LoadObvyazkiAsync()
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -412,6 +419,5 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(AllAvailableAdditionalEquips));
         CurrentStandModel.NewAdditionalEquip = new FormedAdditionalEquip();
     }
-
     #endregion
 }
