@@ -162,5 +162,6 @@ public class HostFactory
         services.AddTransient<FormedFrameView>();
         services.AddTransient<FormedDrainagesView>();
         services.AddTransient<FrameDrainagesView>();
+        services.AddTransient<ProjectPreview>();
     }
 }

@@ -104,12 +104,10 @@
                     <TreeViewItem Header="Редактирование стенда" Tag="BindingTypes">
                         <TreeViewItem Header="Стенд" Tag="Stand" />
                         <TreeViewItem Header="Создание обвязок стенда" Tag="StandObv" />
-                        <TreeViewItem Header="Рамы и дренажи" Tag="FrameDrainages" />
-                        <TreeViewItem Header="Формирование электрической части" />
-                        <TreeViewItem Header="Дополнительные комплектующие" />
+                        <TreeViewItem Header="Формирование стенда" Tag="FrameDrainages" />
+                        <TreeViewItem Header="Предварительный просмотр стенда" Tag="ProjectPreview" />
                     </TreeViewItem>
                     <TreeViewItem Header="Создание отчёта" Tag="Reports" />
-                    <TreeViewItem Header="Предварительный просмотр" Tag="Preview" />
                 </TreeViewItem>
             </TreeView>
         </Border>

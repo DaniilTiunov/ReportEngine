@@ -165,7 +165,6 @@ public class MainWindowViewModel : BaseViewModel
         {
             var projectViewModel = _serviceProvider.GetRequiredService<ProjectViewModel>();
             await projectViewModel.LoadProjectInfoAsync(MainWindowModel.SelectedProject.Id);
-            await projectViewModel.LoadStandsDataAsync();
             _navigation.ShowContent<TreeProjectView>();
         });
     }

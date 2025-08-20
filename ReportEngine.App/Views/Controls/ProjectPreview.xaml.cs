@@ -4,22 +4,19 @@ using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Views.Controls;
 
-/// <summary>
-///     Логика взаимодействия для FrameDrainagesView.xaml
-/// </summary>
-public partial class FrameDrainagesView : UserControl
+public partial class ProjectPreview : UserControl
 {
-    public FrameDrainagesView(ProjectViewModel viewModel)
+    public ProjectPreview(ProjectViewModel viewModel)
     {
         InitializeComponent();
         DataContext = viewModel;
         
         InitializeData(viewModel);
     }
-
+    
     private async void InitializeData(ProjectViewModel viewModel)
     {
-        await viewModel.LoadAllAvaileDataAsync();
+        await viewModel.LoadObvyazkiAsync();
         await viewModel.LoadStandsDataAsync();
     }
 }

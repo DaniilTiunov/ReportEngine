@@ -8,6 +8,7 @@ public class ObvyazkaModel : BaseViewModel
 {
     private ObservableCollection<Obvyazka> _obvyazki = new();
     private Obvyazka _selectedObvyazka = new();
+    
 
     public ObservableCollection<Obvyazka> Obvyazki
     {

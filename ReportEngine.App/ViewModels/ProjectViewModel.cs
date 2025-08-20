@@ -196,6 +196,7 @@ public class ProjectViewModel : BaseViewModel
 
     public async Task LoadAllAvaileDataAsync()
     {
+        
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await _projectDataLoaderService.LoadAllAvailDataToViewModel(this);
@@ -227,7 +228,7 @@ public class ProjectViewModel : BaseViewModel
             CurrentProjectModel.MarkMinus = projectInfo.MarkMinus;
             CurrentProjectModel.MarkPlus = projectInfo.MarkPlus;
             CurrentProjectModel.IsGalvanized = projectInfo.IsGalvanized;
-
+            
             CurrentProjectModel.Stands.Clear();
             if (projectInfo.Stands != null)
                 foreach (var stand in projectInfo.Stands)
