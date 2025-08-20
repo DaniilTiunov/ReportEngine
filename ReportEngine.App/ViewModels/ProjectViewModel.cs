@@ -177,7 +177,7 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(CurrentProjectModel));
         OnPropertyChanged(nameof(CurrentStandModel));
     }
-    
+
     public async Task LoadStandsDataAsync()
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -196,7 +196,6 @@ public class ProjectViewModel : BaseViewModel
 
     public async Task LoadAllAvaileDataAsync()
     {
-        
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await _projectDataLoaderService.LoadAllAvailDataToViewModel(this);
@@ -228,7 +227,7 @@ public class ProjectViewModel : BaseViewModel
             CurrentProjectModel.MarkMinus = projectInfo.MarkMinus;
             CurrentProjectModel.MarkPlus = projectInfo.MarkPlus;
             CurrentProjectModel.IsGalvanized = projectInfo.IsGalvanized;
-            
+
             CurrentProjectModel.Stands.Clear();
             if (projectInfo.Stands != null)
                 foreach (var stand in projectInfo.Stands)
@@ -287,7 +286,7 @@ public class ProjectViewModel : BaseViewModel
             _notificationService.ShowInfo("Сначала создайте проект");
             return;
         }
-        
+
         await _projectService.UpdateProjectAsync(CurrentProjectModel);
     }
 
@@ -333,10 +332,8 @@ public class ProjectViewModel : BaseViewModel
 
     private async Task CreateNewProjectCardAsync()
     {
-        // Вызов сервиса вместо репозитория
         await _projectService.CreateProjectAsync(CurrentProjectModel);
-    
-        // Остальная логика остается без изменений
+        
         CurrentProjectModel.Stands.Clear();
         CurrentStandModel = new StandModel();
     }
@@ -378,51 +375,42 @@ public class ProjectViewModel : BaseViewModel
 
     private async Task AddCustomDrainageToStandAsync()
     {
-        if (!string.IsNullOrWhiteSpace(CurrentStandModel.NewDrainage.Name))
-        {
-            await _standService.AddCustomDrainageAsync(
-                CurrentProjectModel.SelectedStand.Id,
-                CurrentStandModel.NewDrainage);
+        await _standService.AddCustomDrainageAsync(
+            CurrentProjectModel.SelectedStand.Id,
+            CurrentStandModel.NewDrainage);
 
-            AllAvailableDrainages.Add(CurrentStandModel.NewDrainage);
-            CurrentProjectModel.SelectedStand.DrainagesInStand.Add(CurrentStandModel.NewDrainage);
+        AllAvailableDrainages.Add(CurrentStandModel.NewDrainage);
+        CurrentProjectModel.SelectedStand.DrainagesInStand.Add(CurrentStandModel.NewDrainage);
 
-            OnPropertyChanged(nameof(AllAvailableDrainages));
+        OnPropertyChanged(nameof(AllAvailableDrainages));
 
-            CurrentStandModel.NewDrainage = new FormedDrainage();
-        }
+        CurrentStandModel.NewDrainage = new FormedDrainage();
     }
 
     private async Task AddCustomElectricalComponentToStandAsync()
     {
-        if (!string.IsNullOrWhiteSpace(CurrentStandModel.NewElectricalComponent.Name))
-        {
-            await _standService.AddCustomElectricalComponentAsync(
-                CurrentProjectModel.SelectedStand.Id,
-                CurrentStandModel.NewElectricalComponent);
+        await _standService.AddCustomElectricalComponentAsync(
+            CurrentProjectModel.SelectedStand.Id,
+            CurrentStandModel.NewElectricalComponent);
 
-            AllAvailableElectricalComponents.Add(CurrentStandModel.NewElectricalComponent);
-            CurrentProjectModel.SelectedStand.ElectricalComponentsInStand.Add(CurrentStandModel.NewElectricalComponent);
+        AllAvailableElectricalComponents.Add(CurrentStandModel.NewElectricalComponent);
+        CurrentProjectModel.SelectedStand.ElectricalComponentsInStand.Add(CurrentStandModel.NewElectricalComponent);
 
-            OnPropertyChanged(nameof(AllAvailableElectricalComponents));
-            CurrentStandModel.NewElectricalComponent = new FormedElectricalComponent();
-        }
+        OnPropertyChanged(nameof(AllAvailableElectricalComponents));
+        CurrentStandModel.NewElectricalComponent = new FormedElectricalComponent();
     }
 
     private async Task AddCustomAdditionalEquipToStandAsync()
     {
-        if (!string.IsNullOrWhiteSpace(CurrentStandModel.NewAdditionalEquip.Name))
-        {
-            await _standService.AddCustomAdditionalEquipAsync(
-                CurrentProjectModel.SelectedStand.Id,
-                CurrentStandModel.NewAdditionalEquip);
+        await _standService.AddCustomAdditionalEquipAsync(
+            CurrentProjectModel.SelectedStand.Id,
+            CurrentStandModel.NewAdditionalEquip);
 
-            AllAvailableAdditionalEquips.Add(CurrentStandModel.NewAdditionalEquip);
-            CurrentProjectModel.SelectedStand.AdditionalEquipsInStand.Add(CurrentStandModel.NewAdditionalEquip);
+        AllAvailableAdditionalEquips.Add(CurrentStandModel.NewAdditionalEquip);
+        CurrentProjectModel.SelectedStand.AdditionalEquipsInStand.Add(CurrentStandModel.NewAdditionalEquip);
 
-            OnPropertyChanged(nameof(AllAvailableAdditionalEquips));
-            CurrentStandModel.NewAdditionalEquip = new FormedAdditionalEquip();
-        }
+        OnPropertyChanged(nameof(AllAvailableAdditionalEquips));
+        CurrentStandModel.NewAdditionalEquip = new FormedAdditionalEquip();
     }
 
     #endregion
