@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:ReportEngine.App.Views.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    FontSize="13"
     d:DesignHeight="300"
     d:DesignWidth="300"
     mc:Ignorable="d">
@@ -139,7 +140,7 @@
             Padding="5"
             Header="Дренаж в стенде">
             <ListView 
-                ItemsSource="{Binding CurrentProjectModel.SelectedStand.DrainagesInStand}"
+                ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllDrainagePurposes}"
                 SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
                 <ListView.View>
                     <GridView>
@@ -159,7 +160,7 @@
             Padding="5"
             Header="Электрические компоненты">
             <ListView 
-                ItemsSource="{Binding CurrentProjectModel.SelectedStand.ElectricalComponentsInStand}"
+                ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposes}"
                 SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
                 <ListView.View>
                     <GridView>
@@ -179,7 +180,7 @@
             Padding="5"
             Header="Доп комплектующие">
             <ListView 
-                ItemsSource="{Binding CurrentProjectModel.SelectedStand.AdditionalEquipsInStand}"
+                ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposes}"
                 SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
                 <ListView.View>
                     <GridView>

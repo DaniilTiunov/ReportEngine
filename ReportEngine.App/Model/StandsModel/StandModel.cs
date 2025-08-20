@@ -279,4 +279,13 @@ public class StandModel : BaseViewModel
         get => _newAdditionalEquip;
         set => Set(ref _newAdditionalEquip, value);
     }
+    
+    public IEnumerable<DrainagePurpose> AllDrainagePurposes =>
+        DrainagesInStand?.SelectMany(d => d.Purposes ?? Enumerable.Empty<DrainagePurpose>()) ?? Enumerable.Empty<DrainagePurpose>();
+
+    public IEnumerable<ElectricalPurpose> AllElectricalPurposes =>
+        ElectricalComponentsInStand?.SelectMany(e => e.Purposes ?? Enumerable.Empty<ElectricalPurpose>()) ?? Enumerable.Empty<ElectricalPurpose>();
+
+    public IEnumerable<AdditionalEquipPurpose> AllAdditionalEquipPurposes =>
+        AdditionalEquipsInStand?.SelectMany(a => a.Purposes ?? Enumerable.Empty<AdditionalEquipPurpose>()) ?? Enumerable.Empty<AdditionalEquipPurpose>();
 }
