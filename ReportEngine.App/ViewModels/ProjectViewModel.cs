@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
@@ -257,7 +258,7 @@ public class ProjectViewModel : BaseViewModel
                 CurrentStandModel = CurrentProjectModel.SelectedStand;
             else
                 CurrentStandModel = new StandModel();
-
+           
             OnPropertyChanged(nameof(CurrentStandModel));
         });
     }

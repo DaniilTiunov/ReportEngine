@@ -209,6 +209,7 @@ public class ProjectInfoRepository : IProjectInfoRepository
     {
         return await _context.Set<StandDrainage>()
             .Include(sd => sd.Drainage)
+            .ThenInclude(d => d.Purposes)
             .Where(sd => sd.StandId == standId)
             .ToListAsync();
     }
@@ -226,6 +227,7 @@ public class ProjectInfoRepository : IProjectInfoRepository
     {
         return await _context.StandElectricalComponents
             .Include(sec => sec.ElectricalComponent)
+            .ThenInclude(e => e.Purposes)
             .Where(sec => sec.StandId == standId)
             .ToListAsync();
     }
@@ -234,6 +236,7 @@ public class ProjectInfoRepository : IProjectInfoRepository
     {
         return await _context.StandAdditionalEquips
             .Include(sae => sae.AdditionalEquip)
+            .ThenInclude(e => e.Purposes)
             .Where(sae => sae.StandId == standId)
             .ToListAsync();
     }

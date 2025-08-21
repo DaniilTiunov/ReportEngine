@@ -21,5 +21,6 @@ public partial class FrameDrainagesView : UserControl
     {
         await viewModel.LoadAllAvaileDataAsync();
         await viewModel.LoadStandsDataAsync();
+        await viewModel.LoadPurposesInStandsAsync();
     }
 }
