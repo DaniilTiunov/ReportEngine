@@ -15,8 +15,7 @@ public class ProjectCommandProvider
     public ICommand AddFrameToStandCommand { get; set; }
     public ICommand AddDrainageToStandCommand { get; set; }
     public ICommand AddCustomDrainageToStandCommand { get; set; }
-
     public ICommand AddCustomElectricalComponentToStandCommand { get; set; }
-
     public ICommand AddCustomAdditionalEquipToStandCommand { get; set; }
+    public ICommand SelectObvFromDialogCommand { get; set; }
 }

@@ -1,6 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using ReportEngine.App.Services;
 using ReportEngine.App.ViewModels;
+using ReportEngine.App.Views.Windows;
 
 namespace ReportEngine.App.Views.Controls;
 
@@ -13,8 +16,10 @@ public partial class StandObvView : UserControl
     {
         InitializeComponent();
         DataContext = projectViewModel;
+        
+        Loaded += StandObvView_Loaded;
     }
-
+    
     private void StandObvView_Loaded(object sender, RoutedEventArgs e)
     {
         if (DataContext is ProjectViewModel viewModel) viewModel.LoadObvyazkiAsync();

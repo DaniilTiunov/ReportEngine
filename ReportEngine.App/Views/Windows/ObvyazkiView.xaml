@@ -25,7 +25,8 @@
                 ItemsSource="{Binding CurrentObvyazka.Obvyazki, Mode=TwoWay}"
                 SelectedItem="{Binding CurrentObvyazka.SelectedObvyazka, Mode=TwoWay}"
                 BorderThickness="0"
-                Background="Transparent">
+                Background="Transparent"
+                MouseDoubleClick="ObvyazkaListBox_MouseDoubleClick">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="3" />

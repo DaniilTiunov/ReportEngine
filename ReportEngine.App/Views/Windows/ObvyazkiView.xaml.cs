@@ -18,9 +18,17 @@ public partial class ObvyazkiView : Window
 
         InitializeData(obvyazkiViewModel);
     }
-    private async void InitializeData(ObvyazkaViewModel obvyazkiViewModel)
+    private void ObvyazkaListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-        await obvyazkiViewModel.ShowAllObvyazkiAsync();
+         if (DataContext is ObvyazkaViewModel vm && vm.CurrentObvyazka.SelectedObvyazka != null)
+         {
+             vm.SelectionHandler?.Invoke(vm.CurrentObvyazka.SelectedObvyazka);
+             this.Close();
+         }
+    }
+    private void InitializeData(ObvyazkaViewModel obvyazkiViewModel)
+    { 
+        obvyazkiViewModel.ShowAllObvyazkiAsync();
     }
     private void Window_Closing(object sender, CancelEventArgs e)
     {

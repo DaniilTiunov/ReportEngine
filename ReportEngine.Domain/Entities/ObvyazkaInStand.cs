@@ -26,6 +26,7 @@ public class ObvyazkaInStand
     
     public float LineLength { get; set; } // Длина линии
     public float ZraCount { get; set; } //Количество ЗРА
+    public float TreeSocketCount { get; set; } //Кол-во тройников
     public int Sensor { get; set; } //Датчики
     public string SensorType { get; set; } //Тип датчиков
     public float Clamp { get; set; } //Хомуты
@@ -35,7 +36,6 @@ public class ObvyazkaInStand
     public float HumanCost { get; set; } //Трудозатраты чел/час
     public string ImageName { get; set; } //Название картинки
     
-
     // Датчики (до 3-х)
     public string? FirstSensorType { get; set; }
     public string? FirstSensorKKS { get; set; }

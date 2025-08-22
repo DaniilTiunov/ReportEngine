@@ -1,4 +1,5 @@
-﻿using ReportEngine.App.Model;
+﻿using System.Collections.ObjectModel;
+using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
 using ReportEngine.App.Services.Interfaces;
@@ -71,5 +72,49 @@ public class ProjectService : IProjectService
 
 
         _notificationService.ShowInfo("Стенд добавлен");
+    }
+    
+    public async Task<ProjectModel> LoadProjectInfoAsync(int projectId)
+    {
+        var projectInfo = await _projectRepository.GetStandsByIdAsync(projectId);
+        if (projectInfo == null)
+            return null;
+
+        var model = new ProjectModel
+        {
+            CurrentProjectId = projectInfo.Id,
+            Number = projectInfo.Number,
+            Description = projectInfo.Description,
+            CreationDate = projectInfo.CreationDate.ToDateTime(TimeOnly.MinValue),
+            Company = projectInfo.Company,
+            Object = projectInfo.Object,
+            StandCount = projectInfo.StandCount,
+            Cost = projectInfo.Cost,
+            Status = projectInfo.Status.ToString(),
+            StartDate = projectInfo.StartDate.ToDateTime(TimeOnly.MinValue),
+            OutOfProduction = projectInfo.OutOfProduction.ToDateTime(TimeOnly.MinValue),
+            EndDate = projectInfo.EndDate.ToDateTime(TimeOnly.MinValue),
+            OrderCustomer = projectInfo.OrderCustomer,
+            RequestProduction = projectInfo.RequestProduction,
+            MarkMinus = projectInfo.MarkMinus,
+            MarkPlus = projectInfo.MarkPlus,
+            IsGalvanized = projectInfo.IsGalvanized,
+            Stands = new ObservableCollection<StandModel>()
+        };
+
+        if (projectInfo.Stands != null)
+        {
+            foreach (var stand in projectInfo.Stands)
+            {
+                var standModel = StandDataConverter.ConvertToStandModel(stand);
+                standModel.FramesInStand = new ObservableCollection<FormedFrame>(
+                    stand.StandFrames?.Select(sf => sf.Frame) ?? Enumerable.Empty<FormedFrame>()
+                );
+                model.Stands.Add(standModel);
+            }
+        }
+
+        model.SelectedStand = model.Stands.FirstOrDefault();
+        return model;
     }
 }

@@ -48,6 +48,7 @@ public class ProjectViewModel : BaseViewModel
     public ObservableCollection<FormedDrainage> AllAvailableDrainages { get; set; } = new();
     public ObservableCollection<FormedElectricalComponent> AllAvailableElectricalComponents { get; set; } = new();
     public ObservableCollection<FormedAdditionalEquip> AllAvailableAdditionalEquips { get; set; } = new();
+    public Obvyazka SelectedObvyazka { get; set; } = new();
     public StandModel CurrentStandModel { get; set; } = new();
     public ProjectModel CurrentProjectModel { get; set; } = new();
     public ProjectCommandProvider ProjectCommandProvider { get; set; } = new();
@@ -81,6 +82,8 @@ public class ProjectViewModel : BaseViewModel
             new RelayCommand(OnAddCustomElectricalComponentToStandExecuted, CanAllCommandsExecute);
         ProjectCommandProvider.AddCustomAdditionalEquipToStandCommand =
             new RelayCommand(OnAddCustomAdditionalEquipToStandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.SelectObvFromDialogCommand = 
+            new RelayCommand(OnSelectObvCommandExecuted, CanAllCommandsExecute);
     }
 
     public void InitializeGenericCommands()
@@ -166,6 +169,13 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(AddCustomAdditionalEquipToStandAsync);
     }
 
+    public void OnSelectObvCommandExecuted(object p)
+    {
+        ExceptionHelper.SafeExecute(() =>
+        {
+            SelectedObvyazka = _dialogService.ShowObvyazkaDialog();
+        });
+    }
     #endregion
 
     #region Методы
@@ -214,74 +224,23 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            var projectInfo = await _projectRepository.GetStandsByIdAsync(projectId);
-            if (projectInfo == null)
+            var loadedModel = await _projectService.LoadProjectInfoAsync(projectId);
+            if (loadedModel == null)
                 return;
 
-            CurrentProjectModel.CurrentProjectId = projectInfo.Id;
-            CurrentProjectModel.Number = projectInfo.Number;
-            CurrentProjectModel.Description = projectInfo.Description;
-            CurrentProjectModel.CreationDate = projectInfo.CreationDate.ToDateTime(TimeOnly.MinValue);
-            CurrentProjectModel.Company = projectInfo.Company;
-            CurrentProjectModel.Object = projectInfo.Object;
-            CurrentProjectModel.StandCount = projectInfo.StandCount;
-            CurrentProjectModel.Cost = projectInfo.Cost;
-            CurrentProjectModel.Status = projectInfo.Status.ToString();
-            CurrentProjectModel.StartDate = projectInfo.StartDate.ToDateTime(TimeOnly.MinValue);
-            CurrentProjectModel.OutOfProduction = projectInfo.OutOfProduction.ToDateTime(TimeOnly.MinValue);
-            CurrentProjectModel.EndDate = projectInfo.EndDate.ToDateTime(TimeOnly.MinValue);
-            CurrentProjectModel.OrderCustomer = projectInfo.OrderCustomer;
-            CurrentProjectModel.RequestProduction = projectInfo.RequestProduction;
-            CurrentProjectModel.MarkMinus = projectInfo.MarkMinus;
-            CurrentProjectModel.MarkPlus = projectInfo.MarkPlus;
-            CurrentProjectModel.IsGalvanized = projectInfo.IsGalvanized;
-
-            CurrentProjectModel.Stands.Clear();
-            if (projectInfo.Stands != null)
-                foreach (var stand in projectInfo.Stands)
-                {
-                    var standModel = StandDataConverter.ConvertToStandModel(stand);
-
-                    // Получаем рамы через StandFrame
-                    if (stand.StandFrames != null)
-                        standModel.FramesInStand = new ObservableCollection<FormedFrame>(
-                            stand.StandFrames.Select(sf => sf.Frame)
-                        );
-                    else
-                        standModel.FramesInStand = new ObservableCollection<FormedFrame>();
-                    CurrentProjectModel.Stands.Add(standModel);
-                }
-
-            CurrentProjectModel.SelectedStand = CurrentProjectModel.Stands.FirstOrDefault();
-
-            if (CurrentProjectModel.SelectedStand != null)
-                CurrentStandModel = CurrentProjectModel.SelectedStand;
-            else
-                CurrentStandModel = new StandModel();
-           
+            CurrentProjectModel = loadedModel;
+            CurrentStandModel = loadedModel.SelectedStand ?? new StandModel();
             OnPropertyChanged(nameof(CurrentStandModel));
         });
     }
 
+    
     private async Task AddObvToStandAsync()
     {
         if (CurrentProjectModel.SelectedStand == null)
             return;
 
-        var entity = new ObvyazkaInStand
-        {
-            StandId = CurrentProjectModel.SelectedStand.Id,
-            ObvyazkaId = CurrentProjectModel.SelectedStand.ObvyazkaType,
-            NN = CurrentProjectModel.SelectedStand.NN,
-            MaterialLine = CurrentProjectModel.SelectedStand.MaterialLine,
-            Armature = CurrentProjectModel.SelectedStand.Armature,
-            TreeSocket = CurrentProjectModel.SelectedStand.TreeSocket,
-            KMCH = CurrentProjectModel.SelectedStand.KMCH,
-            FirstSensorType = CurrentProjectModel.SelectedStand.FirstSensorType,
-            FirstSensorKKS = CurrentProjectModel.SelectedStand.FirstSensorKKSCounter,
-            FirstSensorMarkPlus = CurrentProjectModel.SelectedStand.FirstSensorMarkPlus,
-            FirstSensorMarkMinus = CurrentProjectModel.SelectedStand.FirstSensorMarkMinus
-        };
+        var entity = await CreateObvyazkaAsync(CurrentProjectModel, SelectedObvyazka);
 
         await _standService.AddObvyazkaToStandAsync(CurrentProjectModel.SelectedStand.Id, entity);
         CurrentProjectModel.SelectedStand.ObvyazkiInStand.Add(entity);
@@ -316,7 +275,6 @@ public class ProjectViewModel : BaseViewModel
             SerialNumber = CurrentStandModel.SerialNumber,
             Weight = CurrentStandModel.Weight,
             StandSummCost = CurrentStandModel.StandSummCost,
-            ObvyazkaType = CurrentStandModel.ObvyazkaType,
             NN = CurrentStandModel.NN,
             MaterialLine = CurrentStandModel.MaterialLine,
             Armature = CurrentStandModel.Armature,
@@ -389,7 +347,7 @@ public class ProjectViewModel : BaseViewModel
 
         AllAvailableDrainages.Add(CurrentStandModel.NewDrainage);
         CurrentProjectModel.SelectedStand.DrainagesInStand.Add(CurrentStandModel.NewDrainage);
-
+        
         OnPropertyChanged(nameof(AllAvailableDrainages));
 
         CurrentStandModel.NewDrainage = new FormedDrainage();
@@ -419,6 +377,37 @@ public class ProjectViewModel : BaseViewModel
 
         OnPropertyChanged(nameof(AllAvailableAdditionalEquips));
         CurrentStandModel.NewAdditionalEquip = new FormedAdditionalEquip();
+    }
+
+    private async Task<ObvyazkaInStand> CreateObvyazkaAsync(ProjectModel project, Obvyazka selectedObvyazka)
+    {
+        return new ObvyazkaInStand
+        {
+            LineLength = selectedObvyazka.LineLength,
+            ZraCount = selectedObvyazka.ZraCount,
+            Sensor = selectedObvyazka.Sensor,
+            SensorType = selectedObvyazka.SensorType,
+            Clamp = selectedObvyazka.Clamp,
+            WidthOnFrame = selectedObvyazka.WidthOnFrame,
+            OtherLineCount = selectedObvyazka.OtherLineCount,
+            Weight = selectedObvyazka.Weight,
+            TreeSocketCount = selectedObvyazka.TreeSocket,
+            HumanCost = selectedObvyazka.HumanCost,
+            ImageName = selectedObvyazka.ImageName,
+            ObvyazkaId = selectedObvyazka.Id,
+            
+            ObvyazkaName = CurrentProjectModel.SelectedStand.ObvyazkaName,
+            StandId = CurrentProjectModel.SelectedStand.Id,
+            NN = CurrentProjectModel.SelectedStand.NN,
+            MaterialLine = CurrentProjectModel.SelectedStand.MaterialLine,
+            Armature = CurrentProjectModel.SelectedStand.Armature,
+            TreeSocket = CurrentProjectModel.SelectedStand.TreeSocket,
+            KMCH = CurrentProjectModel.SelectedStand.KMCH,
+            FirstSensorType = CurrentProjectModel.SelectedStand.FirstSensorType,
+            FirstSensorKKS = CurrentProjectModel.SelectedStand.FirstSensorKKSCounter,
+            FirstSensorMarkPlus = CurrentProjectModel.SelectedStand.FirstSensorMarkPlus,
+            FirstSensorMarkMinus = CurrentProjectModel.SelectedStand.FirstSensorMarkMinus
+        };
     }
     #endregion
 }

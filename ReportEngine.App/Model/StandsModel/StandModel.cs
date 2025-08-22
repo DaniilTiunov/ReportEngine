@@ -37,7 +37,7 @@ public class StandModel : BaseViewModel
     private FormedDrainage _newDrainage = new();
     private FormedElectricalComponent _newElectricalComponent = new();
     private int _nn;
-    private int _obvyazkaType;
+    private string _obvyazkaName;
 
     private ObservableCollection<StandObvyazkaModel> _obvyazki = new();
     private ObservableCollection<ObvyazkaInStand> _obvyazkiInStand = new();
@@ -130,10 +130,10 @@ public class StandModel : BaseViewModel
         set => Set(ref _standSummCost, value);
     }
 
-    public int ObvyazkaType
+    public string ObvyazkaName
     {
-        get => _obvyazkaType;
-        set => Set(ref _obvyazkaType, value);
+        get => _obvyazkaName;
+        set => Set(ref _obvyazkaName, value);
     }
 
     public int NN
@@ -225,7 +225,7 @@ public class StandModel : BaseViewModel
         get => _obvyazkiInStand;
         set => Set(ref _obvyazkiInStand, value);
     }
-
+    
     public FormedDrainage SelectedDrainage
     {
         get => _selectedDrainage;
@@ -238,6 +238,13 @@ public class StandModel : BaseViewModel
         set => Set(ref _selectedFrame, value);
     }
 
+    public ObvyazkaInStand SelectedObvyazkaInStand
+    {
+        get => _selectedObvyazkaInStand;
+        set => Set(ref _selectedObvyazkaInStand, value);
+    }
+
+    private ObvyazkaInStand _selectedObvyazkaInStand = new();
     public FormedDrainage NewDrainage
     {
         get => _newDrainage;
@@ -284,7 +291,6 @@ public class StandModel : BaseViewModel
     private ObservableCollection<ElectricalPurpose> _allElectricalPurposesInStand = new();
     private ObservableCollection<AdditionalEquipPurpose> _allAdditionalEquipPurposesInStand = new();
     
-    
     public ObservableCollection<DrainagePurpose> AllDrainagePurposesInStand
     {
         get => _allDrainagePurposesInStand;
@@ -297,7 +303,6 @@ public class StandModel : BaseViewModel
         set => Set(ref _allElectricalPurposesInStand, value);
     }
         
-
     public ObservableCollection<AdditionalEquipPurpose> AllAdditionalEquipPurposesInStand
     {
         get => _allAdditionalEquipPurposesInStand;

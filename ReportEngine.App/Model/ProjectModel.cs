@@ -106,7 +106,7 @@ public class ProjectModel : BaseViewModel
     {
         get => _description;
         set => Set(ref _description, value);
-    } //Обозначение КД                               
+    } //Обозначение КД
 
     public DateTime CreationDate
     {

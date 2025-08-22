@@ -2,17 +2,22 @@
     x:Class="ReportEngine.App.Views.Controls.ProjectPreview"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:ReportEngine.App.Display"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:ReportEngine.App.Views.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="500"
+    d:DesignWidth="800"
     FontSize="13"
-    d:DesignHeight="300"
-    d:DesignWidth="300"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:ObvyazkaImagePathConverter x:Key="ObvyazkaImagePathConverter" />
+    </UserControl.Resources>
+
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="2*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -27,10 +32,7 @@
             Margin="5"
             Padding="5"
             Header="Стенды проекта">
-            <ListView
-                Grid.Row="1"
-                ItemsSource="{Binding CurrentProjectModel.Stands}"
-                SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}">
+            <ListView ItemsSource="{Binding CurrentProjectModel.Stands}" SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn
@@ -94,13 +96,7 @@
             Margin="5"
             Padding="5"
             Header="Обвязки в стенде">
-            <ListView
-                Grid.Row="4"
-                Margin="0,10,0,0"
-                BorderBrush="#DDDDDD"
-                BorderThickness="1"
-                ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}"
-                SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazka}">
+            <ListView ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}" SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazka, Mode=TwoWay}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn
@@ -127,30 +123,67 @@
                             Width="100"
                             DisplayMemberBinding="{Binding FirstSensorType}"
                             Header="Датчик 1" />
+                        <GridViewColumn Header="Картинка" Width="100">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Image
+                                        Width="80"
+                                        Height="80"
+                                        Source="{Binding ImageName, Converter={StaticResource ObvyazkaImagePathConverter}}"
+                                        Stretch="Uniform" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>
         </GroupBox>
 
-        <!--  Средний правый GroupBox  -->
-        <GroupBox
-            Grid.Row="1"
-            Grid.Column="1"
-            Margin="5"
-            Padding="5"
-            Header="Дренаж в стенде">
-            <ListView 
-                ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand}"
-                SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn DisplayMemberBinding="{Binding Purpose}" Header="Назначение" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Material}" Header="Материал" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Quantity}" Header="Кол-во" />
-                    </GridView>
-                </ListView.View>
-            </ListView>
-        </GroupBox>
+        <!--  Средний правый GroupBox с картинкой и информацией об обвязке  -->
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!--  Картинка выбранной обвязки  -->
+            <Border
+                Grid.Row="0"
+                Margin="5"
+                Background="WhiteSmoke"
+                BorderBrush="LightGray"
+                BorderThickness="1"
+                CornerRadius="5">
+                <Image
+                    Width="150"
+                    Height="150"
+                    Source="{Binding CurrentProjectModel.ImageName, Converter={StaticResource ObvyazkaImagePathConverter}}"
+                    Stretch="Uniform" />
+            </Border>
+
+            <!--  Данные обвязки  -->
+            <GroupBox
+                Grid.Row="1"
+                Margin="5"
+                Padding="5"
+                Header="Информация об обвязке">
+                <StackPanel>
+                    <StackPanel.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="FontSize" Value="12" />
+                            <Setter Property="Margin" Value="0,2" />
+                        </Style>
+                    </StackPanel.Resources>
+
+                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazka.ObvyazkaId, StringFormat='Тип: {0}'}" />
+                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazka.MaterialLine, StringFormat='Материал: {0}'}" />
+                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazka.Armature, StringFormat='Арматура: {0}'}" />
+                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazka.TreeSocket, StringFormat='Тройник: {0}'}" />
+                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazka.KMCH, StringFormat='КМЧ: {0}'}" />
+                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazka.FirstSensorType, StringFormat='Датчик 1: {0}'}" />
+                </StackPanel>
+            </GroupBox>
+        </Grid>
 
         <!--  Нижний левый GroupBox  -->
         <GroupBox
@@ -159,9 +192,7 @@
             Margin="5"
             Padding="5"
             Header="Электрические компоненты">
-            <ListView 
-                ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}"
-                SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
+            <ListView ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}" SelectedItem="{Binding CurrentStandModel.SelectedElectricalComponent}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn DisplayMemberBinding="{Binding Purpose}" Header="Назначение" />
@@ -178,10 +209,8 @@
             Grid.Column="1"
             Margin="5"
             Padding="5"
-            Header="Доп комплектующие">
-            <ListView 
-                ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand}"
-                SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
+            Header="Дренаж в стенде">
+            <ListView ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand}" SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn DisplayMemberBinding="{Binding Purpose}" Header="Назначение" />

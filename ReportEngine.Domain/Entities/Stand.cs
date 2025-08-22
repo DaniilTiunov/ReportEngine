@@ -23,7 +23,7 @@ public class Stand
     public string? SerialNumber { get; set; } //Серийный номер
     public float Weight { get; set; } //Масса
     public decimal StandSummCost { get; set; } //Сумма стенда
-    public int ObvyazkaType { get; set; } //Тип обвязки
+    public string? ObvyazkaType { get; set; } //Тип обвязки
     public int NN { get; set; } //NN
     public string? MaterialLine { get; set; } //Материал линии
     public string? Armature { get; set; } // Араматура
