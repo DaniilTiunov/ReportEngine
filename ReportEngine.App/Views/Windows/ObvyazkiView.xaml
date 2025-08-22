@@ -15,23 +15,23 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*" /> <!-- Область для списка картинок -->
-            <ColumnDefinition Width="Auto" /> <!-- Разделитель -->
-            <ColumnDefinition Width="1.5*" /> <!-- Область для деталей выбранной картинки -->
+            <ColumnDefinition Width="3*" /> <!-- Область для картинок -->
+            <ColumnDefinition Width="1*" /> <!-- Область для информации -->
         </Grid.ColumnDefinitions>
 
-        <!-- Список больших картинок (слева) -->
-        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
-            <ItemsControl
-                Margin="10"
-                ItemsSource="{Binding CurrentObvyazka.Obvyazki}"
-                >
-                <ItemsControl.ItemsPanel>
+        <!-- Картинки обвязок (слева) -->
+        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" Margin="10">
+            <ListBox
+                ItemsSource="{Binding CurrentObvyazka.Obvyazki, Mode=TwoWay}"
+                SelectedItem="{Binding CurrentObvyazka.SelectedObvyazka, Mode=TwoWay}"
+                BorderThickness="0"
+                Background="Transparent">
+                <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Vertical" />
+                        <UniformGrid Columns="3" />
                     </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Border
                             Margin="10"
@@ -40,72 +40,73 @@
                             BorderThickness="1"
                             CornerRadius="5">
                             <Image
-                                Width="250"
-                                Height="250"
+                                Width="200"
+                                Height="200"
                                 Source="{Binding ImageName, Converter={StaticResource ObvyazkaImagePathConverter}}"
-                                Stretch="Uniform"/>
+                                Stretch="Uniform" />
                         </Border>
                     </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
         </ScrollViewer>
 
-        <!-- Разделитель -->
-        <GridSplitter
-            Grid.Column="1"
-            Width="5"
-            Background="LightGray"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch" />
 
-        <!-- Детали выбранной обвязки (справа) -->
-        <Border Grid.Column="2" Margin="10" Background="WhiteSmoke">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                
-                <!-- Уменьшенная картинка -->
-                <Image Grid.Row="0"
-                       Margin="10"
-                       Width="200"
-                       Height="200"
-                       Source="{Binding CurrentObvyazka.SelectedObvyazka.ImageName, Converter={StaticResource ObvyazkaImagePathConverter}}"
-                       Stretch="Uniform"
-                       HorizontalAlignment="Center"/>
-                
-                <!-- Детали обвязки -->
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                    <StackPanel Margin="10">
-                        <StackPanel.Resources>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="FontSize" Value="14" />
-                                <Setter Property="Margin" Value="0,5" />
-                            </Style>
-                        </StackPanel.Resources>
+        <!-- Информация о выбранной обвязке (справа) -->
+        <StackPanel Grid.Column="1" Margin="10" VerticalAlignment="Top">
+            <!-- Картинка выбранной обвязки -->
+            <Border
+                Margin="0,10,0,10"
+                Background="WhiteSmoke"
+                BorderBrush="LightGray"
+                BorderThickness="1"
+                CornerRadius="5">
+                <Image
+                    Width="200"
+                    Height="200"
+                    Source="{Binding CurrentObvyazka.SelectedObvyazka.ImageName, Converter={StaticResource ObvyazkaImagePathConverter}}"
+                    Stretch="Uniform" />
+            </Border>
 
-                        <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.Number, StringFormat='Номер: {0}'}" />
-                        <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.LineLength, StringFormat='Длина линии: {0}'}" />
-                        <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.ZraCount, StringFormat='Кол-во ЗРА: {0}'}" />
-                        <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.TreeSocket, StringFormat='Тройники: {0}'}" />
-                        <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.Sensor, StringFormat='Датчики: {0}'}" />
-                        <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.SensorType, StringFormat='Тип датчиков: {0}'}" />
-                        <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.Clamp, StringFormat='Хомуты: {0}'}" />
-                        <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.WidthOnFrame, StringFormat='Длина на раме: {0}'}" />
-                        <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.OtherLineCount, StringFormat='Др. линии: {0}'}" />
-                        <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.Weight, StringFormat='Масса: {0}'}" />
-                        <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.HumanCost, StringFormat='Трудозатраты: {0}'}" />
-                    </StackPanel>
-                </ScrollViewer>
-                
-                <!-- Кнопки действий -->
-                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10">
-                    <Button Content="Сохранить" Command="{Binding SaveUserCommand}" Margin="5" Padding="10,5"/>
-                    <Button Content="Удалить" Command="{Binding DeleteUserCommand}" Margin="5" Padding="10,5"/>
+            <!-- Данные обвязки -->
+            <GroupBox Header="Информация" Margin="0,10,0,0" Padding="10">
+                <StackPanel>
+                    <StackPanel.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="FontSize" Value="14" />
+                            <Setter Property="Margin" Value="0,5" />
+                        </Style>
+                    </StackPanel.Resources>
+
+                    <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.Number, StringFormat='Номер: {0}'}" />
+                    <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.LineLength, StringFormat='Длина линии: {0}'}" />
+                    <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.ZraCount, StringFormat='Кол-во ЗРА: {0}'}" />
+                    <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.TreeSocket, StringFormat='Тройники: {0}'}" />
+                    <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.Sensor, StringFormat='Датчики: {0}'}" />
+                    <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.SensorType, StringFormat='Тип датчиков: {0}'}" />
+                    <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.Clamp, StringFormat='Хомуты: {0}'}" />
+                    <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.WidthOnFrame, StringFormat='Длина на раме: {0}'}" />
+                    <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.OtherLineCount, StringFormat='Др. линии: {0}'}" />
+                    <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.Weight, StringFormat='Масса: {0}'}" />
+                    <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.HumanCost, StringFormat='Трудозатраты: {0}'}" />
                 </StackPanel>
-            </Grid>
-        </Border>
+            </GroupBox>
+        </StackPanel>
     </Grid>
+
+    <!-- Контекстное меню -->
+    <Window.ContextMenu>
+        <ContextMenu>
+            <MenuItem Command="{Binding ShowAllObvyazkaCommand}" Header="Показать всех" />
+            <Separator />
+            <MenuItem Command="{Binding SaveUserCommand}" Header="Сохранить изменения" />
+            <MenuItem Command="{Binding AddNewUserCommand}" Header="Добавить" />
+            <Separator />
+            <MenuItem Command="{Binding DeleteUserCommand}" Header="Удалить" />
+        </ContextMenu>
+    </Window.ContextMenu>
 </Window>

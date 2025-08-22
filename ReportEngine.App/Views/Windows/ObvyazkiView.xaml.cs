@@ -16,9 +16,12 @@ public partial class ObvyazkiView : Window
         InitializeComponent();
         DataContext = obvyazkiViewModel;
 
-        obvyazkiViewModel.OnShowAllObvyazkiCommandExecuted(null);
+        InitializeData(obvyazkiViewModel);
     }
-    
+    private async void InitializeData(ObvyazkaViewModel obvyazkiViewModel)
+    {
+        await obvyazkiViewModel.ShowAllObvyazkiAsync();
+    }
     private void Window_Closing(object sender, CancelEventArgs e)
     {
         e.Cancel = true;

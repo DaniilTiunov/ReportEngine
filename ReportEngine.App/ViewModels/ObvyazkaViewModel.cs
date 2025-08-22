@@ -50,7 +50,7 @@ public class ObvyazkaViewModel
 
     #region Методы
 
-    private async Task ShowAllObvyazkiAsync()
+    public async Task ShowAllObvyazkiAsync()
     {
         var obvyazki = await _obvyazkaRepository.GetAllAsync();
         CurrentObvyazka.Obvyazki = new ObservableCollection<Obvyazka>(obvyazki);

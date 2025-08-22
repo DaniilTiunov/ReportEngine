@@ -17,12 +17,24 @@ public class ObvyazkaInStand
 
     [ForeignKey("ObvyazkaId")] public virtual Obvyazka Obvyazka { get; set; }
 
-    public string MaterialLine { get; set; }
-    public string TreeSocket { get; set; }
-    public string KMCH { get; set; }
-    public string Armature { get; set; }
-
-    public int NN { get; set; }
+    public string? ObvyazkaName { get; set; }
+    public string? MaterialLine { get; set; }
+    public string? TreeSocket { get; set; }
+    public string? KMCH { get; set; }
+    public string? Armature { get; set; }
+    public int? NN { get; set; }
+    
+    public float LineLength { get; set; } // Длина линии
+    public float ZraCount { get; set; } //Количество ЗРА
+    public int Sensor { get; set; } //Датчики
+    public string SensorType { get; set; } //Тип датчиков
+    public float Clamp { get; set; } //Хомуты
+    public float WidthOnFrame { get; set; } //Длина на раме
+    public int OtherLineCount { get; set; } //Колво др. линий
+    public float Weight { get; set; } //Масса
+    public float HumanCost { get; set; } //Трудозатраты чел/час
+    public string ImageName { get; set; } //Название картинки
+    
 
     // Датчики (до 3-х)
     public string? FirstSensorType { get; set; }
