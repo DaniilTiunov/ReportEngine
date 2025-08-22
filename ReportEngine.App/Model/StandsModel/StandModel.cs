@@ -8,8 +8,12 @@ namespace ReportEngine.App.Model.StandsModel;
 public class StandModel : BaseViewModel
 {
     private ObservableCollection<FormedAdditionalEquip> _additionalEquipsInStand = new();
+    private ObservableCollection<AdditionalEquipPurpose> _allAdditionalEquipPurposesInStand = new();
     private ObservableCollection<FormedDrainage> _allAvailableDrainages = new();
     private ObservableCollection<FormedFrame> _allAvailableFrames = new();
+
+    private ObservableCollection<DrainagePurpose> _allDrainagePurposesInStand = new();
+    private ObservableCollection<ElectricalPurpose> _allElectricalPurposesInStand = new();
     private string _armature;
     private string _braceType;
     private string _design;
@@ -47,6 +51,8 @@ public class StandModel : BaseViewModel
     private FormedElectricalComponent _selectedElectricalComponent;
     private FormedFrame _selectedFrame;
     private StandObvyazkaModel _selectedObvyazka;
+
+    private ObvyazkaInStand _selectedObvyazkaInStand = new();
     private string _serialNumber;
     private decimal _standSummCost;
     private string _treeScoket;
@@ -225,7 +231,7 @@ public class StandModel : BaseViewModel
         get => _obvyazkiInStand;
         set => Set(ref _obvyazkiInStand, value);
     }
-    
+
     public FormedDrainage SelectedDrainage
     {
         get => _selectedDrainage;
@@ -244,7 +250,6 @@ public class StandModel : BaseViewModel
         set => Set(ref _selectedObvyazkaInStand, value);
     }
 
-    private ObvyazkaInStand _selectedObvyazkaInStand = new();
     public FormedDrainage NewDrainage
     {
         get => _newDrainage;
@@ -287,10 +292,6 @@ public class StandModel : BaseViewModel
         set => Set(ref _newAdditionalEquip, value);
     }
 
-    private ObservableCollection<DrainagePurpose> _allDrainagePurposesInStand = new();
-    private ObservableCollection<ElectricalPurpose> _allElectricalPurposesInStand = new();
-    private ObservableCollection<AdditionalEquipPurpose> _allAdditionalEquipPurposesInStand = new();
-    
     public ObservableCollection<DrainagePurpose> AllDrainagePurposesInStand
     {
         get => _allDrainagePurposesInStand;
@@ -302,7 +303,7 @@ public class StandModel : BaseViewModel
         get => _allElectricalPurposesInStand;
         set => Set(ref _allElectricalPurposesInStand, value);
     }
-        
+
     public ObservableCollection<AdditionalEquipPurpose> AllAdditionalEquipPurposesInStand
     {
         get => _allAdditionalEquipPurposesInStand;

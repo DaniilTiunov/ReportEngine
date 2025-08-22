@@ -8,12 +8,12 @@ namespace ReportEngine.App.Services.Core;
 public class ProjectDataLoaderSerive : IProjectDataLoaderService
 {
     private readonly IStandService _standService;
-    
+
     public ProjectDataLoaderSerive(IStandService standService)
     {
         _standService = standService;
     }
-    
+
     public async Task LoadFramesToViewModel(ProjectViewModel viewModel)
     {
         var frames = await _standService.LoadAllAvailableFrameAsync();
@@ -27,11 +27,12 @@ public class ProjectDataLoaderSerive : IProjectDataLoaderService
         viewModel.AllAvailableDrainages = new ObservableCollection<FormedDrainage>(drainages);
         viewModel.OnPropertyChanged(nameof(viewModel.AllAvailableDrainages));
     }
-    
+
     public async Task LoadElectricalComponentsToViewModel(ProjectViewModel viewModel)
     {
         var electricalComponent = await _standService.LoadAllAvailableElectricalComponentsAsync();
-        viewModel.AllAvailableElectricalComponents = new ObservableCollection<FormedElectricalComponent>(electricalComponent);
+        viewModel.AllAvailableElectricalComponents =
+            new ObservableCollection<FormedElectricalComponent>(electricalComponent);
         viewModel.OnPropertyChanged(nameof(viewModel.AllAvailableElectricalComponents));
     }
 

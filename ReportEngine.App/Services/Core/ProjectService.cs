@@ -73,7 +73,7 @@ public class ProjectService : IProjectService
 
         _notificationService.ShowInfo("Стенд добавлен");
     }
-    
+
     public async Task<ProjectModel> LoadProjectInfoAsync(int projectId)
     {
         var projectInfo = await _projectRepository.GetStandsByIdAsync(projectId);
@@ -103,7 +103,6 @@ public class ProjectService : IProjectService
         };
 
         if (projectInfo.Stands != null)
-        {
             foreach (var stand in projectInfo.Stands)
             {
                 var standModel = StandDataConverter.ConvertToStandModel(stand);
@@ -112,7 +111,6 @@ public class ProjectService : IProjectService
                 );
                 model.Stands.Add(standModel);
             }
-        }
 
         model.SelectedStand = model.Stands.FirstOrDefault();
         return model;

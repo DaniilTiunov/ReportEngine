@@ -220,6 +220,7 @@ public class MainWindowViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(DeleteSelectedProjectAsync);
     }
+
     public async Task CheckDbConnectionAsync()
     {
         var context = _serviceProvider.GetRequiredService<ReAppContext>();
@@ -227,16 +228,19 @@ public class MainWindowViewModel : BaseViewModel
         MainWindowModel.ConnectionStatusMessage =
             MainWindowModel.IsConnected ? "Соединение установлено" : "Соединение не установлено";
     }
+
     public async Task ShowAllProjectsAsync()
     {
         var projects = await _projectRepository.GetAllAsync();
         MainWindowModel.AllProjects = new ObservableCollection<ProjectInfo>(projects);
     }
+
     public async Task DeleteSelectedProjectAsync()
     {
         var currentProject = MainWindowModel.SelectedProject;
         await _projectRepository.DeleteAsync(currentProject);
         await ShowAllProjectsAsync();
     }
+
     #endregion
 }

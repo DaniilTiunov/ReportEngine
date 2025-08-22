@@ -15,8 +15,6 @@ public class ObvyazkaViewModel
     private readonly IDialogService _dialogService;
     private readonly NavigationService _navigation;
     private readonly IObvyazkaRepository _obvyazkaRepository;
-    
-    public Action<Obvyazka>? SelectionHandler { get; set; }
 
     public ObvyazkaViewModel(IObvyazkaRepository obvyazkaRepository, NavigationService navigation,
         IDialogService dialogService)
@@ -26,6 +24,8 @@ public class ObvyazkaViewModel
         _dialogService = dialogService;
         InitializeCommands();
     }
+
+    public Action<Obvyazka>? SelectionHandler { get; set; }
 
     public ObvyazkaModel CurrentObvyazka { get; set; } = new();
 
@@ -57,5 +57,6 @@ public class ObvyazkaViewModel
         var obvyazki = await _obvyazkaRepository.GetAllAsync();
         CurrentObvyazka.Obvyazki = new ObservableCollection<Obvyazka>(obvyazki);
     }
+
     #endregion
 }

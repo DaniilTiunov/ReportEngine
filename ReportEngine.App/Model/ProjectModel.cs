@@ -84,7 +84,8 @@ public class ProjectModel : BaseViewModel
 
     #region Публичные свойства
 
-    public IEnumerable<string> Statuses { get; set; } = new List<string> { "Расчёт", "ТКП", "Производство", "Завершен" };
+    public IEnumerable<string> Statuses { get; set; } =
+        new List<string> { "Расчёт", "ТКП", "Производство", "Завершен" };
 
     public int CurrentProjectId;
     public ObservableCollection<StandModel> Stands { get; set; } = new();

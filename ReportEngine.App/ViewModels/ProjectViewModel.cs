@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Diagnostics;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
@@ -10,7 +9,6 @@ using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Pipes;
-using ReportEngine.Domain.Enums;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
 
@@ -20,10 +18,10 @@ public class ProjectViewModel : BaseViewModel
 {
     private readonly IDialogService _dialogService;
     private readonly INotificationService _notificationService;
-    private readonly IProjectInfoRepository _projectRepository;
-    private readonly IStandService _standService;
-    private readonly IProjectService _projectService;
     private readonly IProjectDataLoaderService _projectDataLoaderService;
+    private readonly IProjectInfoRepository _projectRepository;
+    private readonly IProjectService _projectService;
+    private readonly IStandService _standService;
 
     public ProjectViewModel(IProjectInfoRepository projectRepository,
         IDialogService dialogService,
@@ -82,7 +80,7 @@ public class ProjectViewModel : BaseViewModel
             new RelayCommand(OnAddCustomElectricalComponentToStandExecuted, CanAllCommandsExecute);
         ProjectCommandProvider.AddCustomAdditionalEquipToStandCommand =
             new RelayCommand(OnAddCustomAdditionalEquipToStandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.SelectObvFromDialogCommand = 
+        ProjectCommandProvider.SelectObvFromDialogCommand =
             new RelayCommand(OnSelectObvCommandExecuted, CanAllCommandsExecute);
     }
 
@@ -171,11 +169,9 @@ public class ProjectViewModel : BaseViewModel
 
     public void OnSelectObvCommandExecuted(object p)
     {
-        ExceptionHelper.SafeExecute(() =>
-        {
-            SelectedObvyazka = _dialogService.ShowObvyazkaDialog();
-        });
+        ExceptionHelper.SafeExecute(() => { SelectedObvyazka = _dialogService.ShowObvyazkaDialog(); });
     }
+
     #endregion
 
     #region Методы
@@ -196,6 +192,7 @@ public class ProjectViewModel : BaseViewModel
             await _standService.LoadStandsDataAsync(CurrentProjectModel.Stands);
         });
     }
+
     public async Task LoadPurposesInStandsAsync()
     {
         await ExceptionHelper.SafeExecuteAsync(() =>
@@ -204,6 +201,7 @@ public class ProjectViewModel : BaseViewModel
             return Task.CompletedTask;
         });
     }
+
     public async Task LoadObvyazkiAsync()
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -234,7 +232,7 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    
+
     private async Task AddObvToStandAsync()
     {
         if (CurrentProjectModel.SelectedStand == null)
@@ -299,7 +297,7 @@ public class ProjectViewModel : BaseViewModel
     private async Task CreateNewProjectCardAsync()
     {
         await _projectService.CreateProjectAsync(CurrentProjectModel);
-        
+
         CurrentProjectModel.Stands.Clear();
         CurrentStandModel = new StandModel();
     }
@@ -347,7 +345,7 @@ public class ProjectViewModel : BaseViewModel
 
         AllAvailableDrainages.Add(CurrentStandModel.NewDrainage);
         CurrentProjectModel.SelectedStand.DrainagesInStand.Add(CurrentStandModel.NewDrainage);
-        
+
         OnPropertyChanged(nameof(AllAvailableDrainages));
 
         CurrentStandModel.NewDrainage = new FormedDrainage();
@@ -395,7 +393,7 @@ public class ProjectViewModel : BaseViewModel
             HumanCost = selectedObvyazka.HumanCost,
             ImageName = selectedObvyazka.ImageName,
             ObvyazkaId = selectedObvyazka.Id,
-            
+
             ObvyazkaName = CurrentProjectModel.SelectedStand.ObvyazkaName,
             StandId = CurrentProjectModel.SelectedStand.Id,
             NN = CurrentProjectModel.SelectedStand.NN,
@@ -409,5 +407,6 @@ public class ProjectViewModel : BaseViewModel
             FirstSensorMarkMinus = CurrentProjectModel.SelectedStand.FirstSensorMarkMinus
         };
     }
+
     #endregion
 }

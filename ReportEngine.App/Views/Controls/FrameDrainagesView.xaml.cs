@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Views.Controls;
@@ -13,7 +12,7 @@ public partial class FrameDrainagesView : UserControl
     {
         InitializeComponent();
         DataContext = viewModel;
-        
+
         InitializeData(viewModel);
     }
 

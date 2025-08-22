@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using ReportEngine.App.ViewModels;
 
@@ -18,18 +17,21 @@ public partial class ObvyazkiView : Window
 
         InitializeData(obvyazkiViewModel);
     }
+
     private void ObvyazkaListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-         if (DataContext is ObvyazkaViewModel vm && vm.CurrentObvyazka.SelectedObvyazka != null)
-         {
-             vm.SelectionHandler?.Invoke(vm.CurrentObvyazka.SelectedObvyazka);
-             this.Close();
-         }
+        if (DataContext is ObvyazkaViewModel vm && vm.CurrentObvyazka.SelectedObvyazka != null)
+        {
+            vm.SelectionHandler?.Invoke(vm.CurrentObvyazka.SelectedObvyazka);
+            Close();
+        }
     }
+
     private void InitializeData(ObvyazkaViewModel obvyazkiViewModel)
-    { 
+    {
         obvyazkiViewModel.ShowAllObvyazkiAsync();
     }
+
     private void Window_Closing(object sender, CancelEventArgs e)
     {
         e.Cancel = true;
