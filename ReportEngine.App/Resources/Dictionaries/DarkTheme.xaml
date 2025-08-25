@@ -10,14 +10,30 @@
     <SolidColorBrush x:Key="SelectedRowBackground" Color="#FF009688" />
     <SolidColorBrush x:Key="SelectedRowForeground" Color="#FFFFFF" />
 
-    <!-- Стили для UserControl -->
-    <Style TargetType="UserControl">
+    <!-- Принудительные глобальные стили -->
+    <Style TargetType="UserControl" BasedOn="{x:Null}">
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
         <Setter Property="Foreground" Value="White" />
     </Style>
 
-    <!-- Стили для DataGrid -->
-    <Style TargetType="DataGrid">
+    <Style TargetType="Window" BasedOn="{x:Null}">
+        <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+    
+    <!-- Стиль для ContentControl -->
+    <Style TargetType="ContentControl" BasedOn="{x:Null}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="8" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+    </Style>
+
+
+    <Style TargetType="DataGrid" BasedOn="{x:Null}">
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="BorderThickness" Value="1" />
@@ -33,7 +49,7 @@
         <Setter Property="GridLinesVisibility" Value="None" />
     </Style>
 
-    <Style TargetType="DataGridColumnHeader">
+    <Style TargetType="DataGridColumnHeader" BasedOn="{x:Null}">
         <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="FontWeight" Value="Bold" />
@@ -42,7 +58,7 @@
         <Setter Property="Padding" Value="8,4" />
     </Style>
 
-    <Style TargetType="DataGridCell">
+    <Style TargetType="DataGridCell" BasedOn="{x:Null}">
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="BorderThickness" Value="0,0,1,1" />
         <Setter Property="Padding" Value="8,4" />
@@ -58,13 +74,12 @@
         </Style.Triggers>
     </Style>
 
-    <!-- Стили для Menu и MenuItem -->
-    <Style TargetType="Menu">
+    <Style TargetType="Menu" BasedOn="{x:Null}">
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
         <Setter Property="FontSize" Value="14" />
     </Style>
 
-    <Style TargetType="MenuItem">
+    <Style TargetType="MenuItem" BasedOn="{x:Null}">
         <Setter Property="FontSize" Value="14" />
         <Setter Property="Padding" Value="6,2" />
         <Setter Property="Background" Value="Transparent" />
@@ -77,15 +92,13 @@
         </Style.Triggers>
     </Style>
 
-    <!-- Стили для StatusBar -->
-    <Style TargetType="StatusBar">
+    <Style TargetType="StatusBar" BasedOn="{x:Null}">
         <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
         <Setter Property="FontSize" Value="13" />
         <Setter Property="Foreground" Value="White" />
     </Style>
 
-    <!-- Стили для кнопок -->
-    <Style TargetType="Button">
+    <Style TargetType="Button" BasedOn="{x:Null}">
         <Setter Property="Background" Value="{DynamicResource AccentColor}" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="Padding" Value="6,2" />

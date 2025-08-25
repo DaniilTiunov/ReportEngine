@@ -169,6 +169,7 @@
                 AutoGenerateColumns="False"
                 ItemsSource="{Binding MainWindowModel.AllProjects}"
                 SelectedItem="{Binding MainWindowModel.SelectedProject}"
+                Background="{DynamicResource PrimaryColor}"
                 SelectionUnit="FullRow">
                 <DataGrid.Columns>
                     <DataGridTextColumn

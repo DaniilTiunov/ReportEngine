@@ -71,7 +71,8 @@ public partial class MainWindow : Window //Это так называемый "C
     {
         var uri = new Uri("/Resources/Dictionaries/DarkTheme.xaml", UriKind.RelativeOrAbsolute);
         ResourceDictionary resourceDict = Application.LoadComponent(uri) as ResourceDictionary;
-        Application.Current.Resources.Clear();
+        
+        Application.Current.Resources.MergedDictionaries.Clear();
         Application.Current.Resources.MergedDictionaries.Add(resourceDict);
     }
 
