@@ -29,7 +29,8 @@ public class ProjectInfoRepository : IProjectInfoRepository
 
     public async Task<ProjectInfo> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        return await _context.Set<ProjectInfo>()
+            .FirstOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task UpdateAsync(ProjectInfo project)

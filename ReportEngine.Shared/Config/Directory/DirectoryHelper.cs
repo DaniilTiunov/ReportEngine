@@ -23,4 +23,9 @@ public class DirectoryHelper
         return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Images", "Obvyazka",
             imageName + ".jpg");
     }
+
+    public static string GetReportsPath()
+    {
+        return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Отчёты");
+    }
 }

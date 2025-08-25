@@ -18,4 +18,6 @@ public class ProjectCommandProvider
     public ICommand AddCustomElectricalComponentToStandCommand { get; set; }
     public ICommand AddCustomAdditionalEquipToStandCommand { get; set; }
     public ICommand SelectObvFromDialogCommand { get; set; }
+    public ICommand CalculateProjectCommand { get; set; }
+    public ICommand CreateSummaryReportCommand { get; set; }
 }

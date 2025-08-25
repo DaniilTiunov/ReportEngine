@@ -252,7 +252,7 @@
                         Grid.Column="1"
                         Margin="0,0,5,0"
                         ItemsSource="{Binding SensorTypes}"
-                        SelectedItem="{Binding CurrentProjectModel.SelectedStand.Sensor2.Type}" />
+                        SelectedItem="{Binding CurrentProjectModel.SelectedStand.SecondSensorType}" />
 
                     <TextBlock
                         Grid.Row="1"
@@ -262,7 +262,7 @@
                         Grid.Row="1"
                         Grid.Column="1"
                         Margin="0,0,5,0"
-                        Text="{Binding CurrentProjectModel.SelectedStand.Sensor2.KKSCircuit}" />
+                        Text="{Binding CurrentProjectModel.SelectedStand.SecondSensorKKS}" />
 
                     <TextBlock
                         Grid.Row="2"
@@ -272,7 +272,7 @@
                         Grid.Row="2"
                         Grid.Column="1"
                         Margin="0,0,5,0"
-                        Text="{Binding CurrentProjectModel.SelectedStand.Sensor2.MarkingPlus}" />
+                        Text="{Binding CurrentProjectModel.SelectedStand.SecondSensorMarkPlus}" />
 
                     <TextBlock
                         Grid.Row="3"
@@ -282,7 +282,7 @@
                         Grid.Row="3"
                         Grid.Column="1"
                         Margin="0,0,5,0"
-                        Text="{Binding CurrentProjectModel.SelectedStand.Sensor2.MarkingMinus}" />
+                        Text="{Binding CurrentProjectModel.SelectedStand.SecondSensorMarkMinus}" />
 
                     <TextBlock
                         Grid.Row="4"
@@ -327,7 +327,7 @@
                         Grid.Column="1"
                         Margin="0,0,5,0"
                         ItemsSource="{Binding SensorType}"
-                        SelectedItem="{Binding CurrentProjectModel.SelectedStand.Sensor3.Type}" />
+                        SelectedItem="{Binding CurrentProjectModel.SelectedStand.ThirdSensorType}" />
 
                     <TextBlock
                         Grid.Row="1"
@@ -337,7 +337,7 @@
                         Grid.Row="1"
                         Grid.Column="1"
                         Margin="0,0,5,0"
-                        Text="{Binding CurrentProjectModel.SelectedStand.Sensor3.KKSCircuit}" />
+                        Text="{Binding CurrentProjectModel.SelectedStand.ThirdSensorKKS}" />
 
                     <TextBlock
                         Grid.Row="2"
@@ -347,7 +347,7 @@
                         Grid.Row="2"
                         Grid.Column="1"
                         Margin="0,0,5,0"
-                        Text="{Binding CurrentProjectModel.SelectedStand.Sensor3.MarkingPlus}" />
+                        Text="{Binding CurrentProjectModel.SelectedStand.ThirdSensorMarkPlus}" />
 
                     <TextBlock
                         Grid.Row="3"
@@ -357,7 +357,7 @@
                         Grid.Row="3"
                         Grid.Column="1"
                         Margin="0,0,5,0"
-                        Text="{Binding CurrentProjectModel.SelectedStand.Sensor3.MarkingMinus}" />
+                        Text="{Binding CurrentProjectModel.SelectedStand.ThirdSensorMarkMinus}" />
 
                     <TextBlock
                         Grid.Row="4"

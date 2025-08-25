@@ -58,6 +58,15 @@ public class StandModel : BaseViewModel
     private string _treeScoket;
     private float _weight;
     private float _width;
+    private string _comments;
+    private string _secondSensorType;
+    private string? _secondSensorKksCode;
+    private string? _secondSensorMarkPlus;
+    private string? _secondSensorMarkMinus;
+    private string _thirdSensorType;
+    private string? _thirdSensorMarkPlus;
+    private string? _thirdSensorKksCode;
+    private string? _thirdSensorMarkMinus;
 
     public ObservableCollection<StandObvyazkaModel> Obvyazki
     {
@@ -106,6 +115,11 @@ public class StandModel : BaseViewModel
         set => Set(ref _devices, value);
     }
 
+    public string Comments
+    {
+        get => _comments;
+        set => Set(ref _comments, value);
+    }
     public string BraceType
     {
         get => _braceType;
@@ -196,6 +210,54 @@ public class StandModel : BaseViewModel
         set => Set(ref _firstSensorMarkMinus, value);
     } //Марикровка -
 
+    public string SecondSensorType
+    {
+        get => _secondSensorType;
+        set => Set(ref _secondSensorType, value);
+    }
+
+    public string? SecondSensorKKSCounter
+    {
+        get => _secondSensorKksCode;
+        set => Set(ref _secondSensorKksCode, value);
+    } //ККС Контура
+
+    public string? SecondSensorMarkPlus
+    {
+        get => _secondSensorMarkPlus;
+        set => Set(ref _secondSensorMarkPlus, value);
+    } //Марикровка +
+
+    public string? SecondSensorMarkMinus
+    {
+        get => _secondSensorMarkMinus;
+        set => Set(ref _secondSensorMarkMinus, value);
+    } //Марикровка -
+    
+    public string ThirdSensorType
+    {
+        get => _thirdSensorType;
+        set => Set(ref _thirdSensorType, value);
+    }
+
+    public string? ThirdSensorKKS
+    {
+        get => _thirdSensorKksCode;
+        set => Set(ref _thirdSensorKksCode, value);
+    } //ККС Контура
+
+    public string? ThirdSensorMarkPlus
+    {
+        get => _thirdSensorMarkPlus;
+        set => Set(ref _thirdSensorMarkPlus, value);
+    } //Марикровка +
+
+    public string? ThirdSensorMarkMinus
+    {
+        get => _thirdSensorMarkMinus;
+        set => Set(ref _thirdSensorMarkMinus, value);
+    } //Марикровка -
+    
     public string? DesigneStand
     {
         get => _designeStand;

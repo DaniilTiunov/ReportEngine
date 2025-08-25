@@ -19,4 +19,16 @@ public class DirectoryHelperTest
         // Assert
         Assert.AreEqual(expectedPath, result);
     }
+    
+    [TestMethod]
+    public void GetReportFolder_WhenCalled_ReturnsCorrectPath()
+    {
+        // Arrange
+        var expectedPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Отчёты");
+        
+        // Act
+        var result = DirectoryHelper.GetReportsPath();
+        
+        Assert.AreEqual(expectedPath, result);
+    }
 }

@@ -24,6 +24,7 @@ using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork;
+using ReportEngine.Export.ExcelWork.ExcelSettings;
 using Serilog;
 
 namespace ReportEngine.App;
@@ -120,6 +121,7 @@ public class HostFactory
     private static void ConfigureApplicationServices(IServiceCollection services)
     {
         services.AddScoped<ExcelCreator>();
+        services.AddScoped<ExcelCreatorSettings>();
         services.AddSingleton<GenericEquipWindowFactory>();
         services.AddSingleton<NavigationService>();
         services.AddSingleton<IServiceProvider>(provider => provider);

@@ -125,6 +125,7 @@
     <ItemGroup>
         <Folder Include="logs\"/>
         <Folder Include="..\Resources\Icons\"/>
+        <Folder Include="Отчёты\" />
     </ItemGroup>
 
     <ItemGroup>

@@ -10,6 +10,7 @@ using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Export.ExcelWork;
 using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.App.ViewModels;
@@ -22,13 +23,17 @@ public class ProjectViewModel : BaseViewModel
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IProjectService _projectService;
     private readonly IStandService _standService;
+    private readonly ExcelCreator _excelCreator;
+    private readonly ICalculationService _calculationService;
 
     public ProjectViewModel(IProjectInfoRepository projectRepository,
         IDialogService dialogService,
         INotificationService notificationService,
         IStandService standService,
         IProjectService projectService,
-        IProjectDataLoaderService projectDataLoaderService)
+        IProjectDataLoaderService projectDataLoaderService,
+        ExcelCreator excelCreator,
+        ICalculationService calculationService)
     {
         _projectRepository = projectRepository;
         _dialogService = dialogService;
@@ -36,6 +41,8 @@ public class ProjectViewModel : BaseViewModel
         _standService = standService;
         _projectService = projectService;
         _projectDataLoaderService = projectDataLoaderService;
+        _excelCreator = excelCreator;
+        _calculationService = calculationService;
 
         InitializeCommands();
         InitializeTime();
@@ -82,6 +89,10 @@ public class ProjectViewModel : BaseViewModel
             new RelayCommand(OnAddCustomAdditionalEquipToStandExecuted, CanAllCommandsExecute);
         ProjectCommandProvider.SelectObvFromDialogCommand =
             new RelayCommand(OnSelectObvCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.CalculateProjectCommand =
+            new RelayCommand(OnCalculateProjectCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.CreateSummaryReportCommand =
+            new RelayCommand(OnCreateSummaryReportCommandExecuted, CanAllCommandsExecute);
     }
 
     public void InitializeGenericCommands()
@@ -172,6 +183,15 @@ public class ProjectViewModel : BaseViewModel
         ExceptionHelper.SafeExecute(() => { SelectedObvyazka = _dialogService.ShowObvyazkaDialog(); });
     }
 
+    public void OnCalculateProjectCommandExecuted(object p)
+    {
+        ExceptionHelper.SafeExecuteAsync(CalculateProjectAsync);
+    }
+    
+    public void OnCreateSummaryReportCommandExecuted(object p)
+    {
+        ExceptionHelper.SafeExecute(CreateSummaryReportAsync);
+    }
     #endregion
 
     #region Методы
@@ -404,9 +424,26 @@ public class ProjectViewModel : BaseViewModel
             FirstSensorType = CurrentProjectModel.SelectedStand.FirstSensorType,
             FirstSensorKKS = CurrentProjectModel.SelectedStand.FirstSensorKKSCounter,
             FirstSensorMarkPlus = CurrentProjectModel.SelectedStand.FirstSensorMarkPlus,
-            FirstSensorMarkMinus = CurrentProjectModel.SelectedStand.FirstSensorMarkMinus
+            FirstSensorMarkMinus = CurrentProjectModel.SelectedStand.FirstSensorMarkMinus,
+            SecondSensorType = CurrentProjectModel.SelectedStand.SecondSensorType,
+            SecondSensorKKS = CurrentProjectModel.SelectedStand.SecondSensorKKSCounter,
+            SecondSensorMarkPlus = CurrentProjectModel.SelectedStand.SecondSensorMarkPlus,
+            SecondSensorMarkMinus = CurrentProjectModel.SelectedStand.SecondSensorMarkMinus,
+            ThirdSensorType = CurrentProjectModel.SelectedStand.ThirdSensorType,
+            ThirdSensorKKS = CurrentProjectModel.SelectedStand.ThirdSensorKKS,
+            ThirdSensorMarkPlus = CurrentProjectModel.SelectedStand.ThirdSensorMarkPlus,
+            ThirdSensorMarkMinus = CurrentProjectModel.SelectedStand.ThirdSensorMarkMinus,
         };
     }
 
+    private async Task CalculateProjectAsync()
+    {
+        await _calculationService.CalculateProjectAsync(CurrentProjectModel);
+    }
+
+    private async void CreateSummaryReportAsync()
+    {
+        _excelCreator.CreateListOfComponents(CurrentProjectModel.CurrentProjectId);
+    }
     #endregion
 }
