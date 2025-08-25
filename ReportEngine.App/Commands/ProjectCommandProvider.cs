@@ -7,6 +7,7 @@ public class ProjectCommandProvider
     public ICommand SelectMaterialLineDialogCommand { get; set; }
     public ICommand SelectArmatureDialogCommand { get; set; }
     public ICommand SelectTreeSocketDialogCommand { get; set; }
+    
     public ICommand SelectKMCHDialogCommand { get; set; }
     public ICommand SaveObvCommand { get; set; }
     public ICommand CreateNewCardCommand { get; set; }

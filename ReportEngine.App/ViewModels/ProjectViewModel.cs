@@ -59,6 +59,8 @@ public class ProjectViewModel : BaseViewModel
     public StandModel CurrentStandModel { get; set; } = new();
     public ProjectModel CurrentProjectModel { get; set; } = new();
     public ProjectCommandProvider ProjectCommandProvider { get; set; } = new();
+    public MaterialLinesModel CurrentMaterials { get; set; } = new();
+    
 
     #region Инициализация
 
@@ -100,11 +102,13 @@ public class ProjectViewModel : BaseViewModel
     public void InitializeGenericCommands()
     {
         ProjectCommandProvider.SelectMaterialLineDialogCommand =
-            new RelayCommand(OnSelectMaterialFromDialogCommandExecuted<HeaterPipe>, CanAllCommandsExecute);
+            new RelayCommand(OnSelectMaterialFromDialogCommandExecuted, CanAllCommandsExecute);
         ProjectCommandProvider.SelectArmatureDialogCommand =
-            new RelayCommand(OnSelectArmatureFromDialogCommandExecuted<HeaterArmature>, CanAllCommandsExecute);
+            new RelayCommand(OnSelectArmatureFromDialogCommandExecuted, CanAllCommandsExecute);
         ProjectCommandProvider.SelectKMCHDialogCommand =
-            new RelayCommand(OnSelectTreeSocketFromDialogCommandExecuted<HeaterSocket>, CanAllCommandsExecute);
+            new RelayCommand(OnSelectKMCHFromDialogCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.SelectTreeSocketDialogCommand =
+            new RelayCommand(OnSelectTreeSocketFromDialogCommandExecuted, CanAllCommandsExecute);
         ProjectCommandProvider.SaveObvCommand = new RelayCommand(OnSaveObvCommandExecuted, CanAllCommandsExecute);
     }
 
@@ -117,24 +121,69 @@ public class ProjectViewModel : BaseViewModel
         return true;
     }
 
-    public void OnSelectMaterialFromDialogCommandExecuted<T>(object e)
-        where T : class, IBaseEquip, new()
+    public void OnSelectMaterialFromDialogCommandExecuted(object e)
     {
-        SelectEquipment<T>(name => CurrentProjectModel.SelectedStand.MaterialLine = name);
+        switch (CurrentMaterials.SelectedMaterialLine)
+        {
+            case "Жаропрочные":
+                SelectEquipment<HeaterPipe>(name => CurrentProjectModel.SelectedStand.MaterialLine = name);
+                break;
+            case "Нержавеющие":
+                SelectEquipment<StainlessPipe>(name => CurrentProjectModel.SelectedStand.MaterialLine = name);
+                break;
+            case "Углеродистые":
+                SelectEquipment<CarbonPipe>(name => CurrentProjectModel.SelectedStand.MaterialLine = name);
+                break;
+        }
     }
 
-    public void OnSelectArmatureFromDialogCommandExecuted<T>(object e)
-        where T : class, IBaseEquip, new()
+    public void OnSelectArmatureFromDialogCommandExecuted(object e)
     {
-        SelectEquipment<T>(name => CurrentProjectModel.SelectedStand.Armature = name);
+        switch (CurrentMaterials.SelectedAramuteres)
+        {
+            case "Жаропрочные":
+                SelectEquipment<HeaterArmature>(name => CurrentProjectModel.SelectedStand.Armature = name);
+                break;
+            case "Нержавеющие":
+                SelectEquipment<StainlessArmature>(name => CurrentProjectModel.SelectedStand.Armature = name);
+                break;
+            case "Углеродистые":
+                SelectEquipment<CarbonArmature>(name => CurrentProjectModel.SelectedStand.Armature = name);
+                break;
+        }
     }
 
-    public void OnSelectTreeSocketFromDialogCommandExecuted<T>(object e)
-        where T : class, IBaseEquip, new()
+    public void OnSelectTreeSocketFromDialogCommandExecuted(object e)
     {
-        SelectEquipment<T>(name => CurrentProjectModel.SelectedStand.TreeSocket = name);
+        switch (CurrentMaterials.SelectedAramuteres)
+        {
+            case "Жаропрочные":
+                SelectEquipment<HeaterSocket>(name => CurrentProjectModel.SelectedStand.TreeSocket = name);
+                break;
+            case "Нержавеющие":
+                SelectEquipment<StainlessSocket>(name => CurrentProjectModel.SelectedStand.TreeSocket = name);
+                break;
+            case "Углеродистые":
+                SelectEquipment<CarbonSocket>(name => CurrentProjectModel.SelectedStand.TreeSocket = name);
+                break;
+        }
     }
-
+    
+    public void OnSelectKMCHFromDialogCommandExecuted(object e)
+    {
+        switch (CurrentMaterials.SelectedKMCHType)
+        {
+            case "Жаропрочные":
+                SelectEquipment<HeaterSocket>(name => CurrentProjectModel.SelectedStand.KMCH = name);
+                break;
+            case "Нержавеющие":
+                SelectEquipment<StainlessSocket>(name => CurrentProjectModel.SelectedStand.KMCH = name);
+                break;
+            case "Углеродистые":
+                SelectEquipment<CarbonSocket>(name => CurrentProjectModel.SelectedStand.KMCH = name);
+                break;
+        }
+    }
     public async void OnCreateNewCardCommandExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(CreateNewProjectCardAsync);
@@ -448,7 +497,7 @@ public class ProjectViewModel : BaseViewModel
         _excelCreator.CreateListOfComponents(CurrentProjectModel.CurrentProjectId);
 
         // Показываем подтверждение и открываем директорию, если пользователь согласен
-        if (_notificationService.ShowConfirmation("Ведомость комплектующих создана!\n Открыть папку с отчётами?"))
+        if (_notificationService.ShowConfirmation("Ведомость комплектующих создана!\nОткрыть папку с отчётами?"))
         {
             var reportDir = DirectoryHelper.GetReportsDirectory();
             Process.Start("explorer.exe", reportDir);
