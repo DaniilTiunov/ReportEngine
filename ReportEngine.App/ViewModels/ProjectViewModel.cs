@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
@@ -11,6 +12,7 @@ using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork;
+using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.App.ViewModels;
@@ -444,6 +446,13 @@ public class ProjectViewModel : BaseViewModel
     private async void CreateSummaryReportAsync()
     {
         _excelCreator.CreateListOfComponents(CurrentProjectModel.CurrentProjectId);
+
+        // Показываем подтверждение и открываем директорию, если пользователь согласен
+        if (_notificationService.ShowConfirmation("Ведомость комплектующих создана!\n Открыть папку с отчётами?"))
+        {
+            var reportDir = DirectoryHelper.GetReportsDirectory();
+            Process.Start("explorer.exe", reportDir);
+        }
     }
     #endregion
 }

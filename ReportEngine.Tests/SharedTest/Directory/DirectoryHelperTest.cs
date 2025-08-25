@@ -24,10 +24,10 @@ public class DirectoryHelperTest
     public void GetReportFolder_WhenCalled_ReturnsCorrectPath()
     {
         // Arrange
-        var expectedPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Отчёты");
+        var expectedPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ExcelTemplates", "Тара" + ".xlsx");
         
         // Act
-        var result = DirectoryHelper.GetReportsPath();
+        var result = DirectoryHelper.GetReportsTemplatePath("Тара");
         
         Assert.AreEqual(expectedPath, result);
     }

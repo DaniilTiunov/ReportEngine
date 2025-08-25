@@ -5,27 +5,38 @@ public class DirectoryHelper
     public static string GetDirectory()
     {
         return AppDomain.CurrentDomain.BaseDirectory;
-        ;
     }
 
     public static string GetConfigPath()
     {
-        return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config", "appsettings.json");
+        return Path.Combine(GetDirectory(), "Config", "appsettings.json");
     }
 
     public static string GetLogsPath()
     {
-        return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", "log.txt");
+        return Path.Combine(GetDirectory(), "logs", "log.txt");
     }
 
     public static string GetImagesPath(string imageName)
     {
-        return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Images", "Obvyazka",
+        return Path.Combine(GetDirectory(), "Resources", "Images", "Obvyazka",
             imageName + ".jpg");
     }
 
-    public static string GetReportsPath()
+    public static string GetReportsTemplatePath(string templateName)
     {
-        return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Отчёты");
+        return Path.Combine(GetDirectory(), "ExcelTemplates", templateName + ".xlsx");
+    }
+
+    public static string GetReportsDirectory()
+    {
+        return Path.Combine(GetDirectory(), "Отчёты");
+    }
+
+    public static string GetReportSavePath(string fileName)
+    {
+        var dir = GetReportsDirectory();
+        
+        return Path.Combine(dir, fileName);
     }
 }
