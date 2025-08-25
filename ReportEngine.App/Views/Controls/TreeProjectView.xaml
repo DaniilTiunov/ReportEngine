@@ -4,71 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Background="{DynamicResource PrimaryColor}"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/Dictionaries/GigaChadUI.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
-            <!--  Стили для TreeView  -->
-            <Style TargetType="{x:Type TreeView}">
-                <Setter Property="BorderThickness" Value="0" />
-                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
-                <Setter Property="Background" Value="{StaticResource PrimaryColor}" />
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type TreeView}">
-                            <Border
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}">
-                                <ScrollViewer
-                                    CanContentScroll="True"
-                                    HorizontalScrollBarVisibility="Disabled"
-                                    VerticalScrollBarVisibility="Auto">
-                                    <ItemsPresenter />
-                                </ScrollViewer>
-                            </Border>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
-            <!--  Стили для TreeViewItem  -->
-            <Style TargetType="{x:Type TreeViewItem}">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="Foreground" Value="#333333" />
-                <Setter Property="Background" Value="Transparent" />
-                <Setter Property="Padding" Value="5" />
-                <Setter Property="BorderThickness" Value="0" />
-                <Setter Property="HeaderTemplate">
-                    <Setter.Value>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock
-                                    VerticalAlignment="Center"
-                                    FontWeight="Normal"
-                                    Text="{Binding}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </Setter.Value>
-                </Setter>
-                <Style.Triggers>
-                    <Trigger Property="IsSelected" Value="True">
-                        <Setter Property="Background" Value="{StaticResource RowHoverColor}" />
-                        <Setter Property="FontWeight" Value="Bold" />
-                    </Trigger>
-                    <Trigger Property="IsExpanded" Value="True">
-                        <Setter Property="FontWeight" Value="Bold" />
-                    </Trigger>
-                    <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Background" Value="#E0E0E0" />
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-        </ResourceDictionary>
-    </UserControl.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -79,7 +16,6 @@
 
         <Border
             Grid.Column="0"
-            BorderBrush="{StaticResource BorderColor}"
             BorderThickness="0,0,1,0">
             <TreeView
                 x:Name="MainTree"
@@ -90,7 +26,6 @@
                     <Style TargetType="{x:Type TreeViewItem}">
                         <Style.Triggers>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Background" Value="{StaticResource RowHoverColor}" />
                                 <Setter Property="FontWeight" Value="Bold" />
                             </Trigger>
                         </Style.Triggers>
@@ -115,8 +50,7 @@
         <GridSplitter
             Grid.Column="1"
             Width="5"
-            HorizontalAlignment="Stretch"
-            Background="{StaticResource BorderColor}" />
+            HorizontalAlignment="Stretch"/>
 
         <TabControl x:Name="MainTabControl" Grid.Column="2">
             <ContentControl x:Name="MainContent" />

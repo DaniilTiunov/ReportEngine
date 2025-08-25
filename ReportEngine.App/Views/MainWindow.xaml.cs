@@ -23,12 +23,12 @@ public partial class MainWindow : Window //Это так называемый "C
         InitializeComponent();
         DataContext = mainViewModel;
         _mainViewModel = mainViewModel;
-
         Loaded += MainWindow_Loaded;
     }
 
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
+        StandartTheme(null,null);
         await _mainViewModel.ShowAllProjectsAsync();
         await _mainViewModel.CheckDbConnectionAsync();
     }
@@ -69,6 +69,10 @@ public partial class MainWindow : Window //Это так называемый "C
 
     private void ChangeDarkTheme(object sender, RoutedEventArgs e)
     {
+        var uri = new Uri("/Resources/Dictionaries/DarkTheme.xaml", UriKind.RelativeOrAbsolute);
+        ResourceDictionary resourceDict = Application.LoadComponent(uri) as ResourceDictionary;
+        Application.Current.Resources.Clear();
+        Application.Current.Resources.MergedDictionaries.Add(resourceDict);
     }
 
     private void ChangeLightTheme(object sender, RoutedEventArgs e)
@@ -77,6 +81,10 @@ public partial class MainWindow : Window //Это так называемый "C
 
     private void StandartTheme(object sender, RoutedEventArgs e)
     {
+        var uri = new Uri("/Resources/Dictionaries/GigaChadUI.xaml", UriKind.RelativeOrAbsolute);
+        ResourceDictionary resourceDict = Application.LoadComponent(uri) as ResourceDictionary;
+        Application.Current.Resources.Clear();
+        Application.Current.Resources.MergedDictionaries.Add(resourceDict);
     }
 
     private void TestTheme(object sender, RoutedEventArgs e)

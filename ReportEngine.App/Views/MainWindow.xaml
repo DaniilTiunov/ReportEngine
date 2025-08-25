@@ -13,9 +13,6 @@
     mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/Dictionaries/GigaChadUI.xaml" />
-            </ResourceDictionary.MergedDictionaries>
             <Image x:Key="refresh-button.png" Source="/Resources/Images/refresh-button.png" />
         </ResourceDictionary>
     </Window.Resources>
@@ -39,12 +36,8 @@
                     Header="Тёмная тема"
                     Tag="Dark" />
                 <MenuItem
-                    Click="ChangeLightTheme"
-                    Header="Светлая тема"
-                    Tag="Light" />
-                <MenuItem
                     Click="StandartTheme"
-                    Header="Гигачад тема"
+                    Header="Светлая тема"
                     Tag="Standart" />
                 <MenuItem
                     Click="TestTheme"
