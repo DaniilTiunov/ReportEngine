@@ -162,7 +162,7 @@
                 Command="{Binding MainWindowCommandProvider.ChekDbConnectionCommand}"
                 Content="{StaticResource refresh-button.png}" />
         </StatusBar>
-        <ContentControl x:Name="MainContentControl" Margin="10,0,10,10">
+        <ContentControl x:Name="MainContentControl" Margin="10,0,10,10" >
             <DataGrid
                 x:Name="MainDataGrid"
                 Margin="10,30,10,10"

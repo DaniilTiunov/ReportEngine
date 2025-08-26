@@ -75,11 +75,7 @@ public partial class MainWindow : Window //Это так называемый "C
         Application.Current.Resources.MergedDictionaries.Clear();
         Application.Current.Resources.MergedDictionaries.Add(resourceDict);
     }
-
-    private void ChangeLightTheme(object sender, RoutedEventArgs e)
-    {
-    }
-
+    
     private void StandartTheme(object sender, RoutedEventArgs e)
     {
         var uri = new Uri("/Resources/Dictionaries/GigaChadUI.xaml", UriKind.RelativeOrAbsolute);
@@ -90,5 +86,6 @@ public partial class MainWindow : Window //Это так называемый "C
 
     private void TestTheme(object sender, RoutedEventArgs e)
     {
+        
     }
 }

@@ -24,7 +24,8 @@ using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork;
-using ReportEngine.Export.ExcelWork.ExcelSettings;
+using ReportEngine.Export.ExcelWork.Services;
+using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using Serilog;
 
 namespace ReportEngine.App;
@@ -37,18 +38,20 @@ public class HostFactory
             .UseSerilog()
             .ConfigureServices((hostContext, services) =>
             {
-                //Регистрация контекста БД
+                // Регистрация контекста БД
                 ConfigureDatabase(services, connString);
-                //Регистрация репозиториев
+                // Регистрация репозиториев
                 ConfigureRepositories(services);
-                //Регистрация обощённых репозиториев
+                // Регистрация обощённых репозиториев
                 ConfigureGenericRepositories(services);
-                //Регистрация сервисов приложения
+                // Регистрация сервисов приложения
                 ConfigureApplicationServices(services);
-                //Регистрация ViewModels
+                // Регистрация ViewModels
                 ConfigureViewModels(services);
-                //Регистрация окон и представлений
+                // Регистрация окон и представлений
                 ConfigureViews(services);
+                // Регистрация сервисов для формирования отчётов
+                ConfigureReportsServices(services);
 
                 services.AddSingleton<App>();
             })
@@ -120,8 +123,6 @@ public class HostFactory
 
     private static void ConfigureApplicationServices(IServiceCollection services)
     {
-        services.AddScoped<ExcelCreator>();
-        services.AddScoped<ExcelCreatorSettings>();
         services.AddSingleton<GenericEquipWindowFactory>();
         services.AddSingleton<NavigationService>();
         services.AddSingleton<IServiceProvider>(provider => provider);
@@ -133,6 +134,12 @@ public class HostFactory
         services.AddScoped<IProjectDataLoaderService, ProjectDataLoaderSerive>();
     }
 
+    private static void ConfigureReportsServices(IServiceCollection services)
+    {
+        services.AddScoped<IReportService, ReportService>();
+        services.AddScoped<IReportGenerator, ComponentsListReportGenerator>();
+    }
+    
     private static void ConfigureViewModels(IServiceCollection services)
     {
         services.AddScoped<MainWindowViewModel>();

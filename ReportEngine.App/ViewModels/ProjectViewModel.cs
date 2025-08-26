@@ -12,6 +12,8 @@ using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork;
+using ReportEngine.Export.ExcelWork.Enums;
+using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Helpers;
 
@@ -25,7 +27,7 @@ public class ProjectViewModel : BaseViewModel
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IProjectService _projectService;
     private readonly IStandService _standService;
-    private readonly ExcelCreator _excelCreator;
+    private readonly IReportService _reportService;
     private readonly ICalculationService _calculationService;
 
     public ProjectViewModel(IProjectInfoRepository projectRepository,
@@ -34,7 +36,7 @@ public class ProjectViewModel : BaseViewModel
         IStandService standService,
         IProjectService projectService,
         IProjectDataLoaderService projectDataLoaderService,
-        ExcelCreator excelCreator,
+        IReportService reportService,
         ICalculationService calculationService)
     {
         _projectRepository = projectRepository;
@@ -43,7 +45,7 @@ public class ProjectViewModel : BaseViewModel
         _standService = standService;
         _projectService = projectService;
         _projectDataLoaderService = projectDataLoaderService;
-        _excelCreator = excelCreator;
+        _reportService = reportService;
         _calculationService = calculationService;
 
         InitializeCommands();
@@ -494,8 +496,7 @@ public class ProjectViewModel : BaseViewModel
 
     private async void CreateSummaryReportAsync()
     {
-        _excelCreator.CreateListOfComponents(CurrentProjectModel.CurrentProjectId);
-
+        await _reportService.GenerateReportAsync(ReportType.ComponentsListReport, CurrentProjectModel.CurrentProjectId);
         // Показываем подтверждение и открываем директорию, если пользователь согласен
         if (_notificationService.ShowConfirmation("Ведомость комплектующих создана!\nОткрыть папку с отчётами?"))
         {
