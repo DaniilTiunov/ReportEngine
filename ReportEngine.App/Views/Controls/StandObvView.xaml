@@ -96,7 +96,7 @@
                         Grid.Column="2"
                         Width="120"
                         Margin="0,0,5,0"
-                        ItemsSource="{Binding CurrentMaterials.MaterialLineTypes}" 
+                        ItemsSource="{Binding CurrentMaterials.MaterialLineTypes}"
                         SelectedItem="{Binding CurrentMaterials.SelectedMaterialLine, Mode=TwoWay}" />
                     <Button
                         Grid.Row="1"
@@ -120,7 +120,7 @@
                         Grid.Column="2"
                         Width="120"
                         Margin="0,0,5,0"
-                        ItemsSource="{Binding CurrentMaterials.AramuteresTypes}" 
+                        ItemsSource="{Binding CurrentMaterials.AramuteresTypes}"
                         SelectedItem="{Binding CurrentMaterials.SelectedAramuteres, Mode=TwoWay}" />
                     <Button
                         Grid.Row="2"
@@ -144,7 +144,7 @@
                         Grid.Column="2"
                         Width="120"
                         Margin="0,0,5,0"
-                        ItemsSource="{Binding CurrentMaterials.TreeSocketTypes}" 
+                        ItemsSource="{Binding CurrentMaterials.TreeSocketTypes}"
                         SelectedItem="{Binding CurrentMaterials.SelectedSocketTypes, Mode=TwoWay}" />
                     <Button
                         Grid.Row="3"
@@ -168,7 +168,7 @@
                         Grid.Column="2"
                         Width="120"
                         Margin="0,0,5,0"
-                        ItemsSource="{Binding CurrentMaterials.KMCHTypes}" 
+                        ItemsSource="{Binding CurrentMaterials.KMCHTypes}"
                         SelectedItem="{Binding CurrentMaterials.SelectedKMCHType, Mode=TwoWay}" />
                     <Button
                         Grid.Row="4"

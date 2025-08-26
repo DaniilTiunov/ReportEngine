@@ -5,9 +5,9 @@ namespace ReportEngine.App.Services.Core;
 
 public class CalculationService : ICalculationService
 {
-    private readonly IProjectService _projectService;
     private readonly INotificationService _notificationService;
-    
+    private readonly IProjectService _projectService;
+
     public CalculationService(IProjectService projectService, INotificationService notificationService)
     {
         _projectService = projectService;
@@ -17,7 +17,7 @@ public class CalculationService : ICalculationService
     public async Task CalculateProjectAsync(ProjectModel project)
     {
         await CalculateStandsCountAsync(project);
-        
+
         await _projectService.UpdateProjectAsync(project);
         _notificationService.ShowInfo("Расчёт завершён");
     }

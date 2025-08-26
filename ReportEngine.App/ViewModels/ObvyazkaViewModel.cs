@@ -7,7 +7,6 @@ using ReportEngine.App.Services;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
-using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.App.ViewModels;
 

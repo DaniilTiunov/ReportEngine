@@ -11,13 +11,13 @@ public class ReportService : IReportService
     {
         _generators = generators;
     }
-    
+
     public async Task GenerateReportAsync(ReportType generatorType, int projectId)
     {
         var generator = _generators.FirstOrDefault(generator => generator.Type == generatorType);
         if (generator == null)
             throw new InvalidOperationException($"Генератор {generatorType} не зарегистрирован");
-        
+
         await generator.GenerateAsync(projectId);
     }
 }

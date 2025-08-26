@@ -20,7 +20,6 @@ using ReportEngine.Domain.Entities.Frame;
 using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
-using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.App.ViewModels;
 

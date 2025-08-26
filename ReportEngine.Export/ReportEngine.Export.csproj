@@ -19,48 +19,48 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="ExcelTemplates\" />
-        <Folder Include="PDF\" />
+        <Folder Include="ExcelTemplates\"/>
+        <Folder Include="PDF\"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ReportEngine.Domain\ReportEngine.Domain.csproj" />
-        <ProjectReference Include="..\ReportEngine.Shared\ReportEngine.Shared.csproj" />
+        <ProjectReference Include="..\ReportEngine.Domain\ReportEngine.Domain.csproj"/>
+        <ProjectReference Include="..\ReportEngine.Shared\ReportEngine.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="ClosedXML" Version="0.105.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.8" />
+        <PackageReference Include="ClosedXML" Version="0.105.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.8"/>
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="ExcelTemplates\Finplan587.xlsx">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="ExcelTemplates\passports.pdf">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="ExcelTemplates\Ведомость комплектующих.xlsx">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="ExcelTemplates\Маркировка.xlsx">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="ExcelTemplates\Отчет по производству.xlsx">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="ExcelTemplates\Сводная ведомость_04.08.25 09_37_49.xls">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="ExcelTemplates\Тара.xlsx">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="ExcelTemplates\Технологические карты.pdf">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="ExcelTemplates\Шильдики_таблички.xlsx">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
+        <None Update="ExcelTemplates\Finplan587.xlsx">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="ExcelTemplates\passports.pdf">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="ExcelTemplates\Ведомость комплектующих.xlsx">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="ExcelTemplates\Маркировка.xlsx">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="ExcelTemplates\Отчет по производству.xlsx">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="ExcelTemplates\Сводная ведомость_04.08.25 09_37_49.xls">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="ExcelTemplates\Тара.xlsx">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="ExcelTemplates\Технологические карты.pdf">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="ExcelTemplates\Шильдики_таблички.xlsx">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>

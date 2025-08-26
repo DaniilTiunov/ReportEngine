@@ -2,12 +2,12 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- Цветовые ресурсы для тёмной темы -->
-    <SolidColorBrush x:Key="PrimaryColor" Color="#1C1C1C"/>   <!-- мягкий почти чёрный -->
-    <SolidColorBrush x:Key="SecondaryColor" Color="#2B2B2B"/> <!-- фон панелей/StackPanel -->
-    <SolidColorBrush x:Key="BorderColor" Color="#3A3A3A"/>    <!-- мягкие границы -->
-    <SolidColorBrush x:Key="RowHoverColor" Color="#333333"/>
-    <SolidColorBrush x:Key="SelectedRowBackground" Color="#FF009688"/>
-    <SolidColorBrush x:Key="SelectedRowForeground" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="PrimaryColor" Color="#1C1C1C" />   <!-- мягкий почти чёрный -->
+    <SolidColorBrush x:Key="SecondaryColor" Color="#2B2B2B" /> <!-- фон панелей/StackPanel -->
+    <SolidColorBrush x:Key="BorderColor" Color="#3A3A3A" />    <!-- мягкие границы -->
+    <SolidColorBrush x:Key="RowHoverColor" Color="#333333" />
+    <SolidColorBrush x:Key="SelectedRowBackground" Color="#FF009688" />
+    <SolidColorBrush x:Key="SelectedRowForeground" Color="#FFFFFF" />
 
     <!-- Глобально для всего текста -->
     <Style TargetType="TextBlock" BasedOn="{x:Null}">
@@ -18,7 +18,7 @@
         <Setter Property="Foreground" Value="White" />
         <Setter Property="Background" Value="Transparent" />
     </Style>
-    
+
     <!-- Принудительные глобальные стили -->
     <Style TargetType="UserControl" BasedOn="{x:Null}">
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
@@ -29,7 +29,7 @@
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
         <Setter Property="Foreground" Value="White" />
     </Style>
-    
+
     <!-- Стиль для ContentControl -->
     <Style TargetType="ContentControl" BasedOn="{x:Null}">
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
@@ -87,8 +87,8 @@
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
         <Setter Property="FontSize" Value="14" />
     </Style>
-    
-     <Style TargetType="MenuItem" BasedOn="{x:Null}">
+
+    <Style TargetType="MenuItem" BasedOn="{x:Null}">
         <Setter Property="FontSize" Value="14" />
         <Setter Property="Padding" Value="6,2" />
         <Setter Property="Background" Value="Transparent" />
@@ -162,7 +162,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
+
     <!-- ListView -->
     <Style TargetType="ListView" BasedOn="{x:Null}">
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
@@ -197,30 +197,30 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
+
     <!-- TabControl -->
     <Style TargetType="TabControl" BasedOn="{x:Null}">
-        <Setter Property="Background" Value="{DynamicResource PrimaryColor}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+        <Setter Property="Foreground" Value="White" />
     </Style>
 
     <Style TargetType="TabItem" BasedOn="{x:Null}">
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="Background" Value="{DynamicResource SecondaryColor}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
-        <Setter Property="Padding" Value="10,4"/>
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+        <Setter Property="Padding" Value="10,4" />
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="#1C1C1C"/> <!-- вместо белого -->
-                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Background" Value="#1C1C1C" /> <!-- вместо белого -->
+                <Setter Property="FontWeight" Value="Bold" />
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource RowHoverColor}"/>
+                <Setter Property="Background" Value="{DynamicResource RowHoverColor}" />
             </Trigger>
         </Style.Triggers>
     </Style>
-    
+
     <!-- ContextMenu -->
     <Style TargetType="ContextMenu" BasedOn="{x:Null}">
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
@@ -228,12 +228,12 @@
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="BorderThickness" Value="1" />
     </Style>
-    
+
     <!-- StackPanel -->
     <Style TargetType="StackPanel" BasedOn="{x:Null}">
         <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
     </Style>
-    
+
     <!-- TextBox -->
     <Style TargetType="TextBox" BasedOn="{x:Null}">
         <Setter Property="Background" Value="#2A2A2A" /> <!-- светло-тёмно-серый -->
@@ -249,16 +249,16 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
+
     <Style TargetType="Button" BasedOn="{x:Null}">
-        <Setter Property="Background" Value="#3A3A3A"/>
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="Padding" Value="6,2"/>
-        <Setter Property="FontSize" Value="13"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Cursor" Value="Hand"/>
-        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Background" Value="#3A3A3A" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Padding" Value="6,2" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -268,28 +268,28 @@
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="3">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#505050"/>
+                            <Setter Property="Background" Value="#505050" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter Property="Background" Value="#666666"/>
+                            <Setter Property="Background" Value="#666666" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Background" Value="#2A2A2A"/>
-                            <Setter Property="Foreground" Value="#777777"/>
+                            <Setter Property="Background" Value="#2A2A2A" />
+                            <Setter Property="Foreground" Value="#777777" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <Style TargetType="ScrollViewer" BasedOn="{x:Null}">
-        <Setter Property="Background" Value="{DynamicResource PrimaryColor}"/>
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
+        <Setter Property="Foreground" Value="White" />
     </Style>
-    
+
 </ResourceDictionary>

@@ -16,6 +16,7 @@ public class StandModel : BaseViewModel
     private ObservableCollection<ElectricalPurpose> _allElectricalPurposesInStand = new();
     private string _armature;
     private string _braceType;
+    private string _comments;
     private string _design;
     private string _designeStand;
     private int _devices;
@@ -46,6 +47,10 @@ public class StandModel : BaseViewModel
     private ObservableCollection<StandObvyazkaModel> _obvyazki = new();
     private ObservableCollection<ObvyazkaInStand> _obvyazkiInStand = new();
     private int _projectId;
+    private string? _secondSensorKksCode;
+    private string? _secondSensorMarkMinus;
+    private string? _secondSensorMarkPlus;
+    private string _secondSensorType;
     private FormedAdditionalEquip _selectedAdditionalEquip;
     private FormedDrainage _selectedDrainage;
     private FormedElectricalComponent _selectedElectricalComponent;
@@ -55,18 +60,13 @@ public class StandModel : BaseViewModel
     private ObvyazkaInStand _selectedObvyazkaInStand = new();
     private string _serialNumber;
     private decimal _standSummCost;
+    private string? _thirdSensorKksCode;
+    private string? _thirdSensorMarkMinus;
+    private string? _thirdSensorMarkPlus;
+    private string _thirdSensorType;
     private string _treeScoket;
     private float _weight;
     private float _width;
-    private string _comments;
-    private string _secondSensorType;
-    private string? _secondSensorKksCode;
-    private string? _secondSensorMarkPlus;
-    private string? _secondSensorMarkMinus;
-    private string _thirdSensorType;
-    private string? _thirdSensorMarkPlus;
-    private string? _thirdSensorKksCode;
-    private string? _thirdSensorMarkMinus;
 
     public ObservableCollection<StandObvyazkaModel> Obvyazki
     {
@@ -120,6 +120,7 @@ public class StandModel : BaseViewModel
         get => _comments;
         set => Set(ref _comments, value);
     }
+
     public string BraceType
     {
         get => _braceType;
@@ -233,7 +234,7 @@ public class StandModel : BaseViewModel
         get => _secondSensorMarkMinus;
         set => Set(ref _secondSensorMarkMinus, value);
     } //Марикровка -
-    
+
     public string ThirdSensorType
     {
         get => _thirdSensorType;
@@ -257,7 +258,7 @@ public class StandModel : BaseViewModel
         get => _thirdSensorMarkMinus;
         set => Set(ref _thirdSensorMarkMinus, value);
     } //Марикровка -
-    
+
     public string? DesigneStand
     {
         get => _designeStand;

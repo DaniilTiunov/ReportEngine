@@ -12,24 +12,22 @@ using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
-using ReportEngine.Export.ExcelWork;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.App.ViewModels;
 
 public class ProjectViewModel : BaseViewModel
 {
+    private readonly ICalculationService _calculationService;
     private readonly IDialogService _dialogService;
     private readonly INotificationService _notificationService;
     private readonly IProjectDataLoaderService _projectDataLoaderService;
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IProjectService _projectService;
-    private readonly IStandService _standService;
     private readonly IReportService _reportService;
-    private readonly ICalculationService _calculationService;
+    private readonly IStandService _standService;
 
     public ProjectViewModel(IProjectInfoRepository projectRepository,
         IDialogService dialogService,
@@ -63,7 +61,7 @@ public class ProjectViewModel : BaseViewModel
     public ProjectModel CurrentProjectModel { get; set; } = new();
     public ProjectCommandProvider ProjectCommandProvider { get; set; } = new();
     public MaterialLinesModel CurrentMaterials { get; set; } = new();
-    
+
 
     #region Инициализация
 
@@ -171,7 +169,7 @@ public class ProjectViewModel : BaseViewModel
                 break;
         }
     }
-    
+
     public void OnSelectKMCHFromDialogCommandExecuted(object e)
     {
         switch (CurrentMaterials.SelectedKMCHType)
@@ -187,6 +185,7 @@ public class ProjectViewModel : BaseViewModel
                 break;
         }
     }
+
     public async void OnCreateNewCardCommandExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(CreateNewProjectCardAsync);
@@ -241,11 +240,12 @@ public class ProjectViewModel : BaseViewModel
     {
         ExceptionHelper.SafeExecuteAsync(CalculateProjectAsync);
     }
-    
+
     public void OnCreateSummaryReportCommandExecuted(object p)
     {
         ExceptionHelper.SafeExecute(CreateSummaryReportAsync);
     }
+
     #endregion
 
     #region Методы
@@ -486,7 +486,7 @@ public class ProjectViewModel : BaseViewModel
             ThirdSensorType = CurrentProjectModel.SelectedStand.ThirdSensorType,
             ThirdSensorKKS = CurrentProjectModel.SelectedStand.ThirdSensorKKS,
             ThirdSensorMarkPlus = CurrentProjectModel.SelectedStand.ThirdSensorMarkPlus,
-            ThirdSensorMarkMinus = CurrentProjectModel.SelectedStand.ThirdSensorMarkMinus,
+            ThirdSensorMarkMinus = CurrentProjectModel.SelectedStand.ThirdSensorMarkMinus
         };
     }
 
@@ -505,5 +505,6 @@ public class ProjectViewModel : BaseViewModel
             Process.Start("explorer.exe", reportDir);
         }
     }
+
     #endregion
 }

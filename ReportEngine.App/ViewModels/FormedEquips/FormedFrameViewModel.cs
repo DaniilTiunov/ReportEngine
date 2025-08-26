@@ -7,7 +7,6 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.Frame;
 using ReportEngine.Domain.Repositories.Interfaces;
-using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.App.ViewModels.FormedEquips;
 

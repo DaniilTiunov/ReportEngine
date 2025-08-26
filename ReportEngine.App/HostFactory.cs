@@ -23,7 +23,6 @@ using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
-using ReportEngine.Export.ExcelWork;
 using ReportEngine.Export.ExcelWork.Services;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using Serilog;
@@ -139,7 +138,7 @@ public class HostFactory
         services.AddScoped<IReportService, ReportService>();
         services.AddScoped<IReportGenerator, ComponentsListReportGenerator>();
     }
-    
+
     private static void ConfigureViewModels(IServiceCollection services)
     {
         services.AddScoped<MainWindowViewModel>();

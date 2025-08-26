@@ -36,7 +36,7 @@ public class DirectoryHelper
     public static string GetReportSavePath(string fileName)
     {
         var dir = GetReportsDirectory();
-        
+
         return Path.Combine(dir, fileName);
     }
 }

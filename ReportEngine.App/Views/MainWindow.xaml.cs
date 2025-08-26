@@ -6,7 +6,6 @@ using ReportEngine.App.Views;
 using ReportEngine.App.Views.UpdateInformation;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
-using ReportEngine.Shared.Helpers;
 using AboutProgram = ReportEngine.App.Views.Windows.AboutProgram;
 
 
@@ -29,7 +28,7 @@ public partial class MainWindow : Window //Это так называемый "C
 
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
-        StandartTheme(null,null);
+        StandartTheme(null, null);
         await _mainViewModel.ShowAllProjectsAsync();
         await _mainViewModel.CheckDbConnectionAsync();
     }
@@ -71,22 +70,21 @@ public partial class MainWindow : Window //Это так называемый "C
     private void ChangeDarkTheme(object sender, RoutedEventArgs e)
     {
         var uri = new Uri("/Resources/Dictionaries/DarkTheme.xaml", UriKind.RelativeOrAbsolute);
-        ResourceDictionary resourceDict = Application.LoadComponent(uri) as ResourceDictionary;
-        
+        var resourceDict = Application.LoadComponent(uri) as ResourceDictionary;
+
         Application.Current.Resources.MergedDictionaries.Clear();
         Application.Current.Resources.MergedDictionaries.Add(resourceDict);
     }
-    
+
     private void StandartTheme(object sender, RoutedEventArgs e)
     {
         var uri = new Uri("/Resources/Dictionaries/GigaChadUI.xaml", UriKind.RelativeOrAbsolute);
-        ResourceDictionary resourceDict = Application.LoadComponent(uri) as ResourceDictionary;
+        var resourceDict = Application.LoadComponent(uri) as ResourceDictionary;
         Application.Current.Resources.Clear();
         Application.Current.Resources.MergedDictionaries.Add(resourceDict);
     }
 
     private void TestTheme(object sender, RoutedEventArgs e)
     {
-        
     }
 }

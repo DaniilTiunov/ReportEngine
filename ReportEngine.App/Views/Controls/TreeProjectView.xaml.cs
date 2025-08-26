@@ -4,7 +4,6 @@ using System.Windows.Input;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Shared.Config.DebugConsol;
-using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.App.Views.Controls;
 

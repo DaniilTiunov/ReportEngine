@@ -6,7 +6,6 @@ using ReportEngine.App.Display;
 using ReportEngine.App.Model.Contacts;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
-using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.App.ViewModels.Contacts;
 

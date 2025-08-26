@@ -7,7 +7,6 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Drainage;
 using ReportEngine.Domain.Repositories.Interfaces;
 
-
 namespace ReportEngine.App.ViewModels.FormedEquips;
 
 public class FormedDrainagesViewModel : BaseViewModel
