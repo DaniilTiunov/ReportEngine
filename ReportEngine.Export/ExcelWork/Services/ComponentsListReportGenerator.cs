@@ -24,7 +24,6 @@ public class ComponentsListReportGenerator : IReportGenerator
         try
         {
             var project = await _projectInfoRepository.GetByIdAsync(projectId);
-            string title = project.Company;
             string templatePath = DirectoryHelper.GetReportsTemplatePath("Ведомость комплектующих");
             string fileName = "Ведомость комплектующих.xlsx";
             string savePath = DirectoryHelper.GetReportSavePath(fileName);
@@ -48,5 +47,10 @@ public class ComponentsListReportGenerator : IReportGenerator
             string sheetName = $"Стенд_{stand.KKSCode}";
             var ws = wb.Worksheets.Add(sheetName);
         }
+    }
+
+    private void DrawReportHeader(XLWorkbook wb, ICollection<Stand> stands)
+    {
+        
     }
 }

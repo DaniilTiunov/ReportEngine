@@ -16,7 +16,14 @@ public class CalculationService : ICalculationService
 
     public async Task CalculateProjectAsync(ProjectModel project)
     {
-        project.StandCount = project.Stands.Count;
+        await CalculateStandsCountAsync(project);
+        
+        await _projectService.UpdateProjectAsync(project);
         _notificationService.ShowInfo("Расчёт завершён");
+    }
+
+    private async Task CalculateStandsCountAsync(ProjectModel project)
+    {
+        project.StandCount = project.Stands.Count;
     }
 }
