@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Display;
 using ReportEngine.App.Model.FormedEquipsModels;

@@ -1,7 +1,7 @@
 ﻿using ReportEngine.App.Display;
 using ReportEngine.Shared.Config.DebugConsol;
 
-namespace ReportEngine.Shared.Helpers;
+namespace ReportEngine.App.AppHelpers;
 
 public static class ExceptionHelper
 {

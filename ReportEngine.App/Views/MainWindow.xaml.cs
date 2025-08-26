@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Windows;
+using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.Views;
 using ReportEngine.App.Views.UpdateInformation;
