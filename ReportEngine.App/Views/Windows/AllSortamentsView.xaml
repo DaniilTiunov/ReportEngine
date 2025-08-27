@@ -1,0 +1,41 @@
+﻿<Window x:Class="ReportEngine.App.Views.Windows.AllSortamentsView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:ReportEngine.App.Views.Windows"
+        mc:Ignorable="d"
+        Width="1100"
+        Height="450"
+        Title="AllSortamentsView">
+    <Grid>
+        <TabControl>
+            <TabItem Header="Трубы">
+                <TabControl>
+                    <TabItem Header="Жаропрочные">
+                        
+                    </TabItem>
+                    <TabItem Header="Нержавеющие">
+                        
+                    </TabItem>
+                    <TabItem Header="Углеродистые">
+                        
+                    </TabItem>
+                </TabControl>
+            </TabItem>
+            <TabItem Header="Арматуры">
+                <TabControl>
+                    <TabItem Header="Жаропрочные">
+                        
+                    </TabItem>
+                    <TabItem Header="Нержавеющие">
+                        
+                    </TabItem>
+                    <TabItem Header="Углеродистые">
+                        
+                    </TabItem>
+                </TabControl>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

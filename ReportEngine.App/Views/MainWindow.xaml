@@ -109,6 +109,7 @@
                 <MenuItem Command="{Binding GenericEquipCommandProvider.OpenOthersCommand}" Header="Прочие" />
                 <Separator />
                 <MenuItem Command="{Binding GenericEquipCommandProvider.OpenConteinersCommand}" Header="Тара" />
+                <MenuItem Command="{Binding }" Header="Весь сортамент" />
             </MenuItem>
             <MenuItem Header="Формирование комплектующих">
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenFormedFramesCommand}"

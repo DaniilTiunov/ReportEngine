@@ -160,7 +160,7 @@ public class GenericEquipViewModel<T> : BaseViewModel
                 // Проверяем обязательные поля
                 if (string.IsNullOrWhiteSpace(equip.Name))
                 {
-                    MessageBoxHelper.ShowInfo("Поле 'Name' обязательно для заполнения.");
+                    MessageBoxHelper.ShowInfo("Поле 'Название' обязательно для заполнения.");
                     continue;
                 }
 
