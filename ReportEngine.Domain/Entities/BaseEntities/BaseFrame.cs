@@ -6,8 +6,8 @@ namespace ReportEngine.Domain.Entities.BaseEntities;
 
 public class BaseFrame : IBaseEquip
 {
-    public string Measure { get; set; }
     public int ExportDays { get; set; }
+    public string Measure { get; set; }
     public float Cost { get; set; }
 
     [Key]

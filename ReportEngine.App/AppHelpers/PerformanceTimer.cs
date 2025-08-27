@@ -2,7 +2,7 @@
 
 namespace ReportEngine.App.AppHelpers;
 
-public class PerformanceTimer
+public static class PerformanceTimer
 {
     public static void Measure(string name, Action action)
     {

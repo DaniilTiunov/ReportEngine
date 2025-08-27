@@ -30,7 +30,14 @@ public class ComponentsListReportGenerator : IReportGenerator
 
             using (var wb = new XLWorkbook(templatePath))
             {
-                CreateStandWorkSheetAsync(wb, project.Stands);
+                wb.Worksheets.ToList().ForEach(ws => ws.Delete());
+
+                foreach (var stand in project.Stands)
+                {
+                    var ws = wb.Worksheets.Add($"Стенд_{stand.KKSCode}");
+                    DrawReportStandsHeader(ws, stand);
+                    FillStandsData(ws, stand);
+                }
 
                 wb.SaveAs(savePath);
             }
@@ -41,16 +48,41 @@ public class ComponentsListReportGenerator : IReportGenerator
         }
     }
 
-    private void CreateStandWorkSheetAsync(XLWorkbook wb, ICollection<Stand> stands)
+    private void DrawReportStandsHeader(IXLWorksheet ws, Stand stand)
     {
-        foreach (var stand in stands)
-        {
-            var sheetName = $"Стенд_{stand.KKSCode}";
-            var ws = wb.Worksheets.Add(sheetName);
-        }
+        ws.Cell("B1").Value = $"Код-KKS: {stand.KKSCode}";
+        ws.Cell("B1").Style
+            .Border.SetTopBorder(XLBorderStyleValues.Medium)
+            .Border.SetRightBorder(XLBorderStyleValues.Medium)
+            .Border.SetBottomBorder(XLBorderStyleValues.Medium)
+            .Border.SetLeftBorder(XLBorderStyleValues.Medium);
+        ws.Cell("C1").Value = $"Наименование: {stand.Design}";
+
+        ws.Cell("B2").Value = "Сводная ведомость комплектующих";
+        ws.Cell("B2").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        ws.Cell("B2").Style
+            .Border.SetTopBorder(XLBorderStyleValues.Medium)
+            .Border.SetRightBorder(XLBorderStyleValues.Medium)
+            .Border.SetBottomBorder(XLBorderStyleValues.Medium)
+            .Border.SetLeftBorder(XLBorderStyleValues.Medium);
+
+        ws.Cell("B4").Value = "Наименование";
+        ws.Cell("C4").Value = "Ед. изм.";
+        ws.Cell("D4").Value = "Кол.";
+
+        var headerStyle = ws.Range("B4:D4").Style;
+        headerStyle.Font.Bold = true;
+        headerStyle.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+        ws.Column("B").Width = 60;
+        ws.Column("C").Width = 15;
+        ws.Column("D").Width = 10;
     }
 
-    private void DrawReportHeader(XLWorkbook wb, ICollection<Stand> stands)
+    private void FillStandsData(IXLWorksheet ws, Stand stand)
     {
+        var row = 4;
+
+        foreach (var obvyazka in stand.ObvyazkiInStand) ws.Cell("B5").Value = "Сортамент труб";
     }
 }

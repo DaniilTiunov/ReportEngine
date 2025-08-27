@@ -10,6 +10,7 @@ public class ElectricalPurpose
     public string Purpose { get; set; }
     public string? Material { get; set; }
     public float? Quantity { get; set; }
+    public float? CostPerUnit { get; set; }
 
     public int FormedElectricalComponentId { get; set; }
 

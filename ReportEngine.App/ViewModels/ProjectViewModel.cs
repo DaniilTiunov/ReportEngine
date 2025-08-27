@@ -302,6 +302,7 @@ public class ProjectViewModel : BaseViewModel
 
             CurrentProjectModel = loadedModel;
             CurrentStandModel = loadedModel.SelectedStand ?? new StandModel();
+            CurrentStandModel.InitializeDefaultPurposes();
             OnPropertyChanged(nameof(CurrentStandModel));
         });
     }
@@ -361,6 +362,8 @@ public class ProjectViewModel : BaseViewModel
 
         newStandModel.Id = addedStandEntity.Id;
         newStandModel.ProjectId = addedStandEntity.ProjectInfoId;
+
+        newStandModel.InitializeDefaultPurposes();
 
         CurrentProjectModel.Stands.Add(newStandModel);
         CurrentProjectModel.SelectedStand = newStandModel;
