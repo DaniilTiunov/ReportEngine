@@ -75,6 +75,8 @@ public class MainWindowViewModel : BaseViewModel
             new RelayCommand(OpenOthersWindowCommandExecuted<CompanyView>, CanAllCommandsExecute);
         MainWindowCommandProvider.OpenFormedFramesCommand =
             new RelayCommand(OpenOthersWindowCommandExecuted<FormedFrameView>, CanAllCommandsExecute);
+        MainWindowCommandProvider.OpenAllSortamentsCommand =
+            new RelayCommand(OpenOthersWindowCommandExecuted<AllSortamentsView>, CanAllCommandsExecute);
         MainWindowCommandProvider.OpenTreeViewCommand =
             new RelayCommand(OpenAnotherControlsCommandExecuted<TreeProjectView>, CanAllCommandsExecute);
         MainWindowCommandProvider.ChekDbConnectionCommand =

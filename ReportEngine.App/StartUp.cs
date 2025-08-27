@@ -14,9 +14,9 @@ public class StartUp
     {
         try
         {
-#if DEBUG
-            AllocConsole();
-#endif
+//#if DEBUG
+//            AllocConsole();
+//#endif
             Log.Logger = LoggerConfig.InitializeLogger();
 
             var connString = JsonHandler.GetConnectionString(DirectoryHelper.GetConfigPath());

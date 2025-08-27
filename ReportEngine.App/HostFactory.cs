@@ -148,6 +148,7 @@ public class HostFactory
         services.AddScoped<CompanyViewModel>();
         services.AddScoped<FormedFrameViewModel>();
         services.AddScoped<FormedDrainagesViewModel>();
+        services.AddScoped<AllSortamentsViewModel>();
     }
 
     private static void ConfigureViews(IServiceCollection services)
@@ -172,5 +173,6 @@ public class HostFactory
         services.AddTransient<FormedDrainagesView>();
         services.AddTransient<FrameDrainagesView>();
         services.AddTransient<ProjectPreview>();
+        services.AddTransient<AllSortamentsView>();
     }
 }

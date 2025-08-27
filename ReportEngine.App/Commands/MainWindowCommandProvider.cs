@@ -16,4 +16,5 @@ public class MainWindowCommandProvider
     public ICommand DeleteSelectedProjectCommand { get; set; }
     public ICommand EditProjectCommand { get; set; }
     public ICommand OpenAllDrainagesCommand { get; set; }
+    public ICommand OpenAllSortamentsCommand { get; set; }
 }
