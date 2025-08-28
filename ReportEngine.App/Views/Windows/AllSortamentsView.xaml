@@ -3,39 +3,99 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:local="clr-namespace:ReportEngine.App.Views.Windows"
         mc:Ignorable="d"
         Width="1100"
         Height="450"
         Title="AllSortamentsView">
     <Grid>
-        <TabControl>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <TabControl Grid.Row="0">
             <TabItem Header="Трубы">
-                <TabControl>
-                    <TabItem Header="Жаропрочные">
-                        
-                    </TabItem>
-                    <TabItem Header="Нержавеющие">
-                        
-                    </TabItem>
-                    <TabItem Header="Углеродистые">
-                        
-                    </TabItem>
+                <TabControl SelectionChanged="SubTabControl_SelectionChanged">
+                    <TabItem Header="Жаропрочные" Tag="Трубы\Жаропрочные" />
+                    <TabItem Header="Нержавеющие" Tag="Трубы\Нержавеющие" />
+                    <TabItem Header="Углеродистые" Tag="Трубы\Углеродистые" />
                 </TabControl>
             </TabItem>
+
             <TabItem Header="Арматуры">
-                <TabControl>
-                    <TabItem Header="Жаропрочные">
-                        
-                    </TabItem>
-                    <TabItem Header="Нержавеющие">
-                        
-                    </TabItem>
-                    <TabItem Header="Углеродистые">
-                        
-                    </TabItem>
+                <TabControl SelectionChanged="SubTabControl_SelectionChanged">
+                    <TabItem Header="Жаропрочные" Tag="Арматуры\Жаропрочные" />
+                    <TabItem Header="Нержавеющие" Tag="Арматуры\Нержавеющие" />
+                    <TabItem Header="Углеродистые" Tag="Арматуры\Углеродистые" />
+                </TabControl>
+            </TabItem>
+            
+            <TabItem Header="Тройники и КМЧ">
+                <TabControl SelectionChanged="SubTabControl_SelectionChanged">
+                    <TabItem Header="Жаропрочные" Tag="Тройники и КМЧ\Жаропрочные" />
+                    <TabItem Header="Нержавеющие" Tag="Тройники и КМЧ\Нержавеющие" />
+                    <TabItem Header="Углеродистые" Tag="Тройники и КМЧ\Углеродистые" />
+                </TabControl>
+            </TabItem>
+            
+            <TabItem Header="Дренаж">
+                <TabControl SelectionChanged="SubTabControl_SelectionChanged">
+                    <TabItem Header="Дренажи и крепления" Tag="Дренажи и крепления" />
+                </TabControl>
+            </TabItem>
+            
+            <TabItem Header="Рамные комплектующие">
+                <TabControl SelectionChanged="SubTabControl_SelectionChanged">
+                    <TabItem Header="Детали рамы" Tag="Детали рамы" />
+                    <TabItem Header="Комплектующие для стойки" Tag="Комплектующие для стойки" />
+                    <TabItem Header="Прокат" Tag="Прокат" />
+                </TabControl>
+            </TabItem>
+            
+            <TabItem Header="Кронштейны">
+                <TabControl SelectionChanged="SubTabControl_SelectionChanged">
+                    <TabItem Header="Крепление датчиков" Tag="Крепление датчиков" />
+                    <TabItem Header="Крепление дренажа" Tag="Крепление дренажа" />
+                    <TabItem Header="Крепление клеммных коробок" Tag="Крепление клеммных коробок" />
+                </TabControl>
+            </TabItem>
+            
+            <TabItem Header="Электрические компоненты">
+                <TabControl SelectionChanged="SubTabControl_SelectionChanged">
+                    <TabItem Header="Кабельная продукция" Tag="Кабельная продукция" />
+                    <TabItem Header="Кабельные вводы" Tag="Кабельные вводы" />
+                    <TabItem Header="Клеммные коробки" Tag="Клеммные коробки" />
+                    <TabItem Header="Обогрев" Tag="Обогрев" />
+                    <TabItem Header="Средства прокладки и защиты кабеля" Tag="Средства прокладки" />
+                </TabControl>
+            </TabItem>
+            
+            <TabItem Header="Прочие" >
+                <TabControl SelectionChanged="SubTabControl_SelectionChanged">
+                    <TabItem Header="Прочие" Tag="Прочие" />
+                </TabControl>
+            </TabItem>
+            
+            <TabItem Header="Тара" >
+                <TabControl SelectionChanged="SubTabControl_SelectionChanged">
+                    <TabItem Header="Тара" Tag="Тара" />
                 </TabControl>
             </TabItem>
         </TabControl>
+
+        <DataGrid x:Name="EquipDataGrid" Grid.Row="1"
+                  AutoGenerateColumns="False"
+                  Margin="5" />
+
+
+        <StackPanel Grid.Row="2">
+            <Button Height="25"
+                    Width="100"
+                    Padding="5"
+                    Margin="5,5,5,5" 
+                    HorizontalAlignment="Right"
+                    Content="Выбрать" />
+        </StackPanel>
     </Grid>
 </Window>

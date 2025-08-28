@@ -110,7 +110,8 @@
                 <Separator />
                 <MenuItem Command="{Binding GenericEquipCommandProvider.OpenConteinersCommand}" Header="Тара" />
                 <Separator />
-                <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllSortamentsCommand}" Header="Весь сортамент" />
+                <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllSortamentsCommand}"
+                          Header="Весь сортамент" />
             </MenuItem>
             <MenuItem Header="Формирование комплектующих">
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenFormedFramesCommand}"
