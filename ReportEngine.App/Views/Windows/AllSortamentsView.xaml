@@ -14,9 +14,9 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         
-        <TabControl Grid.Row="0">
+        <TabControl Grid.Row="0" x:Name="MainTabControl">
             <TabItem Header="Трубы">
-                <TabControl SelectionChanged="SubTabControl_SelectionChanged">
+                <TabControl SelectionChanged="SubTabControl_SelectionChanged" x:Name="SubTab"> 
                     <TabItem Header="Жаропрочные" Tag="Трубы\Жаропрочные" />
                     <TabItem Header="Нержавеющие" Tag="Трубы\Нержавеющие" />
                     <TabItem Header="Углеродистые" Tag="Трубы\Углеродистые" />
@@ -71,14 +71,14 @@
                 </TabControl>
             </TabItem>
             
-            <TabItem Header="Прочие" >
-                <TabControl SelectionChanged="SubTabControl_SelectionChanged">
+            <TabItem Header="Прочие">
+                <TabControl SelectionChanged="SubTabControl_SelectionChanged" x:Name="OtherTab">
                     <TabItem Header="Прочие" Tag="Прочие" />
                 </TabControl>
             </TabItem>
             
             <TabItem Header="Тара" >
-                <TabControl SelectionChanged="SubTabControl_SelectionChanged">
+                <TabControl SelectionChanged="SubTabControl_SelectionChanged" x:Name="ConTab">
                     <TabItem Header="Тара" Tag="Тара" />
                 </TabControl>
             </TabItem>

@@ -20,6 +20,8 @@ public partial class AllSortamentsView : Window
         if (e.Source is not TabControl) return;
         if ((sender as TabControl)?.SelectedItem is not TabItem selectedTab) return;
 
+        ResetAllSubTabControls();
+        
         var groupKey = selectedTab.Tag as string;
         if (string.IsNullOrWhiteSpace(groupKey)) return;
 
@@ -28,5 +30,18 @@ public partial class AllSortamentsView : Window
 
         if (_viewModel.CurrentSortamentsModel.EquipGroups.TryGetValue(groupKey, out var collection))
             EquipDataGrid.ItemsSource = collection;
+    }
+    
+    
+    // TODO: Исправить этот костыль
+    private void ResetAllSubTabControls()
+    {
+        foreach (var mainTabItem in MainTabControl.Items)
+        {
+            if (mainTabItem is TabItem tabItem && tabItem.Content is TabControl subTabControl)
+            {
+                subTabControl.SelectedIndex = -1;
+            }
+        }
     }
 }

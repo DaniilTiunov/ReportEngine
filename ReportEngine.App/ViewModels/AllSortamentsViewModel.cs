@@ -54,6 +54,7 @@ public class AllSortamentsViewModel : BaseViewModel
 
     public AllSortamentsModel CurrentSortamentsModel { get; set; } = new();
 
+    // TODO: Добавить кэширование
     public async Task LoadGroupAsync(string groupKey)
     {
         if (!_equipTypeMap.TryGetValue(groupKey, out var type))
@@ -70,7 +71,7 @@ public class AllSortamentsViewModel : BaseViewModel
         var items = await ((dynamic)repository).GetAllAsync();
         CurrentSortamentsModel.SetEquipGroup(groupKey, items);
     }
-
+    // TODO: Не использовать рефлексию
     public void GenerateDataGridByTag(DataGrid grid, string groupKey)
     {
         if (!_equipTypeMap.TryGetValue(groupKey, out var type)) return;
