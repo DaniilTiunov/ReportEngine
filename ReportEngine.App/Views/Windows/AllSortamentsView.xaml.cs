@@ -44,4 +44,17 @@ public partial class AllSortamentsView : Window
             }
         }
     }
+    
+    private void SelectButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_viewModel.SelectedEquip != null)
+        {
+            _viewModel.SelectionHandler?.Invoke(_viewModel.SelectedEquip);
+            Close();
+        }
+        else
+        {
+            Close();
+        }
+    }
 }

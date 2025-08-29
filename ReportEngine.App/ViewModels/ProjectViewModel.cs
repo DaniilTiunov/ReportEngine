@@ -98,6 +98,8 @@ public class ProjectViewModel : BaseViewModel
             new RelayCommand(OnCalculateProjectCommandExecuted, CanAllCommandsExecute);
         ProjectCommandProvider.CreateSummaryReportCommand =
             new RelayCommand(OnCreateSummaryReportCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.OpenAllSortamentsDialogCommand =
+            new RelayCommand(OnOpenAllSortamentsDialogExecuted, CanAllCommandsExecute);
     }
 
     public void InitializeGenericCommands()
@@ -120,6 +122,43 @@ public class ProjectViewModel : BaseViewModel
     public bool CanAllCommandsExecute(object e)
     {
         return true;
+    }
+
+    public void OnOpenAllSortamentsDialogExecuted(object e)
+    {
+        // e приходит из XAML CommandParameter — это объект назначения (DrainagePurpose / AdditionalEquipPurpose / ElectricalPurpose)
+        var selected = _dialogService.ShowAllSortamentsDialog();
+        if (selected == null) return;
+
+        // Пытаемся корректно записать Material и CostPerUnit в цель (разные типы целей имеют похожие свойства)
+        if (e is DrainagePurpose dp)
+        {
+            dp.Material = selected.Name;
+            dp.CostPerUnit = selected.Cost;
+        }
+        else if (e is AdditionalEquipPurpose ap)
+        {
+            ap.Material = selected.Name;
+            ap.CostPerUnit = selected.Cost;
+        }
+        else if(e is ElectricalPurpose ep)
+        {
+            ep.Material = selected.Name;
+            ep.CostPerUnit = selected.Cost;
+        }
+        else
+        {
+            // Универсальный fallback через рефлексию — если у объекта есть свойства Material/CostPerUnit, установим их
+            var target = e;
+            if (target != null)
+            {
+                var t = target.GetType();
+                var matProp = t.GetProperty("Material");
+                var costProp = t.GetProperty("CostPerUnit");
+                if (matProp != null && matProp.CanWrite) matProp.SetValue(target, selected.Name);
+                if (costProp != null && costProp.CanWrite) costProp.SetValue(target, selected.Cost);
+            }
+        }
     }
 
     public void OnSelectMaterialFromDialogCommandExecuted(object e)
@@ -508,6 +547,6 @@ public class ProjectViewModel : BaseViewModel
             Process.Start("explorer.exe", reportDir);
         }
     }
-
+    
     #endregion
 }

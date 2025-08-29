@@ -46,13 +46,22 @@ public class AllSortamentsViewModel : BaseViewModel
     };
 
     private readonly IServiceProvider _serviceProvider;
-
+    
     public AllSortamentsViewModel(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
     }
 
     public AllSortamentsModel CurrentSortamentsModel { get; set; } = new();
+    
+    private IBaseEquip _selectedEquip;
+    public IBaseEquip SelectedEquip
+    {
+        get => _selectedEquip;
+        set => Set(ref _selectedEquip, value);
+    }
+    
+    public Action<IBaseEquip>? SelectionHandler { get; set; }
 
     // TODO: Добавить кэширование
     public async Task LoadGroupAsync(string groupKey)

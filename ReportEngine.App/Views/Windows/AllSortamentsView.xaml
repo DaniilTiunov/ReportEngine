@@ -86,7 +86,8 @@
 
         <DataGrid x:Name="EquipDataGrid" Grid.Row="1"
                   AutoGenerateColumns="False"
-                  Margin="5" />
+                  Margin="5" 
+                  SelectedItem="{Binding SelectedEquip, Mode=TwoWay}"/>
 
 
         <StackPanel Grid.Row="2">
@@ -95,7 +96,8 @@
                     Padding="5"
                     Margin="5,5,5,5" 
                     HorizontalAlignment="Right"
-                    Content="Выбрать" />
+                    Content="Выбрать" 
+                    Click="SelectButton_Click"/>
         </StackPanel>
     </Grid>
 </Window>
