@@ -42,9 +42,9 @@ public class FormedFrameRepository : IFrameRepository
                 exisingComponent.Length += length.Value;
             else
                 exisingComponent.Count++;
-            
+
             exisingComponent.CostComponent = component.Cost;
-            
+
             _context.FrameComponents.Update(exisingComponent);
         }
         else

@@ -42,25 +42,26 @@ public class AllSortamentsViewModel : BaseViewModel
         { "Обогрев", typeof(Heater) },
         { "Средства прокладки", typeof(CabelProtection) },
         { "Прочие", typeof(Other) },
-        { "Тара", typeof(Container) },
+        { "Тара", typeof(Container) }
     };
 
     private readonly IServiceProvider _serviceProvider;
-    
+
+    private IBaseEquip _selectedEquip;
+
     public AllSortamentsViewModel(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
     }
 
     public AllSortamentsModel CurrentSortamentsModel { get; set; } = new();
-    
-    private IBaseEquip _selectedEquip;
+
     public IBaseEquip SelectedEquip
     {
         get => _selectedEquip;
         set => Set(ref _selectedEquip, value);
     }
-    
+
     public Action<IBaseEquip>? SelectionHandler { get; set; }
 
     // TODO: Добавить кэширование
@@ -68,7 +69,7 @@ public class AllSortamentsViewModel : BaseViewModel
     {
         if (!_equipTypeMap.TryGetValue(groupKey, out var type))
             return;
-        
+
         if (CurrentSortamentsModel.EquipGroups.ContainsKey(groupKey))
             return;
 
@@ -80,6 +81,7 @@ public class AllSortamentsViewModel : BaseViewModel
         var items = await ((dynamic)repository).GetAllAsync();
         CurrentSortamentsModel.SetEquipGroup(groupKey, items);
     }
+
     // TODO: Не использовать рефлексию
     public void GenerateDataGridByTag(DataGrid grid, string groupKey)
     {

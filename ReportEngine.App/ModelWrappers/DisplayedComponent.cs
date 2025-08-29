@@ -8,7 +8,7 @@ public class DisplayedComponent : INotifyPropertyChanged
     private float _length;
     public IBaseEquip Component { get; set; }
     public int Count { get; set; }
-    public float? CostComponent { get; set; } 
+    public float? CostComponent { get; set; }
 
     public float Length
     {

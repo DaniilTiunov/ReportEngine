@@ -61,7 +61,7 @@ public class ProjectViewModel : BaseViewModel
     public ProjectModel CurrentProjectModel { get; set; } = new();
     public ProjectCommandProvider ProjectCommandProvider { get; set; } = new();
     public MaterialLinesModel CurrentMaterials { get; set; } = new();
-    
+
     public void InitializeTime()
     {
         CurrentProjectModel.CreationDate = DateTime.Now.Date;
@@ -70,6 +70,7 @@ public class ProjectViewModel : BaseViewModel
         CurrentProjectModel.EndDate = DateTime.Now.Date;
     }
 
+    // TODO: Сделать тут рефакторинг (дженерик метод или фабрику)
     public void InitializeCommands()
     {
         ProjectCommandProvider.CreateNewCardCommand =
@@ -189,44 +190,66 @@ public class ProjectViewModel : BaseViewModel
         }
     }
 
-    public async void OnCreateNewCardCommandExecuted(object? e) =>
+    public async void OnCreateNewCardCommandExecuted(object? e)
+    {
         await ExceptionHelper.SafeExecuteAsync(CreateNewProjectCardAsync);
+    }
 
-    public async void OnAddNewStandCommandExecuted(object? e) =>
+    public async void OnAddNewStandCommandExecuted(object? e)
+    {
         await ExceptionHelper.SafeExecuteAsync(AddNewStandToProjectAsync);
-    
-    public async void OnSaveChangesCommandExecuted(object? e) =>
+    }
+
+    public async void OnSaveChangesCommandExecuted(object? e)
+    {
         await ExceptionHelper.SafeExecuteAsync(SaveProjectChangesAsync);
+    }
 
-    public async void OnSaveObvCommandExecuted(object e) =>
+    public async void OnSaveObvCommandExecuted(object e)
+    {
         await ExceptionHelper.SafeExecuteAsync(AddObvToStandAsync);
-    
-    public async void OnAddCustomDrainageToStandExecuted(object p) =>
+    }
+
+    public async void OnAddCustomDrainageToStandExecuted(object p)
+    {
         await ExceptionHelper.SafeExecuteAsync(AddCustomDrainageToStandAsync);
+    }
 
-    public async void OnAddDrainageToStandExecuted(object p) =>
+    public async void OnAddDrainageToStandExecuted(object p)
+    {
         await ExceptionHelper.SafeExecuteAsync(AddDrainageToStandAsync);
+    }
 
-    public async void OnAddFrameToStandExecuted(object p) =>
+    public async void OnAddFrameToStandExecuted(object p)
+    {
         await ExceptionHelper.SafeExecuteAsync(AddFrameToStandAsync);
-    
-    public async void OnAddCustomElectricalComponentToStandExecuted(object p) =>
-        await ExceptionHelper.SafeExecuteAsync(AddCustomElectricalComponentToStandAsync);
+    }
 
-    public async void OnAddCustomAdditionalEquipToStandExecuted(object p) =>
+    public async void OnAddCustomElectricalComponentToStandExecuted(object p)
+    {
+        await ExceptionHelper.SafeExecuteAsync(AddCustomElectricalComponentToStandAsync);
+    }
+
+    public async void OnAddCustomAdditionalEquipToStandExecuted(object p)
+    {
         await ExceptionHelper.SafeExecuteAsync(AddCustomAdditionalEquipToStandAsync);
-    
+    }
+
     public void OnSelectObvCommandExecuted(object p)
     {
         ExceptionHelper.SafeExecute(() => { SelectedObvyazka = _dialogService.ShowObvyazkaDialog(); });
     }
 
-    public async void OnCalculateProjectCommandExecuted(object p) =>
+    public async void OnCalculateProjectCommandExecuted(object p)
+    {
         await ExceptionHelper.SafeExecuteAsync(CalculateProjectAsync);
+    }
 
-    public void OnCreateSummaryReportCommandExecuted(object p) =>
+    public void OnCreateSummaryReportCommandExecuted(object p)
+    {
         ExceptionHelper.SafeExecute(CreateSummaryReportAsync);
-    
+    }
+
     public void ResetProject()
     {
         CurrentProjectModel = new ProjectModel();
@@ -430,7 +453,7 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(AllAvailableAdditionalEquips));
         CurrentStandModel.NewAdditionalEquip = new FormedAdditionalEquip();
     }
-    
+
     private async Task CalculateProjectAsync()
     {
         await _calculationService.CalculateProjectAsync(CurrentProjectModel);
@@ -452,14 +475,14 @@ public class ProjectViewModel : BaseViewModel
     private void ApplySelectedEquipToPurpose(object target, IBaseEquip selected)
     {
         if (target == null || selected == null) return;
-        
+
         switch (target)
         {
             case DrainagePurpose dp:
                 dp.Material = selected.Name;
                 dp.CostPerUnit = selected.Cost;
                 return;
-            
+
             case AdditionalEquipPurpose ap:
                 ap.Material = selected.Name;
                 ap.CostPerUnit = selected.Cost;
@@ -470,6 +493,7 @@ public class ProjectViewModel : BaseViewModel
                 ep.CostPerUnit = selected.Cost;
                 return;
         }
+
         //Рефлексия на случай других типов с такими свойствами
         var t = target.GetType();
         var matProp = t.GetProperty("Material");

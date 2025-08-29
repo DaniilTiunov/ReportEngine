@@ -1,7 +1,6 @@
 ﻿using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
-using ReportEngine.Domain.Entities.BaseEntities.Interface;
 
 namespace ReportEngine.App.Services.Core;
 
@@ -20,17 +19,14 @@ public class CalculationService : ICalculationService
     {
         await CalculateStandsCountAsync(project);
 
-        foreach (var stand in project.Stands)
-        {
-            stand.StandSummCost = CalculateStandEquipCost(stand);
-        }
-        
-        
+        foreach (var stand in project.Stands) stand.StandSummCost = CalculateStandEquipCost(stand);
+
+
         project.Cost = project.Stands.Sum(stand => stand.StandSummCost);
-        
+
         await _projectService.UpdateProjectAsync(project);
         await _projectService.UpdateStandEntity(project);
-        
+
         _notificationService.ShowInfo("Расчёт завершён");
     }
 
@@ -42,23 +38,15 @@ public class CalculationService : ICalculationService
     private decimal CalculateStandEquipCost(StandModel standModel)
     {
         decimal cost = 0;
-        
+
         foreach (var equipInStand in standModel.AdditionalEquipsInStand)
-        {
-            foreach (var purpose in equipInStand.Purposes)
-            {
-                cost += (decimal)(purpose.CostPerUnit ?? 0) * (decimal)(purpose.Quantity ?? 0);
-            }
-        }
+        foreach (var purpose in equipInStand.Purposes)
+            cost += (decimal)(purpose.CostPerUnit ?? 0) * (decimal)(purpose.Quantity ?? 0);
 
         foreach (var frames in standModel.FramesInStand)
-        {
-            foreach (var component in frames.Components)
-            {
-                cost += component.Count * (decimal)(component.CostComponent ?? 0);
-            }
-        }
-        
+        foreach (var component in frames.Components)
+            cost += component.Count * (decimal)(component.CostComponent ?? 0);
+
         return cost;
     }
 }

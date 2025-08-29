@@ -69,15 +69,12 @@ public class DialogService : IDialogService
         {
             IBaseEquip? selected = null;
             var viewModel = _serviceProvider.GetRequiredService<AllSortamentsViewModel>();
-            
-            viewModel.SelectionHandler = item =>
-            {
-                selected = item;
-            };
-            
+
+            viewModel.SelectionHandler = item => { selected = item; };
+
             var window = new AllSortamentsView(viewModel);
             window.ShowDialog();
-            
+
             return selected;
         }
         catch (Exception ex)

@@ -179,7 +179,7 @@ public class StandService : IStandService
         await _projectRepository.AddAdditionalEquipToStandAsync(standId, entity.Id);
         _notificationService.ShowInfo($"Собранное комплектующее успешно добавлено! Id {standId}");
     }
-    
+
     public Task<ObvyazkaInStand> CreateObvyazkaAsync(StandModel standModel, Obvyazka selectedObvyazka)
     {
         if (standModel == null) throw new ArgumentNullException(nameof(standModel));

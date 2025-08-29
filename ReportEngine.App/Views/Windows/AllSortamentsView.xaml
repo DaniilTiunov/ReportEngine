@@ -13,10 +13,10 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        
+
         <TabControl Grid.Row="0" x:Name="MainTabControl">
             <TabItem Header="Трубы">
-                <TabControl SelectionChanged="SubTabControl_SelectionChanged" x:Name="SubTab"> 
+                <TabControl SelectionChanged="SubTabControl_SelectionChanged" x:Name="SubTab">
                     <TabItem Header="Жаропрочные" Tag="Трубы\Жаропрочные" />
                     <TabItem Header="Нержавеющие" Tag="Трубы\Нержавеющие" />
                     <TabItem Header="Углеродистые" Tag="Трубы\Углеродистые" />
@@ -30,7 +30,7 @@
                     <TabItem Header="Углеродистые" Tag="Арматуры\Углеродистые" />
                 </TabControl>
             </TabItem>
-            
+
             <TabItem Header="Тройники и КМЧ">
                 <TabControl SelectionChanged="SubTabControl_SelectionChanged">
                     <TabItem Header="Жаропрочные" Tag="Тройники и КМЧ\Жаропрочные" />
@@ -38,13 +38,13 @@
                     <TabItem Header="Углеродистые" Tag="Тройники и КМЧ\Углеродистые" />
                 </TabControl>
             </TabItem>
-            
+
             <TabItem Header="Дренаж">
                 <TabControl SelectionChanged="SubTabControl_SelectionChanged">
                     <TabItem Header="Дренажи и крепления" Tag="Дренажи и крепления" />
                 </TabControl>
             </TabItem>
-            
+
             <TabItem Header="Рамные комплектующие">
                 <TabControl SelectionChanged="SubTabControl_SelectionChanged">
                     <TabItem Header="Детали рамы" Tag="Детали рамы" />
@@ -52,7 +52,7 @@
                     <TabItem Header="Прокат" Tag="Прокат" />
                 </TabControl>
             </TabItem>
-            
+
             <TabItem Header="Кронштейны">
                 <TabControl SelectionChanged="SubTabControl_SelectionChanged">
                     <TabItem Header="Крепление датчиков" Tag="Крепление датчиков" />
@@ -60,7 +60,7 @@
                     <TabItem Header="Крепление клеммных коробок" Tag="Крепление клеммных коробок" />
                 </TabControl>
             </TabItem>
-            
+
             <TabItem Header="Электрические компоненты">
                 <TabControl SelectionChanged="SubTabControl_SelectionChanged">
                     <TabItem Header="Кабельная продукция" Tag="Кабельная продукция" />
@@ -70,14 +70,14 @@
                     <TabItem Header="Средства прокладки и защиты кабеля" Tag="Средства прокладки" />
                 </TabControl>
             </TabItem>
-            
+
             <TabItem Header="Прочие">
                 <TabControl SelectionChanged="SubTabControl_SelectionChanged" x:Name="OtherTab">
                     <TabItem Header="Прочие" Tag="Прочие" />
                 </TabControl>
             </TabItem>
-            
-            <TabItem Header="Тара" >
+
+            <TabItem Header="Тара">
                 <TabControl SelectionChanged="SubTabControl_SelectionChanged" x:Name="ConTab">
                     <TabItem Header="Тара" Tag="Тара" />
                 </TabControl>
@@ -86,18 +86,18 @@
 
         <DataGrid x:Name="EquipDataGrid" Grid.Row="1"
                   AutoGenerateColumns="False"
-                  Margin="5" 
-                  SelectedItem="{Binding SelectedEquip, Mode=TwoWay}"/>
+                  Margin="5"
+                  SelectedItem="{Binding SelectedEquip, Mode=TwoWay}" />
 
 
         <StackPanel Grid.Row="2">
             <Button Height="25"
                     Width="100"
                     Padding="5"
-                    Margin="5,5,5,5" 
+                    Margin="5,5,5,5"
                     HorizontalAlignment="Right"
-                    Content="Выбрать" 
-                    Click="SelectButton_Click"/>
+                    Content="Выбрать"
+                    Click="SelectButton_Click" />
         </StackPanel>
     </Grid>
 </Window>

@@ -77,7 +77,8 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Binding="{Binding CostComponent, StringFormat={}{0:N2}}" Header="Цена за ед." />
+                                <DataGridTextColumn Binding="{Binding CostComponent, StringFormat={}{0:N2}}"
+                                                    Header="Цена за ед." />
                             </DataGrid.Columns>
                         </DataGrid>
                     </GroupBox>
