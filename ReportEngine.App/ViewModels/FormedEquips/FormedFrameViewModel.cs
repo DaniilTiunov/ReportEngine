@@ -151,6 +151,7 @@ public class FormedFrameViewModel : BaseViewModel
         var frame = FormedFrameModel.SelectedFrame;
         var component = FormedFrameModel.SelectedComponentForAdd;
         var length = float.Parse(FormedFrameModel.ComponentLength);
+        
 
         if (frame == null || component == null) return;
 

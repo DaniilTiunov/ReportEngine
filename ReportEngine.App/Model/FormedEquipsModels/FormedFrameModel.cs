@@ -124,7 +124,7 @@ public class FormedFrameModel : BaseViewModel
             };
             if (component != null)
             {
-                var displayed = new DisplayedComponent { Component = component, Count = frameComponent.Count };
+                var displayed = new DisplayedComponent { Component = component, Count = frameComponent.Count, CostComponent = frameComponent.CostComponent };
                 if (component is BaseFrame baseFrame && baseFrame.Measure == "м")
                     displayed.Length = frameComponent.Length ?? 0;
                 DisplayedComponents.Add(displayed);

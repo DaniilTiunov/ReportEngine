@@ -62,6 +62,14 @@ public class ProjectService : IProjectService
         _notificationService.ShowInfo("Изменения успешно сохранены!");
     }
 
+    public async Task UpdateStandEntity(ProjectModel standModel)
+    {
+        foreach (var stand in standModel.Stands)
+        {
+            await _projectRepository.UpdateStandAsync(StandDataConverter.ConvertToStandEntity(stand));
+        }
+    }
+
     public async Task AddStandToProjectAsync(int projectId, StandModel standModel)
     {
         var standEntity = StandDataConverter.ConvertToStandEntity(standModel);

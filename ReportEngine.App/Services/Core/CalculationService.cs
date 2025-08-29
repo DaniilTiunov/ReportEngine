@@ -20,12 +20,17 @@ public class CalculationService : ICalculationService
     {
         await CalculateStandsCountAsync(project);
 
-        foreach (var stand in project.Stands) stand.StandSummCost = CalculateStandEquipCost(stand);
-
-        project.Cost = project.Stands.Sum(s => s.StandSummCost);
-
+        foreach (var stand in project.Stands)
+        {
+            stand.StandSummCost = CalculateStandEquipCost(stand);
+        }
+        
+        
+        project.Cost = project.Stands.Sum(stand => stand.StandSummCost);
+        
         await _projectService.UpdateProjectAsync(project);
-
+        await _projectService.UpdateStandEntity(project);
+        
         _notificationService.ShowInfo("Расчёт завершён");
     }
 
@@ -34,25 +39,26 @@ public class CalculationService : ICalculationService
         project.StandCount = project.Stands.Count;
     }
 
-    private decimal CalculateStandEquipCost(StandModel stand)
+    private decimal CalculateStandEquipCost(StandModel standModel)
     {
         decimal cost = 0;
+        
+        foreach (var equipInStand in standModel.AdditionalEquipsInStand)
+        {
+            foreach (var purpose in equipInStand.Purposes)
+            {
+                cost += (decimal)(purpose.CostPerUnit ?? 0) * (decimal)(purpose.Quantity ?? 0);
+            }
+        }
 
-        // Дополнительное оборудование
-        foreach (var equip in stand.AdditionalEquipsInStand)
-            if (equip is IBaseEquip addEquip)
-                cost += (decimal)addEquip.Cost;
-
-        // Дренажи
-        foreach (var drainage in stand.DrainagesInStand)
-            if (drainage is IBaseEquip drainEquip)
-                cost += (decimal)drainEquip.Cost;
-
-        // Электрические компоненты
-        foreach (var electrical in stand.ElectricalComponentsInStand)
-            if (electrical is IBaseEquip elecEquip)
-                cost += (decimal)elecEquip.Cost;
-
+        foreach (var frames in standModel.FramesInStand)
+        {
+            foreach (var component in frames.Components)
+            {
+                cost += component.Count * (decimal)(component.CostComponent ?? 0);
+            }
+        }
+        
         return cost;
     }
 }

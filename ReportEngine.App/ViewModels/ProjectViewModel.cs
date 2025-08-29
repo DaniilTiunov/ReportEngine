@@ -61,10 +61,7 @@ public class ProjectViewModel : BaseViewModel
     public ProjectModel CurrentProjectModel { get; set; } = new();
     public ProjectCommandProvider ProjectCommandProvider { get; set; } = new();
     public MaterialLinesModel CurrentMaterials { get; set; } = new();
-
-
-    #region Инициализация
-
+    
     public void InitializeTime()
     {
         CurrentProjectModel.CreationDate = DateTime.Now.Date;
@@ -81,7 +78,6 @@ public class ProjectViewModel : BaseViewModel
             new RelayCommand(OnAddNewStandCommandExecuted, CanAllCommandsExecute);
         ProjectCommandProvider.SaveChangesCommand =
             new RelayCommand(OnSaveChangesCommandExecuted, CanAllCommandsExecute);
-
         ProjectCommandProvider.AddFrameToStandCommand =
             new RelayCommand(OnAddFrameToStandExecuted, CanAllCommandsExecute);
         ProjectCommandProvider.AddDrainageToStandCommand =
@@ -115,11 +111,7 @@ public class ProjectViewModel : BaseViewModel
         ProjectCommandProvider.SaveObvCommand = new RelayCommand(OnSaveObvCommandExecuted, CanAllCommandsExecute);
     }
 
-    #endregion
-
-    #region Команды
-
-    public bool CanAllCommandsExecute(object e)
+    public bool CanAllCommandsExecute(object? e)
     {
         return true;
     }
@@ -130,35 +122,7 @@ public class ProjectViewModel : BaseViewModel
         var selected = _dialogService.ShowAllSortamentsDialog();
         if (selected == null) return;
 
-        // Пытаемся корректно записать Material и CostPerUnit в цель (разные типы целей имеют похожие свойства)
-        if (e is DrainagePurpose dp)
-        {
-            dp.Material = selected.Name;
-            dp.CostPerUnit = selected.Cost;
-        }
-        else if (e is AdditionalEquipPurpose ap)
-        {
-            ap.Material = selected.Name;
-            ap.CostPerUnit = selected.Cost;
-        }
-        else if(e is ElectricalPurpose ep)
-        {
-            ep.Material = selected.Name;
-            ep.CostPerUnit = selected.Cost;
-        }
-        else
-        {
-            // Универсальный fallback через рефлексию — если у объекта есть свойства Material/CostPerUnit, установим их
-            var target = e;
-            if (target != null)
-            {
-                var t = target.GetType();
-                var matProp = t.GetProperty("Material");
-                var costProp = t.GetProperty("CostPerUnit");
-                if (matProp != null && matProp.CanWrite) matProp.SetValue(target, selected.Name);
-                if (costProp != null && costProp.CanWrite) costProp.SetValue(target, selected.Cost);
-            }
-        }
+        ApplySelectedEquipToPurpose(e, selected);
     }
 
     public void OnSelectMaterialFromDialogCommandExecuted(object e)
@@ -225,70 +189,44 @@ public class ProjectViewModel : BaseViewModel
         }
     }
 
-    public async void OnCreateNewCardCommandExecuted(object e)
-    {
+    public async void OnCreateNewCardCommandExecuted(object? e) =>
         await ExceptionHelper.SafeExecuteAsync(CreateNewProjectCardAsync);
-    }
 
-    public async void OnAddNewStandCommandExecuted(object e)
-    {
+    public async void OnAddNewStandCommandExecuted(object? e) =>
         await ExceptionHelper.SafeExecuteAsync(AddNewStandToProjectAsync);
-    }
-
-    public async void OnSaveChangesCommandExecuted(object e)
-    {
+    
+    public async void OnSaveChangesCommandExecuted(object? e) =>
         await ExceptionHelper.SafeExecuteAsync(SaveProjectChangesAsync);
-    }
 
-    public async void OnSaveObvCommandExecuted(object e)
-    {
+    public async void OnSaveObvCommandExecuted(object e) =>
         await ExceptionHelper.SafeExecuteAsync(AddObvToStandAsync);
-    }
-
-    public async void OnAddCustomDrainageToStandExecuted(object p)
-    {
+    
+    public async void OnAddCustomDrainageToStandExecuted(object p) =>
         await ExceptionHelper.SafeExecuteAsync(AddCustomDrainageToStandAsync);
-    }
 
-    public async void OnAddDrainageToStandExecuted(object p)
-    {
+    public async void OnAddDrainageToStandExecuted(object p) =>
         await ExceptionHelper.SafeExecuteAsync(AddDrainageToStandAsync);
-    }
 
-    public async void OnAddFrameToStandExecuted(object p)
-    {
+    public async void OnAddFrameToStandExecuted(object p) =>
         await ExceptionHelper.SafeExecuteAsync(AddFrameToStandAsync);
-    }
-
-    public async void OnAddCustomElectricalComponentToStandExecuted(object p)
-    {
+    
+    public async void OnAddCustomElectricalComponentToStandExecuted(object p) =>
         await ExceptionHelper.SafeExecuteAsync(AddCustomElectricalComponentToStandAsync);
-    }
 
-    public async void OnAddCustomAdditionalEquipToStandExecuted(object p)
-    {
+    public async void OnAddCustomAdditionalEquipToStandExecuted(object p) =>
         await ExceptionHelper.SafeExecuteAsync(AddCustomAdditionalEquipToStandAsync);
-    }
-
+    
     public void OnSelectObvCommandExecuted(object p)
     {
         ExceptionHelper.SafeExecute(() => { SelectedObvyazka = _dialogService.ShowObvyazkaDialog(); });
     }
 
-    public void OnCalculateProjectCommandExecuted(object p)
-    {
-        ExceptionHelper.SafeExecuteAsync(CalculateProjectAsync);
-    }
+    public async void OnCalculateProjectCommandExecuted(object p) =>
+        await ExceptionHelper.SafeExecuteAsync(CalculateProjectAsync);
 
-    public void OnCreateSummaryReportCommandExecuted(object p)
-    {
+    public void OnCreateSummaryReportCommandExecuted(object p) =>
         ExceptionHelper.SafeExecute(CreateSummaryReportAsync);
-    }
-
-    #endregion
-
-    #region Методы
-
+    
     public void ResetProject()
     {
         CurrentProjectModel = new ProjectModel();
@@ -352,7 +290,7 @@ public class ProjectViewModel : BaseViewModel
         if (CurrentProjectModel.SelectedStand == null)
             return;
 
-        var entity = await CreateObvyazkaAsync(CurrentProjectModel, SelectedObvyazka);
+        var entity = await _standService.CreateObvyazkaAsync(CurrentProjectModel.SelectedStand, SelectedObvyazka);
 
         await _standService.AddObvyazkaToStandAsync(CurrentProjectModel.SelectedStand.Id, entity);
         CurrentProjectModel.SelectedStand.ObvyazkiInStand.Add(entity);
@@ -492,49 +430,12 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(AllAvailableAdditionalEquips));
         CurrentStandModel.NewAdditionalEquip = new FormedAdditionalEquip();
     }
-
-    private async Task<ObvyazkaInStand> CreateObvyazkaAsync(ProjectModel project, Obvyazka selectedObvyazka)
-    {
-        return new ObvyazkaInStand
-        {
-            LineLength = selectedObvyazka.LineLength,
-            ZraCount = selectedObvyazka.ZraCount,
-            Sensor = selectedObvyazka.Sensor,
-            SensorType = selectedObvyazka.SensorType,
-            Clamp = selectedObvyazka.Clamp,
-            WidthOnFrame = selectedObvyazka.WidthOnFrame,
-            OtherLineCount = selectedObvyazka.OtherLineCount,
-            Weight = selectedObvyazka.Weight,
-            TreeSocketCount = selectedObvyazka.TreeSocket,
-            HumanCost = selectedObvyazka.HumanCost,
-            ImageName = selectedObvyazka.ImageName,
-            ObvyazkaId = selectedObvyazka.Id,
-
-            ObvyazkaName = CurrentProjectModel.SelectedStand.ObvyazkaName,
-            StandId = CurrentProjectModel.SelectedStand.Id,
-            NN = CurrentProjectModel.SelectedStand.NN,
-            MaterialLine = CurrentProjectModel.SelectedStand.MaterialLine,
-            Armature = CurrentProjectModel.SelectedStand.Armature,
-            TreeSocket = CurrentProjectModel.SelectedStand.TreeSocket,
-            KMCH = CurrentProjectModel.SelectedStand.KMCH,
-            FirstSensorType = CurrentProjectModel.SelectedStand.FirstSensorType,
-            FirstSensorKKS = CurrentProjectModel.SelectedStand.FirstSensorKKSCounter,
-            FirstSensorMarkPlus = CurrentProjectModel.SelectedStand.FirstSensorMarkPlus,
-            FirstSensorMarkMinus = CurrentProjectModel.SelectedStand.FirstSensorMarkMinus,
-            SecondSensorType = CurrentProjectModel.SelectedStand.SecondSensorType,
-            SecondSensorKKS = CurrentProjectModel.SelectedStand.SecondSensorKKSCounter,
-            SecondSensorMarkPlus = CurrentProjectModel.SelectedStand.SecondSensorMarkPlus,
-            SecondSensorMarkMinus = CurrentProjectModel.SelectedStand.SecondSensorMarkMinus,
-            ThirdSensorType = CurrentProjectModel.SelectedStand.ThirdSensorType,
-            ThirdSensorKKS = CurrentProjectModel.SelectedStand.ThirdSensorKKS,
-            ThirdSensorMarkPlus = CurrentProjectModel.SelectedStand.ThirdSensorMarkPlus,
-            ThirdSensorMarkMinus = CurrentProjectModel.SelectedStand.ThirdSensorMarkMinus
-        };
-    }
-
+    
     private async Task CalculateProjectAsync()
     {
         await _calculationService.CalculateProjectAsync(CurrentProjectModel);
+        OnPropertyChanged(nameof(CurrentProjectModel.Stands));
+        OnPropertyChanged(nameof(CurrentProjectModel.Cost));
     }
 
     private async void CreateSummaryReportAsync()
@@ -547,6 +448,33 @@ public class ProjectViewModel : BaseViewModel
             Process.Start("explorer.exe", reportDir);
         }
     }
-    
-    #endregion
+
+    private void ApplySelectedEquipToPurpose(object target, IBaseEquip selected)
+    {
+        if (target == null || selected == null) return;
+        
+        switch (target)
+        {
+            case DrainagePurpose dp:
+                dp.Material = selected.Name;
+                dp.CostPerUnit = selected.Cost;
+                return;
+            
+            case AdditionalEquipPurpose ap:
+                ap.Material = selected.Name;
+                ap.CostPerUnit = selected.Cost;
+                return;
+
+            case ElectricalPurpose ep:
+                ep.Material = selected.Name;
+                ep.CostPerUnit = selected.Cost;
+                return;
+        }
+        //Рефлексия на случай других типов с такими свойствами
+        var t = target.GetType();
+        var matProp = t.GetProperty("Material");
+        var costProp = t.GetProperty("CostPerUnit");
+        if (matProp != null && matProp.CanWrite) matProp.SetValue(target, selected.Name);
+        if (costProp != null && costProp.CanWrite) costProp.SetValue(target, selected.Cost);
+    }
 }

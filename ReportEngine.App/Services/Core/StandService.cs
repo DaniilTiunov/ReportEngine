@@ -126,7 +126,8 @@ public class StandService : IStandService
             {
                 Purpose = p.Purpose,
                 Material = p.Material,
-                Quantity = p.Quantity
+                Quantity = p.Quantity,
+                CostPerUnit = p.CostPerUnit
             }).ToList()
         };
 
@@ -150,7 +151,8 @@ public class StandService : IStandService
             {
                 Purpose = p.Purpose,
                 Material = p.Material,
-                Quantity = p.Quantity
+                Quantity = p.Quantity,
+                CostPerUnit = p.CostPerUnit
             }).ToList()
         };
 
@@ -168,12 +170,57 @@ public class StandService : IStandService
             {
                 Purpose = p.Purpose,
                 Material = p.Material,
-                Quantity = p.Quantity
+                Quantity = p.Quantity,
+                CostPerUnit = p.CostPerUnit
             }).ToList()
         };
 
         await _formedAdditionalEquipsRepository.AddAsync(entity);
         await _projectRepository.AddAdditionalEquipToStandAsync(standId, entity.Id);
         _notificationService.ShowInfo($"Собранное комплектующее успешно добавлено! Id {standId}");
+    }
+    
+    public Task<ObvyazkaInStand> CreateObvyazkaAsync(StandModel standModel, Obvyazka selectedObvyazka)
+    {
+        if (standModel == null) throw new ArgumentNullException(nameof(standModel));
+        if (selectedObvyazka == null) throw new ArgumentNullException(nameof(selectedObvyazka));
+
+        var entity = new ObvyazkaInStand
+        {
+            LineLength = selectedObvyazka.LineLength,
+            ZraCount = selectedObvyazka.ZraCount,
+            Sensor = selectedObvyazka.Sensor,
+            SensorType = selectedObvyazka.SensorType,
+            Clamp = selectedObvyazka.Clamp,
+            WidthOnFrame = selectedObvyazka.WidthOnFrame,
+            OtherLineCount = selectedObvyazka.OtherLineCount,
+            Weight = selectedObvyazka.Weight,
+            TreeSocketCount = selectedObvyazka.TreeSocket,
+            HumanCost = selectedObvyazka.HumanCost,
+            ImageName = selectedObvyazka.ImageName,
+            ObvyazkaId = selectedObvyazka.Id,
+
+            ObvyazkaName = standModel.ObvyazkaName,
+            StandId = standModel.Id,
+            NN = standModel.NN,
+            MaterialLine = standModel.MaterialLine,
+            Armature = standModel.Armature,
+            TreeSocket = standModel.TreeSocket,
+            KMCH = standModel.KMCH,
+            FirstSensorType = standModel.FirstSensorType,
+            FirstSensorKKS = standModel.FirstSensorKKSCounter,
+            FirstSensorMarkPlus = standModel.FirstSensorMarkPlus,
+            FirstSensorMarkMinus = standModel.FirstSensorMarkMinus,
+            SecondSensorType = standModel.SecondSensorType,
+            SecondSensorKKS = standModel.SecondSensorKKSCounter,
+            SecondSensorMarkPlus = standModel.SecondSensorMarkPlus,
+            SecondSensorMarkMinus = standModel.SecondSensorMarkMinus,
+            ThirdSensorType = standModel.ThirdSensorType,
+            ThirdSensorKKS = standModel.ThirdSensorKKS,
+            ThirdSensorMarkPlus = standModel.ThirdSensorMarkPlus,
+            ThirdSensorMarkMinus = standModel.ThirdSensorMarkMinus
+        };
+
+        return Task.FromResult(entity);
     }
 }

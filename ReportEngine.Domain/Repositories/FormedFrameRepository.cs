@@ -42,6 +42,9 @@ public class FormedFrameRepository : IFrameRepository
                 exisingComponent.Length += length.Value;
             else
                 exisingComponent.Count++;
+            
+            exisingComponent.CostComponent = component.Cost;
+            
             _context.FrameComponents.Update(exisingComponent);
         }
         else
@@ -52,7 +55,8 @@ public class FormedFrameRepository : IFrameRepository
                 ComponentId = component.Id,
                 ComponentType = type,
                 Count = component is BaseFrame baseFrame && baseFrame.Measure == "м" ? 0 : 1,
-                Length = component is BaseFrame baseFrame2 && baseFrame2.Measure == "м" ? length : null
+                Length = component is BaseFrame baseFrame2 && baseFrame2.Measure == "м" ? length : null,
+                CostComponent = component.Cost
             };
             await _context.FrameComponents.AddAsync(newComponent);
         }
