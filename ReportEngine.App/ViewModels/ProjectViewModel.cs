@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
+using ReportEngine.App.AsyncCommands;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
@@ -109,14 +110,12 @@ public class ProjectViewModel : BaseViewModel
             new RelayCommand(OnSelectKMCHFromDialogCommandExecuted, CanAllCommandsExecute);
         ProjectCommandProvider.SelectTreeSocketDialogCommand =
             new RelayCommand(OnSelectTreeSocketFromDialogCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.SaveObvCommand = new RelayCommand(OnSaveObvCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.SaveObvCommand = 
+            new RelayCommand(OnSaveObvCommandExecuted, CanAllCommandsExecute);
     }
 
-    public bool CanAllCommandsExecute(object? e)
-    {
-        return true;
-    }
-
+    public bool CanAllCommandsExecute(object? e) => true;
+    
     public void OnOpenAllSortamentsDialogExecuted(object e)
     {
         // e приходит из XAML CommandParameter — это объект назначения (DrainagePurpose / AdditionalEquipPurpose / ElectricalPurpose)

@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+using ReportEngine.App.AsyncCommands;
 
 namespace ReportEngine.App.Commands;
 
@@ -7,7 +8,6 @@ public class ProjectCommandProvider
     public ICommand SelectMaterialLineDialogCommand { get; set; }
     public ICommand SelectArmatureDialogCommand { get; set; }
     public ICommand SelectTreeSocketDialogCommand { get; set; }
-
     public ICommand SelectKMCHDialogCommand { get; set; }
     public ICommand SaveObvCommand { get; set; }
     public ICommand CreateNewCardCommand { get; set; }
@@ -22,4 +22,9 @@ public class ProjectCommandProvider
     public ICommand CalculateProjectCommand { get; set; }
     public ICommand CreateSummaryReportCommand { get; set; }
     public ICommand OpenAllSortamentsDialogCommand { get; set; } // Новая команда для открытия окна ассортиментов
+
+    public ICommand Bind(ICommand command, Action<object> execute, Func<object, bool> canExecute = null)
+    {
+        return new RelayCommand(execute, canExecute);
+    }
 }

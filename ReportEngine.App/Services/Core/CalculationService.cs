@@ -39,13 +39,23 @@ public class CalculationService : ICalculationService
     {
         decimal cost = 0;
 
-        foreach (var equipInStand in standModel.AdditionalEquipsInStand)
-        foreach (var purpose in equipInStand.Purposes)
-            cost += (decimal)(purpose.CostPerUnit ?? 0) * (decimal)(purpose.Quantity ?? 0);
+        cost += standModel.AdditionalEquipsInStand
+            .SelectMany(e => e.Purposes)
+            .Sum(p => (decimal)(p.CostPerUnit ?? 0) * (decimal)(p.Quantity ?? 0));
 
-        foreach (var frames in standModel.FramesInStand)
-        foreach (var component in frames.Components)
-            cost += component.Count * (decimal)(component.CostComponent ?? 0);
+        cost += standModel.FramesInStand
+            .SelectMany(f => f.Components)
+            .Sum(c => c.Length == null
+                ? c.Count * (decimal)(c.CostComponent ?? 0)
+                : (decimal)(c.Length ?? 0) * (decimal)(c.CostComponent ?? 0));
+
+        cost += standModel.ElectricalComponentsInStand
+            .SelectMany(e => e.Purposes)
+            .Sum(p => (decimal)(p.CostPerUnit ?? 0) * (decimal)(p.Quantity ?? 0));
+
+        cost += standModel.DrainagesInStand
+            .SelectMany(d => d.Purposes)
+            .Sum(p => (decimal)(p.CostPerUnit ?? 0) * (decimal)(p.Quantity ?? 0));
 
         return cost;
     }

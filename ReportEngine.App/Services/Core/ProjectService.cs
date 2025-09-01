@@ -66,6 +66,8 @@ public class ProjectService : IProjectService
     {
         foreach (var stand in standModel.Stands)
             await _projectRepository.UpdateStandAsync(StandDataConverter.ConvertToStandEntity(stand));
+
+        
     }
 
     public async Task AddStandToProjectAsync(int projectId, StandModel standModel)

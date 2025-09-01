@@ -1,25 +1,17 @@
-﻿using System.Windows.Input;
+﻿namespace ReportEngine.App.AsyncCommands;
 
-namespace ReportEngine.App.AsyncCommands;
-
-public abstract class AsyncCommandBase : IAsyncCommand
+public class AsyncRelayCommand : AsyncBaseCommand
 {
-    public abstract bool CanExecute(object parameter);
-    public abstract Task ExecuteAsync(object parameter);
-
-    public async void Execute(object parameter)
+    private readonly Func<object, bool> _canExecute;
+    private readonly Action<object> _execute;
+    
+    public override bool CanExecute(object parameter)
     {
-        await ExecuteAsync(parameter);
+        throw new NotImplementedException();
     }
 
-    public event EventHandler CanExecuteChanged
+    public override Task ExecuteAsync(object parameter)
     {
-        add => CommandManager.RequerySuggested += value;
-        remove => CommandManager.RequerySuggested -= value;
-    }
-
-    protected void RaiseCanExecuteChanged()
-    {
-        CommandManager.InvalidateRequerySuggested();
+        throw new NotImplementedException();
     }
 }
