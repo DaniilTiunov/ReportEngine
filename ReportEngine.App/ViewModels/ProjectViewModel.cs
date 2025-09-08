@@ -426,6 +426,7 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(AllAvailableDrainages));
 
         CurrentStandModel.NewDrainage = new FormedDrainage();
+        CurrentStandModel.InitializeDefaultPurposes();
     }
 
     private async Task AddCustomElectricalComponentToStandAsync()
@@ -439,6 +440,7 @@ public class ProjectViewModel : BaseViewModel
 
         OnPropertyChanged(nameof(AllAvailableElectricalComponents));
         CurrentStandModel.NewElectricalComponent = new FormedElectricalComponent();
+        CurrentStandModel.InitializeDefaultPurposes();
     }
 
     private async Task AddCustomAdditionalEquipToStandAsync()
@@ -452,6 +454,7 @@ public class ProjectViewModel : BaseViewModel
 
         OnPropertyChanged(nameof(AllAvailableAdditionalEquips));
         CurrentStandModel.NewAdditionalEquip = new FormedAdditionalEquip();
+        CurrentStandModel.InitializeDefaultPurposes();
     }
 
     private async Task CalculateProjectAsync()
@@ -474,34 +477,36 @@ public class ProjectViewModel : BaseViewModel
 
     private void ApplySelectedEquipToPurpose(object target, IBaseEquip selected)
     {
-        if (target == null || selected == null) return;
-
-        switch (target)
+        ExceptionHelper.SafeExecute(() =>
         {
-            case DrainagePurpose dp:
-                dp.Material = selected.Name;
-                dp.CostPerUnit = selected.Cost;
-                CollectionViewSource.GetDefaultView(CurrentStandModel.AllDrainagePurposesInStand).Refresh();
-                return;
+            if (target == null || selected == null) return;
 
-            case AdditionalEquipPurpose ap:
-                ap.Material = selected.Name;
-                ap.CostPerUnit = selected.Cost;
-                CollectionViewSource.GetDefaultView(CurrentStandModel.NewAdditionalEquip.Purposes).Refresh();
-                return;
+            switch (target)
+            {
+                case DrainagePurpose dp:
+                    dp.Material = selected.Name;
+                    dp.CostPerUnit = selected.Cost;
+                    CollectionViewSource.GetDefaultView(CurrentStandModel.NewDrainage.Purposes).Refresh();
+                    return;
 
-            case ElectricalPurpose ep:
-                ep.Material = selected.Name;
-                ep.CostPerUnit = selected.Cost;
-                CollectionViewSource.GetDefaultView(CurrentStandModel.NewElectricalComponent.Purposes).Refresh();
-                return;
-        }
+                case AdditionalEquipPurpose ap:
+                    ap.Material = selected.Name;
+                    ap.CostPerUnit = selected.Cost;
+                    CollectionViewSource.GetDefaultView(CurrentStandModel.NewAdditionalEquip.Purposes).Refresh();
+                    return;
 
-        //Рефлексия на случай других типов с такими свойствами
-        var t = target.GetType();
-        var matProp = t.GetProperty("Material");
-        var costProp = t.GetProperty("CostPerUnit");
-        if (matProp != null && matProp.CanWrite) matProp.SetValue(target, selected.Name);
-        if (costProp != null && costProp.CanWrite) costProp.SetValue(target, selected.Cost);
+                case ElectricalPurpose ep:
+                    ep.Material = selected.Name;
+                    ep.CostPerUnit = selected.Cost;
+                    CollectionViewSource.GetDefaultView(CurrentStandModel.NewElectricalComponent.Purposes).Refresh();
+                    return;
+            }
+
+            var t = target.GetType();
+            var matProp = t.GetProperty("Material");
+            var costProp = t.GetProperty("CostPerUnit");
+            if (matProp != null && matProp.CanWrite) matProp.SetValue(target, selected.Name);
+            if (costProp != null && costProp.CanWrite) costProp.SetValue(target, selected.Cost);
+        });
     }
 }

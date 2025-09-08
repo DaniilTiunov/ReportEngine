@@ -377,36 +377,45 @@ public class StandModel : BaseViewModel
         get => _allAdditionalEquipPurposesInStand;
         set => Set(ref _allAdditionalEquipPurposesInStand, value);
     }
-
+    
     public void InitializeDefaultPurposes()
     {
-        NewDrainage.Purposes = new ObservableCollection<DrainagePurpose>
+        NewDrainage = new FormedDrainage
         {
-            new() { Purpose = "Основная труба" },
-            new() { Purpose = "Патрубок" },
-            new() { Purpose = "Заглушка основной трубы" },
-            new() { Purpose = "Кронштейн дренажа" },
-            new() { Purpose = "Клапан" }
+            Purposes = new ObservableCollection<DrainagePurpose>
+            {
+                new() { Purpose = "Основная труба" },
+                new() { Purpose = "Патрубок" },
+                new() { Purpose = "Заглушка основной трубы" },
+                new() { Purpose = "Кронштейн дренажа" },
+                new() { Purpose = "Клапан" }
+            }
         };
 
-        NewAdditionalEquip.Purposes = new ObservableCollection<AdditionalEquipPurpose>
+        NewAdditionalEquip = new FormedAdditionalEquip
         {
-            new() { Purpose = "Клеммная коробка" },
-            new() { Purpose = "Кабельные вводы" },
-            new() { Purpose = "Сигнальный кабель" },
-            new() { Purpose = "Металлорукав" },
-            new() { Purpose = "Кабель 6мм" },
-            new() { Purpose = "Кабель 4мм" },
-            new() { Purpose = "Кронштейн коробки" }
+            Purposes = new ObservableCollection<AdditionalEquipPurpose>
+            {
+                new() { Purpose = "Клеммная коробка" },
+                new() { Purpose = "Кабельные вводы" },
+                new() { Purpose = "Сигнальный кабель" },
+                new() { Purpose = "Металлорукав" },
+                new() { Purpose = "Кабель 6мм" },
+                new() { Purpose = "Кабель 4мм" },
+                new() { Purpose = "Кронштейн коробки" }
+            }
         };
 
-        NewElectricalComponent.Purposes = new ObservableCollection<ElectricalPurpose>
+        NewElectricalComponent = new FormedElectricalComponent
         {
-            new() { Purpose = "Шильдик" },
-            new() { Purpose = "Швеллер" },
-            new() { Purpose = "Хомуты" },
-            new() { Purpose = "Табличка" },
-            new() { Purpose = "Кронштейны перепадников" }
+            Purposes = new ObservableCollection<ElectricalPurpose>
+            {
+                new() { Purpose = "Шильдик" },
+                new() { Purpose = "Швеллер" },
+                new() { Purpose = "Хомуты" },
+                new() { Purpose = "Табличка" },
+                new() { Purpose = "Кронштейны перепадников" }
+            }
         };
     }
 }
