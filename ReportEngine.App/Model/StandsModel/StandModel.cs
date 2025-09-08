@@ -377,7 +377,7 @@ public class StandModel : BaseViewModel
         get => _allAdditionalEquipPurposesInStand;
         set => Set(ref _allAdditionalEquipPurposesInStand, value);
     }
-    
+
     public void InitializeDefaultPurposes()
     {
         NewDrainage = new FormedDrainage

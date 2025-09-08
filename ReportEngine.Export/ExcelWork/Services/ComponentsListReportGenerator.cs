@@ -25,13 +25,13 @@ public class ComponentsListReportGenerator : IReportGenerator
         try
         {
             var project = await _projectInfoRepository.GetByIdAsync(projectId);
-            
+
             var templatePath = DirectoryHelper.GetReportsTemplatePath("Ведомость комплектующих");
             var fileName = "Ведомость комплектующих_" + DateTime.Now.ToString("yy-MM-dd") + ".xlsx";
-            
-            string savePath = SettingsManager.GetReportDirectory();
-            string fullSavePath = Path.Combine(savePath, fileName);
-            
+
+            var savePath = SettingsManager.GetReportDirectory();
+            var fullSavePath = Path.Combine(savePath, fileName);
+
             using (var wb = new XLWorkbook(templatePath))
             {
                 wb.Worksheets.ToList().ForEach(ws => ws.Delete());
@@ -41,6 +41,7 @@ public class ComponentsListReportGenerator : IReportGenerator
                     var ws = wb.Worksheets.Add($"Стенд_{stand.KKSCode}");
                     DrawReportStandsHeader(ws, stand);
                 }
+
                 Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
                 wb.SaveAs(fullSavePath);
             }

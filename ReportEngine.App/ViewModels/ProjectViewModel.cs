@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Windows.Data;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
-using ReportEngine.App.AsyncCommands;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
@@ -16,7 +15,6 @@ using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
 
 namespace ReportEngine.App.ViewModels;
@@ -112,12 +110,15 @@ public class ProjectViewModel : BaseViewModel
             new RelayCommand(OnSelectKMCHFromDialogCommandExecuted, CanAllCommandsExecute);
         ProjectCommandProvider.SelectTreeSocketDialogCommand =
             new RelayCommand(OnSelectTreeSocketFromDialogCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.SaveObvCommand = 
+        ProjectCommandProvider.SaveObvCommand =
             new RelayCommand(OnSaveObvCommandExecuted, CanAllCommandsExecute);
     }
 
-    public bool CanAllCommandsExecute(object? e) => true;
-    
+    public bool CanAllCommandsExecute(object? e)
+    {
+        return true;
+    }
+
     public void OnOpenAllSortamentsDialogExecuted(object e)
     {
         // e приходит из XAML CommandParameter — это объект назначения (DrainagePurpose / AdditionalEquipPurpose / ElectricalPurpose)
@@ -307,7 +308,7 @@ public class ProjectViewModel : BaseViewModel
             OnPropertyChanged(nameof(CurrentStandModel));
         });
     }
-    
+
     private async Task AddObvToStandAsync()
     {
         if (CurrentProjectModel.SelectedStand == null)

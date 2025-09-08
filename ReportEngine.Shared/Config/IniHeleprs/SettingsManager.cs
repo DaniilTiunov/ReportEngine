@@ -7,9 +7,9 @@ namespace ReportEngine.Shared.Config.IniHeleprs;
 public class SettingsManager
 {
     private static readonly string _iniFile = DirectoryHelper.GetIniConfigPath();
-    private static FileIniDataParser _parser = new();
+    private static readonly FileIniDataParser _parser = new();
     private static IniData _iniData;
-    
+
     public static string GetReportDirectory()
     {
         _iniData = _parser.ReadFile(_iniFile);

@@ -38,7 +38,8 @@
                         <GridViewColumn Width="100" DisplayMemberBinding="{Binding BraceType}" Header="Тип крепления" />
                         <GridViewColumn Width="100" DisplayMemberBinding="{Binding ObvyazkaType}" Header="Тип обвязки" />
                         <GridViewColumn Width="100" DisplayMemberBinding="{Binding Sensor}" Header="Тип датчика" />
-                        <GridViewColumn Width="100" DisplayMemberBinding="{Binding StandSummCost}" Header="Стоимость стенда" />
+                        <GridViewColumn Width="100" DisplayMemberBinding="{Binding StandSummCost}"
+                                        Header="Стоимость стенда" />
                     </GridView>
                 </ListView.View>
             </ListView>

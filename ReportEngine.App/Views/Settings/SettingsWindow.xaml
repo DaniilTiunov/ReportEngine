@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Настройки приложения"
-    Topmost="True" 
+    Topmost="True"
     Width="700"
     Height="500"
     mc:Ignorable="d">
@@ -55,7 +55,7 @@
                         Content="..."
                         Width="40"
                         Margin="4,0,0,0"
-                        Command="{Binding OpenDialog}"/>
+                        Command="{Binding OpenDialog}" />
                 </DockPanel>
             </StackPanel>
 
@@ -106,11 +106,11 @@
                     Content="Применить"
                     Width="100"
                     Margin="0,0,8,0"
-                    Command="{Binding ApplySettingsCommand}"/>
+                    Command="{Binding ApplySettingsCommand}" />
                 <Button
                     x:Name="CancelButton"
                     Content="Отмена"
-                    Width="80"/>
+                    Width="80" />
             </StackPanel>
         </StackPanel>
     </Grid>

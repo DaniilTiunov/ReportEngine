@@ -12,24 +12,10 @@ namespace ReportEngine.App.ViewModels;
 public class SettingsViewModel : BaseViewModel
 {
     private readonly INotificationService _notificationService;
-    
-    private string _savereportPath;
     private string _connectionString;
-    public string SaveReportDirPath
-    {
-        get => _savereportPath;
-        set => Set(ref _savereportPath, value);
-    }
-    
-    public string ConnectionString
-    {
-        get => _connectionString; 
-        set => Set(ref _connectionString, value);
-    }
-    
-    public ICommand ApplySettingsCommand { get; set; }
-    public ICommand OpenDialog  {get;set;}
-    
+
+    private string _savereportPath;
+
     public SettingsViewModel(INotificationService notificationService)
     {
         ApplySettingsCommand = new RelayCommand(ExecuteSaveCommand, _ => true);
@@ -37,6 +23,21 @@ public class SettingsViewModel : BaseViewModel
 
         _notificationService = notificationService;
     }
+
+    public string SaveReportDirPath
+    {
+        get => _savereportPath;
+        set => Set(ref _savereportPath, value);
+    }
+
+    public string ConnectionString
+    {
+        get => _connectionString;
+        set => Set(ref _connectionString, value);
+    }
+
+    public ICommand ApplySettingsCommand { get; set; }
+    public ICommand OpenDialog { get; set; }
 
     public void ExecuteSaveCommand(object p)
     {
@@ -46,12 +47,9 @@ public class SettingsViewModel : BaseViewModel
 
     public void ExecuteOpenDialog(object p)
     {
-        ExceptionHelper.SafeExecute(() =>
-        {
-            SaveReportDirPath = GetNewDirectory();
-        }); 
+        ExceptionHelper.SafeExecute(() => { SaveReportDirPath = GetNewDirectory(); });
     }
-    
+
     public void LoadSettings()
     {
         SaveReportDirPath = SettingsManager.GetReportDirectory();
@@ -62,19 +60,15 @@ public class SettingsViewModel : BaseViewModel
     {
         SettingsManager.SetReportDirectory(SaveReportDirPath);
     }
-    
-    public string  GetNewDirectory()
+
+    public string GetNewDirectory()
     {
         var dialog = new CommonOpenFileDialog();
         dialog.IsFolderPicker = true;
         dialog.Title = "Выберите папку для сохранения";
-        
-        if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
-        {
-            return dialog.FileName;
-        }
+
+        if (dialog.ShowDialog() == CommonFileDialogResult.Ok) return dialog.FileName;
 
         return null;
-
     }
 }

@@ -4,7 +4,7 @@ public class AsyncRelayCommand : AsyncBaseCommand
 {
     private readonly Func<object, bool> _canExecute;
     private readonly Action<object> _execute;
-    
+
     public override bool CanExecute(object parameter)
     {
         throw new NotImplementedException();

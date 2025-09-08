@@ -11,7 +11,7 @@ public class NavigationService
     private ContentControl? _contentHost; // Контейнер для отображения пользовательского контента
     private UserControl? _currentContent; // Текущий отображаемый пользовательский элемент управления
     private Window? _currentWindow; // Текущее открытое окно
-    
+
     public NavigationService(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
@@ -30,7 +30,7 @@ public class NavigationService
         _currentWindow = _serviceProvider.GetRequiredService<T>(); // Получаем экземпляр окна из провайдера сервисов
         _currentWindow.Show(); // Отображаем окно
     }
-    
+
     public void ShowGenericWindow<T, TEquip>()
         where T : class, IBaseEquip, new()
     {

@@ -1,10 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Windows;
-using DocumentFormat.OpenXml.Wordprocessing;
-using Microsoft.Extensions.Configuration;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
-using ReportEngine.App.Views;
 using ReportEngine.App.Views.UpdateInformation;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;

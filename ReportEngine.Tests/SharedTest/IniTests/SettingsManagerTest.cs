@@ -9,17 +9,17 @@ public class SettingsmanagerTest
     public void CanSaveNewPath_WhenCalled_ReturnsCorrectPath()
     {
         // Arrange
-        string path = "C:\\Users\\pr-constr38";
+        var path = "C:\\Users\\pr-constr38";
     }
-    
+
     [TestMethod]
     public void GetIniPath_WhenCalled_ReturnsCorrectPath()
     {
         // Arrange
-        string path = "C:\\Work\\Prjs\\ReportEngine\\ReportEngine.App\\bin\\Debug\\net8.0-windows\\Отчёты";
-        
+        var path = "C:\\Work\\Prjs\\ReportEngine\\ReportEngine.App\\bin\\Debug\\net8.0-windows\\Отчёты";
+
         var result = SettingsManager.GetReportDirectory();
-        
+
         Assert.AreEqual(path, result);
     }
 }
