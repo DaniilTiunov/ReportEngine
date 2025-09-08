@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Windows.Data;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.AsyncCommands;
@@ -480,16 +481,19 @@ public class ProjectViewModel : BaseViewModel
             case DrainagePurpose dp:
                 dp.Material = selected.Name;
                 dp.CostPerUnit = selected.Cost;
+                CollectionViewSource.GetDefaultView(CurrentStandModel.AllDrainagePurposesInStand).Refresh();
                 return;
 
             case AdditionalEquipPurpose ap:
                 ap.Material = selected.Name;
                 ap.CostPerUnit = selected.Cost;
+                CollectionViewSource.GetDefaultView(CurrentStandModel.NewAdditionalEquip.Purposes).Refresh();
                 return;
 
             case ElectricalPurpose ep:
                 ep.Material = selected.Name;
                 ep.CostPerUnit = selected.Cost;
+                CollectionViewSource.GetDefaultView(CurrentStandModel.NewElectricalComponent.Purposes).Refresh();
                 return;
         }
 

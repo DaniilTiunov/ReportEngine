@@ -138,6 +138,7 @@ public class ProjectInfoRepository : IProjectInfoRepository
     {
         return await _context.StandFrames
             .Include(sf => sf.Frame)
+            .ThenInclude(fc => fc.Components)
             .Where(sf => sf.StandId == standId)
             .ToListAsync();
     }

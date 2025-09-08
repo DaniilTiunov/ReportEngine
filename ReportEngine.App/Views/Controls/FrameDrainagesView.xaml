@@ -35,21 +35,6 @@
                                 <DataGridTextColumn Binding="{Binding Depth, Mode=TwoWay}" Header="Глубина" />
                                 <DataGridTextColumn Binding="{Binding Width, Mode=TwoWay}" Header="Ширина" />
                             </DataGrid.Columns>
-                            <DataGrid.RowDetailsTemplate>
-                                <DataTemplate>
-                                    <DataGrid
-                                        AutoGenerateColumns="True"
-                                        HeadersVisibility="Column"
-                                        ItemsSource="{Binding CurrentStandModel.FormedFrameComponents.DisplayedComponents}">
-                                        <DataGrid.Columns>
-                                            <DataGridTextColumn Binding="{Binding Component.Name}"
-                                                                Header="Наименование" />
-                                            <DataGridTextColumn Binding="{Binding Count}" Header="ШТ" />
-                                            <DataGridTextColumn Binding="{Binding Length}" Header="М" />
-                                        </DataGrid.Columns>
-                                    </DataGrid>
-                                </DataTemplate>
-                            </DataGrid.RowDetailsTemplate>
                         </DataGrid>
                         <Button
                             Margin="5"

@@ -12,6 +12,11 @@ public class DirectoryHelper
         return Path.Combine(GetDirectory(), "Config", "appsettings.json");
     }
 
+    public static string GetIniConfigPath()
+    {
+        return Path.Combine(GetDirectory(), "Config", "settings.ini");
+    }
+
     public static string GetLogsPath()
     {
         return Path.Combine(GetDirectory(), "logs", "log.txt");

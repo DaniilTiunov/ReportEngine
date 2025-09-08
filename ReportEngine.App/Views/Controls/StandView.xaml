@@ -259,6 +259,9 @@
                                 Width="100"
                                 DisplayMemberBinding="{Binding Sensor}"
                                 Header="Тип датчика" />
+                            <GridViewColumn Width="100" 
+                                            DisplayMemberBinding="{Binding StandSummCost}" 
+                                            Header="Стоимость стенда" />
                         </GridView>
                     </ListView.View>
                 </ListView>
