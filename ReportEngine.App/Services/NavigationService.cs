@@ -5,30 +5,18 @@ using ReportEngine.Domain.Entities.BaseEntities.Interface;
 
 namespace ReportEngine.App.Services;
 
-/// <summary>
-///     Сервис навигации для управления отображением окон и пользовательских элементов управления.
-/// </summary>
 public class NavigationService
 {
     private readonly IServiceProvider _serviceProvider; // Провайдер сервисов для получения необходимых зависимостей
     private ContentControl? _contentHost; // Контейнер для отображения пользовательского контента
     private UserControl? _currentContent; // Текущий отображаемый пользовательский элемент управления
     private Window? _currentWindow; // Текущее открытое окно
-
-    /// <summary>
-    ///     Инициализирует новый экземпляр класса NavigationService.
-    /// </summary>
-    /// <param name="serviceProvider">Провайдер сервисов для получения необходимых зависимостей.</param>
+    
     public NavigationService(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
     }
 
-    /// <summary>
-    ///     Инициализирует контейнер для отображения пользовательского контента.
-    /// </summary>
-    /// <param name="contentHost">Контейнер для отображения пользовательского контента.</param>
-    /// <exception cref="ArgumentNullException">Выбрасывается, если contentHost равен null.</exception>
     public void InitializeContentHost(ContentControl contentHost)
     {
         _contentHost = contentHost ?? throw new ArgumentNullException(nameof(contentHost));
@@ -36,22 +24,13 @@ public class NavigationService
 
     #region Методы открытия окон
 
-    /// <summary>
-    ///     Отображает окно указанного типа.
-    /// </summary>
-    /// <typeparam name="T">Тип окна, который нужно отобразить.</typeparam>
     public void ShowWindow<T>()
         where T : Window
     {
         _currentWindow = _serviceProvider.GetRequiredService<T>(); // Получаем экземпляр окна из провайдера сервисов
         _currentWindow.Show(); // Отображаем окно
     }
-
-    /// <summary>
-    ///     Отображает обобщенное окно для указанных типов оборудования.
-    /// </summary>
-    /// <typeparam name="T">Тип, реализующий интерфейс IBaseEquip.</typeparam>
-    /// <typeparam name="TEquip">Тип оборудования, для которого создается окно.</typeparam>
+    
     public void ShowGenericWindow<T, TEquip>()
         where T : class, IBaseEquip, new()
     {
@@ -60,17 +39,11 @@ public class NavigationService
         _currentWindow.Show(); // Отображаем окно
     }
 
-    /// <summary>
-    ///     Скрывает текущее окно.
-    /// </summary>
     public void HideWindow()
     {
         _currentWindow?.Hide(); // Скрываем текущее окно, если оно существует
     }
 
-    /// <summary>
-    ///     Закрывает текущее окно.
-    /// </summary>
     public void CloseWindow()
     {
         _currentWindow?.Close(); // Закрываем текущее окно, если оно существует

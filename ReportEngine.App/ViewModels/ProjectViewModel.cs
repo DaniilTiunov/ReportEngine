@@ -17,6 +17,7 @@ using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
+using ReportEngine.Shared.Config.IniHeleprs;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -306,8 +307,7 @@ public class ProjectViewModel : BaseViewModel
             OnPropertyChanged(nameof(CurrentStandModel));
         });
     }
-
-
+    
     private async Task AddObvToStandAsync()
     {
         if (CurrentProjectModel.SelectedStand == null)
@@ -464,10 +464,10 @@ public class ProjectViewModel : BaseViewModel
     private async void CreateSummaryReportAsync()
     {
         await _reportService.GenerateReportAsync(ReportType.ComponentsListReport, CurrentProjectModel.CurrentProjectId);
-        // Показываем подтверждение и открываем директорию, если пользователь согласен
+
         if (_notificationService.ShowConfirmation("Ведомость комплектующих создана!\nОткрыть папку с отчётами?"))
         {
-            var reportDir = DirectoryHelper.GetReportsDirectory();
+            var reportDir = SettingsManager.GetReportDirectory();
             Process.Start("explorer.exe", reportDir);
         }
     }

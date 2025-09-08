@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Windows;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.Extensions.Configuration;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.Views;
@@ -48,13 +50,6 @@ public partial class MainWindow : Window //Это так называемый "C
         var aboutWindow = new AboutProgram();
 
         aboutWindow.Show();
-    }
-
-    private void OpenSettingsWindow(object sender, RoutedEventArgs e) //Просто простые синхронные операции
-    {
-        var settingsWindow = new SettingsWindow();
-
-        settingsWindow.Show();
     }
 
     private void ShowCalculator(object sender, RoutedEventArgs e)

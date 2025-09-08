@@ -5,6 +5,7 @@ using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
+using ReportEngine.Shared.Config.IniHeleprs;
 
 namespace ReportEngine.Export.ExcelWork.Services;
 
@@ -24,10 +25,13 @@ public class ComponentsListReportGenerator : IReportGenerator
         try
         {
             var project = await _projectInfoRepository.GetByIdAsync(projectId);
+            
             var templatePath = DirectoryHelper.GetReportsTemplatePath("Ведомость комплектующих");
-            var fileName = "Ведомость комплектующих.xlsx";
-            var savePath = DirectoryHelper.GetReportSavePath(fileName);
-
+            var fileName = "Ведомость комплектующих_" + DateTime.Now.ToString("yy-MM-dd") + ".xlsx";
+            
+            string savePath = SettingsManager.GetReportDirectory();
+            string fullSavePath = Path.Combine(savePath, fileName);
+            
             using (var wb = new XLWorkbook(templatePath))
             {
                 wb.Worksheets.ToList().ForEach(ws => ws.Delete());
@@ -36,10 +40,9 @@ public class ComponentsListReportGenerator : IReportGenerator
                 {
                     var ws = wb.Worksheets.Add($"Стенд_{stand.KKSCode}");
                     DrawReportStandsHeader(ws, stand);
-                    FillStandsData(ws, stand);
                 }
-
-                wb.SaveAs(savePath);
+                Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
+                wb.SaveAs(fullSavePath);
             }
         }
         catch (Exception e)

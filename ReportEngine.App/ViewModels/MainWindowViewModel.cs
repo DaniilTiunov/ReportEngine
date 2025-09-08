@@ -6,6 +6,7 @@ using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model;
 using ReportEngine.App.Services;
+using ReportEngine.App.Views;
 using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Database.Context;
@@ -77,6 +78,8 @@ public class MainWindowViewModel : BaseViewModel
             new RelayCommand(OpenOthersWindowCommandExecuted<FormedFrameView>, CanAllCommandsExecute);
         MainWindowCommandProvider.OpenAllSortamentsCommand =
             new RelayCommand(OpenOthersWindowCommandExecuted<AllSortamentsView>, CanAllCommandsExecute);
+        MainWindowCommandProvider.OpenSettingsWindow =
+            new RelayCommand(OpenOthersWindowCommandExecuted<SettingsWindow>, CanAllCommandsExecute);
         MainWindowCommandProvider.OpenTreeViewCommand =
             new RelayCommand(OpenAnotherControlsCommandExecuted<TreeProjectView>, CanAllCommandsExecute);
         MainWindowCommandProvider.ChekDbConnectionCommand =

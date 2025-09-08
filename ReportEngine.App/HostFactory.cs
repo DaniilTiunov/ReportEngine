@@ -9,6 +9,7 @@ using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.Contacts;
 using ReportEngine.App.ViewModels.FormedEquips;
+using ReportEngine.App.Views;
 using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Database.Context;
@@ -149,6 +150,7 @@ public class HostFactory
         services.AddScoped<FormedFrameViewModel>();
         services.AddScoped<FormedDrainagesViewModel>();
         services.AddScoped<AllSortamentsViewModel>();
+        services.AddScoped<SettingsViewModel>();
     }
 
     private static void ConfigureViews(IServiceCollection services)
@@ -174,5 +176,6 @@ public class HostFactory
         services.AddTransient<FrameDrainagesView>();
         services.AddTransient<ProjectPreview>();
         services.AddTransient<AllSortamentsView>();
+        services.AddTransient<SettingsWindow>();
     }
 }
