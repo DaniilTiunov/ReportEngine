@@ -28,7 +28,10 @@ public partial class MainWindow : Window //Это так называемый "C
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
         StandartTheme(null, null);
-        await _mainViewModel.ShowAllProjectsAsync();
+
+        MainWindow_StartUpState();
+
+        //await _mainViewModel.ShowAllProjectsAsync();
         await _mainViewModel.CheckDbConnectionAsync();
     }
 
@@ -82,9 +85,18 @@ public partial class MainWindow : Window //Это так называемый "C
         Application.Current.Resources.MergedDictionaries.Add(resourceDict);
     }
 
-    private void Window_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private void MainWindow_StartUpState()
     {
-        if (e.ClickCount == 2) // двойной клик -> разворачивание/сворачивание
+        var area = SystemParameters.WorkArea;
+        Left = area.Left;
+        Top = area.Top;
+        Width = area.Width;
+        Height = area.Height;
+    }
+
+    private void Window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        if (e.ClickCount == 2)
         {
             MaxRestoreButton_Click(sender, e);
         }
@@ -101,10 +113,21 @@ public partial class MainWindow : Window //Это так называемый "C
 
     private void MaxRestoreButton_Click(object sender, RoutedEventArgs e)
     {
-        if (WindowState == WindowState.Maximized)
-            WindowState = WindowState.Normal;
+        var area = SystemParameters.WorkArea;
+        if (Width != area.Width || Height != area.Height || Left != area.Left || Top != area.Top)
+        {
+            Left = area.Left;
+            Top = area.Top;
+            Width = area.Width;
+            Height = area.Height;
+        }
         else
-            WindowState = WindowState.Maximized;
+        {
+            Width = 1280;
+            Height = 800;
+            Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
+            Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
+        }
     }
 
     private void CloseButton_Click(object sender, RoutedEventArgs e)

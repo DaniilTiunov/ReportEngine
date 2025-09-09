@@ -7,10 +7,9 @@
     xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
     Title="Стенды КИП"
     Icon="/Resources/Icons/estimate_cost_icon_213382.ico"
-    MouseLeftButtonDown="Window_MouseRightButtonDown"
     ResizeMode="CanResize"
     WindowStartupLocation="CenterScreen"
-    WindowState="Maximized"
+    WindowState="Normal"
     WindowStyle="None"
     mc:Ignorable="d">
     
@@ -19,6 +18,7 @@
                       CornerRadius="0" 
                       CaptionHeight="0"/>
     </WindowChrome.WindowChrome>
+
     
     <Window.Resources>
         <ResourceDictionary>
@@ -29,6 +29,8 @@
     <DockPanel>
         <Border
             Height="34"
+            x:Name="MainWindowControlTitle"
+            MouseLeftButtonDown="Window_MouseLeftButtonDown"
             Background="#2D2D30"
             DockPanel.Dock="Top">
             <Grid>
@@ -68,6 +70,7 @@
                     <Button
                         x:Name="MaxRestoreButton"
                         Width="40" Height="30"
+                        Margin="10,0,0,0"
                         FontSize="16"
                         Click="MaxRestoreButton_Click"
                         ToolTip="Развернуть">
@@ -76,6 +79,7 @@
                     <Button
                         x:Name="CloseButton"
                         Width="40" Height="30"
+                        Margin="10,0,10,0"
                         FontSize="16"
                         Click="CloseButton_Click"
                         ToolTip="Закрыть">
@@ -179,38 +183,37 @@
                 <MenuItem Click="CheckForUpdates" Header="Проверить обновления" />
             </MenuItem>
         </Menu>
+
         <StatusBar Height="30" DockPanel.Dock="Bottom">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBlock
-                    Grid.Column="0"
-                    FontSize="14"
-                    Text="Текущий пользователь:" />
-                <TextBlock
-                    Grid.Column="2"
-                    Margin="1317,0,0,0"
-                    HorizontalAlignment="Left"
-                    FontSize="14"
-                    Text="Статус подключения к серверу:" />
-                <TextBlock
-                    Grid.Column="2"
-                    Width="191"
-                    Margin="1527,0,0,1"
-                    HorizontalAlignment="Left"
-                    FontSize="14"
-                    Text="{Binding MainWindowModel.ConnectionStatusMessage}" />
-            </Grid>
-            <Button
-                Height="24"
-                HorizontalAlignment="Left"
-                BorderThickness="0"
-                Command="{Binding MainWindowCommandProvider.ChekDbConnectionCommand}"
-                Content="{StaticResource refresh-button.png}" />
+
+            <StatusBarItem>
+                <TextBlock 
+                    FontSize="14" 
+                    Text="Текущий пользователь:" 
+                    Margin="5,0,0,0"/>
+            </StatusBarItem>
+
+            <StatusBarItem HorizontalAlignment="Stretch">
+                <Separator Visibility="Hidden"/>
+            </StatusBarItem>
+
+            <StatusBarItem HorizontalAlignment="Right">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock FontSize="14" 
+                               Text="Статус подключения к серверу:" />
+                    <TextBlock FontSize="14"
+                               Margin="5,0,0,0"
+                               Width="191"
+                               Text="{Binding MainWindowModel.ConnectionStatusMessage}" />
+                    <Button Height="24"
+                            Margin="5,0,0,0"
+                            BorderThickness="0"
+                            Command="{Binding MainWindowCommandProvider.ChekDbConnectionCommand}"
+                            Content="{StaticResource refresh-button.png}" />
+                </StackPanel>
+            </StatusBarItem>
         </StatusBar>
+
         <ContentControl x:Name="MainContentControl" Margin="10,0,10,10">
             <DataGrid
                 x:Name="MainDataGrid"
