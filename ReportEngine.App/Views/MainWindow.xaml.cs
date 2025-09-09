@@ -81,4 +81,34 @@ public partial class MainWindow : Window //Это так называемый "C
         Application.Current.Resources.Clear();
         Application.Current.Resources.MergedDictionaries.Add(resourceDict);
     }
+
+    private void Window_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        if (e.ClickCount == 2) // двойной клик -> разворачивание/сворачивание
+        {
+            MaxRestoreButton_Click(sender, e);
+        }
+        else
+        {
+            DragMove();
+        }
+    }
+
+    private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState.Minimized;
+    }
+
+    private void MaxRestoreButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (WindowState == WindowState.Maximized)
+            WindowState = WindowState.Normal;
+        else
+            WindowState = WindowState.Maximized;
+    }
+
+    private void CloseButton_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
 }

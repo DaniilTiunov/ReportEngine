@@ -4,24 +4,89 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
     Title="Стенды КИП"
+    
     Icon="/Resources/Icons/estimate_cost_icon_213382.ico"
+    MouseLeftButtonDown="Window_MouseRightButtonDown"
+    ResizeMode="CanResize"
     WindowStartupLocation="CenterScreen"
     WindowState="Maximized"
+    WindowStyle="None"
     mc:Ignorable="d">
+    
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="34"
+                            CornerRadius="0"
+                            GlassFrameThickness="0"
+                            ResizeBorderThickness="6"
+                            UseAeroCaptionButtons="False"/>
+    </shell:WindowChrome.WindowChrome>
+    
     <Window.Resources>
         <ResourceDictionary>
             <Image x:Key="refresh-button.png" Source="/Resources/Images/refresh-button.png" />
         </ResourceDictionary>
     </Window.Resources>
+
     <DockPanel>
+        <Border
+            Height="34"
+            Background="#2D2D30"
+            DockPanel.Dock="Top">
+            <Grid MouseLeftButtonDown="Window_MouseRightButtonDown">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel
+                    Margin="10,0,0,0"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <Image
+                        Width="18"
+                        Height="18"
+                        Margin="0,0,8,0"
+                        Source="/Resources/Icons/estimate_cost_icon_213382.ico" />
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        Foreground="White"
+                        Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
+                </StackPanel>
+
+                <StackPanel
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <Button
+                        x:Name="MinimizeButton"
+                        Click="MinimizeButton_Click"
+                        ToolTip="Свернуть">
+                        ─
+                    </Button>
+                    <Button
+                        x:Name="MaxRestoreButton"
+                        Click="MaxRestoreButton_Click"
+                        ToolTip="Развернуть">
+                        ▢
+                    </Button>
+                    <Button
+                        x:Name="CloseButton"
+                        Click="CloseButton_Click"
+                        ToolTip="Закрыть">
+                        ✕
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
         <Menu
             Height="25"
             DockPanel.Dock="Top"
             FontSize="14">
             <MenuItem Header="Проект">
-                <MenuItem Command="{Binding MainWindowCommandProvider.OpenTreeViewCommand}"
-                          Header="Создать новый проект" />
+                <MenuItem Command="{Binding MainWindowCommandProvider.OpenTreeViewCommand}" Header="Создать новый проект" />
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenMainWindowCommand}" Header="На главный экран" />
                 <Separator />
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenSettingsWindow}" Header="Настройки" />
@@ -49,71 +114,51 @@
             </MenuItem>
             <MenuItem Header="Сортаменты">
                 <MenuItem Header="Сортамент труб">
-                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenHeaterPipeCommand}"
-                              Header="Жарпрочная сталь" />
-                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenStainlessPipeCommand}"
-                              Header="Нержавеющая сталь" />
-                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCarbonPipeCommand}"
-                              Header="Углеродистая сталь" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenHeaterPipeCommand}" Header="Жарпрочная сталь" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenStainlessPipeCommand}" Header="Нержавеющая сталь" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCarbonPipeCommand}" Header="Углеродистая сталь" />
                 </MenuItem>
                 <MenuItem Header="Запорные арматуры">
-                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenHeaterArmatureCommand}"
-                              Header="Жарпрочная сталь" />
-                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenStainlessArmatureCommand}"
-                              Header="Нержавеющая сталь" />
-                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCarbonArmatureCommand}"
-                              Header="Углеродистая сталь" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenHeaterArmatureCommand}" Header="Жарпрочная сталь" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenStainlessArmatureCommand}" Header="Нержавеющая сталь" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCarbonArmatureCommand}" Header="Углеродистая сталь" />
                 </MenuItem>
                 <MenuItem Header="Тройники и КМЧ">
-                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenHeaterSocketsCommand}"
-                              Header="Жарпрочная сталь" />
-                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenStainlessSocketsCommand}"
-                              Header="Нержавеющая сталь" />
-                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCarbonSocketsCommand}"
-                              Header="Углеродистая сталь" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenHeaterSocketsCommand}" Header="Жарпрочная сталь" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenStainlessSocketsCommand}" Header="Нержавеющая сталь" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCarbonSocketsCommand}" Header="Углеродистая сталь" />
                 </MenuItem>
                 <Separator />
                 <MenuItem Command="{Binding GenericEquipCommandProvider.OpenDrainageCommand}" Header="Дренаж" />
                 <Separator />
                 <MenuItem Header="Рамные комплектующие">
-                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenFrameDetailsCommand}"
-                              Header="Детали рамы" />
-                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenPillarEquipCommand}"
-                              Header="Комплектующие для стойки" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenFrameDetailsCommand}" Header="Детали рамы" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenPillarEquipCommand}" Header="Комплектующие для стойки" />
                     <MenuItem Command="{Binding GenericEquipCommandProvider.OpenFrameRollCommand}" Header="Прокат" />
                 </MenuItem>
                 <Separator />
                 <MenuItem Header="Кронштейны">
-                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenBoxesBracesommand}"
-                              Header="Крепление датчиков" />
-                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenDrainageBracesCommand}"
-                              Header="Крепление дренажа" />
-                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenSensorsBracesCommand}"
-                              Header="Крепление клеммных коробок" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenBoxesBracesommand}" Header="Крепление датчиков" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenDrainageBracesCommand}" Header="Крепление дренажа" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenSensorsBracesCommand}" Header="Крепление клеммных коробок" />
                 </MenuItem>
                 <Separator />
                 <MenuItem Header="Электрические компоненты">
-                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCabelProductionCommand}"
-                              Header="Кабельная продукция" />
-                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCabelInputCommand}"
-                              Header="Кабельные вводы" />
-                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCabelBoxeCommand}"
-                              Header="Клеммные коробки" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCabelProductionCommand}" Header="Кабельная продукция" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCabelInputCommand}" Header="Кабельные вводы" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCabelBoxeCommand}" Header="Клеммные коробки" />
                     <MenuItem Command="{Binding GenericEquipCommandProvider.OpenHeaterCommand}" Header="Обогрев" />
-                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCabelProtectionCommand}"
-                              Header="Средства прокладки и защиты кабеля" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCabelProtectionCommand}" Header="Средства прокладки и защиты кабеля" />
                 </MenuItem>
                 <Separator />
                 <MenuItem Command="{Binding GenericEquipCommandProvider.OpenOthersCommand}" Header="Прочие" />
                 <Separator />
                 <MenuItem Command="{Binding GenericEquipCommandProvider.OpenConteinersCommand}" Header="Тара" />
                 <Separator />
-                <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllSortamentsCommand}"
-                          Header="Весь сортамент" />
+                <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllSortamentsCommand}" Header="Весь сортамент" />
             </MenuItem>
             <MenuItem Header="Формирование комплектующих">
-                <MenuItem Command="{Binding MainWindowCommandProvider.OpenFormedFramesCommand}"
-                          Header="Создание и редактировние рам" />
+                <MenuItem Command="{Binding MainWindowCommandProvider.OpenFormedFramesCommand}" Header="Создание и редактировние рам" />
                 <Separator />
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllObvyazkiCommand}" Header="Обвязки" />
                 <Separator />
@@ -231,13 +276,10 @@
                 </DataGrid.Columns>
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Command="{Binding MainWindowCommandProvider.EditProjectCommand}"
-                                  Header="Редактировать проект" />
-                        <MenuItem Command="{Binding MainWindowCommandProvider.ShowAllProjectsCommand}"
-                                  Header="Обновить список проектов" />
+                        <MenuItem Command="{Binding MainWindowCommandProvider.EditProjectCommand}" Header="Редактировать проект" />
+                        <MenuItem Command="{Binding MainWindowCommandProvider.ShowAllProjectsCommand}" Header="Обновить список проектов" />
                         <Separator />
-                        <MenuItem Command="{Binding MainWindowCommandProvider.DeleteSelectedProjectCommand}"
-                                  Header="Удалить проект" />
+                        <MenuItem Command="{Binding MainWindowCommandProvider.DeleteSelectedProjectCommand}" Header="Удалить проект" />
                     </ContextMenu>
                 </DataGrid.ContextMenu>
             </DataGrid>
