@@ -25,7 +25,9 @@ public static class StandDataConverter
             MaterialLine = stand.MaterialLine,
             Armature = stand.Armature,
             TreeSocket = stand.TreeSocket,
-            KMCH = stand.KMCH
+            KMCH = stand.KMCH,
+            ImageData = stand.ImageData,
+            ImageType = stand.ImageType
         };
     }
 
@@ -50,7 +52,9 @@ public static class StandDataConverter
             MaterialLine = model.MaterialLine,
             Armature = model.Armature,
             TreeSocket = model.TreeSocket,
-            KMCH = model.KMCH
+            KMCH = model.KMCH,
+            ImageData = model.ImageData,
+            ImageType = model.ImageType
         };
     }
 }
