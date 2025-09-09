@@ -109,6 +109,6 @@ public partial class MainWindow : Window //Это так называемый "C
 
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
-        Close();
+        Application.Current.Shutdown();
     }
 }

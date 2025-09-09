@@ -6,7 +6,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
     Title="Стенды КИП"
-    
     Icon="/Resources/Icons/estimate_cost_icon_213382.ico"
     MouseLeftButtonDown="Window_MouseRightButtonDown"
     ResizeMode="CanResize"
@@ -15,13 +14,11 @@
     WindowStyle="None"
     mc:Ignorable="d">
     
-    <shell:WindowChrome.WindowChrome>
-        <shell:WindowChrome CaptionHeight="34"
-                            CornerRadius="0"
-                            GlassFrameThickness="0"
-                            ResizeBorderThickness="6"
-                            UseAeroCaptionButtons="False"/>
-    </shell:WindowChrome.WindowChrome>
+    <WindowChrome.WindowChrome>
+        <WindowChrome GlassFrameThickness="0" 
+                      CornerRadius="0" 
+                      CaptionHeight="0"/>
+    </WindowChrome.WindowChrome>
     
     <Window.Resources>
         <ResourceDictionary>
@@ -34,7 +31,7 @@
             Height="34"
             Background="#2D2D30"
             DockPanel.Dock="Top">
-            <Grid MouseLeftButtonDown="Window_MouseRightButtonDown">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
@@ -62,18 +59,24 @@
                     Orientation="Horizontal">
                     <Button
                         x:Name="MinimizeButton"
+                        Width="40" Height="30"
+                        FontSize="16"
                         Click="MinimizeButton_Click"
                         ToolTip="Свернуть">
                         ─
                     </Button>
                     <Button
                         x:Name="MaxRestoreButton"
+                        Width="40" Height="30"
+                        FontSize="16"
                         Click="MaxRestoreButton_Click"
                         ToolTip="Развернуть">
                         ▢
                     </Button>
                     <Button
                         x:Name="CloseButton"
+                        Width="40" Height="30"
+                        FontSize="16"
                         Click="CloseButton_Click"
                         ToolTip="Закрыть">
                         ✕
