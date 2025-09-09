@@ -61,22 +61,24 @@ public partial class MainWindow : Window //Это так называемый "C
 
     private void ChangeDarkTheme(object sender, RoutedEventArgs e)
     {
-        var uri = new Uri("/Resources/Dictionaries/DarkTheme.xaml", UriKind.RelativeOrAbsolute);
-        var resourceDict = Application.LoadComponent(uri) as ResourceDictionary;
-
-        Application.Current.Resources.MergedDictionaries.Clear();
-        Application.Current.Resources.MergedDictionaries.Add(resourceDict);
+        ChangesTheme("/Resources/Dictionaries/DarkTheme.xaml");
     }
 
     private void StandartTheme(object sender, RoutedEventArgs e)
     {
-        var uri = new Uri("/Resources/Dictionaries/GigaChadUI.xaml", UriKind.RelativeOrAbsolute);
-        var resourceDict = Application.LoadComponent(uri) as ResourceDictionary;
-        Application.Current.Resources.Clear();
-        Application.Current.Resources.MergedDictionaries.Add(resourceDict);
+        ChangesTheme("/Resources/Dictionaries/GigaChadUI.xaml");
     }
 
     private void TestTheme(object sender, RoutedEventArgs e)
     {
+        ChangesTheme("/Resources/Dictionaries/TestTheme.xaml");
+    }
+
+    private void ChangesTheme(string dictPath)
+    {
+        var uri = new Uri(dictPath, UriKind.RelativeOrAbsolute);
+        var resourceDict = Application.LoadComponent(uri) as ResourceDictionary;
+        Application.Current.Resources.Clear();
+        Application.Current.Resources.MergedDictionaries.Add(resourceDict);
     }
 }

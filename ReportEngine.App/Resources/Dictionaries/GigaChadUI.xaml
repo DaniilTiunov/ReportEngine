@@ -8,6 +8,10 @@
     <SolidColorBrush x:Key="RowHoverColor" Color="#E0E0E0" />
     <SolidColorBrush x:Key="SelectedRowBackground" Color="#FF153A52" />
     <SolidColorBrush x:Key="SelectedRowForeground" Color="#FFFFFF" />
+    
+    <Style TargetType="DockPanel">
+        <Setter Property="Background" Value="{StaticResource PrimaryColor}"></Setter>
+    </Style>
 
     <!--  Стили для DataGrid  -->
     <Style TargetType="DataGrid">

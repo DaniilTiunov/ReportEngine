@@ -8,6 +8,10 @@
     <SolidColorBrush x:Key="RowHoverColor" Color="#333333" />
     <SolidColorBrush x:Key="SelectedRowBackground" Color="#FF009688" />
     <SolidColorBrush x:Key="SelectedRowForeground" Color="#FFFFFF" />
+    
+    <Style TargetType="DockPanel">
+        <Setter Property="Background" Value="{StaticResource PrimaryColor}"></Setter>
+    </Style>
 
     <!-- Глобально для всего текста -->
     <Style TargetType="TextBlock" BasedOn="{x:Null}">
