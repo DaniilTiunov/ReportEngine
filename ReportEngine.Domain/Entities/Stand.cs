@@ -20,7 +20,7 @@ public class Stand
     public int Devices { get; set; } // Приборы
     public string? BraceType { get; set; } // Тип крепления датчика
     public float Width { get; set; } // Ширна
-    public string? SerialNumber { get; set; } //С ерийный номер
+    public string? SerialNumber { get; set; } //Серийный номер
     public float Weight { get; set; } // Масса
     public decimal StandSummCost { get; set; } // Сумма стенда
     public string? ObvyazkaType { get; set; } // Тип обвязки
