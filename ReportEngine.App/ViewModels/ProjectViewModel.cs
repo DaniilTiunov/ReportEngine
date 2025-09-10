@@ -98,6 +98,8 @@ public class ProjectViewModel : BaseViewModel
             new RelayCommand(OnCreateSummaryReportCommandExecuted, CanAllCommandsExecute);
         ProjectCommandProvider.OpenAllSortamentsDialogCommand =
             new RelayCommand(OnOpenAllSortamentsDialogExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.CreateMarkReport =
+         new RelayCommand(OnCreateMarksReportCommandExecuted, CanAllCommandsExecute);
     }
 
     public void InitializeGenericCommands()
@@ -250,6 +252,11 @@ public class ProjectViewModel : BaseViewModel
     public void OnCreateSummaryReportCommandExecuted(object p)
     {
         ExceptionHelper.SafeExecute(CreateSummaryReportAsync);
+    }
+
+    public void OnCreateMarksReportCommandExecuted(object p)
+    {
+        ExceptionHelper.SafeExecute(CreateMarkReportAsync);
     }
 
     public void ResetProject()
@@ -470,6 +477,17 @@ public class ProjectViewModel : BaseViewModel
         await _reportService.GenerateReportAsync(ReportType.ComponentsListReport, CurrentProjectModel.CurrentProjectId);
 
         if (_notificationService.ShowConfirmation("Ведомость комплектующих создана!\nОткрыть папку с отчётами?"))
+        {
+            var reportDir = SettingsManager.GetReportDirectory();
+            Process.Start("explorer.exe", reportDir);
+        }
+    }
+
+    private async void CreateMarkReportAsync()
+    {
+        await _reportService.GenerateReportAsync(ReportType.MarksReport, CurrentProjectModel.CurrentProjectId);
+
+        if (_notificationService.ShowConfirmation("Ведомость маркировки создана!\nОткрыть папку с отчётами?"))
         {
             var reportDir = SettingsManager.GetReportDirectory();
             Process.Start("explorer.exe", reportDir);
