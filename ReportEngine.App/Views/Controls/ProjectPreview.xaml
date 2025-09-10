@@ -352,6 +352,11 @@
                 Height="30"
                 Command="{Binding ProjectCommandProvider.CreateSummaryReportCommand}"
                 Content="Создать сводную ведомость" />
+            <Button
+     Width="180"
+     Height="30"
+     Command="{Binding ProjectCommandProvider.CreateMarkReport}"
+     Content="Создать маркировку" />
         </StackPanel>
     </Grid>
 </UserControl>

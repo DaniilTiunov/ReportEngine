@@ -22,6 +22,10 @@ public class ProjectCommandProvider
     public ICommand CreateSummaryReportCommand { get; set; }
     public ICommand OpenAllSortamentsDialogCommand { get; set; } // Новая команда для открытия окна ассортиментов
 
+    public ICommand CreateMarkReport { get; set; }
+
+
+
     public ICommand Bind(ICommand command, Action<object> execute, Func<object, bool> canExecute = null)
     {
         return new RelayCommand(execute, canExecute);
