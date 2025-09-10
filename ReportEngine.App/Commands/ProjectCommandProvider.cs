@@ -21,8 +21,8 @@ public class ProjectCommandProvider
     public ICommand CalculateProjectCommand { get; set; }
     public ICommand CreateSummaryReportCommand { get; set; }
     public ICommand OpenAllSortamentsDialogCommand { get; set; } // Новая команда для открытия окна ассортиментов
-
-    public ICommand CreateMarkReport { get; set; }
+    public ICommand DeleteSelectedStandCommand { get; set; }
+    public ICommand CreateMarkReportCommand { get; set; }
 
 
 

@@ -68,6 +68,12 @@ public class ProjectService : IProjectService
             await _projectRepository.UpdateStandAsync(StandDataConverter.ConvertToStandEntity(stand));
     }
 
+    public async Task DeleteStandAsync(int projectId, int standId)
+    {
+        await _projectRepository.DeleteStandAsync(projectId, standId);
+        _notificationService.ShowInfo($"Стенд с Id {standId} удалён из\n Проекта c Id {projectId}");
+    }
+
     public async Task AddStandToProjectAsync(int projectId, StandModel standModel)
     {
         var standEntity = StandDataConverter.ConvertToStandEntity(standModel);

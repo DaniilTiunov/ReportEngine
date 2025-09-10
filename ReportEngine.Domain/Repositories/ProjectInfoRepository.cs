@@ -60,6 +60,20 @@ public class ProjectInfoRepository : IProjectInfoRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task DeleteStandAsync(int projectId, int standId)
+    {
+        if (standId == null)
+            return;
+        
+        var existingStand = await _context.Set<Stand>()
+            .FirstOrDefaultAsync(s => s.Id == standId);
+        
+        if (existingStand != null)
+            _context.Set<Stand>().Remove(existingStand);
+        
+        await _context.SaveChangesAsync();
+    }
+
     public async Task<int> DeleteByIdAsync(int id)
     {
         var entityProjectInfo = await _context.Set<ProjectInfo>().FindAsync(id);

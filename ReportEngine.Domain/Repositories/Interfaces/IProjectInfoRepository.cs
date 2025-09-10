@@ -5,6 +5,7 @@ namespace ReportEngine.Domain.Repositories.Interfaces;
 public interface IProjectInfoRepository : IBaseRepository<ProjectInfo>
 {
     Task<Stand> AddStandAsync(int projectId, Stand stand);
+    Task DeleteStandAsync(int projectId, int standId);
     Task UpdateStandAsync(Stand stand);
     Task<ProjectInfo> GetStandsByIdAsync(int projectId);
     Task AddStandObvyazkaAsync(int standId, ObvyazkaInStand standObvyazka);
