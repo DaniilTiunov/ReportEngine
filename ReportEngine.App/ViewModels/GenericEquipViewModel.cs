@@ -22,7 +22,7 @@ public class GenericEquipViewModel<T> : BaseViewModel
 
     private readonly INotificationService _notificationService;
 
-    public GenericEquipViewModel( IGenericBaseRepository<T, T> genericEquipRepository)
+    public GenericEquipViewModel(IGenericBaseRepository<T, T> genericEquipRepository)
     {
         InitializeCommands(); // Инициализируем команды
         _genericEquipRepository = genericEquipRepository; // Устанавливаем репозиторий
@@ -30,6 +30,7 @@ public class GenericEquipViewModel<T> : BaseViewModel
 
     public Action<T> SelectionHandler { get; set; }
     public GenericEquipModel<T, T> GenericEquipModel { get; set; } = new();
+
     public void InitializeCommands()
     {
         // Инициализируем команду для отображения всего оборудования
@@ -39,13 +40,17 @@ public class GenericEquipViewModel<T> : BaseViewModel
         RemoveEquipCommand = new RelayCommand(OnRemoveEquipCommandExecuted, CanAllCommandsExecute);
         AddNewEquipCommand = new RelayCommand(OnAddNewEquipCommandExecuted, CanAllCommandsExecute);
     }
+
     #region Команды для работы с оборудованием
+
     public ICommand AddNewEquipCommand { get; set; }
     public ICommand ShowAllEquipCommand { get; set; }
+
     public bool CanAllCommandsExecute(object e)
     {
         return true;
     }
+
     public async void OnShowAllEquipCommandExecuted(object e)
     {
         await LoadAllBaseEquipsAsync();
@@ -57,12 +62,14 @@ public class GenericEquipViewModel<T> : BaseViewModel
     {
         if (GenericEquipModel.SelectedBaseEquip != null) SelectionHandler?.Invoke(GenericEquipModel.SelectedBaseEquip);
     }
+
     public ICommand SaveChangesEquipCommand { get; set; }
 
     public async void OnSaveChangesCommandExecuted(object e)
     {
         await SaveChangesAsync();
     }
+
     public ICommand RemoveEquipCommand { get; set; }
 
     public async void OnRemoveEquipCommandExecuted(object e)
@@ -78,6 +85,7 @@ public class GenericEquipViewModel<T> : BaseViewModel
     #endregion
 
     #region Методы для работы с оборудованием
+
     private async Task LoadAllBaseEquipsAsync()
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -96,6 +104,7 @@ public class GenericEquipViewModel<T> : BaseViewModel
             }
         });
     }
+
     private async Task AddBaseEquipAsync()
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -105,6 +114,7 @@ public class GenericEquipViewModel<T> : BaseViewModel
             GenericEquipModel.SelectedBaseEquip = newEquip;
         });
     }
+
     private async Task SaveChangesAsync()
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -125,6 +135,7 @@ public class GenericEquipViewModel<T> : BaseViewModel
             }
         });
     }
+
     private async Task RemoveSelectedBaseEquipAsync()
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -141,5 +152,6 @@ public class GenericEquipViewModel<T> : BaseViewModel
             GenericEquipModel.SelectedBaseEquip = default; // Сбросить выбор
         });
     }
+
     #endregion
 }

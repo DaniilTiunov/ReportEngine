@@ -13,7 +13,7 @@ public partial class ProjectPreview : UserControl
     {
         InitializeComponent();
         DataContext = viewModel;
-        
+
         CommandBindings.Add(new CommandBinding(ApplicationCommands.Paste, OnPasteExecuted, OnPasteCanExecute));
 
         InitializeData(viewModel);
@@ -25,7 +25,7 @@ public partial class ProjectPreview : UserControl
         await viewModel.LoadStandsDataAsync();
         await viewModel.LoadPurposesInStandsAsync();
     }
-    
+
     private void Image_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         if (sender is Control c)
@@ -34,7 +34,7 @@ public partial class ProjectPreview : UserControl
             e.Handled = true;
         }
     }
-    
+
     private void OnPasteCanExecute(object sender, CanExecuteRoutedEventArgs e)
     {
         if (DataContext is ProjectViewModel viewModel &&
@@ -68,15 +68,16 @@ public partial class ProjectPreview : UserControl
                 encoder.Save(memoryStream);
                 bytes = memoryStream.ToArray();
             }
-            
+
             stand.ImageData = bytes;
             stand.ImageType = "image/png";
-            
+
             await viewModel.UpdateStandBlueprintAsync(bytes, "image/png");
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Не удалось вставить изображение: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show($"Не удалось вставить изображение: {ex.Message}", "Ошибка", MessageBoxButton.OK,
+                MessageBoxImage.Error);
         }
     }
 }

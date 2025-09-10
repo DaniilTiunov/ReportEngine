@@ -2,7 +2,6 @@
 using System.Windows.Input;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
-using ReportEngine.App.Display;
 using ReportEngine.App.Model.Contacts;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
@@ -22,7 +21,7 @@ public class CompanyViewModel
 
         _companyRepository = companyRepository;
         _notificationService = notificationService;
-        
+
 
         LoadAllCompaniesAsync();
     }

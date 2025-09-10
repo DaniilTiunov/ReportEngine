@@ -19,7 +19,7 @@ public class CalculationService : ICalculationService
     {
         await CalculateStandsCountAsync(project);
 
-        foreach (var stand in project.Stands) 
+        foreach (var stand in project.Stands)
             stand.StandSummCost = CalculateStandEquipCost(stand);
 
         project.Cost = project.Stands.Sum(stand => stand.StandSummCost);
@@ -60,7 +60,7 @@ public class CalculationService : ICalculationService
 
         return cost;
     }
-    
+
     private float ObvHumanCostCalculation(StandModel stand)
     {
         return stand.ObvyazkiInStand.Sum(obv => obv.HumanCost);

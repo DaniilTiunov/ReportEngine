@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Windows;
+using System.Windows.Input;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.Views.UpdateInformation;
@@ -94,16 +95,12 @@ public partial class MainWindow : Window //Это так называемый "C
         Height = area.Height;
     }
 
-    private void Window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         if (e.ClickCount == 2)
-        {
             MaxRestoreButton_Click(sender, e);
-        }
         else
-        {
             DragMove();
-        }
     }
 
     private void MinimizeButton_Click(object sender, RoutedEventArgs e)

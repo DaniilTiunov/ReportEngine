@@ -6,117 +6,169 @@ using ReportEngine.Domain.Entities;
 namespace ReportEngine.App.Model.StandsModel;
 
 /// <summary>
-/// Модель представления стенда (UI-модель) используемая в WPF для биндинга.
-/// Содержит поля и свойства, отражающие данные стенда и связанные коллекции для отображения в интерфейсе.
+///     Модель представления стенда (UI-модель) используемая в WPF для биндинга.
+///     Содержит поля и свойства, отражающие данные стенда и связанные коллекции для отображения в интерфейсе.
 /// </summary>
 public class StandModel : BaseViewModel
 {
     // Коллекция дополнительных комплектующих, находящихся в стенде
     private ObservableCollection<FormedAdditionalEquip> _additionalEquipsInStand = new();
+
     // Коллекция всех целей для дополнительных комплектующих в стенде
     private ObservableCollection<AdditionalEquipPurpose> _allAdditionalEquipPurposesInStand = new();
+
     // Коллекция всех доступных типов дренажей
     private ObservableCollection<FormedDrainage> _allAvailableDrainages = new();
+
     // Коллекция всех доступных рам
     private ObservableCollection<FormedFrame> _allAvailableFrames = new();
+
     // Коллекция всех целей дренажей, собранная из дренажей в стенде
     private ObservableCollection<DrainagePurpose> _allDrainagePurposesInStand = new();
+
     // Коллекция всех целей электрических компонентов, собранная из компонентов в стенде
     private ObservableCollection<ElectricalPurpose> _allElectricalPurposesInStand = new();
+
     // Арматура стенда (текст)
     private string _armature;
+
     // Тип крепления датчика
     private string _braceType;
+
     // Комментарии к стенду
     private string _comments;
+
     // Обозначение/дизайн стенда
     private string _design;
+
     // Описание стенда
     private string _designeStand;
+
     // Количество приборов
     private int _devices;
+
     // Коллекция дренажей, находящихся в стенде
     private ObservableCollection<FormedDrainage> _drainagesInStand = new();
+
     // Коллекция электрических компонентов, находящихся в стенде
     private ObservableCollection<FormedElectricalComponent> _electricalComponentsInStand = new();
+
     // KKS код первого датчика (внутреннее поле)
     private string _firsSensorKksCode;
+
     // Маркировка + для первого датчика
     private string _firstSensorMarkMinus;
+
     // Маркировка - для первого датчика
     private string _firstSensorMarkPlus;
+
     // Тип первого датчика
     private string _firstSensorType;
+
     // Модель компонентов рамы (вспомогательная модель)
     private FormedFrameModel _formedFrameComponents = new();
+
     // Коллекция рам, добавленных в стенд
     private ObservableCollection<FormedFrame> _framesInStand = new();
+
     // Идентификатор стенда
     private int _id;
-    // KKS-код стенда
-    private string _kksCode;
-    // КМЧ
-    private string _kmch;
-    // Материал линии
-    private string _materialLine;
-    // Объект для создания нового дополнительного комплектующего
-    private FormedAdditionalEquip _newAdditionalEquip = new();
-    // Объект для создания нового дренажа
-    private FormedDrainage _newDrainage = new();
-    // Объект для создания нового электрического компонента
-    private FormedElectricalComponent _newElectricalComponent = new();
-    // Номер по порядку (NN)
-    private int _nn;
-    // Имя/тип обвязки
-    private string _obvyazkaName;
-    // Коллекция обвязок (UI)
-    private ObservableCollection<StandObvyazkaModel> _obvyazki = new();
-    // Коллекция обвязок, привязанных к стенду
-    private ObservableCollection<ObvyazkaInStand> _obvyazkiInStand = new();
-    // Идентификатор проекта, которому принадлежит стенд
-    private int _projectId;
-    // Второй датчик: KKS
-    private string? _secondSensorKksCode;
-    // Второй датчик: маркировка -
-    private string? _secondSensorMarkMinus;
-    // Второй датчик: маркировка +
-    private string? _secondSensorMarkPlus;
-    // Тип второго датчика
-    private string _secondSensorType;
-    // Выбранное дополнительное комплектующее
-    private FormedAdditionalEquip _selectedAdditionalEquip;
-    // Выбранный дренаж
-    private FormedDrainage _selectedDrainage;
-    // Выбранный электрический компонент
-    private FormedElectricalComponent _selectedElectricalComponent;
-    // Выбранная рама
-    private FormedFrame _selectedFrame;
-    // Выбранная обвязка (UI модель)
-    private StandObvyazkaModel _selectedObvyazka;
-    // Выбранная обвязка в стенде
-    private ObvyazkaInStand _selectedObvyazkaInStand = new();
-    // Серийный номер стенда
-    private string _serialNumber;
-    // Суммарная стоимость стенда
-    private decimal _standSummCost;
-    // Третий датчик: KKS
-    private string? _thirdSensorKksCode;
-    // Третий датчик: маркировка -
-    private string? _thirdSensorMarkMinus;
-    // Третий датчик: маркировка +
-    private string? _thirdSensorMarkPlus;
-    // Тип третьего датчика
-    private string _thirdSensorType;
-    // Тройник/разветвитель
-    private string _treeScoket;
-    // Масса стенда
-    private float _weight;
-    // Ширина стенда
-    private float _width;
+
     // Бинарные данные изображения чертежа стенда
     private byte[]? _imageData;
+
     // MIME тип или краткое описание типа изображения (например "image/png")
     private string? _imageType;
+
+    // KKS-код стенда
+    private string _kksCode;
+
+    // КМЧ
+    private string _kmch;
+
+    // Материал линии
+    private string _materialLine;
+
+    // Объект для создания нового дополнительного комплектующего
+    private FormedAdditionalEquip _newAdditionalEquip = new();
+
+    // Объект для создания нового дренажа
+    private FormedDrainage _newDrainage = new();
+
+    // Объект для создания нового электрического компонента
+    private FormedElectricalComponent _newElectricalComponent = new();
+
+    // Номер по порядку (NN)
+    private int _nn;
+
+    // Имя/тип обвязки
+    private string _obvyazkaName;
+
+    // Коллекция обвязок (UI)
+    private ObservableCollection<StandObvyazkaModel> _obvyazki = new();
+
+    // Коллекция обвязок, привязанных к стенду
+    private ObservableCollection<ObvyazkaInStand> _obvyazkiInStand = new();
+
+    // Идентификатор проекта, которому принадлежит стенд
+    private int _projectId;
+
+    // Второй датчик: KKS
+    private string? _secondSensorKksCode;
+
+    // Второй датчик: маркировка -
+    private string? _secondSensorMarkMinus;
+
+    // Второй датчик: маркировка +
+    private string? _secondSensorMarkPlus;
+
+    // Тип второго датчика
+    private string _secondSensorType;
+
+    // Выбранное дополнительное комплектующее
+    private FormedAdditionalEquip _selectedAdditionalEquip;
+
+    // Выбранный дренаж
+    private FormedDrainage _selectedDrainage;
+
+    // Выбранный электрический компонент
+    private FormedElectricalComponent _selectedElectricalComponent;
+
+    // Выбранная рама
+    private FormedFrame _selectedFrame;
+
+    // Выбранная обвязка (UI модель)
+    private StandObvyazkaModel _selectedObvyazka;
+
+    // Выбранная обвязка в стенде
+    private ObvyazkaInStand _selectedObvyazkaInStand = new();
+
+    // Серийный номер стенда
+    private string _serialNumber;
+
+    // Суммарная стоимость стенда
+    private decimal _standSummCost;
+
+    // Третий датчик: KKS
+    private string? _thirdSensorKksCode;
+
+    // Третий датчик: маркировка -
+    private string? _thirdSensorMarkMinus;
+
+    // Третий датчик: маркировка +
+    private string? _thirdSensorMarkPlus;
+
+    // Тип третьего датчика
+    private string _thirdSensorType;
+
+    // Тройник/разветвитель
+    private string _treeScoket;
+
+    // Масса стенда
+    private float _weight;
+
+    // Ширина стенда
+    private float _width;
 
     public StandModel()
     {
@@ -353,7 +405,7 @@ public class StandModel : BaseViewModel
         get => _designeStand;
         set => Set(ref _designeStand, value);
     } //Описание
-    
+
     // Бинарные данные изображения чертежа стенда
     public byte[]? ImageData
     {

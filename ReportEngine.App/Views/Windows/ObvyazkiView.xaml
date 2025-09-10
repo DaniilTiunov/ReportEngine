@@ -16,9 +16,9 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*" /> 
+            <ColumnDefinition Width="3*" />
             <!--  Область для картинок  -->
-            <ColumnDefinition Width="1*" /> 
+            <ColumnDefinition Width="1*" />
             <!--  Область для информации  -->
         </Grid.ColumnDefinitions>
 
@@ -96,16 +96,23 @@
                     </StackPanel.Resources>
 
                     <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.Number, StringFormat='Номер: {0}'}" />
-                    <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.LineLength, StringFormat='Длина линии: {0}'}" />
-                    <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.ZraCount, StringFormat='Кол-во ЗРА: {0}'}" />
-                    <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.TreeSocket, StringFormat='Тройники: {0}'}" />
+                    <TextBlock
+                        Text="{Binding CurrentObvyazka.SelectedObvyazka.LineLength, StringFormat='Длина линии: {0}'}" />
+                    <TextBlock
+                        Text="{Binding CurrentObvyazka.SelectedObvyazka.ZraCount, StringFormat='Кол-во ЗРА: {0}'}" />
+                    <TextBlock
+                        Text="{Binding CurrentObvyazka.SelectedObvyazka.TreeSocket, StringFormat='Тройники: {0}'}" />
                     <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.Sensor, StringFormat='Датчики: {0}'}" />
-                    <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.SensorType, StringFormat='Тип датчиков: {0}'}" />
+                    <TextBlock
+                        Text="{Binding CurrentObvyazka.SelectedObvyazka.SensorType, StringFormat='Тип датчиков: {0}'}" />
                     <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.Clamp, StringFormat='Хомуты: {0}'}" />
-                    <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.WidthOnFrame, StringFormat='Длина на раме: {0}'}" />
-                    <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.OtherLineCount, StringFormat='Др. линии: {0}'}" />
+                    <TextBlock
+                        Text="{Binding CurrentObvyazka.SelectedObvyazka.WidthOnFrame, StringFormat='Длина на раме: {0}'}" />
+                    <TextBlock
+                        Text="{Binding CurrentObvyazka.SelectedObvyazka.OtherLineCount, StringFormat='Др. линии: {0}'}" />
                     <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.Weight, StringFormat='Масса: {0}'}" />
-                    <TextBlock Text="{Binding CurrentObvyazka.SelectedObvyazka.HumanCost, StringFormat='Трудозатраты: {0}'}" />
+                    <TextBlock
+                        Text="{Binding CurrentObvyazka.SelectedObvyazka.HumanCost, StringFormat='Трудозатраты: {0}'}" />
                 </StackPanel>
             </GroupBox>
         </StackPanel>
