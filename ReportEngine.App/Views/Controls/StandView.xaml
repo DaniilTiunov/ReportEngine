@@ -4,8 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    FontSize="13"
+    xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
     Background="{DynamicResource PrimaryColor}"
+    FontSize="13"
     mc:Ignorable="d">
 
     <Grid Margin="20">
@@ -21,7 +22,6 @@
         <!--  Форма редактирования стенда  -->
         <Grid Grid.Row="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -207,7 +207,8 @@
             <Button
                 Grid.Row="10"
                 Grid.Column="3"
-                Margin="365,63,-265,21"
+                Width="100"
+                Margin="365,64,-265,21"
                 Command="{Binding ProjectCommandProvider.SaveStandCommand}"
                 Content="Сохранить" />
 
@@ -259,9 +260,7 @@
                                 Width="100"
                                 DisplayMemberBinding="{Binding Sensor}"
                                 Header="Тип датчика" />
-                            <GridViewColumn Width="100"
-                                            DisplayMemberBinding="{Binding StandSummCost}"
-                                            Header="Стоимость стенда" />
+                            <GridViewColumn DisplayMemberBinding="{Binding StandSummCost}" Header="Стоимость стенда" />
                         </GridView>
                     </ListView.View>
                 </ListView>
