@@ -340,7 +340,7 @@
             <Button
                 Width="180"
                 Height="30"
-                Command="{Binding ProjectCommandProvider.CreateMarkReport}"
+                Command="{Binding ProjectCommandProvider.CreateMarkReportCommand}"
                 Content="Создать маркировку" />
         </StackPanel>
     </Grid>

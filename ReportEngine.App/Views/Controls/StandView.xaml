@@ -212,8 +212,15 @@
 
                 <Button
                     Width="100"
+                    Margin="0,0,10,0"
                     Command="{Binding ProjectCommandProvider.SaveStandCommand}"
                     Content="Сохранить" />
+
+                <Button
+                    Width="100"
+                    Margin="0,0,0,0"
+                    Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}"
+                    Content="Удалить" />
             </StackPanel>
 
         </Grid>
@@ -267,6 +274,24 @@
                             <GridViewColumn DisplayMemberBinding="{Binding StandSummCost}" Header="Стоимость стенда" />
                         </GridView>
                     </ListView.View>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="ContextMenu">
+                                <Setter.Value>
+                                    <ContextMenu>
+                                        <MenuItem
+                                            Command="{Binding DataContext.ProjectCommandProvider.EditStandCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                            CommandParameter="{Binding}"
+                                            Header="Создать копию" />
+                                        <MenuItem
+                                            Command="{Binding DataContext.ProjectCommandProvider.DeleteSelectedStandCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                            CommandParameter="{Binding}"
+                                            Header="Удалить" />
+                                    </ContextMenu>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
                 </ListView>
             </Grid>
         </Border>

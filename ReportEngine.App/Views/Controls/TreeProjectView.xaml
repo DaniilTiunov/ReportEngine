@@ -14,9 +14,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Border
-            Grid.Column="0"
-            BorderThickness="0,0,1,0">
+        <Border Grid.Column="0" BorderThickness="0,0,1,0">
             <TreeView
                 x:Name="MainTree"
                 MinWidth="200"
@@ -37,7 +35,7 @@
                         Header="Карточка проекта"
                         Tag="ProjectCard" />
                     <TreeViewItem Header="Редактирование стенда" Tag="BindingTypes">
-                        <TreeViewItem Header="Стенд" Tag="Stand" />
+                        <TreeViewItem Header="Стенды" Tag="Stand" />
                         <TreeViewItem Header="Создание обвязок стенда" Tag="StandObv" />
                         <TreeViewItem Header="Формирование стенда" Tag="FrameDrainages" />
                         <TreeViewItem Header="Предварительный просмотр стенда" Tag="ProjectPreview" />

@@ -98,8 +98,10 @@ public class ProjectViewModel : BaseViewModel
             new RelayCommand(OnCreateSummaryReportCommandExecuted, CanAllCommandsExecute);
         ProjectCommandProvider.OpenAllSortamentsDialogCommand =
             new RelayCommand(OnOpenAllSortamentsDialogExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.CreateMarkReport =
+        ProjectCommandProvider.CreateMarkReportCommand =
          new RelayCommand(OnCreateMarksReportCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.DeleteSelectedStandCommand = 
+            new RelayCommand(OnDeleteSelectedStandFromProjectExecuted, CanAllCommandsExecute);
     }
 
     public void InitializeGenericCommands()
@@ -202,6 +204,11 @@ public class ProjectViewModel : BaseViewModel
     public async void OnAddNewStandCommandExecuted(object? e)
     {
         await ExceptionHelper.SafeExecuteAsync(AddNewStandToProjectAsync);
+    }
+
+    public async void OnDeleteSelectedStandFromProjectExecuted(object? e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(DeleteStandFromProject);
     }
 
     public async void OnSaveChangesCommandExecuted(object? e)
@@ -377,6 +384,13 @@ public class ProjectViewModel : BaseViewModel
         CurrentProjectModel.SelectedStand = newStandModel;
 
         _notificationService.ShowInfo($"Стенд успешно добавлен! {addedStandEntity.Id}");
+    }
+
+    private async Task DeleteStandFromProject()
+    {
+        await _projectService.DeleteStandAsync(CurrentProjectModel.CurrentProjectId, CurrentProjectModel.SelectedStand.Id);
+        CurrentProjectModel.Stands.Remove(CurrentProjectModel.SelectedStand);
+        //OnPropertyChanged(nameof(CurrentProjectModel.Stands));
     }
 
     private async Task CreateNewProjectCardAsync()

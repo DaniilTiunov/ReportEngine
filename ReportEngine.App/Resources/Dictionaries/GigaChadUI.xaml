@@ -8,8 +8,7 @@
     <SolidColorBrush x:Key="RowHoverColor" Color="#E0E0E0" />
     <SolidColorBrush x:Key="SelectedRowBackground" Color="DarkGray" />
     <SolidColorBrush x:Key="SelectedRowForeground" Color="#FFFFFF" />
-
-    <Style TargetType="CheckBox" BasedOn="{}" />
+    
 
     <Style TargetType="Window">
         <Setter Property="FontFamily" Value="Bahnschrift" />
