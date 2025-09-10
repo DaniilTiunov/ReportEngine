@@ -254,9 +254,9 @@ public class ProjectViewModel : BaseViewModel
         ExceptionHelper.SafeExecute(CreateSummaryReportAsync);
     }
 
-    public void OnCreateMarksReportCommandExecuted(object p)
+    public async void OnCreateMarksReportCommandExecuted(object p)
     {
-        ExceptionHelper.SafeExecute(CreateMarkReportAsync);
+        await ExceptionHelper.SafeExecuteAsync(CreateMarkReportAsync);
     }
 
     public void ResetProject()
@@ -483,7 +483,7 @@ public class ProjectViewModel : BaseViewModel
         }
     }
 
-    private async void CreateMarkReportAsync()
+    private async Task CreateMarkReportAsync()
     {
         await _reportService.GenerateReportAsync(ReportType.MarksReport, CurrentProjectModel.CurrentProjectId);
 
