@@ -276,13 +276,13 @@
                         <Style TargetType="ListViewItem">
                             <Setter Property="ContextMenu">
                                 <Setter.Value>
-                                    <ContextMenu>
+                                    <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
                                         <MenuItem
-                                            Command="{Binding DataContext.ProjectCommandProvider.EditStandCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                            Command="{Binding ProjectCommandProvider.EditStandCommand}"
                                             CommandParameter="{Binding}"
                                             Header="Создать копию" />
                                         <MenuItem
-                                            Command="{Binding DataContext.ProjectCommandProvider.DeleteSelectedStandCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                            Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}"
                                             CommandParameter="{Binding}"
                                             Header="Удалить" />
                                     </ContextMenu>
