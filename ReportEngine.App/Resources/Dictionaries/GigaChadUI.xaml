@@ -6,7 +6,7 @@
     <SolidColorBrush x:Key="AccentColor" Color="#FF184461" />
     <SolidColorBrush x:Key="BorderColor" Color="#CCCCCC" />
     <SolidColorBrush x:Key="RowHoverColor" Color="#E0E0E0" />
-    <SolidColorBrush x:Key="SelectedRowBackground" Color="LightGray" />
+    <SolidColorBrush x:Key="SelectedRowBackground" Color="DarkGray" />
     <SolidColorBrush x:Key="SelectedRowForeground" Color="#FFFFFF" />
 
     <Style TargetType="CheckBox" BasedOn="{}" />
@@ -58,6 +58,37 @@
                 <Setter Property="Background" Value="{StaticResource SelectedRowBackground}" />
                 <Setter Property="Foreground" Value="{StaticResource SelectedRowForeground}" />
             </Trigger>
+        </Style.Triggers>
+    </Style>
+    
+    <!-- Стили для ListView -->
+    <Style TargetType="ListView">
+        <Setter Property="FontSize" Value="14"/>
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{StaticResource SelectedRowBackground}"/>
+                <Setter Property="Foreground" Value="{StaticResource SelectedRowForeground}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+                </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource RowHoverColor}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+                </Trigger>
+        </Style.Triggers>
+    </Style>
+    
+    <Style TargetType="ListViewItem">
+        <Setter Property="Foreground" Value="Black"/>
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{StaticResource SelectedRowBackground}"/>
+                <Setter Property="Foreground" Value="{StaticResource SelectedRowForeground}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+                </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource RowHoverColor}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+                </Trigger>
         </Style.Triggers>
     </Style>
 
