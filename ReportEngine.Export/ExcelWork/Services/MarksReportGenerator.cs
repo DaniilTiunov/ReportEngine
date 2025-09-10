@@ -56,8 +56,6 @@ namespace ReportEngine.Export.ExcelWork.Services
             ws.Cell("C1").Value = "KKS изм. контура (датчика)";
             ws.Cell("D1").Value = "Маркировка";
         }
-
-        private void FillWorksheet(IXLWorksheet ws, ProjectInfo project)
         
         private void CreateStandWorksheet(IXLWorksheet ws, ProjectInfo project)
         {
