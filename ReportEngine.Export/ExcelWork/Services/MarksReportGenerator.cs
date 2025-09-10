@@ -25,7 +25,7 @@ namespace ReportEngine.Export.ExcelWork.Services
             var project = await _projectInfoRepository.GetByIdAsync(projectId);
 
             var templatePath = DirectoryHelper.GetReportsTemplatePath("Маркировка");
-            var fileName = "Маркировка___" + DateTime.Now.ToString("yy-MM-dd___HH-mm-ss")  + ".xlsx";
+            var fileName = "Маркировка___" + DateTime.Now.ToString("yy-MM-dd___HH-mm-ss") + ".xlsx";
 
             var savePath = SettingsManager.GetReportDirectory();
             var fullSavePath = Path.Combine(savePath, fileName);
@@ -33,16 +33,24 @@ namespace ReportEngine.Export.ExcelWork.Services
 
             using (var wb = new XLWorkbook(templatePath))
             {
+                
                 var ws = wb.Worksheets.Add("MainSheet");
+                
+                
                 CreateTableHeader(ws);
                 FillWorksheet(ws, project);
 
+                ws.Columns().AdjustToContents();
+                ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
                 //foreach (var stand in project.Stands)
                 //{
-                    //var ws = wb.Worksheets.Add($"Стенд_{stand.KKSCode}");
-                    
-                    
-               // }
+                //var ws = wb.Worksheets.Add($"Стенд_{stand.KKSCode}");
+
+
+                // }
+
 
                 Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
                 wb.SaveAs(fullSavePath);
@@ -51,49 +59,74 @@ namespace ReportEngine.Export.ExcelWork.Services
 
         private void CreateTableHeader(IXLWorksheet ws)
         {
-            ws.Cell("A1").Value = "№";
-            ws.Cell("B1").Value = "KKS стенда";
-            ws.Cell("C1").Value = "KKS изм. контура (датчика)";
-            ws.Cell("D1").Value = "Маркировка";
-        }
-        
+
+            var headerRange = ws.Range("A1:D1");
+
+            headerRange.Cell(1, 1).Value = "№";
+            headerRange.Cell(1, 2).Value = "KKS стенда";
+            headerRange.Cell(1, 3).Value = "KKS изм. контура (датчика)";
+            headerRange.Cell(1, 4).Value = "Маркировка";
+
+            headerRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
+            headerRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Medium);
+
+            //headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            //headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+            headerRange.Style.Font.SetBold();
+        }    
+
         private void FillWorksheet(IXLWorksheet ws, ProjectInfo project)
         {
+
             int recordNumber = 1;
-
-
 
             foreach (var stand in project.Stands)
             {
-
                 foreach (var obvyazka in stand.ObvyazkiInStand)
                 {
                     //каждая запись - 2 строки
-                    int recordRow = recordNumber + 1;
+                    int upperRecordRow = recordNumber * 2;
+                    int lowerRecordRow = upperRecordRow + 1;
 
 
 
-                    string cellName = "A" + recordRow;
-                    ws.Cell(cellName).Value = recordNumber;
+                    string startRangeCell = "A" + upperRecordRow;
+                    string endRangeCell = "A" + lowerRecordRow;
+                    var unionCellsRange = ws.Range($"{startRangeCell}:{endRangeCell}").Merge();
+                    unionCellsRange.Value = recordNumber;
+
+                    Debug.WriteLine("Стартовая ячейка" + startRangeCell);
+                    Debug.WriteLine("конечная ячейка" + endRangeCell);
+
+                    startRangeCell = "B" + upperRecordRow;
+                    endRangeCell = "B" + lowerRecordRow;
+                    unionCellsRange = ws.Range($"{startRangeCell}:{endRangeCell}").Merge();
+                    unionCellsRange.Value = stand.KKSCode;
+                    
 
 
-                    cellName = "B" + recordRow;
-                    ws.Cell(cellName).Value = stand.KKSCode;
 
-                    cellName = "C" + recordRow;
-                    ws.Cell(cellName).Value = obvyazka.FirstSensorKKS;
+                    startRangeCell = "C" + upperRecordRow;
+                    endRangeCell = "C" + lowerRecordRow;
+                    unionCellsRange = ws.Range($"{startRangeCell}:{endRangeCell}").Merge();
+                    unionCellsRange.Value = obvyazka.FirstSensorKKS;
 
-                    cellName = "D" + recordRow;
-                    ws.Cell(cellName).Value = obvyazka.FirstSensorMarkPlus;
 
-                    cellName = "D" + recordRow + 1;
-                    ws.Cell(cellName).Value = obvyazka.FirstSensorMarkMinus;
+                    startRangeCell = "D" + upperRecordRow;
+                    endRangeCell = "D" + lowerRecordRow;
+                    ws.Cell(startRangeCell).Value = obvyazka.FirstSensorMarkPlus;
+                    ws.Cell(endRangeCell).Value = obvyazka.FirstSensorMarkMinus;
 
                     recordNumber++;
                 }
             }
 
         }
+
+
+
+
     }
 }
 
