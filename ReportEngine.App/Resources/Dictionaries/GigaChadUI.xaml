@@ -68,10 +68,12 @@
             <Trigger Property="IsSelected" Value="True">
                 <Setter Property="Background" Value="{StaticResource SelectedRowBackground}"/>
                 <Setter Property="Foreground" Value="{StaticResource SelectedRowForeground}"/>
-            </Trigger>
+                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+                </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{StaticResource RowHoverColor}"/>
-            </Trigger>
+                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+                </Trigger>
         </Style.Triggers>
     </Style>
     
@@ -81,10 +83,12 @@
             <Trigger Property="IsSelected" Value="True">
                 <Setter Property="Background" Value="{StaticResource SelectedRowBackground}"/>
                 <Setter Property="Foreground" Value="{StaticResource SelectedRowForeground}"/>
-            </Trigger>
+                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+                </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{StaticResource RowHoverColor}"/>
-            </Trigger>
+                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+                </Trigger>
         </Style.Triggers>
     </Style>
 
