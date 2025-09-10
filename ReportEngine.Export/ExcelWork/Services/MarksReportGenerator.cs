@@ -57,7 +57,7 @@ namespace ReportEngine.Export.ExcelWork.Services
             ws.Cell("D1").Value = "Маркировка";
         }
         
-        private void CreateStandWorksheet(IXLWorksheet ws, ProjectInfo project)
+        private void FillWorksheet(IXLWorksheet ws, ProjectInfo project)
         {
             int recordNumber = 1;
 
