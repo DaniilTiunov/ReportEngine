@@ -6,13 +6,17 @@
     <SolidColorBrush x:Key="AccentColor" Color="#FF184461" />
     <SolidColorBrush x:Key="BorderColor" Color="#CCCCCC" />
     <SolidColorBrush x:Key="RowHoverColor" Color="#E0E0E0" />
-    <SolidColorBrush x:Key="SelectedRowBackground" Color="#FF153A52" />
+    <SolidColorBrush x:Key="SelectedRowBackground" Color="LightGray" />
     <SolidColorBrush x:Key="SelectedRowForeground" Color="#FFFFFF" />
+    
+    <Style TargetType="Window">
+        <Setter Property="FontFamily" Value="Bahnschrift"/>
+    </Style>
     
     <Style TargetType="DockPanel">
         <Setter Property="Background" Value="{StaticResource PrimaryColor}"></Setter>
     </Style>
-
+    
     <!--  Стили для DataGrid  -->
     <Style TargetType="DataGrid">
         <Setter Property="Background" Value="{StaticResource PrimaryColor}" />
@@ -100,14 +104,14 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#FF1A3867" />
+                            <Setter Property="Background" Value="#505050" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter Property="Background" Value="#FF1A3867" />
+                            <Setter Property="Background" Value="#666666" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Background" Value="#CCCCCC" />
-                            <Setter Property="Foreground" Value="#888888" />
+                            <Setter Property="Background" Value="#2A2A2A" />
+                            <Setter Property="Foreground" Value="#777777" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

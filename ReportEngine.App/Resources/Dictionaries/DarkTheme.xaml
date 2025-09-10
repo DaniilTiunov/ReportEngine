@@ -92,7 +92,9 @@
     <Style TargetType="Menu" BasedOn="{x:Null}">
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
         <Setter Property="FontSize" Value="14" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
     </Style>
+
 
     <Style TargetType="MenuItem" BasedOn="{x:Null}">
         <Setter Property="FontSize" Value="14" />
@@ -229,10 +231,16 @@
 
     <!-- ContextMenu -->
     <Style TargetType="ContextMenu" BasedOn="{x:Null}">
-        <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
-        <Setter Property="Foreground" Value="White" />
-        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+        <Setter Property="Background" Value="{StaticResource PrimaryColor}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
         <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+    
+    <Style TargetType="Separator">
+        <Setter Property="Background" Value="{StaticResource BorderColor}"/>
+        <Setter Property="Margin" Value="2,0"/>
+        <Setter Property="Height" Value="1"/>
     </Style>
 
     <!-- StackPanel -->

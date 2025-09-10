@@ -8,30 +8,9 @@
     Width="1000"
     Height="700"
     Closing="Window_Closing"
+    FontFamily="Bahnschrift"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
-
-    <Window.Resources>
-        <Style TargetType="Button">
-            <Setter Property="Margin" Value="5" />
-            <Setter Property="Height" Value="40" />
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="Background" Value="#FFDDDDDD" />
-            <Setter Property="BorderBrush" Value="Gray" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-        </Style>
-        <Style TargetType="DataGrid">
-            <Setter Property="Margin" Value="10" />
-            <Setter Property="AutoGenerateColumns" Value="False" />
-            <Setter Property="CanUserAddRows" Value="False" />
-            <Setter Property="Background" Value="White" />
-            <Setter Property="BorderBrush" Value="Gray" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="RowBackground" Value="#FFF5F5F5" />
-            <Setter Property="AlternatingRowBackground" Value="#FFE0E0E0" />
-            <Setter Property="FontSize" Value="14" />
-        </Style>
-    </Window.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -46,15 +25,6 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-
-        <TextBlock
-            Grid.Row="0"
-            Grid.Column="1"
-            Margin="30,9,0,11"
-            HorizontalAlignment="Left"
-            FontSize="16"
-            FontWeight="Bold"
-            Text="Пользователи" />
 
         <DataGrid
             x:Name="UsersDataGrid"

@@ -8,6 +8,8 @@
     Width="450"
     Height="350"
     Background="#f5f5f5"
+    FontFamily="Bahnschrift"
+    FontSize="14"
     ResizeMode="NoResize"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">

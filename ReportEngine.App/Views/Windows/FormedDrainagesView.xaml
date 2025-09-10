@@ -3,7 +3,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Создание и редактирование дренажей"
-    FontSize="13"
+    FontFamily="Bahnschrift"
+    FontSize="14"
     WindowState="Maximized">
 
     <Grid>
@@ -54,15 +55,9 @@
                                 ItemsSource="{Binding FormedDrainagesModel.Purposes}"
                                 SelectedItem="{Binding FormedDrainagesModel.SelectedPurpose, Mode=TwoWay}">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn
-                                        Binding="{Binding Purpose, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                        Header="Назначение" />
-                                    <DataGridTextColumn
-                                        Binding="{Binding Material, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                        Header="Материал" />
-                                    <DataGridTextColumn
-                                        Binding="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                        Header="Длина (м)" />
+                                    <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Назначение" />
+                                    <DataGridTextColumn Binding="{Binding Material, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Материал" />
+                                    <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Длина (м)" />
                                 </DataGrid.Columns>
                             </DataGrid>
                             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
