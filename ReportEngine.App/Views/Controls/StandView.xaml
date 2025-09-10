@@ -9,17 +9,18 @@
     mc:Ignorable="d">
 
     <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <!--  Форма редактирования  -->
-            <RowDefinition Height="Auto" />
-            <!--  Разделитель  -->
-            <RowDefinition Height="250" />
-            <!--  Список стендов  -->
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <!--  Форма редактирования стенда  -->
-        <Grid Grid.Row="0">
+        <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -224,13 +225,10 @@
             </StackPanel>
 
         </Grid>
-
-        <!--  Разделитель  -->
-        <Separator Grid.Row="1" Margin="0,10" />
-
         <!--  Список стендов  -->
         <Border
-            Grid.Row="2"
+            Grid.Column="1"
+            Margin="20,0,0,0"
             BorderBrush="#DDDDDD"
             BorderThickness="1">
             <Grid>
