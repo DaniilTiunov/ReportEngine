@@ -341,6 +341,9 @@
                 Width="180"
                 Height="30"
                 Command="{Binding ProjectCommandProvider.CreateMarkReport}"
+                Width="180"
+                Height="30"
+                Command="{Binding ProjectCommandProvider.CreateMarkReport}"
                 Content="Создать маркировку" />
         </StackPanel>
     </Grid>

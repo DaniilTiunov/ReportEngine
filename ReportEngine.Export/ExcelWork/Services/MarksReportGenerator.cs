@@ -25,7 +25,7 @@ namespace ReportEngine.Export.ExcelWork.Services
             var project = await _projectInfoRepository.GetByIdAsync(projectId);
 
             var templatePath = DirectoryHelper.GetReportsTemplatePath("Маркировка");
-            var fileName = "Маркировка_" + DateTime.Now.ToString("yy-MM-dd") + ".xlsx";
+            var fileName = "Маркировка___" + DateTime.Now.ToString("yy-MM-dd___HH-mm-ss")  + ".xlsx";
 
             var savePath = SettingsManager.GetReportDirectory();
             var fullSavePath = Path.Combine(savePath, fileName);
@@ -33,16 +33,16 @@ namespace ReportEngine.Export.ExcelWork.Services
 
             using (var wb = new XLWorkbook(templatePath))
             {
-                foreach (var stand in project.Stands)
-                {
-                    var ws = wb.Worksheets.Add($"Стенд_{stand.KKSCode}");
-                    CreateTableHeader(ws);
-                    CreateStandWorksheet(ws, project);
-                }
+                var ws = wb.Worksheets.Add("MainSheet");
+                CreateTableHeader(ws);
+                FillWorksheet(ws, project);
 
-
-
-
+                //foreach (var stand in project.Stands)
+                //{
+                    //var ws = wb.Worksheets.Add($"Стенд_{stand.KKSCode}");
+                    
+                    
+               // }
 
                 Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
                 wb.SaveAs(fullSavePath);
@@ -57,6 +57,8 @@ namespace ReportEngine.Export.ExcelWork.Services
             ws.Cell("D1").Value = "Маркировка";
         }
 
+        private void FillWorksheet(IXLWorksheet ws, ProjectInfo project)
+        
         private void CreateStandWorksheet(IXLWorksheet ws, ProjectInfo project)
         {
             int recordNumber = 1;
