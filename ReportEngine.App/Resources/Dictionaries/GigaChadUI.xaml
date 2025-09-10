@@ -82,11 +82,11 @@
 
     <!--  Стили для кнопок  -->
     <Style TargetType="Button">
-        <Setter Property="Background" Value="{StaticResource AccentColor}" />
+        <Setter Property="Background" Value="#3A3A3A" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="Padding" Value="6,2" />
         <Setter Property="FontSize" Value="13" />
-        <Setter Property="BorderBrush" Value="{x:Null}" />
+        <Setter Property="BorderBrush" Value="#3A3A3A" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
