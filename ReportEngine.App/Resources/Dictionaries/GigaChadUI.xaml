@@ -91,6 +91,10 @@
         </Style.Triggers>
     </Style>
 
+    <Style TargetType="ComboBox">
+        
+    </Style>
+    
     <!--  Стили для Menu и MenuItem  -->
     <Style TargetType="Menu">
         <Setter Property="Background" Value="{StaticResource PrimaryColor}" />
