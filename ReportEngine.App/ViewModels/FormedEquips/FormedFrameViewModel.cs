@@ -1,7 +1,6 @@
 ﻿using System.Windows.Input;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
-using ReportEngine.App.Display;
 using ReportEngine.App.Model.FormedEquipsModels;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
@@ -16,8 +15,8 @@ public class FormedFrameViewModel : BaseViewModel
     private readonly IFrameRepository _formedFrameRepository;
     private readonly IGenericBaseRepository<FrameDetail, FrameDetail> _frameDetailRepository;
     private readonly IGenericBaseRepository<FrameRoll, FrameRoll> _frameRollRepository;
-    private readonly IGenericBaseRepository<PillarEqiup, PillarEqiup> _pillarEqiupRepository;
     private readonly INotificationService _notificationService;
+    private readonly IGenericBaseRepository<PillarEqiup, PillarEqiup> _pillarEqiupRepository;
 
     public FormedFrameViewModel(
         IFrameRepository formedFrameRepository,

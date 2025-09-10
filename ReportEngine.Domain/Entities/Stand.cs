@@ -31,9 +31,9 @@ public class Stand
     public string? KMCH { get; set; } // КМЧ
     public string? DesigneStand { get; set; } //Описание
     public string? Comments { get; set; } // Комментарий
-    
-    public byte[]? ImageData { get; set; }   // Изображение
-    
+
+    public byte[]? ImageData { get; set; } // Изображение
+
     public string? ImageType { get; set; } // MIME-тип ("image/png")
 
     public virtual ICollection<StandFrame> StandFrames { get; set; } = new List<StandFrame>();

@@ -1,6 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- Цветовые ресурсы для светлой темы -->
     <SolidColorBrush x:Key="PrimaryColor" Color="#FFFFFF" />
     <SolidColorBrush x:Key="SecondaryColor" Color="#F5F5F5" />
@@ -9,19 +8,17 @@
     <SolidColorBrush x:Key="RowHoverColor" Color="#E0E0E0" />
     <SolidColorBrush x:Key="SelectedRowBackground" Color="LightGray" />
     <SolidColorBrush x:Key="SelectedRowForeground" Color="#FFFFFF" />
-    
-    <Style TargetType="CheckBox" BasedOn="{}">
-        
-    </Style>
-    
+
+    <Style TargetType="CheckBox" BasedOn="{}" />
+
     <Style TargetType="Window">
-        <Setter Property="FontFamily" Value="Bahnschrift"/>
+        <Setter Property="FontFamily" Value="Bahnschrift" />
     </Style>
-    
+
     <Style TargetType="DockPanel">
-        <Setter Property="Background" Value="{StaticResource PrimaryColor}"></Setter>
+        <Setter Property="Background" Value="{StaticResource PrimaryColor}" />
     </Style>
-    
+
     <!--  Стили для DataGrid  -->
     <Style TargetType="DataGrid">
         <Setter Property="Background" Value="{StaticResource PrimaryColor}" />

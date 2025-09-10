@@ -480,16 +480,15 @@ public class ProjectViewModel : BaseViewModel
     {
         if (CurrentProjectModel.SelectedStand == null || CurrentProjectModel == null)
             return;
-        
+
         CurrentProjectModel.SelectedStand.ImageData = imageData;
         CurrentProjectModel.SelectedStand.ImageType = imageType;
-        
+
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await _projectService.UpdateStandEntity(CurrentProjectModel);
             _notificationService.ShowInfo("Чертёж стенда сохранён");
         });
-        
     }
 
     private void ApplySelectedEquipToPurpose(object target, IBaseEquip selected)

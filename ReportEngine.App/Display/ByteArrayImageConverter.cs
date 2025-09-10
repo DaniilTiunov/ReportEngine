@@ -2,8 +2,6 @@
 using System.IO;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
-using ReportEngine.App.AppHelpers;
-using Wpf.Ui.Controls;
 
 namespace ReportEngine.App.Display;
 
@@ -12,8 +10,8 @@ public class ByteArrayImageConverter : IValueConverter
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         var bytes = value as byte[];
-        
-        if (bytes == null || bytes.Length == 0) 
+
+        if (bytes == null || bytes.Length == 0)
             return null;
 
         try
@@ -28,6 +26,7 @@ public class ByteArrayImageConverter : IValueConverter
                 image.EndInit();
                 image.Freeze();
             }
+
             return image;
         }
         catch
