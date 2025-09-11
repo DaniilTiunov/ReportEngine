@@ -12,13 +12,14 @@ namespace ReportEngine.Export.ExcelWork.Services;
 public class MarksReportGenerator : IReportGenerator
 {
     private readonly IProjectInfoRepository _projectInfoRepository;
-    public ReportType Type => ReportType.MarksReport;
-    
+
     public MarksReportGenerator(IProjectInfoRepository projectInfoRepository)
     {
         _projectInfoRepository = projectInfoRepository;
     }
-    
+
+    public ReportType Type => ReportType.MarksReport;
+
     public async Task GenerateAsync(int projectId)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
@@ -66,7 +67,7 @@ public class MarksReportGenerator : IReportGenerator
         //формируем все нуеобходимые записи
         var allRecords = project.Stands
             .SelectMany(stand => stand.ObvyazkiInStand
-            .SelectMany(obvyazka => CreateObvyazkaRecords(obvyazka, stand)))
+                .SelectMany(obvyazka => CreateObvyazkaRecords(obvyazka, stand)))
             .ToList();
 
         var recordNumber = 1;
@@ -135,6 +136,5 @@ public class MarksReportGenerator : IReportGenerator
             SensorMarkPlus = sensorMarkPlus;
             SensorMarkMinus = sensorMarkMinus;
         }
-
     }
 }

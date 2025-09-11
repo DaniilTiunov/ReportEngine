@@ -1,130 +1,118 @@
-﻿using ClosedXML.Excel;
+﻿using System.Diagnostics;
+using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
-using System.Diagnostics;
 
+namespace ReportEngine.Export.ExcelWork.Services;
 
-namespace ReportEngine.Export.ExcelWork.Services
+public class ContainerReportGenerator : IReportGenerator
 {
-    public class ContainerReportGenerator : IReportGenerator
+    private readonly IProjectInfoRepository _projectInfoRepository;
+
+    public ContainerReportGenerator(IProjectInfoRepository projectInfoRepository)
     {
+        _projectInfoRepository = projectInfoRepository;
+    }
 
-        private readonly IProjectInfoRepository _projectInfoRepository;
+    public ReportType Type => ReportType.ContainerReport;
 
-        public ReportType Type => ReportType.ContainerReport;
+    public async Task GenerateAsync(int projectId)
+    {
+        var project = await _projectInfoRepository.GetByIdAsync(projectId);
 
-        public ContainerReportGenerator(IProjectInfoRepository projectInfoRepository)
+        var templatePath = DirectoryHelper.GetReportsTemplatePath("Тара");
+        var fileName = "Тара___" + DateTime.Now.ToString("yy-MM-dd___HH-mm-ss") + ".xlsx";
+
+        var savePath = SettingsManager.GetReportDirectory();
+        var fullSavePath = Path.Combine(savePath, fileName);
+
+
+        using (var wb = new XLWorkbook(templatePath))
         {
-            _projectInfoRepository = projectInfoRepository;
+            var ws = wb.Worksheets.Add("MainSheet");
+
+            CreateTableHeader(ws);
+            FillWorksheet(ws, project);
+
+            ws.Columns().AdjustToContents();
+            ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+            Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
+            wb.SaveAs(fullSavePath);
         }
+    }
 
-        public async Task GenerateAsync(int projectId)
+    private void CreateTableHeader(IXLWorksheet ws)
+    {
+        var headerRange = ws.Range("A1:I1");
+
+        headerRange.Cell(1, 1).Value = "№ места";
+        headerRange.Cell(1, 2).Value = "№ места в ящике";
+        headerRange.Cell(1, 3).Value = "Наименование оборудования и комплектующих";
+        headerRange.Cell(1, 4).Value = "Серийный №";
+        headerRange.Cell(1, 5).Value = "Код KKS";
+        headerRange.Cell(1, 6).Value = "Количество";
+        headerRange.Cell(1, 7).Value = "Ширина рамы, мм";
+        headerRange.Cell(1, 8).Value = "Масса, кг";
+        headerRange.Cell(1, 9).Value = "Упаковка";
+
+
+        headerRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
+        headerRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Medium);
+
+        headerRange.Style.Font.SetBold();
+    }
+
+    private void FillWorksheet(IXLWorksheet ws, ProjectInfo project)
+    {
+        var tableRecords = project.Stands
+            .Select(stand => new StandRecord(
+                stand.NN.ToString(),
+                stand.SerialNumber,
+                stand.KKSCode,
+                "1", //потом поправить на конкретное число
+                stand.Width.ToString()));
+
+        var recordNumber = 1;
+
+        foreach (var record in tableRecords)
         {
-            var project = await _projectInfoRepository.GetByIdAsync(projectId);
+            //для отступа от шапки
+            var recordRow = recordNumber + 1;
 
-            var templatePath = DirectoryHelper.GetReportsTemplatePath("Тара");
-            var fileName = "Тара___" + DateTime.Now.ToString("yy-MM-dd___HH-mm-ss") + ".xlsx";
+            var place = "1." + recordNumber;
 
-            var savePath = SettingsManager.GetReportDirectory();
-            var fullSavePath = Path.Combine(savePath, fileName);
+            ws.Cell($"B{recordRow}").Value = place;
+            ws.Cell($"C{recordRow}").Value = record.Name;
+            ws.Cell($"D{recordRow}").Value = record.SerialNumber;
+            ws.Cell($"E{recordRow}").Value = record.CodeKKS;
+            ws.Cell($"F{recordRow}").Value = record.Quantity;
+            ws.Cell($"G{recordRow}").Value = record.FrameWidth;
 
-
-            using (var wb = new XLWorkbook(templatePath))
-            {
-                var ws = wb.Worksheets.Add("MainSheet");
-
-                CreateTableHeader(ws);
-                FillWorksheet(ws, project);
-
-                ws.Columns().AdjustToContents();
-                ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-
-                Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
-                wb.SaveAs(fullSavePath);
-            }
+            recordNumber++;
         }
+    }
 
+    public struct StandRecord
+    {
+        public string Name;
+        public string SerialNumber;
+        public string CodeKKS;
+        public string Quantity;
+        public string FrameWidth;
 
-
-        private void CreateTableHeader(IXLWorksheet ws)
+        public StandRecord(string name, string serialNumber, string codeKKS, string quantity, string frameWidth)
         {
-            var headerRange = ws.Range("A1:I1");
-
-            headerRange.Cell(1, 1).Value = "№ места";
-            headerRange.Cell(1, 2).Value = "№ места в ящике";
-            headerRange.Cell(1, 3).Value = "Наименование оборудования и комплектующих";
-            headerRange.Cell(1, 4).Value = "Серийный №";
-            headerRange.Cell(1, 5).Value = "Код KKS";
-            headerRange.Cell(1, 6).Value = "Количество";
-            headerRange.Cell(1, 7).Value = "Ширина рамы, мм";
-            headerRange.Cell(1, 8).Value = "Масса, кг";
-            headerRange.Cell(1, 9).Value = "Упаковка";
-
-
-            headerRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
-            headerRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Medium);
-
-            headerRange.Style.Font.SetBold();
-        }
-
-        private void FillWorksheet(IXLWorksheet ws, ProjectInfo project)
-        {
-
-            var tableRecords = project.Stands
-                .Select((stand) => new StandRecord(
-                    name: stand.NN.ToString(),
-                    serialNumber: stand.SerialNumber,
-                    codeKKS: stand.KKSCode,
-                    quantity: "1", //потом поправить на конкретное число
-                    frameWidth: stand.Width.ToString()));
-
-
-
-            int recordNumber = 1;
-
-            foreach (var record in tableRecords)
-            {
-                //для отступа от шапки
-                int recordRow = recordNumber + 1;
-
-                string place = "1." + recordNumber;
-
-                ws.Cell($"B{recordRow}").Value = place;
-                ws.Cell($"C{recordRow}").Value = record.Name;
-                ws.Cell($"D{recordRow}").Value = record.SerialNumber;
-                ws.Cell($"E{recordRow}").Value = record.CodeKKS;
-                ws.Cell($"F{recordRow}").Value = record.Quantity;
-                ws.Cell($"G{recordRow}").Value = record.FrameWidth;
-
-                recordNumber++;
-
-
-            }
-        }
-
-
-
-        public struct StandRecord
-        {
-            public string Name;
-            public string SerialNumber;
-            public string CodeKKS;
-            public string Quantity;
-            public string FrameWidth;
-
-            public StandRecord(string name, string serialNumber, string codeKKS, string quantity, string frameWidth)
-            {
-                Name = name;
-                SerialNumber = serialNumber;
-                CodeKKS = codeKKS;
-                Quantity = quantity;
-                FrameWidth = frameWidth;
-            }
+            Name = name;
+            SerialNumber = serialNumber;
+            CodeKKS = codeKKS;
+            Quantity = quantity;
+            FrameWidth = frameWidth;
         }
     }
 }

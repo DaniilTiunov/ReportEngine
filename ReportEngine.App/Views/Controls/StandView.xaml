@@ -275,7 +275,7 @@
                     <ListView.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Удалить"
-                                      Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}"/>
+                                      Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}" />
                         </ContextMenu>
                     </ListView.ContextMenu>
                 </ListView>
