@@ -119,7 +119,7 @@ public class ProjectViewModel : BaseViewModel
 
     public void OnSelectTreeSocketFromDialogCommandExecuted(object e)
     {
-        switch (CurrentMaterials.SelectedAramuteres)
+        switch (CurrentMaterials.SelectedSocketTypes)
         {
             case "Жаропрочные":
                 SelectEquipment<HeaterSocket>(name => CurrentProjectModel.SelectedStand.TreeSocket = name);

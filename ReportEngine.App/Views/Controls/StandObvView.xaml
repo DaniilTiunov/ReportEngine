@@ -8,7 +8,7 @@
     mc:Ignorable="d">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="900" />
+            <ColumnDefinition Width="950" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -49,6 +49,11 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
+
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Text="Кол-во" />
 
                     <!--  Тип обвязки (без изменений)  -->
                     <TextBlock
