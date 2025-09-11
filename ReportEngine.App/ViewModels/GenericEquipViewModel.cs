@@ -4,6 +4,7 @@ using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Display;
 using ReportEngine.App.Model;
+using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Repositories.Interfaces;
 
@@ -19,10 +20,8 @@ public class GenericEquipViewModel<T> : BaseViewModel
     private readonly IGenericBaseRepository<T, T>
         _genericEquipRepository; // Репозиторий для работы с данными оборудования
 
-    /// <summary>
-    ///     Инициализирует новый экземпляр класса GenericEquipViewModel.
-    /// </summary>
-    /// <param name="genericEquipRepository">Репозиторий для работы с данными оборудования.</param>
+    private readonly INotificationService _notificationService;
+
     public GenericEquipViewModel(IGenericBaseRepository<T, T> genericEquipRepository)
     {
         InitializeCommands(); // Инициализируем команды
@@ -30,15 +29,8 @@ public class GenericEquipViewModel<T> : BaseViewModel
     }
 
     public Action<T> SelectionHandler { get; set; }
-
-    /// <summary>
-    ///     Модель для управления коллекцией оборудования и выбранным элементом оборудования.
-    /// </summary>
     public GenericEquipModel<T, T> GenericEquipModel { get; set; } = new();
 
-    /// <summary>
-    ///     Инициализирует команды для ViewModel.
-    /// </summary>
     public void InitializeCommands()
     {
         // Инициализируем команду для отображения всего оборудования
@@ -52,26 +44,13 @@ public class GenericEquipViewModel<T> : BaseViewModel
     #region Команды для работы с оборудованием
 
     public ICommand AddNewEquipCommand { get; set; }
-
-    /// <summary>
-    ///     Команда для отображения всего оборудования.
-    /// </summary>
     public ICommand ShowAllEquipCommand { get; set; }
 
-    /// <summary>
-    ///     Определяет, может ли команда для отображения всего оборудования быть выполнена.
-    /// </summary>
-    /// <param name="e">Параметр команды.</param>
-    /// <returns>Всегда возвращает true, указывая, что команда всегда может быть выполнена.</returns>
     public bool CanAllCommandsExecute(object e)
     {
         return true;
     }
 
-    /// <summary>
-    ///     Выполняет команду для отображения всего оборудования.
-    /// </summary>
-    /// <param name="e">Параметр команды.</param>
     public async void OnShowAllEquipCommandExecuted(object e)
     {
         await LoadAllBaseEquipsAsync();
@@ -84,9 +63,6 @@ public class GenericEquipViewModel<T> : BaseViewModel
         if (GenericEquipModel.SelectedBaseEquip != null) SelectionHandler?.Invoke(GenericEquipModel.SelectedBaseEquip);
     }
 
-    /// <summary>
-    ///     Команда для добавления нового оборудования.
-    /// </summary>
     public ICommand SaveChangesEquipCommand { get; set; }
 
     public async void OnSaveChangesCommandExecuted(object e)
@@ -94,9 +70,6 @@ public class GenericEquipViewModel<T> : BaseViewModel
         await SaveChangesAsync();
     }
 
-    /// <summary>
-    ///     Команда для удаления оборудования.
-    /// </summary>
     public ICommand RemoveEquipCommand { get; set; }
 
     public async void OnRemoveEquipCommandExecuted(object e)
@@ -113,9 +86,6 @@ public class GenericEquipViewModel<T> : BaseViewModel
 
     #region Методы для работы с оборудованием
 
-    /// <summary>
-    ///     Метод для загрузки всего оборудования.
-    /// </summary>
     private async Task LoadAllBaseEquipsAsync()
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -135,9 +105,6 @@ public class GenericEquipViewModel<T> : BaseViewModel
         });
     }
 
-    /// <summary>
-    ///     Метод для добавления.
-    /// </summary>
     private async Task AddBaseEquipAsync()
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -148,9 +115,6 @@ public class GenericEquipViewModel<T> : BaseViewModel
         });
     }
 
-    /// <summary>
-    ///     Метод для сохранения изменений.
-    /// </summary>
     private async Task SaveChangesAsync()
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -172,9 +136,6 @@ public class GenericEquipViewModel<T> : BaseViewModel
         });
     }
 
-    /// <summary>
-    ///     Метод для удаления выбранного оборудования.
-    /// </summary>
     private async Task RemoveSelectedBaseEquipAsync()
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>

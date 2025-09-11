@@ -7,57 +7,14 @@
     Title="Исходное оборудование"
     Width="1100"
     Height="450"
+    FontFamily="Bahnschrift"
     mc:Ignorable="d">
-
-    <Window.Resources>
-        <!--  Стиль для DataGrid  -->
-        <Style TargetType="{x:Type DataGrid}">
-            <Setter Property="Background" Value="White" />
-            <Setter Property="BorderBrush" Value="#FFDDDDDD" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="RowBackground" Value="White" />
-            <Setter Property="AlternatingRowBackground" Value="#FFF5F5F5" />
-            <Setter Property="FontFamily" Value="Segoe UI" />
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="AutoGenerateColumns" Value="False" />
-            <Setter Property="CanUserAddRows" Value="True" />
-            <Setter Property="SelectionUnit" Value="FullRow" />
-            <Setter Property="HorizontalGridLinesBrush" Value="#FFDDDDDD" />
-            <Setter Property="VerticalGridLinesBrush" Value="#FFDDDDDD" />
-        </Style>
-
-        <!--  Стиль для заголовков столбцов  -->
-        <Style TargetType="{x:Type DataGridColumnHeader}">
-            <Setter Property="Background" Value="#FFECECEC" />
-            <Setter Property="Foreground" Value="Black" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="BorderBrush" Value="#FFDDDDDD" />
-            <Setter Property="BorderThickness" Value="0,0,1,1" />
-            <Setter Property="Padding" Value="8,0" />
-        </Style>
-
-        <!--  Стиль для ячеек  -->
-        <Style TargetType="{x:Type DataGridCell}">
-            <Setter Property="BorderBrush" Value="#FFDDDDDD" />
-            <Setter Property="BorderThickness" Value="0,0,1,1" />
-            <Setter Property="Padding" Value="8,0" />
-        </Style>
-
-        <!--  Стиль для строк  -->
-        <Style TargetType="{x:Type DataGridRow}">
-            <Setter Property="BorderBrush" Value="#FFDDDDDD" />
-            <Setter Property="BorderThickness" Value="0,0,0,1" />
-        </Style>
-    </Window.Resources>
 
     <Grid Margin="5,5,0,5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <!--  Панель кнопок  -->
             <RowDefinition Height="Auto" />
-            <!--  Разделитель  -->
             <RowDefinition Height="*" />
-            <!--  DataGrid  -->
         </Grid.RowDefinitions>
 
         <!--  Панель кнопок  -->

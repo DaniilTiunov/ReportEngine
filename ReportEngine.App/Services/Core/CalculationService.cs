@@ -1,7 +1,6 @@
 ﻿using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
-using ReportEngine.Domain.Entities.BaseEntities.Interface;
 
 namespace ReportEngine.App.Services.Core;
 
@@ -20,11 +19,14 @@ public class CalculationService : ICalculationService
     {
         await CalculateStandsCountAsync(project);
 
-        foreach (var stand in project.Stands) stand.StandSummCost = CalculateStandEquipCost(stand);
+        foreach (var stand in project.Stands)
+            stand.StandSummCost = CalculateStandEquipCost(stand);
 
-        project.Cost = project.Stands.Sum(s => s.StandSummCost);
+        project.Cost = project.Stands.Sum(stand => stand.StandSummCost);
+        project.HumanCost = project.Stands.Sum(ObvHumanCostCalculation);
 
         await _projectService.UpdateProjectAsync(project);
+        await _projectService.UpdateStandEntity(project);
 
         _notificationService.ShowInfo("Расчёт завершён");
     }
@@ -34,25 +36,33 @@ public class CalculationService : ICalculationService
         project.StandCount = project.Stands.Count;
     }
 
-    private decimal CalculateStandEquipCost(StandModel stand)
+    private decimal CalculateStandEquipCost(StandModel standModel)
     {
         decimal cost = 0;
 
-        // Дополнительное оборудование
-        foreach (var equip in stand.AdditionalEquipsInStand)
-            if (equip is IBaseEquip addEquip)
-                cost += (decimal)addEquip.Cost;
+        cost += standModel.AdditionalEquipsInStand
+            .SelectMany(e => e.Purposes)
+            .Sum(p => (decimal)(p.CostPerUnit ?? 0) * (decimal)(p.Quantity ?? 0));
 
-        // Дренажи
-        foreach (var drainage in stand.DrainagesInStand)
-            if (drainage is IBaseEquip drainEquip)
-                cost += (decimal)drainEquip.Cost;
+        cost += standModel.FramesInStand
+            .SelectMany(f => f.Components)
+            .Sum(c => c.Length == null
+                ? c.Count * (decimal)(c.CostComponent ?? 0)
+                : (decimal)(c.Length ?? 0) * (decimal)(c.CostComponent ?? 0));
 
-        // Электрические компоненты
-        foreach (var electrical in stand.ElectricalComponentsInStand)
-            if (electrical is IBaseEquip elecEquip)
-                cost += (decimal)elecEquip.Cost;
+        cost += standModel.ElectricalComponentsInStand
+            .SelectMany(e => e.Purposes)
+            .Sum(p => (decimal)(p.CostPerUnit ?? 0) * (decimal)(p.Quantity ?? 0));
+
+        cost += standModel.DrainagesInStand
+            .SelectMany(d => d.Purposes)
+            .Sum(p => (decimal)(p.CostPerUnit ?? 0) * (decimal)(p.Quantity ?? 0));
 
         return cost;
+    }
+
+    private float ObvHumanCostCalculation(StandModel stand)
+    {
+        return stand.ObvyazkiInStand.Sum(obv => obv.HumanCost);
     }
 }

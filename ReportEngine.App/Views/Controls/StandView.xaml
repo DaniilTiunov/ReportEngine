@@ -4,22 +4,23 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    FontSize="13"
     Background="{DynamicResource PrimaryColor}"
+    FontSize="14"
     mc:Ignorable="d">
 
     <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <!--  Форма редактирования  -->
-            <RowDefinition Height="Auto" />
-            <!--  Разделитель  -->
-            <RowDefinition Height="250" />
-            <!--  Список стендов  -->
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <!--  Форма редактирования стенда  -->
-        <Grid Grid.Row="0">
+        <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -32,7 +33,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="35" />
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
@@ -196,29 +197,38 @@
                 TextWrapping="Wrap" />
 
             <!--  Кнопки управления  -->
+            <StackPanel
+                Grid.Row="11"
+                Grid.Column="0"
+                Grid.ColumnSpan="4"
+                Margin="0,10,0,0"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal">
 
-            <Button
-                Grid.Row="10"
-                Grid.Column="3"
-                Width="100"
-                Margin="240,64,-140,21"
-                Command="{Binding ProjectCommandProvider.AddNewStandCommand}"
-                Content="Добавить" />
-            <Button
-                Grid.Row="10"
-                Grid.Column="3"
-                Margin="365,63,-265,21"
-                Command="{Binding ProjectCommandProvider.SaveStandCommand}"
-                Content="Сохранить" />
+                <Button
+                    Width="100"
+                    Margin="0,0,10,0"
+                    Command="{Binding ProjectCommandProvider.AddNewStandCommand}"
+                    Content="Добавить" />
+
+                <Button
+                    Width="100"
+                    Margin="0,0,10,0"
+                    Command="{Binding ProjectCommandProvider.SaveStandCommand}"
+                    Content="Сохранить" />
+
+                <Button
+                    Width="100"
+                    Margin="0,0,0,0"
+                    Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}"
+                    Content="Удалить" />
+            </StackPanel>
 
         </Grid>
-
-        <!--  Разделитель  -->
-        <Separator Grid.Row="1" Margin="0,10" />
-
         <!--  Список стендов  -->
         <Border
-            Grid.Row="2"
+            Grid.Column="1"
+            Margin="20,0,0,0"
             BorderBrush="#DDDDDD"
             BorderThickness="1">
             <Grid>
@@ -259,8 +269,28 @@
                                 Width="100"
                                 DisplayMemberBinding="{Binding Sensor}"
                                 Header="Тип датчика" />
+                            <GridViewColumn DisplayMemberBinding="{Binding StandSummCost}" Header="Стоимость стенда" />
                         </GridView>
                     </ListView.View>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="ContextMenu">
+                                <Setter.Value>
+                                    <ContextMenu
+                                        DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                        <MenuItem
+                                            Command="{Binding ProjectCommandProvider.EditStandCommand}"
+                                            CommandParameter="{Binding}"
+                                            Header="Создать копию" />
+                                        <MenuItem
+                                            Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}"
+                                            CommandParameter="{Binding}"
+                                            Header="Удалить" />
+                                    </ContextMenu>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
                 </ListView>
             </Grid>
         </Border>

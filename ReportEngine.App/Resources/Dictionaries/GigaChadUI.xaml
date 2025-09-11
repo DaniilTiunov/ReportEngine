@@ -6,8 +6,17 @@
     <SolidColorBrush x:Key="AccentColor" Color="#FF184461" />
     <SolidColorBrush x:Key="BorderColor" Color="#CCCCCC" />
     <SolidColorBrush x:Key="RowHoverColor" Color="#E0E0E0" />
-    <SolidColorBrush x:Key="SelectedRowBackground" Color="#FF153A52" />
+    <SolidColorBrush x:Key="SelectedRowBackground" Color="DarkGray" />
     <SolidColorBrush x:Key="SelectedRowForeground" Color="#FFFFFF" />
+
+
+    <Style TargetType="Window">
+        <Setter Property="FontFamily" Value="Bahnschrift" />
+    </Style>
+
+    <Style TargetType="DockPanel">
+        <Setter Property="Background" Value="{StaticResource PrimaryColor}" />
+    </Style>
 
     <!--  Стили для DataGrid  -->
     <Style TargetType="DataGrid">
@@ -51,6 +60,39 @@
         </Style.Triggers>
     </Style>
 
+    <!-- Стили для ListView -->
+    <Style TargetType="ListView">
+        <Setter Property="FontSize" Value="14" />
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{StaticResource SelectedRowBackground}" />
+                <Setter Property="Foreground" Value="{StaticResource SelectedRowForeground}" />
+                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource RowHoverColor}" />
+                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="ListViewItem">
+        <Setter Property="Foreground" Value="Black" />
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{StaticResource SelectedRowBackground}" />
+                <Setter Property="Foreground" Value="{StaticResource SelectedRowForeground}" />
+                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource RowHoverColor}" />
+                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="ComboBox" />
+
     <!--  Стили для Menu и MenuItem  -->
     <Style TargetType="Menu">
         <Setter Property="Background" Value="{StaticResource PrimaryColor}" />
@@ -78,11 +120,11 @@
 
     <!--  Стили для кнопок  -->
     <Style TargetType="Button">
-        <Setter Property="Background" Value="{StaticResource AccentColor}" />
+        <Setter Property="Background" Value="#3A3A3A" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="Padding" Value="6,2" />
         <Setter Property="FontSize" Value="13" />
-        <Setter Property="BorderBrush" Value="{x:Null}" />
+        <Setter Property="BorderBrush" Value="#3A3A3A" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
@@ -96,14 +138,14 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#FF1A3867" />
+                            <Setter Property="Background" Value="#505050" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter Property="Background" Value="#FF1A3867" />
+                            <Setter Property="Background" Value="#666666" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Background" Value="#CCCCCC" />
-                            <Setter Property="Foreground" Value="#888888" />
+                            <Setter Property="Background" Value="#2A2A2A" />
+                            <Setter Property="Foreground" Value="#777777" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

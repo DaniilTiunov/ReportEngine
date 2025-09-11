@@ -880,6 +880,9 @@ namespace ReportEngine.Domain.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<float?>("CostComponent")
+                        .HasColumnType("real");
+
                     b.Property<int>("Count")
                         .HasColumnType("integer");
 
@@ -1367,6 +1370,12 @@ namespace ReportEngine.Domain.Migrations
 
                     b.Property<int>("Devices")
                         .HasColumnType("integer");
+
+                    b.Property<byte[]>("ImageData")
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("ImageType")
+                        .HasColumnType("text");
 
                     b.Property<string>("KKSCode")
                         .HasColumnType("text");

@@ -9,6 +9,10 @@
     <SolidColorBrush x:Key="SelectedRowBackground" Color="#FF009688" />
     <SolidColorBrush x:Key="SelectedRowForeground" Color="#FFFFFF" />
 
+    <Style TargetType="DockPanel">
+        <Setter Property="Background" Value="{StaticResource PrimaryColor}" />
+    </Style>
+
     <!-- Глобально для всего текста -->
     <Style TargetType="TextBlock" BasedOn="{x:Null}">
         <Setter Property="Foreground" Value="White" />
@@ -21,12 +25,13 @@
 
     <!-- Принудительные глобальные стили -->
     <Style TargetType="UserControl" BasedOn="{x:Null}">
-        <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
+        <Setter Property="Background" Value="{StaticResource PrimaryColor}" />
         <Setter Property="Foreground" Value="White" />
     </Style>
 
     <Style TargetType="Window" BasedOn="{x:Null}">
-        <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
+        <Setter Property="WindowStyle" Value="None" />
+        <Setter Property="Background" Value="{StaticResource PrimaryColor}" />
         <Setter Property="Foreground" Value="White" />
     </Style>
 
@@ -43,6 +48,7 @@
 
 
     <Style TargetType="DataGrid" BasedOn="{x:Null}">
+        <Setter Property="HeadersVisibility" Value="Column" />
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="BorderThickness" Value="1" />
@@ -86,7 +92,9 @@
     <Style TargetType="Menu" BasedOn="{x:Null}">
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
         <Setter Property="FontSize" Value="14" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
     </Style>
+
 
     <Style TargetType="MenuItem" BasedOn="{x:Null}">
         <Setter Property="FontSize" Value="14" />
@@ -223,10 +231,16 @@
 
     <!-- ContextMenu -->
     <Style TargetType="ContextMenu" BasedOn="{x:Null}">
-        <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
-        <Setter Property="Foreground" Value="White" />
-        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+        <Setter Property="Background" Value="{StaticResource PrimaryColor}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
         <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+
+    <Style TargetType="Separator">
+        <Setter Property="Background" Value="{StaticResource BorderColor}" />
+        <Setter Property="Margin" Value="2,0" />
+        <Setter Property="Height" Value="1" />
     </Style>
 
     <!-- StackPanel -->
@@ -290,6 +304,12 @@
     <Style TargetType="ScrollViewer" BasedOn="{x:Null}">
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
         <Setter Property="Foreground" Value="White" />
+    </Style>
+
+    <Style TargetType="GroupBox">
+        <Setter Property="Background" Value="{StaticResource PrimaryColor}" />
+        <Setter Property="Foreground" Value="{StaticResource SelectedRowForeground}" />
+
     </Style>
 
 </ResourceDictionary>

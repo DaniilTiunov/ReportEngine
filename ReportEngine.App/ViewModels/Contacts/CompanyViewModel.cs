@@ -2,8 +2,8 @@
 using System.Windows.Input;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
-using ReportEngine.App.Display;
 using ReportEngine.App.Model.Contacts;
+using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 
@@ -12,12 +12,16 @@ namespace ReportEngine.App.ViewModels.Contacts;
 public class CompanyViewModel
 {
     private readonly IBaseRepository<Company> _companyRepository;
+    private readonly INotificationService _notificationService;
 
-    public CompanyViewModel(IBaseRepository<Company> companyRepository)
+    public CompanyViewModel(IBaseRepository<Company> companyRepository,
+        INotificationService notificationService)
     {
         InitializeCommands();
 
         _companyRepository = companyRepository;
+        _notificationService = notificationService;
+
 
         LoadAllCompaniesAsync();
     }
@@ -87,7 +91,7 @@ public class CompanyViewModel
             if (CurrentCompany.SelectedCompany != null)
             {
                 await _companyRepository.UpdateAsync(CurrentCompany.SelectedCompany);
-                MessageBoxHelper.ShowInfo("Изменения сохранены");
+                _notificationService.ShowInfo("Изменения сохранены");
             }
         });
     }

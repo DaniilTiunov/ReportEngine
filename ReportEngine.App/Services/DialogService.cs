@@ -62,4 +62,25 @@ public class DialogService : IDialogService
             return null;
         }
     }
+
+    public IBaseEquip? ShowAllSortamentsDialog()
+    {
+        try
+        {
+            IBaseEquip? selected = null;
+            var viewModel = _serviceProvider.GetRequiredService<AllSortamentsViewModel>();
+
+            viewModel.SelectionHandler = item => { selected = item; };
+
+            var window = new AllSortamentsView(viewModel);
+            window.ShowDialog();
+
+            return selected;
+        }
+        catch (Exception ex)
+        {
+            MessageBoxHelper.ShowError(ex.Message);
+            return null;
+        }
+    }
 }

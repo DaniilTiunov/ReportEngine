@@ -1,6 +1,6 @@
-﻿using ReportEngine.App.ViewModels;
+﻿using System.Collections.ObjectModel;
+using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
-using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Model;
 
@@ -14,5 +14,4 @@ public class AllSortamentsModel : BaseViewModel
         EquipGroups[groupName] = new ObservableCollection<IBaseEquip>(items.Cast<IBaseEquip>());
         OnPropertyChanged(nameof(EquipGroups));
     }
-
 }

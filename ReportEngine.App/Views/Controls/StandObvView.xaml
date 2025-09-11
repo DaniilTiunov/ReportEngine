@@ -207,6 +207,7 @@
                         Grid.Column="1"
                         Margin="0,0,5,0"
                         ItemsSource="{Binding CurrentProjectModel.SelectedStand.SensorType}"
+                        SelectedIndex="1"
                         SelectedItem="{Binding CurrentProjectModel.SelectedStand.FirstSensorType, Mode=TwoWay}" />
 
                     <TextBlock
@@ -281,7 +282,7 @@
                         Grid.Row="0"
                         Grid.Column="1"
                         Margin="0,0,5,0"
-                        ItemsSource="{Binding SensorTypes}"
+                        ItemsSource="{Binding CurrentProjectModel.SelectedStand.SensorType}"
                         SelectedItem="{Binding CurrentProjectModel.SelectedStand.SecondSensorType}" />
 
                     <TextBlock
@@ -356,7 +357,7 @@
                         Grid.Row="0"
                         Grid.Column="1"
                         Margin="0,0,5,0"
-                        ItemsSource="{Binding SensorType}"
+                        ItemsSource="{Binding CurrentProjectModel.SelectedStand.SensorType}"
                         SelectedItem="{Binding CurrentProjectModel.SelectedStand.ThirdSensorType}" />
 
                     <TextBlock

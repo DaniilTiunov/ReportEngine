@@ -7,49 +7,43 @@
     mc:Ignorable="av">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*" /> <!-- Справочник рам, дренажей и дополнительные секции -->
-            <ColumnDefinition Width="1*" /> <!-- Добавленные к стенду рамы и дренажи -->
-            <ColumnDefinition Width="300" /> <!-- Список стендов -->
+            <ColumnDefinition Width="2*" />
+            <!--  Справочник рам, дренажей и дополнительные секции  -->
+            <ColumnDefinition Width="1*" />
+            <!--  Добавленные к стенду рамы и дренажи  -->
+            <ColumnDefinition Width="300" />
+            <!--  Список стендов  -->
         </Grid.ColumnDefinitions>
 
-        <ScrollViewer Grid.Column="0"
-                      Margin="10"
-                      VerticalScrollBarVisibility="Auto"
-                      HorizontalScrollBarVisibility="Disabled"
-                      CanContentScroll="True">
+        <ScrollViewer
+            Grid.Column="0"
+            Margin="10"
+            CanContentScroll="True"
+            HorizontalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility="Auto">
             <StackPanel>
-                <!-- Доступные рамы -->
+                <!--  Доступные рамы  -->
                 <GroupBox Header="Доступные рамы">
                     <StackPanel>
-                        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding AllAvailableFrames}"
-                                  SelectedItem="{Binding CurrentStandModel.SelectedFrame}">
+                        <DataGrid
+                            AutoGenerateColumns="False"
+                            ItemsSource="{Binding AllAvailableFrames}"
+                            SelectedItem="{Binding CurrentStandModel.SelectedFrame}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay}" Header="Название" />
                                 <DataGridTextColumn Binding="{Binding FrameType, Mode=TwoWay}" Header="Тип" />
                                 <DataGridTextColumn Binding="{Binding Depth, Mode=TwoWay}" Header="Глубина" />
                                 <DataGridTextColumn Binding="{Binding Width, Mode=TwoWay}" Header="Ширина" />
                             </DataGrid.Columns>
-                            <DataGrid.RowDetailsTemplate>
-                                <DataTemplate>
-                                    <DataGrid
-                                        ItemsSource="{Binding CurrentStandModel.FormedFrameComponents.DisplayedComponents}"
-                                        AutoGenerateColumns="True" HeadersVisibility="Column">
-                                        <DataGrid.Columns>
-                                            <DataGridTextColumn Binding="{Binding Component.Name}"
-                                                                Header="Наименование" />
-                                            <DataGridTextColumn Binding="{Binding Count}" Header="ШТ" />
-                                            <DataGridTextColumn Binding="{Binding Length}" Header="М" />
-                                        </DataGrid.Columns>
-                                    </DataGrid>
-                                </DataTemplate>
-                            </DataGrid.RowDetailsTemplate>
                         </DataGrid>
-                        <Button Margin="5" Command="{Binding ProjectCommandProvider.AddFrameToStandCommand}"
-                                Content="Добавить раму" />
+                        <Button
+                            Margin="5"
+                            Command="{Binding ProjectCommandProvider.AddFrameToStandCommand}"
+                            Content="Добавить раму" />
                     </StackPanel>
                 </GroupBox>
 
-                <!-- Дренажи -->
+                <!--  Дренажи  -->
                 <GroupBox>
                     <GroupBox.Header>
                         <TextBlock>
@@ -61,16 +55,19 @@
                     <TabControl>
                         <TabItem Header="Готовые дренажи">
                             <StackPanel>
-                                <DataGrid ItemsSource="{Binding AllAvailableDrainages}"
-                                          SelectedItem="{Binding CurrentStandModel.SelectedDrainage}"
-                                          AutoGenerateColumns="False">
+                                <DataGrid
+                                    AutoGenerateColumns="False"
+                                    ItemsSource="{Binding AllAvailableDrainages}"
+                                    SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding Name}" Header="Название" />
                                     </DataGrid.Columns>
                                     <DataGrid.RowDetailsTemplate>
                                         <DataTemplate>
-                                            <DataGrid ItemsSource="{Binding Purposes}" AutoGenerateColumns="False"
-                                                      HeadersVisibility="Column">
+                                            <DataGrid
+                                                AutoGenerateColumns="False"
+                                                HeadersVisibility="Column"
+                                                ItemsSource="{Binding Purposes}">
                                                 <DataGrid.Columns>
                                                     <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
                                                     <DataGridTextColumn Binding="{Binding Material}" Header="Материал" />
@@ -80,32 +77,50 @@
                                         </DataTemplate>
                                     </DataGrid.RowDetailsTemplate>
                                 </DataGrid>
-                                <Button Margin="5" Command="{Binding ProjectCommandProvider.AddDrainageToStandCommand}"
-                                        Content="Добавить дренаж" />
+                                <Button
+                                    Margin="5"
+                                    Command="{Binding ProjectCommandProvider.AddDrainageToStandCommand}"
+                                    Content="Добавить дренаж" />
                             </StackPanel>
                         </TabItem>
                         <TabItem Header="Собрать дренаж">
                             <StackPanel>
                                 <TextBox Margin="5" Text="{Binding CurrentStandModel.NewDrainage.Name, Mode=TwoWay}" />
-                                <DataGrid Margin="5" AutoGenerateColumns="False" CanUserAddRows="True"
-                                          ItemsSource="{Binding CurrentStandModel.NewDrainage.Purposes}">
+                                <DataGrid
+                                    Margin="5"
+                                    AutoGenerateColumns="False"
+                                    CanUserAddRows="True"
+                                    ItemsSource="{Binding CurrentStandModel.NewDrainage.Purposes}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}"
                                                             Header="Назначение" />
                                         <DataGridTextColumn Binding="{Binding Material, Mode=TwoWay}" Header="Материал" />
                                         <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay}"
                                                             Header="Длина (м)" />
+                                        <DataGridTemplateColumn Header="Действия">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button
+                                                        Margin="2,0,2,0"
+                                                        Padding="5,0,5,0"
+                                                        Command="{Binding DataContext.ProjectCommandProvider.OpenAllSortamentsDialogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"
+                                                        Content="Выбрать" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
-                                <Button Margin="5"
-                                        Command="{Binding ProjectCommandProvider.AddCustomDrainageToStandCommand}"
-                                        Content="Добавить собранный дренаж" />
+                                <Button
+                                    Margin="5"
+                                    Command="{Binding ProjectCommandProvider.AddCustomDrainageToStandCommand}"
+                                    Content="Добавить собранный дренаж" />
                             </StackPanel>
                         </TabItem>
                     </TabControl>
                 </GroupBox>
 
-                <!-- Дополнительные комплектующие по стенду -->
+                <!--  Дополнительные комплектующие по стенду  -->
                 <GroupBox>
                     <GroupBox.Header>
                         <TextBlock>
@@ -116,20 +131,36 @@
                     </GroupBox.Header>
                     <StackPanel>
                         <!-- <TextBox Margin="5" Text="{Binding CurrentStandModel.NewAdditionalEquip.Name, Mode=TwoWay}" /> -->
-                        <DataGrid Margin="5" AutoGenerateColumns="False" CanUserAddRows="True"
-                                  ItemsSource="{Binding CurrentStandModel.NewAdditionalEquip.Purposes}">
+                        <DataGrid
+                            Margin="5"
+                            AutoGenerateColumns="False"
+                            CanUserAddRows="True"
+                            ItemsSource="{Binding CurrentStandModel.NewAdditionalEquip.Purposes}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Название" />
                                 <DataGridTextColumn Binding="{Binding Material, Mode=TwoWay}" Header="Доп.комплекующее" />
                                 <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay}" Header="Кол-во(шт/м)" />
+                                <DataGridTemplateColumn Header="Выбрать">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button
+                                                Margin="2,0,2,0"
+                                                Padding="5,0,5,0"
+                                                Command="{Binding DataContext.ProjectCommandProvider.OpenAllSortamentsDialogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                Content="Выбрать" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <Button Margin="5"
-                                Command="{Binding ProjectCommandProvider.AddCustomAdditionalEquipToStandCommand}"
-                                Content="Добавить комплектующие" />
+                        <Button
+                            Margin="5"
+                            Command="{Binding ProjectCommandProvider.AddCustomAdditionalEquipToStandCommand}"
+                            Content="Добавить комплектующие" />
                     </StackPanel>
                 </GroupBox>
-                <!-- Электрические компоненты по стенду -->
+                <!--  Электрические компоненты по стенду  -->
                 <GroupBox>
                     <GroupBox.Header>
                         <TextBlock>
@@ -140,69 +171,107 @@
                     </GroupBox.Header>
                     <StackPanel>
                         <!-- <TextBox Margin="5"
-                                     Text="{Binding CurrentStandModel.NewElectricalComponent.Name, Mode=TwoWay}" /> -->
-                        <DataGrid Margin="5" AutoGenerateColumns="False" CanUserAddRows="True"
-                                  ItemsSource="{Binding CurrentStandModel.NewElectricalComponent.Purposes}">
+                                     Text="{Binding CurrentStandModel.NewElectricalComponent.Name, Mode=TwoWay}" />-->
+                        <DataGrid
+                            Margin="5"
+                            AutoGenerateColumns="False"
+                            CanUserAddRows="True"
+                            ItemsSource="{Binding CurrentStandModel.NewElectricalComponent.Purposes}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Назначение" />
                                 <DataGridTextColumn Binding="{Binding Material, Mode=TwoWay}" Header="Доп.комплекующее" />
                                 <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay}" Header="Кол-во(шт/м)" />
+                                <DataGridTemplateColumn Header="Выбрать">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button
+                                                Margin="2,0,2,0"
+                                                Padding="5,0,5,0"
+                                                Command="{Binding DataContext.ProjectCommandProvider.OpenAllSortamentsDialogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                Content="Выбрать" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <Button Margin="5"
-                                Command="{Binding ProjectCommandProvider.AddCustomElectricalComponentToStandCommand}"
-                                Content="Добавить компоненты" />
+                        <Button
+                            Margin="5"
+                            Command="{Binding ProjectCommandProvider.AddCustomElectricalComponentToStandCommand}"
+                            Content="Добавить компоненты" />
                     </StackPanel>
                 </GroupBox>
             </StackPanel>
         </ScrollViewer>
-        <!-- Добавленные к стенду рамы и дренажи -->
+        <!--  Добавленные к стенду рамы и дренажи  -->
         <StackPanel Grid.Column="1" Margin="10">
             <GroupBox Header="Рамы в стенде">
-                <ListView DisplayMemberPath="Name"
-                          ItemsSource="{Binding CurrentProjectModel.SelectedStand.FramesInStand}"
-                          SelectedItem="{Binding CurrentStandModel.SelectedFrame}" />
+                <ListView
+                    DisplayMemberPath="Name"
+                    ItemsSource="{Binding CurrentProjectModel.SelectedStand.FramesInStand}"
+                    SelectedItem="{Binding CurrentStandModel.SelectedFrame}" />
             </GroupBox>
             <GroupBox Header="Дренажи в стенде">
-                <ListView DisplayMemberPath="Name"
-                          ItemsSource="{Binding CurrentProjectModel.SelectedStand.DrainagesInStand}"
-                          SelectedItem="{Binding CurrentStandModel.SelectedDrainage}" />
+                <ListView
+                    DisplayMemberPath="Name"
+                    ItemsSource="{Binding CurrentProjectModel.SelectedStand.DrainagesInStand}"
+                    SelectedItem="{Binding CurrentStandModel.SelectedDrainage}" />
             </GroupBox>
             <GroupBox Header="Доп. комплектующие">
-                <ListView DisplayMemberPath="Name"
-                          ItemsSource="{Binding CurrentProjectModel.SelectedStand.AdditionalEquipsInStand}"
-                          SelectedItem="{Binding CurrentStandModel.SelectedDrainage}" />
+                <ListView
+                    DisplayMemberPath="Name"
+                    ItemsSource="{Binding CurrentProjectModel.SelectedStand.AdditionalEquipsInStand}"
+                    SelectedItem="{Binding CurrentStandModel.SelectedDrainage}" />
             </GroupBox>
             <GroupBox Header="Электрические компоненты">
-                <ListView DisplayMemberPath="Name"
-                          ItemsSource="{Binding CurrentProjectModel.SelectedStand.ElectricalComponentsInStand}"
-                          SelectedItem="{Binding CurrentStandModel.SelectedDrainage}" />
+                <ListView
+                    DisplayMemberPath="Name"
+                    ItemsSource="{Binding CurrentProjectModel.SelectedStand.ElectricalComponentsInStand}"
+                    SelectedItem="{Binding CurrentStandModel.SelectedDrainage}" />
             </GroupBox>
         </StackPanel>
 
-        <!-- Список стендов -->
-        <Border Grid.Column="2" BorderBrush="#DDDDDD" BorderThickness="1" Margin="0,0,0,0">
+        <!--  Список стендов  -->
+        <Border
+            Grid.Column="2"
+            Margin="0,0,0,0"
+            BorderBrush="#DDDDDD"
+            BorderThickness="1">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Margin="5" FontWeight="Bold" Text="Список стендов проекта" />
-                <ListView Grid.Row="1" ItemsSource="{Binding CurrentProjectModel.Stands}"
-                          SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}">
+                <TextBlock
+                    Grid.Row="0"
+                    Margin="5"
+                    FontWeight="Bold"
+                    Text="Список стендов проекта" />
+                <ListView
+                    Grid.Row="1"
+                    ItemsSource="{Binding CurrentProjectModel.Stands}"
+                    SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}">
                     <ListView.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Header="Создать копию на основе прототипа"
-                                      Command="{Binding EditStandCommand}" />
+                            <MenuItem Command="{Binding EditStandCommand}" Header="Создать копию на основе прототипа" />
                             <Separator />
                             <MenuItem Header="Удалить" />
                         </ContextMenu>
                     </ListView.ContextMenu>
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Width="40" Header="№" DisplayMemberBinding="{Binding Number}" />
-                            <GridViewColumn Width="120" Header="KKS" DisplayMemberBinding="{Binding KKSCode}" />
-                            <GridViewColumn Width="200" Header="Обозначение" DisplayMemberBinding="{Binding Design}" />
+                            <GridViewColumn
+                                Width="40"
+                                DisplayMemberBinding="{Binding Number}"
+                                Header="№" />
+                            <GridViewColumn
+                                Width="120"
+                                DisplayMemberBinding="{Binding KKSCode}"
+                                Header="KKS" />
+                            <GridViewColumn
+                                Width="200"
+                                DisplayMemberBinding="{Binding Design}"
+                                Header="Обозначение" />
                         </GridView>
                     </ListView.View>
                 </ListView>

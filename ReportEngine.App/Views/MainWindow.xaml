@@ -5,28 +5,103 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Стенды КИП"
-    Width="1920"
-    Height="1080"
-    Icon="/Resources/Icons/estimate_cost_icon_213382.ico"
+    FontFamily="Bahnschrift"
+    ResizeMode="CanResize"
     WindowStartupLocation="CenterScreen"
-    WindowState="Maximized"
+    WindowState="Normal"
+    WindowStyle="None"
     mc:Ignorable="d">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="0"
+            CornerRadius="0"
+            GlassFrameThickness="0" />
+    </WindowChrome.WindowChrome>
+
+
     <Window.Resources>
         <ResourceDictionary>
             <Image x:Key="refresh-button.png" Source="/Resources/Images/refresh-button.png" />
         </ResourceDictionary>
     </Window.Resources>
+
     <DockPanel>
+        <Border
+            x:Name="MainWindowControlTitle"
+            Height="34"
+            Background="#2D2D30"
+            DockPanel.Dock="Top"
+            MouseLeftButtonDown="Window_MouseLeftButtonDown">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel
+                    Margin="10,0,0,0"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <Image
+                        Width="18"
+                        Height="18"
+                        Margin="0,0,8,0"
+                        Source="/Resources/Icons/estimate_cost_icon_213382.ico" />
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        Foreground="White"
+                        Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
+                </StackPanel>
+
+                <StackPanel
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <Button
+                        x:Name="MinimizeButton"
+                        Width="40"
+                        Height="30"
+                        Click="MinimizeButton_Click"
+                        FontSize="16"
+                        ToolTip="Свернуть">
+                        ─
+                    </Button>
+                    <Button
+                        x:Name="MaxRestoreButton"
+                        Width="40"
+                        Height="30"
+                        Margin="10,0,0,0"
+                        Click="MaxRestoreButton_Click"
+                        FontSize="16"
+                        ToolTip="Развернуть">
+                        ▢
+                    </Button>
+                    <Button
+                        x:Name="CloseButton"
+                        Width="40"
+                        Height="30"
+                        Margin="10,0,10,0"
+                        Click="CloseButton_Click"
+                        FontSize="16"
+                        ToolTip="Закрыть">
+                        ✕
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
         <Menu
             Height="25"
             DockPanel.Dock="Top"
+            FontFamily="Bahnschrift"
             FontSize="14">
             <MenuItem Header="Проект">
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenTreeViewCommand}"
                           Header="Создать новый проект" />
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenMainWindowCommand}" Header="На главный экран" />
                 <Separator />
-                <MenuItem Click="OpenSettingsWindow" Header="Настройки" />
+                <MenuItem Command="{Binding MainWindowCommandProvider.OpenSettingsWindow}" Header="Настройки" />
                 <Separator />
                 <MenuItem Command="{Binding MainWindowCommandProvider.CloseAppCommand}" Header="Выход" />
             </MenuItem>
@@ -110,7 +185,8 @@
                 <Separator />
                 <MenuItem Command="{Binding GenericEquipCommandProvider.OpenConteinersCommand}" Header="Тара" />
                 <Separator />
-                <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllSortamentsCommand}" Header="Весь сортамент" />
+                <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllSortamentsCommand}"
+                          Header="Весь сортамент" />
             </MenuItem>
             <MenuItem Header="Формирование комплектующих">
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenFormedFramesCommand}"
@@ -132,38 +208,41 @@
                 <MenuItem Click="CheckForUpdates" Header="Проверить обновления" />
             </MenuItem>
         </Menu>
-        <StatusBar Height="30" DockPanel.Dock="Bottom">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+
+        <StatusBar
+            Height="30"
+            DockPanel.Dock="Bottom"
+            FontFamily="Bahnschrift">
+
+            <StatusBarItem>
                 <TextBlock
-                    Grid.Column="0"
+                    Margin="5,0,0,0"
                     FontSize="14"
                     Text="Текущий пользователь:" />
-                <TextBlock
-                    Grid.Column="2"
-                    Margin="1317,0,0,0"
-                    HorizontalAlignment="Left"
-                    FontSize="14"
-                    Text="Статус подключения к серверу:" />
-                <TextBlock
-                    Grid.Column="2"
-                    Width="191"
-                    Margin="1527,0,0,1"
-                    HorizontalAlignment="Left"
-                    FontSize="14"
-                    Text="{Binding MainWindowModel.ConnectionStatusMessage}" />
-            </Grid>
-            <Button
-                Height="24"
-                HorizontalAlignment="Left"
-                BorderThickness="0"
-                Command="{Binding MainWindowCommandProvider.ChekDbConnectionCommand}"
-                Content="{StaticResource refresh-button.png}" />
+            </StatusBarItem>
+
+            <StatusBarItem HorizontalAlignment="Stretch">
+                <Separator Visibility="Hidden" />
+            </StatusBarItem>
+
+            <StatusBarItem HorizontalAlignment="Right">
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock FontSize="14" Text="Статус подключения к серверу:" />
+                    <TextBlock
+                        Width="191"
+                        Margin="5,0,0,0"
+                        FontSize="14"
+                        Text="{Binding MainWindowModel.ConnectionStatusMessage}" />
+                    <Button
+                        Height="24"
+                        Margin="5,0,0,0"
+                        BorderThickness="0"
+                        Command="{Binding MainWindowCommandProvider.ChekDbConnectionCommand}"
+                        Content="{StaticResource refresh-button.png}" />
+                </StackPanel>
+            </StatusBarItem>
         </StatusBar>
+
         <ContentControl x:Name="MainContentControl" Margin="10,0,10,10">
             <DataGrid
                 x:Name="MainDataGrid"
@@ -171,7 +250,6 @@
                 AutoGenerateColumns="False"
                 ItemsSource="{Binding MainWindowModel.AllProjects}"
                 SelectedItem="{Binding MainWindowModel.SelectedProject}"
-                Background="{DynamicResource PrimaryColor}"
                 SelectionUnit="FullRow">
                 <DataGrid.Columns>
                     <DataGridTextColumn

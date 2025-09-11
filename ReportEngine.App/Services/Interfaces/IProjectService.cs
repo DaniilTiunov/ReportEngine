@@ -8,6 +8,7 @@ public interface IProjectService
     Task CreateProjectAsync(ProjectModel projectModel);
     Task UpdateProjectAsync(ProjectModel projectModel);
     Task AddStandToProjectAsync(int projectId, StandModel standModel);
-
+    Task UpdateStandEntity(ProjectModel standModel);
     Task<ProjectModel> LoadProjectInfoAsync(int projectId);
+    Task DeleteStandAsync(int projectId, int standId);
 }

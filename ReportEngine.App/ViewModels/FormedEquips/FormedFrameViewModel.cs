@@ -1,8 +1,8 @@
 ﻿using System.Windows.Input;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
-using ReportEngine.App.Display;
 using ReportEngine.App.Model.FormedEquipsModels;
+using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.Frame;
@@ -15,18 +15,21 @@ public class FormedFrameViewModel : BaseViewModel
     private readonly IFrameRepository _formedFrameRepository;
     private readonly IGenericBaseRepository<FrameDetail, FrameDetail> _frameDetailRepository;
     private readonly IGenericBaseRepository<FrameRoll, FrameRoll> _frameRollRepository;
+    private readonly INotificationService _notificationService;
     private readonly IGenericBaseRepository<PillarEqiup, PillarEqiup> _pillarEqiupRepository;
 
     public FormedFrameViewModel(
         IFrameRepository formedFrameRepository,
         IGenericBaseRepository<FrameDetail, FrameDetail> frameDetailRepository,
         IGenericBaseRepository<FrameRoll, FrameRoll> frameRollRepository,
-        IGenericBaseRepository<PillarEqiup, PillarEqiup> pillarEqiupRepository)
+        IGenericBaseRepository<PillarEqiup, PillarEqiup> pillarEqiupRepository,
+        INotificationService notificationService)
     {
         _frameDetailRepository = frameDetailRepository;
         _frameRollRepository = frameRollRepository;
         _pillarEqiupRepository = pillarEqiupRepository;
         _formedFrameRepository = formedFrameRepository;
+        _notificationService = notificationService;
 
         LoadDetailsData();
         InitializeCommands();
@@ -122,7 +125,7 @@ public class FormedFrameViewModel : BaseViewModel
 
         FormedFrameModel.SelectedFrame = addedFrame;
 
-        MessageBoxHelper.ShowInfo($"{addedFrame.Name} успешно создана!");
+        _notificationService.ShowInfo($"{addedFrame.Name} успешно создана!");
     }
 
     private async Task SaveChangesAsync()
@@ -130,7 +133,7 @@ public class FormedFrameViewModel : BaseViewModel
         if (FormedFrameModel.SelectedFrame != null)
             await _formedFrameRepository.UpdateAsync(FormedFrameModel.SelectedFrame);
 
-        MessageBoxHelper.ShowInfo("Изменения сохранены");
+        _notificationService.ShowInfo("Изменения сохранены");
     }
 
     private async Task DeleteFrameAsync()
@@ -142,7 +145,7 @@ public class FormedFrameViewModel : BaseViewModel
             FormedFrameModel.AllFrames.Remove(selectedFrame);
 
 
-            MessageBoxHelper.ShowInfo($"{selectedFrame.Name} успешно удалена!");
+            _notificationService.ShowInfo($"{selectedFrame.Name} успешно удалена!");
         }
     }
 
@@ -151,6 +154,7 @@ public class FormedFrameViewModel : BaseViewModel
         var frame = FormedFrameModel.SelectedFrame;
         var component = FormedFrameModel.SelectedComponentForAdd;
         var length = float.Parse(FormedFrameModel.ComponentLength);
+
 
         if (frame == null || component == null) return;
 

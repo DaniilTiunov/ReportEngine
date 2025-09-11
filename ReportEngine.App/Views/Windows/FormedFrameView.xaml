@@ -5,7 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Создание и редактирование рам"
-    FontSize="13"
+    FontFamily="Bahnschrift"
+    FontSize="14"
     WindowState="Maximized"
     mc:Ignorable="d">
     <Grid>
@@ -77,6 +78,8 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
+                                <DataGridTextColumn Binding="{Binding CostComponent, StringFormat={}{0:N2}}"
+                                                    Header="Цена за ед." />
                             </DataGrid.Columns>
                         </DataGrid>
                     </GroupBox>
