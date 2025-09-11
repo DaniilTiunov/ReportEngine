@@ -272,25 +272,12 @@
                             <GridViewColumn DisplayMemberBinding="{Binding StandSummCost}" Header="Стоимость стенда" />
                         </GridView>
                     </ListView.View>
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="ContextMenu">
-                                <Setter.Value>
-                                    <ContextMenu
-                                        DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
-                                        <MenuItem
-                                            Command="{Binding ProjectCommandProvider.EditStandCommand}"
-                                            CommandParameter="{Binding}"
-                                            Header="Создать копию" />
-                                        <MenuItem
-                                            Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}"
-                                            CommandParameter="{Binding}"
-                                            Header="Удалить" />
-                                    </ContextMenu>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </ListView.ItemContainerStyle>
+                    <ListView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Удалить"
+                                      Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}"/>
+                        </ContextMenu>
+                    </ListView.ContextMenu>
                 </ListView>
             </Grid>
         </Border>

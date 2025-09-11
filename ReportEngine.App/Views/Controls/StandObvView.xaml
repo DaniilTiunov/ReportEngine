@@ -4,18 +4,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    FontSize="12"
+    FontSize="14"
     mc:Ignorable="d">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="900" />
             <ColumnDefinition Width="*" />
-            <!--  Основная форма  -->
-            <ColumnDefinition Width="350" />
-            <!--  Список стендов  -->
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <!--  Основное содержимое  -->
         </Grid.RowDefinitions>
 
         <!--  Основная форма (слева)  -->
@@ -412,7 +409,7 @@
                 BorderBrush="#DDDDDD"
                 BorderThickness="1"
                 ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}"
-                SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazka}">
+                SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn
@@ -449,6 +446,12 @@
                             Header="Трудозатраты" />
                     </GridView>
                 </ListView.View>
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Удалить обвязку из стенда"
+                                  Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}"/>
+                    </ContextMenu>
+                </ListView.ContextMenu>
             </ListView>
 
             <!--  Кнопки управления  -->
