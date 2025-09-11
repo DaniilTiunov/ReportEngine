@@ -256,14 +256,20 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(CalculateProjectAsync);
     }
 
-    public void OnCreateSummaryReportCommandExecuted(object p)
+    public async void OnCreateSummaryReportCommandExecuted(object p)
     {
-        ExceptionHelper.SafeExecute(CreateSummaryReportAsync);
+        await ExceptionHelper.SafeExecuteAsync(async ()=>
+        {
+            await CreateReportAsync(ReportType.ComponentsListReport, "комплектующих");
+        });
     }
 
     public async void OnCreateMarksReportCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(CreateMarkReportAsync);
+        await ExceptionHelper.SafeExecuteAsync(async ()=>
+        {
+            await CreateReportAsync(ReportType.MarksReport, "маркировки");
+        });
     }
 
     public void ResetProject()
@@ -486,23 +492,12 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(CurrentProjectModel.Stands));
         OnPropertyChanged(nameof(CurrentProjectModel.Cost));
     }
-
-    private async void CreateSummaryReportAsync()
+    
+    private async Task CreateReportAsync(ReportType typeGenerator, string reportName)
     {
-        await _reportService.GenerateReportAsync(ReportType.ComponentsListReport, CurrentProjectModel.CurrentProjectId);
+        await _reportService.GenerateReportAsync(typeGenerator, CurrentProjectModel.CurrentProjectId);
 
-        if (_notificationService.ShowConfirmation("Ведомость комплектующих создана!\nОткрыть папку с отчётами?"))
-        {
-            var reportDir = SettingsManager.GetReportDirectory();
-            Process.Start("explorer.exe", reportDir);
-        }
-    }
-
-    private async Task CreateMarkReportAsync()
-    {
-        await _reportService.GenerateReportAsync(ReportType.MarksReport, CurrentProjectModel.CurrentProjectId);
-
-        if (_notificationService.ShowConfirmation("Ведомость маркировки создана!\nОткрыть папку с отчётами?"))
+        if (_notificationService.ShowConfirmation($"Ведомость {reportName} создана!\nОткрыть папку с отчётами?"))
         {
             var reportDir = SettingsManager.GetReportDirectory();
             Process.Start("explorer.exe", reportDir);
