@@ -1,4 +1,4 @@
-﻿using System.Windows.Input;
+using System.Windows.Input;
 
 namespace ReportEngine.App.Commands;
 
@@ -24,6 +24,7 @@ public class ProjectCommandProvider
     public ICommand DeleteSelectedStandCommand { get; set; }
     public ICommand CreateMarkReportCommand { get; set; }
     public ICommand RemoveObvFromStandCommand { get; set; }
+
     public ICommand CreateContainerReportCommand { get; set; }
 
     public ICommand Bind(ICommand command, Action<object> execute, Func<object, bool> canExecute = null)
