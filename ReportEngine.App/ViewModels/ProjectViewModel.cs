@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Windows.Data;
+﻿using ControlzEx.Standard;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model;
@@ -16,6 +14,9 @@ using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Windows.Data;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -288,9 +289,11 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnCreateContainerReportCommandExecuted(object p)
     {
+
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await CreateReportAsync(ReportType.ContainerReport, "тара");
+            
         });
     }
     

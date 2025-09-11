@@ -1,16 +1,21 @@
-﻿using System.Diagnostics;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
+using System.Diagnostics;
+
+
 
 namespace ReportEngine.Export.ExcelWork.Services;
 
+
+
 public class ContainerReportGenerator : IReportGenerator
 {
+
     private readonly IProjectInfoRepository _projectInfoRepository;
 
     public ContainerReportGenerator(IProjectInfoRepository projectInfoRepository)
@@ -22,32 +27,35 @@ public class ContainerReportGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId)
     {
+
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
 
-        var templatePath = DirectoryHelper.GetReportsTemplatePath("Тара");
-        var fileName = "Тара___" + DateTime.Now.ToString("yy-MM-dd___HH-mm-ss") + ".xlsx";
-
-        var savePath = SettingsManager.GetReportDirectory();
-        var fullSavePath = Path.Combine(savePath, fileName);
-
-
-        using (var wb = new XLWorkbook(templatePath))
+        using (var wb = new XLWorkbook())
         {
             var ws = wb.Worksheets.Add("MainSheet");
 
-            CreateTableHeader(ws);
-            FillWorksheet(ws, project);
+            CreateWorksheetTableHeader(ws);
+            FillWorksheetTable(ws, project);
 
             ws.Columns().AdjustToContents();
             ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
 
+
+            var savePath = SettingsManager.GetReportDirectory();
+
+            var fileName = "Тара___" + DateTime.Now.ToString("yy-MM-dd___HH-mm-ss") + ".xlsx";
+            var fullSavePath = Path.Combine(savePath, fileName);
+
             Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
             wb.SaveAs(fullSavePath);
         }
+
+
+
     }
 
-    private void CreateTableHeader(IXLWorksheet ws)
+    private void CreateWorksheetTableHeader(IXLWorksheet ws)
     {
         var headerRange = ws.Range("A1:I1");
 
@@ -68,9 +76,9 @@ public class ContainerReportGenerator : IReportGenerator
         headerRange.Style.Font.SetBold();
     }
 
-    private void FillWorksheet(IXLWorksheet ws, ProjectInfo project)
+    private void FillWorksheetTable(IXLWorksheet ws, ProjectInfo project)
     {
-        
+
         var tableRecords = project.Stands
            .Select(stand => new
            {
@@ -81,7 +89,7 @@ public class ContainerReportGenerator : IReportGenerator
                FrameWidth = stand.Width.ToString()
            });
 
-        
+
 
 
         var recordNumber = 1;
