@@ -15,125 +15,125 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Remove="Resources\Icons\estimate_cost_icon_213382.ico"/>
-        <None Remove="Resources\Icons\install_line_icon_236048.ico"/>
-        <None Remove="Resources\Images\logo.png"/>
-        <None Remove="Resources\Images\Obvyazka\1.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\10.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\11.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\12.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\13.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\14.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\15.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\16.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\17.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\18.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\19.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\2.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\20.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\21.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\22.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\23.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\24.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\25.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\26.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\27.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\28.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\29.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\3.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\30.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\31.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\32.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\33.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\34.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\35.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\36.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\37.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\38.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\39.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\4.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\40.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\41.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\42.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\43.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\44.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\45.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\46.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\47.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\48.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\49.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\5.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\50.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\51.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\52.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\53.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\54.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\55.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\56.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\57.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\58.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\59.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\6.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\60.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\61.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\62.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\63.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\64.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\65.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\66.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\67.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\68.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\69.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\7.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\70.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\71.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\73.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\8.jpg"/>
-        <None Remove="Resources\Images\Obvyazka\9.jpg"/>
-        <None Remove="Resources\Images\refresh-button.png"/>
+        <None Remove="Resources\Icons\estimate_cost_icon_213382.ico" />
+        <None Remove="Resources\Icons\install_line_icon_236048.ico" />
+        <None Remove="Resources\Images\logo.png" />
+        <None Remove="Resources\Images\Obvyazka\1.jpg" />
+        <None Remove="Resources\Images\Obvyazka\10.jpg" />
+        <None Remove="Resources\Images\Obvyazka\11.jpg" />
+        <None Remove="Resources\Images\Obvyazka\12.jpg" />
+        <None Remove="Resources\Images\Obvyazka\13.jpg" />
+        <None Remove="Resources\Images\Obvyazka\14.jpg" />
+        <None Remove="Resources\Images\Obvyazka\15.jpg" />
+        <None Remove="Resources\Images\Obvyazka\16.jpg" />
+        <None Remove="Resources\Images\Obvyazka\17.jpg" />
+        <None Remove="Resources\Images\Obvyazka\18.jpg" />
+        <None Remove="Resources\Images\Obvyazka\19.jpg" />
+        <None Remove="Resources\Images\Obvyazka\2.jpg" />
+        <None Remove="Resources\Images\Obvyazka\20.jpg" />
+        <None Remove="Resources\Images\Obvyazka\21.jpg" />
+        <None Remove="Resources\Images\Obvyazka\22.jpg" />
+        <None Remove="Resources\Images\Obvyazka\23.jpg" />
+        <None Remove="Resources\Images\Obvyazka\24.jpg" />
+        <None Remove="Resources\Images\Obvyazka\25.jpg" />
+        <None Remove="Resources\Images\Obvyazka\26.jpg" />
+        <None Remove="Resources\Images\Obvyazka\27.jpg" />
+        <None Remove="Resources\Images\Obvyazka\28.jpg" />
+        <None Remove="Resources\Images\Obvyazka\29.jpg" />
+        <None Remove="Resources\Images\Obvyazka\3.jpg" />
+        <None Remove="Resources\Images\Obvyazka\30.jpg" />
+        <None Remove="Resources\Images\Obvyazka\31.jpg" />
+        <None Remove="Resources\Images\Obvyazka\32.jpg" />
+        <None Remove="Resources\Images\Obvyazka\33.jpg" />
+        <None Remove="Resources\Images\Obvyazka\34.jpg" />
+        <None Remove="Resources\Images\Obvyazka\35.jpg" />
+        <None Remove="Resources\Images\Obvyazka\36.jpg" />
+        <None Remove="Resources\Images\Obvyazka\37.jpg" />
+        <None Remove="Resources\Images\Obvyazka\38.jpg" />
+        <None Remove="Resources\Images\Obvyazka\39.jpg" />
+        <None Remove="Resources\Images\Obvyazka\4.jpg" />
+        <None Remove="Resources\Images\Obvyazka\40.jpg" />
+        <None Remove="Resources\Images\Obvyazka\41.jpg" />
+        <None Remove="Resources\Images\Obvyazka\42.jpg" />
+        <None Remove="Resources\Images\Obvyazka\43.jpg" />
+        <None Remove="Resources\Images\Obvyazka\44.jpg" />
+        <None Remove="Resources\Images\Obvyazka\45.jpg" />
+        <None Remove="Resources\Images\Obvyazka\46.jpg" />
+        <None Remove="Resources\Images\Obvyazka\47.jpg" />
+        <None Remove="Resources\Images\Obvyazka\48.jpg" />
+        <None Remove="Resources\Images\Obvyazka\49.jpg" />
+        <None Remove="Resources\Images\Obvyazka\5.jpg" />
+        <None Remove="Resources\Images\Obvyazka\50.jpg" />
+        <None Remove="Resources\Images\Obvyazka\51.jpg" />
+        <None Remove="Resources\Images\Obvyazka\52.jpg" />
+        <None Remove="Resources\Images\Obvyazka\53.jpg" />
+        <None Remove="Resources\Images\Obvyazka\54.jpg" />
+        <None Remove="Resources\Images\Obvyazka\55.jpg" />
+        <None Remove="Resources\Images\Obvyazka\56.jpg" />
+        <None Remove="Resources\Images\Obvyazka\57.jpg" />
+        <None Remove="Resources\Images\Obvyazka\58.jpg" />
+        <None Remove="Resources\Images\Obvyazka\59.jpg" />
+        <None Remove="Resources\Images\Obvyazka\6.jpg" />
+        <None Remove="Resources\Images\Obvyazka\60.jpg" />
+        <None Remove="Resources\Images\Obvyazka\61.jpg" />
+        <None Remove="Resources\Images\Obvyazka\62.jpg" />
+        <None Remove="Resources\Images\Obvyazka\63.jpg" />
+        <None Remove="Resources\Images\Obvyazka\64.jpg" />
+        <None Remove="Resources\Images\Obvyazka\65.jpg" />
+        <None Remove="Resources\Images\Obvyazka\66.jpg" />
+        <None Remove="Resources\Images\Obvyazka\67.jpg" />
+        <None Remove="Resources\Images\Obvyazka\68.jpg" />
+        <None Remove="Resources\Images\Obvyazka\69.jpg" />
+        <None Remove="Resources\Images\Obvyazka\7.jpg" />
+        <None Remove="Resources\Images\Obvyazka\70.jpg" />
+        <None Remove="Resources\Images\Obvyazka\71.jpg" />
+        <None Remove="Resources\Images\Obvyazka\73.jpg" />
+        <None Remove="Resources\Images\Obvyazka\8.jpg" />
+        <None Remove="Resources\Images\Obvyazka\9.jpg" />
+        <None Remove="Resources\Images\refresh-button.png" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="15.0.1"/>
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1"/>
-        <PackageReference Include="Dirkster.AvalonDock" Version="4.72.1"/>
-        <PackageReference Include="MahApps.Metro" Version="2.4.10"/>
-        <PackageReference Include="MaterialDesignColors" Version="5.2.1"/>
-        <PackageReference Include="MaterialDesignExtensions" Version="3.3.0"/>
-        <PackageReference Include="MaterialDesignThemes" Version="5.2.1"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.8"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.8">
+        <PackageReference Include="AutoMapper" Version="15.0.1" />
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+        <PackageReference Include="Dirkster.AvalonDock" Version="4.72.1" />
+        <PackageReference Include="MahApps.Metro" Version="2.4.10" />
+        <PackageReference Include="MaterialDesignColors" Version="5.2.1" />
+        <PackageReference Include="MaterialDesignExtensions" Version="3.3.0" />
+        <PackageReference Include="MaterialDesignThemes" Version="5.2.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.8"/>
-        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.8"/>
-        <PackageReference Include="Serilog" Version="4.3.0"/>
-        <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0"/>
-        <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.2"/>
-        <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0"/>
-        <PackageReference Include="Serilog.Sinks.File" Version="7.0.0"/>
-        <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1"/>
-        <PackageReference Include="WPF-UI" Version="4.0.3"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.9" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.9" />
+        <PackageReference Include="Serilog" Version="4.3.0" />
+        <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />
+        <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.2" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+        <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+        <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
+        <PackageReference Include="WPF-UI" Version="4.0.3" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ReportEngine.Domain\ReportEngine.Domain.csproj"/>
-        <ProjectReference Include="..\ReportEngine.Export\ReportEngine.Export.csproj"/>
-        <ProjectReference Include="..\ReportEngine.Shared\ReportEngine.Shared.csproj"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.8"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.8"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.8"/>
+        <ProjectReference Include="..\ReportEngine.Domain\ReportEngine.Domain.csproj" />
+        <ProjectReference Include="..\ReportEngine.Export\ReportEngine.Export.csproj" />
+        <ProjectReference Include="..\ReportEngine.Shared\ReportEngine.Shared.csproj" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.9" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.9" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.9" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="logs\"/>
-        <Folder Include="..\Resources\Icons\"/>
-        <Folder Include="Отчёты\"/>
+        <Folder Include="logs\" />
+        <Folder Include="..\Resources\Icons\" />
+        <Folder Include="Отчёты\" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="..\.editorconfig" Link=".editorconfig"/>
+        <None Include="..\.editorconfig" Link=".editorconfig" />
     </ItemGroup>
 
     <ItemGroup>
@@ -149,7 +149,7 @@
         <Resource Include="Resources\Images\logo.png">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Resource>
-        <Content Include="Resources\Icons\estimate_cost_icon_213382_prev.ico"/>
+        <Content Include="Resources\Icons\estimate_cost_icon_213382_prev.ico" />
         <Content Include="Resources\Images\Obvyazka\1.jpg">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
