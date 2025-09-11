@@ -276,7 +276,8 @@
                         <Style TargetType="ListViewItem">
                             <Setter Property="ContextMenu">
                                 <Setter.Value>
-                                    <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                    <ContextMenu
+                                        DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
                                         <MenuItem
                                             Command="{Binding ProjectCommandProvider.EditStandCommand}"
                                             CommandParameter="{Binding}"

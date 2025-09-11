@@ -8,7 +8,7 @@
     <SolidColorBrush x:Key="RowHoverColor" Color="#E0E0E0" />
     <SolidColorBrush x:Key="SelectedRowBackground" Color="DarkGray" />
     <SolidColorBrush x:Key="SelectedRowForeground" Color="#FFFFFF" />
-    
+
 
     <Style TargetType="Window">
         <Setter Property="FontFamily" Value="Bahnschrift" />
@@ -59,42 +59,40 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
+
     <!-- Стили для ListView -->
     <Style TargetType="ListView">
-        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontSize" Value="14" />
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="{StaticResource SelectedRowBackground}"/>
-                <Setter Property="Foreground" Value="{StaticResource SelectedRowForeground}"/>
-                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
-                </Trigger>
+                <Setter Property="Background" Value="{StaticResource SelectedRowBackground}" />
+                <Setter Property="Foreground" Value="{StaticResource SelectedRowForeground}" />
+                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
+            </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource RowHoverColor}"/>
-                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
-                </Trigger>
-        </Style.Triggers>
-    </Style>
-    
-    <Style TargetType="ListViewItem">
-        <Setter Property="Foreground" Value="Black"/>
-        <Style.Triggers>
-            <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="{StaticResource SelectedRowBackground}"/>
-                <Setter Property="Foreground" Value="{StaticResource SelectedRowForeground}"/>
-                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
-                </Trigger>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource RowHoverColor}"/>
-                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
-                </Trigger>
+                <Setter Property="Background" Value="{StaticResource RowHoverColor}" />
+                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
+            </Trigger>
         </Style.Triggers>
     </Style>
 
-    <Style TargetType="ComboBox">
-        
+    <Style TargetType="ListViewItem">
+        <Setter Property="Foreground" Value="Black" />
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{StaticResource SelectedRowBackground}" />
+                <Setter Property="Foreground" Value="{StaticResource SelectedRowForeground}" />
+                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource RowHoverColor}" />
+                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
-    
+
+    <Style TargetType="ComboBox" />
+
     <!--  Стили для Menu и MenuItem  -->
     <Style TargetType="Menu">
         <Setter Property="Background" Value="{StaticResource PrimaryColor}" />

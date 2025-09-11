@@ -25,7 +25,6 @@ public class ProjectCommandProvider
     public ICommand CreateMarkReportCommand { get; set; }
 
 
-
     public ICommand Bind(ICommand command, Action<object> execute, Func<object, bool> canExecute = null)
     {
         return new RelayCommand(execute, canExecute);

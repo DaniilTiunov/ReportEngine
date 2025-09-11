@@ -99,8 +99,8 @@ public class ProjectViewModel : BaseViewModel
         ProjectCommandProvider.OpenAllSortamentsDialogCommand =
             new RelayCommand(OnOpenAllSortamentsDialogExecuted, CanAllCommandsExecute);
         ProjectCommandProvider.CreateMarkReportCommand =
-         new RelayCommand(OnCreateMarksReportCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.DeleteSelectedStandCommand = 
+            new RelayCommand(OnCreateMarksReportCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.DeleteSelectedStandCommand =
             new RelayCommand(OnDeleteSelectedStandFromProjectExecuted, CanAllCommandsExecute);
     }
 
@@ -388,7 +388,8 @@ public class ProjectViewModel : BaseViewModel
 
     private async Task DeleteStandFromProject()
     {
-        await _projectService.DeleteStandAsync(CurrentProjectModel.CurrentProjectId, CurrentProjectModel.SelectedStand.Id);
+        await _projectService.DeleteStandAsync(CurrentProjectModel.CurrentProjectId,
+            CurrentProjectModel.SelectedStand.Id);
         CurrentProjectModel.Stands.Remove(CurrentProjectModel.SelectedStand);
         //OnPropertyChanged(nameof(CurrentProjectModel.Stands));
     }

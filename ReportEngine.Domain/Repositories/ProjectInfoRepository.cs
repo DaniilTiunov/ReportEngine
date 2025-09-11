@@ -64,13 +64,13 @@ public class ProjectInfoRepository : IProjectInfoRepository
     {
         if (standId == null)
             return;
-        
+
         var existingStand = await _context.Set<Stand>()
             .FirstOrDefaultAsync(s => s.Id == standId);
-        
+
         if (existingStand != null)
             _context.Set<Stand>().Remove(existingStand);
-        
+
         await _context.SaveChangesAsync();
     }
 
