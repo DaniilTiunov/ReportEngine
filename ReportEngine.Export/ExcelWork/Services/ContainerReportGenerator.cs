@@ -70,13 +70,19 @@ public class ContainerReportGenerator : IReportGenerator
 
     private void FillWorksheet(IXLWorksheet ws, ProjectInfo project)
     {
+        
         var tableRecords = project.Stands
-            .Select(stand => new StandRecord(
-                stand.NN.ToString(),
-                stand.SerialNumber,
-                stand.KKSCode,
-                "1", //потом поправить на конкретное число
-                stand.Width.ToString()));
+           .Select(stand => new
+           {
+               Name = stand.NN.ToString(),
+               SerialNumber = stand.SerialNumber,
+               CodeKKS = stand.KKSCode,
+               Quantity = "1",//потом поправить на конкретное число
+               FrameWidth = stand.Width.ToString()
+           });
+
+        
+
 
         var recordNumber = 1;
 
@@ -98,21 +104,5 @@ public class ContainerReportGenerator : IReportGenerator
         }
     }
 
-    public struct StandRecord
-    {
-        public string Name;
-        public string SerialNumber;
-        public string CodeKKS;
-        public string Quantity;
-        public string FrameWidth;
 
-        public StandRecord(string name, string serialNumber, string codeKKS, string quantity, string frameWidth)
-        {
-            Name = name;
-            SerialNumber = serialNumber;
-            CodeKKS = codeKKS;
-            Quantity = quantity;
-            FrameWidth = frameWidth;
-        }
-    }
 }

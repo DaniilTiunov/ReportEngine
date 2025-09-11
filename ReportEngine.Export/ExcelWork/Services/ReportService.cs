@@ -1,4 +1,5 @@
-﻿using ReportEngine.Export.ExcelWork.Enums;
+﻿using System.Linq;
+using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 
 namespace ReportEngine.Export.ExcelWork.Services;
@@ -18,6 +19,7 @@ public class ReportService : IReportService
         if (generator == null)
             throw new InvalidOperationException($"Генератор {generatorType} не зарегистрирован");
 
-        await generator.GenerateAsync(projectId);
+        
+        await Task.Run(async () => await generator.GenerateAsync(projectId));
     }
 }
