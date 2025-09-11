@@ -120,10 +120,25 @@ public class ProjectInfoRepository : IProjectInfoRepository
 
     public async Task AddStandObvyazkaAsync(int standId, ObvyazkaInStand standObvyazka)
     {
-        var stand = await _context.Stands.Include(s => s.ObvyazkiInStand).FirstOrDefaultAsync(s => s.Id == standId);
-        if (stand == null) throw new ArgumentException($"Стенд с ID: {standId} не найден.");
+        var stand = await _context.Stands.Include(s => s.ObvyazkiInStand)
+                                         .FirstOrDefaultAsync(s => s.Id == standId);
+        
+        if (stand == null) 
+            throw new ArgumentException($"Стенд с ID: {standId} не найден.");
 
         stand.ObvyazkiInStand.Add(standObvyazka);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteObvFromStandAsync(int standId, int obvyazkaInStandId)
+    {
+        var entity = await _context.Set<ObvyazkaInStand>()
+            .FirstOrDefaultAsync(o => o.StandId == standId && o.Id == obvyazkaInStandId);
+
+        if (entity == null)
+            return;
+
+        _context.Set<ObvyazkaInStand>().Remove(entity);
         await _context.SaveChangesAsync();
     }
 

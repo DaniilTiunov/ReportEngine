@@ -105,6 +105,8 @@ public class ProjectViewModel : BaseViewModel
             new RelayCommand(OnCreateMarksReportCommandExecuted, CanAllCommandsExecute);
         ProjectCommandProvider.DeleteSelectedStandCommand =
             new RelayCommand(OnDeleteSelectedStandFromProjectExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.RemoveObvFromStandCommand = 
+            new RelayCommand(OnRemoveObvCommandExecuted, CanAllCommandsExecute);
     }
 
     public void InitializeGenericCommands()
@@ -224,6 +226,11 @@ public class ProjectViewModel : BaseViewModel
     public async void OnSaveObvCommandExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(AddObvToStandAsync);
+    }
+    
+    public async void OnRemoveObvCommandExecuted(object e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(DeleteObvFromStandAsync);
     }
 
     public async void OnAddCustomDrainageToStandExecuted(object p)
@@ -351,6 +358,38 @@ public class ProjectViewModel : BaseViewModel
         CurrentProjectModel.SelectedStand.ObvyazkiInStand.Add(entity);
     }
 
+    private async Task DeleteObvFromStandAsync()
+    {
+        var stand = CurrentProjectModel?.SelectedStand;
+        var selectedObv = stand?.SelectedObvyazkaInStand;
+
+        if (stand == null || selectedObv == null)
+        {
+            _notificationService.ShowInfo("Обвязка или стенд не выбран");
+            return;
+        }
+        
+        var standId = stand.Id;
+        var obvId = selectedObv.Id;
+
+        try
+        {
+            await _projectService.DeleteObvFromStandAsync(standId, obvId);
+        }
+        catch (Exception ex)
+        {
+            _notificationService.ShowError($"Не удалось удалить обвязку: {ex.Message}");
+            return;
+        }
+        var toRemove = stand.ObvyazkiInStand?.FirstOrDefault(o => o.Id == obvId);
+        if (toRemove != null)
+            stand.ObvyazkiInStand.Remove(toRemove);
+
+        stand.SelectedObvyazkaInStand = null;
+
+        _notificationService.ShowInfo($"Обвязка с Id {obvId} удалена из стенда {standId}");
+    }
+
     private async Task SaveProjectChangesAsync()
     {
         if (CurrentProjectModel.CurrentProjectId == 0)
@@ -388,6 +427,7 @@ public class ProjectViewModel : BaseViewModel
             FirstSensorType = CurrentStandModel.FirstSensorType,
             ProjectId = CurrentProjectModel.CurrentProjectId
         };
+        
         var newStandEntity = StandDataConverter.ConvertToStandEntity(newStandModel);
         var addedStandEntity =
             await _projectRepository.AddStandAsync(CurrentProjectModel.CurrentProjectId, newStandEntity);
