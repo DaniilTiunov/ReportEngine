@@ -53,7 +53,14 @@
                     <TextBlock
                         Grid.Row="0"
                         Grid.Column="2"
-                        Text="Кол-во" />
+                        Margin="3,0,0,0"
+                        Text="Кол-во:" />
+
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="3"
+                        Margin="0,0,0,3"
+                        Text="Выбрать обвязку" />
 
                     <!--  Тип обвязки (без изменений)  -->
                     <TextBlock
@@ -63,26 +70,27 @@
                     <TextBox
                         Grid.Row="0"
                         Grid.Column="1"
-                        Margin="0,0,5,0"
+                        Margin="0,0,5,5"
                         Text="{Binding CurrentProjectModel.SelectedStand.ObvyazkaName}" />
                     <Button
                         Grid.Row="0"
-                        Grid.Column="3"
+                        Grid.Column="4"
                         Width="24"
+                        Margin="0,0,0,5"
                         Command="{Binding ProjectCommandProvider.SelectObvFromDialogCommand}"
                         Content="..." />
                     <TextBlock
                         Grid.Row="0"
                         Grid.RowSpan="2"
                         Grid.Column="5"
-                        Margin="7,0,51,20"
+                        Margin="0,0,0,0"
                         Text="NN:" />
                     <TextBox
                         Grid.Row="0"
                         Grid.RowSpan="2"
                         Grid.Column="5"
                         Width="80"
-                        Margin="32,0,-32,20"
+                        Margin="35,-2,35,35"
                         Text="{Binding CurrentProjectModel.SelectedStand.NN}" />
 
                     <!--  Материал линии  -->
@@ -93,26 +101,27 @@
                     <TextBox
                         Grid.Row="1"
                         Grid.Column="1"
-                        Margin="0,0,5,0"
+                        Margin="0,0,5,5"
                         Text="{Binding CurrentProjectModel.SelectedStand.MaterialLine}" />
                     <TextBox
                         Grid.Row="1"
                         Grid.Column="2"
                         Width="50"
-                        Margin="0,0,5,0"
+                        Margin="0,0,5,5"
                         Text="{Binding CurrentProjectModel.SelectedStand.MaterialLineCount}"
                         ToolTip="Количество материала линии" />
                     <ComboBox
                         Grid.Row="1"
                         Grid.Column="3"
                         Width="120"
-                        Margin="0,0,5,0"
+                        Margin="0,0,0,5"
                         ItemsSource="{Binding CurrentMaterials.MaterialLineTypes}"
                         SelectedItem="{Binding CurrentMaterials.SelectedMaterialLine, Mode=TwoWay}" />
                     <Button
                         Grid.Row="1"
                         Grid.Column="4"
                         Width="24"
+                        Margin="5,0,5,5"
                         Command="{Binding ProjectCommandProvider.SelectMaterialLineDialogCommand}"
                         Content="..." />
 
@@ -124,26 +133,27 @@
                     <TextBox
                         Grid.Row="2"
                         Grid.Column="1"
-                        Margin="0,0,5,0"
+                        Margin="0,0,5,5"
                         Text="{Binding CurrentProjectModel.SelectedStand.Armature}" />
                     <TextBox
                         Grid.Row="2"
                         Grid.Column="2"
                         Width="50"
-                        Margin="0,0,5,0"
+                        Margin="0,0,5,5"
                         Text="{Binding CurrentProjectModel.SelectedStand.ArmatureCount}"
                         ToolTip="Количество арматуры" />
                     <ComboBox
                         Grid.Row="2"
                         Grid.Column="3"
                         Width="120"
-                        Margin="0,0,5,0"
+                        Margin="0,0,0,5"
                         ItemsSource="{Binding CurrentMaterials.AramuteresTypes}"
                         SelectedItem="{Binding CurrentMaterials.SelectedAramuteres, Mode=TwoWay}" />
                     <Button
                         Grid.Row="2"
                         Grid.Column="4"
                         Width="24"
+                        Margin="5,0,5,5"
                         Command="{Binding ProjectCommandProvider.SelectArmatureDialogCommand}"
                         Content="..." />
 
@@ -155,26 +165,27 @@
                     <TextBox
                         Grid.Row="3"
                         Grid.Column="1"
-                        Margin="0,0,5,0"
+                        Margin="0,0,5,5"
                         Text="{Binding CurrentProjectModel.SelectedStand.TreeSocket}" />
                     <TextBox
                         Grid.Row="3"
                         Grid.Column="2"
                         Width="50"
-                        Margin="0,0,5,0"
+                        Margin="0,0,5,5"
                         Text="{Binding CurrentProjectModel.SelectedStand.TreeSocketMaterialCount}"
                         ToolTip="Количество тройников" />
                     <ComboBox
                         Grid.Row="3"
                         Grid.Column="3"
                         Width="120"
-                        Margin="0,0,5,0"
+                        Margin="0,0,0,5"
                         ItemsSource="{Binding CurrentMaterials.TreeSocketTypes}"
                         SelectedItem="{Binding CurrentMaterials.SelectedSocketTypes, Mode=TwoWay}" />
                     <Button
                         Grid.Row="3"
                         Grid.Column="4"
                         Width="24"
+                        Margin="5,0,5,5"
                         Command="{Binding ProjectCommandProvider.SelectTreeSocketDialogCommand}"
                         Content="..." />
 
@@ -199,7 +210,7 @@
                         Grid.Row="4"
                         Grid.Column="3"
                         Width="120"
-                        Margin="0,0,5,0"
+                        Margin="0,0,0,0"
                         ItemsSource="{Binding CurrentMaterials.KMCHTypes}"
                         SelectedItem="{Binding CurrentMaterials.SelectedKMCHType, Mode=TwoWay}" />
                     <Button
@@ -237,7 +248,7 @@
                     <ComboBox
                         Grid.Row="0"
                         Grid.Column="1"
-                        Margin="0,0,5,0"
+                        Margin="0,0,550,5"
                         ItemsSource="{Binding CurrentProjectModel.SelectedStand.SensorType}"
                         SelectedIndex="1"
                         SelectedItem="{Binding CurrentProjectModel.SelectedStand.FirstSensorType, Mode=TwoWay}" />
@@ -249,7 +260,7 @@
                     <TextBox
                         Grid.Row="1"
                         Grid.Column="1"
-                        Margin="0,0,5,0"
+                        Margin="0,0,5,5"
                         Text="{Binding CurrentProjectModel.SelectedStand.FirstSensorKKSCounter}" />
 
                     <TextBlock
@@ -259,7 +270,7 @@
                     <TextBox
                         Grid.Row="2"
                         Grid.Column="1"
-                        Margin="0,0,5,0"
+                        Margin="0,0,5,5"
                         Text="{Binding CurrentProjectModel.SelectedStand.FirstSensorMarkPlus}" />
 
                     <TextBlock
@@ -269,7 +280,7 @@
                     <TextBox
                         Grid.Row="3"
                         Grid.Column="1"
-                        Margin="0,0,5,0"
+                        Margin="0,0,5,5"
                         Text="{Binding CurrentProjectModel.SelectedStand.FirstSensorMarkMinus}" />
 
                     <TextBlock
@@ -313,7 +324,7 @@
                     <ComboBox
                         Grid.Row="0"
                         Grid.Column="1"
-                        Margin="0,0,5,0"
+                        Margin="0,0,550,5"
                         ItemsSource="{Binding CurrentProjectModel.SelectedStand.SensorType}"
                         SelectedItem="{Binding CurrentProjectModel.SelectedStand.SecondSensorType}" />
 
@@ -324,7 +335,7 @@
                     <TextBox
                         Grid.Row="1"
                         Grid.Column="1"
-                        Margin="0,0,5,0"
+                        Margin="0,0,5,5"
                         Text="{Binding CurrentProjectModel.SelectedStand.SecondSensorKKS}" />
 
                     <TextBlock
@@ -334,7 +345,7 @@
                     <TextBox
                         Grid.Row="2"
                         Grid.Column="1"
-                        Margin="0,0,5,0"
+                        Margin="0,0,5,5"
                         Text="{Binding CurrentProjectModel.SelectedStand.SecondSensorMarkPlus}" />
 
                     <TextBlock
@@ -344,7 +355,7 @@
                     <TextBox
                         Grid.Row="3"
                         Grid.Column="1"
-                        Margin="0,0,5,0"
+                        Margin="0,0,5,5"
                         Text="{Binding CurrentProjectModel.SelectedStand.SecondSensorMarkMinus}" />
 
                     <TextBlock
@@ -388,7 +399,7 @@
                     <ComboBox
                         Grid.Row="0"
                         Grid.Column="1"
-                        Margin="0,0,5,0"
+                        Margin="0,0,550,5"
                         ItemsSource="{Binding CurrentProjectModel.SelectedStand.SensorType}"
                         SelectedItem="{Binding CurrentProjectModel.SelectedStand.ThirdSensorType}" />
 
@@ -399,7 +410,7 @@
                     <TextBox
                         Grid.Row="1"
                         Grid.Column="1"
-                        Margin="0,0,5,0"
+                        Margin="0,0,5,5"
                         Text="{Binding CurrentProjectModel.SelectedStand.ThirdSensorKKS}" />
 
                     <TextBlock
@@ -409,7 +420,7 @@
                     <TextBox
                         Grid.Row="2"
                         Grid.Column="1"
-                        Margin="0,0,5,0"
+                        Margin="0,0,5,5"
                         Text="{Binding CurrentProjectModel.SelectedStand.ThirdSensorMarkPlus}" />
 
                     <TextBlock
@@ -419,7 +430,7 @@
                     <TextBox
                         Grid.Row="3"
                         Grid.Column="1"
-                        Margin="0,0,5,0"
+                        Margin="0,0,5,5"
                         Text="{Binding CurrentProjectModel.SelectedStand.ThirdSensorMarkMinus}" />
 
                     <TextBlock
