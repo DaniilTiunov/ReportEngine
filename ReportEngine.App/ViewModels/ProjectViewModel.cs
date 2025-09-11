@@ -72,6 +72,9 @@ public class ProjectViewModel : BaseViewModel
     }
 
     // TODO: Сделать тут рефакторинг (дженерик метод или фабрику)
+
+    #region Инициализация команд
+
     public void InitializeCommands()
     {
         ProjectCommandProvider.CreateNewCardCommand =
@@ -117,6 +120,8 @@ public class ProjectViewModel : BaseViewModel
         ProjectCommandProvider.SaveObvCommand =
             new RelayCommand(OnSaveObvCommandExecuted, CanAllCommandsExecute);
     }
+
+    #endregion
 
     public bool CanAllCommandsExecute(object? e)
     {
@@ -281,6 +286,8 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(CurrentStandModel));
     }
 
+    #region Методы загрузки данных на view
+
     public async Task LoadStandsDataAsync()
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -328,6 +335,10 @@ public class ProjectViewModel : BaseViewModel
             OnPropertyChanged(nameof(CurrentStandModel));
         });
     }
+
+    #endregion
+
+    #region Методы для CRUD с проектами и стендами
 
     private async Task AddObvToStandAsync()
     {
@@ -397,7 +408,6 @@ public class ProjectViewModel : BaseViewModel
         await _projectService.DeleteStandAsync(CurrentProjectModel.CurrentProjectId,
             CurrentProjectModel.SelectedStand.Id);
         CurrentProjectModel.Stands.Remove(CurrentProjectModel.SelectedStand);
-        //OnPropertyChanged(nameof(CurrentProjectModel.Stands));
     }
 
     private async Task CreateNewProjectCardAsync()
@@ -486,24 +496,6 @@ public class ProjectViewModel : BaseViewModel
         CurrentStandModel.InitializeDefaultPurposes();
     }
 
-    private async Task CalculateProjectAsync()
-    {
-        await _calculationService.CalculateProjectAsync(CurrentProjectModel);
-        OnPropertyChanged(nameof(CurrentProjectModel.Stands));
-        OnPropertyChanged(nameof(CurrentProjectModel.Cost));
-    }
-    
-    private async Task CreateReportAsync(ReportType typeGenerator, string reportName)
-    {
-        await _reportService.GenerateReportAsync(typeGenerator, CurrentProjectModel.CurrentProjectId);
-
-        if (_notificationService.ShowConfirmation($"Ведомость {reportName} создана!\nОткрыть папку с отчётами?"))
-        {
-            var reportDir = SettingsManager.GetReportDirectory();
-            Process.Start("explorer.exe", reportDir);
-        }
-    }
-
     public async Task UpdateStandBlueprintAsync(byte[] imageData, string imageType)
     {
         if (CurrentProjectModel.SelectedStand == null || CurrentProjectModel == null)
@@ -553,4 +545,28 @@ public class ProjectViewModel : BaseViewModel
             if (costProp != null && costProp.CanWrite) costProp.SetValue(target, selected.Cost);
         });
     }
+    
+    #endregion
+
+    #region Методы расчёта и создания отчётности
+
+    private async Task CalculateProjectAsync()
+    {
+        await _calculationService.CalculateProjectAsync(CurrentProjectModel);
+        OnPropertyChanged(nameof(CurrentProjectModel.Stands));
+        OnPropertyChanged(nameof(CurrentProjectModel.Cost));
+    }
+    
+    private async Task CreateReportAsync(ReportType typeGenerator, string reportName)
+    {
+        await _reportService.GenerateReportAsync(typeGenerator, CurrentProjectModel.CurrentProjectId);
+
+        if (_notificationService.ShowConfirmation($"Ведомость {reportName} создана!\nОткрыть папку с отчётами?"))
+        {
+            var reportDir = SettingsManager.GetReportDirectory();
+            Process.Start("explorer.exe", reportDir);
+        }
+    }
+
+    #endregion
 }
