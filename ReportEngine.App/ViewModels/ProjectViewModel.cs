@@ -107,6 +107,8 @@ public class ProjectViewModel : BaseViewModel
             new RelayCommand(OnDeleteSelectedStandFromProjectExecuted, CanAllCommandsExecute);
         ProjectCommandProvider.RemoveObvFromStandCommand = 
             new RelayCommand(OnRemoveObvCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.CreateContainerReportCommand = 
+            new RelayCommand(OnCreateContainerReportCommandExecuted, CanAllCommandsExecute);
     }
 
     public void InitializeGenericCommands()
@@ -283,6 +285,16 @@ public class ProjectViewModel : BaseViewModel
             await CreateReportAsync(ReportType.MarksReport, "маркировки");
         });
     }
+
+    public async void OnCreateContainerReportCommandExecuted(object p)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await CreateReportAsync(ReportType.ContainerReport, "тара");
+        });
+    }
+
+
 
     public void ResetProject()
     {

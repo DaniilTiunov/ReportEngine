@@ -139,6 +139,7 @@ public class HostFactory
         services.AddScoped<IReportService, ReportService>();
         services.AddScoped<IReportGenerator, ComponentsListReportGenerator>();
         services.AddScoped<IReportGenerator, MarksReportGenerator>();
+        services.AddScoped<IReportGenerator, ContainerReportGenerator>();
     }
 
     private static void ConfigureViewModels(IServiceCollection services)
