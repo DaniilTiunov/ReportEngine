@@ -175,7 +175,7 @@ public class ProjectViewModel : BaseViewModel
 
     public void OnSelectTreeSocketFromDialogCommandExecuted(object e)
     {
-        switch (CurrentMaterials.SelectedAramuteres)
+        switch (CurrentMaterials.SelectedSocketTypes)
         {
             case "Жаропрочные":
                 SelectEquipment<HeaterSocket>(name => CurrentProjectModel.SelectedStand.TreeSocket = name);
@@ -229,7 +229,7 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(AddObvToStandAsync);
     }
-    
+
     public async void OnRemoveObvCommandExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(DeleteObvFromStandAsync);
@@ -272,7 +272,7 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnCreateSummaryReportCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(async ()=>
+        await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await CreateReportAsync(ReportType.ComponentsListReport, "комплектующих");
         });
@@ -280,7 +280,7 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnCreateMarksReportCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(async ()=>
+        await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await CreateReportAsync(ReportType.MarksReport, "маркировки");
         });
@@ -295,7 +295,6 @@ public class ProjectViewModel : BaseViewModel
     }
 
 
-
     public void ResetProject()
     {
         CurrentProjectModel = new ProjectModel();
@@ -304,6 +303,62 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(CurrentProjectModel));
         OnPropertyChanged(nameof(CurrentStandModel));
     }
+
+    // TODO: Сделать тут рефакторинг (дженерик метод или фабрику)
+
+    #region Инициализация команд
+
+    public void InitializeCommands()
+    {
+        ProjectCommandProvider.CreateNewCardCommand =
+            new RelayCommand(OnCreateNewCardCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.AddNewStandCommand =
+            new RelayCommand(OnAddNewStandCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.SaveChangesCommand =
+            new RelayCommand(OnSaveChangesCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.AddFrameToStandCommand =
+            new RelayCommand(OnAddFrameToStandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.AddDrainageToStandCommand =
+            new RelayCommand(OnAddDrainageToStandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.AddCustomDrainageToStandCommand =
+            new RelayCommand(OnAddCustomDrainageToStandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.AddCustomElectricalComponentToStandCommand =
+            new RelayCommand(OnAddCustomElectricalComponentToStandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.AddCustomAdditionalEquipToStandCommand =
+            new RelayCommand(OnAddCustomAdditionalEquipToStandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.SelectObvFromDialogCommand =
+            new RelayCommand(OnSelectObvCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.CalculateProjectCommand =
+            new RelayCommand(OnCalculateProjectCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.CreateSummaryReportCommand =
+            new RelayCommand(OnCreateSummaryReportCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.OpenAllSortamentsDialogCommand =
+            new RelayCommand(OnOpenAllSortamentsDialogExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.CreateMarkReportCommand =
+            new RelayCommand(OnCreateMarksReportCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.DeleteSelectedStandCommand =
+            new RelayCommand(OnDeleteSelectedStandFromProjectExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.RemoveObvFromStandCommand =
+            new RelayCommand(OnRemoveObvCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.CreateContainerReportCommand =
+            new RelayCommand(OnCreateContainerReportCommandExecuted, CanAllCommandsExecute);
+    }
+
+    public void InitializeGenericCommands()
+    {
+        ProjectCommandProvider.SelectMaterialLineDialogCommand =
+            new RelayCommand(OnSelectMaterialFromDialogCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.SelectArmatureDialogCommand =
+            new RelayCommand(OnSelectArmatureFromDialogCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.SelectKMCHDialogCommand =
+            new RelayCommand(OnSelectKMCHFromDialogCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.SelectTreeSocketDialogCommand =
+            new RelayCommand(OnSelectTreeSocketFromDialogCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.SaveObvCommand =
+            new RelayCommand(OnSaveObvCommandExecuted, CanAllCommandsExecute);
+    }
+
+    #endregion
 
     #region Методы загрузки данных на view
 
@@ -380,7 +435,7 @@ public class ProjectViewModel : BaseViewModel
             _notificationService.ShowInfo("Обвязка или стенд не выбран");
             return;
         }
-        
+
         var standId = stand.Id;
         var obvId = selectedObv.Id;
 
@@ -393,13 +448,14 @@ public class ProjectViewModel : BaseViewModel
             _notificationService.ShowError($"Не удалось удалить обвязку: {ex.Message}");
             return;
         }
+
         var toRemove = stand.ObvyazkiInStand?.FirstOrDefault(o => o.Id == obvId);
         if (toRemove != null)
             stand.ObvyazkiInStand.Remove(toRemove);
 
         stand.SelectedObvyazkaInStand = null;
 
-        _notificationService.ShowInfo($"Обвязка с Id {obvId} удалена из стенда {standId}");
+        _notificationService.ShowInfo("Обвязка удалена из стенда");
     }
 
     private async Task SaveProjectChangesAsync()
@@ -439,7 +495,7 @@ public class ProjectViewModel : BaseViewModel
             FirstSensorType = CurrentStandModel.FirstSensorType,
             ProjectId = CurrentProjectModel.CurrentProjectId
         };
-        
+
         var newStandEntity = StandDataConverter.ConvertToStandEntity(newStandModel);
         var addedStandEntity =
             await _projectRepository.AddStandAsync(CurrentProjectModel.CurrentProjectId, newStandEntity);
@@ -597,7 +653,7 @@ public class ProjectViewModel : BaseViewModel
             if (costProp != null && costProp.CanWrite) costProp.SetValue(target, selected.Cost);
         });
     }
-    
+
     #endregion
 
     #region Методы расчёта и создания отчётности
@@ -608,7 +664,7 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(CurrentProjectModel.Stands));
         OnPropertyChanged(nameof(CurrentProjectModel.Cost));
     }
-    
+
     private async Task CreateReportAsync(ReportType typeGenerator, string reportName)
     {
         await _reportService.GenerateReportAsync(typeGenerator, CurrentProjectModel.CurrentProjectId);

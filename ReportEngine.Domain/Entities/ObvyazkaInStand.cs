@@ -19,9 +19,14 @@ public class ObvyazkaInStand
 
     public string? ObvyazkaName { get; set; }
     public string? MaterialLine { get; set; }
+    
+    public float? MaterialLineCount { get; set; }
     public string? TreeSocket { get; set; }
+    public float? TreeSocketMaterialCount { get; set; }
     public string? KMCH { get; set; }
+    public float? KMCHCount { get; set; }
     public string? Armature { get; set; }
+    public float? ArmatureCount { get; set; }
     public int? NN { get; set; }
 
     public float LineLength { get; set; } // Длина линии

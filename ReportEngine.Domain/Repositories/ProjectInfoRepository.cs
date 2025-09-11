@@ -121,9 +121,9 @@ public class ProjectInfoRepository : IProjectInfoRepository
     public async Task AddStandObvyazkaAsync(int standId, ObvyazkaInStand standObvyazka)
     {
         var stand = await _context.Stands.Include(s => s.ObvyazkiInStand)
-                                         .FirstOrDefaultAsync(s => s.Id == standId);
-        
-        if (stand == null) 
+            .FirstOrDefaultAsync(s => s.Id == standId);
+
+        if (stand == null)
             throw new ArgumentException($"Стенд с ID: {standId} не найден.");
 
         stand.ObvyazkiInStand.Add(standObvyazka);

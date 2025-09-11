@@ -169,6 +169,10 @@ public class StandModel : BaseViewModel
 
     // Ширина стенда
     private float _width;
+    private float? _materialLineCount;
+    private float? _kmchCount;
+    private float? _treeSocketMaterialCount;
+    private float? _armatureCount;
 
     public StandModel()
     {
@@ -294,11 +298,23 @@ public class StandModel : BaseViewModel
         set => Set(ref _materialLine, value);
     }
 
+    public float? MaterialLineCount
+    {
+        get => _materialLineCount; 
+        set => Set(ref _materialLineCount, value);
+    }
+
     // Арматура
     public string Armature
     {
         get => _armature;
         set => Set(ref _armature, value);
+    }
+
+    public float? ArmatureCount
+    {
+        get => _armatureCount; 
+        set => Set(ref _armatureCount, value);
     }
 
     // Информация о тройнике/разветвителе
@@ -308,11 +324,23 @@ public class StandModel : BaseViewModel
         set => Set(ref _treeScoket, value);
     }
 
+    public float? TreeSocketMaterialCount
+    {
+        get => _treeSocketMaterialCount; 
+        set => Set(ref _treeSocketMaterialCount, value);
+    }
+
     // КМЧ
     public string KMCH
     {
         get => _kmch;
         set => Set(ref _kmch, value);
+    }
+
+    public float? KMCHCount
+    {
+        get => _kmchCount; 
+        set => Set(ref _kmchCount, value);
     }
 
     // Тип первого датчика
