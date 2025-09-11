@@ -1,11 +1,11 @@
-﻿using System.Diagnostics;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
+using System.Diagnostics;
 
 namespace ReportEngine.Export.ExcelWork.Services;
 
@@ -22,65 +22,58 @@ public class ComponentsListReportGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId)
     {
-        try
+
+        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+
+        var templatePath = DirectoryHelper.GetReportsTemplatePath("Ведомость комплектующих");
+        var fileName = "Ведомость комплектующих___" + DateTime.Now.ToString("yy-MM-dd___HH-mm-ss") + ".xlsx";
+
+        var savePath = SettingsManager.GetReportDirectory();
+        var fullSavePath = Path.Combine(savePath, fileName);
+
+        using (var wb = new XLWorkbook(templatePath))
         {
-            var project = await _projectInfoRepository.GetByIdAsync(projectId);
+            wb.Worksheets.ToList().ForEach(ws => ws.Delete());
 
-            var templatePath = DirectoryHelper.GetReportsTemplatePath("Ведомость комплектующих");
-            var fileName = "Ведомость комплектующих_" + DateTime.Now.ToString("yy-MM-dd") + ".xlsx";
-
-            var savePath = SettingsManager.GetReportDirectory();
-            var fullSavePath = Path.Combine(savePath, fileName);
-
-            using (var wb = new XLWorkbook(templatePath))
+            foreach (var stand in project.Stands)
             {
-                wb.Worksheets.ToList().ForEach(ws => ws.Delete());
+                var ws = wb.Worksheets.Add($"Стенд_{stand.KKSCode}");
+                CreateTableHeader(ws, stand);
 
-                foreach (var stand in project.Stands)
-                {
-                    var ws = wb.Worksheets.Add($"Стенд_{stand.KKSCode}");
-                    DrawReportStandsHeader(ws, stand);
-                }
 
-                Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
-                wb.SaveAs(fullSavePath);
+                ws.Columns().AdjustToContents();
+                ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
             }
+
+            Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
+            wb.SaveAs(fullSavePath);
         }
-        catch (Exception e)
-        {
-            Debug.Write(e.Message);
-        }
+
+
     }
 
-    private void DrawReportStandsHeader(IXLWorksheet ws, Stand stand)
+    private void CreateTableHeader(IXLWorksheet ws, Stand stand)
     {
+
         ws.Cell("B1").Value = $"Код-KKS: {stand.KKSCode}";
-        ws.Cell("B1").Style
-            .Border.SetTopBorder(XLBorderStyleValues.Medium)
-            .Border.SetRightBorder(XLBorderStyleValues.Medium)
-            .Border.SetBottomBorder(XLBorderStyleValues.Medium)
-            .Border.SetLeftBorder(XLBorderStyleValues.Medium);
-        ws.Cell("C1").Value = $"Наименование: {stand.Design}";
 
-        ws.Cell("B2").Value = "Сводная ведомость комплектующих";
-        ws.Cell("B2").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-        ws.Cell("B2").Style
-            .Border.SetTopBorder(XLBorderStyleValues.Medium)
-            .Border.SetRightBorder(XLBorderStyleValues.Medium)
-            .Border.SetBottomBorder(XLBorderStyleValues.Medium)
-            .Border.SetLeftBorder(XLBorderStyleValues.Medium);
+        var standNameArea = ws.Range("C1:D1").Merge();
+        standNameArea.Value = $"Наименование: {stand.Design}";
 
-        ws.Cell("B4").Value = "Наименование";
-        ws.Cell("C4").Value = "Ед. изм.";
-        ws.Cell("D4").Value = "Кол.";
+        var reportNameArea = ws.Range("B2:D2").Merge();
+        reportNameArea.Value = "Сводная ведомость комплектующих";
 
-        var headerStyle = ws.Range("B4:D4").Style;
-        headerStyle.Font.Bold = true;
-        headerStyle.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        ws.Cell("B3").Value = "Наименование";
+        ws.Cell("C3").Value = "Ед. изм";
+        ws.Cell("D3").Value = "Кол.";
 
-        ws.Column("B").Width = 60;
-        ws.Column("C").Width = 15;
-        ws.Column("D").Width = 10;
+        var headerRange = ws.Range("B1:D3");
+
+        headerRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
+        headerRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Medium);
+
+        headerRange.Style.Font.SetBold();
     }
 
     private void FillStandsData(IXLWorksheet ws, Stand stand)
