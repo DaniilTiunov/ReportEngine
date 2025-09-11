@@ -135,5 +135,6 @@ public class MarksReportGenerator : IReportGenerator
             SensorMarkPlus = sensorMarkPlus;
             SensorMarkMinus = sensorMarkMinus;
         }
+
     }
 }
