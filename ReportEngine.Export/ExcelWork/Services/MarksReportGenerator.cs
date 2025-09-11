@@ -66,7 +66,7 @@ public class MarksReportGenerator : IReportGenerator
         //формируем все нуеобходимые записи
         var allRecords = project.Stands
             .SelectMany(stand => stand.ObvyazkiInStand
-                .SelectMany(obvyazka => CreateObvyazkaRecords(obvyazka, stand)))
+            .SelectMany(obvyazka => CreateObvyazkaRecords(obvyazka, stand)))
             .ToList();
 
         var recordNumber = 1;
@@ -81,14 +81,14 @@ public class MarksReportGenerator : IReportGenerator
             ws.Range($"A{upperRecordRow}:A{lowerRecordRow}").Merge().Value = recordNumber;
 
             // Объединение ячеек для standKKS
-            ws.Range($"B{upperRecordRow}:B{lowerRecordRow}").Merge().Value = item.standKKS;
+            ws.Range($"B{upperRecordRow}:B{lowerRecordRow}").Merge().Value = item.StandKKS;
 
             // Объединение ячеек для sensorKKS
-            ws.Range($"C{upperRecordRow}:C{lowerRecordRow}").Merge().Value = item.sensorKKS;
+            ws.Range($"C{upperRecordRow}:C{lowerRecordRow}").Merge().Value = item.SensorKKS;
 
             // Запись разных значений в D (без объединения)
-            ws.Cell($"D{upperRecordRow}").Value = item.sensorMarkPlus;
-            ws.Cell($"D{lowerRecordRow}").Value = item.sensorMarkMinus;
+            ws.Cell($"D{upperRecordRow}").Value = item.SensorMarkPlus;
+            ws.Cell($"D{lowerRecordRow}").Value = item.SensorMarkMinus;
 
             recordNumber++;
         }
@@ -123,17 +123,17 @@ public class MarksReportGenerator : IReportGenerator
     //структура для одной записи таблицы
     public struct RecordData
     {
-        public string standKKS;
-        public string sensorKKS;
-        public string sensorMarkPlus;
-        public string sensorMarkMinus;
+        public string StandKKS;
+        public string SensorKKS;
+        public string SensorMarkPlus;
+        public string SensorMarkMinus;
 
         public RecordData(string standKKS, string sensorKKS, string sensorMarkPlus, string sensorMarkMinus)
         {
-            this.standKKS = standKKS;
-            this.sensorKKS = sensorKKS;
-            this.sensorMarkPlus = sensorMarkPlus;
-            this.sensorMarkMinus = sensorMarkMinus;
+            StandKKS = standKKS;
+            SensorKKS = sensorKKS;
+            SensorMarkPlus = sensorMarkPlus;
+            SensorMarkMinus = sensorMarkMinus;
         }
     }
 }
