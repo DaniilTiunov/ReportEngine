@@ -1,10 +1,11 @@
-﻿using System.Diagnostics;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace ReportEngine.Export.ExcelWork.Services;
 
@@ -49,7 +50,7 @@ public class ComponentsListReportGenerator : IReportGenerator
             wb.SaveAs(fullSavePath);
         }
     }
-
+    //Создает общий заголовок таблицы на листе
     private void CreateWorksheetTableHeader(IXLWorksheet ws, Stand stand)
     {
         ws.Cell("B1").Value = $"Код-KKS: {stand.KKSCode}";
@@ -77,90 +78,122 @@ public class ComponentsListReportGenerator : IReportGenerator
 
         ws.Range("B2:D2").Merge();
         ws.Range("C1:D1").Merge();
-    }
-
-
-    private void FillWorksheetTable(IXLWorksheet ws, Stand stand)
+    } 
+    //Заполняет таблицу на листе
+    private async Task FillWorksheetTable(IXLWorksheet ws, Stand stand)
     {
-        var activeRow = 4;
+        int activeRow = 4;
+        //Формирование списка труп
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
 
-
-        //Формирование списка труб
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Трубы", ws);
-
-
-        var standPipes = stand.ObvyazkiInStand
+        var pipesList = stand.ObvyazkiInStand
             .Select(obv => new
             {
                 name = obv.MaterialLine,
+                units = obv.MaterialLineMeasure,
                 length = obv.MaterialLineCount
             })
             .GroupBy(pipe => pipe.name)
-            .Select(group => new
-            {
-                Name = group.Key,
-                Unit = "м", //на единицы измерения из базы
-                LengthSum = group.Sum(pipe => pipe.length)
-            });
-
-
-        var pipesRecords = standPipes
-            .Select(pipe => (name: pipe.Name, unit: pipe.Unit, quantity: pipe.LengthSum ?? 0f))
+            .Select(group => (
+                name: group.Key ?? "",
+                unit: group.First().units ?? "",
+                quantity: group.Sum(pipe => pipe.length) ?? 0f
+                ))
             .ToList();
 
-
-        activeRow = FillSubtableData(activeRow, pipesRecords, ws);
-
-
+        activeRow = FillSubtableData(activeRow, pipesList, ws);
         //Формирование списка арматуры
-        CreateSubheaderOnWorksheet(activeRow, "Арматура", ws);
-        activeRow++;
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Арматура", ws);
 
-
-        var armatures = stand.ObvyazkiInStand
+        var armaturesList = stand.ObvyazkiInStand
             .Select(obv => new
             {
-                armName = obv.Armature,
-                armQuantity = obv.ArmatureCount
+                name = obv.Armature,
+                quantity = obv.ArmatureCount
             })
-            .GroupBy(obv => obv.armName)
-            .Select(group => new
-            {
-                name = group.Key,
-                unit = "шт", //на единицы измерения из базы
-                quantity = group.Sum(arm => arm.armQuantity)
-            });
+            .GroupBy(arm => arm.name)
+            .Select(group => (
+                name: group.Key ?? "",
+                unit: "м",
+                quantity: group.Sum(arm => arm.quantity) ?? 0f
+                ))
+            .ToList();
 
-
-        foreach (var arm in armatures)
-        {
-            ws.Cell($"B{activeRow}").Value = arm.name;
-            ws.Cell($"C{activeRow}").Value = arm.unit;
-            activeRow++;
-        }
-
-
+        activeRow = FillSubtableData(activeRow, armaturesList, ws);
         //Формирование списка тройников и КМЧ
-        CreateSubheaderOnWorksheet(activeRow, "Тройники и КМЧ", ws);
-    }
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Тройники и КМЧ", ws);
 
+        var treeList = stand.ObvyazkiInStand
+            .Select(obv => new
+            {
+                name = obv.TreeSocket,
+                quantity = obv.TreeSocketCount
+            })
+            .GroupBy(item => item.name)
+            .Select(group => (
+                name: group.Key ?? "",
+                unit: "шт",
+                quantity: group.Sum(item => item.quantity)
+                ))
+            .ToList();
+
+        var kmchList = stand.ObvyazkiInStand
+           .Select(obv => new
+           {
+               name = obv.KMCH,
+               quantity = obv.KMCHCount
+           })
+           .GroupBy(item => item.name)
+           .Select(group => (
+               name: group.Key ?? "",
+               unit: "шт",
+               quantity: group.Sum(item => item.quantity) ?? 0f
+               ))
+           .ToList();
+
+        activeRow = FillSubtableData(activeRow, treeList, ws);
+        activeRow = FillSubtableData(activeRow, kmchList, ws);
+
+
+        //Формирование списка рамных комплектующих
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Рамные комплектующие", ws);
+
+        var framesCollection = await _projectInfoRepository.GetAllFramesInStandAsync(stand.Id);
+            
+        var framesList = framesCollection
+            .SelectMany(frame => frame.Frame.Components.Select(comp => new
+            {
+                name = comp.ComponentType,
+                unit = comp.Measure,
+                quantity = comp.Count
+            }))
+            .GroupBy(frameComp => frameComp.name)
+            .Select(group => (
+                name: group.Key ?? "",
+                unit: group.First().unit ?? "",
+                quantity: (float) group.Sum(frameComp => frameComp.quantity)
+                ))
+            .ToList();
+
+        activeRow = FillSubtableData(activeRow, framesList, ws);
+    }   
 
     //создает заголовок для подтаблицы и возвращает следующую строку
     private int CreateSubheaderOnWorksheet(int row, string title, IXLWorksheet ws)
     {
-        var subHeaderRange = ws.Range($"A{row}:D{row}");
+        var subHeaderRange = ws.Range($"B{row}:D{row}");
         subHeaderRange.Merge();
         subHeaderRange.Value = title;
         subHeaderRange.Style.Font.SetFontSize(10);
         subHeaderRange.Style.Font.SetBold();
+
         row++;
         return row;
     }
-
     //Заполняет подтаблицу и возвращает следующую строку
     private int FillSubtableData(int startRow, List<(string name, string unit, float quantity)> items, IXLWorksheet ws)
     {
-        var currentRow = startRow;
+        int currentRow = startRow;
         foreach (var item in items)
         {
             ws.Cell($"B{currentRow}").Value = item.name;
