@@ -151,8 +151,7 @@ public class ComponentsListReportGenerator : IReportGenerator
         foreach (var arm in armatures)
         {
             ws.Cell($"B{activeRow}").Value = arm.name;
-            ws.Cell($"C{activeRow}").Value = arm.unit; ;
-            ws.Cell($"D{activeRow}").Value = arm.lengthSum;
+            ws.Cell($"C{activeRow}").Value = arm.unit;
             activeRow++;
         }
 
