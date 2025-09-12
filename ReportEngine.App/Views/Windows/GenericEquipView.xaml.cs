@@ -21,11 +21,11 @@ public partial class GenericEquipView : Window
         {
             var type = DataContext.GetType();
 
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(GenericEquipViewModel<>))
-            {
-                dynamic viewModel = DataContext;
-                viewModel.SelectCommand.Execute(null);
-            }
+            if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(GenericEquipViewModel<>))
+                return;
+            
+            dynamic viewModel = DataContext;
+            viewModel.SelectCommand.Execute(null);
         });
     }
 }

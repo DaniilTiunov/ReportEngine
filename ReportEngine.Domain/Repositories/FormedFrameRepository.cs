@@ -39,6 +39,7 @@ public class FormedFrameRepository : IFrameRepository
         if (exisingComponent != null)
         {
             exisingComponent.Measure = component.Measure;
+            exisingComponent.ComponentName = component.Name;
 
             if (component is BaseFrame baseFrame && baseFrame.Measure == "м" && length.HasValue)
                 exisingComponent.Length += length.Value;
@@ -56,6 +57,7 @@ public class FormedFrameRepository : IFrameRepository
                 FormedFrameId = frameId,
                 ComponentId = component.Id,
                 ComponentType = type,
+                ComponentName = component.Name,
                 Count = component is BaseFrame baseFrame && baseFrame.Measure == "м" ? 0 : 1,
                 Length = component is BaseFrame baseFrame2 && baseFrame2.Measure == "м" ? length : null,
                 CostComponent = component.Cost,
