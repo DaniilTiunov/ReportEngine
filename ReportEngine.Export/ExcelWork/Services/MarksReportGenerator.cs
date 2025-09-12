@@ -37,7 +37,7 @@ public class MarksReportGenerator : IReportGenerator
 
             var savePath = SettingsManager.GetReportDirectory();
 
-            var fileName = "Маркировка___" + DateTime.Now.ToString("yy-MM-dd___HH-mm-ss") + ".xlsx";
+            var fileName = "Маркировка___" + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + ".xlsx";
             var fullSavePath = Path.Combine(savePath, fileName);
 
             Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
