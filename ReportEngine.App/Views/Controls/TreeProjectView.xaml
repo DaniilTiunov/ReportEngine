@@ -48,10 +48,8 @@
         <GridSplitter
             Grid.Column="1"
             Width="5"
-            HorizontalAlignment="Stretch" />
-
-        <TabControl x:Name="MainTabControl" Grid.Column="2">
-            <ContentControl x:Name="MainContent" />
-        </TabControl>
+            HorizontalAlignment="Stretch"
+            Background="Gray" />
+        <TabControl x:Name="MainTabControl" Grid.Column="2" />
     </Grid>
 </UserControl>

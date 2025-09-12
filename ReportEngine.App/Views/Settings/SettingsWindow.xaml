@@ -5,7 +5,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Настройки приложения"
-    Topmost="True"
     Width="700"
     Height="500"
     mc:Ignorable="d">
@@ -16,35 +15,38 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <!-- Меню категорий -->
+        <!--  Меню категорий  -->
         <ListBox
             x:Name="SettingsCategories"
             Margin="0,0,16,0"
             BorderThickness="0"
             SelectionChanged="SettingsCategories_SelectionChanged">
-            <ListBoxItem Content="Основные" IsSelected="True" Tag="GeneralSettings" />
+            <ListBoxItem
+                Content="Основные"
+                IsSelected="True"
+                Tag="GeneralSettings" />
             <ListBoxItem Content="Подключение" Tag="ConnectionSettings" />
             <ListBoxItem Content="Оформление" Tag="DesignSettings" />
             <ListBoxItem Content="Другое" Tag="OtherSettings" />
         </ListBox>
 
-        <!-- Область с настройками -->
+        <!--  Область с настройками  -->
         <StackPanel
             Grid.Column="1"
-            Background="{DynamicResource MaterialDesignPaper}"
-            Margin="0">
+            Margin="0"
+            Background="{DynamicResource MaterialDesignPaper}">
 
-            <!-- Заголовок -->
+            <!--  Заголовок  -->
             <TextBlock
                 x:Name="SettingsTitle"
-                Text="Основные настройки"
+                Margin="0,0,0,10"
                 FontSize="20"
                 FontWeight="Bold"
-                Margin="0 0 0 10" />
+                Text="Основные настройки" />
 
-            <!-- Основные настройки -->
+            <!--  Основные настройки  -->
             <StackPanel x:Name="GeneralSettingsPanel" Visibility="Visible">
-                <TextBlock Text="Директория для сохранения отчётов:" Margin="0 0 0 4" />
+                <TextBlock Margin="0,0,0,4" Text="Директория для сохранения отчётов:" />
                 <DockPanel>
                     <TextBox
                         x:Name="ReportDirBox"
@@ -52,65 +54,65 @@
                         Text="{Binding SaveReportDirPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <Button
                         x:Name="BrowseReportDirButton"
-                        Content="..."
                         Width="40"
                         Margin="4,0,0,0"
-                        Command="{Binding OpenDialog}" />
+                        Command="{Binding OpenDialog}"
+                        Content="..." />
                 </DockPanel>
             </StackPanel>
 
-            <!-- Подключение -->
+            <!--  Подключение  -->
             <StackPanel x:Name="ConnectionSettingsPanel" Visibility="Collapsed">
-                <TextBlock Text="Адрес сервера БД:" Margin="0 0 0 4" />
+                <TextBlock Margin="0,0,0,4" Text="Адрес сервера БД:" />
                 <TextBox
                     x:Name="DbServerBox"
                     Width="400"
                     Text="{Binding ConnectionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                <TextBlock Text="Порт:" Margin="0 8 0 4" />
+                <TextBlock Margin="0,8,0,4" Text="Порт:" />
                 <TextBox
                     x:Name="DbPortBox"
                     Width="100"
                     Text="5432" />
 
-                <TextBlock Text="Имя базы:" Margin="0 8 0 4" />
+                <TextBlock Margin="0,8,0,4" Text="Имя базы:" />
                 <TextBox
                     x:Name="DbNameBox"
                     Width="200"
                     Text="mydb" />
 
-                <TextBlock Text="Пользователь:" Margin="0 8 0 4" />
+                <TextBlock Margin="0,8,0,4" Text="Пользователь:" />
                 <TextBox
                     x:Name="DbUserBox"
                     Width="200"
                     Text="postgres" />
 
-                <TextBlock Text="Пароль:" Margin="0 8 0 4" />
+                <TextBlock Margin="0,8,0,4" Text="Пароль:" />
                 <PasswordBox x:Name="DbPasswordBox" Width="200" />
             </StackPanel>
 
-            <!-- Оформление (плейсхолдер) -->
+            <!--  Оформление (плейсхолдер)  -->
             <StackPanel x:Name="DesignSettingsPanel" Visibility="Collapsed">
-                <TextBlock Text="Настройки оформления (пусто)" Margin="0 0 0 4" />
+                <TextBlock Margin="0,0,0,4" Text="Настройки оформления (пусто)" />
             </StackPanel>
 
-            <!-- Другое (плейсхолдер) -->
+            <!--  Другое (плейсхолдер)  -->
             <StackPanel x:Name="OtherSettingsPanel" Visibility="Collapsed">
-                <TextBlock Text="Прочие настройки (пусто)" Margin="0 0 0 4" />
+                <TextBlock Margin="0,0,0,4" Text="Прочие настройки (пусто)" />
             </StackPanel>
 
-            <!-- Кнопки -->
-            <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+            <!--  Кнопки  -->
+            <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
                 <Button
                     x:Name="ApplyButton"
-                    Content="Применить"
                     Width="100"
                     Margin="0,0,8,0"
-                    Command="{Binding ApplySettingsCommand}" />
+                    Command="{Binding ApplySettingsCommand}"
+                    Content="Применить" />
                 <Button
                     x:Name="CancelButton"
-                    Content="Отмена"
-                    Width="80" />
+                    Width="80"
+                    Content="Отмена" />
             </StackPanel>
         </StackPanel>
     </Grid>
