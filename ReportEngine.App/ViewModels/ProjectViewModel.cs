@@ -84,19 +84,26 @@ public class ProjectViewModel : BaseViewModel
 
         ApplySelectedEquipToPurpose(e, selected);
     }
-
+    
+    // TODO: Сделать тут рефакторинг команд
     public void OnSelectMaterialFromDialogCommandExecuted(object e)
     {
         switch (CurrentMaterials.SelectedMaterialLine)
         {
             case "Жаропрочные":
-                SelectEquipment<HeaterPipe>(name => CurrentProjectModel.SelectedStand.MaterialLine = name);
+                SelectEquipment<HeaterPipe>(
+                    name => CurrentProjectModel.SelectedStand.MaterialLine = name,
+                    measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure);
                 break;
             case "Нержавеющие":
-                SelectEquipment<StainlessPipe>(name => CurrentProjectModel.SelectedStand.MaterialLine = name);
+                SelectEquipment<StainlessPipe>(
+                    name => CurrentProjectModel.SelectedStand.MaterialLine = name,
+                    measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure);
                 break;
             case "Углеродистые":
-                SelectEquipment<CarbonPipe>(name => CurrentProjectModel.SelectedStand.MaterialLine = name);
+                SelectEquipment<CarbonPipe>(
+                    name => CurrentProjectModel.SelectedStand.MaterialLine = name,
+                    measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure);
                 break;
         }
     }
@@ -106,13 +113,19 @@ public class ProjectViewModel : BaseViewModel
         switch (CurrentMaterials.SelectedAramuteres)
         {
             case "Жаропрочные":
-                SelectEquipment<HeaterArmature>(name => CurrentProjectModel.SelectedStand.Armature = name);
+                SelectEquipment<HeaterArmature>(
+                    name => CurrentProjectModel.SelectedStand.Armature = name,
+                    measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure);
                 break;
             case "Нержавеющие":
-                SelectEquipment<StainlessArmature>(name => CurrentProjectModel.SelectedStand.Armature = name);
+                SelectEquipment<StainlessArmature>(
+                    name => CurrentProjectModel.SelectedStand.Armature = name,
+                    measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure);
                 break;
             case "Углеродистые":
-                SelectEquipment<CarbonArmature>(name => CurrentProjectModel.SelectedStand.Armature = name);
+                SelectEquipment<CarbonArmature>(
+                    name => CurrentProjectModel.SelectedStand.Armature = name,
+                    measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure);
                 break;
         }
     }
@@ -122,13 +135,19 @@ public class ProjectViewModel : BaseViewModel
         switch (CurrentMaterials.SelectedSocketTypes)
         {
             case "Жаропрочные":
-                SelectEquipment<HeaterSocket>(name => CurrentProjectModel.SelectedStand.TreeSocket = name);
+                SelectEquipment<HeaterSocket>(
+                    name => CurrentProjectModel.SelectedStand.TreeSocket = name,
+                    measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure);
                 break;
             case "Нержавеющие":
-                SelectEquipment<StainlessSocket>(name => CurrentProjectModel.SelectedStand.TreeSocket = name);
+                SelectEquipment<StainlessSocket>(
+                    name => CurrentProjectModel.SelectedStand.TreeSocket = name,
+                    measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure);
                 break;
             case "Углеродистые":
-                SelectEquipment<CarbonSocket>(name => CurrentProjectModel.SelectedStand.TreeSocket = name);
+                SelectEquipment<CarbonSocket>(
+                    name => CurrentProjectModel.SelectedStand.TreeSocket = name,
+                    measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure);
                 break;
         }
     }
@@ -138,13 +157,19 @@ public class ProjectViewModel : BaseViewModel
         switch (CurrentMaterials.SelectedKMCHType)
         {
             case "Жаропрочные":
-                SelectEquipment<HeaterSocket>(name => CurrentProjectModel.SelectedStand.KMCH = name);
+                SelectEquipment<HeaterSocket>(
+                    name => CurrentProjectModel.SelectedStand.KMCH = name,
+                    measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure);
                 break;
             case "Нержавеющие":
-                SelectEquipment<StainlessSocket>(name => CurrentProjectModel.SelectedStand.KMCH = name);
+                SelectEquipment<StainlessSocket>(
+                    name => CurrentProjectModel.SelectedStand.KMCH = name,
+                    measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure);
                 break;
             case "Углеродистые":
-                SelectEquipment<CarbonSocket>(name => CurrentProjectModel.SelectedStand.KMCH = name);
+                SelectEquipment<CarbonSocket>(
+                    name => CurrentProjectModel.SelectedStand.KMCH = name,
+                    measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure);
                 break;
         }
     }
@@ -365,6 +390,7 @@ public class ProjectViewModel : BaseViewModel
         var entity = await _standService.CreateObvyazkaAsync(CurrentProjectModel.SelectedStand, SelectedObvyazka);
 
         await _standService.AddObvyazkaToStandAsync(CurrentProjectModel.SelectedStand.Id, entity);
+        
         CurrentProjectModel.SelectedStand.ObvyazkiInStand.Add(entity);
     }
 
@@ -469,13 +495,17 @@ public class ProjectViewModel : BaseViewModel
         CurrentStandModel = new StandModel();
     }
 
-    private void SelectEquipment<T>(Action<string> setProperty)
+    private void SelectEquipment<T>(Action<string> setProperty, Action<string> setMeasure)
         where T : class, IBaseEquip, new()
     {
         ExceptionHelper.SafeExecute(() =>
         {
             var equipment = _dialogService.ShowEquipDialog<T>();
-            if (equipment != null && CurrentProjectModel.SelectedStand != null) setProperty(equipment.Name);
+            if (equipment != null && CurrentProjectModel.SelectedStand != null)
+            {
+                setProperty(equipment.Name);
+                setMeasure(equipment.Measure);
+            }
         });
     }
 
