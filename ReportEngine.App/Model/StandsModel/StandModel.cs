@@ -620,13 +620,11 @@ public class StandModel : BaseViewModel
         {
             Purposes = new ObservableCollection<AdditionalEquipPurpose>
             {
-                new() { Purpose = "Клеммная коробка" },
-                new() { Purpose = "Кабельные вводы" },
-                new() { Purpose = "Сигнальный кабель" },
-                new() { Purpose = "Металлорукав" },
-                new() { Purpose = "Кабель 6мм" },
-                new() { Purpose = "Кабель 4мм" },
-                new() { Purpose = "Кронштейн коробки" }
+                new() { Purpose = "Шильдик" },
+                new() { Purpose = "Швеллер" },
+                new() { Purpose = "Хомуты" },
+                new() { Purpose = "Табличка" },
+                new() { Purpose = "Кронштейны перепадников" }
             }
         };
 
@@ -634,11 +632,13 @@ public class StandModel : BaseViewModel
         {
             Purposes = new ObservableCollection<ElectricalPurpose>
             {
-                new() { Purpose = "Шильдик" },
-                new() { Purpose = "Швеллер" },
-                new() { Purpose = "Хомуты" },
-                new() { Purpose = "Табличка" },
-                new() { Purpose = "Кронштейны перепадников" }
+                new() { Purpose = "Клеммная коробка" },
+                new() { Purpose = "Кабельные вводы" },
+                new() { Purpose = "Сигнальный кабель" },
+                new() { Purpose = "Металлорукав" },
+                new() { Purpose = "Кабель 6мм" },
+                new() { Purpose = "Кабель 4мм" },
+                new() { Purpose = "Кронштейн коробки" }
             }
         };
     }

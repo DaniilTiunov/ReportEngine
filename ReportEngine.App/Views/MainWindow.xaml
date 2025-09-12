@@ -149,9 +149,9 @@
                 </MenuItem>
                 <Separator />
                 <MenuItem Header="Кронштейны">
-                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenBoxesBracesommand}" Header="Крепление датчиков" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenBoxesBracesommand}" Header="Крепление клеммных коробок" />
                     <MenuItem Command="{Binding GenericEquipCommandProvider.OpenDrainageBracesCommand}" Header="Крепление дренажа" />
-                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenSensorsBracesCommand}" Header="Крепление клеммных коробок" />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenSensorsBracesCommand}" Header="Крепление датчиков" />
                 </MenuItem>
                 <Separator />
                 <MenuItem Header="Электрические компоненты">
