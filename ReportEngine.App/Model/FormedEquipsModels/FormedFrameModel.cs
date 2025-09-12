@@ -126,12 +126,12 @@ public class FormedFrameModel : BaseViewModel
             {
                 var displayed = new DisplayedComponent
                 {
-                    Component = component, 
-                    Count = frameComponent.Count, 
+                    Component = component,
+                    Count = frameComponent.Count,
                     CostComponent = frameComponent.CostComponent,
-                    Measure = frameComponent.Measure,
+                    Measure = frameComponent.Measure
                 };
-                
+
                 var isMeter = (component as BaseFrame)?.Measure == "м" || frameComponent.Measure == "м";
                 if (isMeter)
                     displayed.Length = frameComponent.Length ?? 0;

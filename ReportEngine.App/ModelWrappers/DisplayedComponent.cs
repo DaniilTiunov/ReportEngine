@@ -9,7 +9,7 @@ public class DisplayedComponent : INotifyPropertyChanged
     public IBaseEquip Component { get; set; }
     public int Count { get; set; }
     public float? CostComponent { get; set; }
-    
+
     public string? Measure { get; set; }
 
     public float Length

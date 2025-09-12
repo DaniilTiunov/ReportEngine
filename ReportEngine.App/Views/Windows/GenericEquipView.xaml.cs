@@ -1,9 +1,7 @@
-﻿using ReportEngine.App.AppHelpers;
-using ReportEngine.App.ViewModels;
-using ReportEngine.Domain.Entities.BaseEntities;
-using ReportEngine.Domain.Entities.BaseEntities.Interface;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
+using ReportEngine.App.AppHelpers;
+using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Views.Windows;
 
@@ -19,16 +17,15 @@ public partial class GenericEquipView : Window
 
     private void SelectEquip_DoubleClick(object sender, MouseButtonEventArgs e)
     {
-        ExceptionHelper.SafeExecute( () =>
+        ExceptionHelper.SafeExecute(() =>
         {
             var type = DataContext.GetType();
 
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(GenericEquipViewModel<>))
             {
-                dynamic vm = DataContext;
-                vm.SelectCommand.Execute(null);
+                dynamic viewModel = DataContext;
+                viewModel.SelectCommand.Execute(null);
             }
-
         });
     }
 }
