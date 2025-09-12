@@ -71,10 +71,7 @@ public class ProjectViewModel : BaseViewModel
         CurrentProjectModel.EndDate = DateTime.Now.Date;
     }
 
-    public bool CanAllCommandsExecute(object? e)
-    {
-        return true;
-    }
+    public bool CanAllCommandsExecute(object? e) => true;
 
     public void OnOpenAllSortamentsDialogExecuted(object e)
     {
@@ -262,6 +259,13 @@ public class ProjectViewModel : BaseViewModel
             await CreateReportAsync(ReportType.ContainerReport, "тара");
         });
     }
+    private async void OnSaveChangesInStandCommandExecuted(object obj)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await SaveChangesInStandAsync();
+        });
+    }
 
     public void ResetProject()
     {
@@ -310,6 +314,8 @@ public class ProjectViewModel : BaseViewModel
             new RelayCommand(OnRemoveObvCommandExecuted, CanAllCommandsExecute);
         ProjectCommandProvider.CreateContainerReportCommand =
             new RelayCommand(OnCreateContainerReportCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.SaveChangesInStandCommand = 
+            new RelayCommand(OnSaveChangesInStandCommandExecuted, CanAllCommandsExecute);
     }
 
     public void InitializeGenericCommands()
@@ -480,6 +486,26 @@ public class ProjectViewModel : BaseViewModel
         _notificationService.ShowInfo($"Стенд успешно добавлен! {addedStandEntity.Id}");
     }
 
+    private async Task SaveChangesInStandAsync()
+    {
+        if (CurrentProjectModel.CurrentProjectId == 0)
+        {
+            _notificationService.ShowInfo("Сначала создайте проект");
+            return;
+        }
+
+        var stand = CurrentProjectModel.SelectedStand;
+        if (stand == null)
+        {
+            _notificationService.ShowInfo("Стенд не выбран");
+            return;
+        }
+
+        var standEntity = StandDataConverter.ConvertToStandEntity(stand);
+        await _projectRepository.UpdateStandAsync(standEntity);
+
+        _notificationService.ShowInfo("Изменения стенда сохранены");
+    }
     private async Task DeleteStandFromProject()
     {
         await _projectService.DeleteStandAsync(CurrentProjectModel.CurrentProjectId,

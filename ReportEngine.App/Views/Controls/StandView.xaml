@@ -206,16 +206,16 @@
                 Orientation="Horizontal">
 
                 <Button
-                    Width="100"
+                    Width="150"
                     Margin="0,0,10,0"
-                    Command="{Binding ProjectCommandProvider.AddNewStandCommand}"
-                    Content="Добавить" />
+                    Command="{Binding ProjectCommandProvider.SaveChangesInStandCommand}"
+                    Content="Сохранить изменения" />
 
                 <Button
-                    Width="100"
+                    Width="150"
                     Margin="0,0,10,0"
-                    Command="{Binding ProjectCommandProvider.SaveStandCommand}"
-                    Content="Сохранить" />
+                    Command="{Binding ProjectCommandProvider.AddNewStandCommand}"
+                    Content="Добавить новый" />
 
                 <Button
                     Width="100"
@@ -274,8 +274,7 @@
                     </ListView.View>
                     <ListView.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Header="Удалить"
-                                      Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}" />
+                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}" Header="Удалить" />
                         </ContextMenu>
                     </ListView.ContextMenu>
                 </ListView>
