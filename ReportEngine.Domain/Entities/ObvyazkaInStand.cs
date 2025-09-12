@@ -19,7 +19,7 @@ public class ObvyazkaInStand
 
     public string? ObvyazkaName { get; set; }
     public string? MaterialLine { get; set; }
-    
+
     public float? MaterialLineCount { get; set; }
     public string? TreeSocket { get; set; }
     public float? TreeSocketMaterialCount { get; set; }

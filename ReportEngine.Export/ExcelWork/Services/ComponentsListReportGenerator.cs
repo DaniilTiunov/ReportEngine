@@ -1,10 +1,10 @@
-﻿using ClosedXML.Excel;
+﻿using System.Diagnostics;
+using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
-using System.Diagnostics;
 
 namespace ReportEngine.Export.ExcelWork.Services;
 
@@ -21,7 +21,6 @@ public class ComponentsListReportGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId)
     {
-
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
 
         using (var wb = new XLWorkbook())
@@ -49,13 +48,10 @@ public class ComponentsListReportGenerator : IReportGenerator
             Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
             wb.SaveAs(fullSavePath);
         }
-
-
     }
 
     private void CreateWorksheetTableHeader(IXLWorksheet ws, Stand stand)
     {
-
         ws.Cell("B1").Value = $"Код-KKS: {stand.KKSCode}";
         ws.Cell("C1").Value = $"Наименование: {stand.Design}";
 
@@ -90,8 +86,7 @@ public class ComponentsListReportGenerator : IReportGenerator
 
     private void FillWorksheetTable(IXLWorksheet ws, Stand stand)
     {
-
-        int activeRow = 4;
+        var activeRow = 4;
 
 
         //Формирование списка труб

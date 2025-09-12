@@ -19,18 +19,18 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="ExcelTemplates\" />
-        <Folder Include="PDF\" />
+        <Folder Include="ExcelTemplates\"/>
+        <Folder Include="PDF\"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ReportEngine.Domain\ReportEngine.Domain.csproj" />
-        <ProjectReference Include="..\ReportEngine.Shared\ReportEngine.Shared.csproj" />
+        <ProjectReference Include="..\ReportEngine.Domain\ReportEngine.Domain.csproj"/>
+        <ProjectReference Include="..\ReportEngine.Shared\ReportEngine.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="ClosedXML" Version="0.105.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
+        <PackageReference Include="ClosedXML" Version="0.105.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9"/>
     </ItemGroup>
 
     <ItemGroup>

@@ -1,21 +1,15 @@
-﻿using ClosedXML.Excel;
+﻿using System.Diagnostics;
+using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
-using System.Diagnostics;
-
-
 
 namespace ReportEngine.Export.ExcelWork.Services;
 
-
-
 public class ContainerReportGenerator : IReportGenerator
 {
-
     private readonly IProjectInfoRepository _projectInfoRepository;
 
     public ContainerReportGenerator(IProjectInfoRepository projectInfoRepository)
@@ -27,7 +21,6 @@ public class ContainerReportGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId)
     {
-
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
 
         using (var wb = new XLWorkbook())
@@ -50,9 +43,6 @@ public class ContainerReportGenerator : IReportGenerator
             Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
             wb.SaveAs(fullSavePath);
         }
-
-
-
     }
 
     private void CreateWorksheetTableHeader(IXLWorksheet ws)
@@ -78,19 +68,15 @@ public class ContainerReportGenerator : IReportGenerator
 
     private void FillWorksheetTable(IXLWorksheet ws, ProjectInfo project)
     {
-
         var tableRecords = project.Stands
-           .Select(stand => new
-           {
-               Name = stand.NN.ToString(),
-               SerialNumber = stand.SerialNumber,
-               CodeKKS = stand.KKSCode,
-               Quantity = "1",//потом поправить на конкретное число
-               FrameWidth = stand.Width.ToString()
-           });
-
-
-
+            .Select(stand => new
+            {
+                Name = stand.NN.ToString(),
+                stand.SerialNumber,
+                CodeKKS = stand.KKSCode,
+                Quantity = "1", //потом поправить на конкретное число
+                FrameWidth = stand.Width.ToString()
+            });
 
         var recordNumber = 1;
 
@@ -111,6 +97,4 @@ public class ContainerReportGenerator : IReportGenerator
             recordNumber++;
         }
     }
-
-
 }

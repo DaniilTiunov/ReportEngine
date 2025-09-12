@@ -31,6 +31,7 @@ public class StandModel : BaseViewModel
 
     // Арматура стенда (текст)
     private string _armature;
+    private float? _armatureCount;
 
     // Тип крепления датчика
     private string _braceType;
@@ -85,9 +86,11 @@ public class StandModel : BaseViewModel
 
     // КМЧ
     private string _kmch;
+    private float? _kmchCount;
 
     // Материал линии
     private string _materialLine;
+    private float? _materialLineCount;
 
     // Объект для создания нового дополнительного комплектующего
     private FormedAdditionalEquip _newAdditionalEquip = new();
@@ -163,16 +166,13 @@ public class StandModel : BaseViewModel
 
     // Тройник/разветвитель
     private string _treeScoket;
+    private float? _treeSocketMaterialCount;
 
     // Масса стенда
     private float _weight;
 
     // Ширина стенда
     private float _width;
-    private float? _materialLineCount;
-    private float? _kmchCount;
-    private float? _treeSocketMaterialCount;
-    private float? _armatureCount;
 
     public StandModel()
     {
@@ -300,7 +300,7 @@ public class StandModel : BaseViewModel
 
     public float? MaterialLineCount
     {
-        get => _materialLineCount; 
+        get => _materialLineCount;
         set => Set(ref _materialLineCount, value);
     }
 
@@ -313,7 +313,7 @@ public class StandModel : BaseViewModel
 
     public float? ArmatureCount
     {
-        get => _armatureCount; 
+        get => _armatureCount;
         set => Set(ref _armatureCount, value);
     }
 
@@ -326,7 +326,7 @@ public class StandModel : BaseViewModel
 
     public float? TreeSocketMaterialCount
     {
-        get => _treeSocketMaterialCount; 
+        get => _treeSocketMaterialCount;
         set => Set(ref _treeSocketMaterialCount, value);
     }
 
@@ -339,7 +339,7 @@ public class StandModel : BaseViewModel
 
     public float? KMCHCount
     {
-        get => _kmchCount; 
+        get => _kmchCount;
         set => Set(ref _kmchCount, value);
     }
 

@@ -1,4 +1,6 @@
-﻿using ControlzEx.Standard;
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Windows.Data;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model;
@@ -14,9 +16,6 @@ using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Windows.Data;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -71,62 +70,6 @@ public class ProjectViewModel : BaseViewModel
         CurrentProjectModel.OutOfProduction = DateTime.Now.Date;
         CurrentProjectModel.EndDate = DateTime.Now.Date;
     }
-
-    // TODO: Сделать тут рефакторинг (дженерик метод или фабрику)
-
-    #region Инициализация команд
-
-    public void InitializeCommands()
-    {
-        ProjectCommandProvider.CreateNewCardCommand =
-            new RelayCommand(OnCreateNewCardCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.AddNewStandCommand =
-            new RelayCommand(OnAddNewStandCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.SaveChangesCommand =
-            new RelayCommand(OnSaveChangesCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.AddFrameToStandCommand =
-            new RelayCommand(OnAddFrameToStandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.AddDrainageToStandCommand =
-            new RelayCommand(OnAddDrainageToStandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.AddCustomDrainageToStandCommand =
-            new RelayCommand(OnAddCustomDrainageToStandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.AddCustomElectricalComponentToStandCommand =
-            new RelayCommand(OnAddCustomElectricalComponentToStandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.AddCustomAdditionalEquipToStandCommand =
-            new RelayCommand(OnAddCustomAdditionalEquipToStandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.SelectObvFromDialogCommand =
-            new RelayCommand(OnSelectObvCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.CalculateProjectCommand =
-            new RelayCommand(OnCalculateProjectCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.CreateSummaryReportCommand =
-            new RelayCommand(OnCreateSummaryReportCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.OpenAllSortamentsDialogCommand =
-            new RelayCommand(OnOpenAllSortamentsDialogExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.CreateMarkReportCommand =
-            new RelayCommand(OnCreateMarksReportCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.DeleteSelectedStandCommand =
-            new RelayCommand(OnDeleteSelectedStandFromProjectExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.RemoveObvFromStandCommand = 
-            new RelayCommand(OnRemoveObvCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.CreateContainerReportCommand = 
-            new RelayCommand(OnCreateContainerReportCommandExecuted, CanAllCommandsExecute);
-    }
-
-    public void InitializeGenericCommands()
-    {
-        ProjectCommandProvider.SelectMaterialLineDialogCommand =
-            new RelayCommand(OnSelectMaterialFromDialogCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.SelectArmatureDialogCommand =
-            new RelayCommand(OnSelectArmatureFromDialogCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.SelectKMCHDialogCommand =
-            new RelayCommand(OnSelectKMCHFromDialogCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.SelectTreeSocketDialogCommand =
-            new RelayCommand(OnSelectTreeSocketFromDialogCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.SaveObvCommand =
-            new RelayCommand(OnSaveObvCommandExecuted, CanAllCommandsExecute);
-    }
-
-    #endregion
 
     public bool CanAllCommandsExecute(object? e)
     {
@@ -289,14 +232,12 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnCreateContainerReportCommandExecuted(object p)
     {
-
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await CreateReportAsync(ReportType.ContainerReport, "тара");
-            
         });
     }
-    
+
     public void ResetProject()
     {
         CurrentProjectModel = new ProjectModel();
@@ -305,7 +246,63 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(CurrentProjectModel));
         OnPropertyChanged(nameof(CurrentStandModel));
     }
-    
+
+    // TODO: Сделать тут рефакторинг (дженерик метод или фабрику)
+
+    #region Инициализация команд
+
+    public void InitializeCommands()
+    {
+        ProjectCommandProvider.CreateNewCardCommand =
+            new RelayCommand(OnCreateNewCardCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.AddNewStandCommand =
+            new RelayCommand(OnAddNewStandCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.SaveChangesCommand =
+            new RelayCommand(OnSaveChangesCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.AddFrameToStandCommand =
+            new RelayCommand(OnAddFrameToStandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.AddDrainageToStandCommand =
+            new RelayCommand(OnAddDrainageToStandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.AddCustomDrainageToStandCommand =
+            new RelayCommand(OnAddCustomDrainageToStandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.AddCustomElectricalComponentToStandCommand =
+            new RelayCommand(OnAddCustomElectricalComponentToStandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.AddCustomAdditionalEquipToStandCommand =
+            new RelayCommand(OnAddCustomAdditionalEquipToStandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.SelectObvFromDialogCommand =
+            new RelayCommand(OnSelectObvCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.CalculateProjectCommand =
+            new RelayCommand(OnCalculateProjectCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.CreateSummaryReportCommand =
+            new RelayCommand(OnCreateSummaryReportCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.OpenAllSortamentsDialogCommand =
+            new RelayCommand(OnOpenAllSortamentsDialogExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.CreateMarkReportCommand =
+            new RelayCommand(OnCreateMarksReportCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.DeleteSelectedStandCommand =
+            new RelayCommand(OnDeleteSelectedStandFromProjectExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.RemoveObvFromStandCommand =
+            new RelayCommand(OnRemoveObvCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.CreateContainerReportCommand =
+            new RelayCommand(OnCreateContainerReportCommandExecuted, CanAllCommandsExecute);
+    }
+
+    public void InitializeGenericCommands()
+    {
+        ProjectCommandProvider.SelectMaterialLineDialogCommand =
+            new RelayCommand(OnSelectMaterialFromDialogCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.SelectArmatureDialogCommand =
+            new RelayCommand(OnSelectArmatureFromDialogCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.SelectKMCHDialogCommand =
+            new RelayCommand(OnSelectKMCHFromDialogCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.SelectTreeSocketDialogCommand =
+            new RelayCommand(OnSelectTreeSocketFromDialogCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.SaveObvCommand =
+            new RelayCommand(OnSaveObvCommandExecuted, CanAllCommandsExecute);
+    }
+
+    #endregion
+
     #region Методы загрузки данных на view
 
     public async Task LoadStandsDataAsync()
@@ -576,18 +573,21 @@ public class ProjectViewModel : BaseViewModel
                 case DrainagePurpose dp:
                     dp.Material = selected.Name;
                     dp.CostPerUnit = selected.Cost;
+                    dp.Measure = selected.Measure;
                     CollectionViewSource.GetDefaultView(CurrentStandModel.NewDrainage.Purposes).Refresh();
                     return;
 
                 case AdditionalEquipPurpose ap:
                     ap.Material = selected.Name;
                     ap.CostPerUnit = selected.Cost;
+                    ap.Measure = selected.Measure;
                     CollectionViewSource.GetDefaultView(CurrentStandModel.NewAdditionalEquip.Purposes).Refresh();
                     return;
 
                 case ElectricalPurpose ep:
                     ep.Material = selected.Name;
                     ep.CostPerUnit = selected.Cost;
+                    ep.Measure = selected.Measure;
                     CollectionViewSource.GetDefaultView(CurrentStandModel.NewElectricalComponent.Purposes).Refresh();
                     return;
             }
@@ -595,6 +595,7 @@ public class ProjectViewModel : BaseViewModel
             var t = target.GetType();
             var matProp = t.GetProperty("Material");
             var costProp = t.GetProperty("CostPerUnit");
+            var measureProp = t.GetProperty("Measure");
             if (matProp != null && matProp.CanWrite) matProp.SetValue(target, selected.Name);
             if (costProp != null && costProp.CanWrite) costProp.SetValue(target, selected.Cost);
         });
