@@ -50,10 +50,6 @@ public class ComponentsListReportGenerator : IReportGenerator
             wb.SaveAs(fullSavePath);
         }
     }
-
-
-
-
     //Создает общий заголовок таблицы на листе
     private void CreateWorksheetTableHeader(IXLWorksheet ws, Stand stand)
     {
@@ -65,12 +61,9 @@ public class ComponentsListReportGenerator : IReportGenerator
         ws.Columns().AdjustToContents();
 
 
-
         ws.Cell("B3").Value = "Наименование";
         ws.Cell("C3").Value = "Ед. изм";
         ws.Cell("D3").Value = "Кол.";
-
-
 
 
         ws.Columns().AdjustToContents();
@@ -85,16 +78,12 @@ public class ComponentsListReportGenerator : IReportGenerator
 
         ws.Range("B2:D2").Merge();
         ws.Range("C1:D1").Merge();
-    }
-
-
+    } 
     //Заполняет таблицу на листе
     private async Task FillWorksheetTable(IXLWorksheet ws, Stand stand)
     {
         int activeRow = 4;
-
-
-        //Формирование списка труб
+        //Формирование списка труп
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
 
         var pipesList = stand.ObvyazkiInStand
@@ -112,11 +101,7 @@ public class ComponentsListReportGenerator : IReportGenerator
                 ))
             .ToList();
 
-
         activeRow = FillSubtableData(activeRow, pipesList, ws);
-
-
-
         //Формирование списка арматуры
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Арматура", ws);
 
@@ -135,11 +120,6 @@ public class ComponentsListReportGenerator : IReportGenerator
             .ToList();
 
         activeRow = FillSubtableData(activeRow, armaturesList, ws);
-
-
-
-
-
         //Формирование списка тройников и КМЧ
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Тройники и КМЧ", ws);
 
@@ -198,7 +178,6 @@ public class ComponentsListReportGenerator : IReportGenerator
         activeRow = FillSubtableData(activeRow, framesList, ws);
     }   
 
-
     //создает заголовок для подтаблицы и возвращает следующую строку
     private int CreateSubheaderOnWorksheet(int row, string title, IXLWorksheet ws)
     {
@@ -211,14 +190,10 @@ public class ComponentsListReportGenerator : IReportGenerator
         row++;
         return row;
     }
-
-
-
     //Заполняет подтаблицу и возвращает следующую строку
     private int FillSubtableData(int startRow, List<(string name, string unit, float quantity)> items, IXLWorksheet ws)
     {
         int currentRow = startRow;
-
         foreach (var item in items)
         {
             ws.Cell($"B{currentRow}").Value = item.name;

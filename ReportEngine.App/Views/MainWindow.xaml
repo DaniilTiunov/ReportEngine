@@ -235,7 +235,7 @@
                         Text="{Binding MainWindowModel.ConnectionStatusMessage}" />
                     <Button
                         Height="24"
-                        Margin="5,0,0,0"
+                        Margin="5,0,5,0"
                         BorderThickness="0"
                         Command="{Binding MainWindowCommandProvider.ChekDbConnectionCommand}"
                         Content="{StaticResource refresh-button.png}" />
