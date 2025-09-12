@@ -573,18 +573,21 @@ public class ProjectViewModel : BaseViewModel
                 case DrainagePurpose dp:
                     dp.Material = selected.Name;
                     dp.CostPerUnit = selected.Cost;
+                    dp.Measure = selected.Measure;
                     CollectionViewSource.GetDefaultView(CurrentStandModel.NewDrainage.Purposes).Refresh();
                     return;
 
                 case AdditionalEquipPurpose ap:
                     ap.Material = selected.Name;
                     ap.CostPerUnit = selected.Cost;
+                    ap.Measure = selected.Measure;
                     CollectionViewSource.GetDefaultView(CurrentStandModel.NewAdditionalEquip.Purposes).Refresh();
                     return;
 
                 case ElectricalPurpose ep:
                     ep.Material = selected.Name;
                     ep.CostPerUnit = selected.Cost;
+                    ep.Measure = selected.Measure;
                     CollectionViewSource.GetDefaultView(CurrentStandModel.NewElectricalComponent.Purposes).Refresh();
                     return;
             }
@@ -592,6 +595,7 @@ public class ProjectViewModel : BaseViewModel
             var t = target.GetType();
             var matProp = t.GetProperty("Material");
             var costProp = t.GetProperty("CostPerUnit");
+            var measureProp = t.GetProperty("Measure");
             if (matProp != null && matProp.CanWrite) matProp.SetValue(target, selected.Name);
             if (costProp != null && costProp.CanWrite) costProp.SetValue(target, selected.Cost);
         });

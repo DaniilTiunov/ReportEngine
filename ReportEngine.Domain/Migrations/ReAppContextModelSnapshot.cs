@@ -39,6 +39,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Material")
                         .HasColumnType("text");
 
+                    b.Property<string>("Measure")
+                        .HasColumnType("text");
+
                     b.Property<string>("Purpose")
                         .IsRequired()
                         .HasColumnType("text");
@@ -343,6 +346,9 @@ namespace ReportEngine.Domain.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Material")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Measure")
                         .HasColumnType("text");
 
                     b.Property<string>("Purpose")
@@ -683,6 +689,9 @@ namespace ReportEngine.Domain.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Material")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Measure")
                         .HasColumnType("text");
 
                     b.Property<string>("Purpose")

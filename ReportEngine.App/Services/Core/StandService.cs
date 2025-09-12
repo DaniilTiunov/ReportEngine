@@ -127,7 +127,8 @@ public class StandService : IStandService
                 Purpose = p.Purpose,
                 Material = p.Material,
                 Quantity = p.Quantity,
-                CostPerUnit = p.CostPerUnit
+                CostPerUnit = p.CostPerUnit,
+                Measure = p.Measure
             }).ToList()
         };
 
@@ -152,7 +153,8 @@ public class StandService : IStandService
                 Purpose = p.Purpose,
                 Material = p.Material,
                 Quantity = p.Quantity,
-                CostPerUnit = p.CostPerUnit
+                CostPerUnit = p.CostPerUnit,
+                Measure = p.Measure
             }).ToList()
         };
 
@@ -171,7 +173,8 @@ public class StandService : IStandService
                 Purpose = p.Purpose,
                 Material = p.Material,
                 Quantity = p.Quantity,
-                CostPerUnit = p.CostPerUnit
+                CostPerUnit = p.CostPerUnit,
+                Measure = p.Measure
             }).ToList()
         };
 
