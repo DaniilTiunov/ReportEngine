@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ReportEngine.Domain.Database.Context;
@@ -11,9 +12,11 @@ using ReportEngine.Domain.Database.Context;
 namespace ReportEngine.Domain.Migrations
 {
     [DbContext(typeof(ReAppContext))]
-    partial class ReAppContextModelSnapshot : ModelSnapshot
+    [Migration("20250912044459_UpdateFrames")]
+    partial class UpdateFrames
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -976,9 +979,6 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float?>("ArmatureCount")
                         .HasColumnType("real");
 
-                    b.Property<string>("ArmatureMeasure")
-                        .HasColumnType("text");
-
                     b.Property<float>("Clamp")
                         .HasColumnType("real");
 
@@ -1010,9 +1010,6 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float?>("KMCHCount")
                         .HasColumnType("real");
 
-                    b.Property<string>("KMCHMeasure")
-                        .HasColumnType("text");
-
                     b.Property<float>("LineLength")
                         .HasColumnType("real");
 
@@ -1021,9 +1018,6 @@ namespace ReportEngine.Domain.Migrations
 
                     b.Property<float?>("MaterialLineCount")
                         .HasColumnType("real");
-
-                    b.Property<string>("MaterialLineMeasure")
-                        .HasColumnType("text");
 
                     b.Property<int?>("NN")
                         .HasColumnType("integer");
@@ -1085,9 +1079,6 @@ namespace ReportEngine.Domain.Migrations
 
                     b.Property<float?>("TreeSocketMaterialCount")
                         .HasColumnType("real");
-
-                    b.Property<string>("TreeSocketMaterialMeasure")
-                        .HasColumnType("text");
 
                     b.Property<float>("Weight")
                         .HasColumnType("real");
