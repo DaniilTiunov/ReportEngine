@@ -17,21 +17,21 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!--  Панель кнопок  -->
+        <!--  Панель кнопок
         <StackPanel
             Grid.Row="0"
             Margin="0,0,0,5"
             HorizontalAlignment="Left"
             Orientation="Horizontal">
 
-            <!--  Кнопка "Выбрать"  -->
+         Кнопка "Выбрать"
             <Button
                 Width="100"
                 Margin="0,0,10,0"
                 Command="{Binding SelectCommand}"
                 Content="Выбрать" />
 
-        </StackPanel>
+         </StackPanel>-->
 
         <!--  Разделительная линия  -->
         <Separator Grid.Row="1" Margin="0,0,0,5" />
@@ -46,6 +46,7 @@
             CanUserSortColumns="True"
             IsReadOnly="False"
             ItemsSource="{Binding GenericEquipModel.BaseEquips}"
+            MouseDoubleClick="SelectEquip_DoubleClick"
             SelectedItem="{Binding GenericEquipModel.SelectedBaseEquip, Mode=TwoWay}"
             SelectionUnit="FullRow">
 
