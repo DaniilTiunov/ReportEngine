@@ -31,6 +31,8 @@ public class StandModel : BaseViewModel
 
     // Арматура стенда (текст)
     private string _armature;
+    private float? _armatureCount;
+    private string? _armatureMeasure;
 
     // Тип крепления датчика
     private string _braceType;
@@ -85,9 +87,13 @@ public class StandModel : BaseViewModel
 
     // КМЧ
     private string _kmch;
+    private float? _kmchCount;
+    private string? _kmchMeasure;
 
     // Материал линии
     private string _materialLine;
+    private float? _materialLineCount;
+    private string? _materialLineMeasure;
 
     // Объект для создания нового дополнительного комплектующего
     private FormedAdditionalEquip _newAdditionalEquip = new();
@@ -163,6 +169,8 @@ public class StandModel : BaseViewModel
 
     // Тройник/разветвитель
     private string _treeScoket;
+    private float? _treeSocketMaterialCount;
+    private string? _treeSocketMaterialMeasure;
 
     // Масса стенда
     private float _weight;
@@ -294,11 +302,35 @@ public class StandModel : BaseViewModel
         set => Set(ref _materialLine, value);
     }
 
+    public float? MaterialLineCount
+    {
+        get => _materialLineCount;
+        set => Set(ref _materialLineCount, value);
+    }
+
+    public string? MaterialLineMeasure
+    {
+        get => _materialLineMeasure;
+        set => Set(ref _materialLineMeasure, value);
+    }
+
     // Арматура
     public string Armature
     {
         get => _armature;
         set => Set(ref _armature, value);
+    }
+
+    public float? ArmatureCount
+    {
+        get => _armatureCount;
+        set => Set(ref _armatureCount, value);
+    }
+
+    public string? ArmatureMeasure
+    {
+        get => _armatureMeasure;
+        set => Set(ref _armatureMeasure, value);
     }
 
     // Информация о тройнике/разветвителе
@@ -308,11 +340,35 @@ public class StandModel : BaseViewModel
         set => Set(ref _treeScoket, value);
     }
 
+    public float? TreeSocketMaterialCount
+    {
+        get => _treeSocketMaterialCount;
+        set => Set(ref _treeSocketMaterialCount, value);
+    }
+
+    public string? TreeSocketMaterialMeasure
+    {
+        get => _treeSocketMaterialMeasure;
+        set => Set(ref _treeSocketMaterialMeasure, value);
+    }
+
     // КМЧ
     public string KMCH
     {
         get => _kmch;
         set => Set(ref _kmch, value);
+    }
+
+    public float? KMCHCount
+    {
+        get => _kmchCount;
+        set => Set(ref _kmchCount, value);
+    }
+
+    public string? KMCHMeasure
+    {
+        get => _kmchMeasure;
+        set => Set(ref _kmchMeasure, value);
     }
 
     // Тип первого датчика

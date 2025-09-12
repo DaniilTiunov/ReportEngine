@@ -71,58 +71,6 @@ public class ProjectViewModel : BaseViewModel
         CurrentProjectModel.EndDate = DateTime.Now.Date;
     }
 
-    // TODO: Сделать тут рефакторинг (дженерик метод или фабрику)
-
-    #region Инициализация команд
-
-    public void InitializeCommands()
-    {
-        ProjectCommandProvider.CreateNewCardCommand =
-            new RelayCommand(OnCreateNewCardCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.AddNewStandCommand =
-            new RelayCommand(OnAddNewStandCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.SaveChangesCommand =
-            new RelayCommand(OnSaveChangesCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.AddFrameToStandCommand =
-            new RelayCommand(OnAddFrameToStandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.AddDrainageToStandCommand =
-            new RelayCommand(OnAddDrainageToStandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.AddCustomDrainageToStandCommand =
-            new RelayCommand(OnAddCustomDrainageToStandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.AddCustomElectricalComponentToStandCommand =
-            new RelayCommand(OnAddCustomElectricalComponentToStandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.AddCustomAdditionalEquipToStandCommand =
-            new RelayCommand(OnAddCustomAdditionalEquipToStandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.SelectObvFromDialogCommand =
-            new RelayCommand(OnSelectObvCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.CalculateProjectCommand =
-            new RelayCommand(OnCalculateProjectCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.CreateSummaryReportCommand =
-            new RelayCommand(OnCreateSummaryReportCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.OpenAllSortamentsDialogCommand =
-            new RelayCommand(OnOpenAllSortamentsDialogExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.CreateMarkReportCommand =
-            new RelayCommand(OnCreateMarksReportCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.DeleteSelectedStandCommand =
-            new RelayCommand(OnDeleteSelectedStandFromProjectExecuted, CanAllCommandsExecute);
-    }
-
-    public void InitializeGenericCommands()
-    {
-        ProjectCommandProvider.SelectMaterialLineDialogCommand =
-            new RelayCommand(OnSelectMaterialFromDialogCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.SelectArmatureDialogCommand =
-            new RelayCommand(OnSelectArmatureFromDialogCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.SelectKMCHDialogCommand =
-            new RelayCommand(OnSelectKMCHFromDialogCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.SelectTreeSocketDialogCommand =
-            new RelayCommand(OnSelectTreeSocketFromDialogCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.SaveObvCommand =
-            new RelayCommand(OnSaveObvCommandExecuted, CanAllCommandsExecute);
-    }
-
-    #endregion
-
     public bool CanAllCommandsExecute(object? e)
     {
         return true;
@@ -137,18 +85,25 @@ public class ProjectViewModel : BaseViewModel
         ApplySelectedEquipToPurpose(e, selected);
     }
 
+    // TODO: Сделать тут рефакторинг команд
     public void OnSelectMaterialFromDialogCommandExecuted(object e)
     {
         switch (CurrentMaterials.SelectedMaterialLine)
         {
             case "Жаропрочные":
-                SelectEquipment<HeaterPipe>(name => CurrentProjectModel.SelectedStand.MaterialLine = name);
+                SelectEquipment<HeaterPipe>(
+                    name => CurrentProjectModel.SelectedStand.MaterialLine = name,
+                    measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure);
                 break;
             case "Нержавеющие":
-                SelectEquipment<StainlessPipe>(name => CurrentProjectModel.SelectedStand.MaterialLine = name);
+                SelectEquipment<StainlessPipe>(
+                    name => CurrentProjectModel.SelectedStand.MaterialLine = name,
+                    measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure);
                 break;
             case "Углеродистые":
-                SelectEquipment<CarbonPipe>(name => CurrentProjectModel.SelectedStand.MaterialLine = name);
+                SelectEquipment<CarbonPipe>(
+                    name => CurrentProjectModel.SelectedStand.MaterialLine = name,
+                    measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure);
                 break;
         }
     }
@@ -158,29 +113,41 @@ public class ProjectViewModel : BaseViewModel
         switch (CurrentMaterials.SelectedAramuteres)
         {
             case "Жаропрочные":
-                SelectEquipment<HeaterArmature>(name => CurrentProjectModel.SelectedStand.Armature = name);
+                SelectEquipment<HeaterArmature>(
+                    name => CurrentProjectModel.SelectedStand.Armature = name,
+                    measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure);
                 break;
             case "Нержавеющие":
-                SelectEquipment<StainlessArmature>(name => CurrentProjectModel.SelectedStand.Armature = name);
+                SelectEquipment<StainlessArmature>(
+                    name => CurrentProjectModel.SelectedStand.Armature = name,
+                    measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure);
                 break;
             case "Углеродистые":
-                SelectEquipment<CarbonArmature>(name => CurrentProjectModel.SelectedStand.Armature = name);
+                SelectEquipment<CarbonArmature>(
+                    name => CurrentProjectModel.SelectedStand.Armature = name,
+                    measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure);
                 break;
         }
     }
 
     public void OnSelectTreeSocketFromDialogCommandExecuted(object e)
     {
-        switch (CurrentMaterials.SelectedAramuteres)
+        switch (CurrentMaterials.SelectedSocketTypes)
         {
             case "Жаропрочные":
-                SelectEquipment<HeaterSocket>(name => CurrentProjectModel.SelectedStand.TreeSocket = name);
+                SelectEquipment<HeaterSocket>(
+                    name => CurrentProjectModel.SelectedStand.TreeSocket = name,
+                    measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure);
                 break;
             case "Нержавеющие":
-                SelectEquipment<StainlessSocket>(name => CurrentProjectModel.SelectedStand.TreeSocket = name);
+                SelectEquipment<StainlessSocket>(
+                    name => CurrentProjectModel.SelectedStand.TreeSocket = name,
+                    measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure);
                 break;
             case "Углеродистые":
-                SelectEquipment<CarbonSocket>(name => CurrentProjectModel.SelectedStand.TreeSocket = name);
+                SelectEquipment<CarbonSocket>(
+                    name => CurrentProjectModel.SelectedStand.TreeSocket = name,
+                    measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure);
                 break;
         }
     }
@@ -190,13 +157,19 @@ public class ProjectViewModel : BaseViewModel
         switch (CurrentMaterials.SelectedKMCHType)
         {
             case "Жаропрочные":
-                SelectEquipment<HeaterSocket>(name => CurrentProjectModel.SelectedStand.KMCH = name);
+                SelectEquipment<HeaterSocket>(
+                    name => CurrentProjectModel.SelectedStand.KMCH = name,
+                    measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure);
                 break;
             case "Нержавеющие":
-                SelectEquipment<StainlessSocket>(name => CurrentProjectModel.SelectedStand.KMCH = name);
+                SelectEquipment<StainlessSocket>(
+                    name => CurrentProjectModel.SelectedStand.KMCH = name,
+                    measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure);
                 break;
             case "Углеродистые":
-                SelectEquipment<CarbonSocket>(name => CurrentProjectModel.SelectedStand.KMCH = name);
+                SelectEquipment<CarbonSocket>(
+                    name => CurrentProjectModel.SelectedStand.KMCH = name,
+                    measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure);
                 break;
         }
     }
@@ -224,6 +197,11 @@ public class ProjectViewModel : BaseViewModel
     public async void OnSaveObvCommandExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(AddObvToStandAsync);
+    }
+
+    public async void OnRemoveObvCommandExecuted(object e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(DeleteObvFromStandAsync);
     }
 
     public async void OnAddCustomDrainageToStandExecuted(object p)
@@ -263,7 +241,7 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnCreateSummaryReportCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(async ()=>
+        await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await CreateReportAsync(ReportType.ComponentsListReport, "комплектующих");
         });
@@ -271,9 +249,17 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnCreateMarksReportCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(async ()=>
+        await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await CreateReportAsync(ReportType.MarksReport, "маркировки");
+        });
+    }
+
+    public async void OnCreateContainerReportCommandExecuted(object p)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await CreateReportAsync(ReportType.ContainerReport, "тара");
         });
     }
 
@@ -285,6 +271,62 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(CurrentProjectModel));
         OnPropertyChanged(nameof(CurrentStandModel));
     }
+
+    // TODO: Сделать тут рефакторинг (дженерик метод или фабрику)
+
+    #region Инициализация команд
+
+    public void InitializeCommands()
+    {
+        ProjectCommandProvider.CreateNewCardCommand =
+            new RelayCommand(OnCreateNewCardCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.AddNewStandCommand =
+            new RelayCommand(OnAddNewStandCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.SaveChangesCommand =
+            new RelayCommand(OnSaveChangesCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.AddFrameToStandCommand =
+            new RelayCommand(OnAddFrameToStandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.AddDrainageToStandCommand =
+            new RelayCommand(OnAddDrainageToStandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.AddCustomDrainageToStandCommand =
+            new RelayCommand(OnAddCustomDrainageToStandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.AddCustomElectricalComponentToStandCommand =
+            new RelayCommand(OnAddCustomElectricalComponentToStandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.AddCustomAdditionalEquipToStandCommand =
+            new RelayCommand(OnAddCustomAdditionalEquipToStandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.SelectObvFromDialogCommand =
+            new RelayCommand(OnSelectObvCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.CalculateProjectCommand =
+            new RelayCommand(OnCalculateProjectCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.CreateSummaryReportCommand =
+            new RelayCommand(OnCreateSummaryReportCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.OpenAllSortamentsDialogCommand =
+            new RelayCommand(OnOpenAllSortamentsDialogExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.CreateMarkReportCommand =
+            new RelayCommand(OnCreateMarksReportCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.DeleteSelectedStandCommand =
+            new RelayCommand(OnDeleteSelectedStandFromProjectExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.RemoveObvFromStandCommand =
+            new RelayCommand(OnRemoveObvCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.CreateContainerReportCommand =
+            new RelayCommand(OnCreateContainerReportCommandExecuted, CanAllCommandsExecute);
+    }
+
+    public void InitializeGenericCommands()
+    {
+        ProjectCommandProvider.SelectMaterialLineDialogCommand =
+            new RelayCommand(OnSelectMaterialFromDialogCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.SelectArmatureDialogCommand =
+            new RelayCommand(OnSelectArmatureFromDialogCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.SelectKMCHDialogCommand =
+            new RelayCommand(OnSelectKMCHFromDialogCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.SelectTreeSocketDialogCommand =
+            new RelayCommand(OnSelectTreeSocketFromDialogCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.SaveObvCommand =
+            new RelayCommand(OnSaveObvCommandExecuted, CanAllCommandsExecute);
+    }
+
+    #endregion
 
     #region Методы загрузки данных на view
 
@@ -348,7 +390,41 @@ public class ProjectViewModel : BaseViewModel
         var entity = await _standService.CreateObvyazkaAsync(CurrentProjectModel.SelectedStand, SelectedObvyazka);
 
         await _standService.AddObvyazkaToStandAsync(CurrentProjectModel.SelectedStand.Id, entity);
+
         CurrentProjectModel.SelectedStand.ObvyazkiInStand.Add(entity);
+    }
+
+    private async Task DeleteObvFromStandAsync()
+    {
+        var stand = CurrentProjectModel?.SelectedStand;
+        var selectedObv = stand?.SelectedObvyazkaInStand;
+
+        if (stand == null || selectedObv == null)
+        {
+            _notificationService.ShowInfo("Обвязка или стенд не выбран");
+            return;
+        }
+
+        var standId = stand.Id;
+        var obvId = selectedObv.Id;
+
+        try
+        {
+            await _projectService.DeleteObvFromStandAsync(standId, obvId);
+        }
+        catch (Exception ex)
+        {
+            _notificationService.ShowError($"Не удалось удалить обвязку: {ex.Message}");
+            return;
+        }
+
+        var toRemove = stand.ObvyazkiInStand?.FirstOrDefault(o => o.Id == obvId);
+        if (toRemove != null)
+            stand.ObvyazkiInStand.Remove(toRemove);
+
+        stand.SelectedObvyazkaInStand = null;
+
+        _notificationService.ShowInfo("Обвязка удалена из стенда");
     }
 
     private async Task SaveProjectChangesAsync()
@@ -388,6 +464,7 @@ public class ProjectViewModel : BaseViewModel
             FirstSensorType = CurrentStandModel.FirstSensorType,
             ProjectId = CurrentProjectModel.CurrentProjectId
         };
+
         var newStandEntity = StandDataConverter.ConvertToStandEntity(newStandModel);
         var addedStandEntity =
             await _projectRepository.AddStandAsync(CurrentProjectModel.CurrentProjectId, newStandEntity);
@@ -418,13 +495,17 @@ public class ProjectViewModel : BaseViewModel
         CurrentStandModel = new StandModel();
     }
 
-    private void SelectEquipment<T>(Action<string> setProperty)
+    private void SelectEquipment<T>(Action<string> setProperty, Action<string> setMeasure)
         where T : class, IBaseEquip, new()
     {
         ExceptionHelper.SafeExecute(() =>
         {
             var equipment = _dialogService.ShowEquipDialog<T>();
-            if (equipment != null && CurrentProjectModel.SelectedStand != null) setProperty(equipment.Name);
+            if (equipment != null && CurrentProjectModel.SelectedStand != null)
+            {
+                setProperty(equipment.Name);
+                setMeasure(equipment.Measure);
+            }
         });
     }
 
@@ -522,18 +603,21 @@ public class ProjectViewModel : BaseViewModel
                 case DrainagePurpose dp:
                     dp.Material = selected.Name;
                     dp.CostPerUnit = selected.Cost;
+                    dp.Measure = selected.Measure;
                     CollectionViewSource.GetDefaultView(CurrentStandModel.NewDrainage.Purposes).Refresh();
                     return;
 
                 case AdditionalEquipPurpose ap:
                     ap.Material = selected.Name;
                     ap.CostPerUnit = selected.Cost;
+                    ap.Measure = selected.Measure;
                     CollectionViewSource.GetDefaultView(CurrentStandModel.NewAdditionalEquip.Purposes).Refresh();
                     return;
 
                 case ElectricalPurpose ep:
                     ep.Material = selected.Name;
                     ep.CostPerUnit = selected.Cost;
+                    ep.Measure = selected.Measure;
                     CollectionViewSource.GetDefaultView(CurrentStandModel.NewElectricalComponent.Purposes).Refresh();
                     return;
             }
@@ -541,11 +625,12 @@ public class ProjectViewModel : BaseViewModel
             var t = target.GetType();
             var matProp = t.GetProperty("Material");
             var costProp = t.GetProperty("CostPerUnit");
+            var measureProp = t.GetProperty("Measure");
             if (matProp != null && matProp.CanWrite) matProp.SetValue(target, selected.Name);
             if (costProp != null && costProp.CanWrite) costProp.SetValue(target, selected.Cost);
         });
     }
-    
+
     #endregion
 
     #region Методы расчёта и создания отчётности
@@ -556,7 +641,7 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(CurrentProjectModel.Stands));
         OnPropertyChanged(nameof(CurrentProjectModel.Cost));
     }
-    
+
     private async Task CreateReportAsync(ReportType typeGenerator, string reportName)
     {
         await _reportService.GenerateReportAsync(typeGenerator, CurrentProjectModel.CurrentProjectId);

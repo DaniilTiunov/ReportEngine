@@ -12,18 +12,52 @@ using ReportEngine.Domain.Database.Context;
 namespace ReportEngine.Domain.Migrations
 {
     [DbContext(typeof(ReAppContext))]
-    [Migration("20250815100314_UpdateFrames")]
-    partial class UpdateFrames
+    [Migration("20250912051003_UpdateObvyazki")]
+    partial class UpdateObvyazki
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.8")
+                .HasAnnotation("ProductVersion", "9.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.AdditionalEquipPurpose", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float?>("CostPerUnit")
+                        .HasColumnType("real");
+
+                    b.Property<int>("FormedAdditionalEquipId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Material")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Measure")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Purpose")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<float?>("Quantity")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FormedAdditionalEquipId");
+
+                    b.ToTable("AdditionalEquipPurposes");
+                });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.Armautre.CarbonArmature", b =>
                 {
@@ -308,10 +342,16 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<float?>("CostPerUnit")
+                        .HasColumnType("real");
+
                     b.Property<int>("FormedDrainageId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Material")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Measure")
                         .HasColumnType("text");
 
                     b.Property<string>("Purpose")
@@ -325,7 +365,7 @@ namespace ReportEngine.Domain.Migrations
 
                     b.HasIndex("FormedDrainageId");
 
-                    b.ToTable("DrainagePurpose");
+                    b.ToTable("DrainagePurposes");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.ElectricComponents.CabelBoxe", b =>
@@ -637,6 +677,56 @@ namespace ReportEngine.Domain.Migrations
                     b.ToTable("StainlessSockets");
                 });
 
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ElectricalPurpose", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float?>("CostPerUnit")
+                        .HasColumnType("real");
+
+                    b.Property<int>("FormedElectricalComponentId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Material")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Measure")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Purpose")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<float?>("Quantity")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FormedElectricalComponentId");
+
+                    b.ToTable("ElectricalPurposes");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.FormedAdditionalEquip", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FormedAdditionalEquips");
+                });
+
             modelBuilder.Entity("ReportEngine.Domain.Entities.FormedDrainage", b =>
                 {
                     b.Property<int>("Id")
@@ -648,14 +738,25 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<int?>("StandId")
+                    b.HasKey("Id");
+
+                    b.ToTable("FormedDrainages");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.FormedElectricalComponent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StandId");
-
-                    b.ToTable("FormedDrainages");
+                    b.ToTable("FormedElectricalComponents");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.FormedFrame", b =>
@@ -791,6 +892,9 @@ namespace ReportEngine.Domain.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<float?>("CostComponent")
+                        .HasColumnType("real");
+
                     b.Property<int>("Count")
                         .HasColumnType("integer");
 
@@ -799,6 +903,9 @@ namespace ReportEngine.Domain.Migrations
 
                     b.Property<float?>("Length")
                         .HasColumnType("real");
+
+                    b.Property<string>("Measure")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -867,8 +974,16 @@ namespace ReportEngine.Domain.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Armature")
-                        .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<float?>("ArmatureCount")
+                        .HasColumnType("real");
+
+                    b.Property<string>("ArmatureMeasure")
+                        .HasColumnType("text");
+
+                    b.Property<float>("Clamp")
+                        .HasColumnType("real");
 
                     b.Property<string>("FirstDescription")
                         .HasColumnType("text");
@@ -885,18 +1000,44 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("FirstSensorType")
                         .HasColumnType("text");
 
-                    b.Property<string>("KMCH")
+                    b.Property<float>("HumanCost")
+                        .HasColumnType("real");
+
+                    b.Property<string>("ImageName")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<string>("KMCH")
+                        .HasColumnType("text");
+
+                    b.Property<float?>("KMCHCount")
+                        .HasColumnType("real");
+
+                    b.Property<string>("KMCHMeasure")
+                        .HasColumnType("text");
+
+                    b.Property<float>("LineLength")
+                        .HasColumnType("real");
 
                     b.Property<string>("MaterialLine")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("NN")
+                    b.Property<float?>("MaterialLineCount")
+                        .HasColumnType("real");
+
+                    b.Property<string>("MaterialLineMeasure")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("NN")
                         .HasColumnType("integer");
 
                     b.Property<int>("ObvyazkaId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ObvyazkaName")
+                        .HasColumnType("text");
+
+                    b.Property<int>("OtherLineCount")
                         .HasColumnType("integer");
 
                     b.Property<string>("SecondDescription")
@@ -912,6 +1053,13 @@ namespace ReportEngine.Domain.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("SecondSensorType")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Sensor")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SensorType")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("StandId")
@@ -933,8 +1081,25 @@ namespace ReportEngine.Domain.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("TreeSocket")
-                        .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<float>("TreeSocketCount")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("TreeSocketMaterialCount")
+                        .HasColumnType("real");
+
+                    b.Property<string>("TreeSocketMaterialMeasure")
+                        .HasColumnType("text");
+
+                    b.Property<float>("Weight")
+                        .HasColumnType("real");
+
+                    b.Property<float>("WidthOnFrame")
+                        .HasColumnType("real");
+
+                    b.Property<float>("ZraCount")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
@@ -1245,6 +1410,12 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<int>("Devices")
                         .HasColumnType("integer");
 
+                    b.Property<byte[]>("ImageData")
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("ImageType")
+                        .HasColumnType("text");
+
                     b.Property<string>("KKSCode")
                         .HasColumnType("text");
 
@@ -1260,8 +1431,8 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<int>("Number")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ObvyazkaType")
-                        .HasColumnType("integer");
+                    b.Property<string>("ObvyazkaType")
+                        .HasColumnType("text");
 
                     b.Property<int>("ProjectInfoId")
                         .HasColumnType("integer");
@@ -1286,6 +1457,75 @@ namespace ReportEngine.Domain.Migrations
                     b.HasIndex("ProjectInfoId");
 
                     b.ToTable("Stands");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.StandAdditionalEquip", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AdditionalEquipId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StandId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdditionalEquipId");
+
+                    b.HasIndex("StandId");
+
+                    b.ToTable("StandAdditionalEquips");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.StandDrainage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DrainageId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StandId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DrainageId");
+
+                    b.HasIndex("StandId");
+
+                    b.ToTable("StandDrainages");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.StandElectricalComponent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ElectricalComponentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StandId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ElectricalComponentId");
+
+                    b.HasIndex("StandId");
+
+                    b.ToTable("StandElectricalComponents");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.StandFrame", b =>
@@ -1345,6 +1585,17 @@ namespace ReportEngine.Domain.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("ReportEngine.Domain.Entities.AdditionalEquipPurpose", b =>
+                {
+                    b.HasOne("ReportEngine.Domain.Entities.FormedAdditionalEquip", "FormedAdditionalEquip")
+                        .WithMany("Purposes")
+                        .HasForeignKey("FormedAdditionalEquipId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FormedAdditionalEquip");
+                });
+
             modelBuilder.Entity("ReportEngine.Domain.Entities.DrainagePurpose", b =>
                 {
                     b.HasOne("ReportEngine.Domain.Entities.FormedDrainage", "FormedDrainage")
@@ -1356,11 +1607,15 @@ namespace ReportEngine.Domain.Migrations
                     b.Navigation("FormedDrainage");
                 });
 
-            modelBuilder.Entity("ReportEngine.Domain.Entities.FormedDrainage", b =>
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ElectricalPurpose", b =>
                 {
-                    b.HasOne("ReportEngine.Domain.Entities.Stand", null)
-                        .WithMany("FormedDrainages")
-                        .HasForeignKey("StandId");
+                    b.HasOne("ReportEngine.Domain.Entities.FormedElectricalComponent", "FormedElectricalComponent")
+                        .WithMany("Purposes")
+                        .HasForeignKey("FormedElectricalComponentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FormedElectricalComponent");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.FrameComponent", b =>
@@ -1404,6 +1659,63 @@ namespace ReportEngine.Domain.Migrations
                     b.Navigation("Project");
                 });
 
+            modelBuilder.Entity("ReportEngine.Domain.Entities.StandAdditionalEquip", b =>
+                {
+                    b.HasOne("ReportEngine.Domain.Entities.FormedAdditionalEquip", "AdditionalEquip")
+                        .WithMany("StandAdditionalEquips")
+                        .HasForeignKey("AdditionalEquipId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ReportEngine.Domain.Entities.Stand", "Stand")
+                        .WithMany("StandAdditionalEquips")
+                        .HasForeignKey("StandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AdditionalEquip");
+
+                    b.Navigation("Stand");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.StandDrainage", b =>
+                {
+                    b.HasOne("ReportEngine.Domain.Entities.FormedDrainage", "Drainage")
+                        .WithMany("StandDrainages")
+                        .HasForeignKey("DrainageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ReportEngine.Domain.Entities.Stand", "Stand")
+                        .WithMany("StandDrainages")
+                        .HasForeignKey("StandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Drainage");
+
+                    b.Navigation("Stand");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.StandElectricalComponent", b =>
+                {
+                    b.HasOne("ReportEngine.Domain.Entities.FormedElectricalComponent", "ElectricalComponent")
+                        .WithMany("StandElectricalComponents")
+                        .HasForeignKey("ElectricalComponentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ReportEngine.Domain.Entities.Stand", "Stand")
+                        .WithMany("StandElectricalComponent")
+                        .HasForeignKey("StandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ElectricalComponent");
+
+                    b.Navigation("Stand");
+                });
+
             modelBuilder.Entity("ReportEngine.Domain.Entities.StandFrame", b =>
                 {
                     b.HasOne("ReportEngine.Domain.Entities.FormedFrame", "Frame")
@@ -1423,9 +1735,25 @@ namespace ReportEngine.Domain.Migrations
                     b.Navigation("Stand");
                 });
 
+            modelBuilder.Entity("ReportEngine.Domain.Entities.FormedAdditionalEquip", b =>
+                {
+                    b.Navigation("Purposes");
+
+                    b.Navigation("StandAdditionalEquips");
+                });
+
             modelBuilder.Entity("ReportEngine.Domain.Entities.FormedDrainage", b =>
                 {
                     b.Navigation("Purposes");
+
+                    b.Navigation("StandDrainages");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.FormedElectricalComponent", b =>
+                {
+                    b.Navigation("Purposes");
+
+                    b.Navigation("StandElectricalComponents");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.FormedFrame", b =>
@@ -1442,9 +1770,13 @@ namespace ReportEngine.Domain.Migrations
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.Stand", b =>
                 {
-                    b.Navigation("FormedDrainages");
-
                     b.Navigation("ObvyazkiInStand");
+
+                    b.Navigation("StandAdditionalEquips");
+
+                    b.Navigation("StandDrainages");
+
+                    b.Navigation("StandElectricalComponent");
 
                     b.Navigation("StandFrames");
                 });

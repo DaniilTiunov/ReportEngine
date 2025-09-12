@@ -57,7 +57,7 @@
                             Header="Тип крепления" />
                         <GridViewColumn
                             Width="100"
-                            DisplayMemberBinding="{Binding ObvyazkaType}"
+                            DisplayMemberBinding="{Binding ObvyazkaName}"
                             Header="Тип обвязки" />
                         <GridViewColumn
                             Width="100"
@@ -224,7 +224,6 @@
                             <Setter Property="Margin" Value="0,3" />
                         </Style>
                     </StackPanel.Resources>
-
                     <TextBlock
                         Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.ObvyazkaId, StringFormat='Номер: {0}'}" />
                     <TextBlock
@@ -274,6 +273,7 @@
                         <GridViewColumn DisplayMemberBinding="{Binding Material}" Header="Материал" />
                         <GridViewColumn DisplayMemberBinding="{Binding Quantity}" Header="Кол-во" />
                         <GridViewColumn DisplayMemberBinding="{Binding CostPerUnit}" Header="Цена" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Measure}" Header="Ед. изм." />
                     </GridView>
                 </ListView.View>
             </ListView>
@@ -301,6 +301,7 @@
                         <GridViewColumn DisplayMemberBinding="{Binding Material}" Header="Материал" />
                         <GridViewColumn DisplayMemberBinding="{Binding Quantity}" Header="Кол-во" />
                         <GridViewColumn DisplayMemberBinding="{Binding CostPerUnit}" Header="Цена" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Measure}" Header="Ед. изм." />
                     </GridView>
                 </ListView.View>
             </ListView>
@@ -328,6 +329,7 @@
                         <GridViewColumn DisplayMemberBinding="{Binding Material}" Header="Материал" />
                         <GridViewColumn DisplayMemberBinding="{Binding Quantity}" Header="Кол-во" />
                         <GridViewColumn DisplayMemberBinding="{Binding CostPerUnit}" Header="Цена" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Measure}" Header="Ед. изм." />
                     </GridView>
                 </ListView.View>
             </ListView>
@@ -356,8 +358,16 @@
             <Button
                 Width="180"
                 Height="30"
+                Margin="0,0,10,0"
                 Command="{Binding ProjectCommandProvider.CreateMarkReportCommand}"
                 Content="Создать маркировку" />
+            <Button
+                Width="180"
+                Height="30"
+                Margin="0,0,10,0"
+                Command="{Binding ProjectCommandProvider.CreateContainerReportCommand}"
+                Content="Создать тару" />
+
         </StackPanel>
     </Grid>
 </UserControl>

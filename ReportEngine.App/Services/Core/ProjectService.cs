@@ -81,9 +81,6 @@ public class ProjectService : IProjectService
 
         standModel.Id = addedStand.Id;
         standModel.ProjectId = addedStand.ProjectInfoId;
-
-
-        _notificationService.ShowInfo("Стенд добавлен");
     }
 
     public async Task<ProjectModel> LoadProjectInfoAsync(int projectId)
@@ -126,5 +123,10 @@ public class ProjectService : IProjectService
 
         model.SelectedStand = model.Stands.FirstOrDefault();
         return model;
+    }
+
+    public async Task DeleteObvFromStandAsync(int standId, int obvyazkaInStandId)
+    {
+        await _projectRepository.DeleteObvFromStandAsync(standId, obvyazkaInStandId);
     }
 }

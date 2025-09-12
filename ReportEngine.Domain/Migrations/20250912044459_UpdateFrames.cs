@@ -5,20 +5,14 @@
 namespace ReportEngine.Domain.Migrations
 {
     /// <inheritdoc />
-    public partial class AddStandImage : Migration
+    public partial class UpdateFrames : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<byte[]>(
-                name: "ImageData",
-                table: "Stands",
-                type: "bytea",
-                nullable: true);
-
             migrationBuilder.AddColumn<string>(
-                name: "ImageType",
-                table: "Stands",
+                name: "Measure",
+                table: "FrameComponents",
                 type: "text",
                 nullable: true);
         }
@@ -27,12 +21,8 @@ namespace ReportEngine.Domain.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "ImageData",
-                table: "Stands");
-
-            migrationBuilder.DropColumn(
-                name: "ImageType",
-                table: "Stands");
+                name: "Measure",
+                table: "FrameComponents");
         }
     }
 }

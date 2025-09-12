@@ -10,6 +10,7 @@ public class DrainagePurpose
     public string? Material { get; set; } // Просто текстовое поле для материала
     public float? Quantity { get; set; } // Количество
     public float? CostPerUnit { get; set; }
+    public string? Measure { get; set; }
 
     // Внешний ключ на дренаж
     public int FormedDrainageId { get; set; }

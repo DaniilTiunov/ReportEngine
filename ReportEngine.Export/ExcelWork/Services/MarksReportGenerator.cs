@@ -4,7 +4,6 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
 
 namespace ReportEngine.Export.ExcelWork.Services;
@@ -12,41 +11,41 @@ namespace ReportEngine.Export.ExcelWork.Services;
 public class MarksReportGenerator : IReportGenerator
 {
     private readonly IProjectInfoRepository _projectInfoRepository;
-    public ReportType Type => ReportType.MarksReport;
-    
+
     public MarksReportGenerator(IProjectInfoRepository projectInfoRepository)
     {
         _projectInfoRepository = projectInfoRepository;
     }
-    
+
+    public ReportType Type => ReportType.MarksReport;
+
     public async Task GenerateAsync(int projectId)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
 
-        var templatePath = DirectoryHelper.GetReportsTemplatePath("Маркировка");
-        var fileName = "Маркировка___" + DateTime.Now.ToString("yy-MM-dd___HH-mm-ss") + ".xlsx";
 
-        var savePath = SettingsManager.GetReportDirectory();
-        var fullSavePath = Path.Combine(savePath, fileName);
-
-
-        using (var wb = new XLWorkbook(templatePath))
+        using (var wb = new XLWorkbook())
         {
             var ws = wb.Worksheets.Add("MainSheet");
 
-            CreateTableHeader(ws);
-            FillWorksheet(ws, project);
+            CreateWorksheetTableHeader(ws);
+            FillWorksheetTable(ws, project);
 
             ws.Columns().AdjustToContents();
             ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+            var savePath = SettingsManager.GetReportDirectory();
+
+            var fileName = "Маркировка___" + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + ".xlsx";
+            var fullSavePath = Path.Combine(savePath, fileName);
 
             Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
             wb.SaveAs(fullSavePath);
         }
     }
 
-    private void CreateTableHeader(IXLWorksheet ws)
+    private void CreateWorksheetTableHeader(IXLWorksheet ws)
     {
         var headerRange = ws.Range("A1:D1");
 
@@ -61,12 +60,12 @@ public class MarksReportGenerator : IReportGenerator
         headerRange.Style.Font.SetBold();
     }
 
-    private void FillWorksheet(IXLWorksheet ws, ProjectInfo project)
+    private void FillWorksheetTable(IXLWorksheet ws, ProjectInfo project)
     {
         //формируем все нуеобходимые записи
         var allRecords = project.Stands
             .SelectMany(stand => stand.ObvyazkiInStand
-            .SelectMany(obvyazka => CreateObvyazkaRecords(obvyazka, stand)))
+                .SelectMany(obvyazka => CreateObvyazkaRecords(obvyazka, stand)))
             .ToList();
 
         var recordNumber = 1;

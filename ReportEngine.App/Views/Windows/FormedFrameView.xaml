@@ -68,6 +68,9 @@
                                 <DataGridTextColumn
                                     Binding="{Binding Length, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                     Header="Длина (м)" />
+                                <DataGridTextColumn Binding="{Binding CostComponent, StringFormat={}{0:N2}}"
+                                                    Header="Цена за ед." />
+                                <DataGridTextColumn Binding="{Binding Measure}" Header="Ед. изм." />
                                 <DataGridTemplateColumn Header="Действия">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
@@ -78,8 +81,6 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Binding="{Binding CostComponent, StringFormat={}{0:N2}}"
-                                                    Header="Цена за ед." />
                             </DataGrid.Columns>
                         </DataGrid>
                     </GroupBox>

@@ -12,15 +12,15 @@ using ReportEngine.Domain.Database.Context;
 namespace ReportEngine.Domain.Migrations
 {
     [DbContext(typeof(ReAppContext))]
-    [Migration("20250909044614_AddStandImage")]
-    partial class AddStandImage
+    [Migration("20250912040954_UpdatePurposes")]
+    partial class UpdatePurposes
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.8")
+                .HasAnnotation("ProductVersion", "9.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -40,6 +40,9 @@ namespace ReportEngine.Domain.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Material")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Measure")
                         .HasColumnType("text");
 
                     b.Property<string>("Purpose")
@@ -346,6 +349,9 @@ namespace ReportEngine.Domain.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Material")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Measure")
                         .HasColumnType("text");
 
                     b.Property<string>("Purpose")
@@ -688,6 +694,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Material")
                         .HasColumnType("text");
 
+                    b.Property<string>("Measure")
+                        .HasColumnType("text");
+
                     b.Property<string>("Purpose")
                         .IsRequired()
                         .HasColumnType("text");
@@ -964,6 +973,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Armature")
                         .HasColumnType("text");
 
+                    b.Property<float?>("ArmatureCount")
+                        .HasColumnType("real");
+
                     b.Property<float>("Clamp")
                         .HasColumnType("real");
 
@@ -992,11 +1004,17 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("KMCH")
                         .HasColumnType("text");
 
+                    b.Property<float?>("KMCHCount")
+                        .HasColumnType("real");
+
                     b.Property<float>("LineLength")
                         .HasColumnType("real");
 
                     b.Property<string>("MaterialLine")
                         .HasColumnType("text");
+
+                    b.Property<float?>("MaterialLineCount")
+                        .HasColumnType("real");
 
                     b.Property<int?>("NN")
                         .HasColumnType("integer");
@@ -1054,6 +1072,9 @@ namespace ReportEngine.Domain.Migrations
                         .HasColumnType("text");
 
                     b.Property<float>("TreeSocketCount")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("TreeSocketMaterialCount")
                         .HasColumnType("real");
 
                     b.Property<float>("Weight")

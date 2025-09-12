@@ -127,7 +127,8 @@ public class StandService : IStandService
                 Purpose = p.Purpose,
                 Material = p.Material,
                 Quantity = p.Quantity,
-                CostPerUnit = p.CostPerUnit
+                CostPerUnit = p.CostPerUnit,
+                Measure = p.Measure
             }).ToList()
         };
 
@@ -152,7 +153,8 @@ public class StandService : IStandService
                 Purpose = p.Purpose,
                 Material = p.Material,
                 Quantity = p.Quantity,
-                CostPerUnit = p.CostPerUnit
+                CostPerUnit = p.CostPerUnit,
+                Measure = p.Measure
             }).ToList()
         };
 
@@ -171,7 +173,8 @@ public class StandService : IStandService
                 Purpose = p.Purpose,
                 Material = p.Material,
                 Quantity = p.Quantity,
-                CostPerUnit = p.CostPerUnit
+                CostPerUnit = p.CostPerUnit,
+                Measure = p.Measure
             }).ToList()
         };
 
@@ -204,9 +207,13 @@ public class StandService : IStandService
             StandId = standModel.Id,
             NN = standModel.NN,
             MaterialLine = standModel.MaterialLine,
+            MaterialLineCount = standModel.MaterialLineCount,
             Armature = standModel.Armature,
+            ArmatureCount = standModel.ArmatureCount,
             TreeSocket = standModel.TreeSocket,
+            TreeSocketMaterialCount = standModel.TreeSocketMaterialCount,
             KMCH = standModel.KMCH,
+            KMCHCount = standModel.KMCHCount,
             FirstSensorType = standModel.FirstSensorType,
             FirstSensorKKS = standModel.FirstSensorKKSCounter,
             FirstSensorMarkPlus = standModel.FirstSensorMarkPlus,

@@ -72,6 +72,7 @@
                                                     <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
                                                     <DataGridTextColumn Binding="{Binding Material}" Header="Материал" />
                                                     <DataGridTextColumn Binding="{Binding Quantity}" Header="Кол-во" />
+                                                    <DataGridTextColumn Binding="{Binding Measure}" Header="Кол-во" />
                                                 </DataGrid.Columns>
                                             </DataGrid>
                                         </DataTemplate>
@@ -140,6 +141,7 @@
                                 <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Название" />
                                 <DataGridTextColumn Binding="{Binding Material, Mode=TwoWay}" Header="Доп.комплекующее" />
                                 <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay}" Header="Кол-во(шт/м)" />
+                                <DataGridTextColumn Binding="{Binding Measure, Mode=TwoWay}" Header="Ед. изм." />
                                 <DataGridTemplateColumn Header="Выбрать">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
@@ -181,6 +183,7 @@
                                 <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Назначение" />
                                 <DataGridTextColumn Binding="{Binding Material, Mode=TwoWay}" Header="Доп.комплекующее" />
                                 <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay}" Header="Кол-во(шт/м)" />
+                                <DataGridTextColumn Binding="{Binding Measure, Mode=TwoWay}" Header="Ед. изм." />
                                 <DataGridTemplateColumn Header="Выбрать">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
