@@ -4,7 +4,6 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
 
 namespace ReportEngine.Export.ExcelWork.Services;
@@ -23,8 +22,6 @@ public class MarksReportGenerator : IReportGenerator
     public async Task GenerateAsync(int projectId)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
-
-
 
 
         using (var wb = new XLWorkbook())

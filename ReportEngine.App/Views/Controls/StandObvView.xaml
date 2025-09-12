@@ -494,7 +494,8 @@
                 </ListView.View>
                 <ListView.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}" Header="Удалить обвязку из стенда" />
+                        <MenuItem Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}"
+                                  Header="Удалить обвязку из стенда" />
                         <MenuItem Header="Копировать обвязку" />
                     </ContextMenu>
                 </ListView.ContextMenu>
