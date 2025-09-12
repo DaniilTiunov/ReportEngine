@@ -1,10 +1,8 @@
 ﻿using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
 using System.Diagnostics;
 
@@ -43,9 +41,9 @@ public class ComponentsListReportGenerator : IReportGenerator
 
 
             var savePath = SettingsManager.GetReportDirectory();
-            var fileName = "Ведомость комплектующих___" + DateTime.Now.ToString("yy-MM-dd___HH-mm-ss") + ".xlsx";
+            var fileName = "Ведомость комплектующих___" + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + ".xlsx";
 
-    
+
             var fullSavePath = Path.Combine(savePath, fileName);
 
             Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
@@ -64,14 +62,14 @@ public class ComponentsListReportGenerator : IReportGenerator
         ws.Cell("B2").Value = "Сводная ведомость комплектующих";
 
         ws.Columns().AdjustToContents();
-       
-       
+
+
 
         ws.Cell("B3").Value = "Наименование";
         ws.Cell("C3").Value = "Ед. изм";
         ws.Cell("D3").Value = "Кол.";
 
- 
+
 
 
         ws.Columns().AdjustToContents();
@@ -83,10 +81,12 @@ public class ComponentsListReportGenerator : IReportGenerator
 
         headerRange.Style.Font.SetBold();
 
-        
+
         ws.Range("B2:D2").Merge();
         ws.Range("C1:D1").Merge();
     }
+
+
 
     private void FillWorksheetTable(IXLWorksheet ws, Stand stand)
     {
@@ -94,41 +94,106 @@ public class ComponentsListReportGenerator : IReportGenerator
         int activeRow = 4;
 
 
-        // Подзаголовок для сортамента труб
-        var subHeaderRange = ws.Range($"A{activeRow}:D{activeRow}");
-        subHeaderRange.Merge();
-        subHeaderRange.Value = "Сортамент труб";
-        subHeaderRange.Style.Font.SetFontSize(10);
-        subHeaderRange.Style.Font.SetBold();
+        //Формирование списка труб
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Трубы", ws);
+ 
 
-        activeRow++;
-
-
-
-        //формирование списка труб
-
-        //худо-бедно работает, но надо поправить на нормальный LINQ
 
         var standPipes = stand.ObvyazkiInStand
-            .GroupBy(obv => obv.MaterialLine)
+            .Select(obv => new
+            {
+                name = obv.MaterialLine,
+                length = obv.MaterialLineCount
+            })
+            .GroupBy(pipe => pipe.name)
             .Select(group => new
             {
                 Name = group.Key,
-                Unit = "м", //поправить на реальные ед. изм
-                LengthSum = group.Sum(pipe => pipe.MaterialLineCount)
+                Unit = "м", //на единицы измерения из базы
+                LengthSum = group.Sum(pipe => pipe.length)
+            });
 
+
+        var pipesRecords = standPipes
+            .Select(pipe => (name:pipe.Name, unit:pipe.Unit, quantity:pipe.LengthSum ?? 0f))
+            .ToList();
+
+
+
+
+
+        activeRow = FillSubtableData(activeRow, pipesRecords, ws);
+      
+
+
+
+
+
+
+
+
+        //Формирование списка арматуры
+        CreateSubheaderOnWorksheet(activeRow, "Арматура", ws);
+        activeRow++;
+
+
+        var armatures = stand.ObvyazkiInStand
+            .Select(obv => new
+            {
+                armName = obv.Armature,
+                armQuantity = obv.ArmatureCount
+            })
+            .GroupBy(obv => obv.armName)
+            .Select(group => new
+            {
+                name = group.Key,
+                unit = "шт", //на единицы измерения из базы
+                quantity = group.Sum(arm => arm.armQuantity)
             });
 
 
 
-        foreach (var pipe in standPipes)
+        foreach (var arm in armatures)
         {
-            ws.Cell($"B{activeRow}").Value = pipe.Name;
-            ws.Cell($"C{activeRow}").Value = pipe.Unit; ;
-            ws.Cell($"D{activeRow}").Value = pipe.LengthSum; 
+            ws.Cell($"B{activeRow}").Value = arm.name;
+            ws.Cell($"C{activeRow}").Value = arm.unit; ;
+            ws.Cell($"D{activeRow}").Value = arm.lengthSum;
             activeRow++;
         }
 
 
+        //Формирование списка тройников и КМЧ
+        CreateSubheaderOnWorksheet(activeRow, "Тройники и КМЧ", ws);
+
+        
+
+
+    }
+
+
+    //создает заголовок для подтаблицы и возвращает следующую строку
+    int CreateSubheaderOnWorksheet(int row, string title, IXLWorksheet ws)
+    {
+        var subHeaderRange = ws.Range($"A{row}:D{row}");
+        subHeaderRange.Merge();
+        subHeaderRange.Value = title;
+        subHeaderRange.Style.Font.SetFontSize(10);
+        subHeaderRange.Style.Font.SetBold();
+        row++;
+        return row;
+    }
+
+    //Заполняет подтаблицу и возвращает следующую строку
+    int FillSubtableData(int startRow, List<(string name, string unit, float quantity)> items, IXLWorksheet ws)
+    {
+        int currentRow = startRow;
+        foreach (var item in items)
+        {
+            ws.Cell($"B{currentRow}").Value = item.name;
+            ws.Cell($"C{currentRow}").Value = item.unit;
+            ws.Cell($"D{currentRow}").Value = item.quantity;
+            currentRow++;
+        } 
+        return currentRow;
     }
 }
