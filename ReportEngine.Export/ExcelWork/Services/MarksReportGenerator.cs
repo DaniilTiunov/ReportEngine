@@ -24,30 +24,31 @@ public class MarksReportGenerator : IReportGenerator
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
 
-        var templatePath = DirectoryHelper.GetReportsTemplatePath("Маркировка");
-        var fileName = "Маркировка___" + DateTime.Now.ToString("yy-MM-dd___HH-mm-ss") + ".xlsx";
-
-        var savePath = SettingsManager.GetReportDirectory();
-        var fullSavePath = Path.Combine(savePath, fileName);
 
 
-        using (var wb = new XLWorkbook(templatePath))
+
+        using (var wb = new XLWorkbook())
         {
             var ws = wb.Worksheets.Add("MainSheet");
 
-            CreateTableHeader(ws);
-            FillWorksheet(ws, project);
+            CreateWorksheetTableHeader(ws);
+            FillWorksheetTable(ws, project);
 
             ws.Columns().AdjustToContents();
             ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+            var savePath = SettingsManager.GetReportDirectory();
+
+            var fileName = "Маркировка___" + DateTime.Now.ToString("yy-MM-dd___HH-mm-ss") + ".xlsx";
+            var fullSavePath = Path.Combine(savePath, fileName);
 
             Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
             wb.SaveAs(fullSavePath);
         }
     }
 
-    private void CreateTableHeader(IXLWorksheet ws)
+    private void CreateWorksheetTableHeader(IXLWorksheet ws)
     {
         var headerRange = ws.Range("A1:D1");
 
@@ -62,7 +63,7 @@ public class MarksReportGenerator : IReportGenerator
         headerRange.Style.Font.SetBold();
     }
 
-    private void FillWorksheet(IXLWorksheet ws, ProjectInfo project)
+    private void FillWorksheetTable(IXLWorksheet ws, ProjectInfo project)
     {
         //формируем все нуеобходимые записи
         var allRecords = project.Stands
