@@ -35,233 +35,240 @@
                 Margin="0,0,0,10"
                 Padding="8"
                 Header="Обвязка">
+                <!--  outer grid: left = form, right = preview (preview вынесен из формы чтобы не растягивать строки)  -->
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="120" />
-                        <ColumnDefinition Width="60" />
-                        <ColumnDefinition Width="60" />
-                        <ColumnDefinition Width="125" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="220" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="230" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock
-                        Grid.Row="0"
-                        Grid.Column="2"
-                        Margin="3,0,0,0"
-                        Text="Кол-во:" />
-                    <TextBlock
-                        Grid.Row="0"
-                        Grid.Column="3"
-                        Margin="3,0,0,0"
-                        Text="Ед. изм:" />
-                    <TextBlock
-                        Grid.Row="0"
-                        Grid.Column="4"
-                        Margin="0,0,0,3"
-                        Text="Выбрать обвязку" />
+                    <!--  left: существующая форма (колонки для полей)  -->
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="120" />
+                            <ColumnDefinition Width="60" />
+                            <ColumnDefinition Width="60" />
+                            <ColumnDefinition Width="125" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-                    <!--  Тип обвязки  -->
-                    <TextBlock
-                        Grid.Row="0"
-                        Grid.Column="0"
-                        Text="Тип обвязки:" />
-                    <TextBox
-                        Grid.Row="0"
-                        Grid.Column="1"
-                        Margin="0,0,5,5"
-                        Text="{Binding CurrentProjectModel.SelectedStand.ObvyazkaName}" />
-                    <Button
-                        Grid.Row="0"
-                        Grid.Column="5"
-                        Width="24"
-                        Margin="0,0,0,5"
-                        Command="{Binding ProjectCommandProvider.SelectObvFromDialogCommand}"
-                        Content="..." />
-                    <TextBlock
-                        Grid.Column="7"
-                        Margin="2,2,7,7"
-                        Text="NN:" />
-                    <TextBox
-                        Grid.Row="0"
-                        Grid.Column="8"
-                        Width="80"
-                        Margin="5,1,5,3"
-                        Text="{Binding CurrentProjectModel.SelectedStand.NN}" />
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="2"
+                            Margin="3,0,0,0"
+                            Text="Кол-во:" />
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="3"
+                            Margin="3,0,0,0"
+                            Text="Ед. изм:" />
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="4"
+                            Margin="0,0,0,3"
+                            Text="Выбрать обвязку" />
 
-                    <!--  Материал линии  -->
-                    <TextBlock
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        Text="Материал линии:" />
-                    <TextBox
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Margin="0,0,5,5"
-                        Text="{Binding CurrentProjectModel.SelectedStand.MaterialLine}" />
-                    <TextBox
-                        Grid.Row="1"
-                        Grid.Column="2"
-                        Width="50"
-                        Margin="0,0,5,5"
-                        Text="{Binding CurrentProjectModel.SelectedStand.MaterialLineCount}"
-                        ToolTip="Количество материала линии" />
-                    <TextBox
-                        Grid.Row="1"
-                        Grid.Column="3"
-                        Width="50"
-                        Margin="0,0,5,5"
-                        Text="{Binding CurrentProjectModel.SelectedStand.MaterialLineMeasure}"
-                        ToolTip="Ед. измерения" />
-                    <ComboBox
-                        Grid.Row="1"
-                        Grid.Column="4"
-                        Width="120"
-                        Margin="0,0,5,5"
-                        ItemsSource="{Binding CurrentMaterials.MaterialLineTypes}"
-                        SelectedItem="{Binding CurrentMaterials.SelectedMaterialLine, Mode=TwoWay}" />
-                    <Button
-                        Grid.Row="1"
-                        Grid.Column="5"
-                        Width="24"
-                        Margin="5,0,5,5"
-                        Command="{Binding ProjectCommandProvider.SelectMaterialLineDialogCommand}"
-                        Content="..." />
+                        <!--  Тип обвязки  -->
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Text="Тип обвязки:" />
+                        <TextBox
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="0,0,5,5"
+                            Text="{Binding CurrentProjectModel.SelectedStand.ObvyazkaName}" />
+                        <Button
+                            Grid.Row="0"
+                            Grid.Column="5"
+                            Width="24"
+                            Margin="0,0,0,5"
+                            Command="{Binding ProjectCommandProvider.SelectObvFromDialogCommand}"
+                            Content="..." />
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="6"
+                            Margin="2,2,7,7"
+                            Text="NN:" />
+                        <TextBox
+                            Grid.Row="0"
+                            Grid.Column="7"
+                            Width="80"
+                            Margin="5,1,5,3"
+                            Text="{Binding CurrentProjectModel.SelectedStand.NN}" />
 
-                    <!--  Арматура  -->
-                    <TextBlock
-                        Grid.Row="2"
-                        Grid.Column="0"
-                        Text="Арматура:" />
-                    <TextBox
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        Margin="0,0,5,5"
-                        Text="{Binding CurrentProjectModel.SelectedStand.Armature}" />
-                    <TextBox
-                        Grid.Row="2"
-                        Grid.Column="2"
-                        Width="50"
-                        Margin="0,0,5,5"
-                        Text="{Binding CurrentProjectModel.SelectedStand.ArmatureCount}"
-                        ToolTip="Количество арматуры" />
-                    <TextBox
-                        Grid.Row="2"
-                        Grid.Column="3"
-                        Width="50"
-                        Margin="0,0,5,5"
-                        Text="{Binding CurrentProjectModel.SelectedStand.ArmatureMeasure}"
-                        ToolTip="Ед. измерения" />
-                    <ComboBox
-                        Grid.Row="2"
-                        Grid.Column="4"
-                        Width="120"
-                        Margin="0,0,5,5"
-                        ItemsSource="{Binding CurrentMaterials.AramuteresTypes}"
-                        SelectedItem="{Binding CurrentMaterials.SelectedAramuteres, Mode=TwoWay}" />
-                    <Button
-                        Grid.Row="2"
-                        Grid.Column="5"
-                        Width="24"
-                        Margin="5,0,5,5"
-                        Command="{Binding ProjectCommandProvider.SelectArmatureDialogCommand}"
-                        Content="..." />
+                        <!--  Материал линии  -->
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Text="Материал линии:" />
+                        <TextBox
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="0,0,5,5"
+                            Text="{Binding CurrentProjectModel.SelectedStand.MaterialLine}" />
+                        <TextBox
+                            Grid.Row="1"
+                            Grid.Column="2"
+                            Width="50"
+                            Margin="0,0,5,5"
+                            Text="{Binding CurrentProjectModel.SelectedStand.MaterialLineCount}"
+                            ToolTip="Количество материала линии" />
+                        <TextBox
+                            Grid.Row="1"
+                            Grid.Column="3"
+                            Width="50"
+                            Margin="0,0,5,5"
+                            Text="{Binding CurrentProjectModel.SelectedStand.MaterialLineMeasure}"
+                            ToolTip="Ед. измерения" />
+                        <ComboBox
+                            Grid.Row="1"
+                            Grid.Column="4"
+                            Width="120"
+                            Margin="0,0,5,5"
+                            ItemsSource="{Binding CurrentMaterials.MaterialLineTypes}"
+                            SelectedItem="{Binding CurrentMaterials.SelectedMaterialLine, Mode=TwoWay}" />
+                        <Button
+                            Grid.Row="1"
+                            Grid.Column="5"
+                            Width="24"
+                            Margin="5,0,5,5"
+                            Command="{Binding ProjectCommandProvider.SelectMaterialLineDialogCommand}"
+                            Content="..." />
 
-                    <!--  Тройник  -->
-                    <TextBlock
-                        Grid.Row="3"
-                        Grid.Column="0"
-                        Text="Тройник:" />
-                    <TextBox
-                        Grid.Row="3"
-                        Grid.Column="1"
-                        Margin="0,0,5,5"
-                        Text="{Binding CurrentProjectModel.SelectedStand.TreeSocket}" />
-                    <TextBox
-                        Grid.Row="3"
-                        Grid.Column="2"
-                        Width="50"
-                        Margin="0,0,5,5"
-                        Text="{Binding CurrentProjectModel.SelectedStand.TreeSocketMaterialCount}"
-                        ToolTip="Количество тройников" />
-                    <TextBox
-                        Grid.Row="3"
-                        Grid.Column="3"
-                        Width="50"
-                        Margin="0,0,5,5"
-                        Text="{Binding CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure}"
-                        ToolTip="Ед. измерения" />
-                    <ComboBox
-                        Grid.Row="3"
-                        Grid.Column="4"
-                        Width="120"
-                        Margin="0,0,5,5"
-                        ItemsSource="{Binding CurrentMaterials.TreeSocketTypes}"
-                        SelectedItem="{Binding CurrentMaterials.SelectedSocketTypes, Mode=TwoWay}" />
-                    <Button
-                        Grid.Row="3"
-                        Grid.Column="5"
-                        Width="24"
-                        Margin="5,0,5,5"
-                        Command="{Binding ProjectCommandProvider.SelectTreeSocketDialogCommand}"
-                        Content="..." />
+                        <!--  Арматура  -->
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Text="Арматура:" />
+                        <TextBox
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Margin="0,0,5,5"
+                            Text="{Binding CurrentProjectModel.SelectedStand.Armature}" />
+                        <TextBox
+                            Grid.Row="2"
+                            Grid.Column="2"
+                            Width="50"
+                            Margin="0,0,5,5"
+                            Text="{Binding CurrentProjectModel.SelectedStand.ArmatureCount}"
+                            ToolTip="Количество арматуры" />
+                        <TextBox
+                            Grid.Row="2"
+                            Grid.Column="3"
+                            Width="50"
+                            Margin="0,0,5,5"
+                            Text="{Binding CurrentProjectModel.SelectedStand.ArmatureMeasure}"
+                            ToolTip="Ед. измерения" />
+                        <ComboBox
+                            Grid.Row="2"
+                            Grid.Column="4"
+                            Width="120"
+                            Margin="0,0,5,5"
+                            ItemsSource="{Binding CurrentMaterials.AramuteresTypes}"
+                            SelectedItem="{Binding CurrentMaterials.SelectedAramuteres, Mode=TwoWay}" />
+                        <Button
+                            Grid.Row="2"
+                            Grid.Column="5"
+                            Width="24"
+                            Margin="5,0,5,5"
+                            Command="{Binding ProjectCommandProvider.SelectArmatureDialogCommand}"
+                            Content="..." />
 
-                    <!--  КМЧ  -->
-                    <TextBlock
-                        Grid.Row="4"
-                        Grid.Column="0"
-                        Text="КМЧ:" />
-                    <TextBox
-                        Grid.Row="4"
-                        Grid.Column="1"
-                        Margin="0,0,5,0"
-                        Text="{Binding CurrentProjectModel.SelectedStand.KMCH}" />
-                    <TextBox
-                        Grid.Row="4"
-                        Grid.Column="2"
-                        Width="50"
-                        Margin="0,0,5,0"
-                        Text="{Binding CurrentProjectModel.SelectedStand.KMCHCount}"
-                        ToolTip="Количество КМЧ" />
-                    <TextBox
-                        Grid.Row="4"
-                        Grid.Column="3"
-                        Width="50"
-                        Margin="0,0,5,0"
-                        Text="{Binding CurrentProjectModel.SelectedStand.KMCHMeasure}"
-                        ToolTip="Ед. измерения" />
-                    <ComboBox
-                        Grid.Row="4"
-                        Grid.Column="4"
-                        Width="120"
-                        Margin="0,0,5,0"
-                        ItemsSource="{Binding CurrentMaterials.KMCHTypes}"
-                        SelectedItem="{Binding CurrentMaterials.SelectedKMCHType, Mode=TwoWay}" />
-                    <Button
-                        Grid.Row="4"
-                        Grid.Column="5"
-                        Width="24"
-                        Command="{Binding ProjectCommandProvider.SelectKMCHDialogCommand}"
-                        Content="..." />
+                        <!--  Тройник  -->
+                        <TextBlock
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            Text="Тройник:" />
+                        <TextBox
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            Margin="0,0,5,5"
+                            Text="{Binding CurrentProjectModel.SelectedStand.TreeSocket}" />
+                        <TextBox
+                            Grid.Row="3"
+                            Grid.Column="2"
+                            Width="50"
+                            Margin="0,0,5,5"
+                            Text="{Binding CurrentProjectModel.SelectedStand.TreeSocketMaterialCount}"
+                            ToolTip="Количество тройников" />
+                        <TextBox
+                            Grid.Row="3"
+                            Grid.Column="3"
+                            Width="50"
+                            Margin="0,0,5,5"
+                            Text="{Binding CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure}"
+                            ToolTip="Ед. измерения" />
+                        <ComboBox
+                            Grid.Row="3"
+                            Grid.Column="4"
+                            Width="120"
+                            Margin="0,0,5,5"
+                            ItemsSource="{Binding CurrentMaterials.TreeSocketTypes}"
+                            SelectedItem="{Binding CurrentMaterials.SelectedSocketTypes, Mode=TwoWay}" />
+                        <Button
+                            Grid.Row="3"
+                            Grid.Column="5"
+                            Width="24"
+                            Margin="5,0,5,5"
+                            Command="{Binding ProjectCommandProvider.SelectTreeSocketDialogCommand}"
+                            Content="..." />
 
-                    <!--  Мини-превью обвязки внутри секции (справа)  -->
+                        <!--  КМЧ  -->
+                        <TextBlock
+                            Grid.Row="4"
+                            Grid.Column="0"
+                            Text="КМЧ:" />
+                        <TextBox
+                            Grid.Row="4"
+                            Grid.Column="1"
+                            Margin="0,0,5,0"
+                            Text="{Binding CurrentProjectModel.SelectedStand.KMCH}" />
+                        <TextBox
+                            Grid.Row="4"
+                            Grid.Column="2"
+                            Width="50"
+                            Margin="0,0,5,0"
+                            Text="{Binding CurrentProjectModel.SelectedStand.KMCHCount}"
+                            ToolTip="Количество КМЧ" />
+                        <TextBox
+                            Grid.Row="4"
+                            Grid.Column="3"
+                            Width="50"
+                            Margin="0,0,5,0"
+                            Text="{Binding CurrentProjectModel.SelectedStand.KMCHMeasure}"
+                            ToolTip="Ед. измерения" />
+                        <ComboBox
+                            Grid.Row="4"
+                            Grid.Column="4"
+                            Width="120"
+                            Margin="0,0,5,0"
+                            ItemsSource="{Binding CurrentMaterials.KMCHTypes}"
+                            SelectedItem="{Binding CurrentMaterials.SelectedKMCHType, Mode=TwoWay}" />
+                        <Button
+                            Grid.Row="4"
+                            Grid.Column="5"
+                            Width="24"
+                            Command="{Binding ProjectCommandProvider.SelectKMCHDialogCommand}"
+                            Content="..." />
+                    </Grid>
+
+                    <!--  right: preview — не входит в layout строк формы, поэтому не растягивает их  -->
                     <Border
-                        Grid.Row="0"
-                        Grid.RowSpan="4"
-                        Grid.Column="6"
+                        Grid.Column="1"
                         Margin="8,0,0,0"
                         Padding="6"
-                        HorizontalAlignment="Stretch"
+                        HorizontalAlignment="Right"
                         VerticalAlignment="Top"
                         Background="WhiteSmoke"
                         BorderBrush="LightGray"
@@ -354,13 +361,12 @@
                 </Grid>
             </GroupBox>
 
-            <!--  Датчик 2  -->
+            <!--  остальные части формы без изменений  -->
             <GroupBox
                 Grid.Row="2"
                 Margin="0,0,0,10"
                 Padding="8"
                 Header="Датчик 2">
-                <!--  содержимое без изменений  -->
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -430,13 +436,11 @@
                 </Grid>
             </GroupBox>
 
-            <!--  Датчик 3  -->
             <GroupBox
                 Grid.Row="3"
                 Margin="0,0,0,10"
                 Padding="8"
                 Header="Датчик 3">
-                <!--  содержимое без изменений  -->
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -506,59 +510,7 @@
                 </Grid>
             </GroupBox>
 
-            <!--  Список обвязок  -->
-            <ListView
-                Grid.Row="4"
-                Margin="0,10,0,0"
-                BorderBrush="#DDDDDD"
-                BorderThickness="1"
-                ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}"
-                SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn
-                            Width="100"
-                            DisplayMemberBinding="{Binding ObvyazkaName}"
-                            Header="Тип" />
-                        <GridViewColumn
-                            Width="120"
-                            DisplayMemberBinding="{Binding MaterialLine}"
-                            Header="Материал" />
-                        <GridViewColumn
-                            Width="100"
-                            DisplayMemberBinding="{Binding Armature}"
-                            Header="Арматура" />
-                        <GridViewColumn
-                            Width="100"
-                            DisplayMemberBinding="{Binding TreeSocket}"
-                            Header="Тройник" />
-                        <GridViewColumn
-                            Width="100"
-                            DisplayMemberBinding="{Binding KMCH}"
-                            Header="КМЧ" />
-                        <GridViewColumn
-                            Width="100"
-                            DisplayMemberBinding="{Binding FirstSensorType}"
-                            Header="Датчик 1" />
-                        <GridViewColumn
-                            Width="100"
-                            DisplayMemberBinding="{Binding WidthOnFrame}"
-                            Header="Ширина на раме" />
-                        <GridViewColumn
-                            Width="100"
-                            DisplayMemberBinding="{Binding HumanCost}"
-                            Header="Трудозатраты" />
-                    </GridView>
-                </ListView.View>
-                <ListView.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}" Header="Удалить обвязку из стенда" />
-                        <MenuItem Header="Копировать обвязку" />
-                    </ContextMenu>
-                </ListView.ContextMenu>
-            </ListView>
-
-            <!--  Кнопки управления  -->
+            <!--  Список обвязок остался в правой панели (под списком стендов)  -->
             <StackPanel
                 Grid.Row="5"
                 Margin="0,10,0,0"
@@ -571,7 +523,7 @@
             </StackPanel>
         </Grid>
 
-        <!--  Список стендов (справа)  -->
+        <!--  Правая панель: список стендов + обвязки под ним  -->
         <Border
             Grid.Column="1"
             Margin="0,0,0,0"
@@ -581,6 +533,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <TextBlock
                     Grid.Row="0"
@@ -589,6 +542,7 @@
                     Text="Список стендов проекта" />
                 <ListView
                     Grid.Row="1"
+                    Margin="5,0,5,5"
                     ItemsSource="{Binding CurrentProjectModel.Stands}"
                     SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}">
                     <ListView.View>
@@ -608,6 +562,56 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
+                <GroupBox
+                    Grid.Row="2"
+                    Margin="5,5,5,5"
+                    Padding="5"
+                    Header="Обвязки стенда">
+                    <ListView ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}" SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn
+                                    Width="100"
+                                    DisplayMemberBinding="{Binding ObvyazkaName}"
+                                    Header="Тип" />
+                                <GridViewColumn
+                                    Width="120"
+                                    DisplayMemberBinding="{Binding MaterialLine}"
+                                    Header="Материал" />
+                                <GridViewColumn
+                                    Width="100"
+                                    DisplayMemberBinding="{Binding Armature}"
+                                    Header="Арматура" />
+                                <GridViewColumn
+                                    Width="100"
+                                    DisplayMemberBinding="{Binding TreeSocket}"
+                                    Header="Тройник" />
+                                <GridViewColumn
+                                    Width="100"
+                                    DisplayMemberBinding="{Binding KMCH}"
+                                    Header="КМЧ" />
+                                <GridViewColumn
+                                    Width="100"
+                                    DisplayMemberBinding="{Binding FirstSensorType}"
+                                    Header="Датчик 1" />
+                                <GridViewColumn
+                                    Width="100"
+                                    DisplayMemberBinding="{Binding WidthOnFrame}"
+                                    Header="Ширина на раме" />
+                                <GridViewColumn
+                                    Width="100"
+                                    DisplayMemberBinding="{Binding HumanCost}"
+                                    Header="Трудозатраты" />
+                            </GridView>
+                        </ListView.View>
+                        <ListView.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}" Header="Удалить обвязку из стенда" />
+                                <MenuItem Header="Копировать обвязку" />
+                            </ContextMenu>
+                        </ListView.ContextMenu>
+                    </ListView>
+                </GroupBox>
             </Grid>
         </Border>
     </Grid>
