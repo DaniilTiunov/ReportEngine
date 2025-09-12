@@ -19,6 +19,7 @@ public partial class StandObvView : UserControl
 
     private void StandObvView_Loaded(object sender, RoutedEventArgs e)
     {
-        if (DataContext is ProjectViewModel viewModel) viewModel.LoadObvyazkiAsync();
+        if (DataContext is ProjectViewModel viewModel)
+            viewModel.LoadObvyazkiAsync();
     }
 }
