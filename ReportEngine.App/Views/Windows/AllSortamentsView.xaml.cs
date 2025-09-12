@@ -1,6 +1,7 @@
-﻿using System.Windows;
+﻿using ReportEngine.App.ViewModels;
+using System.Windows;
 using System.Windows.Controls;
-using ReportEngine.App.ViewModels;
+using System.Windows.Input;
 
 namespace ReportEngine.App.Views.Windows;
 
@@ -32,7 +33,6 @@ public partial class AllSortamentsView : Window
             EquipDataGrid.ItemsSource = collection;
     }
 
-
     // TODO: Исправить этот костыль
     private void ResetAllSubTabControls()
     {
@@ -41,7 +41,7 @@ public partial class AllSortamentsView : Window
                 subTabControl.SelectedIndex = -1;
     }
 
-    private void SelectButton_Click(object sender, RoutedEventArgs e)
+    private void SelectEquip_DoubleClick(object sender, MouseButtonEventArgs e)
     {
         if (_viewModel.SelectedEquip != null)
         {

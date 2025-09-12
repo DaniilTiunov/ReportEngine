@@ -92,18 +92,7 @@
             Margin="5"
             AutoGenerateColumns="False"
             FontFamily="Bahnschrift"
+            MouseDoubleClick="SelectEquip_DoubleClick"
             SelectedItem="{Binding SelectedEquip, Mode=TwoWay}" />
-
-
-        <StackPanel Grid.Row="2">
-            <Button
-                Width="100"
-                Height="25"
-                Margin="5,5,5,5"
-                Padding="5"
-                HorizontalAlignment="Right"
-                Click="SelectButton_Click"
-                Content="Выбрать" />
-        </StackPanel>
     </Grid>
 </Window>
