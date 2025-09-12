@@ -60,12 +60,9 @@ public class ComponentsListReportGenerator : IReportGenerator
         ws.Columns().AdjustToContents();
 
 
-
         ws.Cell("B3").Value = "Наименование";
         ws.Cell("C3").Value = "Ед. изм";
         ws.Cell("D3").Value = "Кол.";
-
-
 
 
         ws.Columns().AdjustToContents();
@@ -83,7 +80,6 @@ public class ComponentsListReportGenerator : IReportGenerator
     }
 
 
-
     private void FillWorksheetTable(IXLWorksheet ws, Stand stand)
     {
         var activeRow = 4;
@@ -91,7 +87,6 @@ public class ComponentsListReportGenerator : IReportGenerator
 
         //Формирование списка труб
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Трубы", ws);
- 
 
 
         var standPipes = stand.ObvyazkiInStand
@@ -110,21 +105,11 @@ public class ComponentsListReportGenerator : IReportGenerator
 
 
         var pipesRecords = standPipes
-            .Select(pipe => (name:pipe.Name, unit:pipe.Unit, quantity:pipe.LengthSum ?? 0f))
+            .Select(pipe => (name: pipe.Name, unit: pipe.Unit, quantity: pipe.LengthSum ?? 0f))
             .ToList();
 
 
-
-
-
         activeRow = FillSubtableData(activeRow, pipesRecords, ws);
-      
-
-
-
-
-
-
 
 
         //Формирование списка арматуры
@@ -147,7 +132,6 @@ public class ComponentsListReportGenerator : IReportGenerator
             });
 
 
-
         foreach (var arm in armatures)
         {
             ws.Cell($"B{activeRow}").Value = arm.name;
@@ -158,15 +142,11 @@ public class ComponentsListReportGenerator : IReportGenerator
 
         //Формирование списка тройников и КМЧ
         CreateSubheaderOnWorksheet(activeRow, "Тройники и КМЧ", ws);
-
-        
-
-
     }
 
 
     //создает заголовок для подтаблицы и возвращает следующую строку
-    int CreateSubheaderOnWorksheet(int row, string title, IXLWorksheet ws)
+    private int CreateSubheaderOnWorksheet(int row, string title, IXLWorksheet ws)
     {
         var subHeaderRange = ws.Range($"A{row}:D{row}");
         subHeaderRange.Merge();
@@ -178,16 +158,17 @@ public class ComponentsListReportGenerator : IReportGenerator
     }
 
     //Заполняет подтаблицу и возвращает следующую строку
-    int FillSubtableData(int startRow, List<(string name, string unit, float quantity)> items, IXLWorksheet ws)
+    private int FillSubtableData(int startRow, List<(string name, string unit, float quantity)> items, IXLWorksheet ws)
     {
-        int currentRow = startRow;
+        var currentRow = startRow;
         foreach (var item in items)
         {
             ws.Cell($"B{currentRow}").Value = item.name;
             ws.Cell($"C{currentRow}").Value = item.unit;
             ws.Cell($"D{currentRow}").Value = item.quantity;
             currentRow++;
-        } 
+        }
+
         return currentRow;
     }
 }

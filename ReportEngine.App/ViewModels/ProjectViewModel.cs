@@ -84,7 +84,7 @@ public class ProjectViewModel : BaseViewModel
 
         ApplySelectedEquipToPurpose(e, selected);
     }
-    
+
     // TODO: Сделать тут рефакторинг команд
     public void OnSelectMaterialFromDialogCommandExecuted(object e)
     {
@@ -390,7 +390,7 @@ public class ProjectViewModel : BaseViewModel
         var entity = await _standService.CreateObvyazkaAsync(CurrentProjectModel.SelectedStand, SelectedObvyazka);
 
         await _standService.AddObvyazkaToStandAsync(CurrentProjectModel.SelectedStand.Id, entity);
-        
+
         CurrentProjectModel.SelectedStand.ObvyazkiInStand.Add(entity);
     }
 

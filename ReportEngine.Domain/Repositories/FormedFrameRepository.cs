@@ -39,7 +39,7 @@ public class FormedFrameRepository : IFrameRepository
         if (exisingComponent != null)
         {
             exisingComponent.Measure = component.Measure;
-            
+
             if (component is BaseFrame baseFrame && baseFrame.Measure == "м" && length.HasValue)
                 exisingComponent.Length += length.Value;
             else
