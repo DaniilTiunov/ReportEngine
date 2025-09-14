@@ -11,11 +11,20 @@
     <!--  Текстовые цвета  -->
     <SolidColorBrush x:Key="PrimaryForeground" Color="White" />
     <SolidColorBrush x:Key="SecondaryForeground" Color="#DDDDDD" />
+    <!--  Рамка окна  -->
+    <SolidColorBrush x:Key="WindowBorderColor" Color="WhiteSmoke" />
 
     <Style TargetType="Window">
         <Setter Property="FontFamily" Value="Bahnschrift" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
+    </Style>
+
+    <!-- Стиль рамки окна-->
+    <Style x:Key="WindowBorder" TargetType="Border">
+        <Setter Property="BorderBrush" Value="{DynamicResource WindowBorderColor}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="0"/>
     </Style>
 
     <Style TargetType="UserControl">
