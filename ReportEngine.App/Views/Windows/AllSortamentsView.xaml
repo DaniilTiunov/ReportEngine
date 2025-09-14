@@ -8,6 +8,8 @@
     Width="1100"
     Height="450"
     FontFamily="Bahnschrift"
+    Background="{DynamicResource PrimaryColor}"
+    Foreground="{DynamicResource PrimaryForeground}"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>

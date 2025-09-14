@@ -9,6 +9,8 @@
     Width="1400"
     Height="700"
     FontFamily="Bahnschrift"
+    Background="{DynamicResource PrimaryColor}"
+    Foreground="{DynamicResource PrimaryForeground}"
     mc:Ignorable="d">
     <Window.Resources>
         <converters:ObvyazkaImagePathConverter x:Key="ObvyazkaImagePathConverter" />

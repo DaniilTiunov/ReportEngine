@@ -7,7 +7,6 @@
     <SolidColorBrush x:Key="RowHoverColor" Color="#E0E0E0" />
     <SolidColorBrush x:Key="SelectedRowBackground" Color="DarkGray" />
     <SolidColorBrush x:Key="SelectedRowForeground" Color="#FFFFFF" />
-
     <!--  Текстовые цвета  -->
     <SolidColorBrush x:Key="PrimaryForeground" Color="Black" />
     <SolidColorBrush x:Key="SecondaryForeground" Color="#333333" />
@@ -16,10 +15,12 @@
     <Style TargetType="Window">
         <Setter Property="FontFamily" Value="Bahnschrift" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+        <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
     </Style>
 
     <Style TargetType="UserControl">
         <Setter Property="FontFamily" Value="Bahnschrift" />
+        <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
     </Style>
 
