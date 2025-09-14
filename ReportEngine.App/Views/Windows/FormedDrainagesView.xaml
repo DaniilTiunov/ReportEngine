@@ -5,6 +5,8 @@
     Title="Создание и редактирование дренажей"
     FontFamily="Bahnschrift"
     FontSize="14"
+    Background="{DynamicResource PrimaryColor}"
+    Foreground="{DynamicResource PrimaryForeground}"
     WindowState="Maximized">
 
     <Grid>

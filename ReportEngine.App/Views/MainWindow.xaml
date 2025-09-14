@@ -8,6 +8,8 @@
     FontFamily="Bahnschrift"
     ResizeMode="CanResize"
     WindowStartupLocation="CenterScreen"
+    Background="{DynamicResource PrimaryColor}"
+    Foreground="{DynamicResource PrimaryForeground}"
     WindowState="Normal"
     WindowStyle="None"
     mc:Ignorable="d">

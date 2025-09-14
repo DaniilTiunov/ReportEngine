@@ -10,6 +10,8 @@
     Closing="Window_Closing"
     FontFamily="Bahnschrift"
     WindowStartupLocation="CenterScreen"
+    Background="{DynamicResource PrimaryColor}"
+    Foreground="{DynamicResource PrimaryForeground}"
     mc:Ignorable="d">
 
     <Grid>
