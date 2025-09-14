@@ -23,9 +23,12 @@ public partial class MainWindow : Window //Это так называемый "C
         InitializeComponent();
         DataContext = mainViewModel;
         _mainViewModel = mainViewModel;
+
         Loaded += MainWindow_Loaded;
+        StateChanged += MindowWindow_StateChanges;
     }
 
+    // Событие загрузки окна
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
         StandartTheme(null, null);
@@ -34,6 +37,12 @@ public partial class MainWindow : Window //Это так называемый "C
 
         //await _mainViewModel.ShowAllProjectsAsync();
         await _mainViewModel.CheckDbConnectionAsync();
+    }
+    // Событие изменения состояния окна
+    private void MindowWindow_StateChanges(object? sender, EventArgs e)
+    {
+        if (WindowState == WindowState.Maximized)
+            WindowState = WindowState.Normal;
     }
 
     private void CheckForUpdates(object sender, RoutedEventArgs e)

@@ -9,37 +9,96 @@
     Foreground="{DynamicResource PrimaryForeground}"
     Width="1100"
     Height="450"
+    WindowStyle="None"
     FontFamily="Bahnschrift"
     mc:Ignorable="d">
 
-    <Grid Margin="5,5,0,5">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+        CaptionHeight="0"
+        CornerRadius="0"
+        GlassFrameThickness="0" />
+    </WindowChrome.WindowChrome>
 
-        <!--  Панель кнопок
-        <StackPanel
-            Grid.Row="0"
-            Margin="0,0,0,5"
-            HorizontalAlignment="Left"
-            Orientation="Horizontal">
+    <Border Style="{DynamicResource WindowBorder}">
+        <DockPanel>
+            <Border
+     x:Name="FormedFrameWindowTitle"
+     Height="34"
+     Background="#2D2D30"
+     DockPanel.Dock="Top"
+     MouseLeftButtonDown="Window_MouseLeftButtonDown">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-         Кнопка "Выбрать"
-            <Button
-                Width="100"
-                Margin="0,0,10,0"
-                Command="{Binding SelectCommand}"
-                Content="Выбрать" />
+                    <StackPanel
+             Margin="10,0,0,0"
+             VerticalAlignment="Center"
+             Orientation="Horizontal">
+                        <Image
+                 Width="18"
+                 Height="18"
+                 Margin="0,0,8,0"
+                 Source="/Resources/Icons/estimate_cost_icon_213382.ico" />
+                        <TextBlock
+                 VerticalAlignment="Center"
+                 FontSize="14"
+                 Foreground="White"
+                 Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
+                    </StackPanel>
 
-         </StackPanel>-->
+                    <StackPanel
+             Grid.Column="1"
+             VerticalAlignment="Center"
+             Orientation="Horizontal">
+                        <Button
+                 x:Name="MinimizeButton"
+                 Width="40"
+                 Height="30"
+                 Click="MinimizeButton_Click"
+                 FontSize="16"
+                 ToolTip="Свернуть">
+                            ─
+                        </Button>
+                        <Button
+                 x:Name="MaxRestoreButton"
+                 Width="40"
+                 Height="30"
+                 Margin="10,0,0,0"
+                 Click="MaxRestoreButton_Click"
+                 FontSize="16"
+                 ToolTip="Развернуть">
+                            ▢
+                        </Button>
+                        <Button
+                 x:Name="CloseButton"
+                 Width="40"
+                 Height="30"
+                 Margin="10,0,10,0"
+                 Click="CloseButton_Click"
+                 FontSize="16"
+                 ToolTip="Закрыть">
+                            ✕
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
 
-        <!--  Разделительная линия  -->
-        <Separator Grid.Row="1" Margin="0,0,0,5" />
+            <Grid Margin="5,5,0,5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-        <!--  DataGrid с контекстным меню  -->
-        <DataGrid
+                <!--  Разделительная линия  -->
+                <Separator Grid.Row="1" Margin="0,0,0,5" />
+
+                <!--  DataGrid с контекстным меню  -->
+                <DataGrid
             x:Name="GenericEquipDataGrid"
             Grid.Row="2"
             AutoGenerateColumns="False"
@@ -52,18 +111,20 @@
             SelectedItem="{Binding GenericEquipModel.SelectedBaseEquip, Mode=TwoWay}"
             SelectionUnit="FullRow">
 
-            <DataGrid.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Command="{Binding ShowAllEquipCommand}" Header="Показать всё" />
-                    <Separator />
-                    <MenuItem Command="{Binding SaveChangesEquipCommand}" Header="Сохранить изменения" />
-                    <Separator />
-                    <MenuItem
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding ShowAllEquipCommand}" Header="Показать всё" />
+                            <Separator />
+                            <MenuItem Command="{Binding SaveChangesEquipCommand}" Header="Сохранить изменения" />
+                            <Separator />
+                            <MenuItem
                         Command="{Binding RemoveEquipCommand}"
                         Header="Удалить оборудование"
                         IsEnabled="{Binding GenericEquipModel.SelectedBaseEquip}" />
-                </ContextMenu>
-            </DataGrid.ContextMenu>
-        </DataGrid>
-    </Grid>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                </DataGrid>
+            </Grid>
+        </DockPanel>
+    </Border>
 </Window>

@@ -10,31 +10,48 @@
     <!--  Текстовые цвета  -->
     <SolidColorBrush x:Key="PrimaryForeground" Color="Black" />
     <SolidColorBrush x:Key="SecondaryForeground" Color="#333333" />
+    <!--  Рамка окна  -->
+    <SolidColorBrush x:Key="WindowBorderColor" Color="Black" />
 
-
+    <!-- Стили для Window-->
     <Style TargetType="Window">
         <Setter Property="FontFamily" Value="Bahnschrift" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
     </Style>
 
+    <Style x:Key="WindowBorder" TargetType="Border">
+        <Setter Property="BorderBrush" Value="{DynamicResource WindowBorderColor}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="0"/>
+    </Style>
+
+    <!-- Стили для UserControl-->
     <Style TargetType="UserControl">
         <Setter Property="FontFamily" Value="Bahnschrift" />
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
     </Style>
 
+    <!-- Стили для DockPanel-->
     <Style TargetType="DockPanel">
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
     </Style>
 
+    <!-- Стили для TextBox-->
+    <Style TargetType="TextBox">
+        <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+    </Style>
+    
     <!--  Стили для DataGrid  -->
     <Style TargetType="DataGrid">
-        <Setter Property="Background" Value="{StaticResource PrimaryColor}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
+        <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="RowBackground" Value="{StaticResource PrimaryColor}" />
-        <Setter Property="AlternatingRowBackground" Value="{StaticResource SecondaryColor}" />
+        <Setter Property="RowBackground" Value="{DynamicResource PrimaryColor}" />
+        <Setter Property="AlternatingRowBackground" Value="{DynamicResource SecondaryColor}" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="AutoGenerateColumns" Value="False" />
         <Setter Property="CanUserAddRows" Value="False" />
@@ -47,26 +64,26 @@
     </Style>
 
     <Style TargetType="DataGridColumnHeader">
-        <Setter Property="Background" Value="{StaticResource SecondaryColor}" />
+        <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="BorderThickness" Value="0,0,1,1" />
         <Setter Property="Padding" Value="8,4" />
     </Style>
 
     <Style TargetType="DataGridCell">
-        <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="BorderThickness" Value="0,0,1,1" />
         <Setter Property="Padding" Value="8,4" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource RowHoverColor}" />
+                <Setter Property="Background" Value="{DynamicResource RowHoverColor}" />
             </Trigger>
             <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="{StaticResource SelectedRowBackground}" />
-                <Setter Property="Foreground" Value="{StaticResource SelectedRowForeground}" />
+                <Setter Property="Background" Value="{DynamicResource SelectedRowBackground}" />
+                <Setter Property="Foreground" Value="{DynamicResource SelectedRowForeground}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -77,13 +94,13 @@
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="{StaticResource SelectedRowBackground}" />
-                <Setter Property="Foreground" Value="{StaticResource SelectedRowForeground}" />
-                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
+                <Setter Property="Background" Value="{DynamicResource SelectedRowBackground}" />
+                <Setter Property="Foreground" Value="{DynamicResource SelectedRowForeground}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource RowHoverColor}" />
-                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
+                <Setter Property="Background" Value="{DynamicResource RowHoverColor}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -92,24 +109,28 @@
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="{StaticResource SelectedRowBackground}" />
-                <Setter Property="Foreground" Value="{StaticResource SelectedRowForeground}" />
-                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
+                <Setter Property="Background" Value="{DynamicResource SelectedRowBackground}" />
+                <Setter Property="Foreground" Value="{DynamicResource SelectedRowForeground}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource RowHoverColor}" />
-                <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
+                <Setter Property="Background" Value="{DynamicResource RowHoverColor}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
             </Trigger>
         </Style.Triggers>
     </Style>
-
-    <Style TargetType="ComboBox" />
-
+    
     <!--  Стили для Menu и MenuItem  -->
     <Style TargetType="Menu">
-        <Setter Property="Background" Value="{StaticResource PrimaryColor}" />
+        <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="FontSize" Value="14" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource RowHoverColor}" />
+                <Setter Property="Foreground" Value="{DynamicResource AccentColor}" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <Style TargetType="MenuItem">
@@ -119,15 +140,15 @@
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource RowHoverColor}" />
-                <Setter Property="Foreground" Value="{StaticResource AccentColor}" />
+                <Setter Property="Background" Value="{DynamicResource RowHoverColor}" />
+                <Setter Property="Foreground" Value="{DynamicResource AccentColor}" />
             </Trigger>
         </Style.Triggers>
     </Style>
 
     <!--  Стили для StatusBar  -->
     <Style TargetType="StatusBar">
-        <Setter Property="Background" Value="{StaticResource SecondaryColor}" />
+        <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="FontSize" Value="13" />
     </Style>
@@ -167,10 +188,11 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type TreeView}">
+    <!-- Стили для TreeView-->
+    <Style TargetType="TreeView">
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
-        <Setter Property="Background" Value="{StaticResource PrimaryColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+        <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="Template">
             <Setter.Value>
@@ -192,7 +214,7 @@
     </Style>
 
     <!--  Стили для TreeViewItem  -->
-    <Style TargetType="{x:Type TreeViewItem}">
+    <Style TargetType="TreeViewItem">
         <Setter Property="FontSize" Value="14" />
         <Setter Property="Foreground" Value="{DynamicResource SecondaryForeground}" />
         <Setter Property="Background" Value="Transparent" />
@@ -212,15 +234,36 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="{StaticResource RowHoverColor}" />
+                <Setter Property="Background" Value="{DynamicResource RowHoverColor}" />
                 <Setter Property="FontWeight" Value="Bold" />
             </Trigger>
             <Trigger Property="IsExpanded" Value="True">
                 <Setter Property="FontWeight" Value="Bold" />
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#E0E0E0" />
+                <Setter Property="Background" Value="{DynamicResource RowHoverColor}" />
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <!-- Стили для ContextMenu-->
+    <Style TargetType="ContextMenu">
+        <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource RowHoverColor}" />
+                <Setter Property="Foreground" Value="{DynamicResource RowHoverColor}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Стили для TabContol-->
+    <Style TargetType="TabControl">
+        <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+    </Style>
+    
 </ResourceDictionary>

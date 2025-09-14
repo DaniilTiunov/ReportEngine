@@ -3,7 +3,7 @@
     <!--  Цвета тёмной темы  -->
     <SolidColorBrush x:Key="PrimaryColor" Color="#1E1E1E" />
     <SolidColorBrush x:Key="SecondaryColor" Color="#2D2D30" />
-    <SolidColorBrush x:Key="AccentColor" Color="LightGray" />
+    <SolidColorBrush x:Key="AccentColor" Color="#00BFA5" />
     <SolidColorBrush x:Key="BorderColor" Color="#3F3F46" />
     <SolidColorBrush x:Key="RowHoverColor" Color="#333333" />
     <SolidColorBrush x:Key="SelectedRowBackground" Color="#555555" />
