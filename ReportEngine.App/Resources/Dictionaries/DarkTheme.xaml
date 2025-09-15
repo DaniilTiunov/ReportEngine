@@ -3,7 +3,7 @@
     <!--  Цвета тёмной темы  -->
     <SolidColorBrush x:Key="PrimaryColor" Color="#1E1E1E" />
     <SolidColorBrush x:Key="SecondaryColor" Color="#2D2D30" />
-    <SolidColorBrush x:Key="AccentColor" Color="#00BFA5" />
+    <SolidColorBrush x:Key="AccentColor" Color="WhiteSmoke" />
     <SolidColorBrush x:Key="BorderColor" Color="#3F3F46" />
     <SolidColorBrush x:Key="RowHoverColor" Color="#333333" />
     <SolidColorBrush x:Key="SelectedRowBackground" Color="#555555" />
@@ -135,24 +135,86 @@
     </Style>
 
     <Style TargetType="MenuItem">
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="Padding" Value="6,2" />
-        <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
-        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
-                <Setter Property="Foreground" Value="{DynamicResource SecondaryColor}" />
-            </Trigger>
-            <Trigger Property="IsHighlighted" Value="True">
-                <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
-                <Setter Property="Foreground" Value="{DynamicResource SecondaryColor}" />
-            </Trigger>
-            <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="Gray"/>
-            </Trigger>
-        </Style.Triggers>
-    </Style>
+    <Setter Property="OverridesDefaultStyle" Value="True"/>
+    <Setter Property="Template">
+        <Setter.Value>
+            <ControlTemplate TargetType="MenuItem">
+                <Border x:Name="Border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="20" /> <!-- колонка под стрелку -->
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Заголовок -->
+                        <ContentPresenter x:Name="HeaderHost"
+                                          ContentSource="Header"
+                                          VerticalAlignment="Center"
+                                          Margin="6,3" />
+
+                        <!-- Стрелочка -->
+                        <Path x:Name="Arrow"
+                              Grid.Column="1"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Center"
+                              Data="M 0 0 L 4 4 L 0 8 Z"
+                              Fill="{DynamicResource PrimaryForeground}"
+                              Visibility="Collapsed" />
+
+                        <!-- Подменю -->
+                        <Popup x:Name="SubMenuPopup"
+                               Placement="Right"
+                               AllowsTransparency="True"
+                               Focusable="False"
+                               IsOpen="{TemplateBinding IsSubmenuOpen}"
+                               PopupAnimation="Fade">
+                            <Border x:Name="SubMenuBorder"
+                                    Background="{DynamicResource SecondaryColor}"
+                                    BorderBrush="{DynamicResource AccentColor}"
+                                    BorderThickness="1"
+                                    CornerRadius="2"
+                                    SnapsToDevicePixels="True">
+                                <StackPanel IsItemsHost="True"
+                                            KeyboardNavigation.DirectionalNavigation="Cycle"/>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                </Border>
+
+                <!-- Триггеры -->
+                <ControlTemplate.Triggers>
+                    <!-- Подсветка -->
+                    <Trigger Property="IsHighlighted" Value="True">
+                        <Setter TargetName="Border" Property="Background"
+                                Value="{DynamicResource RowHoverColor}"/>
+                        <Setter TargetName="Border" Property="BorderBrush"
+                                Value="{DynamicResource AccentColor}"/>
+                    </Trigger>
+
+                    <!-- Неактивный пункт -->
+                    <Trigger Property="IsEnabled" Value="False">
+                        <Setter Property="Foreground" Value="Gray"/>
+                        <Setter TargetName="Arrow" Property="Fill" Value="Gray"/>
+                    </Trigger>
+
+                    <!-- Если есть подменю → показываем стрелку -->
+                    <Trigger Property="HasItems" Value="True">
+                        <Setter TargetName="Arrow" Property="Visibility" Value="Visible"/>
+                    </Trigger>
+
+                    <!-- Если подменю открыто → подсветка стрелки -->
+                    <Trigger Property="IsSubmenuOpen" Value="True">
+                        <Setter TargetName="Arrow" Property="Fill"
+                                Value="{DynamicResource AccentColor}"/>
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+        </Setter.Value>
+    </Setter>
+</Style>
     
     <Style TargetType="Separator">
         <Setter Property="Background" Value="{DynamicResource SecondaryColor}"/>
