@@ -71,7 +71,10 @@ public class ProjectViewModel : BaseViewModel
         CurrentProjectModel.EndDate = DateTime.Now.Date;
     }
 
-    public bool CanAllCommandsExecute(object? e) => true;
+    public bool CanAllCommandsExecute(object? e)
+    {
+        return true;
+    }
 
     public void OnOpenAllSortamentsDialogExecuted(object e)
     {
@@ -259,12 +262,10 @@ public class ProjectViewModel : BaseViewModel
             await CreateReportAsync(ReportType.ContainerReport, "тара");
         });
     }
+
     private async void OnSaveChangesInStandCommandExecuted(object obj)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
-        {
-            await SaveChangesInStandAsync();
-        });
+        await ExceptionHelper.SafeExecuteAsync(async () => { await SaveChangesInStandAsync(); });
     }
 
     public void ResetProject()
@@ -314,7 +315,7 @@ public class ProjectViewModel : BaseViewModel
             new RelayCommand(OnRemoveObvCommandExecuted, CanAllCommandsExecute);
         ProjectCommandProvider.CreateContainerReportCommand =
             new RelayCommand(OnCreateContainerReportCommandExecuted, CanAllCommandsExecute);
-        ProjectCommandProvider.SaveChangesInStandCommand = 
+        ProjectCommandProvider.SaveChangesInStandCommand =
             new RelayCommand(OnSaveChangesInStandCommandExecuted, CanAllCommandsExecute);
     }
 
@@ -506,6 +507,7 @@ public class ProjectViewModel : BaseViewModel
 
         _notificationService.ShowInfo("Изменения стенда сохранены");
     }
+
     private async Task DeleteStandFromProject()
     {
         await _projectService.DeleteStandAsync(CurrentProjectModel.CurrentProjectId,

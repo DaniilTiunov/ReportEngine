@@ -19,6 +19,7 @@ public partial class FormedFrameView : Window
         Loaded += FormedFrameWindow_Loaded;
         StateChanged += FormedFrameWindow_StateChanges;
     }
+
     private void FormedFrameWindow_Loaded(object sender, RoutedEventArgs e)
     {
         FormedFrameWindow_StartUpState();

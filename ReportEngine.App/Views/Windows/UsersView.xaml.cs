@@ -1,7 +1,6 @@
-﻿using ReportEngine.App.ViewModels.Contacts;
-using System.ComponentModel;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
+using ReportEngine.App.ViewModels.Contacts;
 
 namespace ReportEngine.App.Views.Windows;
 

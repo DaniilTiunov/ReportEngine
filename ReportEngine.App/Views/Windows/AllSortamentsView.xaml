@@ -15,19 +15,19 @@
 
     <WindowChrome.WindowChrome>
         <WindowChrome
-        CaptionHeight="0"
-        CornerRadius="0"
-        GlassFrameThickness="0" />
+            CaptionHeight="0"
+            CornerRadius="0"
+            GlassFrameThickness="0" />
     </WindowChrome.WindowChrome>
 
     <Border Style="{DynamicResource WindowBorder}">
         <DockPanel>
             <Border
-        x:Name="FormedFrameWindowTitle"
-        Height="34"
-        Background="#2D2D30"
-        DockPanel.Dock="Top"
-        MouseLeftButtonDown="Window_MouseLeftButtonDown">
+                x:Name="FormedFrameWindowTitle"
+                Height="34"
+                Background="#2D2D30"
+                DockPanel.Dock="Top"
+                MouseLeftButtonDown="Window_MouseLeftButtonDown">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -35,52 +35,52 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel
-                Margin="10,0,0,0"
-                VerticalAlignment="Center"
-                Orientation="Horizontal">
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
                         <Image
-                    Width="18"
-                    Height="18"
-                    Margin="0,0,8,0"
-                    Source="/Resources/Icons/estimate_cost_icon_213382.ico" />
+                            Width="18"
+                            Height="18"
+                            Margin="0,0,8,0"
+                            Source="/Resources/Icons/estimate_cost_icon_213382.ico" />
                         <TextBlock
-                    VerticalAlignment="Center"
-                    FontSize="14"
-                    Foreground="White"
-                    Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            Foreground="White"
+                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
                     </StackPanel>
 
                     <StackPanel
-                Grid.Column="1"
-                VerticalAlignment="Center"
-                Orientation="Horizontal">
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
                         <Button
-                    x:Name="MinimizeButton"
-                    Width="40"
-                    Height="30"
-                    Click="MinimizeButton_Click"
-                    FontSize="16"
-                    ToolTip="Свернуть">
+                            x:Name="MinimizeButton"
+                            Width="40"
+                            Height="30"
+                            Click="MinimizeButton_Click"
+                            FontSize="16"
+                            ToolTip="Свернуть">
                             ─
                         </Button>
                         <Button
-                    x:Name="MaxRestoreButton"
-                    Width="40"
-                    Height="30"
-                    Margin="10,0,0,0"
-                    Click="MaxRestoreButton_Click"
-                    FontSize="16"
-                    ToolTip="Развернуть">
+                            x:Name="MaxRestoreButton"
+                            Width="40"
+                            Height="30"
+                            Margin="10,0,0,0"
+                            Click="MaxRestoreButton_Click"
+                            FontSize="16"
+                            ToolTip="Развернуть">
                             ▢
                         </Button>
                         <Button
-                    x:Name="CloseButton"
-                    Width="40"
-                    Height="30"
-                    Margin="10,0,10,0"
-                    Click="CloseButton_Click"
-                    FontSize="16"
-                    ToolTip="Закрыть">
+                            x:Name="CloseButton"
+                            Width="40"
+                            Height="30"
+                            Margin="10,0,10,0"
+                            Click="CloseButton_Click"
+                            FontSize="16"
+                            ToolTip="Закрыть">
                             ✕
                         </Button>
                     </StackPanel>
@@ -165,13 +165,13 @@
                 </TabControl>
 
                 <DataGrid
-            x:Name="EquipDataGrid"
-            Grid.Row="1"
-            Margin="5"
-            AutoGenerateColumns="False"
-            FontFamily="Bahnschrift"
-            MouseDoubleClick="SelectEquip_DoubleClick"
-            SelectedItem="{Binding SelectedEquip, Mode=TwoWay}" />
+                    x:Name="EquipDataGrid"
+                    Grid.Row="1"
+                    Margin="5"
+                    AutoGenerateColumns="False"
+                    FontFamily="Bahnschrift"
+                    MouseDoubleClick="SelectEquip_DoubleClick"
+                    SelectedItem="{Binding SelectedEquip, Mode=TwoWay}" />
             </Grid>
         </DockPanel>
     </Border>

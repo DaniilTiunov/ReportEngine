@@ -1,6 +1,6 @@
-﻿using ReportEngine.App.ViewModels.FormedEquips;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
+using ReportEngine.App.ViewModels.FormedEquips;
 
 namespace ReportEngine.App.Views.Windows;
 
@@ -23,6 +23,7 @@ public partial class FormedDrainagesView : Window
     {
         FormedDrainagesView_StartUpState();
     }
+
     // Событие изменения состояния окна
     private void FormedDrainagesWindow_StateChanges(object? sender, EventArgs e)
     {

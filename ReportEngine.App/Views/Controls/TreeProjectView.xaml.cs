@@ -19,6 +19,18 @@ public partial class TreeProjectView : UserControl, IDisposable
         DataContext = projectViewModel;
     }
 
+    public void Dispose()
+    {
+        if (_disposed) return;
+
+        DataContext = null;
+
+        if (Resources != null)
+            Resources.Clear();
+
+        _disposed = true;
+    }
+
     private void OpenCurrentView(object sender, MouseButtonEventArgs e)
     {
         ExceptionHelper.SafeExecute(() =>
@@ -38,10 +50,7 @@ public partial class TreeProjectView : UserControl, IDisposable
         ExceptionHelper.SafeExecute(() =>
         {
             var tabItem = MainTabControl.SelectedItem as TabItem;
-            if (tabItem != null)
-            {
-                MainTabControl.Items.Remove(tabItem);
-            }
+            if (tabItem != null) MainTabControl.Items.Remove(tabItem);
         });
     }
 
@@ -56,7 +65,7 @@ public partial class TreeProjectView : UserControl, IDisposable
             if (content == null)
                 return; // Не добавлять вкладку, если контент не создан
 
-            if(CheckForOpenedTabs(content, tag))
+            if (CheckForOpenedTabs(content, tag))
                 return; // Вкладка уже открыта, переключаемся на неё
 
             var tabControl = new TabItem
@@ -77,7 +86,7 @@ public partial class TreeProjectView : UserControl, IDisposable
         {
             if (string.IsNullOrEmpty(tag))
                 return null;
-           
+
             UserControl control = tag switch
             {
                 "ProjectCard" => new ProjectCardView(_projectViewModel),
@@ -86,7 +95,7 @@ public partial class TreeProjectView : UserControl, IDisposable
                 "FrameDrainages" => new FrameDrainagesView(_projectViewModel),
                 "ProjectPreview" => new ProjectPreview(_projectViewModel)
             };
-            
+
             return control;
         }
         catch (Exception ex)
@@ -134,9 +143,8 @@ public partial class TreeProjectView : UserControl, IDisposable
     {
         if (control == null)
             return false;
-        
+
         foreach (var item in MainTabControl.Items.OfType<TabItem>())
-        {
             if (item.Tag is string existingTag && !string.IsNullOrEmpty(existingTag))
             {
                 if (string.Equals(existingTag, tag, StringComparison.Ordinal))
@@ -153,21 +161,8 @@ public partial class TreeProjectView : UserControl, IDisposable
                     return true;
                 }
             }
-        }
-        
+
         return false;
-    }
-
-    public void Dispose()
-    {
-        if (_disposed) return;
-
-        DataContext = null;
-
-        if (Resources != null)
-            Resources.Clear();
-
-        _disposed = true;
     }
 
     ~TreeProjectView()

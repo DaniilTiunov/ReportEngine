@@ -38,6 +38,7 @@ public partial class MainWindow : Window //Это так называемый "C
         //await _mainViewModel.ShowAllProjectsAsync();
         await _mainViewModel.CheckDbConnectionAsync();
     }
+
     // Событие изменения состояния окна
     private void MindowWindow_StateChanges(object? sender, EventArgs e)
     {

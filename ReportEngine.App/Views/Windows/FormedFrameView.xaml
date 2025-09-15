@@ -24,11 +24,11 @@
     <Border Style="{DynamicResource WindowBorder}">
         <DockPanel>
             <Border
-            x:Name="FormedFrameWindowTitle"
-            Height="34"
-            Background="#2D2D30"
-            DockPanel.Dock="Top"
-            MouseLeftButtonDown="Window_MouseLeftButtonDown">
+                x:Name="FormedFrameWindowTitle"
+                Height="34"
+                Background="#2D2D30"
+                DockPanel.Dock="Top"
+                MouseLeftButtonDown="Window_MouseLeftButtonDown">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -36,52 +36,52 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel
-                    Margin="10,0,0,0"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal">
-                        <Image
-                        Width="18"
-                        Height="18"
-                        Margin="0,0,8,0"
-                        Source="/Resources/Icons/estimate_cost_icon_213382.ico" />
-                        <TextBlock
+                        Margin="10,0,0,0"
                         VerticalAlignment="Center"
-                        FontSize="14"
-                        Foreground="White"
-                        Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
+                        Orientation="Horizontal">
+                        <Image
+                            Width="18"
+                            Height="18"
+                            Margin="0,0,8,0"
+                            Source="/Resources/Icons/estimate_cost_icon_213382.ico" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            Foreground="White"
+                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
                     </StackPanel>
 
                     <StackPanel
-                    Grid.Column="1"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal">
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
                         <Button
-                        x:Name="MinimizeButton"
-                        Width="40"
-                        Height="30"
-                        Click="MinimizeButton_Click"
-                        FontSize="16"
-                        ToolTip="Свернуть">
+                            x:Name="MinimizeButton"
+                            Width="40"
+                            Height="30"
+                            Click="MinimizeButton_Click"
+                            FontSize="16"
+                            ToolTip="Свернуть">
                             ─
                         </Button>
                         <Button
-                        x:Name="MaxRestoreButton"
-                        Width="40"
-                        Height="30"
-                        Margin="10,0,0,0"
-                        Click="MaxRestoreButton_Click"
-                        FontSize="16"
-                        ToolTip="Развернуть">
+                            x:Name="MaxRestoreButton"
+                            Width="40"
+                            Height="30"
+                            Margin="10,0,0,0"
+                            Click="MaxRestoreButton_Click"
+                            FontSize="16"
+                            ToolTip="Развернуть">
                             ▢
                         </Button>
                         <Button
-                        x:Name="CloseButton"
-                        Width="40"
-                        Height="30"
-                        Margin="10,0,10,0"
-                        Click="CloseButton_Click"
-                        FontSize="16"
-                        ToolTip="Закрыть">
+                            x:Name="CloseButton"
+                            Width="40"
+                            Height="30"
+                            Margin="10,0,10,0"
+                            Click="CloseButton_Click"
+                            FontSize="16"
+                            ToolTip="Закрыть">
                             ✕
                         </Button>
                     </StackPanel>
@@ -106,21 +106,21 @@
 
                     <!--  Список рам  -->
                     <GroupBox
-                    Grid.Row="0"
-                    Margin="10"
-                    Header="Список рам">
+                        Grid.Row="0"
+                        Margin="10"
+                        Header="Список рам">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <DataGrid
-                            Grid.Column="0"
-                            Margin="5"
-                            AutoGenerateColumns="False"
-                            CanUserAddRows="False"
-                            ItemsSource="{Binding FormedFrameModel.AllFrames}"
-                            SelectedItem="{Binding FormedFrameModel.SelectedFrame}">
+                                Grid.Column="0"
+                                Margin="5"
+                                AutoGenerateColumns="False"
+                                CanUserAddRows="False"
+                                ItemsSource="{Binding FormedFrameModel.AllFrames}"
+                                SelectedItem="{Binding FormedFrameModel.SelectedFrame}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
                                     <DataGridTextColumn Binding="{Binding FrameType}" Header="Тип" />
@@ -132,29 +132,32 @@
                                 </DataGrid.Columns>
                             </DataGrid>
                             <GroupBox
-                            Grid.Column="1"
-                            Margin="5"
-                            Header="Комплектующие рамы">
-                                <DataGrid
+                                Grid.Column="1"
                                 Margin="5"
-                                AutoGenerateColumns="False"
-                                CanUserAddRows="False"
-                                IsReadOnly="False"
-                                ItemsSource="{Binding FormedFrameModel.DisplayedComponents}"
-                                SelectedItem="{Binding FormedFrameModel.SelectedComponentInFrame}">
+                                Header="Комплектующие рамы">
+                                <DataGrid
+                                    Margin="5"
+                                    AutoGenerateColumns="False"
+                                    CanUserAddRows="False"
+                                    IsReadOnly="False"
+                                    ItemsSource="{Binding FormedFrameModel.DisplayedComponents}"
+                                    SelectedItem="{Binding FormedFrameModel.SelectedComponentInFrame}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding Component.Name}" Header="Наименование" />
                                         <DataGridTextColumn Binding="{Binding Count}" Header="Кол-во" />
-                                        <DataGridTextColumn Binding="{Binding Length, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Длина (м)" />
-                                        <DataGridTextColumn Binding="{Binding CostComponent, StringFormat={}{0:N2}}" Header="Цена за ед." />
+                                        <DataGridTextColumn
+                                            Binding="{Binding Length, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            Header="Длина (м)" />
+                                        <DataGridTextColumn Binding="{Binding CostComponent, StringFormat={}{0:N2}}"
+                                                            Header="Цена за ед." />
                                         <DataGridTextColumn Binding="{Binding Measure}" Header="Ед. изм." />
                                         <DataGridTemplateColumn Header="Действия">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <Button
-                                                    Command="{Binding DataContext.RemoveComponentCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                                                    CommandParameter="{Binding}"
-                                                    Content="Удалить" />
+                                                        Command="{Binding DataContext.RemoveComponentCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                                        CommandParameter="{Binding}"
+                                                        Content="Удалить" />
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
@@ -166,9 +169,9 @@
 
                     <!--  Добавление новой рамы  -->
                     <GroupBox
-                    Grid.Row="1"
-                    Margin="10"
-                    Header="Добавление новой рамы">
+                        Grid.Row="1"
+                        Margin="10"
+                        Header="Добавление новой рамы">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -185,103 +188,103 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            Margin="5"
-                            VerticalAlignment="Center">
-                            <Run Text="Наименование:" />
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Margin="5"
+                                VerticalAlignment="Center">
+                                <Run Text="Наименование:" />
                             </TextBlock>
                             <TextBox
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            Margin="5"
-                            Text="{Binding FormedFrameModel.NewFrame.Name}" />
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="5"
+                                Text="{Binding FormedFrameModel.NewFrame.Name}" />
 
                             <TextBlock
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            Margin="5"
-                            VerticalAlignment="Center">
-                            <Run Text="Тип:" />
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Margin="5"
+                                VerticalAlignment="Center">
+                                <Run Text="Тип:" />
                             </TextBlock>
                             <TextBox
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            Margin="5"
-                            Text="{Binding FormedFrameModel.NewFrame.FrameType}" />
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="5"
+                                Text="{Binding FormedFrameModel.NewFrame.FrameType}" />
 
                             <TextBlock
-                            Grid.Row="2"
-                            Grid.Column="0"
-                            Margin="5"
-                            VerticalAlignment="Center">
-                            <Run Text="Ширина:" />
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Margin="5"
+                                VerticalAlignment="Center">
+                                <Run Text="Ширина:" />
                             </TextBlock>
                             <TextBox
-                            Grid.Row="2"
-                            Grid.Column="1"
-                            Margin="5"
-                            Text="{Binding FormedFrameModel.NewFrame.Width}" />
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Margin="5"
+                                Text="{Binding FormedFrameModel.NewFrame.Width}" />
 
                             <TextBlock
-                            Grid.Row="3"
-                            Grid.Column="0"
-                            Margin="5"
-                            VerticalAlignment="Center">
-                            <Run Text="Высота:" />
+                                Grid.Row="3"
+                                Grid.Column="0"
+                                Margin="5"
+                                VerticalAlignment="Center">
+                                <Run Text="Высота:" />
                             </TextBlock>
                             <TextBox
-                            Grid.Row="3"
-                            Grid.Column="1"
-                            Margin="5"
-                            Text="{Binding FormedFrameModel.NewFrame.Height}" />
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                Margin="5"
+                                Text="{Binding FormedFrameModel.NewFrame.Height}" />
 
                             <TextBlock
-                            Grid.Row="4"
-                            Grid.Column="0"
-                            Margin="5"
-                            VerticalAlignment="Center">
-                            <Run Text="Глубина:" />
+                                Grid.Row="4"
+                                Grid.Column="0"
+                                Margin="5"
+                                VerticalAlignment="Center">
+                                <Run Text="Глубина:" />
                             </TextBlock>
                             <TextBox
-                            Grid.Row="4"
-                            Grid.Column="1"
-                            Margin="5"
-                            Text="{Binding FormedFrameModel.NewFrame.Depth}" />
+                                Grid.Row="4"
+                                Grid.Column="1"
+                                Margin="5"
+                                Text="{Binding FormedFrameModel.NewFrame.Depth}" />
 
                             <TextBlock
-                            Grid.Row="5"
-                            Grid.Column="0"
-                            Margin="5"
-                            VerticalAlignment="Center">
-                            <Run Text="Масса:" />
+                                Grid.Row="5"
+                                Grid.Column="0"
+                                Margin="5"
+                                VerticalAlignment="Center">
+                                <Run Text="Масса:" />
                             </TextBlock>
                             <TextBox
-                            Grid.Row="5"
-                            Grid.Column="1"
-                            Margin="5"
-                            Text="{Binding FormedFrameModel.NewFrame.Weight}" />
+                                Grid.Row="5"
+                                Grid.Column="1"
+                                Margin="5"
+                                Text="{Binding FormedFrameModel.NewFrame.Weight}" />
 
                             <TextBlock
-                            Grid.Row="6"
-                            Grid.Column="0"
-                            Margin="5"
-                            VerticalAlignment="Center">
-                            <Run Text="Обозначение по КД:" />
+                                Grid.Row="6"
+                                Grid.Column="0"
+                                Margin="5"
+                                VerticalAlignment="Center">
+                                <Run Text="Обозначение по КД:" />
                             </TextBlock>
                             <TextBox
-                            Grid.Row="6"
-                            Grid.Column="1"
-                            Margin="5"
-                            Text="{Binding FormedFrameModel.NewFrame.Designe}" />
+                                Grid.Row="6"
+                                Grid.Column="1"
+                                Margin="5"
+                                Text="{Binding FormedFrameModel.NewFrame.Designe}" />
                         </Grid>
                     </GroupBox>
 
                     <!--  Редактирование рамы из списка  -->
                     <GroupBox
-                    Grid.Row="2"
-                    Margin="10"
-                    Header="Редактирование рамы из списка">
+                        Grid.Row="2"
+                        Margin="10"
+                        Header="Редактирование рамы из списка">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -298,116 +301,116 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            Margin="5"
-                            VerticalAlignment="Center">
-                            <Run Text="Наименование:" />
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Margin="5"
+                                VerticalAlignment="Center">
+                                <Run Text="Наименование:" />
                             </TextBlock>
                             <TextBox
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            Margin="5"
-                            Text="{Binding FormedFrameModel.SelectedFrame.Name}" />
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="5"
+                                Text="{Binding FormedFrameModel.SelectedFrame.Name}" />
 
                             <TextBlock
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            Margin="5"
-                            VerticalAlignment="Center">
-                            <Run Text="Тип:" />
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Margin="5"
+                                VerticalAlignment="Center">
+                                <Run Text="Тип:" />
                             </TextBlock>
                             <TextBox
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            Margin="5"
-                            Text="{Binding FormedFrameModel.SelectedFrame.FrameType}" />
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="5"
+                                Text="{Binding FormedFrameModel.SelectedFrame.FrameType}" />
 
                             <TextBlock
-                            Grid.Row="2"
-                            Grid.Column="0"
-                            Margin="5"
-                            VerticalAlignment="Center">
-                            <Run Text="Ширина:" />
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Margin="5"
+                                VerticalAlignment="Center">
+                                <Run Text="Ширина:" />
                             </TextBlock>
                             <TextBox
-                            Grid.Row="2"
-                            Grid.Column="1"
-                            Margin="5"
-                            Text="{Binding FormedFrameModel.SelectedFrame.Width}" />
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Margin="5"
+                                Text="{Binding FormedFrameModel.SelectedFrame.Width}" />
 
                             <TextBlock
-                            Grid.Row="3"
-                            Grid.Column="0"
-                            Margin="5"
-                            VerticalAlignment="Center">
-                            <Run Text="Высота:" />
+                                Grid.Row="3"
+                                Grid.Column="0"
+                                Margin="5"
+                                VerticalAlignment="Center">
+                                <Run Text="Высота:" />
                             </TextBlock>
                             <TextBox
-                            Grid.Row="3"
-                            Grid.Column="1"
-                            Margin="5"
-                            Text="{Binding FormedFrameModel.SelectedFrame.Height}" />
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                Margin="5"
+                                Text="{Binding FormedFrameModel.SelectedFrame.Height}" />
 
                             <TextBlock
-                            Grid.Row="4"
-                            Grid.Column="0"
-                            Margin="5"
-                            VerticalAlignment="Center">
-                            <Run Text="Глубина:" />
+                                Grid.Row="4"
+                                Grid.Column="0"
+                                Margin="5"
+                                VerticalAlignment="Center">
+                                <Run Text="Глубина:" />
                             </TextBlock>
                             <TextBox
-                            Grid.Row="4"
-                            Grid.Column="1"
-                            Margin="5"
-                            Text="{Binding FormedFrameModel.SelectedFrame.Depth}" />
+                                Grid.Row="4"
+                                Grid.Column="1"
+                                Margin="5"
+                                Text="{Binding FormedFrameModel.SelectedFrame.Depth}" />
 
                             <TextBlock
-                            Grid.Row="5"
-                            Grid.Column="0"
-                            Margin="5"
-                            VerticalAlignment="Center">
-                            <Run Text="Масса:" />
+                                Grid.Row="5"
+                                Grid.Column="0"
+                                Margin="5"
+                                VerticalAlignment="Center">
+                                <Run Text="Масса:" />
                             </TextBlock>
                             <TextBox
-                            Grid.Row="5"
-                            Grid.Column="1"
-                            Margin="5"
-                            Text="{Binding FormedFrameModel.SelectedFrame.Weight}" />
+                                Grid.Row="5"
+                                Grid.Column="1"
+                                Margin="5"
+                                Text="{Binding FormedFrameModel.SelectedFrame.Weight}" />
 
                             <TextBlock
-                            Grid.Row="6"
-                            Grid.Column="0"
-                            Margin="5"
-                            VerticalAlignment="Center">
-                            <Run Text="Обозначение по КД:" />
+                                Grid.Row="6"
+                                Grid.Column="0"
+                                Margin="5"
+                                VerticalAlignment="Center">
+                                <Run Text="Обозначение по КД:" />
                             </TextBlock>
                             <TextBox
-                            Grid.Row="6"
-                            Grid.Column="1"
-                            Margin="5"
-                            Text="{Binding FormedFrameModel.SelectedFrame.Designe}" />
+                                Grid.Row="6"
+                                Grid.Column="1"
+                                Margin="5"
+                                Text="{Binding FormedFrameModel.SelectedFrame.Designe}" />
                         </Grid>
                     </GroupBox>
 
                     <!--  Кнопки управления  -->
                     <StackPanel
-                    Grid.Row="3"
-                    Margin="10"
-                    HorizontalAlignment="Center"
-                    Orientation="Horizontal">
+                        Grid.Row="3"
+                        Margin="10"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
                         <Button
-                        Margin="5"
-                        Command="{Binding AddNewFrameCommand}"
-                        Content="Добавить новую" />
+                            Margin="5"
+                            Command="{Binding AddNewFrameCommand}"
+                            Content="Добавить новую" />
                         <Button
-                        Margin="5"
-                        Command="{Binding SaveChangesCommand}"
-                        Content="Сохранить изменения" />
+                            Margin="5"
+                            Command="{Binding SaveChangesCommand}"
+                            Content="Сохранить изменения" />
                         <Button
-                        Margin="5"
-                        Command="{Binding DeleteFrameCommand}"
-                        Content="Удалить выбранную раму" />
+                            Margin="5"
+                            Command="{Binding DeleteFrameCommand}"
+                            Content="Удалить выбранную раму" />
                     </StackPanel>
                 </Grid>
 
@@ -423,11 +426,11 @@
                         <TabItem Header="Детали рамы">
                             <StackPanel>
                                 <DataGrid
-                                Margin="5"
-                                AutoGenerateColumns="False"
-                                CanUserAddRows="False"
-                                ItemsSource="{Binding FormedFrameModel.FrameDetails}"
-                                SelectedItem="{Binding FormedFrameModel.SelectedComponentForAdd}">
+                                    Margin="5"
+                                    AutoGenerateColumns="False"
+                                    CanUserAddRows="False"
+                                    ItemsSource="{Binding FormedFrameModel.FrameDetails}"
+                                    SelectedItem="{Binding FormedFrameModel.SelectedComponentForAdd}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
                                         <DataGridTextColumn Binding="{Binding Cost}" Header="Цена" />
@@ -436,26 +439,27 @@
                                 </DataGrid>
                                 <StackPanel Margin="5,0,0,5" Orientation="Horizontal">
                                     <TextBlock
-                                    Margin="0,0,5,0"
-                                    VerticalAlignment="Center"
-                                    Text="Длина (м):" />
-                                    <TextBox Width="60" Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        Margin="0,0,5,0"
+                                        VerticalAlignment="Center"
+                                        Text="Длина (м):" />
+                                    <TextBox Width="60"
+                                             Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
                                 <Button
-                                Margin="5"
-                                Command="{Binding AddDetailsCommand}"
-                                CommandParameter="FrameDetail"
-                                Content="Добавить комплектующую" />
+                                    Margin="5"
+                                    Command="{Binding AddDetailsCommand}"
+                                    CommandParameter="FrameDetail"
+                                    Content="Добавить комплектующую" />
                             </StackPanel>
                         </TabItem>
                         <TabItem Header="Комплектующие для стойки">
                             <StackPanel>
                                 <DataGrid
-                                Margin="5"
-                                AutoGenerateColumns="False"
-                                CanUserAddRows="False"
-                                ItemsSource="{Binding FormedFrameModel.PillarEqiups}"
-                                SelectedItem="{Binding FormedFrameModel.SelectedComponentForAdd}">
+                                    Margin="5"
+                                    AutoGenerateColumns="False"
+                                    CanUserAddRows="False"
+                                    ItemsSource="{Binding FormedFrameModel.PillarEqiups}"
+                                    SelectedItem="{Binding FormedFrameModel.SelectedComponentForAdd}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
                                         <DataGridTextColumn Binding="{Binding Cost}" Header="Цена" />
@@ -464,26 +468,27 @@
                                 </DataGrid>
                                 <StackPanel Margin="5,0,0,5" Orientation="Horizontal">
                                     <TextBlock
-                                    Margin="0,0,5,0"
-                                    VerticalAlignment="Center"
-                                    Text="Длина (м):" />
-                                    <TextBox Width="60" Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        Margin="0,0,5,0"
+                                        VerticalAlignment="Center"
+                                        Text="Длина (м):" />
+                                    <TextBox Width="60"
+                                             Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
                                 <Button
-                                Margin="5"
-                                Command="{Binding AddDetailsCommand}"
-                                CommandParameter="PillarEqiup"
-                                Content="Добавить комплектующую" />
+                                    Margin="5"
+                                    Command="{Binding AddDetailsCommand}"
+                                    CommandParameter="PillarEqiup"
+                                    Content="Добавить комплектующую" />
                             </StackPanel>
                         </TabItem>
                         <TabItem Header="Прокат">
                             <StackPanel>
                                 <DataGrid
-                                Margin="5"
-                                AutoGenerateColumns="False"
-                                CanUserAddRows="False"
-                                ItemsSource="{Binding FormedFrameModel.FrameRolls}"
-                                SelectedItem="{Binding FormedFrameModel.SelectedComponentForAdd}">
+                                    Margin="5"
+                                    AutoGenerateColumns="False"
+                                    CanUserAddRows="False"
+                                    ItemsSource="{Binding FormedFrameModel.FrameRolls}"
+                                    SelectedItem="{Binding FormedFrameModel.SelectedComponentForAdd}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
                                         <DataGridTextColumn Binding="{Binding Cost}" Header="Цена" />
@@ -492,16 +497,17 @@
                                 </DataGrid>
                                 <StackPanel Margin="5,0,0,5" Orientation="Horizontal">
                                     <TextBlock
-                                    Margin="0,0,5,0"
-                                    VerticalAlignment="Center"
-                                    Text="Длина (м):" />
-                                    <TextBox Width="60" Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        Margin="0,0,5,0"
+                                        VerticalAlignment="Center"
+                                        Text="Длина (м):" />
+                                    <TextBox Width="60"
+                                             Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
                                 <Button
-                                Margin="5"
-                                Command="{Binding AddDetailsCommand}"
-                                CommandParameter="FrameRoll"
-                                Content="Добавить комплектующую" />
+                                    Margin="5"
+                                    Command="{Binding AddDetailsCommand}"
+                                    CommandParameter="FrameRoll"
+                                    Content="Добавить комплектующую" />
                             </StackPanel>
                         </TabItem>
                     </TabControl>

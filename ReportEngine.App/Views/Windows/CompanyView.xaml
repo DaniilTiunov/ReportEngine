@@ -18,19 +18,19 @@
 
     <WindowChrome.WindowChrome>
         <WindowChrome
-        CaptionHeight="0"
-        CornerRadius="0"
-        GlassFrameThickness="0" />
+            CaptionHeight="0"
+            CornerRadius="0"
+            GlassFrameThickness="0" />
     </WindowChrome.WindowChrome>
 
     <Border Style="{DynamicResource WindowBorder}">
         <DockPanel>
             <Border
-        x:Name="FormedFrameWindowTitle"
-        Height="34"
-        Background="#2D2D30"
-        DockPanel.Dock="Top"
-        MouseLeftButtonDown="Window_MouseLeftButtonDown">
+                x:Name="FormedFrameWindowTitle"
+                Height="34"
+                Background="#2D2D30"
+                DockPanel.Dock="Top"
+                MouseLeftButtonDown="Window_MouseLeftButtonDown">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -38,52 +38,52 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel
-                Margin="10,0,0,0"
-                VerticalAlignment="Center"
-                Orientation="Horizontal">
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
                         <Image
-                    Width="18"
-                    Height="18"
-                    Margin="0,0,8,0"
-                    Source="/Resources/Icons/estimate_cost_icon_213382.ico" />
+                            Width="18"
+                            Height="18"
+                            Margin="0,0,8,0"
+                            Source="/Resources/Icons/estimate_cost_icon_213382.ico" />
                         <TextBlock
-                    VerticalAlignment="Center"
-                    FontSize="14"
-                    Foreground="White"
-                    Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            Foreground="White"
+                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
                     </StackPanel>
 
                     <StackPanel
-                Grid.Column="1"
-                VerticalAlignment="Center"
-                Orientation="Horizontal">
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
                         <Button
-                    x:Name="MinimizeButton"
-                    Width="40"
-                    Height="30"
-                    Click="MinimizeButton_Click"
-                    FontSize="16"
-                    ToolTip="Свернуть">
+                            x:Name="MinimizeButton"
+                            Width="40"
+                            Height="30"
+                            Click="MinimizeButton_Click"
+                            FontSize="16"
+                            ToolTip="Свернуть">
                             ─
                         </Button>
                         <Button
-                    x:Name="MaxRestoreButton"
-                    Width="40"
-                    Height="30"
-                    Margin="10,0,0,0"
-                    Click="MaxRestoreButton_Click"
-                    FontSize="16"
-                    ToolTip="Развернуть">
+                            x:Name="MaxRestoreButton"
+                            Width="40"
+                            Height="30"
+                            Margin="10,0,0,0"
+                            Click="MaxRestoreButton_Click"
+                            FontSize="16"
+                            ToolTip="Развернуть">
                             ▢
                         </Button>
                         <Button
-                    x:Name="CloseButton"
-                    Width="40"
-                    Height="30"
-                    Margin="10,0,10,0"
-                    Click="CloseButton_Click"
-                    FontSize="16"
-                    ToolTip="Закрыть">
+                            x:Name="CloseButton"
+                            Width="40"
+                            Height="30"
+                            Margin="10,0,10,0"
+                            Click="CloseButton_Click"
+                            FontSize="16"
+                            ToolTip="Закрыть">
                             ✕
                         </Button>
                     </StackPanel>
@@ -102,18 +102,18 @@
                 </Grid.RowDefinitions>
 
                 <DataGrid
-            x:Name="CompaniesDataGrid"
-            Grid.Row="1"
-            Grid.ColumnSpan="4"
-            Margin="10,14,5,75"
-            CanUserAddRows="True"
-            CanUserDeleteRows="True"
-            CanUserReorderColumns="True"
-            CanUserSortColumns="True"
-            ItemsSource="{Binding CurrentCompany.AllCompanies, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            RowHeaderWidth="40"
-            SelectedItem="{Binding CurrentCompany.SelectedCompany, Mode=TwoWay}"
-            SelectionUnit="FullRow">
+                    x:Name="CompaniesDataGrid"
+                    Grid.Row="1"
+                    Grid.ColumnSpan="4"
+                    Margin="10,14,5,75"
+                    CanUserAddRows="True"
+                    CanUserDeleteRows="True"
+                    CanUserReorderColumns="True"
+                    CanUserSortColumns="True"
+                    ItemsSource="{Binding CurrentCompany.AllCompanies, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    RowHeaderWidth="40"
+                    SelectedItem="{Binding CurrentCompany.SelectedCompany, Mode=TwoWay}"
+                    SelectionUnit="FullRow">
                     <DataGrid.ContextMenu>
                         <ContextMenu>
                             <MenuItem Command="{Binding LoadAllCompaniesCommand}" Header="Показать всех" />
@@ -126,17 +126,17 @@
                     </DataGrid.ContextMenu>
                     <DataGrid.Columns>
                         <DataGridTextColumn
-                    Width="90"
-                    Binding="{Binding Number, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                    Header="Номер" />
+                            Width="90"
+                            Binding="{Binding Number, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                            Header="Номер" />
                         <DataGridTextColumn
-                    Width="*"
-                    Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                    Header="Название организации" />
+                            Width="*"
+                            Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                            Header="Название организации" />
                         <DataGridTextColumn
-                    Width="150"
-                    Binding="{Binding RegisterDate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                    Header="Дата регистрации" />
+                            Width="150"
+                            Binding="{Binding RegisterDate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                            Header="Дата регистрации" />
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

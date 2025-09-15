@@ -1,4 +1,5 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!--  Цветовые ресурсы для светлой темы  -->
     <SolidColorBrush x:Key="PrimaryColor" Color="#FFFFFF" />
     <SolidColorBrush x:Key="SecondaryColor" Color="#F5F5F5" />
@@ -22,9 +23,9 @@
 
     <!-- Стиль рамки окна-->
     <Style x:Key="WindowBorder" TargetType="Border">
-        <Setter Property="BorderBrush" Value="{DynamicResource WindowBorderColor}"/>
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource WindowBorderColor}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="0" />
     </Style>
 
     <!-- Стили для UserControl-->
@@ -45,7 +46,7 @@
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
     </Style>
-    
+
     <!--  Стили для DataGrid  -->
     <Style TargetType="DataGrid">
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
@@ -120,7 +121,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
+
     <!--  Стили для Menu и MenuItem  -->
     <Style TargetType="Menu">
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
@@ -266,5 +267,5 @@
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
     </Style>
-    
+
 </ResourceDictionary>

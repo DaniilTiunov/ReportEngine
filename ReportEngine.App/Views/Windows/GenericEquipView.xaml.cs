@@ -23,7 +23,7 @@ public partial class GenericEquipView : Window
 
             if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(GenericEquipViewModel<>))
                 return;
-            
+
             dynamic viewModel = DataContext;
             viewModel.SelectCommand.Execute(null);
         });
