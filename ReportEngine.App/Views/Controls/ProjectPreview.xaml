@@ -8,8 +8,8 @@
     d:DesignHeight="500"
     d:DesignWidth="800"
     Background="{DynamicResource PrimaryColor}"
-    Foreground="{DynamicResource PrimaryForeground}"
     FontSize="13"
+    Foreground="{DynamicResource PrimaryForeground}"
     mc:Ignorable="d">
     <UserControl.Resources>
         <converters:ObvyazkaImagePathConverter x:Key="ObvyazkaImagePathConverter" />
@@ -37,8 +37,7 @@
             Margin="5"
             Padding="5"
             Header="Стенды проекта">
-            <ListView ItemsSource="{Binding CurrentProjectModel.Stands}"
-                      SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}">
+            <ListView ItemsSource="{Binding CurrentProjectModel.Stands}" SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn
@@ -121,8 +120,7 @@
                         Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(нет данных)'}" />
                 </TextBlock>
             </GroupBox.Header>
-            <ListView ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}"
-                      SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand, Mode=TwoWay}">
+            <ListView ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}" SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand, Mode=TwoWay}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn
@@ -171,7 +169,7 @@
             </GroupBox.Header>
             <Border
                 Padding="5"
-                Background="WhiteSmoke"
+                Background="{DynamicResource SecondaryColor}"
                 Focusable="True"
                 PreviewMouseLeftButtonDown="Image_PreviewMouseLeftButtonDown"
                 ToolTip="Кликните сюда и нажмите Ctrl+V, чтобы вставить скриншот">
@@ -202,8 +200,8 @@
                 Width="200"
                 Height="200"
                 Margin="0,0,10,0"
-                Background="WhiteSmoke"
-                BorderBrush="LightGray"
+                Background="{DynamicResource SecondaryColor}"
+                BorderBrush="{DynamicResource BorderColor}"
                 BorderThickness="1"
                 CornerRadius="5">
                 <Image
@@ -226,28 +224,17 @@
                             <Setter Property="Margin" Value="0,3" />
                         </Style>
                     </StackPanel.Resources>
-                    <TextBlock
-                        Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.ObvyazkaId, StringFormat='Номер: {0}'}" />
-                    <TextBlock
-                        Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.LineLength, StringFormat='Длина линии: {0}'}" />
-                    <TextBlock
-                        Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.ZraCount, StringFormat='Кол-во ЗРА: {0}'}" />
-                    <TextBlock
-                        Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.TreeSocketCount, StringFormat='Тройники: {0}'}" />
-                    <TextBlock
-                        Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.Sensor, StringFormat='Датчики: {0}'}" />
-                    <TextBlock
-                        Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.SensorType, StringFormat='Тип датчиков: {0}'}" />
-                    <TextBlock
-                        Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.Clamp, StringFormat='Хомуты: {0}'}" />
-                    <TextBlock
-                        Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.WidthOnFrame, StringFormat='Длина на раме: {0}'}" />
-                    <TextBlock
-                        Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.OtherLineCount, StringFormat='Др. линии: {0}'}" />
-                    <TextBlock
-                        Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.Weight, StringFormat='Масса: {0}'}" />
-                    <TextBlock
-                        Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.HumanCost, StringFormat='Трудозатраты: {0}'}" />
+                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.ObvyazkaId, StringFormat='Номер: {0}'}" />
+                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.LineLength, StringFormat='Длина линии: {0}'}" />
+                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.ZraCount, StringFormat='Кол-во ЗРА: {0}'}" />
+                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.TreeSocketCount, StringFormat='Тройники: {0}'}" />
+                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.Sensor, StringFormat='Датчики: {0}'}" />
+                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.SensorType, StringFormat='Тип датчиков: {0}'}" />
+                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.Clamp, StringFormat='Хомуты: {0}'}" />
+                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.WidthOnFrame, StringFormat='Длина на раме: {0}'}" />
+                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.OtherLineCount, StringFormat='Др. линии: {0}'}" />
+                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.Weight, StringFormat='Масса: {0}'}" />
+                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.HumanCost, StringFormat='Трудозатраты: {0}'}" />
                 </StackPanel>
             </GroupBox>
         </Grid>
@@ -267,8 +254,7 @@
                         Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(ошибка привязки)'}" />
                 </TextBlock>
             </GroupBox.Header>
-            <ListView ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}"
-                      SelectedItem="{Binding CurrentStandModel.SelectedElectricalComponent}">
+            <ListView ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}" SelectedItem="{Binding CurrentStandModel.SelectedElectricalComponent}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn DisplayMemberBinding="{Binding Purpose}" Header="Назначение" />
@@ -295,8 +281,7 @@
                         Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(ошибка привязки)'}" />
                 </TextBlock>
             </GroupBox.Header>
-            <ListView ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand}"
-                      SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
+            <ListView ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand}" SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn DisplayMemberBinding="{Binding Purpose}" Header="Назначение" />
@@ -304,7 +289,7 @@
                         <GridViewColumn DisplayMemberBinding="{Binding Quantity}" Header="Кол-во" />
                         <GridViewColumn DisplayMemberBinding="{Binding Measure}" Header="Ед. изм." />
                         <GridViewColumn DisplayMemberBinding="{Binding CostPerUnit}" Header="Цена" />
-                         </GridView>
+                    </GridView>
                 </ListView.View>
             </ListView>
         </GroupBox>
@@ -323,8 +308,7 @@
                         Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(ошибка привязки)'}" />
                 </TextBlock>
             </GroupBox.Header>
-            <ListView ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand}"
-                      SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
+            <ListView ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand}" SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn DisplayMemberBinding="{Binding Purpose}" Header="Назначение" />
@@ -332,7 +316,7 @@
                         <GridViewColumn DisplayMemberBinding="{Binding Quantity}" Header="Кол-во" />
                         <GridViewColumn DisplayMemberBinding="{Binding Measure}" Header="Ед. изм." />
                         <GridViewColumn DisplayMemberBinding="{Binding CostPerUnit}" Header="Цена" />
-                         </GridView>
+                    </GridView>
                 </ListView.View>
             </ListView>
         </GroupBox>
