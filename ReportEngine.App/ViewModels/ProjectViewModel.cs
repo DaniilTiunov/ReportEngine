@@ -711,21 +711,24 @@ public class ProjectViewModel : BaseViewModel
                     dp.Material = selected.Name;
                     dp.CostPerUnit = selected.Cost;
                     dp.Measure = selected.Measure;
-                    CollectionViewSource.GetDefaultView(CurrentStandModel.NewDrainage.Purposes).Refresh();
+                    CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewDrainage.Purposes);
+                    CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand);
                     return;
 
                 case AdditionalEquipPurpose ap:
                     ap.Material = selected.Name;
                     ap.CostPerUnit = selected.Cost;
                     ap.Measure = selected.Measure;
-                    CollectionViewSource.GetDefaultView(CurrentStandModel.NewAdditionalEquip.Purposes).Refresh();
+                    CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
+                    CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand);
                     return;
 
                 case ElectricalPurpose ep:
                     ep.Material = selected.Name;
                     ep.CostPerUnit = selected.Cost;
                     ep.Measure = selected.Measure;
-                    CollectionViewSource.GetDefaultView(CurrentStandModel.NewElectricalComponent.Purposes).Refresh();
+                    CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewElectricalComponent.Purposes);
+                    CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand);
                     return;
             }
 
