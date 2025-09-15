@@ -712,7 +712,7 @@ public class ProjectViewModel : BaseViewModel
         var purpose = CurrentProjectModel.SelectedStand.SelectedElectricalComponent;
 
         await _standService.UpdateElectricalPurposeAsync(purpose);
-        _notificationService.ShowInfo("Цель электрического компонента сохранена");
+        _notificationService.ShowInfo("Электрические компоненты сохранены");
     }
 
     private async Task DeleteElectricalComponentFromStandAsync()
@@ -729,7 +729,7 @@ public class ProjectViewModel : BaseViewModel
         var purpose = CurrentProjectModel.SelectedStand.SelectedAdditionalEquip;
 
         await _standService.UpdateAdditionalPurposeAsync(purpose);
-        _notificationService.ShowInfo("Доп. комплктующее сохранено");
+        _notificationService.ShowInfo("Доп. комплктующие сохранены");
     }
 
     private async Task DeleteAdditionalComponentFromStandAsync()
@@ -738,7 +738,7 @@ public class ProjectViewModel : BaseViewModel
         await _standService.DeleteAdditionalPurposeAsync(CurrentProjectModel.SelectedStand.SelectedElectricalComponent.Id);
         CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand.Remove(toRemove);
 
-        _notificationService.ShowInfo("Доп. комплктующее удалёно");
+        _notificationService.ShowInfo("Доп. комплктующее удалено");
     }
 
     public async Task UpdateDrainagePurposeAsync()
@@ -746,7 +746,7 @@ public class ProjectViewModel : BaseViewModel
         var purpose = CurrentProjectModel.SelectedStand.SelectedDrainagePurpose;
 
         await _standService.UpdateDrainagePurposeAsync(purpose);
-        _notificationService.ShowInfo("Доп. комплктующее сохранено");
+        _notificationService.ShowInfo("Дренажные комплектующие сохранены");
     }
 
     private async Task DeleteDrainageComponentFromStandAsync()
@@ -755,7 +755,7 @@ public class ProjectViewModel : BaseViewModel
         await _standService.DeleteDrainagePurposeAsync(CurrentProjectModel.SelectedStand.SelectedDrainage.Id);
         CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand.Remove(toRemove);
 
-        _notificationService.ShowInfo("Доп. комплктующее удалёно");
+        _notificationService.ShowInfo("Дренажное комплектующее удалён");
     }
 
     #endregion
