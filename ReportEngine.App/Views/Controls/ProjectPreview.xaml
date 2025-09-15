@@ -23,14 +23,12 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
-            <!--  Новая строка для кнопок  -->
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <!--  Верхние GroupBox остаются без изменений  -->
         <GroupBox
             Grid.Row="0"
             Grid.Column="0"
@@ -158,92 +156,147 @@
             </ListView>
         </GroupBox>
 
+        <!--  Объединённая секция: Чертёж стенда + инфо  -->
         <GroupBox
             Grid.Row="1"
+            Grid.RowSpan="2"
             Grid.Column="1"
             Margin="5"
-            Padding="5"
-            Focusable="True">
+            Padding="5">
             <GroupBox.Header>
                 <TextBlock>
-                    <Run Text="Чертёж стенда — " />
+                    <Run Text="Чертёж стенда и информация по обвязке — " />
                     <Run
                         FontSize="15"
                         FontWeight="Bold"
                         Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(ошибка привязки)'}" />
                 </TextBlock>
             </GroupBox.Header>
-            <Border
-                Padding="5"
-                Background="{DynamicResource SecondaryColor}"
-                Focusable="True"
-                PreviewMouseLeftButtonDown="Image_PreviewMouseLeftButtonDown"
-                ToolTip="Кликните сюда и нажмите Ctrl+V, чтобы вставить скриншот">
-                <Image
-                    x:Name="StandDrawingImage"
-                    Focusable="True"
-                    Source="{Binding CurrentProjectModel.SelectedStand.ImageData, Converter={StaticResource ByteArrayImageConverter}}"
-                    Stretch="Uniform" />
-            </Border>
-        </GroupBox>
 
-        <!--  Средний правый GroupBox с большой картинкой и информацией  -->
-        <Grid
-            Grid.Row="2"
-            Grid.Column="1"
-            Margin="5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <!--  Картинка  -->
-                <ColumnDefinition Width="*" />
-                <!--  Информация  -->
-            </Grid.ColumnDefinitions>
-
-            <!--  Большая квадратная картинка  -->
+            <!--  Внешняя рамка для визуального выделения секции  -->
             <Border
-                Grid.Row="2"
-                Grid.Column="0"
-                Width="200"
-                Height="200"
-                Margin="0,0,10,0"
-                Background="{DynamicResource SecondaryColor}"
+                Padding="8"
+                Background="{DynamicResource PrimaryColor}"
                 BorderBrush="{DynamicResource SecondaryColor}"
                 BorderThickness="1"
-                CornerRadius="5">
-                <Image
-                    Width="190"
-                    Height="190"
-                    Source="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.ImageName, Converter={StaticResource ObvyazkaImagePathConverter}}"
-                    Stretch="Uniform" />
-            </Border>
+                CornerRadius="8"
+                SnapsToDevicePixels="True">
+                <Border.Effect>
+                    <DropShadowEffect
+                        BlurRadius="8"
+                        Opacity="0.6"
+                        ShadowDepth="2"
+                        Color="#22000000" />
+                </Border.Effect>
 
-            <!--  Информация об обвязке  -->
-            <GroupBox
-                Grid.Row="2"
-                Grid.Column="1"
-                Padding="5"
-                Header="Информация об обвязке">
-                <StackPanel>
-                    <StackPanel.Resources>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="FontSize" Value="12" />
-                            <Setter Property="Margin" Value="0,3" />
-                        </Style>
-                    </StackPanel.Resources>
-                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.ObvyazkaId, StringFormat='Номер: {0}'}" />
-                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.LineLength, StringFormat='Длина линии: {0}'}" />
-                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.ZraCount, StringFormat='Кол-во ЗРА: {0}'}" />
-                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.TreeSocketCount, StringFormat='Тройники: {0}'}" />
-                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.Sensor, StringFormat='Датчики: {0}'}" />
-                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.SensorType, StringFormat='Тип датчиков: {0}'}" />
-                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.Clamp, StringFormat='Хомуты: {0}'}" />
-                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.WidthOnFrame, StringFormat='Длина на раме: {0}'}" />
-                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.OtherLineCount, StringFormat='Др. линии: {0}'}" />
-                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.Weight, StringFormat='Масса: {0}'}" />
-                    <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.HumanCost, StringFormat='Трудозатраты: {0}'}" />
-                </StackPanel>
-            </GroupBox>
-        </Grid>
+                <Grid Margin="0">
+                    <Grid.ColumnDefinitions>
+                        <!--  Поле чертежа: растягивается  -->
+                        <ColumnDefinition Width="*" MinWidth="100" />
+                        <!--  Полоска GridSplitter  -->
+                        <ColumnDefinition Width="6" />
+                        <!--  Правая панель: содержит картинку обвязки + информацию, сворачивается целиком  -->
+                        <ColumnDefinition Width="Auto" MinWidth="0" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  Stand drawing  -->
+                    <Border
+                        Grid.Column="0"
+                        Margin="0,0,10,0"
+                        Padding="6"
+                        VerticalAlignment="Stretch"
+                        Background="{DynamicResource SecondaryColor}"
+                        BorderBrush="{DynamicResource PrimaryForeground}"
+                        BorderThickness="1"
+                        CornerRadius="6"
+                        SnapsToDevicePixels="True">
+                        <Image
+                            x:Name="StandDrawingImage"
+                            Focusable="True"
+                            Source="{Binding CurrentProjectModel.SelectedStand.ImageData, Converter={StaticResource ByteArrayImageConverter}}"
+                            Stretch="Uniform" />
+                    </Border>
+
+                    <!--
+                        GridSplitter между чертежом и правой панелью.
+                        ResizeBehavior="PreviousAndNext" заставляет менять ширину колонки 0 и колонки 2,
+                        а так как правая панель — одна колонка, при утачивании её ширина может уйти в 0.
+                    -->
+                    <GridSplitter
+                        Grid.Column="1"
+                        Width="6"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Stretch"
+                        Background="#22000000"
+                        Cursor="SizeWE"
+                        ResizeBehavior="PreviousAndNext"
+                        ResizeDirection="Columns" />
+
+                    <!--  Правая объединённая панель (обвязка + инфо)  -->
+                    <Grid
+                        Grid.Column="2"
+                        MinWidth="0"
+                        HorizontalAlignment="Right">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" MinWidth="0" />
+                            <ColumnDefinition Width="*" MinWidth="0" />
+                        </Grid.ColumnDefinitions>
+
+                        <!--  Большая картинка обвязки  -->
+                        <Border
+                            Grid.Column="0"
+                            Width="220"
+                            Height="220"
+                            Margin="0,0,10,0"
+                            Padding="4"
+                            VerticalAlignment="Top"
+                            Background="{DynamicResource SecondaryColor}"
+                            BorderBrush="{DynamicResource PrimaryForeground}"
+                            BorderThickness="1"
+                            CornerRadius="6">
+                            <Image
+                                Width="210"
+                                Height="210"
+                                Source="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.ImageName, Converter={StaticResource ObvyazkaImagePathConverter}}"
+                                Stretch="Uniform" />
+                        </Border>
+
+                        <!--  Информация об обвязке  -->
+                        <Border
+                            Grid.Column="1"
+                            Padding="8"
+                            VerticalAlignment="Top"
+                            Background="{DynamicResource PrimaryColor}"
+                            BorderThickness="0">
+                            <StackPanel>
+                                <TextBlock
+                                    Margin="0,0,0,6"
+                                    FontSize="13"
+                                    FontWeight="Bold"
+                                    Text="Информация об обвязке" />
+                                <StackPanel.Resources>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="FontSize" Value="12" />
+                                        <Setter Property="Margin" Value="0,3" />
+                                    </Style>
+                                </StackPanel.Resources>
+                                <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.ObvyazkaId, StringFormat='Номер: {0}'}" />
+                                <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.LineLength, StringFormat='Длина линии: {0}'}" />
+                                <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.ZraCount, StringFormat='Кол-во ЗРА: {0}'}" />
+                                <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.TreeSocketCount, StringFormat='Тройники: {0}'}" />
+                                <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.Sensor, StringFormat='Датчики: {0}'}" />
+                                <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.SensorType, StringFormat='Тип датчиков: {0}'}" />
+                                <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.Clamp, StringFormat='Хомуты: {0}'}" />
+                                <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.WidthOnFrame, StringFormat='Длина на раме: {0}'}" />
+                                <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.OtherLineCount, StringFormat='Др. линии: {0}'}" />
+                                <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.Weight, StringFormat='Масса: {0}'}" />
+                                <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.HumanCost, StringFormat='Трудозатраты: {0}'}" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </Border>
+        </GroupBox>
 
         <!--  Электрические компоненты  -->
         <GroupBox
@@ -401,7 +454,7 @@
                 Command="{Binding ProjectCommandProvider.CalculateProjectCommand}"
                 Content="Рассчитать проект" />
             <Button
-                Width="180"
+                Width="185"
                 Height="30"
                 Margin="0,0,10,0"
                 Command="{Binding ProjectCommandProvider.CreateSummaryReportCommand}"
