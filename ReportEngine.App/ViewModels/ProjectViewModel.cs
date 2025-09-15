@@ -3,14 +3,12 @@ using ReportEngine.App.Commands;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
-using ReportEngine.App.Services;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Pipes;
-using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
@@ -272,32 +270,65 @@ public class ProjectViewModel : BaseViewModel
 
     private async void OnDeleteElectricalComponentFromStandCommandExecuted(object obj)
     {
-        await ExceptionHelper.SafeExecuteAsync(DeleteElectricalComponentFromStandAsync);
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await DeletePurposeAsync(CurrentProjectModel.SelectedStand.SelectedElectricalComponent,
+                                    _standService.DeleteElectricalPurposeAsync,
+                                    CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand,
+                                    "Электрический компонент удалён");
+        });
     }
 
     private async void OnUpdateElectricalComponentInStandCommandExecuted(object obj)
     {
-        await ExceptionHelper.SafeExecuteAsync(UpdateElectricalPurposeAsync);
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await UpdatePurposeAsync(CurrentProjectModel.SelectedStand.SelectedElectricalComponent,
+                            _standService.UpdateElectricalPurposeAsync,
+                            "Электрические компоненты сохранены");
+        });
     }
 
     private async void OnDeleteAdditionalComponentFromStandCommandExecuted(object obj)
     {
-        await ExceptionHelper.SafeExecuteAsync(DeleteAdditionalComponentFromStandAsync);
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await DeletePurposeAsync(CurrentProjectModel.SelectedStand.SelectedAdditionalEquip,
+                            _standService.DeleteAdditionalPurposeAsync,
+                            CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand,
+                            "Доп. комплектующее удалено");
+        });
     }
 
     private async void OnUpdateAdditionalComponentInStandCommandExecuted(object obj)
     {
-        await ExceptionHelper.SafeExecuteAsync(UpdateAdditionalPurposeAsync);
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await UpdatePurposeAsync(CurrentProjectModel.SelectedStand.SelectedAdditionalEquip,
+                            _standService.UpdateAdditionalPurposeAsync,
+                            "Доп. комплектующие сохранены");
+        });
     }
 
     private async void OnDeleteDrainageComponentFromStandCommandExecuted(object obj)
     {
-        await ExceptionHelper.SafeExecuteAsync(DeleteDrainageComponentFromStandAsync);
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await DeletePurposeAsync(CurrentProjectModel.SelectedStand.SelectedDrainagePurpose,
+                            _standService.DeleteDrainagePurposeAsync,
+                            CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand,
+                            "Дренажное комплектующее удалено");
+        });
     }
 
     private async void OnUpdateDrainageComponentInStandCommandExecuted(object obj)
     {
-        await ExceptionHelper.SafeExecuteAsync(UpdateDrainagePurposeAsync);
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await UpdatePurposeAsync(CurrentProjectModel.SelectedStand.SelectedDrainagePurpose,
+                            _standService.UpdateDrainagePurposeAsync,
+                            "Дренажное комплектующее сохранено");
+        });
     }
 
     public void ResetProject()
@@ -707,57 +738,31 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async Task UpdateElectricalPurposeAsync()
+    private async Task UpdatePurposeAsync<T>(T? purpose,
+                                            Func<T, Task> updateFunc,
+                                            string successMessage)
+    where T : class, IPurposeEntity
     {
-        var purpose = CurrentProjectModel.SelectedStand.SelectedElectricalComponent;
+        if (purpose is null)
+            return;
 
-        await _standService.UpdateElectricalPurposeAsync(purpose);
-        _notificationService.ShowInfo("Электрические компоненты сохранены");
+        await updateFunc(purpose);
+        _notificationService.ShowInfo(successMessage);
     }
 
-    private async Task DeleteElectricalComponentFromStandAsync()
+    private async Task DeletePurposeAsync<T>(T? purpose,
+                                            Func<int, Task> deleteFunc,
+                                            ICollection<T> collection,
+                                            string successMessage)
+    where T : class, IPurposeEntity
     {
-        var toRemove = CurrentProjectModel.SelectedStand.SelectedElectricalComponent;
-        await _standService.DeleteElectricalPurposeAsync(CurrentProjectModel.SelectedStand.SelectedElectricalComponent.Id);
-        CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand.Remove(toRemove);
+        if (purpose is null)
+            return;
 
-        _notificationService.ShowInfo("Электрический компонент удалён");
+        await deleteFunc(purpose.Id);
+        collection.Remove(purpose);
+        _notificationService.ShowInfo(successMessage);
     }
-
-    public async Task UpdateAdditionalPurposeAsync()
-    {
-        var purpose = CurrentProjectModel.SelectedStand.SelectedAdditionalEquip;
-
-        await _standService.UpdateAdditionalPurposeAsync(purpose);
-        _notificationService.ShowInfo("Доп. комплктующие сохранены");
-    }
-
-    private async Task DeleteAdditionalComponentFromStandAsync()
-    {
-        var toRemove = CurrentProjectModel.SelectedStand.SelectedAdditionalEquip;
-        await _standService.DeleteAdditionalPurposeAsync(CurrentProjectModel.SelectedStand.SelectedAdditionalEquip.Id);
-        CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand.Remove(toRemove);
-
-        _notificationService.ShowInfo("Доп. комплктующее удалено");
-    }
-
-    public async Task UpdateDrainagePurposeAsync()
-    {
-        var purpose = CurrentProjectModel.SelectedStand.SelectedDrainagePurpose;
-
-        await _standService.UpdateDrainagePurposeAsync(purpose);
-        _notificationService.ShowInfo("Дренажные комплектующие сохранены");
-    }
-
-    private async Task DeleteDrainageComponentFromStandAsync()
-    {
-        var toRemove = CurrentProjectModel.SelectedStand.SelectedDrainagePurpose;
-        await _standService.DeleteDrainagePurposeAsync(CurrentProjectModel.SelectedStand.SelectedDrainagePurpose.Id);
-        CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand.Remove(toRemove);
-
-        _notificationService.ShowInfo("Дренажное комплектующее удалён");
-    }
-
     #endregion
 
     #region Методы расчёта и создания отчётности

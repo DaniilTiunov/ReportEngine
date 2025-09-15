@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ReportEngine.Domain.Entities.BaseEntities.Interface;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReportEngine.Domain.Entities;
 
-public class AdditionalEquipPurpose
+public class AdditionalEquipPurpose : IPurposeEntity
 {
     [Key] public int Id { get; set; }
 
