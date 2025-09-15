@@ -7,6 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="500"
     d:DesignWidth="800"
+    Background="{DynamicResource PrimaryColor}"
+    Foreground="{DynamicResource PrimaryForeground}"
     FontSize="13"
     mc:Ignorable="d">
     <UserControl.Resources>

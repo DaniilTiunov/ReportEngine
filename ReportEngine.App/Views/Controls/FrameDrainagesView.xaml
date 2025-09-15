@@ -4,6 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:av="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Background="{DynamicResource PrimaryColor}"
+    Foreground="{DynamicResource PrimaryForeground}"
     mc:Ignorable="av">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
@@ -48,7 +50,8 @@
                     <GroupBox.Header>
                         <TextBlock>
                             <Run Text="Дренажи и крепелния по стенду — " />
-                            <Run Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
+                            <Run
+                                Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
                         </TextBlock>
                     </GroupBox.Header>
                     <TabControl>
@@ -61,9 +64,11 @@
                                     CanUserAddRows="True"
                                     ItemsSource="{Binding CurrentStandModel.NewDrainage.Purposes}">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Назначение" />
+                                        <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}"
+                                                            Header="Назначение" />
                                         <DataGridTextColumn Binding="{Binding Material, Mode=TwoWay}" Header="Материал" />
-                                        <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay}" Header="Длина (м)" />
+                                        <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay}"
+                                                            Header="Длина (м)" />
                                         <DataGridTemplateColumn Header="Действия">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
@@ -124,7 +129,8 @@
                     <GroupBox.Header>
                         <TextBlock>
                             <Run Text="Дополнительные комплектующие по стенду — " />
-                            <Run Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
+                            <Run
+                                Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
                         </TextBlock>
                     </GroupBox.Header>
                     <StackPanel>
@@ -164,7 +170,8 @@
                     <GroupBox.Header>
                         <TextBlock>
                             <Run Text="Электрические компоненты по стенду — " />
-                            <Run Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
+                            <Run
+                                Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
                         </TextBlock>
                     </GroupBox.Header>
                     <StackPanel>

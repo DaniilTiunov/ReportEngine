@@ -68,7 +68,7 @@ public class SettingsViewModel : BaseViewModel
         dialog.AddToMostRecentlyUsedList = true;
         dialog.Title = "Выберите папку для сохранения";
 
-        if (dialog.ShowDialog() == CommonFileDialogResult.Ok) 
+        if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             return dialog.FileName;
 
         return null;

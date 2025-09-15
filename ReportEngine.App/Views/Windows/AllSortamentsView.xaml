@@ -8,102 +8,171 @@
     Width="1100"
     Height="450"
     FontFamily="Bahnschrift"
+    WindowStyle="None"
+    Background="{DynamicResource PrimaryColor}"
+    Foreground="{DynamicResource PrimaryForeground}"
     mc:Ignorable="d">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
 
-        <TabControl x:Name="MainTabControl" Grid.Row="0">
-            <TabItem Header="Трубы">
-                <TabControl x:Name="SubTab" SelectionChanged="SubTabControl_SelectionChanged">
-                    <TabItem Header="Жаропрочные" Tag="Трубы\Жаропрочные" />
-                    <TabItem Header="Нержавеющие" Tag="Трубы\Нержавеющие" />
-                    <TabItem Header="Углеродистые" Tag="Трубы\Углеродистые" />
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="0"
+            CornerRadius="0"
+            GlassFrameThickness="0" />
+    </WindowChrome.WindowChrome>
+
+    <Border Style="{DynamicResource WindowBorder}">
+        <DockPanel>
+            <Border
+                x:Name="FormedFrameWindowTitle"
+                Height="34"
+                Background="#2D2D30"
+                DockPanel.Dock="Top"
+                MouseLeftButtonDown="Window_MouseLeftButtonDown">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <Image
+                            Width="18"
+                            Height="18"
+                            Margin="0,0,8,0"
+                            Source="/Resources/Icons/estimate_cost_icon_213382.ico" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            Foreground="White"
+                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <Button
+                            x:Name="MinimizeButton"
+                            Width="40"
+                            Height="30"
+                            Click="MinimizeButton_Click"
+                            FontSize="16"
+                            ToolTip="Свернуть">
+                            ─
+                        </Button>
+                        <Button
+                            x:Name="MaxRestoreButton"
+                            Width="40"
+                            Height="30"
+                            Margin="10,0,0,0"
+                            Click="MaxRestoreButton_Click"
+                            FontSize="16"
+                            ToolTip="Развернуть">
+                            ▢
+                        </Button>
+                        <Button
+                            x:Name="CloseButton"
+                            Width="40"
+                            Height="30"
+                            Margin="10,0,10,0"
+                            Click="CloseButton_Click"
+                            FontSize="16"
+                            ToolTip="Закрыть">
+                            ✕
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TabControl x:Name="MainTabControl" Grid.Row="0">
+                    <TabItem Header="Трубы">
+                        <TabControl x:Name="SubTab" SelectionChanged="SubTabControl_SelectionChanged">
+                            <TabItem Header="Жаропрочные" Tag="Трубы\Жаропрочные" />
+                            <TabItem Header="Нержавеющие" Tag="Трубы\Нержавеющие" />
+                            <TabItem Header="Углеродистые" Tag="Трубы\Углеродистые" />
+                        </TabControl>
+                    </TabItem>
+
+                    <TabItem Header="Арматуры">
+                        <TabControl SelectionChanged="SubTabControl_SelectionChanged">
+                            <TabItem Header="Жаропрочные" Tag="Арматуры\Жаропрочные" />
+                            <TabItem Header="Нержавеющие" Tag="Арматуры\Нержавеющие" />
+                            <TabItem Header="Углеродистые" Tag="Арматуры\Углеродистые" />
+                        </TabControl>
+                    </TabItem>
+
+                    <TabItem Header="Тройники и КМЧ">
+                        <TabControl SelectionChanged="SubTabControl_SelectionChanged">
+                            <TabItem Header="Жаропрочные" Tag="Тройники и КМЧ\Жаропрочные" />
+                            <TabItem Header="Нержавеющие" Tag="Тройники и КМЧ\Нержавеющие" />
+                            <TabItem Header="Углеродистые" Tag="Тройники и КМЧ\Углеродистые" />
+                        </TabControl>
+                    </TabItem>
+
+                    <TabItem Header="Дренаж">
+                        <TabControl SelectionChanged="SubTabControl_SelectionChanged">
+                            <TabItem Header="Дренажи и крепления" Tag="Дренажи и крепления" />
+                        </TabControl>
+                    </TabItem>
+
+                    <TabItem Header="Рамные комплектующие">
+                        <TabControl SelectionChanged="SubTabControl_SelectionChanged">
+                            <TabItem Header="Детали рамы" Tag="Детали рамы" />
+                            <TabItem Header="Комплектующие для стойки" Tag="Комплектующие для стойки" />
+                            <TabItem Header="Прокат" Tag="Прокат" />
+                        </TabControl>
+                    </TabItem>
+
+                    <TabItem Header="Кронштейны">
+                        <TabControl SelectionChanged="SubTabControl_SelectionChanged">
+                            <TabItem Header="Крепление датчиков" Tag="Крепление датчиков" />
+                            <TabItem Header="Крепление дренажа" Tag="Крепление дренажа" />
+                            <TabItem Header="Крепление клеммных коробок" Tag="Крепление клеммных коробок" />
+                        </TabControl>
+                    </TabItem>
+
+                    <TabItem Header="Электрические компоненты">
+                        <TabControl SelectionChanged="SubTabControl_SelectionChanged">
+                            <TabItem Header="Кабельная продукция" Tag="Кабельная продукция" />
+                            <TabItem Header="Кабельные вводы" Tag="Кабельные вводы" />
+                            <TabItem Header="Клеммные коробки" Tag="Клеммные коробки" />
+                            <TabItem Header="Обогрев" Tag="Обогрев" />
+                            <TabItem Header="Средства прокладки и защиты кабеля" Tag="Средства прокладки" />
+                        </TabControl>
+                    </TabItem>
+
+                    <TabItem Header="Прочие">
+                        <TabControl x:Name="OtherTab" SelectionChanged="SubTabControl_SelectionChanged">
+                            <TabItem Header="Прочие" Tag="Прочие" />
+                        </TabControl>
+                    </TabItem>
+
+                    <TabItem Header="Тара">
+                        <TabControl x:Name="ConTab" SelectionChanged="SubTabControl_SelectionChanged">
+                            <TabItem Header="Тара" Tag="Тара" />
+                        </TabControl>
+                    </TabItem>
                 </TabControl>
-            </TabItem>
 
-            <TabItem Header="Арматуры">
-                <TabControl SelectionChanged="SubTabControl_SelectionChanged">
-                    <TabItem Header="Жаропрочные" Tag="Арматуры\Жаропрочные" />
-                    <TabItem Header="Нержавеющие" Tag="Арматуры\Нержавеющие" />
-                    <TabItem Header="Углеродистые" Tag="Арматуры\Углеродистые" />
-                </TabControl>
-            </TabItem>
-
-            <TabItem Header="Тройники и КМЧ">
-                <TabControl SelectionChanged="SubTabControl_SelectionChanged">
-                    <TabItem Header="Жаропрочные" Tag="Тройники и КМЧ\Жаропрочные" />
-                    <TabItem Header="Нержавеющие" Tag="Тройники и КМЧ\Нержавеющие" />
-                    <TabItem Header="Углеродистые" Tag="Тройники и КМЧ\Углеродистые" />
-                </TabControl>
-            </TabItem>
-
-            <TabItem Header="Дренаж">
-                <TabControl SelectionChanged="SubTabControl_SelectionChanged">
-                    <TabItem Header="Дренажи и крепления" Tag="Дренажи и крепления" />
-                </TabControl>
-            </TabItem>
-
-            <TabItem Header="Рамные комплектующие">
-                <TabControl SelectionChanged="SubTabControl_SelectionChanged">
-                    <TabItem Header="Детали рамы" Tag="Детали рамы" />
-                    <TabItem Header="Комплектующие для стойки" Tag="Комплектующие для стойки" />
-                    <TabItem Header="Прокат" Tag="Прокат" />
-                </TabControl>
-            </TabItem>
-
-            <TabItem Header="Кронштейны">
-                <TabControl SelectionChanged="SubTabControl_SelectionChanged">
-                    <TabItem Header="Крепление датчиков" Tag="Крепление датчиков" />
-                    <TabItem Header="Крепление дренажа" Tag="Крепление дренажа" />
-                    <TabItem Header="Крепление клеммных коробок" Tag="Крепление клеммных коробок" />
-                </TabControl>
-            </TabItem>
-
-            <TabItem Header="Электрические компоненты">
-                <TabControl SelectionChanged="SubTabControl_SelectionChanged">
-                    <TabItem Header="Кабельная продукция" Tag="Кабельная продукция" />
-                    <TabItem Header="Кабельные вводы" Tag="Кабельные вводы" />
-                    <TabItem Header="Клеммные коробки" Tag="Клеммные коробки" />
-                    <TabItem Header="Обогрев" Tag="Обогрев" />
-                    <TabItem Header="Средства прокладки и защиты кабеля" Tag="Средства прокладки" />
-                </TabControl>
-            </TabItem>
-
-            <TabItem Header="Прочие">
-                <TabControl x:Name="OtherTab" SelectionChanged="SubTabControl_SelectionChanged">
-                    <TabItem Header="Прочие" Tag="Прочие" />
-                </TabControl>
-            </TabItem>
-
-            <TabItem Header="Тара">
-                <TabControl x:Name="ConTab" SelectionChanged="SubTabControl_SelectionChanged">
-                    <TabItem Header="Тара" Tag="Тара" />
-                </TabControl>
-            </TabItem>
-        </TabControl>
-
-        <DataGrid
-            x:Name="EquipDataGrid"
-            Grid.Row="1"
-            Margin="5"
-            AutoGenerateColumns="False"
-            FontFamily="Bahnschrift"
-            SelectedItem="{Binding SelectedEquip, Mode=TwoWay}" />
-
-
-        <StackPanel Grid.Row="2">
-            <Button
-                Width="100"
-                Height="25"
-                Margin="5,5,5,5"
-                Padding="5"
-                HorizontalAlignment="Right"
-                Click="SelectButton_Click"
-                Content="Выбрать" />
-        </StackPanel>
-    </Grid>
+                <DataGrid
+                    x:Name="EquipDataGrid"
+                    Grid.Row="1"
+                    Margin="5"
+                    AutoGenerateColumns="False"
+                    FontFamily="Bahnschrift"
+                    MouseDoubleClick="SelectEquip_DoubleClick"
+                    SelectedItem="{Binding SelectedEquip, Mode=TwoWay}" />
+            </Grid>
+        </DockPanel>
+    </Border>
 </Window>

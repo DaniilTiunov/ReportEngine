@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Views.Windows;
@@ -32,7 +33,6 @@ public partial class AllSortamentsView : Window
             EquipDataGrid.ItemsSource = collection;
     }
 
-
     // TODO: Исправить этот костыль
     private void ResetAllSubTabControls()
     {
@@ -41,7 +41,7 @@ public partial class AllSortamentsView : Window
                 subTabControl.SelectedIndex = -1;
     }
 
-    private void SelectButton_Click(object sender, RoutedEventArgs e)
+    private void SelectEquip_DoubleClick(object sender, MouseButtonEventArgs e)
     {
         if (_viewModel.SelectedEquip != null)
         {
@@ -52,5 +52,42 @@ public partial class AllSortamentsView : Window
         {
             Close();
         }
+    }
+
+    private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ClickCount == 2)
+            MaxRestoreButton_Click(sender, e);
+        else
+            DragMove();
+    }
+
+    private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState.Minimized;
+    }
+
+    private void MaxRestoreButton_Click(object sender, RoutedEventArgs e)
+    {
+        var area = SystemParameters.WorkArea;
+        if (Width != area.Width || Height != area.Height || Left != area.Left || Top != area.Top)
+        {
+            Left = area.Left;
+            Top = area.Top;
+            Width = area.Width;
+            Height = area.Height;
+        }
+        else
+        {
+            Width = 1100;
+            Height = 450;
+            Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
+            Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
+        }
+    }
+
+    private void CloseButton_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
     }
 }

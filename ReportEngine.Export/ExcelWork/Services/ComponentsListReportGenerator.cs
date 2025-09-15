@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel;
+﻿using System.Diagnostics;
+using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
@@ -49,6 +50,7 @@ public class ComponentsListReportGenerator : IReportGenerator
             wb.SaveAs(fullSavePath);
         }
     }
+
     //Создает общий заголовок таблицы на листе
     private void CreateWorksheetTableHeader(IXLWorksheet ws, Stand stand)
     {
@@ -81,8 +83,7 @@ public class ComponentsListReportGenerator : IReportGenerator
     //Заполняет таблицу на листе
     private async Task FillWorksheetTable(IXLWorksheet ws, Stand stand)
     {
-        int activeRow = 4;
-
+        var activeRow = 4;
 
 
         //Формирование списка труб
@@ -99,14 +100,12 @@ public class ComponentsListReportGenerator : IReportGenerator
                 name: group.Key ?? "",
                 unit: group.First().units ?? "",
                 quantity: group.Sum(pipe => pipe.length) ?? 0f
-                ))
+            ))
             .ToList();
-
 
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
         activeRow = FillSubtableData(activeRow, pipesList, ws);
-
 
 
 
@@ -123,13 +122,12 @@ public class ComponentsListReportGenerator : IReportGenerator
                 name: group.Key ?? "",
                 unit: "м",
                 quantity: group.Sum(arm => arm.quantity) ?? 0f
-                ))
+            ))
             .ToList();
 
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Арматура", ws);
         activeRow = FillSubtableData(activeRow, armaturesList, ws);
-
 
 
 
@@ -146,24 +144,22 @@ public class ComponentsListReportGenerator : IReportGenerator
                 name: group.Key ?? "",
                 unit: "шт",
                 quantity: group.Sum(item => item.quantity)
-                ))
+            ))
             .ToList();
 
         var kmchList = stand.ObvyazkiInStand
-           .Select(obv => new
-           {
-               name = obv.KMCH,
-               quantity = obv.KMCHCount
-           })
-           .GroupBy(item => item.name)
-           .Select(group => (
-               name: group.Key ?? "",
-               unit: "шт",
-               quantity: group.Sum(item => item.quantity) ?? 0f
-               ))
-           .ToList();
-
-
+            .Select(obv => new
+            {
+                name = obv.KMCH,
+                quantity = obv.KMCHCount
+            })
+            .GroupBy(item => item.name)
+            .Select(group => (
+                name: group.Key ?? "",
+                unit: "шт",
+                quantity: group.Sum(item => item.quantity) ?? 0f
+            ))
+            .ToList();
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Тройники и КМЧ", ws);
 
@@ -174,8 +170,6 @@ public class ComponentsListReportGenerator : IReportGenerator
 
 
         activeRow = FillSubtableData(activeRow, kmchList, ws);
-
-
 
 
         //Формирование списка рамных комплектующих
@@ -194,6 +188,7 @@ public class ComponentsListReportGenerator : IReportGenerator
                 name: group.Key ?? "",
                 unit: group.First().unit ?? "",
                 quantity: (float)group.Sum(frameComp => frameComp.quantity)
+
                 ))
             .ToList();
 
@@ -201,10 +196,15 @@ public class ComponentsListReportGenerator : IReportGenerator
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Рамные комплектующие", ws);
         activeRow = FillSubtableData(activeRow, framesList, ws);
 
+        var boxesHolders = stand.StandAdditionalEquips.SelectMany(equip => equip.AdditionalEquip.Purposes)
+            .Where(purpose => purpose.Purpose.Contains("Кронштейн"));
+
+        var sensorsHolders = stand.StandElectricalComponent.SelectMany(comp => comp.ElectricalComponent.Purposes)
+            .Where(purpose => purpose.Purpose.Contains("Кронштейн"));
 
 
-
-        //формирование списка кронштейнов
+        if (drainageHolders.Count() > 0 || boxesHolders.Count() > 0 || sensorsHolders.Any())
+            activeRow = CreateSubheaderOnWorksheet(activeRow, "Кронштейны", ws);
 
         var drainageHolders = stand.StandDrainages
             .SelectMany(drainage => drainage.Drainage.Purposes)
@@ -287,8 +287,6 @@ public class ComponentsListReportGenerator : IReportGenerator
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Прочие", ws);
 
         activeRow = FillSubtableData(activeRow, additionalParts, ws);
-
-
     }
 
     //создает заголовок для подтаблицы и возвращает следующую строку
@@ -303,10 +301,11 @@ public class ComponentsListReportGenerator : IReportGenerator
         row++;
         return row;
     }
+
     //Заполняет подтаблицу и возвращает следующую строку
     private int FillSubtableData(int startRow, List<(string name, string unit, float quantity)> items, IXLWorksheet ws)
     {
-        int currentRow = startRow;
+        var currentRow = startRow;
         foreach (var item in items)
         {
             ws.Cell($"B{currentRow}").Value = item.name;

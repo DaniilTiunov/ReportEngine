@@ -16,4 +16,9 @@ public partial class AboutProgram : Window
     }
 
     public string Version => JsonHandler.GetCurrentVersion(DirectoryHelper.GetConfigPath());
+
+    private void CloseButton_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
 }

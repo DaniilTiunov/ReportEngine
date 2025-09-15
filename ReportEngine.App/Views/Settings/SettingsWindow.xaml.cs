@@ -15,10 +15,7 @@ public partial class SettingsWindow : Window
         InitializeComponent();
         DataContext = viewModel;
 
-        Loaded += (_, __) => 
-        {
-            InitializeSettings(viewModel); 
-        };
+        Loaded += (_, __) => { InitializeSettings(viewModel); };
     }
 
     private void InitializeSettings(SettingsViewModel viewModel)
