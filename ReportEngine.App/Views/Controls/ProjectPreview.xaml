@@ -274,12 +274,6 @@
                                     FontSize="13"
                                     FontWeight="Bold"
                                     Text="Информация об обвязке" />
-                                <StackPanel.Resources>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="FontSize" Value="12" />
-                                        <Setter Property="Margin" Value="0,3" />
-                                    </Style>
-                                </StackPanel.Resources>
                                 <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.ObvyazkaId, StringFormat='Номер: {0}'}" />
                                 <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.LineLength, StringFormat='Длина линии: {0}'}" />
                                 <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.ZraCount, StringFormat='Кол-во ЗРА: {0}'}" />
