@@ -26,6 +26,12 @@ public class ProjectCommandProvider
     public ICommand RemoveObvFromStandCommand { get; set; }
     public ICommand CreateContainerReportCommand { get; set; }
     public ICommand SaveChangesInStandCommand { get; set; }
+    public ICommand DeleteElectricalComponentFromStandCommand { get; set; }
+    public ICommand UpdateElectricalComponentInStandCommand { get; set; }
+    public ICommand DeleteAdditionalComponentFromStandCommand { get; set; }
+    public ICommand UpdateAdditionalComponentInStandCommand { get; set; }
+    public ICommand DeleteDrainageComponentFromStandCommand { get; set; }
+    public ICommand UpdateDrainageComponentInStandCommand { get; set; }
 
     public ICommand Bind(ICommand command, Action<object> execute, Func<object, bool> canExecute = null)
     {

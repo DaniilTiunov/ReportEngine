@@ -230,4 +230,37 @@ public class StandService : IStandService
 
         return Task.FromResult(entity);
     }
+
+    public async Task UpdateElectricalPurposeAsync(ElectricalPurpose entity)
+    {
+        if (entity == null) return;
+        await _formedElectricalRepository.UpdateAsync(entity);
+    }
+
+    public async Task DeleteElectricalPurposeAsync(int purposeId)
+    {
+        await _formedElectricalRepository.DeletePurposeAsync(purposeId);
+    }
+
+    public async Task UpdateAdditionalPurposeAsync(AdditionalEquipPurpose entity)
+    {
+        if (entity == null) return;
+        await _formedAdditionalEquipsRepository.UpdateAsync(entity);
+    }
+
+    public async Task DeleteAdditionalPurposeAsync(int purposeId)
+    {
+        await _formedAdditionalEquipsRepository.DeletePurposeAsync(purposeId);
+    }
+
+    public async Task UpdateDrainagePurposeAsync(DrainagePurpose entity)
+    {
+        if (entity == null) return;
+        await _formedDrainagesRepository.UpdateAsync(entity);
+    }
+
+    public async Task DeleteDrainagePurposeAsync(int purposeId)
+    {
+        await _formedDrainagesRepository.DeletePurposeAsync(purposeId);
+    }
 }

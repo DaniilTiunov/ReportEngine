@@ -1,21 +1,23 @@
-﻿using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Windows.Data;
-using ReportEngine.App.AppHelpers;
+﻿using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
+using ReportEngine.App.Services;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Pipes;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Windows.Data;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -265,7 +267,37 @@ public class ProjectViewModel : BaseViewModel
 
     private async void OnSaveChangesInStandCommandExecuted(object obj)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () => { await SaveChangesInStandAsync(); });
+        await ExceptionHelper.SafeExecuteAsync(SaveChangesInStandAsync);
+    }
+
+    private async void OnDeleteElectricalComponentFromStandCommandExecuted(object obj)
+    {
+        await ExceptionHelper.SafeExecuteAsync(DeleteElectricalComponentFromStandAsync);
+    }
+
+    private async void OnUpdateElectricalComponentInStandCommandExecuted(object obj)
+    {
+        await ExceptionHelper.SafeExecuteAsync(UpdateElectricalPurposeAsync);
+    }
+
+    private async void OnDeleteAdditionalComponentFromStandCommandExecuted(object obj)
+    {
+        await ExceptionHelper.SafeExecuteAsync(DeleteAdditionalComponentFromStandAsync);
+    }
+
+    private async void OnUpdateAdditionalComponentInStandCommandExecuted(object obj)
+    {
+        await ExceptionHelper.SafeExecuteAsync(UpdateAdditionalPurposeAsync);
+    }
+
+    private async void OnDeleteDrainageComponentFromStandCommandExecuted(object obj)
+    {
+        await ExceptionHelper.SafeExecuteAsync(DeleteDrainageComponentFromStandAsync);
+    }
+
+    private async void OnUpdateDrainageComponentInStandCommandExecuted(object obj)
+    {
+        await ExceptionHelper.SafeExecuteAsync(UpdateDrainagePurposeAsync);
     }
 
     public void ResetProject()
@@ -317,6 +349,22 @@ public class ProjectViewModel : BaseViewModel
             new RelayCommand(OnCreateContainerReportCommandExecuted, CanAllCommandsExecute);
         ProjectCommandProvider.SaveChangesInStandCommand =
             new RelayCommand(OnSaveChangesInStandCommandExecuted, CanAllCommandsExecute);
+
+        ProjectCommandProvider.DeleteElectricalComponentFromStandCommand =
+            new RelayCommand(OnDeleteElectricalComponentFromStandCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.UpdateElectricalComponentInStandCommand =
+            new RelayCommand(OnUpdateElectricalComponentInStandCommandExecuted, CanAllCommandsExecute);
+
+        ProjectCommandProvider.DeleteAdditionalComponentFromStandCommand =
+            new RelayCommand(OnDeleteAdditionalComponentFromStandCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.UpdateAdditionalComponentInStandCommand =
+            new RelayCommand(OnUpdateAdditionalComponentInStandCommandExecuted, CanAllCommandsExecute);
+
+        ProjectCommandProvider.DeleteDrainageComponentFromStandCommand =
+            new RelayCommand(OnDeleteDrainageComponentFromStandCommandExecuted, CanAllCommandsExecute);
+        ProjectCommandProvider.UpdateDrainageComponentInStandCommand =
+            new RelayCommand(OnUpdateDrainageComponentInStandCommandExecuted, CanAllCommandsExecute);
+
     }
 
     public void InitializeGenericCommands()
@@ -657,6 +705,57 @@ public class ProjectViewModel : BaseViewModel
             if (matProp != null && matProp.CanWrite) matProp.SetValue(target, selected.Name);
             if (costProp != null && costProp.CanWrite) costProp.SetValue(target, selected.Cost);
         });
+    }
+
+    public async Task UpdateElectricalPurposeAsync()
+    {
+        var purpose = CurrentProjectModel.SelectedStand.SelectedElectricalComponent;
+
+        await _standService.UpdateElectricalPurposeAsync(purpose);
+        _notificationService.ShowInfo("Цель электрического компонента сохранена");
+    }
+
+    private async Task DeleteElectricalComponentFromStandAsync()
+    {
+        var toRemove = CurrentProjectModel.SelectedStand.SelectedElectricalComponent;
+        await _standService.DeleteElectricalPurposeAsync(CurrentProjectModel.SelectedStand.SelectedElectricalComponent.Id);
+        CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand.Remove(toRemove);
+
+        _notificationService.ShowInfo("Электрический компонент удалён");
+    }
+
+    public async Task UpdateAdditionalPurposeAsync()
+    {
+        var purpose = CurrentProjectModel.SelectedStand.SelectedAdditionalEquip;
+
+        await _standService.UpdateAdditionalPurposeAsync(purpose);
+        _notificationService.ShowInfo("Доп. комплктующее сохранено");
+    }
+
+    private async Task DeleteAdditionalComponentFromStandAsync()
+    {
+        var toRemove = CurrentProjectModel.SelectedStand.SelectedAdditionalEquip;
+        await _standService.DeleteAdditionalPurposeAsync(CurrentProjectModel.SelectedStand.SelectedElectricalComponent.Id);
+        CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand.Remove(toRemove);
+
+        _notificationService.ShowInfo("Доп. комплктующее удалёно");
+    }
+
+    public async Task UpdateDrainagePurposeAsync()
+    {
+        var purpose = CurrentProjectModel.SelectedStand.SelectedDrainagePurpose;
+
+        await _standService.UpdateDrainagePurposeAsync(purpose);
+        _notificationService.ShowInfo("Доп. комплктующее сохранено");
+    }
+
+    private async Task DeleteDrainageComponentFromStandAsync()
+    {
+        var toRemove = CurrentProjectModel.SelectedStand.SelectedDrainagePurpose;
+        await _standService.DeleteDrainagePurposeAsync(CurrentProjectModel.SelectedStand.SelectedDrainage.Id);
+        CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand.Remove(toRemove);
+
+        _notificationService.ShowInfo("Доп. комплктующее удалёно");
     }
 
     #endregion

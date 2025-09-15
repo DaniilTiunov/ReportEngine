@@ -9,4 +9,7 @@ public interface IFormedAdditionalEquipsRepository
 
     Task<IEnumerable<FormedAdditionalEquip>> GetAllWithPurposesAsync();
     Task<FormedAdditionalEquip> GetByIdWithPurposesAsync(int id);
+
+    Task UpdateAsync(AdditionalEquipPurpose purpose);
+    Task DeletePurposeAsync(int purposeId);
 }

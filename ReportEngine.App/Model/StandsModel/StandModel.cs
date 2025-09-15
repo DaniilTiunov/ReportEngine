@@ -132,13 +132,13 @@ public class StandModel : BaseViewModel
     private string _secondSensorType = "Датчик перепада давления";
 
     // Выбранное дополнительное комплектующее
-    private FormedAdditionalEquip _selectedAdditionalEquip;
+    private AdditionalEquipPurpose _selectedAdditionalEquip;
 
     // Выбранный дренаж
-    private FormedDrainage _selectedDrainage;
+    private Dra _selectedDrainage;
 
     // Выбранный электрический компонент
-    private FormedElectricalComponent _selectedElectricalComponent;
+    private ElectricalPurpose _selectedElectricalComponent;
 
     // Выбранная рама
     private FormedFrame _selectedFrame;
@@ -177,6 +177,7 @@ public class StandModel : BaseViewModel
 
     // Ширина стенда
     private float _width;
+    private DrainagePurpose _selectedDrainagePurpose;
 
     public StandModel()
     {
@@ -518,6 +519,12 @@ public class StandModel : BaseViewModel
         set => Set(ref _selectedDrainage, value);
     }
 
+    public DrainagePurpose SelectedDrainagePurpose
+    {
+        get => _selectedDrainagePurpose;
+        set => Set(ref _selectedDrainagePurpose, value);
+    }
+
     // Выбранная рама
     public FormedFrame SelectedFrame
     {
@@ -554,14 +561,14 @@ public class StandModel : BaseViewModel
     }
 
     // Выбранный электрический компонент
-    public FormedElectricalComponent SelectedElectricalComponent
+    public ElectricalPurpose SelectedElectricalComponent
     {
         get => _selectedElectricalComponent;
         set => Set(ref _selectedElectricalComponent, value);
     }
 
     // Выбранное дополнительное комплектующее
-    public FormedAdditionalEquip SelectedAdditionalEquip
+    public AdditionalEquipPurpose SelectedAdditionalEquip
     {
         get => _selectedAdditionalEquip;
         set => Set(ref _selectedAdditionalEquip, value);

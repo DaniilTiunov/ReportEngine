@@ -105,7 +105,7 @@
             </ListView>
         </GroupBox>
 
-        <!--  Средний левый GroupBox с ListView обвязок  -->
+        <!--  Обвязки по стенду  -->
         <GroupBox
             Grid.Row="1"
             Grid.Column="0"
@@ -149,6 +149,12 @@
                             Header="Датчик 1" />
                     </GridView>
                 </ListView.View>
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}" Header="Удалить обвязку из стенда" />
+                        <MenuItem Header="Копировать обвязку" />
+                    </ContextMenu>
+                </ListView.ContextMenu>
             </ListView>
         </GroupBox>
 
@@ -201,7 +207,7 @@
                 Height="200"
                 Margin="0,0,10,0"
                 Background="{DynamicResource SecondaryColor}"
-                BorderBrush="{DynamicResource BorderColor}"
+                BorderBrush="{DynamicResource SecondaryColor}"
                 BorderThickness="1"
                 CornerRadius="5">
                 <Image
@@ -239,7 +245,7 @@
             </GroupBox>
         </Grid>
 
-        <!--  Нижние GroupBox остаются без изменений  -->
+        <!--  Электрические компоненты  -->
         <GroupBox
             Grid.Row="2"
             Grid.Column="0"
@@ -254,46 +260,27 @@
                         Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(ошибка привязки)'}" />
                 </TextBlock>
             </GroupBox.Header>
-            <ListView ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}" SelectedItem="{Binding CurrentStandModel.SelectedElectricalComponent}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn DisplayMemberBinding="{Binding Purpose}" Header="Назначение" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Material}" Header="Материал" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Quantity}" Header="Кол-во" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Measure}" Header="Ед. изм." />
-                        <GridViewColumn DisplayMemberBinding="{Binding CostPerUnit}" Header="Цена" />
-                    </GridView>
-                </ListView.View>
-            </ListView>
+            <DataGrid
+                CanUserAddRows="True"
+                ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}"
+                SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedElectricalComponent}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
+                    <DataGridTextColumn Binding="{Binding Material}" Header="Доп. комплектующее" />
+                    <DataGridTextColumn Binding="{Binding Quantity}" Header="Кол-во" />
+                    <DataGridTextColumn Binding="{Binding Measure}" Header="Ед. изм." />
+                    <DataGridTextColumn Binding="{Binding CostPerUnit}" Header="Цена" />
+                </DataGrid.Columns>
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="{Binding ProjectCommandProvider.UpdateElectricalComponentInStandCommand}" Header="Сохранить изменения" />
+                        <MenuItem Command="{Binding ProjectCommandProvider.DeleteElectricalComponentFromStandCommand}" Header="Удалить" />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+            </DataGrid>
         </GroupBox>
 
-        <GroupBox
-            Grid.Row="3"
-            Grid.Column="1"
-            Margin="5"
-            Padding="5">
-            <GroupBox.Header>
-                <TextBlock>
-                    <Run Text="Дренаж в стенде — " />
-                    <Run
-                        FontSize="14"
-                        FontWeight="Bold"
-                        Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(ошибка привязки)'}" />
-                </TextBlock>
-            </GroupBox.Header>
-            <ListView ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand}" SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn DisplayMemberBinding="{Binding Purpose}" Header="Назначение" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Material}" Header="Материал" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Quantity}" Header="Кол-во" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Measure}" Header="Ед. изм." />
-                        <GridViewColumn DisplayMemberBinding="{Binding CostPerUnit}" Header="Цена" />
-                    </GridView>
-                </ListView.View>
-            </ListView>
-        </GroupBox>
-
+        <!--  Дополнительные компоненты в стенде  -->
         <GroupBox
             Grid.Row="3"
             Grid.Column="0"
@@ -308,17 +295,59 @@
                         Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(ошибка привязки)'}" />
                 </TextBlock>
             </GroupBox.Header>
-            <ListView ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand}" SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn DisplayMemberBinding="{Binding Purpose}" Header="Назначение" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Material}" Header="Материал" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Quantity}" Header="Кол-во" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Measure}" Header="Ед. изм." />
-                        <GridViewColumn DisplayMemberBinding="{Binding CostPerUnit}" Header="Цена" />
-                    </GridView>
-                </ListView.View>
-            </ListView>
+            <DataGrid
+                CanUserAddRows="True"
+                ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand}"
+                SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedAdditionalEquip}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
+                    <DataGridTextColumn Binding="{Binding Material}" Header="Доп. комплектующее" />
+                    <DataGridTextColumn Binding="{Binding Quantity}" Header="Кол-во" />
+                    <DataGridTextColumn Binding="{Binding Measure}" Header="Ед. изм." />
+                    <DataGridTextColumn Binding="{Binding CostPerUnit}" Header="Цена" />
+                </DataGrid.Columns>
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="{Binding ProjectCommandProvider.UpdateAdditionalComponentInStandCommand}" Header="Сохранить изменения" />
+                        <MenuItem Command="{Binding ProjectCommandProvider.DeleteAdditionalComponentFromStandCommand}" Header="Удалить" />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+            </DataGrid>
+        </GroupBox>
+
+        <!--  Дренаж в стенде  -->
+        <GroupBox
+            Grid.Row="3"
+            Grid.Column="1"
+            Margin="5"
+            Padding="5">
+            <GroupBox.Header>
+                <TextBlock>
+                    <Run Text="Дренаж в стенде — " />
+                    <Run
+                        FontSize="14"
+                        FontWeight="Bold"
+                        Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(ошибка привязки)'}" />
+                </TextBlock>
+            </GroupBox.Header>
+            <DataGrid
+                CanUserAddRows="True"
+                ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand}"
+                SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedDrainagePurpose}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
+                    <DataGridTextColumn Binding="{Binding Material}" Header="Материал" />
+                    <DataGridTextColumn Binding="{Binding Quantity}" Header="Кол-во" />
+                    <DataGridTextColumn Binding="{Binding Measure}" Header="Ед. изм." />
+                    <DataGridTextColumn Binding="{Binding CostPerUnit}" Header="Цена" />
+                </DataGrid.Columns>
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="{Binding ProjectCommandProvider.UpdateDrainageComponentInStandCommand}" Header="Сохранить изменения" />
+                        <MenuItem Command="{Binding ProjectCommandProvider.DeleteDrainageComponentFromStandCommand}" Header="Удалить" />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+            </DataGrid>
         </GroupBox>
 
         <!--  Панель с кнопками  -->
@@ -353,7 +382,6 @@
                 Margin="0,0,10,0"
                 Command="{Binding ProjectCommandProvider.CreateContainerReportCommand}"
                 Content="Создать тару" />
-
         </StackPanel>
     </Grid>
 </UserControl>

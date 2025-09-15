@@ -42,4 +42,42 @@ public class FormedElectricalRepository : IFormedElectricalRepository
             .Include(ec => ec.Purposes)
             .FirstOrDefaultAsync(ec => ec.Id == id);
     }
+    public async Task UpdateAsync(ElectricalPurpose purpose)
+    {
+        if (purpose == null) return;
+
+        if (purpose.Id == 0)
+        {
+            if (purpose.FormedElectricalComponentId == 0)
+                throw new ArgumentException("Для добавления новой цели необходим FormedElectricalComponentId");
+
+            await _context.ElectricalPurposes.AddAsync(purpose);
+            await _context.SaveChangesAsync();
+            return;
+        }
+
+        var existing = await _context.ElectricalPurposes.FindAsync(purpose.Id);
+        if (existing == null)
+        {
+            return;
+        }
+
+        existing.Purpose = purpose.Purpose;
+        existing.Material = purpose.Material;
+        existing.Quantity = purpose.Quantity;
+        existing.CostPerUnit = purpose.CostPerUnit;
+        existing.Measure = purpose.Measure;
+
+        _context.ElectricalPurposes.Update(existing);
+        await _context.SaveChangesAsync();
+    }
+
+
+    public async Task DeletePurposeAsync(int purposeId)
+    {
+        var entity = await _context.Set<ElectricalPurpose>().FindAsync(purposeId);
+        if (entity == null) return;
+        _context.Set<ElectricalPurpose>().Remove(entity);
+        await _context.SaveChangesAsync();
+    }
 }
