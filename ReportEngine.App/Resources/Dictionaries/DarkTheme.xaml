@@ -260,11 +260,14 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type TreeView}">
-        <Setter Property="BorderThickness" Value="0" />
+    <!-- Стили для TreeView -->
+    <Style TargetType="TreeView">
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+        <Setter Property="Padding" Value="2"/>
+        <Setter Property="FontSize" Value="16"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TreeView}">
@@ -284,12 +287,12 @@
         </Setter>
     </Style>
 
-    <!--  Стили для TreeViewItem  -->
-    <Style TargetType="{x:Type TreeViewItem}">
+    <!-- Стили для TreeViewItem -->
+    <Style TargetType="TreeViewItem">
         <Setter Property="FontSize" Value="14" />
         <Setter Property="Foreground" Value="{DynamicResource SecondaryForeground}" />
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Padding" Value="5" />
+        <Setter Property="Padding" Value="4,2" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="HeaderTemplate">
             <Setter.Value>
@@ -304,15 +307,19 @@
             </Setter.Value>
         </Setter>
         <Style.Triggers>
+            <!-- Выделение элемента -->
             <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="{DynamicResource RowHoverColor}" />
+                <Setter Property="Background" Value="{DynamicResource SelectedRowBackground}" />
+                <Setter Property="Foreground" Value="{DynamicResource SelectedRowForeground}" />
                 <Setter Property="FontWeight" Value="Bold" />
             </Trigger>
+            <!-- Наведение мыши -->
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource RowHoverColor}" />
+            </Trigger>
+            <!-- Раскрытие узла -->
             <Trigger Property="IsExpanded" Value="True">
                 <Setter Property="FontWeight" Value="Bold" />
-            </Trigger>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#E0E0E0" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -356,6 +363,10 @@
     </Style>
     <!-- Стили для Combobox -->
     <Style TargetType="ComboBox">
-        <Setter Property="Background" Value="{DynamicResource SecondaryColor}"/>
+        <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="4,2" />
     </Style>
 </ResourceDictionary>
