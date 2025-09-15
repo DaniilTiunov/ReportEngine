@@ -5,6 +5,7 @@ using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
+using System.Diagnostics;
 
 namespace ReportEngine.Export.ExcelWork.Services;
 
@@ -79,7 +80,6 @@ public class ComponentsListReportGenerator : IReportGenerator
         ws.Range("B2:D2").Merge();
         ws.Range("C1:D1").Merge();
     }
-
     //Заполняет таблицу на листе
     private async Task FillWorksheetTable(IXLWorksheet ws, Stand stand)
     {
@@ -103,11 +103,10 @@ public class ComponentsListReportGenerator : IReportGenerator
             ))
             .ToList();
 
-        if (pipesList.Count > 0)
-        {
-            activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
-            activeRow = FillSubtableData(activeRow, pipesList, ws);
-        }
+
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
+        activeRow = FillSubtableData(activeRow, pipesList, ws);
+
 
 
         //Формирование списка арматуры
@@ -126,11 +125,10 @@ public class ComponentsListReportGenerator : IReportGenerator
             ))
             .ToList();
 
-        if (armaturesList.Count > 0)
-        {
-            activeRow = CreateSubheaderOnWorksheet(activeRow, "Арматура", ws);
-            activeRow = FillSubtableData(activeRow, armaturesList, ws);
-        }
+
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Арматура", ws);
+        activeRow = FillSubtableData(activeRow, armaturesList, ws);
+
 
 
         //Формирование списка тройников и КМЧ
@@ -163,13 +161,15 @@ public class ComponentsListReportGenerator : IReportGenerator
             ))
             .ToList();
 
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Тройники и КМЧ", ws);
 
-        if (treeList.Count > 0 || kmchList.Count > 0)
-            activeRow = CreateSubheaderOnWorksheet(activeRow, "Тройники и КМЧ", ws);
 
-        if (treeList.Count > 0) activeRow = FillSubtableData(activeRow, treeList, ws);
 
-        if (kmchList.Count > 0) activeRow = FillSubtableData(activeRow, kmchList, ws);
+        activeRow = FillSubtableData(activeRow, treeList, ws);
+
+
+
+        activeRow = FillSubtableData(activeRow, kmchList, ws);
 
 
         //Формирование списка рамных комплектующих
@@ -188,19 +188,13 @@ public class ComponentsListReportGenerator : IReportGenerator
                 name: group.Key ?? "",
                 unit: group.First().unit ?? "",
                 quantity: (float)group.Sum(frameComp => frameComp.quantity)
-            ))
+
+                ))
             .ToList();
 
-        if (framesList.Count > 0)
-        {
-            activeRow = CreateSubheaderOnWorksheet(activeRow, "Рамные комплектующие", ws);
-            activeRow = FillSubtableData(activeRow, framesList, ws);
-        }
 
-        //формирование списка кронштейнов
-
-        var drainageHolders = stand.StandDrainages.SelectMany(drainage => drainage.Drainage.Purposes)
-            .Where(purpose => purpose.Purpose.Contains("Кронштейн"));
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Рамные комплектующие", ws);
+        activeRow = FillSubtableData(activeRow, framesList, ws);
 
         var boxesHolders = stand.StandAdditionalEquips.SelectMany(equip => equip.AdditionalEquip.Purposes)
             .Where(purpose => purpose.Purpose.Contains("Кронштейн"));
@@ -212,19 +206,87 @@ public class ComponentsListReportGenerator : IReportGenerator
         if (drainageHolders.Count() > 0 || boxesHolders.Count() > 0 || sensorsHolders.Any())
             activeRow = CreateSubheaderOnWorksheet(activeRow, "Кронштейны", ws);
 
-        if (drainageHolders.Count() > 0)
-        {
-            var drainageHoldersList = drainageHolders
-                .GroupBy(purpose => purpose.Purpose)
-                .Select(group => (
+        var drainageHolders = stand.StandDrainages
+            .SelectMany(drainage => drainage.Drainage.Purposes)
+            .Where(purpose => purpose.Purpose.Contains("Кронштейн"))
+            .GroupBy(purpose => purpose.Material)
+            .Select(group => (
                     name: group.Key ?? "",
-                    unit: "шт",
-                    quantity: (float)group.Count()
-                ))
+                    unit: group.First().Measure ?? "попугаи",
+                    quantity: group.Sum(groupElement => groupElement.Quantity) ?? 0f
+                    ))
                 .ToList();
 
-            activeRow = FillSubtableData(activeRow, drainageHoldersList, ws);
-        }
+
+
+        var boxesHolders = stand.StandAdditionalEquips
+           .SelectMany(equip => equip.AdditionalEquip.Purposes)
+           .Where(purpose => purpose.Purpose.Contains("Кронштейн"))
+           .GroupBy(purpose => purpose.Material)
+           .Select(group => (
+                    name: group.Key ?? "",
+                    unit: group.First().Measure ?? "попугаи",
+                    quantity: group.Sum(groupElement => groupElement.Quantity) ?? 0f
+                    ))
+                .ToList(); ;
+
+
+        var sensorsHolders = stand.StandElectricalComponent
+               .SelectMany(equip => equip.ElectricalComponent.Purposes)
+               .Where(purpose => purpose.Purpose.Contains("Кронштейн"))
+               .GroupBy(purpose => purpose.Material)
+               .Select(group => (
+                        name: group.Key ?? "",
+                        unit: group.First().Measure ?? "попугаи",
+                        quantity: group.Sum(groupElement => groupElement.Quantity) ?? 0f
+                        ))
+                    .ToList(); ;
+
+
+
+
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Кронштейны", ws);
+
+        activeRow = FillSubtableData(activeRow, drainageHolders, ws);
+        activeRow = FillSubtableData(activeRow, boxesHolders, ws);
+        activeRow = FillSubtableData(activeRow, sensorsHolders, ws);
+
+
+
+
+        //формирование списка электрических комплектующих
+
+        var electricalParts = stand.StandElectricalComponent
+            .SelectMany(equip => equip.ElectricalComponent.Purposes)      
+            .GroupBy(purpose => purpose.Material)
+            .Select(group => (
+                name: group.Key ?? "",
+                unit: group.First().Measure ?? "попугаи",
+                quantity: group.Sum(item => item.Quantity) ?? 0f
+                ))
+            .ToList();
+
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Электрические компоненты", ws);
+
+        activeRow = FillSubtableData(activeRow, electricalParts, ws);
+
+
+
+        //формирование списка дополнительного оборудования
+
+        var additionalParts = stand.StandAdditionalEquips
+             .SelectMany(equip => equip.AdditionalEquip.Purposes)
+             .GroupBy(purpose => purpose.Material)
+             .Select(group => (
+                 name: group.Key ?? "",
+                 unit: group.First().Measure ?? "попугаи",
+                 quantity: group.Sum(item => item.Quantity) ?? 0f
+                 ))
+             .ToList();
+
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Прочие", ws);
+
+        activeRow = FillSubtableData(activeRow, additionalParts, ws);
     }
 
     //создает заголовок для подтаблицы и возвращает следующую строку
