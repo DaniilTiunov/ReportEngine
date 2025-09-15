@@ -65,4 +65,40 @@ public class FormedDrainagesRepository : IFormedDrainagesRepository
             .Include(fd => fd.Purposes)
             .FirstOrDefaultAsync(fd => fd.Id == id);
     }
+
+    public async Task UpdateAsync(DrainagePurpose purpose)
+    {
+        if (purpose == null) return;
+
+        if (purpose.Id == 0)
+        {
+            if (purpose.FormedDrainageId == 0)
+                throw new ArgumentException("Для добавления новой цели необходим FormedDrainageId");
+
+            await _context.DrainagePurposes.AddAsync(purpose);
+            await _context.SaveChangesAsync();
+            return;
+        }
+
+        var existing = await _context.DrainagePurposes.FindAsync(purpose.Id);
+        if (existing == null) return;
+
+        existing.Purpose = purpose.Purpose;
+        existing.Material = purpose.Material;
+        existing.Quantity = purpose.Quantity;
+        existing.CostPerUnit = purpose.CostPerUnit;
+        existing.Measure = purpose.Measure;
+
+        _context.DrainagePurposes.Update(existing);
+        await _context.SaveChangesAsync();
+    }
+
+
+    public async Task DeletePurposeAsync(int purposeId)
+    {
+        var entity = await _context.DrainagePurposes.FindAsync(purposeId);
+        if (entity == null) return;
+        _context.DrainagePurposes.Remove(entity);
+        await _context.SaveChangesAsync();
+    }
 }

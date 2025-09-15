@@ -19,4 +19,12 @@ public interface IStandService
     Task AddCustomAdditionalEquipAsync(int standId, FormedAdditionalEquip customEquip);
     void LoadPurposesInStands(IEnumerable<StandModel> stands);
     Task<ObvyazkaInStand> CreateObvyazkaAsync(StandModel standModel, Obvyazka selectedObvyazka);
+    Task UpdateElectricalPurposeAsync(ElectricalPurpose entity);
+    Task DeleteElectricalPurposeAsync(int purposeId);
+
+    Task UpdateAdditionalPurposeAsync(AdditionalEquipPurpose entity);
+    Task DeleteAdditionalPurposeAsync(int purposeId);
+
+    Task UpdateDrainagePurposeAsync(DrainagePurpose entity);
+    Task DeleteDrainagePurposeAsync(int purposeId);
 }

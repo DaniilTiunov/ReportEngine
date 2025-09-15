@@ -42,4 +42,39 @@ public class FormedAdditionalEquipsRepository : IFormedAdditionalEquipsRepositor
             .Include(ae => ae.Purposes)
             .FirstOrDefaultAsync(ae => ae.Id == id);
     }
+
+    public async Task UpdateAsync(AdditionalEquipPurpose purpose)
+    {
+        if (purpose == null) return;
+
+        if (purpose.Id == 0)
+        {
+            if (purpose.FormedAdditionalEquipId == 0)
+                throw new ArgumentException("Для добавления новой цели необходим FormedAdditionalEquipId");
+
+            await _context.AdditionalEquipPurposes.AddAsync(purpose);
+            await _context.SaveChangesAsync();
+            return;
+        }
+
+        var existing = await _context.AdditionalEquipPurposes.FindAsync(purpose.Id);
+        if (existing == null) return;
+
+        existing.Purpose = purpose.Purpose;
+        existing.Material = purpose.Material;
+        existing.Quantity = purpose.Quantity;
+        existing.CostPerUnit = purpose.CostPerUnit;
+        existing.Measure = purpose.Measure;
+
+        _context.AdditionalEquipPurposes.Update(existing);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeletePurposeAsync(int purposeId)
+    {
+        var entity = await _context.AdditionalEquipPurposes.FindAsync(purposeId);
+        if (entity == null) return;
+        _context.AdditionalEquipPurposes.Remove(entity);
+        await _context.SaveChangesAsync();
+    }
 }
