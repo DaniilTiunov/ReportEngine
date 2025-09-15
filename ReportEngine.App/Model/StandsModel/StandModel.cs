@@ -135,7 +135,7 @@ public class StandModel : BaseViewModel
     private AdditionalEquipPurpose _selectedAdditionalEquip;
 
     // Выбранный дренаж
-    private Dra _selectedDrainage;
+    private FormedDrainage _selectedDrainage;
 
     // Выбранный электрический компонент
     private ElectricalPurpose _selectedElectricalComponent;

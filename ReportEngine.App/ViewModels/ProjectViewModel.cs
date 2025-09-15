@@ -735,7 +735,7 @@ public class ProjectViewModel : BaseViewModel
     private async Task DeleteAdditionalComponentFromStandAsync()
     {
         var toRemove = CurrentProjectModel.SelectedStand.SelectedAdditionalEquip;
-        await _standService.DeleteAdditionalPurposeAsync(CurrentProjectModel.SelectedStand.SelectedElectricalComponent.Id);
+        await _standService.DeleteAdditionalPurposeAsync(CurrentProjectModel.SelectedStand.SelectedAdditionalEquip.Id);
         CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand.Remove(toRemove);
 
         _notificationService.ShowInfo("Доп. комплктующее удалено");
@@ -752,7 +752,7 @@ public class ProjectViewModel : BaseViewModel
     private async Task DeleteDrainageComponentFromStandAsync()
     {
         var toRemove = CurrentProjectModel.SelectedStand.SelectedDrainagePurpose;
-        await _standService.DeleteDrainagePurposeAsync(CurrentProjectModel.SelectedStand.SelectedDrainage.Id);
+        await _standService.DeleteDrainagePurposeAsync(CurrentProjectModel.SelectedStand.SelectedDrainagePurpose.Id);
         CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand.Remove(toRemove);
 
         _notificationService.ShowInfo("Дренажное комплектующее удалён");
