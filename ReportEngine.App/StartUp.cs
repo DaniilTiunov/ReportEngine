@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
 using ReportEngine.Shared.Config.Logger;
@@ -14,9 +13,6 @@ public class StartUp
     {
         try
         {
-//#if DEBUG
-//            AllocConsole();
-//#endif
             Log.Logger = LoggerConfig.InitializeLogger();
 
             var connString = JsonHandler.GetConnectionString(DirectoryHelper.GetConfigPath());
@@ -41,7 +37,4 @@ public class StartUp
             Log.CloseAndFlush();
         }
     }
-
-    [DllImport("kernel32.dll")]
-    private static extern bool AllocConsole();
 }

@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
+﻿using ReportEngine.App.Display;
+using System.Diagnostics;
 using System.IO;
-using ReportEngine.App.Display;
 
 namespace ReportEngine.App.Views.UpdateInformation;
 

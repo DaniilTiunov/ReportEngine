@@ -104,8 +104,6 @@
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenMainWindowCommand}" Header="На главный экран" />
                 <Separator />
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenSettingsWindow}" Header="Настройки" />
-                <Separator />
-                <MenuItem Command="{Binding MainWindowCommandProvider.CloseAppCommand}" Header="Выход" />
             </MenuItem>
             <MenuItem Header="Вид" Tag="ThemeItemChanger">
                 <MenuItem

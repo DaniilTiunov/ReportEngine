@@ -1,7 +1,7 @@
-﻿using System.Collections.ObjectModel;
-using ReportEngine.App.Model.FormedEquipsModels;
+﻿using ReportEngine.App.Model.FormedEquipsModels;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
+using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Model.StandsModel;
 

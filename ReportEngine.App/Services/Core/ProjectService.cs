@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using ReportEngine.App.Model;
+﻿using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
 using ReportEngine.App.Services.Interfaces;
@@ -7,6 +6,7 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Enums;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
+using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Services.Core;
 

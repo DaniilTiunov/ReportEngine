@@ -8,8 +8,6 @@ public class SettingsmanagerTest
     [TestMethod]
     public void CanSaveNewPath_WhenCalled_ReturnsCorrectPath()
     {
-        // Arrange
-        var path = "C:\\Users\\pr-constr38";
     }
 
     [TestMethod]

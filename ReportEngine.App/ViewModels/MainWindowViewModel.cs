@@ -1,31 +1,29 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows;
-using System.Windows.Controls;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
+using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Model;
 using ReportEngine.App.Services;
-using ReportEngine.App.Views;
 using ReportEngine.App.Views.Controls;
-using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
-using ReportEngine.Domain.Entities.Braces;
-using ReportEngine.Domain.Entities.Drainage;
-using ReportEngine.Domain.Entities.ElectricComponents;
-using ReportEngine.Domain.Entities.ElectricSockets;
-using ReportEngine.Domain.Entities.Frame;
-using ReportEngine.Domain.Entities.Other;
-using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
+using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace ReportEngine.App.ViewModels;
 
 public class MainWindowViewModel : BaseViewModel
 {
+    private readonly IProjectInfoRepository _projectRepository;
+    private readonly NavigationService _navigation;
+    private readonly IServiceProvider _serviceProvider;
+    public MainWindowModel MainWindowModel { get; set; } = new();
+    public GenericEquipCommandProvider GenericEquipCommandProvider { get; set; } = new();
+    public MainWindowCommandProvider MainWindowCommandProvider { get; set; } = new();
+
     #region Конструктор
 
     public MainWindowViewModel(IServiceProvider serviceProvider, NavigationService navigation,
@@ -41,10 +39,6 @@ public class MainWindowViewModel : BaseViewModel
 
     #endregion
 
-    public MainWindowModel MainWindowModel { get; set; } = new();
-    public GenericEquipCommandProvider GenericEquipCommandProvider { get; set; } = new();
-    public MainWindowCommandProvider MainWindowCommandProvider { get; set; } = new();
-
     #region Дженерик команды
 
     public void OnOpenGenericWindowCommandExecuted<T, TEquip>(object e)
@@ -55,102 +49,16 @@ public class MainWindowViewModel : BaseViewModel
 
     #endregion
 
-    #region DI сервисов
-
-    private readonly IProjectInfoRepository _projectRepository;
-    private readonly NavigationService _navigation;
-    private readonly IServiceProvider _serviceProvider;
-
-    #endregion
-
     #region Методы
 
     public void InitializeMainWindowCommands() // Нужно придумать как отрефакторить этого монстра 
     {
-        MainWindowCommandProvider.CloseAppCommand = new RelayCommand(OnCloseAppCommandExecuted, CanAllCommandsExecute);
-        MainWindowCommandProvider.OpenAllUsersCommand =
-            new RelayCommand(OpenOthersWindowCommandExecuted<UsersView>, CanAllCommandsExecute);
-        MainWindowCommandProvider.OpenAllObvyazkiCommand =
-            new RelayCommand(OpenOthersWindowCommandExecuted<ObvyazkiView>, CanAllCommandsExecute);
-        MainWindowCommandProvider.OpenAllCompaniesCommand =
-            new RelayCommand(OpenOthersWindowCommandExecuted<CompanyView>, CanAllCommandsExecute);
-        MainWindowCommandProvider.OpenFormedFramesCommand =
-            new RelayCommand(OpenOthersWindowCommandExecuted<FormedFrameView>, CanAllCommandsExecute);
-        MainWindowCommandProvider.OpenAllSortamentsCommand =
-            new RelayCommand(OpenOthersWindowCommandExecuted<AllSortamentsView>, CanAllCommandsExecute);
-        MainWindowCommandProvider.OpenSettingsWindow =
-            new RelayCommand(OpenOthersWindowCommandExecuted<SettingsWindow>, CanAllCommandsExecute);
-        MainWindowCommandProvider.OpenTreeViewCommand =
-            new RelayCommand(OpenAnotherControlsCommandExecuted<TreeProjectView>, CanAllCommandsExecute);
-        MainWindowCommandProvider.ChekDbConnectionCommand =
-            new RelayCommand(OnCheckDbConnectionCommandExecuted, CanAllCommandsExecute);
-        MainWindowCommandProvider.ShowAllProjectsCommand =
-            new RelayCommand(OnShowAllProjectsCommandExecuted, CanAllCommandsExecute);
-        MainWindowCommandProvider.DeleteSelectedProjectCommand =
-            new RelayCommand(OnDeleteSelectedProjectExecuted, CanAllCommandsExecute);
-        MainWindowCommandProvider.OpenMainWindowCommand =
-            new RelayCommand(OnOpenMainWindowCommandExecuted, CanAllCommandsExecute);
-        MainWindowCommandProvider.EditProjectCommand =
-            new RelayCommand(OnEditProjectCommandExecuted, CanAllCommandsExecute);
-        MainWindowCommandProvider.OpenAllDrainagesCommand =
-            new RelayCommand(OpenOthersWindowCommandExecuted<FormedDrainagesView>, CanAllCommandsExecute);
+        MainWindowCommandsInitializer.InitializeCommands(this);
     }
 
     public void InitializeGenericEquipCommands() // Нужно придумать как отрефакторить этого монстра
     {
-        GenericEquipCommandProvider.OpenHeaterPipeCommand =
-            new RelayCommand(OnOpenGenericWindowCommandExecuted<HeaterPipe, HeaterPipe>, CanAllCommandsExecute);
-        GenericEquipCommandProvider.OpenCarbonPipeCommand =
-            new RelayCommand(OnOpenGenericWindowCommandExecuted<CarbonPipe, CarbonPipe>, CanAllCommandsExecute);
-        GenericEquipCommandProvider.OpenStainlessPipeCommand =
-            new RelayCommand(OnOpenGenericWindowCommandExecuted<StainlessPipe, StainlessPipe>, CanAllCommandsExecute);
-
-        GenericEquipCommandProvider.OpenHeaterArmatureCommand =
-            new RelayCommand(OnOpenGenericWindowCommandExecuted<HeaterArmature, HeaterArmature>, CanAllCommandsExecute);
-        GenericEquipCommandProvider.OpenCarbonArmatureCommand =
-            new RelayCommand(OnOpenGenericWindowCommandExecuted<CarbonArmature, CarbonArmature>, CanAllCommandsExecute);
-        GenericEquipCommandProvider.OpenStainlessArmatureCommand = new RelayCommand(
-            OnOpenGenericWindowCommandExecuted<StainlessArmature, StainlessArmature>, CanAllCommandsExecute);
-
-        GenericEquipCommandProvider.OpenCarbonSocketsCommand =
-            new RelayCommand(OnOpenGenericWindowCommandExecuted<CarbonSocket, CarbonSocket>, CanAllCommandsExecute);
-        GenericEquipCommandProvider.OpenStainlessSocketsCommand = new RelayCommand(
-            OnOpenGenericWindowCommandExecuted<StainlessSocket, StainlessSocket>, CanAllCommandsExecute);
-        GenericEquipCommandProvider.OpenHeaterSocketsCommand =
-            new RelayCommand(OnOpenGenericWindowCommandExecuted<HeaterSocket, HeaterSocket>, CanAllCommandsExecute);
-
-        GenericEquipCommandProvider.OpenDrainageCommand =
-            new RelayCommand(OnOpenGenericWindowCommandExecuted<Drainage, Drainage>, CanAllCommandsExecute);
-
-        GenericEquipCommandProvider.OpenFrameDetailsCommand =
-            new RelayCommand(OnOpenGenericWindowCommandExecuted<FrameDetail, FrameDetail>, CanAllCommandsExecute);
-        GenericEquipCommandProvider.OpenPillarEquipCommand =
-            new RelayCommand(OnOpenGenericWindowCommandExecuted<PillarEqiup, PillarEqiup>, CanAllCommandsExecute);
-        GenericEquipCommandProvider.OpenFrameRollCommand =
-            new RelayCommand(OnOpenGenericWindowCommandExecuted<FrameRoll, FrameRoll>, CanAllCommandsExecute);
-
-        GenericEquipCommandProvider.OpenBoxesBracesommand =
-            new RelayCommand(OnOpenGenericWindowCommandExecuted<BoxesBrace, BoxesBrace>, CanAllCommandsExecute);
-        GenericEquipCommandProvider.OpenDrainageBracesCommand =
-            new RelayCommand(OnOpenGenericWindowCommandExecuted<DrainageBrace, DrainageBrace>, CanAllCommandsExecute);
-        GenericEquipCommandProvider.OpenSensorsBracesCommand =
-            new RelayCommand(OnOpenGenericWindowCommandExecuted<SensorBrace, SensorBrace>, CanAllCommandsExecute);
-
-        GenericEquipCommandProvider.OpenCabelBoxeCommand =
-            new RelayCommand(OnOpenGenericWindowCommandExecuted<CabelBoxe, CabelBoxe>, CanAllCommandsExecute);
-        GenericEquipCommandProvider.OpenCabelInputCommand =
-            new RelayCommand(OnOpenGenericWindowCommandExecuted<CabelInput, CabelInput>, CanAllCommandsExecute);
-        GenericEquipCommandProvider.OpenCabelProductionCommand = new RelayCommand(
-            OnOpenGenericWindowCommandExecuted<CabelProduction, CabelProduction>, CanAllCommandsExecute);
-        GenericEquipCommandProvider.OpenCabelProtectionCommand = new RelayCommand(
-            OnOpenGenericWindowCommandExecuted<CabelProtection, CabelProtection>, CanAllCommandsExecute);
-        GenericEquipCommandProvider.OpenHeaterCommand =
-            new RelayCommand(OnOpenGenericWindowCommandExecuted<Heater, Heater>, CanAllCommandsExecute);
-
-        GenericEquipCommandProvider.OpenConteinersCommand =
-            new RelayCommand(OnOpenGenericWindowCommandExecuted<Container, Container>, CanAllCommandsExecute);
-        GenericEquipCommandProvider.OpenOthersCommand =
-            new RelayCommand(OnOpenGenericWindowCommandExecuted<Other, Other>, CanAllCommandsExecute);
+        MainWindowCommandsInitializer.InitializeGenericCommands(this);
     }
 
     #endregion
@@ -204,11 +112,6 @@ public class MainWindowViewModel : BaseViewModel
 
             _navigation.ShowContent<T>();
         });
-    }
-
-    public static void OnCloseAppCommandExecuted(object e)
-    {
-        Application.Current.Shutdown();
     }
 
     public async void OnCheckDbConnectionCommandExecuted(object e)

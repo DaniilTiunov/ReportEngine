@@ -70,7 +70,7 @@ public class ProjectViewModel : BaseViewModel
         CurrentProjectModel.StartDate = DateTime.Now.Date;
         CurrentProjectModel.OutOfProduction = DateTime.Now.Date;
         CurrentProjectModel.EndDate = DateTime.Now.Date;
-    }   
+    }
 
     public void InitializeCommands()
     {
