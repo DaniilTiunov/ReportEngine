@@ -1,10 +1,11 @@
-﻿using System.Diagnostics;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.Drainage;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
+using System.Diagnostics;
 
 namespace ReportEngine.Export.ExcelWork.Services;
 
@@ -103,11 +104,6 @@ public class ComponentsListReportGenerator : IReportGenerator
             ))
             .ToList();
 
-
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
-        activeRow = FillSubtableData(activeRow, pipesList, ws);
-
-
         //Формирование списка арматуры
 
         var armaturesList = stand.ObvyazkiInStand
@@ -124,9 +120,6 @@ public class ComponentsListReportGenerator : IReportGenerator
             ))
             .ToList();
 
-
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Арматура", ws);
-        activeRow = FillSubtableData(activeRow, armaturesList, ws);
 
 
         //Формирование списка тройников и КМЧ
@@ -160,38 +153,6 @@ public class ComponentsListReportGenerator : IReportGenerator
             .ToList();
 
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Тройники и КМЧ", ws);
-
-
-        activeRow = FillSubtableData(activeRow, treeList, ws);
-
-
-        activeRow = FillSubtableData(activeRow, kmchList, ws);
-
-
-        //Формирование списка рамных комплектующих
-
-        var framesCollection = await _projectInfoRepository.GetAllFramesInStandAsync(stand.Id);
-
-        var framesList = framesCollection
-            .SelectMany(fr => fr.Frame.Components.Select(comp => new
-            {
-                name = comp.ComponentType,
-                unit = comp.Measure,
-                quantity = comp.Count
-            }))
-            .GroupBy(frameComp => frameComp.name)
-            .Select(group => (
-                name: group.Key ?? "",
-                unit: group.First().unit ?? "",
-                quantity: (float)group.Sum(frameComp => frameComp.quantity)
-            ))
-            .ToList();
-
-
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Рамные комплектующие", ws);
-        activeRow = FillSubtableData(activeRow, framesList, ws);
-
 
         //формирование списка кронштейнов
 
@@ -217,7 +178,7 @@ public class ComponentsListReportGenerator : IReportGenerator
                 quantity: group.Sum(groupElement => groupElement.Quantity) ?? 0f
             ))
             .ToList();
-        ;
+
 
 
         var sensorsHolders = stand.StandElectricalComponent
@@ -230,14 +191,48 @@ public class ComponentsListReportGenerator : IReportGenerator
                 quantity: group.Sum(groupElement => groupElement.Quantity) ?? 0f
             ))
             .ToList();
-        ;
 
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Кронштейны", ws);
 
-        activeRow = FillSubtableData(activeRow, drainageHolders, ws);
-        activeRow = FillSubtableData(activeRow, boxesHolders, ws);
-        activeRow = FillSubtableData(activeRow, sensorsHolders, ws);
+
+
+
+        //формирование дренажа
+
+        var drainageParts = stand.StandDrainages
+            .SelectMany(drainage => drainage.Drainage.Purposes)
+            .GroupBy(purpose => purpose.Material)
+            .Select(group => (
+                name: group.Key ?? "",
+                unit: group.First().Measure ?? "попугаи",
+                quantity: group.Sum(groupElement => groupElement.Quantity) ?? 0f
+            ))
+            .Except(drainageHolders)
+            .ToList();
+
+
+
+        //Формирование списка рамных комплектующих
+
+        var framesCollection = await _projectInfoRepository.GetAllFramesInStandAsync(stand.Id);
+
+        var framesList = framesCollection
+            .SelectMany(fr => fr.Frame.Components.Select(comp => new
+            {
+                name = comp.ComponentType,
+                unit = comp.Measure,
+                quantity = comp.Count
+            }))
+            .GroupBy(frameComp => frameComp.name)
+            .Select(group => (
+                name: group.Key ?? "",
+                unit: group.First().unit ?? "попугаи",
+                quantity: (float)group.Sum(frameComp => frameComp.quantity)
+            ))
+            .ToList();
+
+
+
 
 
         //формирование списка электрических комплектующих
@@ -250,11 +245,9 @@ public class ComponentsListReportGenerator : IReportGenerator
                 unit: group.First().Measure ?? "попугаи",
                 quantity: group.Sum(item => item.Quantity) ?? 0f
             ))
+            .Except(boxesHolders)
             .ToList();
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Электрические компоненты", ws);
-
-        activeRow = FillSubtableData(activeRow, electricalParts, ws);
 
 
         //формирование списка дополнительного оборудования
@@ -267,11 +260,50 @@ public class ComponentsListReportGenerator : IReportGenerator
                 unit: group.First().Measure ?? "попугаи",
                 quantity: group.Sum(item => item.Quantity) ?? 0f
             ))
+            .Except(sensorsHolders);
+
+
+        var othersParts = additionalParts
+            .Where(part => part.name.Contains("Шильдик"))
+            .Where(part => part.name.Contains("Табличка"))
             .ToList();
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Прочие", ws);
+        var supplies = additionalParts
+            .Except(othersParts)
+            .ToList();
 
-        activeRow = FillSubtableData(activeRow, additionalParts, ws);
+
+
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
+        activeRow = FillSubtableData(activeRow, pipesList, ws);
+
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Арматура", ws);
+        activeRow = FillSubtableData(activeRow, armaturesList, ws);
+
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Тройники и КМЧ", ws);
+        activeRow = FillSubtableData(activeRow, treeList, ws);
+        activeRow = FillSubtableData(activeRow, kmchList, ws);
+
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Дренаж", ws);
+        activeRow = FillSubtableData(activeRow, drainageParts, ws);
+
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Рамные комплектующие", ws);
+        activeRow = FillSubtableData(activeRow, framesList, ws);
+
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Кронштейны", ws);
+        activeRow = FillSubtableData(activeRow, drainageHolders, ws);
+        activeRow = FillSubtableData(activeRow, boxesHolders, ws);
+        activeRow = FillSubtableData(activeRow, sensorsHolders, ws);
+
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Электрические компоненты", ws);
+        activeRow = FillSubtableData(activeRow, electricalParts, ws);
+
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Прочие", ws);
+        activeRow = FillSubtableData(activeRow, othersParts, ws);
+
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Расходные материалы", ws);
+        activeRow = FillSubtableData(activeRow, supplies, ws);
+
     }
 
     //создает заголовок для подтаблицы и возвращает следующую строку
