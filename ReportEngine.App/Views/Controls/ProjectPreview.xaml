@@ -272,8 +272,8 @@
                         <GridViewColumn DisplayMemberBinding="{Binding Purpose}" Header="Назначение" />
                         <GridViewColumn DisplayMemberBinding="{Binding Material}" Header="Материал" />
                         <GridViewColumn DisplayMemberBinding="{Binding Quantity}" Header="Кол-во" />
-                        <GridViewColumn DisplayMemberBinding="{Binding CostPerUnit}" Header="Цена" />
                         <GridViewColumn DisplayMemberBinding="{Binding Measure}" Header="Ед. изм." />
+                        <GridViewColumn DisplayMemberBinding="{Binding CostPerUnit}" Header="Цена" />
                     </GridView>
                 </ListView.View>
             </ListView>
@@ -300,9 +300,9 @@
                         <GridViewColumn DisplayMemberBinding="{Binding Purpose}" Header="Назначение" />
                         <GridViewColumn DisplayMemberBinding="{Binding Material}" Header="Материал" />
                         <GridViewColumn DisplayMemberBinding="{Binding Quantity}" Header="Кол-во" />
-                        <GridViewColumn DisplayMemberBinding="{Binding CostPerUnit}" Header="Цена" />
                         <GridViewColumn DisplayMemberBinding="{Binding Measure}" Header="Ед. изм." />
-                    </GridView>
+                        <GridViewColumn DisplayMemberBinding="{Binding CostPerUnit}" Header="Цена" />
+                         </GridView>
                 </ListView.View>
             </ListView>
         </GroupBox>
@@ -328,9 +328,9 @@
                         <GridViewColumn DisplayMemberBinding="{Binding Purpose}" Header="Назначение" />
                         <GridViewColumn DisplayMemberBinding="{Binding Material}" Header="Материал" />
                         <GridViewColumn DisplayMemberBinding="{Binding Quantity}" Header="Кол-во" />
-                        <GridViewColumn DisplayMemberBinding="{Binding CostPerUnit}" Header="Цена" />
                         <GridViewColumn DisplayMemberBinding="{Binding Measure}" Header="Ед. изм." />
-                    </GridView>
+                        <GridViewColumn DisplayMemberBinding="{Binding CostPerUnit}" Header="Цена" />
+                         </GridView>
                 </ListView.View>
             </ListView>
         </GroupBox>
