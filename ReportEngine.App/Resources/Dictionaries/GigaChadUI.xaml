@@ -155,7 +155,7 @@
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="20" /> 
+                                <ColumnDefinition Width="20" />
                                 <!--  колонка под стрелку  -->
                             </Grid.ColumnDefinitions>
 
@@ -388,5 +388,15 @@
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="4,2" />
+    </Style>
+
+    <Style TargetType="ComboBoxItem">
+        <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 </ResourceDictionary>

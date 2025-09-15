@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ReportEngine.Domain.Entities.BaseEntities.Interface;
+using System.ComponentModel.DataAnnotations;
 
 namespace ReportEngine.Domain.Entities;
 
-public class DrainagePurpose
+public class DrainagePurpose : IPurposeEntity
 {
     [Key] public int Id { get; set; }
 
