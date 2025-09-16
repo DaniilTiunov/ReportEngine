@@ -1,6 +1,7 @@
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.Views;
 using ReportEngine.App.Views.Controls;
+using ReportEngine.App.Views.Settings;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.Braces;
@@ -37,6 +38,9 @@ namespace ReportEngine.App.Commands.Initializers
 
             vm.MainWindowCommandProvider.OpenSettingsWindow =
                 new RelayCommand(vm.OpenOthersWindowCommandExecuted<SettingsWindow>, vm.CanAllCommandsExecute);
+
+            vm.MainWindowCommandProvider.OpenCalculationSettingsWindow =
+                new RelayCommand(vm.OpenOthersWindowCommandExecuted<CalculationSettingsWindow>, vm.CanAllCommandsExecute);
 
             vm.MainWindowCommandProvider.OpenTreeViewCommand =
                 new RelayCommand(vm.OpenAnotherControlsCommandExecuted<TreeProjectView>, vm.CanAllCommandsExecute);

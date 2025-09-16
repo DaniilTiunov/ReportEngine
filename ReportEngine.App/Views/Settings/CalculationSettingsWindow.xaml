@@ -28,7 +28,8 @@
                 x:Name="WindowTitle"
                 Height="34"
                 Background="#2D2D30"
-                DockPanel.Dock="Top">
+                DockPanel.Dock="Top"
+                MouseLeftButtonDown="Window_MouseLeftButtonDown">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />

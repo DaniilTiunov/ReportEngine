@@ -6,92 +6,92 @@ namespace ReportEngine.App.Model.CalculationModels
 {
     public class HumanCostSettingsModel : BaseViewModel
     {
-        private float _obvzyakaProduction;
-        private float _collectorProduction;
-        private float _tests;
-        private float _commonCheckStand;
-        private float _timeForCheckStand;
-        private float _timeForFinalWork;
-        private float _timeForOneDrill;
-        private float _timeForCollectorBoil;
-        private float _timeForAllChecks;
-        private float _timeForPrepareAllEquipment;
-        private float _timeForDrillOneBus;
-        private float _timeForMontageOneInput;
-        private float _timeForOthersOperations;
-        public float ObvzyakaProduction 
+        private double _obvzyakaProduction;
+        private double _collectorProduction;
+        private double _tests;
+        private double _commonCheckStand;
+        private double _timeForCheckStand;
+        private double _timeForFinalWork;
+        private double _timeForOneDrill;
+        private double _timeForCollectorBoil;
+        private double _timeForAllChecks;
+        private double _timeForPrepareAllEquipment;
+        private double _timeForDrillOneBus;
+        private double _timeForMontageOneInput;
+        private double _timeForOthersOperations;
+        public double ObvzyakaProduction 
         { 
             get => _obvzyakaProduction; 
             set => Set(ref _obvzyakaProduction, value); 
         }
 
-        public float CollectorProduction 
+        public double CollectorProduction 
         { 
             get => _collectorProduction; 
             set => Set(ref _collectorProduction, value); 
         }
 
-        public float Tests 
+        public double Tests 
         { 
             get => _tests; 
             set => Set(ref _tests, value); 
         }
 
-        public float CommonCheckStand 
+        public double CommonCheckStand 
         { 
             get => _commonCheckStand; 
             set => Set(ref _commonCheckStand, value); 
         }
 
-        public float TimeForCheckStand 
+        public double TimeForCheckStand 
         { 
             get => _timeForCheckStand; 
             set => Set(ref _timeForCheckStand, value); 
         }
 
-        public float TimeForFinalWork 
+        public double TimeForFinalWork 
         { 
             get => _timeForFinalWork; 
             set => Set(ref _timeForFinalWork, value); 
         }
 
-        public float TimeForOneDrill 
+        public double TimeForOneDrill 
         { 
             get => _timeForOneDrill; 
             set => Set(ref _timeForOneDrill, value); 
         }
 
-        public float TimeForCollectorBoil 
+        public double TimeForCollectorBoil 
         { 
             get => _timeForCollectorBoil; 
             set => Set(ref _timeForCollectorBoil, value); 
         }
 
-        public float TimeForAllChecks 
+        public double TimeForAllChecks 
         { 
             get => _timeForAllChecks; 
             set => Set(ref _timeForAllChecks, value); 
         }
 
-        public float TimeForPrepareAllEquipment 
+        public double TimeForPrepareAllEquipment 
         { 
             get => _timeForPrepareAllEquipment; 
             set => Set(ref _timeForPrepareAllEquipment, value); 
         }
 
-        public float TimeForDrillOneBus 
+        public double TimeForDrillOneBus 
         { 
             get => _timeForDrillOneBus; 
             set => Set(ref _timeForDrillOneBus, value); 
         }
 
-        public float TimeForMontageOneInput 
+        public double TimeForMontageOneInput 
         { 
             get => _timeForMontageOneInput; 
             set => Set(ref _timeForMontageOneInput, value); 
         }
 
-        public float TimeForOthersOperations
+        public double TimeForOthersOperations
         {
             get => _timeForOthersOperations; 
             set => Set(ref _timeForOthersOperations, value);

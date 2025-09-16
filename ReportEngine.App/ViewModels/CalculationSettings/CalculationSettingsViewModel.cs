@@ -11,7 +11,7 @@ namespace ReportEngine.App.ViewModels.CalculationSettings
             
         }
 
-        public async Task LoadSettings()
+        public async Task LoadSettingsAsync()
         {
             await HumanCosts.LoadDataFromIniAsync();
         }
