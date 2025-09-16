@@ -92,6 +92,39 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
+                <TabControl Grid.Row="0">
+                    <TabItem Header="Трудозатраты">
+                        <Grid>
+                            <!--  Трудозатраты  -->
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Margin="0,20,0,20"
+                                Text="Изготовление обвязок: " />
+                            <TextBox
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="0,20,0,20"
+                                Text="{Binding HumanCosts.ObvzyakaProduction, Mode=TwoWay}" />
+                        </Grid>
+                    </TabItem>
+                </TabControl>
             </Grid>
         </DockPanel>
     </Border>
