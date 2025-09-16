@@ -52,19 +52,19 @@ namespace ReportEngine.Shared.Config.IniHeleprs
 
             return new HumanCostSettings
             {
-                ObvzyakaProduction = float.Parse(costData["HumanCostSettings"]["obvzyakaProduction"]),
-                CollectorProduction = float.Parse(costData["HumanCostSettings"]["collectorProduction"]),
-                Tests = float.Parse(costData["HumanCostSettings"]["tests"]),
-                CommonCheckStand = float.Parse(costData["HumanCostSettings"]["commonCheckStand"]),
-                TimeForCheckStand = float.Parse(costData["HumanCostSettings"]["timeForCheckStand"]),
-                TimeForFinalWork = float.Parse(costData["HumanCostSettings"]["timeForFinalWork"]),
-                TimeForOneDrill = float.Parse(costData["HumanCostSettings"]["timeForOneDrill"]),
-                TimeForCollectorBoil = float.Parse(costData["HumanCostSettings"]["timeForCollectorBoil"]),
-                TimeForAllChecks = float.Parse(costData["HumanCostSettings"]["timeForAllChecks"]),
-                TimeForPrepareAllEquipment = float.Parse(costData["HumanCostSettings"]["timeForPrepareAllEquipment"])       ,
-                TimeForDrillOneBus = float.Parse(costData["HumanCostSettings"]["timeForDrillOneBus"]),
-                TimeForMontageOneInput = float.Parse(costData["HumanCostSettings"]["timeForMontageOneInput"]),
-                TimeForOthersOperations = float.Parse(costData["HumanCostSettings"]["timeForOthersOperations"])
+                ObvzyakaProduction = Convert.ToDouble(costData["HumanCostSettings"]["obvzyakaProduction"], CultureInfo.InvariantCulture),
+                CollectorProduction = Convert.ToDouble(costData["HumanCostSettings"]["collectorProduction"], CultureInfo.InvariantCulture),
+                Tests = Convert.ToDouble(costData["HumanCostSettings"]["tests"], CultureInfo.InvariantCulture),
+                CommonCheckStand = Convert.ToDouble(costData["HumanCostSettings"]["commonCheckStand"], CultureInfo.InvariantCulture),
+                TimeForCheckStand = Convert.ToDouble(costData["HumanCostSettings"]["timeForCheckStand"], CultureInfo.InvariantCulture),
+                TimeForFinalWork = Convert.ToDouble(costData["HumanCostSettings"]["timeForFinalWork"], CultureInfo.InvariantCulture),
+                TimeForOneDrill = Convert.ToDouble(costData["HumanCostSettings"]["timeForOneDrill"], CultureInfo.InvariantCulture),
+                TimeForCollectorBoil = Convert.ToDouble(costData["HumanCostSettings"]["timeForCollectorBoil"], CultureInfo.InvariantCulture),
+                TimeForAllChecks = Convert.ToDouble(costData["HumanCostSettings"]["timeForAllChecks"], CultureInfo.InvariantCulture),
+                TimeForPrepareAllEquipment = Convert.ToDouble(costData["HumanCostSettings"]["timeForPrepareAllEquipment"], CultureInfo.InvariantCulture)       ,
+                TimeForDrillOneBus = Convert.ToDouble(costData["HumanCostSettings"]["timeForDrillOneBus"], CultureInfo.InvariantCulture),
+                TimeForMontageOneInput = Convert.ToDouble(costData["HumanCostSettings"]["timeForMontageOneInput"], CultureInfo.InvariantCulture),
+                TimeForOthersOperations = Convert.ToDouble(costData["HumanCostSettings"]["timeForOthersOperations"], CultureInfo.InvariantCulture)
             };
         }
         // Запись в файл

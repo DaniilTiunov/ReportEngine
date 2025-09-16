@@ -17,6 +17,6 @@ public class MainWindowCommandProvider
     public ICommand EditProjectCommand { get; set; }
     public ICommand OpenAllDrainagesCommand { get; set; }
     public ICommand OpenAllSortamentsCommand { get; set; }
-
     public ICommand OpenSettingsWindow { get; set; }
+    public ICommand OpenCalculationSettingsWindow { get; set; }
 }

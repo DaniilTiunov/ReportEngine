@@ -1,4 +1,5 @@
-﻿using ReportEngine.App.ViewModels.CalculationSettings;
+﻿using ReportEngine.App.AppHelpers;
+using ReportEngine.App.ViewModels.CalculationSettings;
 using System.Windows;
 using System.Windows.Input;
 
@@ -23,7 +24,7 @@ namespace ReportEngine.App.Views.Settings
 
         private async void CalculationSettingsWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            await _viewModel.LoadSettings();
+            await ExceptionHelper.SafeExecuteAsync(_viewModel.LoadSettingsAsync);
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
