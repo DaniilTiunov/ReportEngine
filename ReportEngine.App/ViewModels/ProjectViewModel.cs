@@ -1,6 +1,6 @@
 ﻿using ReportEngine.App.AppHelpers;
-using ReportEngine.App.Commands;
 using ReportEngine.App.Commands.Initializers;
+using ReportEngine.App.Commands.Providers;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
@@ -264,6 +264,14 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await CreateReportAsync(ReportType.MarksReport, "маркировки");
+        });
+    }
+
+    public async void OnCreateNameplatesReportCommandExecuted(object p)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await CreateReportAsync(ReportType.NameplatesReport, "шильдики");
         });
     }
 

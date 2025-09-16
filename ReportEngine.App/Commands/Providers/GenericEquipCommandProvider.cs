@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace ReportEngine.App.Commands;
+namespace ReportEngine.App.Commands.Providers;
 
 public class GenericEquipCommandProvider
 {

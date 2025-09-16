@@ -66,7 +66,7 @@ namespace ReportEngine.Export.ExcelWork.Services
 
 
             //рассчитываем шапку для шильдиков
-            startColumn = 2;
+            startColumn = 3;
             int endColumn = startColumn + quantityInfo.maxTablesQuantity - 1;
 
             var startCell = ws.Cell(headerRow,startColumn);
@@ -99,7 +99,7 @@ namespace ReportEngine.Export.ExcelWork.Services
             int maxNameplates = 0;
 
 
-            int activeRow = 1;
+            int activeRow = 2;
             int standNumber = 1;
 
             foreach (var stand in stands)
@@ -111,7 +111,7 @@ namespace ReportEngine.Export.ExcelWork.Services
 
                 var standTables = stand.StandAdditionalEquips
                     .SelectMany(equip => equip.AdditionalEquip.Purposes)
-                    .Where(purpose => purpose.Material.Contains("Табличка"));
+                    .Where(purpose => purpose?.Material?.Contains("Табличка") ?? false);
 
                 var standTablesStrings = standTables.Select(_ =>
                 {
@@ -125,7 +125,7 @@ namespace ReportEngine.Export.ExcelWork.Services
 
                 var standNameplates = stand.StandAdditionalEquips
                                            .SelectMany(equip => equip.AdditionalEquip.Purposes)
-                                           .Where(purpose => purpose.Material.Contains("Шильдик"));
+                                           .Where(purpose => purpose?.Material?.Contains("Шильдик") ?? false);
 
                 var standNameplatesStrings = standNameplates.Select(_ =>
                 {

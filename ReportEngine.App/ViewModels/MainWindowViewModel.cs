@@ -2,6 +2,7 @@
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Commands.Initializers;
+using ReportEngine.App.Commands.Providers;
 using ReportEngine.App.Model;
 using ReportEngine.App.Services;
 using ReportEngine.App.Views.Controls;
