@@ -8,17 +8,17 @@ namespace ReportEngine.App.ViewModels.CalculationSettings
 
         public CalculationSettingsViewModel() 
         {
-            LoadSettings();
+            
         }
 
-        public void LoadSettings()
+        public async Task LoadSettings()
         {
-            HumanCosts.LoadDataFromIni();
+            await HumanCosts.LoadDataFromIniAsync();
         }
 
-        public void SaveSettings()
+        public async Task SaveSettings()
         {
-            HumanCosts.SaveDataToIni();
+            await HumanCosts.SaveDataToIniAsync();
         }
     }
 }
