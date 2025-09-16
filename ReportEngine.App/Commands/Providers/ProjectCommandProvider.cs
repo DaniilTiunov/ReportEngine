@@ -1,6 +1,6 @@
 using System.Windows.Input;
 
-namespace ReportEngine.App.Commands;
+namespace ReportEngine.App.Commands.Providers;
 
 public class ProjectCommandProvider
 {
@@ -23,6 +23,7 @@ public class ProjectCommandProvider
     public ICommand OpenAllSortamentsDialogCommand { get; set; } // Новая команда для открытия окна ассортиментов
     public ICommand DeleteSelectedStandCommand { get; set; }
     public ICommand CreateMarkReportCommand { get; set; }
+    public ICommand CreateNameplatesReportCommand { get; set; }
     public ICommand RemoveObvFromStandCommand { get; set; }
     public ICommand CreateContainerReportCommand { get; set; }
     public ICommand SaveChangesInStandCommand { get; set; }
