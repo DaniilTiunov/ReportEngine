@@ -67,7 +67,7 @@ namespace ReportEngine.Export.ExcelWork.Services
 
             //рассчитываем шапку для шильдиков
             startColumn = 2;
-            int endColumn = startColumn + quantityInfo.maxTablesQuantity;
+            int endColumn = quantityInfo.maxTablesQuantity>0 ? startColumn+quantityInfo.maxTablesQuantity-1 : startColumn;
 
             var startCell = ws.Cell(headerRow,startColumn);
             var endCell = ws.Cell(headerRow, endColumn);
@@ -78,7 +78,7 @@ namespace ReportEngine.Export.ExcelWork.Services
 
             //рассчитываем шапку для табличек
             startColumn = endColumn + 1;
-            endColumn = startColumn + quantityInfo.maxNameplatesQuantity;
+            endColumn = quantityInfo.maxTablesQuantity > 0 ? startColumn + quantityInfo.maxNameplatesQuantity - 1 : startColumn;
 
             startCell = ws.Cell(headerRow, startColumn);
             endCell = ws.Cell(headerRow, endColumn);
@@ -166,6 +166,12 @@ namespace ReportEngine.Export.ExcelWork.Services
                 standNumber++;
                 activeRow++;
             }
+
+
+            Debug.WriteLine($"maxTables: {maxTables}");
+            Debug.WriteLine($"maxNameplates: {maxNameplates}");
+
+
 
             //отдаем максимум найденных табличек/шильдиков для построения шапки
             return (maxTablesQuantity: maxTables,
