@@ -9,6 +9,8 @@
     Width="800"
     Height="450"
     Background="{DynamicResource PrimaryColor}"
+    FontFamily="Bahnschrift"
+    FontSize="14"
     Foreground="{DynamicResource PrimaryForeground}"
     ResizeMode="CanResize"
     WindowStyle="None"
@@ -94,6 +96,77 @@
                     <RowDefinition Height="40" />
                 </Grid.RowDefinitions>
                 <TabControl Grid.Row="0">
+                    <TabItem Header="Стенды">
+                        <Grid>
+                            <!--  Стенды  -->
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="50" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Margin="15,5,5,5"
+                                Text="Швеллер: " />
+                            <TextBox
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="15,5,5,5"
+                                Text="{Binding HumanCosts.ObvzyakaProduction, Mode=TwoWay}" />
+                            <Button
+                                Grid.Row="0"
+                                Grid.Column="2"
+                                Margin="5,5,15,5"
+                                Content="..." />
+
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Margin="15,5,5,5"
+                                Text="Шилдьик: " />
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="15,5,5,5"
+                                Text="{Binding HumanCosts.ObvzyakaProduction, Mode=TwoWay}" />
+                            <Button
+                                Grid.Row="1"
+                                Grid.Column="2"
+                                Margin="5,5,15,5"
+                                Content="..." />
+
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Margin="15,5,5,5"
+                                Text="Табличка: " />
+                            <TextBox
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Margin="15,5,5,5"
+                                Text="{Binding HumanCosts.ObvzyakaProduction, Mode=TwoWay}" />
+                            <Button
+                                Grid.Row="2"
+                                Grid.Column="3"
+                                Margin="5,5,15,5"
+                                Content="..." />
+                        </Grid>
+                    </TabItem>
                     <TabItem Header="Трудозатраты">
                         <Grid>
                             <!--  Трудозатраты  -->
@@ -117,7 +190,7 @@
                                 Grid.Row="0"
                                 Grid.Column="0"
                                 Margin="5,15,0,10"
-                                Text="Изготовление обвязок: " />
+                                Text="Изготовление&#x0a;обвязок: " />
                             <TextBox
                                 Grid.Row="0"
                                 Grid.Column="1"
@@ -128,7 +201,7 @@
                                 Grid.Row="1"
                                 Grid.Column="0"
                                 Margin="5,15,0,10"
-                                Text="Изготовление&#x0a;  коллектора: " />
+                                Text="Изготовление&#x0a;коллектора: " />
                             <TextBox
                                 Grid.Row="1"
                                 Grid.Column="1"

@@ -15,6 +15,10 @@ namespace ReportEngine.App.ViewModels.CalculationSettings
             InitializeCommands();
             _notificationService = notificationService;
         }
+        private void InitializeCommands()
+        {
+            SaveSettingsCommand = new RelayCommand(OnSaveSettingsCommandExecuted, _ => true);
+        }
 
         public ICommand SaveSettingsCommand { get; set; }
 
@@ -23,10 +27,7 @@ namespace ReportEngine.App.ViewModels.CalculationSettings
             await SaveSettings();
         }
 
-        private void InitializeCommands()
-        {
-            SaveSettingsCommand = new RelayCommand(OnSaveSettingsCommandExecuted, _ => true);
-        }
+
         public async Task LoadSettingsAsync()
         {
             await HumanCosts.LoadDataFromIniAsync();
