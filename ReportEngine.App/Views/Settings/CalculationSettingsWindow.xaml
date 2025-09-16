@@ -10,7 +10,7 @@
     Height="450"
     Background="{DynamicResource PrimaryColor}"
     Foreground="{DynamicResource PrimaryForeground}"
-    ResizeMode="NoResize"
+    ResizeMode="CanResize"
     WindowStyle="None"
     mc:Ignorable="d">
 
@@ -91,7 +91,7 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="40" />
                 </Grid.RowDefinitions>
                 <TabControl Grid.Row="0">
                     <TabItem Header="Трудозатраты">
@@ -116,16 +116,156 @@
                             <TextBlock
                                 Grid.Row="0"
                                 Grid.Column="0"
-                                Margin="0,20,0,20"
+                                Margin="5,15,0,10"
                                 Text="Изготовление обвязок: " />
                             <TextBox
                                 Grid.Row="0"
                                 Grid.Column="1"
                                 Margin="0,20,0,20"
                                 Text="{Binding HumanCosts.ObvzyakaProduction, Mode=TwoWay}" />
+
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Margin="5,15,0,10"
+                                Text="Изготовление&#x0a;  коллектора: " />
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="0,20,0,20"
+                                Text="{Binding HumanCosts.CollectorProduction, Mode=TwoWay}" />
+
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Margin="5,15,0,10"
+                                Text="Испытание: " />
+                            <TextBox
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Margin="0,20,0,20"
+                                Text="{Binding HumanCosts.Tests, Mode=TwoWay}" />
+
+                            <TextBlock
+                                Grid.Row="3"
+                                Grid.Column="0"
+                                Margin="5,15,0,10"
+                                Text="Общая проверка &#x0a;стенда: " />
+                            <TextBox
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                Margin="0,20,0,20"
+                                Text="{Binding HumanCosts.CommonCheckStand, Mode=TwoWay}" />
+
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="2"
+                                Margin="5,15,0,10"
+                                Text="Время проверки 1:&#x0a;стенда: " />
+                            <TextBox
+                                Grid.Row="0"
+                                Grid.Column="3"
+                                Margin="0,20,0,20"
+                                Text="{Binding HumanCosts.TimeForCheckStand, Mode=TwoWay}" />
+
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="2"
+                                Margin="5,15,0,10"
+                                Text="Время подгот.-закл&#x0a;работ: " />
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="3"
+                                Margin="0,20,0,20"
+                                Text="{Binding HumanCosts.TimeForFinalWork, Mode=TwoWay}" />
+
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="2"
+                                Margin="5,15,0,10"
+                                Text="Время сверления 1&#x0a;отверстия: " />
+                            <TextBox
+                                Grid.Row="2"
+                                Grid.Column="3"
+                                Margin="0,20,0,20"
+                                Text="{Binding HumanCosts.TimeForOneDrill, Mode=TwoWay}" />
+
+                            <TextBlock
+                                Grid.Row="3"
+                                Grid.Column="2"
+                                Margin="5,15,0,10"
+                                Text="Время сварки &#x0a;коллектора: " />
+                            <TextBox
+                                Grid.Row="3"
+                                Grid.Column="3"
+                                Margin="0,20,0,20"
+                                Text="{Binding HumanCosts.TimeForCollectorBoil, Mode=TwoWay}" />
+
+                            <TextBlock
+                                Grid.Row="4"
+                                Grid.Column="2"
+                                Margin="5,15,0,10"
+                                Text="Время проведения&#x0a;всех испытаний: " />
+                            <TextBox
+                                Grid.Row="4"
+                                Grid.Column="3"
+                                Margin="0,20,0,20"
+                                Text="{Binding HumanCosts.TimeForAllChecks, Mode=TwoWay}" />
+
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="4"
+                                Margin="5,15,0,10"
+                                Text="Время подгототовки&#x0a;всего оборудования: " />
+                            <TextBox
+                                Grid.Row="0"
+                                Grid.Column="5"
+                                Margin="0,20,0,20"
+                                Text="{Binding HumanCosts.TimeForPrepareAllEquipment, Mode=TwoWay}" />
+
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="4"
+                                Margin="5,15,0,10"
+                                Text="Время сверления 1&#x0a;отверстия в шине: " />
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="5"
+                                Margin="0,20,0,20"
+                                Text="{Binding HumanCosts.TimeForDrillOneBus, Mode=TwoWay}" />
+
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="4"
+                                Margin="5,15,0,10"
+                                Text="Время монтажа 1 &#x0a;ввода: " />
+                            <TextBox
+                                Grid.Row="2"
+                                Grid.Column="5"
+                                Margin="0,20,0,20"
+                                Text="{Binding HumanCosts.TimeForMontageOneInput, Mode=TwoWay}" />
+
+                            <TextBlock
+                                Grid.Row="3"
+                                Grid.Column="4"
+                                Margin="5,15,0,10"
+                                Text="Время других&#x0a;операций: " />
+                            <TextBox
+                                Grid.Row="3"
+                                Grid.Column="5"
+                                Margin="0,20,0,20"
+                                Text="{Binding HumanCosts.TimeForOthersOperations, Mode=TwoWay}" />
                         </Grid>
                     </TabItem>
                 </TabControl>
+                <StackPanel Grid.Row="1" HorizontalAlignment="Right">
+                    <Button
+                        Width="100"
+                        Height="30"
+                        Margin="5,5,5,0"
+                        Command="{Binding SaveSettingsCommand}"
+                        Content="Применить" />
+                </StackPanel>
             </Grid>
         </DockPanel>
     </Border>
