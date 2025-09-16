@@ -1,6 +1,8 @@
 ﻿using IniParser;
+using IniParser.Model;
 using ReportEngine.Shared.CalculationSettings;
 using ReportEngine.Shared.Config.Directory;
+using System.Globalization;
 
 namespace ReportEngine.Shared.Config.IniHeleprs
 {
@@ -9,9 +11,44 @@ namespace ReportEngine.Shared.Config.IniHeleprs
         private static readonly FileIniDataParser _parser = new ();
         private static readonly string _iniFile = DirectoryHelper.GetIniConfigPath();
 
+        // Синхронные методы
         public static HumanCostSettings LoadHumanCostSettings()
         {
             var costData = _parser.ReadFile(_iniFile);
+            return ReadFromIniData(costData);
+        }
+
+        public static void SaveHumanCostSettings(HumanCostSettings settings)
+        {
+            var costData = _parser.ReadFile(_iniFile);
+            WriteToIniData(costData, settings);
+            _parser.WriteFile(_iniFile, costData);
+        }
+
+        // Асинхронные методы
+        public static Task<HumanCostSettings> LoadHumanCostSettingsAsync()
+        {
+            return Task.Run(() =>
+            {
+                var costData = _parser.ReadFile(_iniFile);
+                return ReadFromIniData(costData);
+            });
+        }
+
+        public static Task SaveHumanCostSettingsAsync(HumanCostSettings settings)
+        {
+            return Task.Run(() =>
+            {
+                var costData = _parser.ReadFile(_iniFile);
+                WriteToIniData(costData, settings);
+                _parser.WriteFile(_iniFile, costData);
+            });
+        }
+        // Чтение из файла
+        private static HumanCostSettings ReadFromIniData(IniData costData)
+        {
+            if (costData == null)
+                return new HumanCostSettings();
 
             return new HumanCostSettings
             {
@@ -20,7 +57,7 @@ namespace ReportEngine.Shared.Config.IniHeleprs
                 Tests = float.Parse(costData["HumanCostSettings"]["tests"]),
                 CommonCheckStand = float.Parse(costData["HumanCostSettings"]["commonCheckStand"]),
                 TimeForCheckStand = float.Parse(costData["HumanCostSettings"]["timeForCheckStand"]),
-                TimeForFinalWork = float.Parse(costData["HumanCostSettings"]["timeForFinalWorkd"]),
+                TimeForFinalWork = float.Parse(costData["HumanCostSettings"]["timeForFinalWork"]),
                 TimeForOneDrill = float.Parse(costData["HumanCostSettings"]["timeForOneDrill"]),
                 TimeForCollectorBoil = float.Parse(costData["HumanCostSettings"]["timeForCollectorBoil"]),
                 TimeForAllChecks = float.Parse(costData["HumanCostSettings"]["timeForAllChecks"]),
@@ -30,17 +67,18 @@ namespace ReportEngine.Shared.Config.IniHeleprs
                 TimeForOthersOperations = float.Parse(costData["HumanCostSettings"]["timeForOthersOperations"])
             };
         }
-
-        public static void SaveHumanCostSettings(HumanCostSettings settings)
+        // Запись в файл
+        private static void WriteToIniData(IniData costData, HumanCostSettings settings)
         {
-            var costData = _parser.ReadFile(_iniFile);
+            if (costData == null)
+                return;
 
             costData["HumanCostSettings"]["obvzyakaProduction"] = settings.ObvzyakaProduction.ToString();
             costData["HumanCostSettings"]["collectorProduction"] = settings.CollectorProduction.ToString();
             costData["HumanCostSettings"]["tests"] = settings.Tests.ToString();
             costData["HumanCostSettings"]["commonCheckStand"] = settings.CommonCheckStand.ToString();
             costData["HumanCostSettings"]["timeForCheckStand"] = settings.TimeForCheckStand.ToString();
-            costData["HumanCostSettings"]["timeForFinalWorkd"] = settings.TimeForFinalWork.ToString();
+            costData["HumanCostSettings"]["timeForFinalWork"] = settings.TimeForFinalWork.ToString();
             costData["HumanCostSettings"]["timeForOneDrill"] = settings.TimeForOneDrill.ToString();
             costData["HumanCostSettings"]["timeForCollectorBoil"] = settings.TimeForCollectorBoil.ToString();
             costData["HumanCostSettings"]["timeForAllChecks"] = settings.TimeForAllChecks.ToString();

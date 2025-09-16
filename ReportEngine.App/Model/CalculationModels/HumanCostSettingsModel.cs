@@ -97,9 +97,11 @@ namespace ReportEngine.App.Model.CalculationModels
             set => Set(ref _timeForOthersOperations, value);
         }
 
-        public void LoadDataFromIni()
+        public async Task LoadDataFromIniAsync()
         {
-            var iniData = CalculationSettingsManager.LoadHumanCostSettings();
+            var iniData = await CalculationSettingsManager.LoadHumanCostSettingsAsync();
+
+            if (iniData == null) return;
 
             ObvzyakaProduction = iniData.ObvzyakaProduction;
             CollectorProduction = iniData.CollectorProduction;
@@ -115,7 +117,7 @@ namespace ReportEngine.App.Model.CalculationModels
             TimeForMontageOneInput = iniData.TimeForMontageOneInput;
             TimeForOthersOperations = iniData.TimeForOthersOperations;
         }
-        public void SaveDataToIni()
+        public async Task SaveDataToIniAsync()
         {
             var iniData = new HumanCostSettings()
             {
@@ -133,7 +135,8 @@ namespace ReportEngine.App.Model.CalculationModels
                 TimeForMontageOneInput = TimeForMontageOneInput,
                 TimeForOthersOperations = TimeForOthersOperations
             };
-            CalculationSettingsManager.SaveHumanCostSettings(iniData);
+            
+            await CalculationSettingsManager.SaveHumanCostSettingsAsync(iniData);
         }
     }
 }
