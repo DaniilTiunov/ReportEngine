@@ -18,7 +18,6 @@ public class StartUp
             var connString = JsonHandler.GetConnectionString(DirectoryHelper.GetConfigPath());
 
             var host = HostFactory.BuildHost(connString);
-
             var app = host.Services.GetRequiredService<App>();
 
             var mainWindow = host.Services.GetRequiredService<MainWindow>();
