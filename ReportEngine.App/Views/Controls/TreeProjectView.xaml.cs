@@ -4,6 +4,7 @@ using ReportEngine.Shared.Config.DebugConsol;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace ReportEngine.App.Views.Controls;
 
@@ -49,8 +50,18 @@ public partial class TreeProjectView : UserControl, IDisposable
     {
         ExceptionHelper.SafeExecute(() =>
         {
-            var tabItem = MainTabControl.SelectedItem as TabItem;
-            if (tabItem != null) MainTabControl.Items.Remove(tabItem);
+            // Сначала пытаемся получить связанную вкладку из Tag кнопки
+            if (sender is Button btn && btn.Tag is TabItem taggedTab)
+            {
+                if (MainTabControl.Items.Contains(taggedTab))
+                    MainTabControl.Items.Remove(taggedTab);
+
+                return;
+            }
+
+            // Фолбэк: если тег не установлен, удаляем текущую выбранную вкладку
+            if (MainTabControl.SelectedItem is TabItem selectedTab)
+                MainTabControl.Items.Remove(selectedTab);
         });
     }
 
@@ -68,15 +79,16 @@ public partial class TreeProjectView : UserControl, IDisposable
             if (CheckForOpenedTabs(content, tag))
                 return; // Вкладка уже открыта, переключаемся на неё
 
-            var tabControl = new TabItem
+            var tabItem = new TabItem
             {
-                Header = CreaterTabItemHeader(header),
-                Content = content,
-                FontSize = 16
+                Tag = tag,
+                Content = content
             };
 
-            MainTabControl.Items.Add(tabControl);
-            MainTabControl.SelectedItem = tabControl;
+            tabItem.Header = CreaterTabItemHeader(header, tabItem);
+
+            MainTabControl.Items.Add(tabItem);
+            MainTabControl.SelectedItem = tabItem;
         });
     }
 
@@ -106,19 +118,21 @@ public partial class TreeProjectView : UserControl, IDisposable
         }
     }
 
-    private UIElement CreaterTabItemHeader(string headerName)
+    private UIElement CreaterTabItemHeader(string headerName, TabItem parentTab)
     {
         var header = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Margin = new Thickness(0, 0, 0, 0)
+            Margin = new Thickness(0, 0, 0, 0),
         };
 
         var headerText = new TextBlock
         {
             Text = headerName,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 5, 0)
+            Margin = new Thickness(0, 0, 5, 0),
+            FontSize = 16,
+            FontFamily = new FontFamily("Bahnschrift")
         };
 
         var closeButton = new Button
@@ -131,6 +145,7 @@ public partial class TreeProjectView : UserControl, IDisposable
             VerticalAlignment = VerticalAlignment.Center
         };
 
+        closeButton.Tag = parentTab;
         closeButton.Click += CloseCurrentView;
 
         header.Children.Add(headerText);

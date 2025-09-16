@@ -35,7 +35,7 @@ public partial class MainWindow : Window //Это так называемый "C
 
         MainWindow_StartUpState();
 
-        await _mainViewModel.ShowAllProjectsAsync();
+        //await _mainViewModel.ShowAllProjectsAsync();
         await _mainViewModel.CheckDbConnectionAsync();
     }
 

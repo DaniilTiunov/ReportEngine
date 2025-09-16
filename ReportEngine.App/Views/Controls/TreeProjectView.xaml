@@ -4,9 +4,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+    xmlns:localDisplay="clr-namespace:ReportEngine.App.Display"
     Background="{DynamicResource PrimaryColor}"
     Foreground="{DynamicResource PrimaryForeground}"
     mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <localDisplay:DefaultInterTabClient x:Key="DefaultInterTabClient" />
+        <dragablz:InterTabController x:Key="InterTabController" InterTabClient="{StaticResource DefaultInterTabClient}" />
+    </UserControl.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -51,6 +58,11 @@
             Width="5"
             HorizontalAlignment="Stretch"
             Background="Gray" />
-        <TabControl x:Name="MainTabControl" Grid.Column="2" />
+        <dragablz:TabablzControl x:Name="MainTabControl"
+                                 Grid.Column="2"
+                                 InterTabController="{StaticResource InterTabController}"
+                                 ShowDefaultCloseButton="True"
+                                 ConsolidateOrphanedItems="True">
+        </dragablz:TabablzControl>
     </Grid>
 </UserControl>
