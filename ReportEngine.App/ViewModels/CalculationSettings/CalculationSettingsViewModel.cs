@@ -1,16 +1,32 @@
-﻿using ReportEngine.App.Model.CalculationModels;
+﻿using ReportEngine.App.Commands;
+using ReportEngine.App.Model.CalculationModels;
+using ReportEngine.App.Services.Interfaces;
+using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels.CalculationSettings
 {
     public class CalculationSettingsViewModel : BaseViewModel
     {
+        private readonly INotificationService _notificationService;
         public HumanCostSettingsModel HumanCosts { get; set; } = new();
 
-        public CalculationSettingsViewModel() 
+        public CalculationSettingsViewModel(INotificationService notificationService) 
         {
-            
+            InitializeCommands();
+            _notificationService = notificationService;
         }
 
+        public ICommand SaveSettingsCommand { get; set; }
+
+        public async void OnSaveSettingsCommandExecuted(object p)
+        {
+            await SaveSettings();
+        }
+
+        private void InitializeCommands()
+        {
+            SaveSettingsCommand = new RelayCommand(OnSaveSettingsCommandExecuted, _ => true);
+        }
         public async Task LoadSettingsAsync()
         {
             await HumanCosts.LoadDataFromIniAsync();
@@ -19,6 +35,7 @@ namespace ReportEngine.App.ViewModels.CalculationSettings
         public async Task SaveSettings()
         {
             await HumanCosts.SaveDataToIniAsync();
+            _notificationService.ShowInfo("Настройки сохранены.");
         }
     }
 }
