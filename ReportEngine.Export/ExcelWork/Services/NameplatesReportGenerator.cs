@@ -66,8 +66,8 @@ namespace ReportEngine.Export.ExcelWork.Services
 
 
             //рассчитываем шапку для шильдиков
-            startColumn = 3;
-            int endColumn = startColumn + quantityInfo.maxTablesQuantity - 1;
+            startColumn = 2;
+            int endColumn = startColumn + quantityInfo.maxTablesQuantity;
 
             var startCell = ws.Cell(headerRow,startColumn);
             var endCell = ws.Cell(headerRow, endColumn);
@@ -78,7 +78,7 @@ namespace ReportEngine.Export.ExcelWork.Services
 
             //рассчитываем шапку для табличек
             startColumn = endColumn + 1;
-            endColumn = startColumn + quantityInfo.maxNameplatesQuantity - 1;
+            endColumn = startColumn + quantityInfo.maxNameplatesQuantity;
 
             startCell = ws.Cell(headerRow, startColumn);
             endCell = ws.Cell(headerRow, endColumn);
