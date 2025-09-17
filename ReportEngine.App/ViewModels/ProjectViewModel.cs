@@ -361,25 +361,30 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async() => await _containerService.CreateBatchAsync(CurrentProjectModel));
     }
-
+    
+    public async void OnDeleteBatchCommandExecuted(object obj)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async() => _containerService.DeleteBanchAsync(CurrentProjectModel));
+    }
+    
     public async void OnRefreshBatchesCommandCommandExecuted(object obj)
     {
-        //await ExceptionHelper.SafeExecuteAsync(_containerService.LoadBatchesAsync);
+        await ExceptionHelper.SafeExecuteAsync(async () => _containerService.LoadBatchesAsync(CurrentProjectModel));
     }
 
     public async void OnAddContainerToBatchCommandExecuted(object obj)
     {
-        //await ExceptionHelper.SafeExecuteAsync(_containerService.AddContainerToBatchAsync);
+        await ExceptionHelper.SafeExecuteAsync(async() => _containerService.AddContainerToBatchAsync(CurrentProjectModel));
     }
 
     public async void OnDeleteContainerCommandExecuted(object obj)
     {
-        //await ExceptionHelper.SafeExecuteAsync(_containerService.RemoveContainerFromBatchAsync);
+        await ExceptionHelper.SafeExecuteAsync(async() => _containerService.RemoveContainerFromBatchAsync(CurrentProjectModel));
     }
 
     public async void OnAddStandToContainerCommandExecuted(object obj)
     {
-        //await ExceptionHelper.SafeExecuteAsync(_containerService.AddStandToContainerAsync);
+        await ExceptionHelper.SafeExecuteAsync(async() => _containerService.AddStandToContainerAsync(CurrentProjectModel));
     }
 
     public async void OnRemoveStandFromContainerCommandExecuted(object obj)
@@ -387,10 +392,6 @@ public class ProjectViewModel : BaseViewModel
         //await ExceptionHelper.SafeExecuteAsync(_containerService.RemoveStandFromContainerAsync);
     }
 
-    public async void OnDeleteBatchCommandExecuted(object obj)
-    {
-        //await ExceptionHelper.SafeExecuteAsync(_containerService.DeleteBanchAsync);
-    }
 
     public void ResetProject()
     {
@@ -448,6 +449,14 @@ public class ProjectViewModel : BaseViewModel
             CurrentStandModel = loadedModel.SelectedStand ?? new StandModel();
             CurrentStandModel.InitializeDefaultPurposes();
             OnPropertyChanged(nameof(CurrentStandModel));
+        });
+    }
+
+    public async Task LoadContainersInfoAsync()
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await _containerService.LoadAllData(CurrentProjectModel);
         });
     }
 

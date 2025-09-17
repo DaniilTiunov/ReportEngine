@@ -91,7 +91,7 @@ public class ContainerRepository : IContainerRepository
     {
         return await _context.ContainersBatch
             .Include(b => b.Containers)
-                .ThenInclude(c => c.Stands)
+            .ThenInclude(c => c.Stands)
             .FirstOrDefaultAsync(b => b.Id == id);
     }
 
@@ -99,7 +99,7 @@ public class ContainerRepository : IContainerRepository
     {
         return await _context.ContainersBatch
             .Include(b => b.Containers)
-                .ThenInclude(c => c.Stands)
+            .ThenInclude(c => c.Stands)
             .Where(b => b.ProjectInfoId == projectId)
             .AsNoTracking()
             .ToListAsync();
@@ -114,20 +114,44 @@ public class ContainerRepository : IContainerRepository
 
         if (batch == null)
             throw new ArgumentException($"Batch with ID {batchId} not found.");
+        
+        if (container.Id != 0)
+        {
+            // Если партия уже содержит контейнер с таким Id — ничего не делаем.
+            if (batch.Containers.Any(c => c.Id == container.Id))
+                return;
 
-        // Защита от двойного добавления:
-        // если в партии уже есть контейнер с тем же Id или тем же Name — пропускаем добавление
-        if (container.Id != 0 && batch.Containers.Any(c => c.Id == container.Id))
-            return;
+            var existing = await _context.ContainersStand
+                .Include(c => c.Stands)
+                .FirstOrDefaultAsync(c => c.Id == container.Id);
 
-        if (!string.IsNullOrEmpty(container.Name) && batch.Containers.Any(c => c.Name == container.Name))
-            return;
-
-        container.ContainerBatchId = batchId;
-
-        // Добавляем контейнер в БД и в коллекцию партии
-        await _context.ContainersStand.AddAsync(container);
-        batch.Containers.Add(container);
+            if (existing == null)
+            {
+                // Если в БД нет такого контейнера, создаём новый как раньше (редкий кейс).
+                container.ContainerBatchId = batchId;
+                if (container.ProjectInfoId == 0)
+                    container.ProjectInfoId = batch.ProjectInfoId;
+                await _context.ContainersStand.AddAsync(container);
+                batch.Containers.Add(container);
+            }
+            else
+            {
+                // Привязываем существующий контейнер к партии
+                existing.ContainerBatchId = batchId;
+                if (!batch.Containers.Any(c => c.Id == existing.Id))
+                    batch.Containers.Add(existing);
+                _context.ContainersStand.Update(existing);
+            }
+        }
+        else
+        {
+            // Новый контейнер
+            container.ContainerBatchId = batchId;
+            if (container.ProjectInfoId == 0)
+                container.ProjectInfoId = batch.ProjectInfoId;
+            await _context.ContainersStand.AddAsync(container);
+            batch.Containers.Add(container);
+        }
 
         // Обновляем счётчики партии
         batch.ContainersCount = batch.Containers.Count;
