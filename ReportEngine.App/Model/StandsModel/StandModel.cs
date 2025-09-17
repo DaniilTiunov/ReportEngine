@@ -178,9 +178,9 @@ public class StandModel : BaseViewModel
     // Ширина стенда
     private float _width;
     private DrainagePurpose _selectedDrainagePurpose;
-    private string? _firstDescription;
-    private string? _secondDescription;
-    private string? _thirdDescription;
+    private string? _firstSensorDescription;
+    private string? _secondSensorDescription;
+    private string? _thirdSensorDescription;
 
     public StandModel()
     {
@@ -403,10 +403,10 @@ public class StandModel : BaseViewModel
         set => Set(ref _firstSensorMarkMinus, value);
     } //Марикровка -
 
-    public string? FirstDescription 
+    public string? FirstSensorDescription 
     { 
-        get => _firstDescription;
-        set => Set(ref _firstDescription, value);
+        get => _firstSensorDescription;
+        set => Set(ref _firstSensorDescription, value);
     }
 
     // Тип второго датчика
@@ -437,10 +437,10 @@ public class StandModel : BaseViewModel
         set => Set(ref _secondSensorMarkMinus, value);
     } //Марикровка -
 
-    public string? SecondDescription
+    public string? SecondSensorDescription
     {
-        get => _secondDescription;
-        set => Set(ref _secondDescription, value);
+        get => _secondSensorDescription;
+        set => Set(ref _secondSensorDescription, value);
     }
 
     // Тип третьего датчика
@@ -471,10 +471,10 @@ public class StandModel : BaseViewModel
         set => Set(ref _thirdSensorMarkMinus, value);
     } //Марикровка -
 
-    public string? ThirdDescription
+    public string? ThirdSensorDescription
     {
-        get => _thirdDescription;
-        set => Set(ref _thirdDescription, value);
+        get => _thirdSensorDescription;
+        set => Set(ref _thirdSensorDescription, value);
     }
 
     // Описание стенда
