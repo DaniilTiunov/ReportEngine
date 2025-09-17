@@ -5,9 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:ReportEngine.App.Views.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Width="800"
-    Height="500"
     Background="{DynamicResource PrimaryColor}"
+    FontSize="16"
     Foreground="{DynamicResource PrimaryForeground}"
     mc:Ignorable="d">
     <Grid>
@@ -16,7 +15,7 @@
             <RowDefinition Height="150" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="200" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
@@ -35,7 +34,10 @@
                         Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(ошибка привязки)'}" />
                 </TextBlock>
             </GroupBox.Header>
-            <DataGrid ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}" SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedElectricalComponent}">
+            <DataGrid
+                CanUserAddRows="True"
+                ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}"
+                SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedElectricalComponent}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Purpose}" Header="Упаковок" />
                     <DataGridTextColumn Binding="{Binding Material}" Header="Стендов" />
@@ -57,7 +59,10 @@
                         Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(ошибка привязки)'}" />
                 </TextBlock>
             </GroupBox.Header>
-            <DataGrid ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}" SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedElectricalComponent}">
+            <DataGrid
+                CanUserAddRows="True"
+                ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}"
+                SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedElectricalComponent}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Purpose}" Header="Упаковка" />
                     <DataGridTextColumn Binding="{Binding Material}" Header="Стендов" />
@@ -82,7 +87,10 @@
                         Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(ошибка привязки)'}" />
                 </TextBlock>
             </GroupBox.Header>
-            <DataGrid ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}" SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedElectricalComponent}">
+            <DataGrid
+                CanUserAddRows="True"
+                ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}"
+                SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedElectricalComponent}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Purpose}" Header="KKS-код стенда" />
                     <DataGridTextColumn Binding="{Binding Material}" Header="Серийный номер" />

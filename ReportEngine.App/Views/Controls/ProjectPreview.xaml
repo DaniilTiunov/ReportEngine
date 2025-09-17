@@ -260,33 +260,6 @@
                                 Source="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.ImageName, Converter={StaticResource ObvyazkaImagePathConverter}}"
                                 Stretch="Uniform" />
                         </Border>
-
-                        <!--  Информация об обвязке  -->
-                        <Border
-                            Grid.Column="1"
-                            Padding="8"
-                            VerticalAlignment="Top"
-                            Background="{DynamicResource PrimaryColor}"
-                            BorderThickness="0">
-                            <StackPanel>
-                                <TextBlock
-                                    Margin="0,0,0,6"
-                                    FontSize="13"
-                                    FontWeight="Bold"
-                                    Text="Информация об обвязке" />
-                                <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.ObvyazkaId, StringFormat='Номер: {0}'}" />
-                                <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.LineLength, StringFormat='Длина линии: {0}'}" />
-                                <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.ZraCount, StringFormat='Кол-во ЗРА: {0}'}" />
-                                <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.TreeSocketCount, StringFormat='Тройники: {0}'}" />
-                                <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.Sensor, StringFormat='Датчики: {0}'}" />
-                                <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.SensorType, StringFormat='Тип датчиков: {0}'}" />
-                                <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.Clamp, StringFormat='Хомуты: {0}'}" />
-                                <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.WidthOnFrame, StringFormat='Длина на раме: {0}'}" />
-                                <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.OtherLineCount, StringFormat='Др. линии: {0}'}" />
-                                <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.Weight, StringFormat='Масса: {0}'}" />
-                                <TextBlock Text="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.HumanCost, StringFormat='Трудозатраты: {0}'}" />
-                            </StackPanel>
-                        </Border>
                     </Grid>
                 </Grid>
             </Border>
