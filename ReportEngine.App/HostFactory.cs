@@ -134,6 +134,7 @@ public class HostFactory
         services.AddScoped<IStandService, StandService>();
         services.AddScoped<IProjectService, ProjectService>();
         services.AddScoped<IProjectDataLoaderService, ProjectDataLoaderSerive>();
+        services.AddScoped<ContainerService>();
     }
 
     private static void ConfigureReportsServices(IServiceCollection services)

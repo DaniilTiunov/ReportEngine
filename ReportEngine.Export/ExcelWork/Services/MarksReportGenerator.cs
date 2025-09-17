@@ -35,6 +35,8 @@ public class MarksReportGenerator : IReportGenerator
             ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
 
+            
+            ws.Cells().Style.Alignment.WrapText = true;
             ws.Columns().AdjustToContents();
 
             var savePath = SettingsManager.GetReportDirectory();

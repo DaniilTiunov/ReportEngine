@@ -44,6 +44,7 @@ namespace ReportEngine.Export.ExcelWork.Services
                 ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
 
                 ws.Columns().AdjustToContents();
+                ws.Cells().Style.Alignment.WrapText = true;
 
                 var savePath = SettingsManager.GetReportDirectory();
                 var fileName = "Ведомость_шильдиков_табличек___" + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + ".xlsx";
