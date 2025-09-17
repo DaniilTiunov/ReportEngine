@@ -8,19 +8,35 @@ namespace ReportEngine.Domain.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        // Внешний ключ на проект (опционально — контейнер привязан к проекту)
+
+        // Привязка к проекту (опционально)
         public int ProjectInfoId { get; set; }
+
         [ForeignKey(nameof(ProjectInfoId))]
-        public virtual ProjectInfo Project { get; set; }
-        // Имя ящика/контейнера
+        public virtual ProjectInfo? Project { get; set; }
+
+        // Код/имя упаковки (маркировка)
         public string? Name { get; set; }
-        public float? StandsWeight { get; set; }
-        public int? StandsCount { get; set; }
+
+        // Кол-во стендов в упаковке
+        public int StandsCount { get; set; }
+
+        // Суммарная масса стендов в упаковке (кг)
+        public float StandsWeight { get; set; }
+
+        // Вес контейнера/ящика (кг)
         public float? ContainerWeight { get; set; }
-        public string? Quary { get; set; }
-        // Дополнительное описание 
+
+        // Описание
         public string? Description { get; set; }
-        // Набор стендов внутри этого контейнера
+
+        // Ссылка на партию (batch)
+        public int? ContainerBatchId { get; set; }
+
+        [ForeignKey(nameof(ContainerBatchId))]
+        public virtual ContainerBatch? Batch { get; set; }
+
+        // Список стендов внутри упаковки
         public virtual ICollection<Stand> Stands { get; set; } = new List<Stand>();
     }
 }

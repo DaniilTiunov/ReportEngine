@@ -1,6 +1,8 @@
-﻿using ReportEngine.App.Model.StandsModel;
+﻿using ReportEngine.App.Model.Container;
+using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using System.Collections.ObjectModel;
 
@@ -14,13 +16,15 @@ public class StandService : IStandService
     private readonly IFrameRepository _formedFrameRepository;
     private readonly INotificationService _notificationService;
     private readonly IProjectInfoRepository _projectRepository;
+    private readonly IContainerRepository _containerRepository;
 
     public StandService(IProjectInfoRepository projectRepository,
         IFrameRepository frameRepository,
         IFormedDrainagesRepository drainagesRepository,
         INotificationService notificationService,
         IFormedAdditionalEquipsRepository formedAdditionalEquipsRepository,
-        IFormedElectricalRepository formedElectricalRepository)
+        IFormedElectricalRepository formedElectricalRepository,
+        IContainerRepository containerRepository)
     {
         _projectRepository = projectRepository;
         _formedFrameRepository = frameRepository;
@@ -28,6 +32,7 @@ public class StandService : IStandService
         _notificationService = notificationService;
         _formedAdditionalEquipsRepository = formedAdditionalEquipsRepository;
         _formedElectricalRepository = formedElectricalRepository;
+        _containerRepository = containerRepository;
     }
 
     public async Task<IEnumerable<FormedFrame>> LoadAllAvailableFrameAsync()
@@ -265,5 +270,66 @@ public class StandService : IStandService
     public async Task DeleteDrainagePurposeAsync(int purposeId)
     {
         await _formedDrainagesRepository.DeletePurposeAsync(purposeId);
+    }
+
+    public async Task<ContainerBatchModel> CreateBatchAsync(ContainerBatchModel batchModel)
+    {
+        var entity = ContainerMapper.ToEntity(batchModel);
+        await _containerRepository.AddAsync(entity);
+
+        // загружаем обратно с контейнерами, чтобы вернуть корректный объект с идентификаторами
+        var loaded = await _containerRepository.GetByIdWithContainersAsync(entity.Id);
+        var result = ContainerMapper.ToModel(loaded);
+        _notificationService.ShowInfo("Партия упаковок создана");
+        return result;
+    }
+
+    public async Task DeleteBatchAsync(int batchId)
+    {
+        await _containerRepository.DeleteByIdAsync(batchId);
+        _notificationService.ShowInfo("Партия удалена");
+    }
+
+    public async Task<IEnumerable<ContainerBatchModel>> GetBatchesByProjectAsync(int projectId)
+    {
+        var batches = await _containerRepository.GetAllByProjectIdAsync(projectId);
+        return batches.Select(ContainerMapper.ToModel);
+    }
+
+    public async Task<ContainerBatchModel> GetBatchWithContainersAsync(int batchId)
+    {
+        var batch = await _containerRepository.GetByIdWithContainersAsync(batchId);
+        return ContainerMapper.ToModel(batch);
+    }
+
+    public async Task AddContainerToBatchAsync(int batchId, ContainerStandModel containerModel)
+    {
+        var entity = containerModel.ToEntity();
+        await _containerRepository.AddContainerToBatchAsync(batchId, entity);
+        _notificationService.ShowInfo("Упаковка добавлена в партию");
+    }
+
+    public async Task RemoveContainerFromBatchAsync(int batchId, int containerId)
+    {
+        await _containerRepository.RemoveContainerFromBatchAsync(batchId, containerId);
+        _notificationService.ShowInfo("Упаковка удалена из партии");
+    }
+
+    public async Task DeleteContainerAsync(int containerId)
+    {
+        await _containerRepository.DeleteContainerAsync(containerId);
+        _notificationService.ShowInfo("Контейнер удалён");
+    }
+
+    public async Task AddStandToContainerAsync(int containerId, int standId)
+    {
+        await _containerRepository.AddStandToContainerAsync(containerId, standId);
+        _notificationService.ShowInfo("Стенд привязан к упаковке");
+    }
+
+    public async Task RemoveStandFromContainerAsync(int containerId, int standId)
+    {
+        await _containerRepository.RemoveStandFromContainerAsync(containerId, standId);
+        _notificationService.ShowInfo("Стенд удалён из упаковки");
     }
 }

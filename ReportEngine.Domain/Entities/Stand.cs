@@ -14,6 +14,7 @@ public class Stand
 
     [ForeignKey("ProjectInfoId")] public virtual ProjectInfo Project { get; set; }
 
+
     public int Number { get; set; } // Нопер ПП
     public string? KKSCode { get; set; } // Код ККС
     public string? Design { get; set; } // Обозначение стэнда
@@ -31,6 +32,7 @@ public class Stand
     public string? KMCH { get; set; } // КМЧ
     public string? DesigneStand { get; set; } //Описание
     public string? Comments { get; set; } // Комментарий
+    public int? ContainerStandId { get; set; }
 
     public byte[]? ImageData { get; set; } // Изображение
 

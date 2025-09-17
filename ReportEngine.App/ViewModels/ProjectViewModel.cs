@@ -21,6 +21,15 @@ namespace ReportEngine.App.ViewModels;
 
 public class ProjectViewModel : BaseViewModel
 {
+    private readonly IContainerRepository _containerRepository;
+
+    private ObservableCollection<ContainerBatch> _containerBatches = new();
+    private ContainerBatch? _selectedBatch;
+    private ObservableCollection<ContainerStand> _batchContainers = new();
+    private ContainerStand? _selectedContainer;
+    private ObservableCollection<Stand> _selectedContainerStands = new();
+    private ContainerStand _newContainer = new();
+
     private readonly ICalculationService _calculationService;
     private readonly IDialogService _dialogService;
     private readonly INotificationService _notificationService;
@@ -29,6 +38,50 @@ public class ProjectViewModel : BaseViewModel
     private readonly IProjectService _projectService;
     private readonly IReportService _reportService;
     private readonly IStandService _standService;
+
+    public ObservableCollection<ContainerBatch> ContainerBatches
+    {
+        get => _containerBatches;
+        set => Set(ref _containerBatches, value);
+    }
+
+    public ContainerBatch? SelectedBatch
+    {
+        get => _selectedBatch;
+        set
+        {
+            if (Set(ref _selectedBatch, value))
+                _ = LoadContainersForSelectedBatchAsync();
+        }
+    }
+
+    public ObservableCollection<ContainerStand> BatchContainers
+    {
+        get => _batchContainers;
+        set => Set(ref _batchContainers, value);
+    }
+
+    public ContainerStand? SelectedContainer
+    {
+        get => _selectedContainer;
+        set
+        {
+            if (Set(ref _selectedContainer, value))
+                _ = LoadStandsForSelectedContainerAsync();
+        }
+    }
+
+    public ObservableCollection<Stand> SelectedContainerStands
+    {
+        get => _selectedContainerStands;
+        set => Set(ref _selectedContainerStands, value);
+    }
+
+    public ContainerStand NewContainer
+    {
+        get => _newContainer;
+        set => Set(ref _newContainer, value);
+    }
 
     public ProjectViewModel(IProjectInfoRepository projectRepository,
         IDialogService dialogService,
@@ -733,6 +786,5 @@ public class ProjectViewModel : BaseViewModel
             Process.Start("explorer.exe", reportDir);
         }
     }
-
     #endregion
 }
