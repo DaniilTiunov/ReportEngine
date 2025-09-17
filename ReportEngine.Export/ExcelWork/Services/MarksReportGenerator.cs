@@ -62,30 +62,39 @@ public class MarksReportGenerator : IReportGenerator
 
     private void FillWorksheetTable(IXLWorksheet ws, ProjectInfo project)
     {
-        //формируем все нуеобходимые записи
+        //формируем все необходимые записи
         var allRecords = project.Stands
-            .SelectMany(stand => stand.ObvyazkiInStand
-                .SelectMany(obvyazka => CreateObvyazkaRecords(obvyazka, stand)))
+            .SelectMany(
+                stand => stand.ObvyazkiInStand,
+                (stand,obv) => new
+                {
+                    selectedStand = stand,
+                    obvyazka = obv
+                })
+            .SelectMany(obvInfo => CreateObvyazkaRecords(obvInfo.obvyazka, obvInfo.selectedStand))
             .ToList();
 
         var recordNumber = 1;
         const int recordRowOffset = 2;
 
+
+        //выводим сформированный список
         foreach (var item in allRecords)
         {
             var upperRecordRow = recordNumber * recordRowOffset;
             var lowerRecordRow = upperRecordRow + 1;
 
-            // Объединение ячеек для номера записи
+
             ws.Range($"A{upperRecordRow}:A{lowerRecordRow}").Merge().Value = recordNumber;
 
-            // Объединение ячеек для standKKS
-            ws.Range($"B{upperRecordRow}:B{lowerRecordRow}").Merge().Value = item.StandKKS;
 
-            // Объединение ячеек для sensorKKS
+            ws.Range($"B{upperRecordRow}:B{lowerRecordRow}").Merge().Value = $"{item.StandKKS} ({item.StandSerialNumber})";
+
+
+
             ws.Range($"C{upperRecordRow}:C{lowerRecordRow}").Merge().Value = item.SensorKKS;
 
-            // Запись разных значений в D (без объединения)
+
             ws.Cell($"D{upperRecordRow}").Value = item.SensorMarkPlus;
             ws.Cell($"D{lowerRecordRow}").Value = item.SensorMarkMinus;
 
@@ -99,19 +108,25 @@ public class MarksReportGenerator : IReportGenerator
         var resultRecords = new List<RecordData>();
 
         if (obvyazka.FirstSensorKKS != null)
-            resultRecords.Add(new RecordData(stand.KKSCode,
+            resultRecords.Add(new RecordData(
+                stand.SerialNumber ?? "",
+                stand.KKSCode ?? "",
                 obvyazka.FirstSensorKKS,
                 obvyazka.FirstSensorMarkPlus ?? "",
                 obvyazka.FirstSensorMarkMinus ?? ""));
 
         if (obvyazka.SecondSensorKKS != null)
-            resultRecords.Add(new RecordData(stand.KKSCode,
+            resultRecords.Add(new RecordData(
+                stand.SerialNumber ?? "",
+                stand.KKSCode ?? "",
                 obvyazka.SecondSensorKKS,
                 obvyazka.SecondSensorMarkPlus ?? "",
                 obvyazka.SecondSensorMarkMinus ?? ""));
 
         if (obvyazka.ThirdSensorKKS != null)
-            resultRecords.Add(new RecordData(stand.KKSCode,
+            resultRecords.Add(new RecordData(
+                stand.SerialNumber ?? "",
+                stand.KKSCode ?? "",
                 obvyazka.ThirdSensorKKS,
                 obvyazka.ThirdSensorMarkPlus ?? "",
                 obvyazka.ThirdSensorMarkMinus ?? ""));
@@ -119,16 +134,20 @@ public class MarksReportGenerator : IReportGenerator
         return resultRecords;
     }
 
+
     //структура для одной записи таблицы
     public struct RecordData
     {
+        public string StandSerialNumber;
         public string StandKKS;
         public string SensorKKS;
         public string SensorMarkPlus;
         public string SensorMarkMinus;
 
-        public RecordData(string standKKS, string sensorKKS, string sensorMarkPlus, string sensorMarkMinus)
+
+        public RecordData(string standSerialNumber, string standKKS, string sensorKKS, string sensorMarkPlus, string sensorMarkMinus)
         {
+            StandSerialNumber = standSerialNumber;
             StandKKS = standKKS;
             SensorKKS = sensorKKS;
             SensorMarkPlus = sensorMarkPlus;
