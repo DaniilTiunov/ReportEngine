@@ -15,6 +15,6 @@ namespace ReportEngine.Domain.Entities
         public int? ContainersCount { get; set; }
         public int? StandsCount { get; set; }
         // Набор упаковок внутри этого контейнера
-        public virtual ICollection<ContainerStand> Container { get; set; } = new List<ContainerStand>();
+        public virtual ICollection<ContainerStand> Containers { get; set; } = new List<ContainerStand>();
     }
 }

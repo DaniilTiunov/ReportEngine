@@ -105,7 +105,8 @@ public partial class TreeProjectView : UserControl, IDisposable
                 "Stand" => new StandView(_projectViewModel),
                 "StandObv" => new StandObvView(_projectViewModel),
                 "FrameDrainages" => new FrameDrainagesView(_projectViewModel),
-                "ProjectPreview" => new ProjectPreview(_projectViewModel)
+                "ProjectPreview" => new ProjectPreview(_projectViewModel),
+                "StandsContainer" => new StandsContainerView(_projectViewModel),
             };
 
             return control;
