@@ -27,6 +27,7 @@ public class ComponentsListReportGenerator : IReportGenerator
         {
             int standNumber = 1;
 
+            //заполняем листы по стендам
             foreach (var stand in project.Stands)
             {
                 var ws = wb.Worksheets.Add($"{standNumber}");
@@ -34,21 +35,30 @@ public class ComponentsListReportGenerator : IReportGenerator
                 CreateStandTableHeader(ws, stand);
                 await FillStandTable(ws, stand);
 
+                standNumber++;
+            }
 
+
+            //заполняем сводную ведомость
+            var lastSheet = wb.Worksheets.Add("Сводная заявка");
+
+            CreateCommonListTableHeader(lastSheet, project);
+            FillCommonListTable(lastSheet, project);
+
+
+
+
+            //применяем оформление ко всему документу
+
+            foreach (var ws in wb.Worksheets)
+            {
                 ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
 
                 ws.Cells().Style.Alignment.WrapText = true;
                 ws.Columns().AdjustToContents();
 
-                standNumber++;
             }
-
-            var lastSheet = wb.Worksheets.Add("Сводная заявка");
-
-            CreateCommonListTableHeader(lastSheet, project);
-            FillCommonListTable(lastSheet, project);
-
 
 
             var savePath = SettingsManager.GetReportDirectory();
@@ -123,7 +133,7 @@ public class ComponentsListReportGenerator : IReportGenerator
         headerRange.Style.Font.SetBold();
 
     }
-    
+
     #endregion
 
 
@@ -151,7 +161,7 @@ public class ComponentsListReportGenerator : IReportGenerator
             .Select(group => (
                 name: group.Key ?? dbErrorString,
                 unit: group.First().units ?? dbErrorString,
-                quantity: group.Sum(pipe => pipe.length) ?? 0f
+                quantity: group.Sum(pipe => pipe.length).ToString() ?? dbErrorString
             ))
             .ToList();
 
@@ -168,7 +178,7 @@ public class ComponentsListReportGenerator : IReportGenerator
             .Select(group => (
                 name: group.Key ?? dbErrorString,
                 unit: group.First().units ?? dbErrorString,
-                quantity: group.Sum(arm => arm.quantity) ?? 0f
+                quantity: group.Sum(arm => arm.quantity).ToString() ?? dbErrorString
             ))
             .ToList();
 
@@ -187,7 +197,7 @@ public class ComponentsListReportGenerator : IReportGenerator
             .Select(group => (
                 name: group.Key ?? dbErrorString,
                 unit: group.First().units ?? dbErrorString,
-                quantity: group.Sum(item => item.quantity)
+                quantity: group.Sum(item => item.quantity).ToString() ?? dbErrorString
             ))
             .ToList();
 
@@ -204,7 +214,7 @@ public class ComponentsListReportGenerator : IReportGenerator
             .Select(group => (
                 name: group.Key ?? dbErrorString,
                 unit: group.First().units ?? dbErrorString,
-                quantity: group.Sum(item => item.quantity) ?? 0f
+                quantity: group.Sum(item => item.quantity).ToString() ?? dbErrorString
             ))
             .ToList();
 
@@ -217,7 +227,7 @@ public class ComponentsListReportGenerator : IReportGenerator
             .Select(group => (
                 name: group.Key ?? dbErrorString,
                 unit: group.First().Measure ?? dbErrorString,
-                quantity: group.Sum(groupElement => groupElement.Quantity) ?? 0f
+                quantity: group.Sum(groupElement => groupElement.Quantity).ToString() ?? dbErrorString
             ))
             .ToList();
 
@@ -228,17 +238,18 @@ public class ComponentsListReportGenerator : IReportGenerator
         var framesCollection = await _projectInfoRepository.GetAllFramesInStandAsync(stand.Id);
 
         var framesList = framesCollection
-            .SelectMany(fr => fr.Frame.Components.Select(comp => new
+            .SelectMany(fr => fr.Frame.Components)
+            .Select(comp => new
             {
                 name = comp.ComponentType,
                 unit = comp.Measure,
                 quantity = comp.Count
-            }))
+            })
             .GroupBy(frameComp => frameComp.name)
             .Select(group => (
                 name: group.Key ?? dbErrorString,
                 unit: group.First().unit ?? dbErrorString,
-                quantity: (float)group.Sum(frameComp => frameComp.quantity)
+                quantity: group.Sum(frameComp => frameComp.quantity).ToString() ?? dbErrorString
             ))
             .ToList();
 
@@ -255,7 +266,7 @@ public class ComponentsListReportGenerator : IReportGenerator
             .Select(group => (
                 name: group.Key ?? dbErrorString,
                 unit: group.First().Measure ?? dbErrorString,
-                quantity: group.Sum(groupElement => groupElement.Quantity) ?? 0f
+                quantity: group.Sum(groupElement => groupElement.Quantity).ToString() ?? dbErrorString
             ))
             .ToList();
 
@@ -268,7 +279,7 @@ public class ComponentsListReportGenerator : IReportGenerator
             .Select(group => (
                 name: group.Key ?? dbErrorString,
                 unit: group.First().Measure ?? dbErrorString,
-                quantity: group.Sum(item => item.Quantity) ?? 0f
+                quantity: group.Sum(item => item.Quantity).ToString() ?? dbErrorString
             ))
             .ToList();
 
@@ -282,7 +293,7 @@ public class ComponentsListReportGenerator : IReportGenerator
             .Select(group => (
                 name: group.Key ?? dbErrorString,
                 unit: group.First().Measure ?? dbErrorString,
-                quantity: group.Sum(item => item.Quantity) ?? 0f
+                quantity: group.Sum(item => item.Quantity).ToString() ?? dbErrorString
             ))
             .Except(sensorsHolders);
 
@@ -314,7 +325,7 @@ public class ComponentsListReportGenerator : IReportGenerator
         activeRow = FillSubtableData(activeRow, framesList, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Кронштейны", ws);
-    
+
         activeRow = FillSubtableData(activeRow, sensorsHolders, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Электрические компоненты", ws);
@@ -353,7 +364,7 @@ public class ComponentsListReportGenerator : IReportGenerator
     }
 
     //Заполняет подтаблицу и возвращает следующую строку
-    private int FillSubtableData(int startRow, List<(string name, string unit, float quantity)> items, IXLWorksheet ws)
+    private int FillSubtableData(int startRow, List<(string name, string unit, string quantity)> items, IXLWorksheet ws)
     {
         var currentRow = startRow;
         foreach (var item in items)
@@ -365,7 +376,7 @@ public class ComponentsListReportGenerator : IReportGenerator
         }
 
         return currentRow;
-    } 
+    }
 
     #endregion
 }
