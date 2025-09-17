@@ -380,7 +380,7 @@ public class StandModel : BaseViewModel
     }
 
     // KKS первого датчика (контур)
-    public string? FirstSensorKKSCounter
+    public string? FirstSensorKKS
     {
         get => _firsSensorKksCode;
         set => Set(ref _firsSensorKksCode, value);
@@ -408,7 +408,7 @@ public class StandModel : BaseViewModel
     }
 
     // KKS второго датчика
-    public string? SecondSensorKKSCounter
+    public string? SecondSensorKKS
     {
         get => _secondSensorKksCode;
         set => Set(ref _secondSensorKksCode, value);
