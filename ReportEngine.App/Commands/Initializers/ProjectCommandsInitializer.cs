@@ -1,4 +1,6 @@
-﻿using ReportEngine.App.ViewModels;
+﻿using ReportEngine.App.Commands.Providers;
+using ReportEngine.App.ViewModels;
+using System.Windows.Input;
 
 namespace ReportEngine.App.Commands.Initializers
 {
@@ -49,7 +51,7 @@ namespace ReportEngine.App.Commands.Initializers
                 new RelayCommand(vm.OnCreateMarksReportCommandExecuted, vm.CanAllCommandsExecute);
 
             vm.ProjectCommandProvider.CreateNameplatesReportCommand =
-                   new RelayCommand(vm.OnCreateNameplatesReportCommandExecuted, vm.CanAllCommandsExecute);
+                new RelayCommand(vm.OnCreateNameplatesReportCommandExecuted, vm.CanAllCommandsExecute);
 
             vm.ProjectCommandProvider.DeleteSelectedStandCommand =
                 new RelayCommand(vm.OnDeleteSelectedStandFromProjectExecuted, vm.CanAllCommandsExecute);
@@ -83,6 +85,27 @@ namespace ReportEngine.App.Commands.Initializers
 
             vm.ProjectCommandProvider.SaveObvCommand =
                 new RelayCommand(vm.OnSaveObvCommandExecuted, vm.CanAllCommandsExecute);
+
+            vm.ProjectCommandProvider.CreateContainerBatchCommand =
+                new RelayCommand(vm.OnCreateContainerStandCommandExecuted, vm.CanAllCommandsExecute);
+
+            vm.ProjectCommandProvider.RefreshBatchesCommand = 
+                new RelayCommand(vm.OnRefreshBatchesCommandCommandExecuted, vm.CanAllCommandsExecute);
+
+            vm.ProjectCommandProvider.AddContainerToBatchCommand = 
+                new RelayCommand(vm.OnAddContainerToBatchCommandExecuted, vm.CanAllCommandsExecute);
+
+            vm.ProjectCommandProvider.DeleteContainerCommand = 
+                new RelayCommand(vm.OnDeleteContainerCommandExecuted, vm.CanAllCommandsExecute);
+
+            vm.ProjectCommandProvider.DeleteBatchCommand =
+                new RelayCommand(vm.OnDeleteBatchCommandExecuted, vm.CanAllCommandsExecute);
+
+            vm.ProjectCommandProvider.AddStandToContainerCommand = 
+                new RelayCommand(vm.OnAddStandToContainerCommandExecuted, vm.CanAllCommandsExecute);
+
+            vm.ProjectCommandProvider.RemoveStandFromContainerCommand = 
+                new RelayCommand(vm.OnRemoveStandFromContainerCommandExecuted, vm.CanAllCommandsExecute);
         }
 
         public static void InitializeGenericCommands(ProjectViewModel vm)

@@ -80,14 +80,25 @@ public class ProjectModel : BaseViewModel
 
     private StandModel? _stand;
 
+
+    private ObservableCollection<ContainerStand> _containerStandsInProject = new();
+    private ObservableCollection<ContainerBatch> _containerBathInProject = new();
+
+    private ContainerStand? _containerStand;
+    private ContainerBatch? _containerBatch;
+
+    private ContainerStand? _selectedContainerStand;
+    private ContainerBatch? _selectedContainerBatch;
+
     #endregion
 
     #region Публичные свойства
-
     public IEnumerable<string> Statuses { get; set; } =
         new List<string> { "Расчёт", "ТКП", "Производство", "Завершен" };
 
     public int CurrentProjectId;
+    private ObservableCollection<StandModel> _standsInContainer;
+
     public ObservableCollection<StandModel> Stands { get; set; } = new();
 
     public StandModel? SelectedStand
@@ -204,6 +215,47 @@ public class ProjectModel : BaseViewModel
         get => _isGalvanized;
         set => Set(ref _isGalvanized, value);
     } //Оцинковка
+
+    // Упаковка
+    public ObservableCollection<ContainerStand> ContainerStandsInProject
+    { 
+        get => _containerStandsInProject; 
+        set => Set(ref _containerStandsInProject, value);
+    }// Упаковки
+    public ObservableCollection<ContainerBatch> ContainerBatchesInProject
+    { 
+        get => _containerBathInProject; 
+        set => Set(ref _containerBathInProject, value);
+    }// Партии
+
+    public ObservableCollection<StandModel> StandsInContainer
+    {
+        get => _standsInContainer;
+        set => Set(ref _standsInContainer, value);
+    }
+
+    public ContainerStand? ContainerStand 
+    { 
+        get => _containerStand; 
+        set => Set(ref _containerStand, value); 
+    }// Упаковка
+    public ContainerBatch? ContainerBatch 
+    {
+        get => _containerBatch;
+        set => Set(ref _containerBatch, value);
+    }// Партия
+
+    public ContainerStand? SelectedContainerStand 
+    { 
+        get => _selectedContainerStand; 
+        set => Set(ref _selectedContainerStand, value);
+    }// Выбранная упаковка
+    public ContainerBatch? SelectedContainerBatch 
+    { 
+        get => _selectedContainerBatch;
+        set => Set(ref _selectedContainerBatch, value);
+    }// Выбранная партия
+
 
     #endregion
 }

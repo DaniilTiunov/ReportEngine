@@ -21,10 +21,8 @@ public interface IStandService
     Task<ObvyazkaInStand> CreateObvyazkaAsync(StandModel standModel, Obvyazka selectedObvyazka);
     Task UpdateElectricalPurposeAsync(ElectricalPurpose entity);
     Task DeleteElectricalPurposeAsync(int purposeId);
-
     Task UpdateAdditionalPurposeAsync(AdditionalEquipPurpose entity);
     Task DeleteAdditionalPurposeAsync(int purposeId);
-
     Task UpdateDrainagePurposeAsync(DrainagePurpose entity);
     Task DeleteDrainagePurposeAsync(int purposeId);
 }

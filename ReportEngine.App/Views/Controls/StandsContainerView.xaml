@@ -9,94 +9,189 @@
     FontSize="16"
     Foreground="{DynamicResource PrimaryForeground}"
     mc:Ignorable="d">
-    <Grid>
+    <Grid Margin="6">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="150" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
+        <!--  Partitions / Batches  -->
         <GroupBox
             Grid.Row="0"
             Grid.Column="0"
             Margin="5"
-            Padding="5">
-            <GroupBox.Header>
-                <TextBlock>
-                    <Run Text="Упаковка проекта" />
-                    <Run
-                        FontSize="14"
-                        FontWeight="Bold"
-                        Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(ошибка привязки)'}" />
-                </TextBlock>
-            </GroupBox.Header>
-            <DataGrid
-                CanUserAddRows="True"
-                ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}"
-                SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedElectricalComponent}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Purpose}" Header="Упаковок" />
-                    <DataGridTextColumn Binding="{Binding Material}" Header="Стендов" />
-                </DataGrid.Columns>
-            </DataGrid>
+            Padding="5"
+            Header="Очереди">
+            <DockPanel LastChildFill="True">
+                <!--  Убраны кнопки сверху. Управление через контекстное меню на DataGrid  -->
+                <DataGrid
+                    AutoGenerateColumns="False"
+                    CanUserAddRows="True"
+                    CanUserDeleteRows="True"
+                    ItemsSource="{Binding CurrentProjectModel.ContainerBatchesInProject}"
+                    SelectedItem="{Binding CurrentProjectModel.SelectedContainerBatch}">
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding ProjectCommandProvider.CreateContainerBatchCommand}" Header="Добавить очередь" />
+                            <Separator />
+                            <MenuItem Command="{Binding ProjectCommandProvider.RefreshBatchesCommand}" Header="Обновить список" />
+                            <Separator />
+                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteBatchCommand}" Header="Удалить очередь" />
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn
+                            Width="80"
+                            Binding="{Binding BatchOrder}"
+                            Header="№" />
+                        <DataGridTextColumn
+                            Width="120"
+                            Binding="{Binding ContainersCount}"
+                            Header="Упаковок" />
+                        <DataGridTextColumn
+                            Width="100"
+                            Binding="{Binding StandsCount}"
+                            Header="Стендов" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
         </GroupBox>
 
+        <!--  Containers in selected batch  -->
         <GroupBox
             Grid.Row="0"
             Grid.Column="1"
             Margin="5"
-            Padding="5">
-            <GroupBox.Header>
-                <TextBlock>
-                    <Run Text="Упаковка очередь — " />
-                    <Run
-                        FontSize="14"
-                        FontWeight="Bold"
-                        Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(ошибка привязки)'}" />
-                </TextBlock>
-            </GroupBox.Header>
-            <DataGrid
-                CanUserAddRows="True"
-                ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}"
-                SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedElectricalComponent}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Purpose}" Header="Упаковка" />
-                    <DataGridTextColumn Binding="{Binding Material}" Header="Стендов" />
-                    <DataGridTextColumn Binding="{Binding Quantity}" Header="Масса стендов" />
-                    <DataGridTextColumn Binding="{Binding Measure}" Header="Масса" />
-                    <DataGridTextColumn Binding="{Binding CostPerUnit}" Header="Ширина" />
-                </DataGrid.Columns>
-            </DataGrid>
+            Padding="5"
+            Header="Контейнеры партии">
+            <DockPanel LastChildFill="True">
+                <!--  Поля для ввода оставлены для быстрого создания, но можно добавлять строки прямо в DataGrid  -->
+
+                <DataGrid
+                    AutoGenerateColumns="False"
+                    CanUserAddRows="True"
+                    CanUserDeleteRows="True"
+                    IsReadOnly="False"
+                    ItemsSource="{Binding CurrentProjectModel.ContainerStandsInProject}"
+                    SelectedItem="{Binding CurrentProjectModel.SelectedContainerStand}">
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding ProjectCommandProvider.AddContainerToBatchCommand}" Header="Добавить упаковку в очередь" />
+                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteContainerCommand}" Header="Удалить контейнер" />
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Name}" Header="Упаковка" />
+                        <DataGridTextColumn
+                            Width="120"
+                            Binding="{Binding StandsCount}"
+                            Header="Стендов" />
+                        <DataGridTextColumn
+                            Width="120"
+                            Binding="{Binding StandsWeight}"
+                            Header="Масса стендов" />
+                        <DataGridTextColumn
+                            Width="120"
+                            Binding="{Binding ContainerWeight}"
+                            Header="Масса" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
         </GroupBox>
 
+        <!--  Stands in selected container and project stands to pick from  -->
         <GroupBox
             Grid.Row="0"
             Grid.Column="2"
             Margin="5"
-            Padding="5">
-            <GroupBox.Header>
-                <TextBlock>
-                    <Run Text="Стенды упаковки — ИМЯ " />
-                    <Run
-                        FontSize="14"
-                        FontWeight="Bold"
-                        Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(ошибка привязки)'}" />
-                </TextBlock>
-            </GroupBox.Header>
-            <DataGrid
-                CanUserAddRows="True"
-                ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}"
-                SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedElectricalComponent}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Purpose}" Header="KKS-код стенда" />
-                    <DataGridTextColumn Binding="{Binding Material}" Header="Серийный номер" />
-                    <DataGridTextColumn Binding="{Binding Quantity}" Header="Ширина" />
-                </DataGrid.Columns>
-            </DataGrid>
+            Padding="5"
+            Header="Стенды и назначение в контейнер">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock
+                    Margin="4"
+                    FontWeight="Bold"
+                    Text="Стенды внутри контейнера" />
+                <DataGrid
+                    Grid.Row="0"
+                    Margin="4,24,4,4"
+                    AutoGenerateColumns="False"
+                    CanUserAddRows="False"
+                    CanUserDeleteRows="False"
+                    IsReadOnly="True"
+                    ItemsSource="{Binding CurrentProjectModel.StandsInContainer}"
+                    SelectedItem="{Binding CurrentProjectModel.SelectedContainerStand}">
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding DataContext.ProjectCommandProvider.RemoveStandFromContainerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" Header="Удалить стенд из контейнера" />
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn
+                            Width="80"
+                            Binding="{Binding NN}"
+                            Header="NN" />
+                        <DataGridTextColumn Binding="{Binding KKSCode}" Header="KKS" />
+                        <DataGridTextColumn
+                            Width="140"
+                            Binding="{Binding SerialNumber}"
+                            Header="Серийный №" />
+                        <DataGridTextColumn
+                            Width="100"
+                            Binding="{Binding Width}"
+                            Header="Ширина" />
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <StackPanel
+                    Grid.Row="1"
+                    Margin="0,6"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+                    <!--  Кнопки убраны: добавление стенда делается через контекстное меню на списке стендов проекта  -->
+                </StackPanel>
+
+                <GroupBox
+                    Grid.Row="2"
+                    Margin="4"
+                    Header="Стенды проекта (выберите для привязки)">
+                    <DataGrid
+                        AutoGenerateColumns="False"
+                        CanUserAddRows="False"
+                        ItemsSource="{Binding CurrentProjectModel.Stands}"
+                        SelectedItem="{Binding CurrentProjectModel.SelectedStand}">
+                        <DataGrid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding ProjectCommandProvider.AddStandToContainerCommand}" Header="Добавить выбранный стенд в контейнер" />
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding KKSCode}" Header="KKS" />
+                            <DataGridTextColumn
+                                Width="140"
+                                Binding="{Binding SerialNumber}"
+                                Header="Серийный №" />
+                            <DataGridTextColumn
+                                Width="80"
+                                Binding="{Binding NN}"
+                                Header="Ширина" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+            </Grid>
         </GroupBox>
     </Grid>
 </UserControl>
