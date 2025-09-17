@@ -326,7 +326,7 @@
                         Grid.Row="1"
                         Grid.Column="1"
                         Margin="0,0,5,5"
-                        Text="{Binding CurrentProjectModel.SelectedStand.FirstSensorKKSCounter}" />
+                        Text="{Binding CurrentProjectModel.SelectedStand.FirstSensorKKS}" />
 
                     <TextBlock
                         Grid.Row="2"
@@ -401,7 +401,7 @@
                         Grid.Row="1"
                         Grid.Column="1"
                         Margin="0,0,5,5"
-                        Text="{Binding CurrentProjectModel.SelectedStand.SecondSensorKKSCounter}" />
+                        Text="{Binding CurrentProjectModel.SelectedStand.SecondSensorKKS}" />
 
                     <TextBlock
                         Grid.Row="2"
