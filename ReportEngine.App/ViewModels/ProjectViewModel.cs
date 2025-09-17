@@ -4,7 +4,7 @@ using ReportEngine.App.Commands.Providers;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
-using ReportEngine.App.Services;
+using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
@@ -32,6 +32,7 @@ public class ProjectViewModel : BaseViewModel
     private readonly IProjectService _projectService;
     private readonly IReportService _reportService;
     private readonly IStandService _standService;
+    private readonly ContainerService _containerService;
 
     public ProjectViewModel(IProjectInfoRepository projectRepository,
         IDialogService dialogService,
@@ -40,7 +41,8 @@ public class ProjectViewModel : BaseViewModel
         IProjectService projectService,
         IProjectDataLoaderService projectDataLoaderService,
         IReportService reportService,
-        ICalculationService calculationService)
+        ICalculationService calculationService,
+        ContainerService containerService)
     {
         _projectRepository = projectRepository;
         _dialogService = dialogService;
@@ -50,6 +52,7 @@ public class ProjectViewModel : BaseViewModel
         _projectDataLoaderService = projectDataLoaderService;
         _reportService = reportService;
         _calculationService = calculationService;
+        _containerService = containerService;
 
         InitializeCommands();
         InitializeTime();
@@ -356,32 +359,37 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnCreateContainerStandCommandExecuted(object obj)
     {
-        await ExceptionHelper.SafeExecuteAsync(CreateBatchAsync);
+        await ExceptionHelper.SafeExecuteAsync(async() => await _containerService.CreateBatchAsync(CurrentProjectModel));
     }
 
     public async void OnRefreshBatchesCommandCommandExecuted(object obj)
     {
-        await ExceptionHelper.SafeExecuteAsync(LoadBatchesAsync);
+        //await ExceptionHelper.SafeExecuteAsync(_containerService.LoadBatchesAsync);
     }
 
     public async void OnAddContainerToBatchCommandExecuted(object obj)
     {
-        await ExceptionHelper.SafeExecuteAsync(AddContainerToBatchAsync);
+        //await ExceptionHelper.SafeExecuteAsync(_containerService.AddContainerToBatchAsync);
     }
 
     public async void OnDeleteContainerCommandExecuted(object obj)
     {
-        await ExceptionHelper.SafeExecuteAsync(RemoveContainerFromBatchAsync);
+        //await ExceptionHelper.SafeExecuteAsync(_containerService.RemoveContainerFromBatchAsync);
     }
 
     public async void OnAddStandToContainerCommandExecuted(object obj)
     {
-        await ExceptionHelper.SafeExecuteAsync(AddStandToContainerAsync);
+        //await ExceptionHelper.SafeExecuteAsync(_containerService.AddStandToContainerAsync);
     }
 
     public async void OnRemoveStandFromContainerCommandExecuted(object obj)
     {
-        await ExceptionHelper.SafeExecuteAsync(RemoveStandFromContainerAsync);
+        //await ExceptionHelper.SafeExecuteAsync(_containerService.RemoveStandFromContainerAsync);
+    }
+
+    public async void OnDeleteBatchCommandExecuted(object obj)
+    {
+        //await ExceptionHelper.SafeExecuteAsync(_containerService.DeleteBanchAsync);
     }
 
     public void ResetProject()
@@ -766,187 +774,5 @@ public class ProjectViewModel : BaseViewModel
             Process.Start("explorer.exe", reportDir);
         }
     }
-    #endregion
-
-    public async Task CreateBatchAsync()
-    {
-        if (CurrentProjectModel == null || CurrentProjectModel.CurrentProjectId == 0)
-        {
-            _notificationService.ShowInfo("Сначала создайте проект");
-            return;
-        }
-
-        try
-        {
-            // Определяем следующий номер партии
-            var existing = CurrentProjectModel.ContainerBatchesInProject ?? new ObservableCollection<ContainerBatch>();
-            var nextOrder = existing.Any() ? existing.Max(b => b.BatchOrder) + 1 : 1;
-
-            var batch = new ContainerBatch
-            {
-                ProjectInfoId = CurrentProjectModel.CurrentProjectId,
-                Name = $"Партия {nextOrder}",
-                BatchOrder = nextOrder,
-                ContainersCount = 0,
-                StandsCount = 0
-            };
-
-            var created = await _projectService.CreateBatchAsync(batch);
-
-            // Добавляем в коллекцию VM и выбираем новую партию
-            if (CurrentProjectModel.ContainerBatchesInProject == null)
-                CurrentProjectModel.ContainerBatchesInProject = new ObservableCollection<ContainerBatch>();
-
-            CurrentProjectModel.ContainerBatchesInProject.Add(created);
-            CurrentProjectModel.SelectedContainerBatch = created;
-
-            _notificationService.ShowInfo("Партия создана");
-        }
-        catch (Exception ex)
-        {
-            _notificationService.ShowError($"Ошибка при создании партии: {ex.Message}");
-        }
-    }
-    // Загрузить партии проекта
-    public async Task LoadBatchesAsync()
-    {
-        if (CurrentProjectModel == null || CurrentProjectModel.CurrentProjectId == 0)
-            return;
-
-        try
-        {
-            var batches = await _projectService.GetBatchesByProjectAsync(CurrentProjectModel.CurrentProjectId);
-            CurrentProjectModel.ContainerBatchesInProject = new ObservableCollection<ContainerBatch>(batches ?? Enumerable.Empty<ContainerBatch>());
-            CurrentProjectModel.SelectedContainerBatch = CurrentProjectModel.ContainerBatchesInProject.FirstOrDefault();
-        }
-        catch (Exception ex)
-        {
-            _notificationService.ShowError($"Ошибка при загрузке партий: {ex.Message}");
-        }
-    }
-
-    // Добавить упаковку (ContainerStand) в выбранную партию
-    public async Task AddContainerToBatchAsync()
-    {
-        if (CurrentProjectModel == null)
-        {
-            _notificationService.ShowInfo("Проект не загружен");
-            return;
-        }
-
-        var batch = CurrentProjectModel.SelectedContainerBatch;
-        if (batch == null)
-        {
-            _notificationService.ShowInfo("Выберите партию");
-            return;
-        }
-
-        var container = CurrentProjectModel.ContainerStand ?? new ContainerStand();
-        container.ProjectInfoId = CurrentProjectModel.CurrentProjectId;
-        container.ContainerBatchId = batch.Id;
-
-        try
-        {
-            await _projectService.AddContainerToBatchAsync(batch.Id, container);
-
-            // Обновим коллекции — проще перечитать партии
-            await LoadBatchesAsync();
-
-            // Выбрать ту же партию (по Id)
-            CurrentProjectModel.SelectedContainerBatch = CurrentProjectModel.ContainerBatchesInProject.FirstOrDefault(b => b.Id == batch.Id);
-
-            // Сброс формы ввода контейнера
-            CurrentProjectModel.ContainerStand = new ContainerStand();
-
-            _notificationService.ShowInfo("Контейнер добавлен в партию");
-        }
-        catch (Exception ex)
-        {
-            _notificationService.ShowError($"Ошибка при добавлении контейнера: {ex.Message}");
-        }
-    }
-
-    // Удалить упаковку из партии (используется контекстное меню)
-    public async Task RemoveContainerFromBatchAsync()
-    {
-        if (CurrentProjectModel?.SelectedContainerBatch == null || CurrentProjectModel.SelectedContainerStand == null)
-        {
-            _notificationService.ShowInfo("Выберите партию и контейнер");
-            return;
-        }
-
-        try
-        {
-            await _projectService.RemoveContainerFromBatchAsync(CurrentProjectModel.SelectedContainerBatch.Id, CurrentProjectModel.SelectedContainerStand.Id);
-
-            // Перезагрузить партии/контейнеры
-            await LoadBatchesAsync();
-
-            _notificationService.ShowInfo("Контейнер удалён из партии");
-        }
-        catch (Exception ex)
-        {
-            _notificationService.ShowError($"Ошибка при удалении контейнера: {ex.Message}");
-        }
-    }
-
-    // Добавить стенд в выбранную упаковку
-    public async Task AddStandToContainerAsync()
-    {
-        if (CurrentProjectModel?.SelectedContainerBatch == null)
-        {
-            _notificationService.ShowInfo("Выберите партию/контейнер");
-            return;
-        }
-
-        if (CurrentProjectModel.SelectedStand == null)
-        {
-            _notificationService.ShowInfo("Выберите стенд в списке проекта");
-            return;
-        }
-
-        // Берём первый контейнер из выбранной партии (или можно выбирать конкретный контейнер через UI)
-        var container = CurrentProjectModel.SelectedContainerBatch.Containers?.FirstOrDefault();
-        if (container == null)
-        {
-            _notificationService.ShowInfo("В выбранной партии нет контейнеров. Добавьте контейнер.");
-            return;
-        }
-
-        try
-        {
-            await _projectService.AddStandToContainerAsync(container.Id, CurrentProjectModel.SelectedStand.Id);
-
-            // Перезагрузим партии чтобы обновить данные
-            await LoadBatchesAsync();
-
-            _notificationService.ShowInfo("Стенд добавлен в контейнер");
-        }
-        catch (Exception ex)
-        {
-            _notificationService.ShowError($"Ошибка при привязке стенда: {ex.Message}");
-        }
-    }
-
-    public async Task RemoveStandFromContainerAsync()
-    {
-        if (CurrentProjectModel?.SelectedContainerStand == null)
-        {
-            _notificationService.ShowInfo("Выберите контейнер и стенд");
-            return;
-        }
-
-        try
-        {
-            await _projectService.RemoveStandFromContainerAsync(CurrentProjectModel.SelectedContainerStand.Id, CurrentProjectModel.SelectedStand.Id);
-
-            await LoadBatchesAsync();
-
-            _notificationService.ShowInfo("Стенд удалён из контейнера");
-        }
-        catch (Exception ex)
-        {
-            _notificationService.ShowError($"Ошибка при удалении стенда из контейнера: {ex.Message}");
-        }
-    }
+    #endregion   
 }

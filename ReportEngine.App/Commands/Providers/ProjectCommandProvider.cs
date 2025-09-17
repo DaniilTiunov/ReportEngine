@@ -38,7 +38,9 @@ public class ProjectCommandProvider
     public ICommand CreateContainerBatchCommand { get; set; }
     public ICommand RefreshBatchesCommand { get; set; }
     public ICommand AddContainerToBatchCommand { get; set; }
-    public ICommand  DeleteContainerCommand { get; set; }
+    public ICommand DeleteContainerCommand { get; set; }
+    public ICommand DeleteBatchCommand { get; set; }
+
     public ICommand AddStandToContainerCommand { get; set; }
     public ICommand RemoveStandFromContainerCommand { get; set; }
     public ICommand Bind(ICommand command, Action<object> execute, Func<object, bool> canExecute = null)

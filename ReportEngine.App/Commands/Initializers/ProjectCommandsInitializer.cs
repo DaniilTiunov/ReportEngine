@@ -51,7 +51,7 @@ namespace ReportEngine.App.Commands.Initializers
                 new RelayCommand(vm.OnCreateMarksReportCommandExecuted, vm.CanAllCommandsExecute);
 
             vm.ProjectCommandProvider.CreateNameplatesReportCommand =
-                   new RelayCommand(vm.OnCreateNameplatesReportCommandExecuted, vm.CanAllCommandsExecute);
+                new RelayCommand(vm.OnCreateNameplatesReportCommandExecuted, vm.CanAllCommandsExecute);
 
             vm.ProjectCommandProvider.DeleteSelectedStandCommand =
                 new RelayCommand(vm.OnDeleteSelectedStandFromProjectExecuted, vm.CanAllCommandsExecute);
@@ -97,6 +97,9 @@ namespace ReportEngine.App.Commands.Initializers
 
             vm.ProjectCommandProvider.DeleteContainerCommand = 
                 new RelayCommand(vm.OnDeleteContainerCommandExecuted, vm.CanAllCommandsExecute);
+
+            vm.ProjectCommandProvider.DeleteBatchCommand =
+                new RelayCommand(vm.OnDeleteBatchCommandExecuted, vm.CanAllCommandsExecute);
 
             vm.ProjectCommandProvider.AddStandToContainerCommand = 
                 new RelayCommand(vm.OnAddStandToContainerCommandExecuted, vm.CanAllCommandsExecute);

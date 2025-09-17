@@ -38,6 +38,10 @@
                     <DataGrid.ContextMenu>
                         <ContextMenu>
                             <MenuItem Command="{Binding ProjectCommandProvider.CreateContainerBatchCommand}" Header="Добавить очередь" />
+                            <Separator />
+                            <MenuItem Command="{Binding ProjectCommandProvider.RefreshBatchesCommand}" Header="Обновить список" />
+                            <Separator />
+                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteBatchCommand}" Header="Удалить очередь" />
                         </ContextMenu>
                     </DataGrid.ContextMenu>
                     <DataGrid.Columns>
@@ -77,7 +81,7 @@
                     SelectedItem="{Binding CurrentProjectModel.SelectedContainerStand}">
                     <DataGrid.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Command="{Binding ProjectCommandProvider.AddContainerToBatchCommand}" Header="Добавить контейнер (сохранить поля ввода)" />
+                            <MenuItem Command="{Binding ProjectCommandProvider.AddContainerToBatchCommand}" Header="Добавить упаковку в очередь" />
                             <MenuItem Command="{Binding ProjectCommandProvider.DeleteContainerCommand}" Header="Удалить контейнер" />
                         </ContextMenu>
                     </DataGrid.ContextMenu>
@@ -126,8 +130,8 @@
                     CanUserAddRows="False"
                     CanUserDeleteRows="False"
                     IsReadOnly="True"
-                    ItemsSource="{Binding CurrentProjectModel.SelectedContainerStand.Stands}"
-                    SelectedItem="{Binding CurrentProjectModel.SelectedStandInContainer}">
+                    ItemsSource="{Binding CurrentProjectModel.StandsInContainer}"
+                    SelectedItem="{Binding CurrentProjectModel.SelectedContainerStand}">
                     <DataGrid.ContextMenu>
                         <ContextMenu>
                             <MenuItem Command="{Binding DataContext.ProjectCommandProvider.RemoveStandFromContainerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" Header="Удалить стенд из контейнера" />

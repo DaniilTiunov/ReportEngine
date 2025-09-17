@@ -97,6 +97,7 @@ public class ProjectModel : BaseViewModel
         new List<string> { "Расчёт", "ТКП", "Производство", "Завершен" };
 
     public int CurrentProjectId;
+    private ObservableCollection<StandModel> _standsInContainer;
 
     public ObservableCollection<StandModel> Stands { get; set; } = new();
 
@@ -226,6 +227,12 @@ public class ProjectModel : BaseViewModel
         get => _containerBathInProject; 
         set => Set(ref _containerBathInProject, value);
     }// Партии
+
+    public ObservableCollection<StandModel> StandsInContainer
+    {
+        get => _standsInContainer;
+        set => Set(ref _standsInContainer, value);
+    }
 
     public ContainerStand? ContainerStand 
     { 
