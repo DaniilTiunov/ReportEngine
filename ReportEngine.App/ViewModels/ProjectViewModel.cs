@@ -4,6 +4,7 @@ using ReportEngine.App.Commands.Providers;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
+using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
@@ -21,6 +22,8 @@ namespace ReportEngine.App.ViewModels;
 
 public class ProjectViewModel : BaseViewModel
 {
+    private readonly IContainerRepository _containerRepository;
+
     private readonly ICalculationService _calculationService;
     private readonly IDialogService _dialogService;
     private readonly INotificationService _notificationService;
@@ -29,6 +32,7 @@ public class ProjectViewModel : BaseViewModel
     private readonly IProjectService _projectService;
     private readonly IReportService _reportService;
     private readonly IStandService _standService;
+    private readonly ContainerService _containerService;
 
     public ProjectViewModel(IProjectInfoRepository projectRepository,
         IDialogService dialogService,
@@ -37,7 +41,8 @@ public class ProjectViewModel : BaseViewModel
         IProjectService projectService,
         IProjectDataLoaderService projectDataLoaderService,
         IReportService reportService,
-        ICalculationService calculationService)
+        ICalculationService calculationService,
+        ContainerService containerService)
     {
         _projectRepository = projectRepository;
         _dialogService = dialogService;
@@ -47,6 +52,7 @@ public class ProjectViewModel : BaseViewModel
         _projectDataLoaderService = projectDataLoaderService;
         _reportService = reportService;
         _calculationService = calculationService;
+        _containerService = containerService;
 
         InitializeCommands();
         InitializeTime();
@@ -349,6 +355,41 @@ public class ProjectViewModel : BaseViewModel
                             _standService.UpdateDrainagePurposeAsync,
                             "Дренажное комплектующее сохранено");
         });
+    }
+
+    public async void OnCreateContainerStandCommandExecuted(object obj)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async() => await _containerService.CreateBatchAsync(CurrentProjectModel));
+    }
+
+    public async void OnRefreshBatchesCommandCommandExecuted(object obj)
+    {
+        //await ExceptionHelper.SafeExecuteAsync(_containerService.LoadBatchesAsync);
+    }
+
+    public async void OnAddContainerToBatchCommandExecuted(object obj)
+    {
+        //await ExceptionHelper.SafeExecuteAsync(_containerService.AddContainerToBatchAsync);
+    }
+
+    public async void OnDeleteContainerCommandExecuted(object obj)
+    {
+        //await ExceptionHelper.SafeExecuteAsync(_containerService.RemoveContainerFromBatchAsync);
+    }
+
+    public async void OnAddStandToContainerCommandExecuted(object obj)
+    {
+        //await ExceptionHelper.SafeExecuteAsync(_containerService.AddStandToContainerAsync);
+    }
+
+    public async void OnRemoveStandFromContainerCommandExecuted(object obj)
+    {
+        //await ExceptionHelper.SafeExecuteAsync(_containerService.RemoveStandFromContainerAsync);
+    }
+
+    public async void OnDeleteBatchCommandExecuted(object obj)
+    {
+        //await ExceptionHelper.SafeExecuteAsync(_containerService.DeleteBanchAsync);
     }
 
     public void ResetProject()
@@ -733,6 +774,5 @@ public class ProjectViewModel : BaseViewModel
             Process.Start("explorer.exe", reportDir);
         }
     }
-
-    #endregion
+    #endregion   
 }

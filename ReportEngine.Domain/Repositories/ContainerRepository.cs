@@ -23,16 +23,7 @@ public class ContainerRepository : IContainerRepository
     public async Task DeleteAsync(ContainerBatch entity)
     {
         if (entity == null) return;
-        var existing = await _context.Set<ContainerBatch>()
-            .Include(b => b.Containers)
-            .FirstOrDefaultAsync(b => b.Id == entity.Id);
-
-        if (existing != null)
-        {
-            // Удаляем связанные контейнеры только если это ожидаемо — здесь просто удаляем партию
-            _context.Set<ContainerBatch>().Remove(existing);
-            await _context.SaveChangesAsync();
-        }
+        await DeleteByIdAsync(entity.Id);
     }
 
     public async Task<IEnumerable<ContainerBatch>> GetAllAsync()
@@ -59,12 +50,40 @@ public class ContainerRepository : IContainerRepository
         await _context.SaveChangesAsync();
     }
 
+    // Удаление партии + всех контейнеров в ней (без удаления стендов — только отвязка)
     public async Task<int> DeleteByIdAsync(int id)
     {
-        var entity = await _context.Set<ContainerBatch>().FindAsync(id);
-        if (entity == null) return 0;
-        _context.Set<ContainerBatch>().Remove(entity);
+        // Транзакция для консистентности
+        using var tx = await _context.Database.BeginTransactionAsync();
+
+        var batch = await _context.ContainersBatch
+            .Include(b => b.Containers)
+                .ThenInclude(c => c.Stands)
+            .FirstOrDefaultAsync(b => b.Id == id);
+
+        if (batch == null) return 0;
+
+        // Для каждой упаковки: отвязать стенды и удалить упаковку
+        foreach (var container in batch.Containers.ToList())
+        {
+            // Отвязать стенды — не удалять сами стенды
+            var stands = await _context.Stands.Where(s => s.ContainerStandId == container.Id).ToListAsync();
+            foreach (var s in stands)
+            {
+                s.ContainerStandId = null;
+                _context.Stands.Update(s);
+            }
+
+            // Удаляем контейнер
+            _context.ContainersStand.Remove(container);
+        }
+
+        // Удаляем саму партию
+        _context.ContainersBatch.Remove(batch);
+
         await _context.SaveChangesAsync();
+        await tx.CommitAsync();
+
         return 1;
     }
 
@@ -80,6 +99,7 @@ public class ContainerRepository : IContainerRepository
     {
         return await _context.ContainersBatch
             .Include(b => b.Containers)
+                .ThenInclude(c => c.Stands)
             .Where(b => b.ProjectInfoId == projectId)
             .AsNoTracking()
             .ToListAsync();
@@ -89,15 +109,177 @@ public class ContainerRepository : IContainerRepository
     {
         var batch = await _context.ContainersBatch
             .Include(b => b.Containers)
+                .ThenInclude(c => c.Stands)
             .FirstOrDefaultAsync(b => b.Id == batchId);
 
         if (batch == null)
             throw new ArgumentException($"Batch with ID {batchId} not found.");
 
-        // Если контейнер уже отсутсвует в контексте — добавляем
+        // Защита от двойного добавления:
+        // если в партии уже есть контейнер с тем же Id или тем же Name — пропускаем добавление
+        if (container.Id != 0 && batch.Containers.Any(c => c.Id == container.Id))
+            return;
+
+        if (!string.IsNullOrEmpty(container.Name) && batch.Containers.Any(c => c.Name == container.Name))
+            return;
+
+        container.ContainerBatchId = batchId;
+
+        // Добавляем контейнер в БД и в коллекцию партии
         await _context.ContainersStand.AddAsync(container);
         batch.Containers.Add(container);
 
+        // Обновляем счётчики партии
+        batch.ContainersCount = batch.Containers.Count;
+        batch.StandsCount = batch.Containers.Sum(c => c.StandsCount);
+
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task RemoveContainerFromBatchAsync(int batchId, int containerId)
+    {
+        var batch = await _context.ContainersBatch
+            .Include(b => b.Containers)
+                .ThenInclude(c => c.Stands)
+            .FirstOrDefaultAsync(b => b.Id == batchId);
+
+        if (batch == null)
+            throw new ArgumentException($"Batch with ID {batchId} not found.");
+
+        var container = batch.Containers.FirstOrDefault(c => c.Id == containerId);
+        if (container == null)
+            return;
+
+        // отвязываем стенды внутри контейнера (обнуляем их ContainerStandId)
+        var stands = await _context.Stands.Where(s => s.ContainerStandId == containerId).ToListAsync();
+        foreach (var s in stands)
+        {
+            s.ContainerStandId = null;
+            _context.Stands.Update(s);
+        }
+
+        // удаляем контейнер
+        _context.ContainersStand.Remove(container);
+        batch.Containers.Remove(container);
+
+        // обновляем счётчики партии
+        batch.ContainersCount = batch.Containers.Count;
+        batch.StandsCount = batch.Containers.Sum(c => c.StandsCount);
+
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task AddStandToContainerAsync(int containerId, int standId)
+    {
+        var container = await _context.ContainersStand
+            .Include(c => c.Stands)
+            .FirstOrDefaultAsync(c => c.Id == containerId);
+        if (container == null) throw new ArgumentException($"Container with ID {containerId} not found.");
+
+        var stand = await _context.Stands.FirstOrDefaultAsync(s => s.Id == standId);
+        if (stand == null) throw new ArgumentException($"Stand with ID {standId} not found.");
+
+        // Защита от двойной привязки
+        if (stand.ContainerStandId == containerId)
+            return;
+
+        // Привязываем
+        stand.ContainerStandId = containerId;
+        _context.Stands.Update(stand);
+
+        // Обновляем контейнерные данные
+        if (!container.Stands.Any(s => s.Id == standId))
+            container.Stands.Add(stand);
+
+        container.StandsCount = container.Stands.Count;
+        container.StandsWeight = container.Stands.Sum(s => s.Weight);
+
+        // Обновляем родительскую партию (если есть)
+        if (container.ContainerBatchId.HasValue)
+        {
+            var batch = await _context.ContainersBatch
+                .Include(b => b.Containers)
+                    .ThenInclude(c => c.Stands)
+                .FirstOrDefaultAsync(b => b.Id == container.ContainerBatchId.Value);
+
+            if (batch != null)
+            {
+                batch.ContainersCount = batch.Containers.Count;
+                batch.StandsCount = batch.Containers.Sum(c => c.StandsCount);
+            }
+        }
+
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task RemoveStandFromContainerAsync(int containerId, int standId)
+    {
+        var container = await _context.ContainersStand
+            .Include(c => c.Stands)
+            .FirstOrDefaultAsync(c => c.Id == containerId);
+        if (container == null) throw new ArgumentException($"Container with ID {containerId} not found.");
+
+        var stand = container.Stands.FirstOrDefault(s => s.Id == standId);
+        if (stand == null) return;
+
+        // Отвязка стенда
+        stand.ContainerStandId = null;
+        _context.Stands.Update(stand);
+
+        container.Stands.Remove(stand);
+        container.StandsCount = container.Stands.Count;
+        container.StandsWeight = container.Stands.Sum(s => s.Weight);
+
+        // Обновляем родительскую партию (если есть)
+        if (container.ContainerBatchId.HasValue)
+        {
+            var batch = await _context.ContainersBatch
+                .Include(b => b.Containers)
+                    .ThenInclude(c => c.Stands)
+                .FirstOrDefaultAsync(b => b.Id == container.ContainerBatchId.Value);
+
+            if (batch != null)
+            {
+                batch.ContainersCount = batch.Containers.Count;
+                batch.StandsCount = batch.Containers.Sum(c => c.StandsCount);
+            }
+        }
+
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteContainerAsync(int containerId)
+    {
+        var container = await _context.ContainersStand
+            .Include(c => c.Stands)
+            .FirstOrDefaultAsync(c => c.Id == containerId);
+        if (container == null) return;
+
+        // Отвязать стенды
+        var stands = container.Stands.ToList();
+        foreach (var s in stands)
+        {
+            s.ContainerStandId = null;
+            _context.Stands.Update(s);
+        }
+
+        // Если контейнер был в партии, обновим партию
+        if (container.ContainerBatchId.HasValue)
+        {
+            var batch = await _context.ContainersBatch
+                .Include(b => b.Containers)
+                    .ThenInclude(c => c.Stands)
+                .FirstOrDefaultAsync(b => b.Id == container.ContainerBatchId.Value);
+
+            if (batch != null)
+            {
+                batch.Containers.Remove(container);
+                batch.ContainersCount = batch.Containers.Count;
+                batch.StandsCount = batch.Containers.Sum(c => c.StandsCount);
+            }
+        }
+
+        _context.ContainersStand.Remove(container);
         await _context.SaveChangesAsync();
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ReportEngine.Domain.Database.Context;
@@ -11,9 +12,11 @@ using ReportEngine.Domain.Database.Context;
 namespace ReportEngine.Domain.Migrations
 {
     [DbContext(typeof(ReAppContext))]
-    partial class ReAppContextModelSnapshot : ModelSnapshot
+    [Migration("20250917053136_ContainersBatchUpdatesJoska")]
+    partial class ContainersBatchUpdatesJoska
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1053,7 +1056,7 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float>("Clamp")
                         .HasColumnType("real");
 
-                    b.Property<string>("FirstSensorDescription")
+                    b.Property<string>("FirstDescription")
                         .HasColumnType("text");
 
                     b.Property<string>("FirstSensorKKS")
@@ -1108,7 +1111,7 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<int>("OtherLineCount")
                         .HasColumnType("integer");
 
-                    b.Property<string>("SecondSensorDescription")
+                    b.Property<string>("SecondDescription")
                         .HasColumnType("text");
 
                     b.Property<string>("SecondSensorKKS")
@@ -1133,7 +1136,7 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<int>("StandId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("ThirdSensorDescription")
+                    b.Property<string>("ThirdDescription")
                         .HasColumnType("text");
 
                     b.Property<string>("ThirdSensorKKS")
@@ -1682,9 +1685,7 @@ namespace ReportEngine.Domain.Migrations
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.ContainerStand", b =>
                 {
-
                     b.HasOne("ReportEngine.Domain.Entities.ContainerBatch", "Batch")
-
                         .WithMany("Containers")
                         .HasForeignKey("ContainerBatchId");
 

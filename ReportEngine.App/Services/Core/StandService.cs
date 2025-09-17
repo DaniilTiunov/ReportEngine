@@ -14,13 +14,15 @@ public class StandService : IStandService
     private readonly IFrameRepository _formedFrameRepository;
     private readonly INotificationService _notificationService;
     private readonly IProjectInfoRepository _projectRepository;
+    private readonly IContainerRepository _containerRepository;
 
     public StandService(IProjectInfoRepository projectRepository,
         IFrameRepository frameRepository,
         IFormedDrainagesRepository drainagesRepository,
         INotificationService notificationService,
         IFormedAdditionalEquipsRepository formedAdditionalEquipsRepository,
-        IFormedElectricalRepository formedElectricalRepository)
+        IFormedElectricalRepository formedElectricalRepository,
+        IContainerRepository containerRepository)
     {
         _projectRepository = projectRepository;
         _formedFrameRepository = frameRepository;
@@ -28,6 +30,7 @@ public class StandService : IStandService
         _notificationService = notificationService;
         _formedAdditionalEquipsRepository = formedAdditionalEquipsRepository;
         _formedElectricalRepository = formedElectricalRepository;
+        _containerRepository = containerRepository;
     }
 
     public async Task<IEnumerable<FormedFrame>> LoadAllAvailableFrameAsync()
@@ -265,5 +268,5 @@ public class StandService : IStandService
     public async Task DeleteDrainagePurposeAsync(int purposeId)
     {
         await _formedDrainagesRepository.DeletePurposeAsync(purposeId);
-    }
+    }    
 }
