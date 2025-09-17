@@ -39,8 +39,7 @@ public class ReAppContext : DbContext
     public DbSet<CabelProduction> CabelProductions { get; set; } //Кабельная продукция
     public DbSet<CabelProtection> CabelProtections { get; set; } //Средства прокладки и защиты кабеля
     public DbSet<Heater> Heaters { get; set; } //Обогрев
-    public DbSet<Other> Others { get; set; } //Прочие
-    
+    public DbSet<Other> Others { get; set; } //Прочие   
     public DbSet<Container> Containers { get; set; } //Тара
 
     //Обвязки
@@ -69,7 +68,6 @@ public class ReAppContext : DbContext
     // Дополнительные комплектующие
     public DbSet<FormedAdditionalEquip> FormedAdditionalEquips { get; set; }
     public DbSet<AdditionalEquipPurpose> AdditionalEquipPurposes { get; set; }
-
     public DbSet<StandAdditionalEquip> StandAdditionalEquips { get; set; }
 
     //Остальные сущности
@@ -78,5 +76,6 @@ public class ReAppContext : DbContext
     public DbSet<Company> Companies { get; set; }
     public DbSet<Stand> Stands { get; set; }
 
-    public DbSet<ContainerStand> ContainerStand { get; set; } // Ящики с стендами
+    public DbSet<ContainerStand> ContainersStand { get; set; } // Ящики с стендами
+    public DbSet<ContainerBatch> ContainersBatch { get; set; } // Ящики с стендами
 }

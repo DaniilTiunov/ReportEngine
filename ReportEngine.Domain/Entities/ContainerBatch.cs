@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReportEngine.Domain.Entities
 {
-    public class ContainerStand
+    public class ContainerBatch
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -12,15 +12,9 @@ namespace ReportEngine.Domain.Entities
         public int ProjectInfoId { get; set; }
         [ForeignKey(nameof(ProjectInfoId))]
         public virtual ProjectInfo Project { get; set; }
-        // Имя ящика/контейнера
-        public string? Name { get; set; }
-        public float? StandsWeight { get; set; }
+        public int? ContainersCount { get; set; }
         public int? StandsCount { get; set; }
-        public float? ContainerWeight { get; set; }
-        public string? Quary { get; set; }
-        // Дополнительное описание 
-        public string? Description { get; set; }
-        // Набор стендов внутри этого контейнера
-        public virtual ICollection<Stand> Stands { get; set; } = new List<Stand>();
+        // Набор упаковок внутри этого контейнера
+        public virtual ICollection<ContainerStand> Container { get; set; } = new List<ContainerStand>();
     }
 }

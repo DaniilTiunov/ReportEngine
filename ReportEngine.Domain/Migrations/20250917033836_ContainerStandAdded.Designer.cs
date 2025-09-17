@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ReportEngine.Domain.Database.Context;
@@ -11,9 +12,11 @@ using ReportEngine.Domain.Database.Context;
 namespace ReportEngine.Domain.Migrations
 {
     [DbContext(typeof(ReAppContext))]
-    partial class ReAppContextModelSnapshot : ModelSnapshot
+    [Migration("20250917033836_ContainerStandAdded")]
+    partial class ContainerStandAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -288,30 +291,6 @@ namespace ReportEngine.Domain.Migrations
                     b.ToTable("Companies");
                 });
 
-            modelBuilder.Entity("ReportEngine.Domain.Entities.ContainerBatch", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("ContainersCount")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProjectInfoId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("StandsCount")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectInfoId");
-
-                    b.ToTable("ContainersBatch");
-                });
-
             modelBuilder.Entity("ReportEngine.Domain.Entities.ContainerStand", b =>
                 {
                     b.Property<int>("Id")
@@ -319,9 +298,6 @@ namespace ReportEngine.Domain.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("ContainerBatchId")
-                        .HasColumnType("integer");
 
                     b.Property<float?>("ContainerWeight")
                         .HasColumnType("real");
@@ -335,9 +311,6 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<int>("ProjectInfoId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Quary")
-                        .HasColumnType("text");
-
                     b.Property<int?>("StandsCount")
                         .HasColumnType("integer");
 
@@ -346,11 +319,9 @@ namespace ReportEngine.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ContainerBatchId");
-
                     b.HasIndex("ProjectInfoId");
 
-                    b.ToTable("ContainersStand");
+                    b.ToTable("ContainerStand");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.Drainage.Drainage", b =>
@@ -1666,23 +1637,8 @@ namespace ReportEngine.Domain.Migrations
                     b.Navigation("FormedAdditionalEquip");
                 });
 
-            modelBuilder.Entity("ReportEngine.Domain.Entities.ContainerBatch", b =>
-                {
-                    b.HasOne("ReportEngine.Domain.Entities.ProjectInfo", "Project")
-                        .WithMany()
-                        .HasForeignKey("ProjectInfoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Project");
-                });
-
             modelBuilder.Entity("ReportEngine.Domain.Entities.ContainerStand", b =>
                 {
-                    b.HasOne("ReportEngine.Domain.Entities.ContainerBatch", null)
-                        .WithMany("Container")
-                        .HasForeignKey("ContainerBatchId");
-
                     b.HasOne("ReportEngine.Domain.Entities.ProjectInfo", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectInfoId")
@@ -1833,11 +1789,6 @@ namespace ReportEngine.Domain.Migrations
                     b.Navigation("Frame");
 
                     b.Navigation("Stand");
-                });
-
-            modelBuilder.Entity("ReportEngine.Domain.Entities.ContainerBatch", b =>
-                {
-                    b.Navigation("Container");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.ContainerStand", b =>

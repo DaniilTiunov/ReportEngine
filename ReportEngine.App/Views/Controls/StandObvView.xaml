@@ -5,8 +5,8 @@
     xmlns:converters="clr-namespace:ReportEngine.App.Display"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    FontSize="14"
     Background="{DynamicResource PrimaryColor}"
+    FontSize="14"
     Foreground="{DynamicResource PrimaryForeground}"
     mc:Ignorable="d">
 
@@ -569,8 +569,7 @@
                     Margin="5,5,5,5"
                     Padding="5"
                     Header="Обвязки стенда">
-                    <ListView ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}"
-                              SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand}">
+                    <ListView ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}" SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand}">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn
@@ -609,8 +608,7 @@
                         </ListView.View>
                         <ListView.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}"
-                                          Header="Удалить обвязку из стенда" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}" Header="Удалить обвязку из стенда" />
                                 <MenuItem Header="Копировать обвязку" />
                             </ContextMenu>
                         </ListView.ContextMenu>

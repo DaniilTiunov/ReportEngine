@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ReportEngine.App.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,10 @@ namespace ReportEngine.App.Views.Controls
     /// </summary>
     public partial class StandsContainerView : UserControl
     {
-        public StandsContainerView()
+        public StandsContainerView(ProjectViewModel projectViewModel)
         {
             InitializeComponent();
+            DataContext = projectViewModel;
         }
     }
 }
