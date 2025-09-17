@@ -221,17 +221,17 @@ public class StandService : IStandService
             FirstSensorKKS = standModel.FirstSensorKKS,
             FirstSensorMarkPlus = standModel.FirstSensorMarkPlus,
             FirstSensorMarkMinus = standModel.FirstSensorMarkMinus,
-            FirstDescription = standModel.FirstDescription,
+            FirstSensorDescription = standModel.FirstSensorDescription,
             SecondSensorType = standModel.SecondSensorType,
             SecondSensorKKS = standModel.SecondSensorKKS,
             SecondSensorMarkPlus = standModel.SecondSensorMarkPlus,
             SecondSensorMarkMinus = standModel.SecondSensorMarkMinus,
-            SecondDescription = standModel.SecondDescription,
+            SecondSensorDescription = standModel.SecondSensorDescription,
             ThirdSensorType = standModel.ThirdSensorType,
             ThirdSensorKKS = standModel.ThirdSensorKKS,
             ThirdSensorMarkPlus = standModel.ThirdSensorMarkPlus,
             ThirdSensorMarkMinus = standModel.ThirdSensorMarkMinus,
-            ThirdDescription = standModel.ThirdDescription
+            ThirdSensorDescription = standModel.ThirdSensorDescription
         };
 
         return Task.FromResult(entity);

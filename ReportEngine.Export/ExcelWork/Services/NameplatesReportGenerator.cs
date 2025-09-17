@@ -1,5 +1,4 @@
 ﻿using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Office.Y2022.FeaturePropertyBag;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
@@ -13,6 +12,7 @@ namespace ReportEngine.Export.ExcelWork.Services
     {
 
         private readonly IProjectInfoRepository _projectInfoRepository;
+
 
         public NameplatesReportGenerator(IProjectInfoRepository projectInfoRepository)
         {
@@ -34,8 +34,9 @@ namespace ReportEngine.Export.ExcelWork.Services
 
                 var ws = wb.Worksheets.Add("Sheet1");
 
-                var quantityInfo = FillWorksheetTable(ws, project);
-                CreateWorksheetTableHeader(ws, quantityInfo);
+                int maxTablesQuantity = FillWorksheetTable(ws, project);
+                CreateWorksheetTableHeader(ws, maxTablesQuantity);
+              
 
 
 
@@ -56,48 +57,53 @@ namespace ReportEngine.Export.ExcelWork.Services
         }
 
 
-        private void CreateWorksheetTableHeader(IXLWorksheet ws, (int maxTablesQuantity, int maxNameplatesQuantity) quantityInfo)
+        private void CreateWorksheetTableHeader(IXLWorksheet ws, int maxTablesQuantity)
         {
+
             const int headerRow = 1;
 
             int startColumn = 1;
+            int endColumn = startColumn;
+
 
             ws.Cell(headerRow, startColumn).Value = "№";
 
 
             //рассчитываем шапку для шильдиков
             startColumn = 2;
-            int endColumn = quantityInfo.maxTablesQuantity>0 ? startColumn+quantityInfo.maxTablesQuantity-1 : startColumn;
 
-            var startCell = ws.Cell(headerRow,startColumn);
-            var endCell = ws.Cell(headerRow, endColumn);
-         
-            var tablesHeaderArea = ws.Range(startCell,endCell).Merge();
-            tablesHeaderArea.Value = "Шильдик";
+            var nameplatesHeaderCell = ws.Cell(headerRow, startColumn);
+           
+            string nameplatesHeaderContent = "Шильдик (40х56)\n";
+            nameplatesHeaderContent += "ЭП-С.000.0000.001";
+            nameplatesHeaderCell.Value = nameplatesHeaderContent;
+
 
 
             //рассчитываем шапку для табличек
-            startColumn = endColumn + 1;
-            endColumn = quantityInfo.maxTablesQuantity > 0 ? startColumn + quantityInfo.maxNameplatesQuantity - 1 : startColumn;
+            startColumn = 3;
 
-            startCell = ws.Cell(headerRow, startColumn);
-            endCell = ws.Cell(headerRow, endColumn);
+            endColumn = maxTablesQuantity > 1 ?  startColumn + maxTablesQuantity - 1 : startColumn;
 
-            var nameplatesHeaderArea = ws.Range(startCell, endCell).Merge();
+            var startCell = ws.Cell(headerRow, startColumn);
+            var endCell = ws.Cell(headerRow, endColumn);
+
+            var tablesHeaderArea = ws.Range(startCell, endCell).Merge();
 
 
-            nameplatesHeaderArea.Value = "Табличка";
+            string tablesHeaderContent = "Табличка (26х80)\n";
+            tablesHeaderContent += "ЭП-С.000.0000.003";
+            tablesHeaderArea.Value = tablesHeaderContent;
 
         }
 
-        private (int maxTablesQuantity, int maxNameplatesQuantity) FillWorksheetTable(IXLWorksheet ws, ProjectInfo project)
+        private int FillWorksheetTable(IXLWorksheet ws, ProjectInfo project)
         {
+
 
             var stands = project.Stands;
 
             int maxTables = 0;
-            int maxNameplates = 0;
-
 
             int activeRow = 2;
             int standNumber = 1;
@@ -108,52 +114,44 @@ namespace ReportEngine.Export.ExcelWork.Services
                 ws.Cell("A" + activeRow).Value = standNumber;
 
 
+                //формируем текст шильдика
+                string standNameplateText = "Стенд датчиков КИПиА\n";
+                standNameplateText += $"{stand.KKSCode}\n";
+                standNameplateText += $"{stand.SerialNumber}\n";
+                standNameplateText += $"Дата: {DateTime.Now.ToString("MM.yyyy")}";
 
-                var standTables = stand.StandAdditionalEquips
-                    .SelectMany(equip => equip.AdditionalEquip.Purposes)
-                    .Where(purpose => purpose?.Material?.Contains("Табличка") ?? false);
+                
 
-                var standTablesStrings = standTables.Select(_ =>
-                {
-                    string standTableText = "Стенд датчиков КИПиА\n";
-                    standTableText += $"{stand.KKSCode}\n";
-                    standTableText += $"{stand.SerialNumber}\n";
-                    standTableText += $"Дата: {DateTime.Now.ToString("dd.MM.yyyy")}";
 
-                    return standTableText;
-                });
 
-                var standNameplates = stand.StandAdditionalEquips
-                                           .SelectMany(equip => equip.AdditionalEquip.Purposes)
-                                           .Where(purpose => purpose?.Material?.Contains("Шильдик") ?? false);
+                //формируем текста табличек
+                var standTablesStrings = stand.ObvyazkiInStand
+                    .SelectMany(obv=>CreateSensorsListFromObvyazka(obv))
+                    .Select(record =>
+                    {
+                        string nameplateText = $"{record.SensorDescription}\n";
+                        nameplateText += $"{record.SensorKKS}";
 
-                var standNameplatesStrings = standNameplates.Select(_ =>
-                {
-                    string standNameplateText = "Содержимое таблички\n";
-                    standNameplateText += $"{stand.KKSCode}\n";
-
-                    return standNameplateText;
-                });
+                        return nameplateText;
+                    });
+             
+                
 
 
 
                 int activeColumn = 2;
 
-                //растягиваем все найденные таблички вдоль строки
-                foreach (var tableString in standTablesStrings)
-                {
+                ws.Cell(activeRow, activeColumn).Value = standNameplateText;
+                activeColumn++;
 
-                    ws.Cell(activeRow, activeColumn).Value = tableString;
 
-                    activeColumn++;
-
-                }
+ 
 
                 //растягиваем все найденные шильдики вдоль строки после табличек
-                foreach (var nameplateString in standNameplatesStrings)
+                foreach (var tableText in standTablesStrings)
                 {
 
-                    ws.Cell(activeRow, activeColumn).Value = nameplateString;
+                    ws.Cell(activeRow, activeColumn).Value = tableText;
 
                     activeColumn++;
 
@@ -161,22 +159,62 @@ namespace ReportEngine.Export.ExcelWork.Services
 
 
                 maxTables = Math.Max(maxTables, standTablesStrings.Count());
-                maxNameplates = Math.Max(maxNameplates, standNameplatesStrings.Count());
 
                 standNumber++;
                 activeRow++;
             }
 
 
-            Debug.WriteLine($"maxTables: {maxTables}");
-            Debug.WriteLine($"maxNameplates: {maxNameplates}");
-
-
-
-            //отдаем максимум найденных табличек/шильдиков для построения шапки
-            return (maxTablesQuantity: maxTables,
-                    maxNameplatesQuantity: maxNameplates);
+            //отдаем максимум найденных табличек для построения шапки
+            return maxTables;
+                    
         }
+
+
+
+
+
+        private List<RecordData> CreateSensorsListFromObvyazka(ObvyazkaInStand obv)
+        {
+            var resultRecords = new List<RecordData>();
+
+            if (obv.FirstSensorKKS != null)
+                resultRecords.Add(new RecordData(
+                    sensorKKS: obv.FirstSensorKKS,
+                    sensorDescription: obv.FirstSensorDescription ?? ""));
+
+            if (obv.SecondSensorKKS != null)
+                resultRecords.Add(new RecordData(
+                   sensorKKS: obv.SecondSensorKKS,
+                   sensorDescription: obv.SecondSensorDescription ?? ""));
+
+            if (obv.ThirdSensorKKS != null)
+                resultRecords.Add(new RecordData(
+                  sensorKKS: obv.ThirdSensorKKS,
+                  sensorDescription: obv.ThirdSensorDescription ?? ""));
+
+            return resultRecords;
+        }
+
+
+
+        //структура для одной записи таблицы
+        public struct RecordData
+        {
+
+            public string SensorKKS;
+            public string SensorDescription;
+
+            public RecordData(string sensorKKS, string sensorDescription)
+            {
+                SensorKKS = sensorKKS;
+                SensorDescription = sensorDescription;
+            }
+        }
+
+
+
+
 
     }
 }

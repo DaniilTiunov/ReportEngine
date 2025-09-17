@@ -358,7 +358,7 @@
                         Height="40"
                         Margin="0,0,5,0"
                         AcceptsReturn="True"
-                        Text="{Binding CurrentProjectModel.SelectedStand.FirstDescription}"
+                        Text="{Binding CurrentProjectModel.SelectedStand.FirstSensorDescription}"
                         TextWrapping="Wrap" />
                 </Grid>
             </GroupBox>
@@ -433,7 +433,7 @@
                         Height="40"
                         Margin="0,0,5,0"
                         AcceptsReturn="True"
-                        Text="{Binding CurrentProjectModel.SelectedStand.SecondDescription}"
+                        Text="{Binding CurrentProjectModel.SelectedStand.SecondSensorDescription}"
                         TextWrapping="Wrap" />
                 </Grid>
             </GroupBox>
@@ -507,7 +507,7 @@
                         Height="40"
                         Margin="0,0,5,0"
                         AcceptsReturn="True"
-                        Text="{Binding CurrentProjectModel.SelectedStand.ThirdDescription}"
+                        Text="{Binding CurrentProjectModel.SelectedStand.ThirdSensorDescription}"
                         TextWrapping="Wrap" />
                 </Grid>
             </GroupBox>
