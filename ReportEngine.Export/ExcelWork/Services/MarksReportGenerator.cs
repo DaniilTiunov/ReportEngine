@@ -26,14 +26,16 @@ public class MarksReportGenerator : IReportGenerator
 
         using (var wb = new XLWorkbook())
         {
-            var ws = wb.Worksheets.Add("MainSheet");
+            var ws = wb.Worksheets.Add($"Проект");
 
             CreateWorksheetTableHeader(ws);
             FillWorksheetTable(ws, project);
 
-            ws.Columns().AdjustToContents();
+            
             ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+            ws.Columns().AdjustToContents();
 
             var savePath = SettingsManager.GetReportDirectory();
 
