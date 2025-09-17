@@ -30,10 +30,12 @@ public class ContainerReportGenerator : IReportGenerator
             CreateWorksheetTableHeader(ws);
             FillWorksheetTable(ws, project);
 
-            ws.Columns().AdjustToContents();
+            
             ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
 
+            ws.Cells().Style.Alignment.WrapText = true;
+            ws.Columns().AdjustToContents();
 
             var savePath = SettingsManager.GetReportDirectory();
 

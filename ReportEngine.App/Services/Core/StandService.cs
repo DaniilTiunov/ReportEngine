@@ -211,12 +211,16 @@ public class StandService : IStandService
             NN = standModel.NN,
             MaterialLine = standModel.MaterialLine,
             MaterialLineCount = standModel.MaterialLineCount,
+            MaterialLineMeasure = standModel.MaterialLineMeasure,
             Armature = standModel.Armature,
             ArmatureCount = standModel.ArmatureCount,
+            ArmatureMeasure = standModel.ArmatureMeasure,
             TreeSocket = standModel.TreeSocket,
             TreeSocketMaterialCount = standModel.TreeSocketMaterialCount,
+            TreeSocketMaterialMeasure = standModel.TreeSocketMaterialMeasure,
             KMCH = standModel.KMCH,
             KMCHCount = standModel.KMCHCount,
+            KMCHMeasure = standModel.KMCHMeasure,
             FirstSensorType = standModel.FirstSensorType,
             FirstSensorKKS = standModel.FirstSensorKKS,
             FirstSensorMarkPlus = standModel.FirstSensorMarkPlus,
@@ -232,6 +236,11 @@ public class StandService : IStandService
             ThirdSensorMarkPlus = standModel.ThirdSensorMarkPlus,
             ThirdSensorMarkMinus = standModel.ThirdSensorMarkMinus,
             ThirdSensorDescription = standModel.ThirdSensorDescription
+
+
+
+
+
         };
 
         return Task.FromResult(entity);
