@@ -49,17 +49,17 @@ public class ObvyazkaInStand
     public string? FirstSensorKKS { get; set; }
     public string? FirstSensorMarkPlus { get; set; }
     public string? FirstSensorMarkMinus { get; set; }
-    public string? FirstDescription { get; set; }
+    public string? FirstSensorDescription { get; set; }
 
     public string? SecondSensorType { get; set; }
     public string? SecondSensorKKS { get; set; }
     public string? SecondSensorMarkPlus { get; set; }
     public string? SecondSensorMarkMinus { get; set; }
-    public string? SecondDescription { get; set; }
+    public string? SecondSensorDescription { get; set; }
 
     public string? ThirdSensorType { get; set; }
     public string? ThirdSensorKKS { get; set; }
     public string? ThirdSensorMarkPlus { get; set; }
     public string? ThirdSensorMarkMinus { get; set; }
-    public string? ThirdDescription { get; set; }
+    public string? ThirdSensorDescription { get; set; }
 }
