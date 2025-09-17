@@ -1,5 +1,4 @@
-﻿using ReportEngine.App.Model.Container;
-using ReportEngine.App.Model.StandsModel;
+﻿using ReportEngine.App.Model.StandsModel;
 using ReportEngine.Domain.Entities;
 
 namespace ReportEngine.App.Services.Interfaces;
@@ -26,14 +25,4 @@ public interface IStandService
     Task DeleteAdditionalPurposeAsync(int purposeId);
     Task UpdateDrainagePurposeAsync(DrainagePurpose entity);
     Task DeleteDrainagePurposeAsync(int purposeId);
-
-    Task<ContainerBatchModel> CreateBatchAsync(ContainerBatchModel batchModel);
-    Task DeleteBatchAsync(int batchId);
-    Task<IEnumerable<ContainerBatchModel>> GetBatchesByProjectAsync(int projectId);
-    Task<ContainerBatchModel> GetBatchWithContainersAsync(int batchId);
-    Task AddContainerToBatchAsync(int batchId, ContainerStandModel containerModel);
-    Task RemoveContainerFromBatchAsync(int batchId, int containerId);
-    Task DeleteContainerAsync(int containerId);
-    Task AddStandToContainerAsync(int containerId, int standId);
-    Task RemoveStandFromContainerAsync(int containerId, int standId);
 }

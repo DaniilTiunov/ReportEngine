@@ -4,6 +4,7 @@ using ReportEngine.App.ModelWrappers;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Enums;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
 using System.Collections.ObjectModel;
@@ -14,13 +15,16 @@ public class ProjectService : IProjectService
 {
     private readonly INotificationService _notificationService;
     private readonly IProjectInfoRepository _projectRepository;
+    private readonly IContainerRepository _containerRepository;
 
     public ProjectService(
         IProjectInfoRepository projectRepository,
-        INotificationService notificationService)
+        INotificationService notificationService,
+        IContainerRepository containerRepository)
     {
         _projectRepository = projectRepository;
         _notificationService = notificationService;
+        _containerRepository = containerRepository;
     }
 
     public async Task CreateProjectAsync(ProjectModel projectModel)
@@ -128,5 +132,60 @@ public class ProjectService : IProjectService
     public async Task DeleteObvFromStandAsync(int standId, int obvyazkaInStandId)
     {
         await _projectRepository.DeleteObvFromStandAsync(standId, obvyazkaInStandId);
+    }
+
+    public async Task<ContainerBatch> CreateBatchAsync(ContainerBatch сontainerBatch)
+    {
+        await _containerRepository.AddAsync(сontainerBatch);
+
+        var loaded = await _containerRepository.GetByIdWithContainersAsync(сontainerBatch.Id);
+        _notificationService.ShowInfo("Партия упаковок создана");
+        return loaded;
+    }
+
+    public async Task DeleteBatchAsync(int batchId)
+    {
+        await _containerRepository.DeleteByIdAsync(batchId);
+        _notificationService.ShowInfo("Партия удалена");
+    }
+
+    public async Task<IEnumerable<ContainerBatch>> GetBatchesByProjectAsync(int projectId)
+    {
+        return await _containerRepository.GetAllByProjectIdAsync(projectId);
+    }
+
+    public async Task<ContainerBatch> GetBatchWithContainersAsync(int batchId)
+    {
+        return await _containerRepository.GetByIdWithContainersAsync(batchId);
+    }
+
+    public async Task AddContainerToBatchAsync(int batchId, ContainerStand containerModel)
+    {
+        await _containerRepository.AddContainerToBatchAsync(batchId, containerModel);
+        _notificationService.ShowInfo("Контейнер добавлен в партию");
+    }
+
+    public async Task RemoveContainerFromBatchAsync(int batchId, int containerId)
+    {
+        await _containerRepository.RemoveContainerFromBatchAsync(batchId, containerId);
+        _notificationService.ShowInfo("Контейнер удалён из партии");
+    }
+
+    public async Task DeleteContainerAsync(int containerId)
+    {
+        await _containerRepository  .DeleteContainerAsync(containerId);
+        _notificationService.ShowInfo("Контейнер удалён");
+    }
+
+    public async Task AddStandToContainerAsync(int containerId, int standId)
+    {
+        await _containerRepository.AddStandToContainerAsync(containerId, standId);
+        _notificationService.ShowInfo("Стенд привязан к контейнеру");
+    }
+
+    public async Task RemoveStandFromContainerAsync(int containerId, int standId)
+    {
+        await _containerRepository.RemoveStandFromContainerAsync(containerId, standId);
+        _notificationService.ShowInfo("Стенд удалён из контейнера");
     }
 }

@@ -15,7 +15,7 @@
             <RowDefinition Height="150" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="270" />
+            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
@@ -26,39 +26,33 @@
             Grid.Column="0"
             Margin="5"
             Padding="5"
-            Header="Партии упаковок">
+            Header="Очереди">
             <DockPanel LastChildFill="True">
-                <StackPanel
-                    Margin="0,0,0,6"
-                    DockPanel.Dock="Top"
-                    Orientation="Horizontal">
-                    <Button
-                        Margin="0,0,6,0"
-                        Command="{Binding CreateBatchCommand}"
-                        Content="Создать партию" />
-                    <Button Command="{Binding RefreshBatchesCommand}" Content="Обновить" />
-                </StackPanel>
-
+                <!--  Убраны кнопки сверху. Управление через контекстное меню на DataGrid  -->
                 <DataGrid
                     AutoGenerateColumns="False"
-                    CanUserAddRows="False"
-                    IsReadOnly="True"
-                    ItemsSource="{Binding ContainerBatches}"
-                    SelectedItem="{Binding SelectedBatch}">
+                    CanUserAddRows="True"
+                    CanUserDeleteRows="True"
+                    ItemsSource="{Binding CurrentProjectModel.ContainerBatchesInProject}"
+                    SelectedItem="{Binding CurrentProjectModel.SelectedContainerBatch}">
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding ProjectCommandProvider.CreateContainerBatchCommand}" Header="Добавить очередь" />
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
                     <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Name}" Header="Имя" />
                         <DataGridTextColumn
                             Width="80"
                             Binding="{Binding BatchOrder}"
-                            Header="Порядок" />
+                            Header="№" />
                         <DataGridTextColumn
                             Width="120"
-                            Binding="{Binding TotalContainers}"
-                            Header="Всего контейнеров" />
+                            Binding="{Binding ContainersCount}"
+                            Header="Упаковок" />
                         <DataGridTextColumn
                             Width="100"
-                            Binding="{Binding PackedContainers}"
-                            Header="Упаковано" />
+                            Binding="{Binding StandsCount}"
+                            Header="Стендов" />
                     </DataGrid.Columns>
                 </DataGrid>
             </DockPanel>
@@ -72,49 +66,36 @@
             Padding="5"
             Header="Контейнеры партии">
             <DockPanel LastChildFill="True">
-                <StackPanel
-                    Margin="0,0,0,6"
-                    DockPanel.Dock="Top"
-                    Orientation="Horizontal">
-                    <TextBox
-                        Width="160"
-                        Margin="0,0,6,0"
-                        Text="{Binding NewContainer.Name, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBox
-                        Width="80"
-                        Margin="0,0,6,0"
-                        Text="{Binding NewContainer.StandsCount, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBox
-                        Width="100"
-                        Margin="0,0,6,0"
-                        Text="{Binding NewContainer.ContainerWeight, UpdateSourceTrigger=PropertyChanged}" />
-                    <Button Command="{Binding AddContainerToBatchCommand}" Content="Добавить контейнер" />
-                </StackPanel>
+                <!--  Поля для ввода оставлены для быстрого создания, но можно добавлять строки прямо в DataGrid  -->
 
                 <DataGrid
                     AutoGenerateColumns="False"
-                    CanUserAddRows="False"
-                    IsReadOnly="True"
-                    ItemsSource="{Binding BatchContainers}"
-                    SelectedItem="{Binding SelectedContainer}">
+                    CanUserAddRows="True"
+                    CanUserDeleteRows="True"
+                    IsReadOnly="False"
+                    ItemsSource="{Binding CurrentProjectModel.ContainerStandsInProject}"
+                    SelectedItem="{Binding CurrentProjectModel.SelectedContainerStand}">
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding ProjectCommandProvider.AddContainerToBatchCommand}" Header="Добавить контейнер (сохранить поля ввода)" />
+                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteContainerCommand}" Header="Удалить контейнер" />
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+
                     <DataGrid.Columns>
-                        <DataGridTextColumn
-                            Width="60"
-                            Binding="{Binding Id}"
-                            Header="Id" />
-                        <DataGridTextColumn Binding="{Binding Name}" Header="Имя" />
+                        <DataGridTextColumn Binding="{Binding Name}" Header="Упаковка" />
                         <DataGridTextColumn
                             Width="120"
                             Binding="{Binding StandsCount}"
-                            Header="Кол-во стендов" />
+                            Header="Стендов" />
                         <DataGridTextColumn
                             Width="120"
                             Binding="{Binding StandsWeight}"
-                            Header="Вес стендов" />
+                            Header="Масса стендов" />
                         <DataGridTextColumn
                             Width="120"
                             Binding="{Binding ContainerWeight}"
-                            Header="Вес ящика" />
+                            Header="Масса" />
                     </DataGrid.Columns>
                 </DataGrid>
             </DockPanel>
@@ -143,8 +124,16 @@
                     Margin="4,24,4,4"
                     AutoGenerateColumns="False"
                     CanUserAddRows="False"
+                    CanUserDeleteRows="False"
                     IsReadOnly="True"
-                    ItemsSource="{Binding SelectedContainerStands}">
+                    ItemsSource="{Binding CurrentProjectModel.SelectedContainerStand.Stands}"
+                    SelectedItem="{Binding CurrentProjectModel.SelectedStandInContainer}">
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding DataContext.ProjectCommandProvider.RemoveStandFromContainerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" Header="Удалить стенд из контейнера" />
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+
                     <DataGrid.Columns>
                         <DataGridTextColumn
                             Width="80"
@@ -159,10 +148,6 @@
                             Width="100"
                             Binding="{Binding Width}"
                             Header="Ширина" />
-                        <DataGridTextColumn
-                            Width="100"
-                            Binding="{Binding Weight}"
-                            Header="Масса" />
                     </DataGrid.Columns>
                 </DataGrid>
 
@@ -171,10 +156,7 @@
                     Margin="0,6"
                     HorizontalAlignment="Center"
                     Orientation="Horizontal">
-                    <Button
-                        Margin="6"
-                        Command="{Binding AddStandToContainerCommand}"
-                        Content="Привязать выбранный стенд к контейнеру" />
+                    <!--  Кнопки убраны: добавление стенда делается через контекстное меню на списке стендов проекта  -->
                 </StackPanel>
 
                 <GroupBox
@@ -186,16 +168,22 @@
                         CanUserAddRows="False"
                         ItemsSource="{Binding CurrentProjectModel.Stands}"
                         SelectedItem="{Binding CurrentProjectModel.SelectedStand}">
+                        <DataGrid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding ProjectCommandProvider.AddStandToContainerCommand}" Header="Добавить выбранный стенд в контейнер" />
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>
+
                         <DataGrid.Columns>
-                            <DataGridTextColumn
-                                Width="80"
-                                Binding="{Binding NN}"
-                                Header="NN" />
                             <DataGridTextColumn Binding="{Binding KKSCode}" Header="KKS" />
                             <DataGridTextColumn
                                 Width="140"
                                 Binding="{Binding SerialNumber}"
                                 Header="Серийный №" />
+                            <DataGridTextColumn
+                                Width="80"
+                                Binding="{Binding NN}"
+                                Header="Ширина" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </GroupBox>
