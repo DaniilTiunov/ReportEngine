@@ -77,7 +77,7 @@
                     CanUserAddRows="True"
                     CanUserDeleteRows="True"
                     IsReadOnly="False"
-                    ItemsSource="{Binding CurrentProjectModel.ContainerStandsInProject}"
+                    ItemsSource="{Binding CurrentProjectModel.ContainerStandsInSelectedBatch}"
                     SelectedItem="{Binding CurrentProjectModel.SelectedContainerStand}">
                     <DataGrid.ContextMenu>
                         <ContextMenu>
@@ -129,10 +129,10 @@
                         AutoGenerateColumns="False"
                         IsReadOnly="True"
                         ItemsSource="{Binding CurrentProjectModel.StandsInContainer}"
-                        SelectedItem="{Binding CurrentProjectModel.SelectedContainerStand}">
+                        SelectedItem="{Binding CurrentProjectModel.SelectedContainerBatch}">
                         <DataGrid.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding DataContext.ProjectCommandProvider.RemoveStandFromContainerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" Header="Удалить стенд из контейнера" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.RemoveStandFromContainerCommand}" Header="Удалить стенд из контейнера" />
                             </ContextMenu>
                         </DataGrid.ContextMenu>
                         <DataGrid.Columns>

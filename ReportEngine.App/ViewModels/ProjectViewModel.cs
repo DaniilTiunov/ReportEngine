@@ -389,7 +389,7 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnRemoveStandFromContainerCommandExecuted(object obj)
     {
-        //await ExceptionHelper.SafeExecuteAsync(_containerService.RemoveStandFromContainerAsync);
+        await ExceptionHelper.SafeExecuteAsync(async() => _containerService.RemoveStandFromContainerAsync(CurrentProjectModel));
     }
 
 

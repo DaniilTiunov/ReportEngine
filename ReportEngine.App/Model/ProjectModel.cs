@@ -72,6 +72,8 @@ public class ProjectModel : BaseViewModel
     private string? _markMinus; //Маркировка -
 
     private bool _isGalvanized; //Оцинковка
+    
+    private ObservableCollection<ContainerStand> _containerStandsInSelectedBatch = new();
 
     //
     private float _humanCost; //Трудозатраты
@@ -256,6 +258,12 @@ public class ProjectModel : BaseViewModel
         set => Set(ref _selectedContainerBatch, value);
     }// Выбранная партия
 
+    
+    public ObservableCollection<ContainerStand> ContainerStandsInSelectedBatch
+    {
+        get => _containerStandsInSelectedBatch;
+        set => Set(ref _containerStandsInSelectedBatch, value);
+    }
 
     #endregion
 }
