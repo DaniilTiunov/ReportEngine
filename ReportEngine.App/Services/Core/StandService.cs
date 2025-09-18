@@ -236,14 +236,47 @@ public class StandService : IStandService
             ThirdSensorMarkPlus = standModel.ThirdSensorMarkPlus,
             ThirdSensorMarkMinus = standModel.ThirdSensorMarkMinus,
             ThirdSensorDescription = standModel.ThirdSensorDescription
-
-
-
-
-
         };
 
         return Task.FromResult(entity);
+    }
+    
+    public async Task FillStandFieldsFromObvyazka(StandModel stand, ObvyazkaInStand obv)
+    {
+        if (stand == null || obv == null)
+            return;
+
+        stand.ObvyazkaName = obv.ObvyazkaName;
+        stand.MaterialLine = obv.MaterialLine;
+        stand.MaterialLineCount = obv.MaterialLineCount;
+        stand.MaterialLineMeasure = obv.MaterialLineMeasure;
+        stand.Armature = obv.Armature;
+        stand.ArmatureCount = obv.ArmatureCount;
+        stand.ArmatureMeasure = obv.ArmatureMeasure;
+        stand.TreeSocket = obv.TreeSocket;
+        stand.TreeSocketMaterialCount = obv.TreeSocketMaterialCount;
+        stand.TreeSocketMaterialMeasure = obv.TreeSocketMaterialMeasure;
+        stand.KMCH = obv.KMCH;
+        stand.KMCHCount = obv.KMCHCount;
+        stand.KMCHMeasure = obv.KMCHMeasure;
+        
+        stand.FirstSensorType = obv.FirstSensorType;
+        stand.FirstSensorKKS = obv.FirstSensorKKS;
+        stand.FirstSensorMarkPlus = obv.FirstSensorMarkPlus;
+        stand.FirstSensorMarkMinus = obv.FirstSensorMarkMinus;
+        stand.FirstSensorDescription = obv.FirstSensorDescription;
+        stand.SecondSensorType = obv.SecondSensorType;
+        stand.SecondSensorKKS = obv.SecondSensorKKS;
+        stand.SecondSensorMarkPlus = obv.SecondSensorMarkPlus;
+        stand.SecondSensorMarkMinus = obv.SecondSensorMarkMinus;
+        stand.SecondSensorDescription = obv.SecondSensorDescription;
+        stand.ThirdSensorType = obv.ThirdSensorType;
+        stand.ThirdSensorKKS = obv.ThirdSensorKKS;
+        stand.ThirdSensorMarkPlus = obv.ThirdSensorMarkPlus;
+        stand.ThirdSensorMarkMinus = obv.ThirdSensorMarkMinus;
+        stand.ThirdSensorDescription = obv.ThirdSensorDescription;
+
+        await Task.CompletedTask;
     }
 
     public async Task UpdateElectricalPurposeAsync(ElectricalPurpose entity)

@@ -364,6 +364,22 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
+    public async void OnFillStandFieldsFromObvyazkaCommandExecuted(object obj)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            _standService.FillStandFieldsFromObvyazka(CurrentProjectModel.SelectedStand, CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand);
+        });
+    }
+    
+    public async void OnUpdateObvInStandCommandExecuted(object obj)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await _projectService.UpdateObvInStandAsync(CurrentProjectModel);
+        });
+    }
+    
     public async void OnCreateContainerStandCommandExecuted(object obj)
     {
         await ExceptionHelper.SafeExecuteAsync(async() => await _containerService.CreateBatchAsync(CurrentProjectModel));

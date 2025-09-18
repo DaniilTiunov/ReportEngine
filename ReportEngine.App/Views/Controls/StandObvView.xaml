@@ -516,12 +516,19 @@
             <StackPanel
                 Grid.Row="5"
                 Margin="0,10,0,0"
-                HorizontalAlignment="Right">
+                HorizontalAlignment="Right"
+                Orientation="Horizontal">
                 <Button
                     Width="120"
                     Height="30"
+                    Margin="0,0,10,0"
                     Command="{Binding ProjectCommandProvider.SaveObvCommand}"
                     Content="Добавить" />
+                <Button
+                    Width="150"
+                    Height="30"
+                    Command="{Binding ProjectCommandProvider.UpdateObvInStandCommand}"
+                    Content="Сохранить изменения" />
             </StackPanel>
         </Grid>
 
@@ -663,7 +670,7 @@
                         <ListView.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}" Header="Удалить обвязку из стенда" />
-                                <MenuItem Header="Копировать обвязку" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.FillStandFieldsFromObvyazkaCommand}" Header="Редактировать обвязку" />
                             </ContextMenu>
                         </ListView.ContextMenu>
                     </ListView>

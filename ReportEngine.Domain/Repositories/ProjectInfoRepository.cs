@@ -141,7 +141,20 @@ public class ProjectInfoRepository : IProjectInfoRepository
         _context.Set<ObvyazkaInStand>().Remove(entity);
         await _context.SaveChangesAsync();
     }
-    
+
+    public async Task UpdateObvInStandAsync(int standId, ObvyazkaInStand standObvyazka)
+    {
+        var existingObvyazka = await _context.Set<ObvyazkaInStand>()
+            .FirstOrDefaultAsync(obv => obv.Id == standObvyazka.Id && obv.StandId == standId);
+
+        if (existingObvyazka != null)
+        {
+            // Обновляем значения
+            _context.Entry(existingObvyazka).CurrentValues.SetValues(standObvyazka);
+            await _context.SaveChangesAsync();
+        }
+    }
+
     public async Task DeleteFrameFromStandAsync(int frameInStandId)
     {
         var entity = await _context.Set<StandFrame>()

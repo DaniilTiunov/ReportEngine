@@ -19,5 +19,6 @@ public interface IProjectInfoRepository : IBaseRepository<ProjectInfo>
     Task<IEnumerable<StandElectricalComponent>> GetAllElectricalComponentsInStandAsync(int standId);
     Task<IEnumerable<StandAdditionalEquip>> GetAllAdditionalEquipsInStandAsync(int standId);
     Task DeleteObvFromStandAsync(int standId, int obvyazkaInStandId);
+    Task UpdateObvInStandAsync(int standId, ObvyazkaInStand standObvyazka);
     Task DeleteFrameFromStandAsync(int standFrameId);
 }

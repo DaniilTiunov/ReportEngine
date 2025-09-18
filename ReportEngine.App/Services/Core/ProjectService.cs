@@ -8,6 +8,7 @@ using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
 using System.Collections.ObjectModel;
+using ReportEngine.App.AppHelpers;
 
 namespace ReportEngine.App.Services.Core;
 
@@ -134,6 +135,48 @@ public class ProjectService : IProjectService
         await _projectRepository.DeleteObvFromStandAsync(standId, obvyazkaInStandId);
     }
 
+    public async Task UpdateObvInStandAsync(ProjectModel projectModel)
+    {
+        var stand = projectModel.SelectedStand;
+        var obv = stand.SelectedObvyazkaInStand;
+        if (stand == null || obv == null)
+            return;
+        obv.ObvyazkaName = stand.ObvyazkaName;
+        obv.MaterialLine = stand.MaterialLine;
+        obv.MaterialLineCount = stand.MaterialLineCount;
+        obv.MaterialLineMeasure = stand.MaterialLineMeasure;
+        obv.Armature = stand.Armature;
+        obv.ArmatureCount = stand.ArmatureCount;
+        obv.ArmatureMeasure = stand.ArmatureMeasure;
+        obv.TreeSocket = stand.TreeSocket;
+        obv.TreeSocketMaterialCount = stand.TreeSocketMaterialCount;
+        obv.TreeSocketMaterialMeasure = stand.TreeSocketMaterialMeasure;
+        obv.KMCH = stand.KMCH;
+        obv.KMCHCount = stand.KMCHCount;
+        obv.KMCHMeasure = stand.KMCHMeasure;
+        obv.NN = stand.NN;
+        obv.FirstSensorType = stand.FirstSensorType;
+        obv.FirstSensorKKS = stand.FirstSensorKKS;
+        obv.FirstSensorMarkPlus = stand.FirstSensorMarkPlus;
+        obv.FirstSensorMarkMinus = stand.FirstSensorMarkMinus;
+        obv.FirstSensorDescription = stand.FirstSensorDescription;
+        obv.SecondSensorType = stand.SecondSensorType;
+        obv.SecondSensorKKS = stand.SecondSensorKKS;
+        obv.SecondSensorMarkPlus = stand.SecondSensorMarkPlus;
+        obv.SecondSensorMarkMinus = stand.SecondSensorMarkMinus;
+        obv.SecondSensorDescription = stand.SecondSensorDescription;
+        obv.ThirdSensorType = stand.ThirdSensorType;
+        obv.ThirdSensorKKS = stand.ThirdSensorKKS;
+        obv.ThirdSensorMarkPlus = stand.ThirdSensorMarkPlus;
+        obv.ThirdSensorMarkMinus = stand.ThirdSensorMarkMinus;
+        obv.ThirdSensorDescription = stand.ThirdSensorDescription;
+        
+        CollectionRefreshHelper.SafeRefreshCollection(projectModel.SelectedStand.ObvyazkiInStand);
+        
+        await _projectRepository.UpdateObvInStandAsync(projectModel.SelectedStand.Id, projectModel.SelectedStand.SelectedObvyazkaInStand);
+        _notificationService.ShowInfo("Обвязка обновлена");
+    }
+    
     public async Task DeleteFrameFromStandAsync(ProjectModel projectModel)
     {
         var stand = projectModel.SelectedStand;
