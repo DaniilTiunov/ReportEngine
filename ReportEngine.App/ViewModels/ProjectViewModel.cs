@@ -256,7 +256,11 @@ public class ProjectViewModel : BaseViewModel
 
     public void OnSelectObvCommandExecuted(object p)
     {
-        ExceptionHelper.SafeExecute(() => { SelectedObvyazka = _dialogService.ShowObvyazkaDialog(); });
+        ExceptionHelper.SafeExecute(() =>
+        {
+            SelectedObvyazka = _dialogService.ShowObvyazkaDialog();
+
+        });
     }
 
     public async void OnCalculateProjectCommandExecuted(object p)
@@ -376,7 +380,7 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            await _projectService.UpdateObvInStandAsync(CurrentProjectModel);
+            await _projectService.UpdateObvInStandAsync(CurrentProjectModel, SelectedObvyazka);
         });
     }
     
