@@ -19,4 +19,5 @@ public class MainWindowCommandProvider
     public ICommand OpenAllSortamentsCommand { get; set; }
     public ICommand OpenSettingsWindow { get; set; }
     public ICommand OpenCalculationSettingsWindow { get; set; }
+    public ICommand RecalculateProjectCommand { get; set; }
 }

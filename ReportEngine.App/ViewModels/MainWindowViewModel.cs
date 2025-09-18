@@ -13,6 +13,8 @@ using ReportEngine.Domain.Repositories.Interfaces;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using ReportEngine.App.Services.Interfaces;
+using ReportEngine.Export.ExcelWork.Services.Interfaces;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -21,15 +23,23 @@ public class MainWindowViewModel : BaseViewModel
     private readonly IProjectInfoRepository _projectRepository;
     private readonly NavigationService _navigation;
     private readonly IServiceProvider _serviceProvider;
+    private readonly ICalculationService _calculationService;
+    private readonly INotificationService _notificationService;
     public MainWindowModel MainWindowModel { get; set; } = new();
     public GenericEquipCommandProvider GenericEquipCommandProvider { get; set; } = new();
     public MainWindowCommandProvider MainWindowCommandProvider { get; set; } = new();
 
     #region Конструктор
 
-    public MainWindowViewModel(IServiceProvider serviceProvider, NavigationService navigation,
-        IProjectInfoRepository projectRepository)
+    public MainWindowViewModel(
+        IServiceProvider serviceProvider,
+        NavigationService navigation,
+        IProjectInfoRepository projectRepository,
+        ICalculationService calculationService,
+        INotificationService notificationService)
     {
+        _notificationService = notificationService;
+        _calculationService = calculationService;
         _serviceProvider = serviceProvider;
         _projectRepository = projectRepository;
         _navigation = navigation;
@@ -71,6 +81,11 @@ public class MainWindowViewModel : BaseViewModel
         return true;
     }
 
+    public async void OnRecalculateProjectCommandExecuted(object e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(RecalculateProjectAsync);
+    }
+    
     public async void OnEditProjectCommandExecuted(object e)
     {
         if (MainWindowModel.SelectedProject == null) return;
@@ -149,6 +164,28 @@ public class MainWindowViewModel : BaseViewModel
         var currentProject = MainWindowModel.SelectedProject;
         await _projectRepository.DeleteAsync(currentProject);
         await ShowAllProjectsAsync();
+    }
+
+    private async Task RecalculateProjectAsync()
+    {
+        if (MainWindowModel.SelectedProject == null)
+        {
+            _notificationService.ShowInfo("Проект не выбран");
+            return;
+        }
+            
+        var projectViewModel = _serviceProvider.GetRequiredService<ProjectViewModel>();
+        var projectService = _serviceProvider.GetRequiredService<IProjectService>();
+            
+        await projectViewModel.LoadProjectInfoAsync(MainWindowModel.SelectedProject.Id);
+            
+        await _calculationService.CalculateProjectAsync(projectViewModel.CurrentProjectModel);
+            
+        await projectService.UpdateProjectAsync(projectViewModel.CurrentProjectModel);
+
+        CollectionRefreshHelper.SafeRefreshCollection(MainWindowModel.AllProjects);
+            
+        _notificationService.ShowInfo("Переформирование завершено");
     }
 
     #endregion
