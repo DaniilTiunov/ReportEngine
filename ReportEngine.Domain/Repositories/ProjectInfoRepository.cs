@@ -142,10 +142,10 @@ public class ProjectInfoRepository : IProjectInfoRepository
         await _context.SaveChangesAsync();
     }
     
-    public async Task DeleteFrameFromStandAsync(int standId, int frameInStandId)
+    public async Task DeleteFrameFromStandAsync(int frameInStandId)
     {
         var entity = await _context.Set<StandFrame>()
-            .FirstOrDefaultAsync(o => o.StandId == standId);
+            .FirstOrDefaultAsync(o => o.Id == frameInStandId);
 
         if (entity == null)
             return;

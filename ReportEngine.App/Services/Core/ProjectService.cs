@@ -134,8 +134,19 @@ public class ProjectService : IProjectService
         await _projectRepository.DeleteObvFromStandAsync(standId, obvyazkaInStandId);
     }
 
-    public async Task DeleteFrameFromStandAsync(int standId, int frameInStandId)
+    public async Task DeleteFrameFromStandAsync(ProjectModel projectModel)
     {
-        await _projectRepository.DeleteFrameFromStandAsync(standId, frameInStandId);
+        var stand = projectModel.SelectedStand;
+        var frame = stand.SelectedFrame;
+        var standFrame = frame.StandFrames?.FirstOrDefault(sf => sf.StandId == stand.Id && sf.FrameId == frame.Id);
+
+        stand.FramesInStand.Remove(frame);
+        
+        stand.SelectedFrame = null;
+
+        projectModel.OnPropertyChanged(nameof(projectModel.SelectedStand.FramesInStand));
+
+        if (standFrame != null)
+            await _projectRepository.DeleteFrameFromStandAsync(standFrame.Id);
     }
 }

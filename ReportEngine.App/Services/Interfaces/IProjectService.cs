@@ -13,5 +13,5 @@ public interface IProjectService
     Task<ProjectModel> LoadProjectInfoAsync(int projectId);
     Task DeleteStandAsync(int projectId, int standId);
     Task DeleteObvFromStandAsync(int standId, int obvyazkaInStandId);
-    Task DeleteFrameFromStandAsync(int standId, int frameInStandId);
+    Task DeleteFrameFromStandAsync(ProjectModel projectModel);
 }

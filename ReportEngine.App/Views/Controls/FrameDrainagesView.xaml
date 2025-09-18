@@ -25,26 +25,6 @@
             VerticalScrollBarVisibility="Auto">
             <StackPanel>
                 <!--  Доступные рамы  -->
-                <GroupBox Header="Доступные рамы">
-                    <StackPanel>
-                        <DataGrid
-                            AutoGenerateColumns="False"
-                            ItemsSource="{Binding AllAvailableFrames}"
-                            SelectedItem="{Binding CurrentStandModel.SelectedFrame}">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay}" Header="Название" />
-                                <DataGridTextColumn Binding="{Binding FrameType, Mode=TwoWay}" Header="Тип" />
-                                <DataGridTextColumn Binding="{Binding Depth, Mode=TwoWay}" Header="Глубина" />
-                                <DataGridTextColumn Binding="{Binding Width, Mode=TwoWay}" Header="Ширина" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-                        <Button
-                            Margin="5"
-                            Command="{Binding ProjectCommandProvider.AddFrameToStandCommand}"
-                            Content="Добавить раму" />
-                    </StackPanel>
-                </GroupBox>
-
                 <!--  Дренажи  -->
                 <GroupBox>
                     <GroupBox.Header>
@@ -206,12 +186,6 @@
         </ScrollViewer>
         <!--  Добавленные к стенду рамы и дренажи  -->
         <StackPanel Grid.Column="1" Margin="10">
-            <GroupBox Header="Рамы в стенде">
-                <ListView
-                    DisplayMemberPath="Name"
-                    ItemsSource="{Binding CurrentProjectModel.SelectedStand.FramesInStand}"
-                    SelectedItem="{Binding CurrentStandModel.SelectedFrame}" />
-            </GroupBox>
             <GroupBox Header="Дренажи в стенде">
                 <ListView
                     DisplayMemberPath="Name"

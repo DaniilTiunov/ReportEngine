@@ -223,14 +223,9 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            var frameToRemove = CurrentProjectModel.SelectedStand.SelectedFrame;
+            await _projectService.DeleteFrameFromStandAsync(CurrentProjectModel);
             
-            await _projectService.DeleteFrameFromStandAsync(CurrentProjectModel.SelectedStand.Id, frameToRemove.Id);
-
-            CurrentProjectModel.SelectedStand.FramesInStand.Remove(frameToRemove);
-            OnPropertyChanged(nameof(CurrentProjectModel.SelectedStand.FramesInStand));
-            
-            _notificationService.ShowInfo($"Рама удалена из стенда {CurrentProjectModel.SelectedStand.Id}");
+            _notificationService.ShowInfo($"Рама удалена из стенда");
         });
     }
 
