@@ -254,6 +254,9 @@ public class ProjectModel : BaseViewModel
         {
             if (Set(ref _selectedContainerStand, value))
             {
+                StandsInSelectedContainer = value != null
+                    ? new ObservableCollection<Stand>(value.Stands)
+                    : new ObservableCollection<Stand>();
                 OnPropertyChanged(nameof(StandsInSelectedContainer));
             }
         }
@@ -265,21 +268,45 @@ public class ProjectModel : BaseViewModel
         {
             if (Set(ref _selectedContainerBatch, value))
             {
+                ContainerStandsInSelectedBatch = value != null
+                    ? new ObservableCollection<ContainerStand>(value.Containers)
+                    : new ObservableCollection<ContainerStand>();
                 OnPropertyChanged(nameof(ContainerStandsInSelectedBatch));
-                OnPropertyChanged(nameof(StandsInSelectedContainer));
+                // Обновить StandsInSelectedContainer тоже, если нужно
+                if (SelectedContainerStand != null)
+                    StandsInSelectedContainer = new ObservableCollection<Stand>(SelectedContainerStand.Stands);
+                else
+                    StandsInSelectedContainer = new ObservableCollection<Stand>();
             }
         }
     }// Выбранная партия
     
     public ObservableCollection<ContainerStand> ContainerStandsInSelectedBatch
-        => SelectedContainerBatch != null
-            ? new ObservableCollection<ContainerStand>(SelectedContainerBatch.Containers)
-            : new ObservableCollection<ContainerStand>();
-    
+    {
+        get => _containerStandsInSelectedBatch;
+        set => Set(ref _containerStandsInSelectedBatch, value);
+    }
+
     public ObservableCollection<Stand> StandsInSelectedContainer
-        => SelectedContainerStand != null
-            ? new ObservableCollection<Stand>(SelectedContainerStand.Stands)
-            : new ObservableCollection<Stand>();
+    {
+        get => _standsInSelectedContainer;
+        set => Set(ref _standsInSelectedContainer, value);
+    }
     
+    private Stand? _selectedStandInContainer;
+    private StandModel? _selectedStandInProject;
+
+    public Stand? SelectedStandInContainer
+    {
+        get => _selectedStandInContainer;
+        set => Set(ref _selectedStandInContainer, value);
+    }
+
+    public StandModel? SelectedStandInProject
+    {
+        get => _selectedStandInProject;
+        set => Set(ref _selectedStandInProject, value);
+    }
+
     #endregion
 }

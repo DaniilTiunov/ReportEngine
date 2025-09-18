@@ -4,6 +4,7 @@ using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using System.Collections.ObjectModel;
 using ReportEngine.App.Model.StandsModel;
+using ReportEngine.App.ModelWrappers;
 using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.App.Services.Core
@@ -193,14 +194,21 @@ namespace ReportEngine.App.Services.Core
             {
                 _notificationService.ShowInfo("Выберите упаковку");
             }
+            
+            var selectedStandModel = projectModel.SelectedStandInProject;
+            if (selectedStandModel == null)
+            {
+                _notificationService.ShowInfo("Выберите стенд для добавления");
+                return;
+            }
 
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
-                var batch = projectModel.SelectedContainerBatch;
                 var container = projectModel.SelectedContainerStand;
-                var standToAdd = projectModel.SelectedStand;
                 
-                await _containerRepository.AddStandToContainerAsync(container.Id, standToAdd.Id);
+                await _containerRepository.AddStandToContainerAsync(container.Id, selectedStandModel.Id);
+                
+                projectModel.StandsInSelectedContainer.Add(StandDataConverter.ConvertToStandEntity(selectedStandModel));
                 
                 projectModel.OnPropertyChanged(nameof(projectModel.ContainerStandsInSelectedBatch));
                 projectModel.OnPropertyChanged(nameof(projectModel.StandsInSelectedContainer));
@@ -214,20 +222,42 @@ namespace ReportEngine.App.Services.Core
             if (projectModel.SelectedContainerStand == null)
             {
                 _notificationService.ShowInfo("Выберите упаковку");
+                return;
+            }
+
+            var selectedStandModel = projectModel.SelectedStandInContainer;
+            if (selectedStandModel == null)
+            {
+                _notificationService.ShowInfo("Выберите стенд для удаления");
+                return;
             }
 
             await ExceptionHelper.SafeExecuteAsync(async () =>
             {
                 var container = projectModel.SelectedContainerStand;
-                var standToRemove = projectModel.SelectedStand;
-                
+
+                // Найти Stand по Id из StandModel
+                var standToRemove = container.Stands?.FirstOrDefault(s => s.Id == selectedStandModel.Id);
+                if (standToRemove == null)
+                {
+                    _notificationService.ShowInfo("Стенд не найден в упаковке");
+                    return;
+                }
+
                 await _containerRepository.RemoveStandFromContainerAsync(container.Id, standToRemove.Id);
 
-                standToRemove = null;
-                
+                // Удалить из коллекции контейнера
+                container.Stands.Remove(standToRemove);
+
+                // Удалить из коллекции VM
+                projectModel.StandsInSelectedContainer.Remove(standToRemove);
+
+                // Сбросить выбранный стенд
+                projectModel.SelectedStand = null;
+
                 projectModel.OnPropertyChanged(nameof(projectModel.ContainerStandsInSelectedBatch));
                 projectModel.OnPropertyChanged(nameof(projectModel.StandsInSelectedContainer));
-                
+
                 _notificationService.ShowInfo("Стенд удалён!");
             });
         }

@@ -129,7 +129,7 @@
                         AutoGenerateColumns="False"
                         IsReadOnly="True"
                         ItemsSource="{Binding CurrentProjectModel.StandsInSelectedContainer}"
-                        SelectedItem="{Binding CurrentProjectModel.SelectedStand}">
+                        SelectedItem="{Binding CurrentProjectModel.SelectedStandInContainer}">
                         <DataGrid.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Command="{Binding ProjectCommandProvider.RemoveStandFromContainerCommand}" Header="Удалить стенд из упаковки" />
@@ -165,7 +165,7 @@
                         AutoGenerateColumns="False"
                         CanUserAddRows="False"
                         ItemsSource="{Binding CurrentProjectModel.Stands}"
-                        SelectedItem="{Binding CurrentProjectModel.SelectedStand}">
+                        SelectedItem="{Binding CurrentProjectModel.SelectedStandInProject}">
                         <DataGrid.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Command="{Binding ProjectCommandProvider.AddStandToContainerCommand}" Header="Добавить выбранный стенд в контейнер" />
