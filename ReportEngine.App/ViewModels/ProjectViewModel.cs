@@ -300,6 +300,16 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
+    public async void OnCreateProductionReportCommandExecuted(object p)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () => {
+
+            await CreateReportAsync(ReportType.ProductionReport, "производство");
+
+        });
+   
+    }
+
     public async void OnSaveChangesInStandCommandExecuted(object obj)
     {
         await ExceptionHelper.SafeExecuteAsync(SaveChangesInStandAsync);

@@ -33,8 +33,8 @@ namespace ReportEngine.Export.ExcelWork.Services
             {
                 var ws = wb.Worksheets.Add("MainSheet");
 
-                CreateCommonHeader(ws,project);
-                int endRow = FillStandsTable(ws, project);
+                int endRow = CreateCommonHeader(ws,project);
+                endRow = FillStandsTable(ws, project,endRow);
                 FillComponentsTable(ws, project, endRow);
 
 
@@ -46,7 +46,7 @@ namespace ReportEngine.Export.ExcelWork.Services
 
                 var savePath = SettingsManager.GetReportDirectory();
 
-                var fileName = "Тара___" + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + ".xlsx";
+                var fileName = "Производство___" + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + ".xlsx";
                 var fullSavePath = Path.Combine(savePath, fileName);
 
                 Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
@@ -62,18 +62,19 @@ namespace ReportEngine.Export.ExcelWork.Services
 
 
         //создание общего заголовка
-        private void CreateCommonHeader(IXLWorksheet ws, ProjectInfo project)
+        private int CreateCommonHeader(IXLWorksheet ws, ProjectInfo project)
         {
+            int activeRow = 1;
 
-            var headerRange = ws.Range("A1:D2").Merge();
+            var headerRange = ws.Range($"A{activeRow}:D{activeRow + 1}");
 
 
 
-            ws.Cell("A1").Value = $"{project.Company}";
-            ws.Cell("B1").Value = $"{project.OrderCustomer}";
-            ws.Cell("C1").Value = $"{project.Description}";
+            ws.Cell($"A{activeRow}").Value = $"{project.Company}";
+            ws.Cell($"B{activeRow}").Value = $"{project.OrderCustomer}";
+            ws.Cell($"C{activeRow}").Value = $"{project.Description}";
 
-            var projectStringArea = ws.Range("A2:D2").Merge();
+            var projectStringArea = ws.Range($"A{activeRow+1}:D{activeRow+1}").Merge();
             projectStringArea.Value = "Проект целиком";
 
 
@@ -84,10 +85,11 @@ namespace ReportEngine.Export.ExcelWork.Services
             // headerRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
             //headerRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Medium);
 
-
+            activeRow += 2;
+            return activeRow;
         }
 
-        private int FillStandsTable(IXLWorksheet ws, ProjectInfo project)
+        private int FillStandsTable(IXLWorksheet ws, ProjectInfo project,int startRow)
         {
 
             const string dbErrorString = "Не найдена информация в БД";
@@ -96,7 +98,7 @@ namespace ReportEngine.Export.ExcelWork.Services
 
             //формируем шапку
 
-            int activeRow = 3;
+            int activeRow = startRow;
 
             ws.Cell($"A{activeRow}").Value = "Наименование";
 
@@ -104,6 +106,10 @@ namespace ReportEngine.Export.ExcelWork.Services
             kksCodeStringArea.Value = "Код KKS";
 
             ws.Cell($"D{activeRow}").Value = "Серийный номер";
+
+            var headerRange = ws.Range($"A{activeRow}:D{activeRow}");
+            headerRange.Style.Font.SetBold();
+
 
             activeRow++;
 
@@ -144,7 +150,7 @@ namespace ReportEngine.Export.ExcelWork.Services
 
 
 
-            var floorTableArea = ws.Range($"A{activeRow}:D{activeRow}").Merge();
+            var floorTableArea = ws.Range($"A{activeRow}:D{activeRow}");
 
             floorTableArea.Style.Font.SetBold();
     
@@ -167,10 +173,29 @@ namespace ReportEngine.Export.ExcelWork.Services
 
             int activeRow = startRow;
 
+            //область всего заголовока
+            var headerRange = ws.Range($"A{activeRow}:D{activeRow+1}");
+
+
+            //область заголовка "сводная ведомость комплектующих"
+            var componentsStringHeaderRange = ws.Range(($"A{activeRow}:D{activeRow}"));
+            componentsStringHeaderRange.Value = "Сводная ведомость комплектующих";
+            activeRow++;
+
+
+            //названия столбцов сводной ведомости
+            ws.Cell($"A{activeRow}").Value = "Наименование";
+            ws.Cell($"B{activeRow}").Value = "Ед.изм.";
+            ws.Cell($"C{activeRow}").Value = "Кол-во (По проекту)";
+            ws.Cell($"D{activeRow}").Value = "Кол-во (По факту)";
 
 
 
 
+
+            headerRange.Style.Font.SetBold();
+
+            activeRow++;
 
 
 
@@ -345,7 +370,7 @@ namespace ReportEngine.Export.ExcelWork.Services
                 .ToList();
 
 
-            var activeRow = 4;
+            
 
 
 
@@ -388,7 +413,7 @@ namespace ReportEngine.Export.ExcelWork.Services
         //создает подзаголовок для подтаблицы и возвращает следующую строку
         private int CreateSubheaderOnWorksheet(int row, string title, IXLWorksheet ws)
         {
-            var subHeaderRange = ws.Range($"B{row}:D{row}");
+            var subHeaderRange = ws.Range($"A{row}:D{row}");
             subHeaderRange.Merge();
             subHeaderRange.Value = title;
             subHeaderRange.Style.Font.SetFontSize(10);
@@ -404,9 +429,9 @@ namespace ReportEngine.Export.ExcelWork.Services
             var currentRow = startRow;
             foreach (var item in items)
             {
-                ws.Cell($"B{currentRow}").Value = item.name;
-                ws.Cell($"C{currentRow}").Value = item.unit;
-                ws.Cell($"D{currentRow}").Value = item.quantity;
+                ws.Cell($"A{currentRow}").Value = item.name;
+                ws.Cell($"B{currentRow}").Value = item.unit;
+                ws.Cell($"C{currentRow}").Value = item.quantity;
                 currentRow++;
             }
 
