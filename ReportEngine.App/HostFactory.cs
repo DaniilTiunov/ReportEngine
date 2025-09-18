@@ -83,6 +83,7 @@ public class HostFactory
         services.AddScoped<IFormedDrainagesRepository, FormedDrainagesRepository>();
         services.AddScoped<IFormedAdditionalEquipsRepository, FormedAdditionalEquipsRepository>();
         services.AddScoped<IFormedElectricalRepository, FormedElectricalRepository>();
+        services.AddScoped<IContainerRepository, ContainerRepository>();
     }
 
     private static void ConfigureGenericRepositories(IServiceCollection services)
@@ -144,7 +145,7 @@ public class HostFactory
         services.AddScoped<IReportGenerator, MarksReportGenerator>();
         services.AddScoped<IReportGenerator, ContainerReportGenerator>();
         services.AddScoped<IReportGenerator, NameplatesReportGenerator>();
-        services.AddScoped<IContainerRepository, ContainerRepository>();
+        
     }
 
     private static void ConfigureViewModels(IServiceCollection services)
