@@ -67,13 +67,20 @@
             Grid.Row="0"
             Grid.Column="1"
             Margin="5"
-            Padding="5"
-            Header="Упаковки стендов">
+            Padding="5">
+            <GroupBox.Header>
+                <TextBlock>
+                    <Run Text="Упаковка очередь — " />
+                    <Run
+                        FontSize="14"
+                        FontWeight="Bold"
+                        Text="{Binding CurrentProjectModel.SelectedContainerBatch.BatchOrder, TargetNullValue='(ошибка привязки)'}" />
+                </TextBlock>
+            </GroupBox.Header>
             <DockPanel LastChildFill="True">
                 <!--  Поля для ввода оставлены для быстрого создания, но можно добавлять строки прямо в DataGrid  -->
 
                 <DataGrid
-                    AutoGenerateColumns="False"
                     CanUserAddRows="True"
                     CanUserDeleteRows="True"
                     IsReadOnly="False"
@@ -85,7 +92,6 @@
                             <MenuItem Command="{Binding ProjectCommandProvider.DeleteContainerCommand}" Header="Удалить упаковку" />
                         </ContextMenu>
                     </DataGrid.ContextMenu>
-
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Name}" Header="Упаковка" />
                         <DataGridTextColumn
@@ -100,6 +106,18 @@
                             Width="120"
                             Binding="{Binding ContainerWeight}"
                             Header="Масса" />
+                        <DataGridTemplateColumn Header="Выбрать">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button
+                                        Margin="2,0,2,0"
+                                        Padding="5,0,5,0"
+                                        Command="{Binding DataContext.ProjectCommandProvider.OpenAllSortamentsDialogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding}"
+                                        Content="Выбрать" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
             </DockPanel>
@@ -128,11 +146,11 @@
                         Margin="4,24,4,4"
                         AutoGenerateColumns="False"
                         IsReadOnly="True"
-                        ItemsSource="{Binding CurrentProjectModel.StandsInContainer}"
-                        SelectedItem="{Binding CurrentProjectModel.SelectedContainerBatch}">
+                        ItemsSource="{Binding CurrentProjectModel.StandsInSelectedContainer}"
+                        SelectedItem="{Binding CurrentProjectModel.SelectedStandInContainer}">
                         <DataGrid.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding ProjectCommandProvider.RemoveStandFromContainerCommand}" Header="Удалить стенд из контейнера" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.RemoveStandFromContainerCommand}" Header="Удалить стенд из упаковки" />
                             </ContextMenu>
                         </DataGrid.ContextMenu>
                         <DataGrid.Columns>
@@ -160,12 +178,12 @@
                 <GroupBox
                     Grid.Row="2"
                     Margin="4"
-                    Header="Стенды проекта в проекте">
+                    Header="Стенды в проекте">
                     <DataGrid
                         AutoGenerateColumns="False"
                         CanUserAddRows="False"
                         ItemsSource="{Binding CurrentProjectModel.Stands}"
-                        SelectedItem="{Binding CurrentProjectModel.SelectedStand}">
+                        SelectedItem="{Binding CurrentProjectModel.SelectedStandInProject}">
                         <DataGrid.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Command="{Binding ProjectCommandProvider.AddStandToContainerCommand}" Header="Добавить выбранный стенд в контейнер" />

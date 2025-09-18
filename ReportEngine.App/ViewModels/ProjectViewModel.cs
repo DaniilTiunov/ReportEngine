@@ -726,6 +726,11 @@ public class ProjectViewModel : BaseViewModel
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewElectricalComponent.Purposes);
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand);
                     return;
+                
+                case ContainerStand cs:
+                    cs.Name = selected.Name;
+                    CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.ContainerStandsInSelectedBatch);
+                    return;
             }
 
             var t = target.GetType();

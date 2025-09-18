@@ -74,6 +74,8 @@ public class ProjectModel : BaseViewModel
     private bool _isGalvanized; //Оцинковка
     
     private ObservableCollection<ContainerStand> _containerStandsInSelectedBatch = new();
+    private ObservableCollection<Stand> _standsInSelectedContainer = new();
+    
 
     //
     private float _humanCost; //Трудозатраты
@@ -235,7 +237,6 @@ public class ProjectModel : BaseViewModel
         get => _standsInContainer;
         set => Set(ref _standsInContainer, value);
     }
-
     public ContainerStand? ContainerStand 
     { 
         get => _containerStand; 
@@ -246,18 +247,39 @@ public class ProjectModel : BaseViewModel
         get => _containerBatch;
         set => Set(ref _containerBatch, value);
     }// Партия
-
     public ContainerStand? SelectedContainerStand 
     { 
         get => _selectedContainerStand; 
-        set => Set(ref _selectedContainerStand, value);
+        set
+        {
+            if (Set(ref _selectedContainerStand, value))
+            {
+                StandsInSelectedContainer = value != null
+                    ? new ObservableCollection<Stand>(value.Stands)
+                    : new ObservableCollection<Stand>();
+                OnPropertyChanged(nameof(StandsInSelectedContainer));
+            }
+        }
     }// Выбранная упаковка
     public ContainerBatch? SelectedContainerBatch 
     { 
         get => _selectedContainerBatch;
-        set => Set(ref _selectedContainerBatch, value);
+        set
+        {
+            if (Set(ref _selectedContainerBatch, value))
+            {
+                ContainerStandsInSelectedBatch = value != null
+                    ? new ObservableCollection<ContainerStand>(value.Containers)
+                    : new ObservableCollection<ContainerStand>();
+                OnPropertyChanged(nameof(ContainerStandsInSelectedBatch));
+                // Обновить StandsInSelectedContainer тоже, если нужно
+                if (SelectedContainerStand != null)
+                    StandsInSelectedContainer = new ObservableCollection<Stand>(SelectedContainerStand.Stands);
+                else
+                    StandsInSelectedContainer = new ObservableCollection<Stand>();
+            }
+        }
     }// Выбранная партия
-
     
     public ObservableCollection<ContainerStand> ContainerStandsInSelectedBatch
     {
@@ -265,5 +287,25 @@ public class ProjectModel : BaseViewModel
         set => Set(ref _containerStandsInSelectedBatch, value);
     }
 
+    public ObservableCollection<Stand> StandsInSelectedContainer
+    {
+        get => _standsInSelectedContainer;
+        set => Set(ref _standsInSelectedContainer, value);
+    }
+    
+    private Stand? _selectedStandInContainer;
+    private StandModel? _selectedStandInProject;
+
+    public Stand? SelectedStandInContainer
+    {
+        get => _selectedStandInContainer;
+        set => Set(ref _selectedStandInContainer, value);
+    }
+
+    public StandModel? SelectedStandInProject
+    {
+        get => _selectedStandInProject;
+        set => Set(ref _selectedStandInProject, value);
+    }
     #endregion
 }
