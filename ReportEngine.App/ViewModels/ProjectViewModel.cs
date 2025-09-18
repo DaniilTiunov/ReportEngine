@@ -89,10 +89,7 @@ public class ProjectViewModel : BaseViewModel
     }
     #endregion
 
-    public bool CanAllCommandsExecute(object? e)
-    {
-        return true;
-    }
+    public bool CanAllCommandsExecute(object? e) => true;
 
     public void OnOpenAllSortamentsDialogExecuted(object e)
     {
@@ -220,6 +217,21 @@ public class ProjectViewModel : BaseViewModel
     public async void OnRemoveObvCommandExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(DeleteObvFromStandAsync);
+    }
+    
+    public async void OnRemoveFrameFromStandCommandExecuted(object e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            var frameToRemove = CurrentProjectModel.SelectedStand.SelectedFrame;
+            
+            await _projectService.DeleteFrameFromStandAsync(CurrentProjectModel.SelectedStand.Id, frameToRemove.Id);
+
+            CurrentProjectModel.SelectedStand.FramesInStand.Remove(frameToRemove);
+            OnPropertyChanged(nameof(CurrentProjectModel.SelectedStand.FramesInStand));
+            
+            _notificationService.ShowInfo($"Рама удалена из стенда {CurrentProjectModel.SelectedStand.Id}");
+        });
     }
 
     public async void OnAddCustomDrainageToStandExecuted(object p)
@@ -391,8 +403,7 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async() => _containerService.RemoveStandFromContainerAsync(CurrentProjectModel));
     }
-
-
+    
     public void ResetProject()
     {
         CurrentProjectModel = new ProjectModel();
@@ -459,7 +470,6 @@ public class ProjectViewModel : BaseViewModel
             await _containerService.LoadAllData(CurrentProjectModel);
         });
     }
-
     #endregion
 
     #region Методы для CRUD с проектами и стендами

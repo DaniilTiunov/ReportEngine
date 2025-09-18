@@ -141,6 +141,18 @@ public class ProjectInfoRepository : IProjectInfoRepository
         _context.Set<ObvyazkaInStand>().Remove(entity);
         await _context.SaveChangesAsync();
     }
+    
+    public async Task DeleteFrameFromStandAsync(int standId, int frameInStandId)
+    {
+        var entity = await _context.Set<StandFrame>()
+            .FirstOrDefaultAsync(o => o.StandId == standId);
+
+        if (entity == null)
+            return;
+
+        _context.Set<StandFrame>().Remove(entity);
+        await _context.SaveChangesAsync();
+    }
 
     // Связь через StandFrame
     public async Task AddFrameToStandAsync(int standId, int frameId)

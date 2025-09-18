@@ -134,51 +134,8 @@ public class ProjectService : IProjectService
         await _projectRepository.DeleteObvFromStandAsync(standId, obvyazkaInStandId);
     }
 
-    public async Task<ContainerBatch> CreateBatchAsync(ContainerBatch сontainerBatch)
+    public async Task DeleteFrameFromStandAsync(int standId, int frameInStandId)
     {
-        await _containerRepository.AddAsync(сontainerBatch);
-
-        var loaded = await _containerRepository.GetByIdWithContainersAsync(сontainerBatch.Id);
-        return loaded;
-    }
-
-    public async Task DeleteBatchAsync(int batchId)
-    {
-        await _containerRepository.DeleteByIdAsync(batchId);
-    }
-
-    public async Task<IEnumerable<ContainerBatch>> GetBatchesByProjectAsync(int projectId)
-    {
-        return await _containerRepository.GetAllByProjectIdAsync(projectId);
-    }
-
-    public async Task<ContainerBatch> GetBatchWithContainersAsync(int batchId)
-    {
-        return await _containerRepository.GetByIdWithContainersAsync(batchId);
-    }
-
-    public async Task AddContainerToBatchAsync(int batchId, ContainerStand containerModel)
-    {
-        await _containerRepository.AddContainerToBatchAsync(batchId, containerModel);
-    }
-
-    public async Task RemoveContainerFromBatchAsync(int batchId, int containerId)
-    {
-        await _containerRepository.RemoveContainerFromBatchAsync(batchId, containerId);
-    }
-
-    public async Task DeleteContainerAsync(int containerId)
-    {
-        await _containerRepository  .DeleteContainerAsync(containerId);
-    }
-
-    public async Task AddStandToContainerAsync(int containerId, int standId)
-    {
-        await _containerRepository.AddStandToContainerAsync(containerId, standId);
-    }
-
-    public async Task RemoveStandFromContainerAsync(int containerId, int standId)
-    {
-        await _containerRepository.RemoveStandFromContainerAsync(containerId, standId);
+        await _projectRepository.DeleteFrameFromStandAsync(standId, frameInStandId);
     }
 }
