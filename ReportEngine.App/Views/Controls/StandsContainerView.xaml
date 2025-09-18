@@ -67,13 +67,20 @@
             Grid.Row="0"
             Grid.Column="1"
             Margin="5"
-            Padding="5"
-            Header="Упаковки очередь - ">
+            Padding="5">
+            <GroupBox.Header>
+                <TextBlock>
+                    <Run Text="Упаковка очередь — " />
+                    <Run
+                        FontSize="14"
+                        FontWeight="Bold"
+                        Text="{Binding CurrentProjectModel.SelectedContainerBatch.BatchOrder, TargetNullValue='(ошибка привязки)'}" />
+                </TextBlock>
+            </GroupBox.Header>
             <DockPanel LastChildFill="True">
                 <!--  Поля для ввода оставлены для быстрого создания, но можно добавлять строки прямо в DataGrid  -->
 
                 <DataGrid
-                    AutoGenerateColumns="False"
                     CanUserAddRows="True"
                     CanUserDeleteRows="True"
                     IsReadOnly="False"
@@ -85,7 +92,6 @@
                             <MenuItem Command="{Binding ProjectCommandProvider.DeleteContainerCommand}" Header="Удалить упаковку" />
                         </ContextMenu>
                     </DataGrid.ContextMenu>
-
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Name}" Header="Упаковка" />
                         <DataGridTextColumn
@@ -100,6 +106,18 @@
                             Width="120"
                             Binding="{Binding ContainerWeight}"
                             Header="Масса" />
+                        <DataGridTemplateColumn Header="Выбрать">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button
+                                        Margin="2,0,2,0"
+                                        Padding="5,0,5,0"
+                                        Command="{Binding DataContext.ProjectCommandProvider.OpenAllSortamentsDialogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding}"
+                                        Content="Выбрать" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
             </DockPanel>

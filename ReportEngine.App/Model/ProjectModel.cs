@@ -307,6 +307,5 @@ public class ProjectModel : BaseViewModel
         get => _selectedStandInProject;
         set => Set(ref _selectedStandInProject, value);
     }
-
     #endregion
 }
