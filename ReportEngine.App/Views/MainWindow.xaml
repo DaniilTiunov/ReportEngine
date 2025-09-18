@@ -295,6 +295,8 @@
                         <MenuItem Command="{Binding MainWindowCommandProvider.EditProjectCommand}" Header="Редактировать проект" />
                         <MenuItem Command="{Binding MainWindowCommandProvider.ShowAllProjectsCommand}" Header="Обновить список проектов" />
                         <Separator />
+                        <MenuItem Command="{Binding MainWindowCommandProvider.RecalculateProjectCommand}" Header="Переформировать" />
+                        <Separator />
                         <MenuItem Command="{Binding MainWindowCommandProvider.DeleteSelectedProjectCommand}" Header="Удалить проект" />
                     </ContextMenu>
                 </DataGrid.ContextMenu>

@@ -63,8 +63,6 @@ public class ProjectService : IProjectService
             IsGalvanized = projectModel.IsGalvanized
         };
         await _projectRepository.UpdateAsync(projectInfo);
-
-        _notificationService.ShowInfo("Изменения успешно сохранены!");
     }
 
     public async Task UpdateStandEntity(ProjectModel standModel)

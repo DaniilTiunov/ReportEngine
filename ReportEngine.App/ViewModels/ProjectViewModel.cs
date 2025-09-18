@@ -260,6 +260,9 @@ public class ProjectViewModel : BaseViewModel
         {
             SelectedObvyazka = _dialogService.ShowObvyazkaDialog();
 
+            CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.ImageName = SelectedObvyazka.ImageName;
+            
+            PropertyRefreshHelper.RefreshProperty(this, nameof(CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand));
         });
     }
 
@@ -543,6 +546,8 @@ public class ProjectViewModel : BaseViewModel
         }
 
         await _projectService.UpdateProjectAsync(CurrentProjectModel);
+        
+        _notificationService.ShowInfo("Изменения успешно сохранены!");
     }
 
     private async Task AddNewStandToProjectAsync()
@@ -801,6 +806,8 @@ public class ProjectViewModel : BaseViewModel
         await _calculationService.CalculateProjectAsync(CurrentProjectModel);
         OnPropertyChanged(nameof(CurrentProjectModel.Stands));
         OnPropertyChanged(nameof(CurrentProjectModel.Cost));
+        
+        _notificationService.ShowInfo("Расчёт завершён");
     }
 
     private async Task CreateReportAsync(ReportType typeGenerator, string reportName)
