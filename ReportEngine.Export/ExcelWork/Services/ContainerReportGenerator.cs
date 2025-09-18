@@ -11,10 +11,11 @@ namespace ReportEngine.Export.ExcelWork.Services;
 public class ContainerReportGenerator : IReportGenerator
 {
     private readonly IProjectInfoRepository _projectInfoRepository;
-
-    public ContainerReportGenerator(IProjectInfoRepository projectInfoRepository)
+    private readonly IContainerRepository _containerRepository;
+    public ContainerReportGenerator(IProjectInfoRepository projectInfoRepository, IContainerRepository containerRepository)
     {
         _projectInfoRepository = projectInfoRepository;
+        _containerRepository = containerRepository;
     }
 
     public ReportType Type => ReportType.ContainerReport;
@@ -28,9 +29,9 @@ public class ContainerReportGenerator : IReportGenerator
             var ws = wb.Worksheets.Add("MainSheet");
 
             CreateWorksheetTableHeader(ws);
-            FillWorksheetTable(ws, project);
+            await FillWorksheetTable(ws, project);
 
-            
+
             ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
 
@@ -68,35 +69,82 @@ public class ContainerReportGenerator : IReportGenerator
         headerRange.Style.Font.SetBold();
     }
 
-    private void FillWorksheetTable(IXLWorksheet ws, ProjectInfo project)
+    private async Task FillWorksheetTable(IXLWorksheet ws, ProjectInfo project)
     {
-        var tableRecords = project.Stands
-            .Select(stand => new
+
+        const string dbErrorString = "Ошибка загрузки данных из БД";
+        //создаем объекты всех контейнеров
+        var containerBatches = await _containerRepository.GetAllByProjectIdAsync(project.Id);
+
+
+        var containers = containerBatches
+            .SelectMany(batch => batch.Containers)
+            .Where(container => container.Stands.Any())
+            .Select(container => new
             {
-                Name = stand.NN.ToString(),
-                stand.SerialNumber,
-                CodeKKS = stand.KKSCode,
-                Quantity = "1", //потом поправить на конкретное число
-                FrameWidth = stand.Width.ToString()
+                containerInstance = container,
+                containerContent = container.Stands,
             });
 
-        var recordNumber = 1;
 
-        foreach (var record in tableRecords)
+
+        // выводим в таблицу
+
+        int containerStartRow = 2;
+        int standActiveRow = containerStartRow;
+
+        int containerNumber = 1;
+
+
+        foreach (var container in containers)
         {
-            //для отступа от шапки
-            var recordRow = recordNumber + 1;
 
-            var place = "1." + recordNumber;
+            int placeInContainerNumber = 1;
 
-            ws.Cell($"B{recordRow}").Value = place;
-            ws.Cell($"C{recordRow}").Value = record.Name;
-            ws.Cell($"D{recordRow}").Value = record.SerialNumber;
-            ws.Cell($"E{recordRow}").Value = record.CodeKKS;
-            ws.Cell($"F{recordRow}").Value = record.Quantity;
-            ws.Cell($"G{recordRow}").Value = record.FrameWidth;
 
-            recordNumber++;
+            //сначала выводим все стенды
+
+            foreach (var stand in container.containerContent)
+            {
+
+                string placeInContainerString = $"{containerNumber}.{placeInContainerNumber}";
+
+                ws.Cell($"B{standActiveRow}").Value = placeInContainerString;
+                ws.Cell($"C{standActiveRow}").Value = stand.Design ?? dbErrorString;
+                ws.Cell($"D{standActiveRow}").Value = stand.SerialNumber ?? dbErrorString;
+                ws.Cell($"E{standActiveRow}").Value = stand.KKSCode ?? dbErrorString;
+                ws.Cell($"F{standActiveRow}").Value = "1"; //пока костыль
+                ws.Cell($"G{standActiveRow}").Value = stand.StandFrames.FirstOrDefault()?.Frame.Width;
+
+                standActiveRow++;
+                placeInContainerNumber++;
+
+            }
+
+            //вычисляем где закончили выводиться стенды
+            //заполняем инфу о таре
+            int containerEndRow = standActiveRow - 1;
+
+
+
+            var containerNumberRange = ws.Range($"A{containerStartRow}:A{containerEndRow}").Merge();
+            containerNumberRange.Value = containerNumber;
+
+            var commonContainerWeight = ((container.containerInstance.ContainerWeight ?? 0f) + container.containerInstance.StandsWeight);
+
+            var containerWeightRange = ws.Range($"H{containerStartRow}:H{containerEndRow}").Merge();
+            containerWeightRange.Value = commonContainerWeight;
+
+            var containerPackRange = ws.Range($"I{containerStartRow}:I{containerEndRow}").Merge();
+            containerPackRange.Value = container.containerInstance.Name;
+
+
+            containerNumber++;
+
+            containerStartRow = containerEndRow + 1;
+            standActiveRow = containerStartRow;
+
         }
+
     }
 }
