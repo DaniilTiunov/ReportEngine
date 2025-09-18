@@ -1,6 +1,5 @@
 ﻿using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
@@ -131,10 +130,8 @@ public class ContainerReportGenerator : IReportGenerator
             var containerNumberRange = ws.Range($"A{containerStartRow}:A{containerEndRow}").Merge();
             containerNumberRange.Value = containerNumber;
 
-
-
             var commonContainerWeight = ((container.containerInstance.ContainerWeight ?? 0f) + container.containerInstance.StandsWeight);
-           
+
             var containerWeightRange = ws.Range($"H{containerStartRow}:H{containerEndRow}").Merge();
             containerWeightRange.Value = commonContainerWeight;
 
@@ -146,7 +143,6 @@ public class ContainerReportGenerator : IReportGenerator
 
             containerStartRow = containerEndRow + 1;
             standActiveRow = containerStartRow;
-
 
         }
 
