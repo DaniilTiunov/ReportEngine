@@ -141,10 +141,11 @@ public class HostFactory
     private static void ConfigureReportsServices(IServiceCollection services)
     {
         services.AddScoped<IReportService, ReportService>();
-        services.AddScoped<IReportGenerator, ComponentsListReportGenerator>();
+        services.AddScoped<IReportGenerator, ProductionReportGenerator>();
         services.AddScoped<IReportGenerator, MarksReportGenerator>();
         services.AddScoped<IReportGenerator, ContainerReportGenerator>();
         services.AddScoped<IReportGenerator, NameplatesReportGenerator>();
+        services.AddScoped<IReportGenerator, ComponentListReportGenerator>();
         
     }
 

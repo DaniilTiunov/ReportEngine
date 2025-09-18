@@ -8,11 +8,11 @@ using System.Diagnostics;
 
 namespace ReportEngine.Export.ExcelWork.Services;
 
-public class ComponentsListReportGenerator : IReportGenerator
+public class ComponentListReportGenerator : IReportGenerator
 {
     private readonly IProjectInfoRepository _projectInfoRepository;
 
-    public ComponentsListReportGenerator(IProjectInfoRepository projectInfoRepository)
+    public ComponentListReportGenerator(IProjectInfoRepository projectInfoRepository)
     {
         _projectInfoRepository = projectInfoRepository;
     }

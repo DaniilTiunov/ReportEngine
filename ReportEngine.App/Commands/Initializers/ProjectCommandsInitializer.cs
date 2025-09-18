@@ -53,6 +53,9 @@ namespace ReportEngine.App.Commands.Initializers
             vm.ProjectCommandProvider.CreateNameplatesReportCommand =
                 new RelayCommand(vm.OnCreateNameplatesReportCommandExecuted, vm.CanAllCommandsExecute);
 
+            vm.ProjectCommandProvider.CreateProductionReportCommand = 
+                new RelayCommand(vm.OnCreateProductionReportCommandExecuted,vm.CanAllCommandsExecute);
+
             vm.ProjectCommandProvider.DeleteSelectedStandCommand =
                 new RelayCommand(vm.OnDeleteSelectedStandFromProjectExecuted, vm.CanAllCommandsExecute);
 

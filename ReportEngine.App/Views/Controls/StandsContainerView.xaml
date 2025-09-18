@@ -52,11 +52,11 @@
                         <DataGridTextColumn
                             Width="120"
                             Binding="{Binding ContainersCount}"
-                            Header="Упаковок" />
+                            Header="Количество тары" />
                         <DataGridTextColumn
                             Width="100"
                             Binding="{Binding StandsCount}"
-                            Header="Стендов" />
+                            Header="Количество стендов" />
                     </DataGrid.Columns>
                 </DataGrid>
             </DockPanel>
@@ -70,7 +70,7 @@
             Padding="5">
             <GroupBox.Header>
                 <TextBlock>
-                    <Run Text="Упаковка очередь — " />
+                    <Run Text="Упаковка №" />
                     <Run
                         FontSize="14"
                         FontWeight="Bold"
@@ -93,11 +93,11 @@
                         </ContextMenu>
                     </DataGrid.ContextMenu>
                     <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Name}" Header="Упаковка" />
+                        <DataGridTextColumn Binding="{Binding Name}" Header="Тара" />
                         <DataGridTextColumn
                             Width="120"
                             Binding="{Binding StandsCount}"
-                            Header="Стендов" />
+                            Header="Количество стендов" />
                         <DataGridTextColumn
                             Width="120"
                             Binding="{Binding StandsWeight}"
@@ -140,7 +140,7 @@
                 <GroupBox
                     Grid.Row="0"
                     Margin="4"
-                    Header="Стенды проекта внутри упаковки">
+                    Header="Стенды внутри тары">
                     <DataGrid
                         Grid.Row="0"
                         Margin="4,24,4,4"
@@ -178,7 +178,7 @@
                 <GroupBox
                     Grid.Row="2"
                     Margin="4"
-                    Header="Стенды в проекте">
+                    Header="Стенды проекта">
                     <DataGrid
                         AutoGenerateColumns="False"
                         CanUserAddRows="False"
