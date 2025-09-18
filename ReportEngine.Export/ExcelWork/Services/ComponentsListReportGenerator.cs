@@ -239,6 +239,9 @@ public class ComponentsListReportGenerator : IReportGenerator
 
         //Формирование списка рамных комплектующих
 
+
+
+
         var framesList = stand.StandFrames
             .SelectMany(fr => fr.Frame.Components)
             .Select(comp => new

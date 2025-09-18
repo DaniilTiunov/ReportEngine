@@ -100,6 +100,8 @@ public class ContainerRepository : IContainerRepository
         return await _context.ContainersBatch
             .Include(b => b.Containers)
             .ThenInclude(c => c.Stands)
+            .ThenInclude(s => s.StandFrames)
+            .ThenInclude(sf=> sf.Frame)
             .Where(b => b.ProjectInfoId == projectId)
             .AsNoTracking()
             .ToListAsync();
