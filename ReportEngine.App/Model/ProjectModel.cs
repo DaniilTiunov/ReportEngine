@@ -74,6 +74,8 @@ public class ProjectModel : BaseViewModel
     private bool _isGalvanized; //Оцинковка
     
     private ObservableCollection<ContainerStand> _containerStandsInSelectedBatch = new();
+    private ObservableCollection<Stand> _standsInSelectedContainer = new();
+    
 
     //
     private float _humanCost; //Трудозатраты
@@ -235,7 +237,6 @@ public class ProjectModel : BaseViewModel
         get => _standsInContainer;
         set => Set(ref _standsInContainer, value);
     }
-
     public ContainerStand? ContainerStand 
     { 
         get => _containerStand; 
@@ -246,24 +247,39 @@ public class ProjectModel : BaseViewModel
         get => _containerBatch;
         set => Set(ref _containerBatch, value);
     }// Партия
-
     public ContainerStand? SelectedContainerStand 
     { 
         get => _selectedContainerStand; 
-        set => Set(ref _selectedContainerStand, value);
+        set
+        {
+            if (Set(ref _selectedContainerStand, value))
+            {
+                OnPropertyChanged(nameof(StandsInSelectedContainer));
+            }
+        }
     }// Выбранная упаковка
     public ContainerBatch? SelectedContainerBatch 
     { 
         get => _selectedContainerBatch;
-        set => Set(ref _selectedContainerBatch, value);
+        set
+        {
+            if (Set(ref _selectedContainerBatch, value))
+            {
+                OnPropertyChanged(nameof(ContainerStandsInSelectedBatch));
+                OnPropertyChanged(nameof(StandsInSelectedContainer));
+            }
+        }
     }// Выбранная партия
-
     
     public ObservableCollection<ContainerStand> ContainerStandsInSelectedBatch
-    {
-        get => _containerStandsInSelectedBatch;
-        set => Set(ref _containerStandsInSelectedBatch, value);
-    }
-
+        => SelectedContainerBatch != null
+            ? new ObservableCollection<ContainerStand>(SelectedContainerBatch.Containers)
+            : new ObservableCollection<ContainerStand>();
+    
+    public ObservableCollection<Stand> StandsInSelectedContainer
+        => SelectedContainerStand != null
+            ? new ObservableCollection<Stand>(SelectedContainerStand.Stands)
+            : new ObservableCollection<Stand>();
+    
     #endregion
 }

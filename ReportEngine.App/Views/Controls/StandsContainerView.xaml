@@ -68,7 +68,7 @@
             Grid.Column="1"
             Margin="5"
             Padding="5"
-            Header="Упаковки стендов">
+            Header="Упаковки очередь - ">
             <DockPanel LastChildFill="True">
                 <!--  Поля для ввода оставлены для быстрого создания, но можно добавлять строки прямо в DataGrid  -->
 
@@ -128,11 +128,11 @@
                         Margin="4,24,4,4"
                         AutoGenerateColumns="False"
                         IsReadOnly="True"
-                        ItemsSource="{Binding CurrentProjectModel.StandsInContainer}"
-                        SelectedItem="{Binding CurrentProjectModel.SelectedContainerBatch}">
+                        ItemsSource="{Binding CurrentProjectModel.StandsInSelectedContainer}"
+                        SelectedItem="{Binding CurrentProjectModel.SelectedStand}">
                         <DataGrid.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding ProjectCommandProvider.RemoveStandFromContainerCommand}" Header="Удалить стенд из контейнера" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.RemoveStandFromContainerCommand}" Header="Удалить стенд из упаковки" />
                             </ContextMenu>
                         </DataGrid.ContextMenu>
                         <DataGrid.Columns>
@@ -160,7 +160,7 @@
                 <GroupBox
                     Grid.Row="2"
                     Margin="4"
-                    Header="Стенды проекта в проекте">
+                    Header="Стенды в проекте">
                     <DataGrid
                         AutoGenerateColumns="False"
                         CanUserAddRows="False"
