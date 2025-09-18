@@ -8,6 +8,7 @@ using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
 using System.Collections.ObjectModel;
+using ReportEngine.App.AppHelpers;
 
 namespace ReportEngine.App.Services.Core;
 
@@ -134,51 +135,74 @@ public class ProjectService : IProjectService
         await _projectRepository.DeleteObvFromStandAsync(standId, obvyazkaInStandId);
     }
 
-    public async Task<ContainerBatch> CreateBatchAsync(ContainerBatch сontainerBatch)
+    public async Task UpdateObvInStandAsync(ProjectModel projectModel, Obvyazka selectedObvyazka)
     {
-        await _containerRepository.AddAsync(сontainerBatch);
+        var stand = projectModel.SelectedStand;
+        var obv = stand.SelectedObvyazkaInStand;
+        if (stand == null || obv == null)
+            return;
+        
+        obv.ObvyazkaName = stand.ObvyazkaName;
+        obv.MaterialLine = stand.MaterialLine;
+        obv.MaterialLineCount = stand.MaterialLineCount;
+        obv.MaterialLineMeasure = stand.MaterialLineMeasure;
+        obv.Armature = stand.Armature;
+        obv.ArmatureCount = stand.ArmatureCount;
+        obv.ArmatureMeasure = stand.ArmatureMeasure;
+        obv.TreeSocket = stand.TreeSocket;
+        obv.TreeSocketMaterialCount = stand.TreeSocketMaterialCount;
+        obv.TreeSocketMaterialMeasure = stand.TreeSocketMaterialMeasure;
+        obv.KMCH = stand.KMCH;
+        obv.KMCHCount = stand.KMCHCount;
+        obv.KMCHMeasure = stand.KMCHMeasure;
+        obv.NN = stand.NN;
+        obv.FirstSensorType = stand.FirstSensorType;
+        obv.FirstSensorKKS = stand.FirstSensorKKS;
+        obv.FirstSensorMarkPlus = stand.FirstSensorMarkPlus;
+        obv.FirstSensorMarkMinus = stand.FirstSensorMarkMinus;
+        obv.FirstSensorDescription = stand.FirstSensorDescription;
+        obv.SecondSensorType = stand.SecondSensorType;
+        obv.SecondSensorKKS = stand.SecondSensorKKS;
+        obv.SecondSensorMarkPlus = stand.SecondSensorMarkPlus;
+        obv.SecondSensorMarkMinus = stand.SecondSensorMarkMinus;
+        obv.SecondSensorDescription = stand.SecondSensorDescription;
+        obv.ThirdSensorType = stand.ThirdSensorType;
+        obv.ThirdSensorKKS = stand.ThirdSensorKKS;
+        obv.ThirdSensorMarkPlus = stand.ThirdSensorMarkPlus;
+        obv.ThirdSensorMarkMinus = stand.ThirdSensorMarkMinus;
+        obv.ThirdSensorDescription = stand.ThirdSensorDescription;
 
-        var loaded = await _containerRepository.GetByIdWithContainersAsync(сontainerBatch.Id);
-        return loaded;
+        obv.LineLength = selectedObvyazka.LineLength;
+        obv.ZraCount = selectedObvyazka.ZraCount;
+        obv.Sensor = selectedObvyazka.Sensor;
+        obv.SensorType = selectedObvyazka.SensorType;
+        obv.Clamp = selectedObvyazka.Clamp;
+        obv.WidthOnFrame = selectedObvyazka.WidthOnFrame;
+        obv.OtherLineCount = selectedObvyazka.OtherLineCount;
+        obv.Weight = selectedObvyazka.Weight;
+        obv.TreeSocketCount = selectedObvyazka.TreeSocket;
+        obv.HumanCost = selectedObvyazka.HumanCost;
+        obv.ImageName = selectedObvyazka.ImageName;
+        
+        CollectionRefreshHelper.SafeRefreshCollection(projectModel.SelectedStand.ObvyazkiInStand);
+        
+        await _projectRepository.UpdateObvInStandAsync(projectModel.SelectedStand.Id, projectModel.SelectedStand.SelectedObvyazkaInStand);
+        _notificationService.ShowInfo("Обвязка обновлена");
     }
-
-    public async Task DeleteBatchAsync(int batchId)
+    
+    public async Task DeleteFrameFromStandAsync(ProjectModel projectModel)
     {
-        await _containerRepository.DeleteByIdAsync(batchId);
-    }
+        var stand = projectModel.SelectedStand;
+        var frame = stand.SelectedFrame;
+        var standFrame = frame.StandFrames?.FirstOrDefault(sf => sf.StandId == stand.Id && sf.FrameId == frame.Id);
 
-    public async Task<IEnumerable<ContainerBatch>> GetBatchesByProjectAsync(int projectId)
-    {
-        return await _containerRepository.GetAllByProjectIdAsync(projectId);
-    }
+        stand.FramesInStand.Remove(frame);
+        
+        stand.SelectedFrame = null;
 
-    public async Task<ContainerBatch> GetBatchWithContainersAsync(int batchId)
-    {
-        return await _containerRepository.GetByIdWithContainersAsync(batchId);
-    }
+        projectModel.OnPropertyChanged(nameof(projectModel.SelectedStand.FramesInStand));
 
-    public async Task AddContainerToBatchAsync(int batchId, ContainerStand containerModel)
-    {
-        await _containerRepository.AddContainerToBatchAsync(batchId, containerModel);
-    }
-
-    public async Task RemoveContainerFromBatchAsync(int batchId, int containerId)
-    {
-        await _containerRepository.RemoveContainerFromBatchAsync(batchId, containerId);
-    }
-
-    public async Task DeleteContainerAsync(int containerId)
-    {
-        await _containerRepository  .DeleteContainerAsync(containerId);
-    }
-
-    public async Task AddStandToContainerAsync(int containerId, int standId)
-    {
-        await _containerRepository.AddStandToContainerAsync(containerId, standId);
-    }
-
-    public async Task RemoveStandFromContainerAsync(int containerId, int standId)
-    {
-        await _containerRepository.RemoveStandFromContainerAsync(containerId, standId);
+        if (standFrame != null)
+            await _projectRepository.DeleteFrameFromStandAsync(standFrame.Id);
     }
 }

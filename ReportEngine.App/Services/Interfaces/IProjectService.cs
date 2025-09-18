@@ -13,14 +13,6 @@ public interface IProjectService
     Task<ProjectModel> LoadProjectInfoAsync(int projectId);
     Task DeleteStandAsync(int projectId, int standId);
     Task DeleteObvFromStandAsync(int standId, int obvyazkaInStandId);
-
-    Task<ContainerBatch> CreateBatchAsync(ContainerBatch batchModel);
-    Task DeleteBatchAsync(int batchId);
-    Task<IEnumerable<ContainerBatch>> GetBatchesByProjectAsync(int projectId);
-    Task<ContainerBatch> GetBatchWithContainersAsync(int batchId);
-    Task AddContainerToBatchAsync(int batchId, ContainerStand containerModel);
-    Task RemoveContainerFromBatchAsync(int batchId, int containerId);
-    Task DeleteContainerAsync(int containerId);
-    Task AddStandToContainerAsync(int containerId, int standId);
-    Task RemoveStandFromContainerAsync(int containerId, int standId);
+    Task UpdateObvInStandAsync(ProjectModel projectModel, Obvyazka selectedObvyazka);
+    Task DeleteFrameFromStandAsync(ProjectModel projectModel);
 }

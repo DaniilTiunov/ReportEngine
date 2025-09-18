@@ -25,6 +25,9 @@ public class ProjectCommandProvider
     public ICommand CreateMarkReportCommand { get; set; }
     public ICommand CreateNameplatesReportCommand { get; set; }
     public ICommand RemoveObvFromStandCommand { get; set; }
+    public ICommand UpdateObvInStandCommand { get; set; }
+    public ICommand FillStandFieldsFromObvyazkaCommand { get; set; }
+    public ICommand RemoveFrameStandCommand { get; set; }
     public ICommand CreateContainerReportCommand { get; set; }
     public ICommand SaveChangesInStandCommand { get; set; }
     public ICommand DeleteElectricalComponentFromStandCommand { get; set; }

@@ -13,13 +13,14 @@ public partial class StandObvView : UserControl
     {
         InitializeComponent();
         DataContext = projectViewModel;
-
-        Loaded += StandObvView_Loaded;
+        
+        Loaded += async (_, __) => await InitializeDataAsync(projectViewModel);
     }
-
-    private void StandObvView_Loaded(object sender, RoutedEventArgs e)
+    
+    private async Task InitializeDataAsync(ProjectViewModel viewModel)
     {
-        if (DataContext is ProjectViewModel viewModel)
-            viewModel.LoadObvyazkiAsync();
+        await viewModel.LoadStandsDataAsync();
+        await viewModel.LoadObvyazkiAsync();
+        await viewModel.LoadAllAvaileDataAsync();
     }
 }

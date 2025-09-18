@@ -89,10 +89,7 @@ public class ProjectViewModel : BaseViewModel
     }
     #endregion
 
-    public bool CanAllCommandsExecute(object? e)
-    {
-        return true;
-    }
+    public bool CanAllCommandsExecute(object? e) => true;
 
     public void OnOpenAllSortamentsDialogExecuted(object e)
     {
@@ -221,6 +218,16 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(DeleteObvFromStandAsync);
     }
+    
+    public async void OnRemoveFrameFromStandCommandExecuted(object e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await _projectService.DeleteFrameFromStandAsync(CurrentProjectModel);
+            
+            _notificationService.ShowInfo($"Рама удалена из стенда");
+        });
+    }
 
     public async void OnAddCustomDrainageToStandExecuted(object p)
     {
@@ -249,7 +256,11 @@ public class ProjectViewModel : BaseViewModel
 
     public void OnSelectObvCommandExecuted(object p)
     {
-        ExceptionHelper.SafeExecute(() => { SelectedObvyazka = _dialogService.ShowObvyazkaDialog(); });
+        ExceptionHelper.SafeExecute(() =>
+        {
+            SelectedObvyazka = _dialogService.ShowObvyazkaDialog();
+
+        });
     }
 
     public async void OnCalculateProjectCommandExecuted(object p)
@@ -357,6 +368,22 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
+    public async void OnFillStandFieldsFromObvyazkaCommandExecuted(object obj)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            _standService.FillStandFieldsFromObvyazka(CurrentProjectModel.SelectedStand, CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand);
+        });
+    }
+    
+    public async void OnUpdateObvInStandCommandExecuted(object obj)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await _projectService.UpdateObvInStandAsync(CurrentProjectModel, SelectedObvyazka);
+        });
+    }
+    
     public async void OnCreateContainerStandCommandExecuted(object obj)
     {
         await ExceptionHelper.SafeExecuteAsync(async() => await _containerService.CreateBatchAsync(CurrentProjectModel));
@@ -391,8 +418,7 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async() => _containerService.RemoveStandFromContainerAsync(CurrentProjectModel));
     }
-
-
+    
     public void ResetProject()
     {
         CurrentProjectModel = new ProjectModel();
@@ -459,7 +485,6 @@ public class ProjectViewModel : BaseViewModel
             await _containerService.LoadAllData(CurrentProjectModel);
         });
     }
-
     #endregion
 
     #region Методы для CRUD с проектами и стендами

@@ -79,12 +79,21 @@ namespace ReportEngine.App.Commands.Initializers
 
             vm.ProjectCommandProvider.DeleteDrainageComponentFromStandCommand =
                 new RelayCommand(vm.OnDeleteDrainageComponentFromStandCommandExecuted, vm.CanAllCommandsExecute);
+            
+            vm.ProjectCommandProvider.RemoveFrameStandCommand =
+                new RelayCommand(vm.OnRemoveFrameFromStandCommandExecuted, vm.CanAllCommandsExecute);
 
             vm.ProjectCommandProvider.UpdateDrainageComponentInStandCommand =
                 new RelayCommand(vm.OnUpdateDrainageComponentInStandCommandExecuted, vm.CanAllCommandsExecute);
 
             vm.ProjectCommandProvider.SaveObvCommand =
                 new RelayCommand(vm.OnSaveObvCommandExecuted, vm.CanAllCommandsExecute);
+            
+            vm.ProjectCommandProvider.FillStandFieldsFromObvyazkaCommand =
+                new RelayCommand(vm.OnFillStandFieldsFromObvyazkaCommandExecuted, vm.CanAllCommandsExecute);
+            
+            vm.ProjectCommandProvider.UpdateObvInStandCommand =
+                new RelayCommand(vm.OnUpdateObvInStandCommandExecuted, vm.CanAllCommandsExecute);
 
             vm.ProjectCommandProvider.CreateContainerBatchCommand =
                 new RelayCommand(vm.OnCreateContainerStandCommandExecuted, vm.CanAllCommandsExecute);
