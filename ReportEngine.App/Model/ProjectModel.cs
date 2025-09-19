@@ -307,5 +307,20 @@ public class ProjectModel : BaseViewModel
         get => _selectedStandInProject;
         set => Set(ref _selectedStandInProject, value);
     }
+
+    private ObservableCollection<ObvyazkaInStand> _obvyazkiInProject = new();
+    private ObvyazkaInStand _selectedObvyazkaToCopy = new();
+    
+    public ObservableCollection<ObvyazkaInStand> ObvyazkiInProject
+    {
+        get => _obvyazkiInProject;
+        set => Set(ref _obvyazkiInProject, value);
+    }
+
+    public ObvyazkaInStand SelectedObvyazkaToCopy
+    {
+        get => _selectedObvyazkaToCopy;
+        set => Set(ref _selectedObvyazkaToCopy, value);
+    }
     #endregion
 }

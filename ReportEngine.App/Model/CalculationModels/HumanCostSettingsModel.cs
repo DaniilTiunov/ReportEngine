@@ -1,6 +1,11 @@
-﻿using ReportEngine.App.ViewModels;
-using ReportEngine.Shared.CalculationSettings;
+﻿using Mapster;
+using ReportEngine.App.ViewModels;
 using ReportEngine.Shared.Config.IniHeleprs;
+using ReportEngine.Shared.Config.IniHeleprs.CalculationSettings;
+using ReportEngine.Shared.Config.IniHeleprs.CalculationSettings.Interfaces;
+using ReportEngine.Shared.Config.IniHelpers;
+using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
+using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
 
 namespace ReportEngine.App.Model.CalculationModels
 {
@@ -97,46 +102,19 @@ namespace ReportEngine.App.Model.CalculationModels
             set => Set(ref _timeForOthersOperations, value);
         }
 
-        public async Task LoadDataFromIniAsync()
+        public async Task LoadHumanCostDataFromIniAsync()
         {
-            var iniData = await CalculationSettingsManager.LoadHumanCostSettingsAsync();
+            var iniData = await CalculationSettingsManager.LoadAsync<HumanCostSettings, HumanCostSettingsData>();
 
-            if (iniData == null) return;
+            if (iniData == null)
+                return;
 
-            ObvzyakaProduction = iniData.ObvzyakaProduction;
-            CollectorProduction = iniData.CollectorProduction;
-            Tests = iniData.Tests;
-            CommonCheckStand = iniData.CommonCheckStand;
-            TimeForCheckStand = iniData.TimeForCheckStand;
-            TimeForFinalWork = iniData.TimeForFinalWork;
-            TimeForOneDrill = iniData.TimeForOneDrill;
-            TimeForCollectorBoil = iniData.TimeForCollectorBoil;
-            TimeForAllChecks = iniData.TimeForAllChecks;
-            TimeForPrepareAllEquipment = iniData.TimeForPrepareAllEquipment;
-            TimeForDrillOneBus = iniData.TimeForDrillOneBus;
-            TimeForMontageOneInput = iniData.TimeForMontageOneInput;
-            TimeForOthersOperations = iniData.TimeForOthersOperations;
+            iniData.Adapt(this);
         }
         public async Task SaveDataToIniAsync()
         {
-            var iniData = new HumanCostSettings()
-            {
-                ObvzyakaProduction = ObvzyakaProduction,
-                CollectorProduction = CollectorProduction,
-                Tests = Tests,
-                CommonCheckStand = CommonCheckStand,
-                TimeForCheckStand = TimeForCheckStand,
-                TimeForFinalWork = TimeForFinalWork,
-                TimeForOneDrill = TimeForOneDrill,
-                TimeForCollectorBoil = TimeForCollectorBoil,
-                TimeForAllChecks = TimeForAllChecks,
-                TimeForPrepareAllEquipment = TimeForPrepareAllEquipment,
-                TimeForDrillOneBus = TimeForDrillOneBus,
-                TimeForMontageOneInput = TimeForMontageOneInput,
-                TimeForOthersOperations = TimeForOthersOperations
-            };
-            
-            await CalculationSettingsManager.SaveHumanCostSettingsAsync(iniData);
+            var iniData = this.Adapt<HumanCostSettingsData>();
+            await CalculationSettingsManager.SaveAsync<HumanCostSettings, HumanCostSettingsData>(iniData);
         }
     }
 }

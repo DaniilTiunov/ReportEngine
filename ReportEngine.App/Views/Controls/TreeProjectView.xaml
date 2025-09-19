@@ -7,6 +7,7 @@
     xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
     xmlns:localDisplay="clr-namespace:ReportEngine.App.Display"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Background="{DynamicResource PrimaryColor}"
     FontSize="14"
     Foreground="{DynamicResource PrimaryForeground}"
@@ -20,7 +21,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
@@ -42,14 +43,14 @@
                                         x:Name="ProjectCard"
                                         Header="Карточка проекта"
                                         Tag="ProjectCard" />
-                                    <TreeViewItem Header="Редактирование стенда" Tag="BindingTypes">
+                                    <TreeViewItem Header="Редактирование стенда">
                                         <TreeViewItem Header="Стенды" Tag="Stand" />
                                         <TreeViewItem Header="Создание обвязок стенда" Tag="StandObv" />
                                         <TreeViewItem Header="Формирование стенда" Tag="FrameDrainages" />
                                         <TreeViewItem Header="Предварительный просмотр стенда" Tag="ProjectPreview" />
                                         <TreeViewItem Header="Формирование упаковки" Tag="StandsContainer" />
                                     </TreeViewItem>
-                                    <TreeViewItem Header="Создание отчёта" Tag="Reports" />
+                                    <TreeViewItem Header="Создание отчёта" />
                                 </TreeViewItem>
                             </TreeView>
                         </avalonDock:LayoutAnchorable>
