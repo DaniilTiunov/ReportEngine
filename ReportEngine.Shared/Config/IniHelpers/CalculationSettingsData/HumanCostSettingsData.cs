@@ -1,6 +1,8 @@
-﻿namespace ReportEngine.Shared.CalculationSettings;
+﻿using ReportEngine.Shared.Config.IniHeleprs.CalculationSettings.Interfaces;
 
-public class HumanCostSettings
+namespace ReportEngine.Shared.CalculationSettingsData;
+
+public class HumanCostSettingsData : IIniData
 {
     public double ObvzyakaProduction { get; set; } // Изготовление обвязок
     public double CollectorProduction { get; set; } // Изготовление коллектора
