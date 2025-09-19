@@ -36,7 +36,8 @@
                             <TreeView
                                 x:Name="MainTree"
                                 MinWidth="200"
-                                FontSize="14">
+                                FontSize="14"
+                                MouseDoubleClick="OpenCurrentView">
                                 <TreeViewItem Header="Проект" IsExpanded="True">
                                     <TreeViewItem
                                         x:Name="ProjectCard"

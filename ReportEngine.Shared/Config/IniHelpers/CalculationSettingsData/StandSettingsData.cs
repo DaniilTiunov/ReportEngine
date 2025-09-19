@@ -1,6 +1,6 @@
 ﻿using ReportEngine.Shared.Config.IniHeleprs.CalculationSettings.Interfaces;
 
-namespace ReportEngine.Shared.Config.IniHeleprs.CalculationSettingsData;
+namespace ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
 
 public class StandSettingsData : IIniData
 {

@@ -1,11 +1,8 @@
 ﻿using IniParser;
-using IniParser.Model;
-using ReportEngine.Shared.CalculationSettingsData;
 using ReportEngine.Shared.Config.Directory;
-using System.Globalization;
 using ReportEngine.Shared.Config.IniHeleprs.CalculationSettings.Interfaces;
 
-namespace ReportEngine.Shared.Config.IniHeleprs
+namespace ReportEngine.Shared.Config.IniHelpers
 {
     public static class CalculationSettingsManager
     {

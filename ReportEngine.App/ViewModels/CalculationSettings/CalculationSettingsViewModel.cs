@@ -9,6 +9,8 @@ namespace ReportEngine.App.ViewModels.CalculationSettings
     {
         private readonly INotificationService _notificationService;
         public HumanCostSettingsModel HumanCosts { get; set; } = new();
+        public StandSettingsModel StandSettings { get; set; } = new();
+        
 
         public CalculationSettingsViewModel(INotificationService notificationService) 
         {
@@ -26,16 +28,18 @@ namespace ReportEngine.App.ViewModels.CalculationSettings
         {
             await SaveSettings();
         }
-
-
+        
         public async Task LoadSettingsAsync()
         {
-            await HumanCosts.LoadDataFromIniAsync();
+            await HumanCosts.LoadHumanCostDataFromIniAsync();
+            await StandSettings.LoadStandsSettingsDataAsync();
         }
 
         public async Task SaveSettings()
         {
             await HumanCosts.SaveDataToIniAsync();
+            await StandSettings.SaveDataToIniAsync();
+            
             _notificationService.ShowInfo("Настройки сохранены.");
         }
     }
