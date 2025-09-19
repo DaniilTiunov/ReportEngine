@@ -368,3 +368,5 @@ ReportEngine.Shared/Config/Logger/LoggerConfig.cs
 .editorconfig
 Documentation.xml
 План.txt
+.idea/.idea.ReportEngine.App/.idea/copilot.data.migration.agent.xml
+.idea/.idea.ReportEngine.App/.idea/copilot.data.migration.edit.xml

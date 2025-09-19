@@ -2,11 +2,13 @@
     x:Class="ReportEngine.App.Views.Controls.TreeProjectView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avalonDock="https://github.com/Dirkster99/AvalonDock"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
     xmlns:localDisplay="clr-namespace:ReportEngine.App.Display"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Background="{DynamicResource PrimaryColor}"
+    FontSize="14"
     Foreground="{DynamicResource PrimaryForeground}"
     mc:Ignorable="d">
 
@@ -22,46 +24,50 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Border Grid.Column="0" BorderThickness="0,0,1,0">
-            <TreeView
-                x:Name="MainTree"
-                MinWidth="200"
-                FontSize="14"
-                MouseDoubleClick="OpenCurrentView">
-                <TreeView.ItemContainerStyle>
-                    <Style TargetType="{x:Type TreeViewItem}">
-                        <Style.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="FontWeight" Value="Bold" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </TreeView.ItemContainerStyle>
-                <TreeViewItem Header="Проект" IsExpanded="True">
-                    <TreeViewItem
-                        x:Name="ProjectCard"
-                        Header="Карточка проекта"
-                        Tag="ProjectCard" />
-                    <TreeViewItem Header="Редактирование стенда" Tag="BindingTypes">
-                        <TreeViewItem Header="Стенды" Tag="Stand" />
-                        <TreeViewItem Header="Создание обвязок стенда" Tag="StandObv" />
-                        <TreeViewItem Header="Формирование стенда" Tag="FrameDrainages" />
-                        <TreeViewItem Header="Предварительный просмотр стенда" Tag="ProjectPreview" />
-                        <TreeViewItem Header="Формирование упаковки" Tag="StandsContainer" />
-                    </TreeViewItem>
-                    <TreeViewItem Header="Создание отчёта" Tag="Reports" />
-                </TreeViewItem>
-            </TreeView>
-        </Border>
+        <avalonDock:DockingManager>
+            <avalonDock:LayoutRoot>
+                <avalonDock:LayoutPanel x:Name="LayoutPanel" Orientation="Horizontal">
+                    <avalonDock:LayoutAnchorablePane DockHeight="300">
+                        <avalonDock:LayoutAnchorable
+                            Title="Навигация по проекту"
+                            CanClose="False"
+                            CanHide="False">
+                            <TreeView
+                                x:Name="MainTree"
+                                MinWidth="200"
+                                FontSize="14"
+                                MouseDoubleClick="OpenCurrentView">
+                                <TreeViewItem Header="Проект" IsExpanded="True">
+                                    <TreeViewItem
+                                        x:Name="ProjectCard"
+                                        Header="Карточка проекта"
+                                        Tag="ProjectCard" />
+                                    <TreeViewItem Header="Редактирование стенда" Tag="BindingTypes">
+                                        <TreeViewItem Header="Стенды" Tag="Stand" />
+                                        <TreeViewItem Header="Создание обвязок стенда" Tag="StandObv" />
+                                        <TreeViewItem Header="Формирование стенда" Tag="FrameDrainages" />
+                                        <TreeViewItem Header="Предварительный просмотр стенда" Tag="ProjectPreview" />
+                                        <TreeViewItem Header="Формирование упаковки" Tag="StandsContainer" />
+                                    </TreeViewItem>
+                                    <TreeViewItem Header="Создание отчёта" Tag="Reports" />
+                                </TreeViewItem>
+                            </TreeView>
+                        </avalonDock:LayoutAnchorable>
+                    </avalonDock:LayoutAnchorablePane>
+                </avalonDock:LayoutPanel>
+            </avalonDock:LayoutRoot>
+        </avalonDock:DockingManager>
 
         <GridSplitter
             Grid.Column="1"
-            Width="5"
+            Width="2"
             HorizontalAlignment="Stretch"
-            Background="Gray" />
+            Background="WhiteSmoke" />
+
         <dragablz:TabablzControl
             x:Name="MainTabControl"
             Grid.Column="2"
+            Background="{DynamicResource PrimaryColor}"
             ConsolidateOrphanedItems="True"
             InterTabController="{StaticResource InterTabController}"
             ShowDefaultCloseButton="True" />
