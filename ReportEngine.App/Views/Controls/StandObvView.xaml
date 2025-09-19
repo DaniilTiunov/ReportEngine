@@ -524,7 +524,7 @@
                     Height="30"
                     Margin="0,0,10,0"
                     Command="{Binding ProjectCommandProvider.SaveObvCommand}"
-                    Content="Добавить" />
+                    Content="Добавить новую" />
                 <Button
                     Width="150"
                     Height="30"
