@@ -52,6 +52,7 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -543,6 +544,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
                 <GroupBox
@@ -627,6 +629,42 @@
 
                 <GroupBox
                     Grid.Row="2"
+                    Margin="5"
+                    Padding="5"
+                    Header="Все обвязки проекта">
+                    <DataGrid
+                        AutoGenerateColumns="False"
+                        IsReadOnly="True"
+                        ItemsSource="{Binding CurrentProjectModel.ObvyazkiInProject}"
+                        SelectedItem="{Binding CurrentProjectModel.SelectedObvyazkaToCopy}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
+                                Width="150"
+                                Binding="{Binding Stand.Name}"
+                                Header="Стенд" />
+                            <DataGridTextColumn
+                                Width="150"
+                                Binding="{Binding ObvyazkaName}"
+                                Header="Тип" />
+                            <DataGridTextColumn
+                                Width="120"
+                                Binding="{Binding MaterialLine}"
+                                Header="Материал" />
+                            <DataGridTextColumn
+                                Width="120"
+                                Binding="{Binding Armature}"
+                                Header="Арматура" />
+                        </DataGrid.Columns>
+                        <DataGrid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}" Header="Скопировать в выбранный стенд" />
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>
+                    </DataGrid>
+                </GroupBox>
+
+                <GroupBox
+                    Grid.Row="3"
                     Margin="5,5,5,5"
                     Padding="5"
                     Header="Обвязки стенда">

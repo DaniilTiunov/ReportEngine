@@ -203,4 +203,22 @@ public class ProjectService : IProjectService
         if (standFrame != null)
             await _projectRepository.DeleteFrameFromStandAsync(standFrame.Id);
     }
+
+    public async Task LoadAllObvyazkiInProject(ProjectModel projectModel)
+    {
+        var projectInfo = await _projectRepository.GetStandsByIdAsync(projectModel.CurrentProjectId);
+        if (projectInfo?.Stands == null)
+            return;
+
+        var obvyazkiInStands = projectInfo.Stands
+            .Where(s => s.ObvyazkiInStand != null)
+            .SelectMany(s => s.ObvyazkiInStand);
+
+        projectModel.ObvyazkiInProject.Clear();
+        
+        foreach (var obvyazkiInStand in obvyazkiInStands)
+        {
+            projectModel.ObvyazkiInProject.Add(obvyazkiInStand);
+        }
+    }
 }

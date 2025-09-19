@@ -254,6 +254,24 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(AddCustomAdditionalEquipToStandAsync);
     }
 
+    public async void OnCopyObvyazkaToStandsCommandExecuted(object p)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            var sourceObv = CurrentProjectModel.SelectedObvyazkaToCopy;
+            var standId = CurrentProjectModel.SelectedStand.Id;
+            
+            var newObvyazka = ObvyzkaModelWrapper.CloneForStand(sourceObv, standId);
+            
+            await _standService.AddObvyazkaToStandAsync(standId, newObvyazka);
+            
+            OnPropertyChanged(nameof(CurrentProjectModel.SelectedStand.ObvyazkiInStand));
+            OnPropertyChanged(nameof(CurrentProjectModel.ObvyazkiInProject));
+            
+            _notificationService.ShowInfo("Обвязка скопирована в стенд");
+        });
+    }
+
     public void OnSelectObvCommandExecuted(object p)
     {
         ExceptionHelper.SafeExecute(() =>
@@ -465,6 +483,7 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await _standService.LoadObvyazkiInStandsAsync(CurrentProjectModel.Stands);
+            await _projectService.LoadAllObvyazkiInProject(CurrentProjectModel);
         });
     }
 

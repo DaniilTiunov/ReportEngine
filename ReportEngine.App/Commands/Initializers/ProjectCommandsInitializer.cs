@@ -37,6 +37,9 @@ namespace ReportEngine.App.Commands.Initializers
 
             vm.ProjectCommandProvider.SelectObvFromDialogCommand =
                 new RelayCommand(vm.OnSelectObvCommandExecuted, vm.CanAllCommandsExecute);
+            
+            vm.ProjectCommandProvider.CopyObvyazkaToStandsCommand =
+                new RelayCommand(vm.OnCopyObvyazkaToStandsCommandExecuted, vm.CanAllCommandsExecute);
 
             vm.ProjectCommandProvider.CalculateProjectCommand =
                 new RelayCommand(vm.OnCalculateProjectCommandExecuted, vm.CanAllCommandsExecute);
