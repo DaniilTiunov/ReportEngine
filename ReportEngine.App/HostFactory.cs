@@ -146,6 +146,7 @@ public class HostFactory
         services.AddScoped<IReportGenerator, ContainerReportGenerator>();
         services.AddScoped<IReportGenerator, NameplatesReportGenerator>();
         services.AddScoped<IReportGenerator, ComponentListReportGenerator>();
+        services.AddScoped<IReportGenerator, FinPlanReportGenerator>();
         
     }
 

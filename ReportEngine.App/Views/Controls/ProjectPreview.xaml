@@ -449,8 +449,13 @@
                  Height="30"
                  Margin="0,0,10,0"
                  Command="{Binding ProjectCommandProvider.CreateProductionReportCommand}"
-                 Content="Производство" />      
-
+                 Content="Производство" />
+            <Button
+                 Width="70"
+                 Height="30"
+                 Margin="0,0,10,0"
+                 Command="{Binding ProjectCommandProvider.CreateFinplanReportCommand}"
+                 Content="Финплан" />
         </StackPanel>
     </Grid>
 </UserControl>
