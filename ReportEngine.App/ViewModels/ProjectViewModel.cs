@@ -310,7 +310,15 @@ public class ProjectViewModel : BaseViewModel
             await CreateReportAsync(ReportType.ProductionReport, "производство");
 
         });
-   
+    }
+
+    public async void OnCreateFinplanReportCommandExecuted(object p)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () => {
+
+            await CreateReportAsync(ReportType.FinPlanReport, "финплан");
+
+        });
     }
 
     public async void OnSaveChangesInStandCommandExecuted(object obj)

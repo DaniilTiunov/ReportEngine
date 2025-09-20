@@ -65,6 +65,9 @@ namespace ReportEngine.App.Commands.Initializers
             vm.ProjectCommandProvider.CreateContainerReportCommand =
                 new RelayCommand(vm.OnCreateContainerReportCommandExecuted, vm.CanAllCommandsExecute);
 
+            vm.ProjectCommandProvider.CreateFinplanReportCommand =
+                new RelayCommand(vm.OnCreateFinplanReportCommandExecuted, vm.CanAllCommandsExecute);
+
             vm.ProjectCommandProvider.SaveChangesInStandCommand =
                 new RelayCommand(vm.OnSaveChangesInStandCommandExecuted, vm.CanAllCommandsExecute);
 
