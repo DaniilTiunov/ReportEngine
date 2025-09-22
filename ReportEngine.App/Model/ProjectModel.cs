@@ -80,7 +80,7 @@ public class ProjectModel : BaseViewModel
     //
     private float _humanCost; //Трудозатраты
 
-    private string? _manager;
+    private string _manager;
 
     private StandModel? _stand;
 

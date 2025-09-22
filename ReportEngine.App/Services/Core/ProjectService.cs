@@ -107,6 +107,7 @@ public class ProjectService : IProjectService
             EndDate = projectInfo.EndDate.ToDateTime(TimeOnly.MinValue),
             OrderCustomer = projectInfo.OrderCustomer,
             RequestProduction = projectInfo.RequestProduction,
+            Manager = projectInfo.Manager,
             MarkMinus = projectInfo.MarkMinus,
             MarkPlus = projectInfo.MarkPlus,
             IsGalvanized = projectInfo.IsGalvanized,
