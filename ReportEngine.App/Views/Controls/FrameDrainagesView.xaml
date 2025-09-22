@@ -11,9 +11,9 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <!--  Справочник рам, дренажей и дополнительные секции  -->
-            <ColumnDefinition Width="350" />
+            <ColumnDefinition Width="550" />
             <!--  Добавленные к стенду рамы и дренажи  -->
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="450" />
             <!--  Список стендов  -->
         </Grid.ColumnDefinitions>
 
@@ -29,8 +29,8 @@
                 <GroupBox>
                     <GroupBox.Header>
                         <TextBlock>
-                            <Run Text="Дренажи и крепления по стенду — " />
-                            <Run Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
+                            <Run FontSize="16" Text="Добавить дренажи и крепления в стенд — " />
+                            <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
                         </TextBlock>
                     </GroupBox.Header>
                     <TabControl>
@@ -44,7 +44,10 @@
                                     ItemsSource="{Binding CurrentStandModel.NewDrainage.Purposes}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Назначение" />
-                                        <DataGridTextColumn Binding="{Binding Material, Mode=TwoWay}" Header="Материал" />
+                                        <DataGridTextColumn
+                                            Width="*"
+                                            Binding="{Binding Material, Mode=TwoWay}"
+                                            Header="Материал" />
                                         <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay}" Header="Длина (м)" />
                                         <DataGridTemplateColumn Header="Действия">
                                             <DataGridTemplateColumn.CellTemplate>
@@ -105,12 +108,11 @@
                 <GroupBox>
                     <GroupBox.Header>
                         <TextBlock>
-                            <Run Text="Дополнительные комплектующие по стенду — " />
-                            <Run Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
+                            <Run FontSize="16" Text="Добавить дополнительные комплектующие встенд — " />
+                            <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
                         </TextBlock>
                     </GroupBox.Header>
                     <StackPanel>
-                        <!-- <TextBox Margin="5" Text="{Binding CurrentStandModel.NewAdditionalEquip.Name, Mode=TwoWay}" /> -->
                         <DataGrid
                             Margin="5"
                             AutoGenerateColumns="False"
@@ -118,9 +120,18 @@
                             ItemsSource="{Binding CurrentStandModel.NewAdditionalEquip.Purposes}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Название" />
-                                <DataGridTextColumn Binding="{Binding Material, Mode=TwoWay}" Header="Доп.комплекующее" />
-                                <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay}" Header="Кол-во(шт/м)" />
-                                <DataGridTextColumn Binding="{Binding Measure, Mode=TwoWay}" Header="Ед. изм." />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Material, Mode=TwoWay}"
+                                    Header="Доп.комплекующее" />
+                                <DataGridTextColumn
+                                    Width="105"
+                                    Binding="{Binding Quantity, Mode=TwoWay}"
+                                    Header="Кол-во(шт/м)" />
+                                <DataGridTextColumn
+                                    Width="70"
+                                    Binding="{Binding Measure, Mode=TwoWay}"
+                                    Header="Ед. изм." />
                                 <DataGridTemplateColumn Header="Выбрать">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
@@ -145,8 +156,8 @@
                 <GroupBox>
                     <GroupBox.Header>
                         <TextBlock>
-                            <Run Text="Электрические компоненты по стенду — " />
-                            <Run Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
+                            <Run FontSize="16" Text="Добавить электрические компоненты в стенд — " />
+                            <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
                         </TextBlock>
                     </GroupBox.Header>
                     <StackPanel>
@@ -159,7 +170,10 @@
                             ItemsSource="{Binding CurrentStandModel.NewElectricalComponent.Purposes}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Назначение" />
-                                <DataGridTextColumn Binding="{Binding Material, Mode=TwoWay}" Header="Доп.комплекующее" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Material, Mode=TwoWay}"
+                                    Header="Доп.комплекующее" />
                                 <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay}" Header="Кол-во(шт/м)" />
                                 <DataGridTextColumn Binding="{Binding Measure, Mode=TwoWay}" Header="Ед. изм." />
                                 <DataGridTemplateColumn Header="Выбрать">
@@ -186,23 +200,72 @@
         </ScrollViewer>
         <!--  Добавленные к стенду рамы и дренажи  -->
         <StackPanel Grid.Column="1" Margin="10">
-            <GroupBox Header="Дренажные компелктующие в стенде">
-                <ListView
-                    DisplayMemberPath="Purpose"
-                    ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand}"
-                    SelectedItem="{Binding CurrentStandModel.SelectedDrainage}" />
+            <GroupBox>
+                <GroupBox.Header>
+                    <TextBlock>
+                        <Run FontSize="16" Text="Дренажные компелктующие в стенде -" />
+                        <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
+                    </TextBlock>
+                </GroupBox.Header>
+                <DataGrid ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand}" SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Назначение" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding Material, Mode=TwoWay}"
+                            Header="Материал" />
+                        <DataGridTextColumn
+                            Width="70"
+                            Binding="{Binding Quantity, Mode=TwoWay}"
+                            Header="Кол-во" />
+                    </DataGrid.Columns>
+                </DataGrid>
             </GroupBox>
-            <GroupBox Header="Доп. комплектующие в стенде">
-                <ListView
-                    DisplayMemberPath="Purpose"
-                    ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand}"
-                    SelectedItem="{Binding CurrentStandModel.SelectedDrainage}" />
+            <GroupBox>
+                <GroupBox.Header>
+                    <TextBlock>
+                        <Run FontSize="16" Text="Доп. комплектующие в стенде -" />
+                        <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
+                    </TextBlock>
+                </GroupBox.Header>
+                <DataGrid ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand}" SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Назначение" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding Material, Mode=TwoWay}"
+                            Header="Материал" />
+                        <DataGridTextColumn
+                            Width="70"
+                            Binding="{Binding Quantity, Mode=TwoWay}"
+                            Header="Кол-во" />
+                    </DataGrid.Columns>
+                </DataGrid>
             </GroupBox>
-            <GroupBox Header="Электрические компоненты в стенде">
-                <ListView
-                    DisplayMemberPath="Purpose"
+            <GroupBox>
+                <GroupBox.Header>
+                    <TextBlock>
+                        <Run FontSize="16" Text="Электрические компоненты в стенде — " />
+                        <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
+                    </TextBlock>
+                </GroupBox.Header>
+                <DataGrid
+                    AutoGenerateColumns="False"
+                    CanUserAddRows="False"
                     ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}"
-                    SelectedItem="{Binding CurrentStandModel.SelectedDrainage}" />
+                    SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Назначение" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding Material, Mode=TwoWay}"
+                            Header="Материал" />
+                        <DataGridTextColumn
+                            Width="70"
+                            Binding="{Binding Quantity, Mode=TwoWay}"
+                            Header="Кол-во" />
+                    </DataGrid.Columns>
+                </DataGrid>
             </GroupBox>
         </StackPanel>
 
