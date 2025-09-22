@@ -18,6 +18,9 @@ public class CalculationSettingsViewModel : BaseViewModel
 
     public HumanCostSettingsModel HumanCosts { get; set; } = new();
     public StandSettingsModel StandSettings { get; set; } = new();
+    public FrameSettingsModel FrameSettings { get; set; } = new();
+    public SandBlasteSettingModel SandBlaste { get; set; } = new();
+    public ElectricalSettingsModel ElectricalSettings { get; set; } = new();
 
     public ICommand SaveSettingsCommand { get; set; }
 
@@ -35,12 +38,18 @@ public class CalculationSettingsViewModel : BaseViewModel
     {
         await HumanCosts.LoadHumanCostDataFromIniAsync();
         await StandSettings.LoadStandsSettingsDataAsync();
+        await FrameSettings.LoadFrameDataFromIniAsync();
+        await SandBlaste.LoadSandBlastDataFromIniAsync();
+        await ElectricalSettings.LoadElectricalDataFromIniAsync();
     }
 
     public async Task SaveSettings()
     {
         await HumanCosts.SaveDataToIniAsync();
         await StandSettings.SaveDataToIniAsync();
+        await FrameSettings.SaveFrameDataToIniAsync();
+        await SandBlaste.SaveSandBlastDataToIniAsync();
+        await ElectricalSettings.SaveElectricalDataToIniAsync();
 
         _notificationService.ShowInfo("Настройки сохранены.");
     }

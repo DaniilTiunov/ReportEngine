@@ -501,7 +501,7 @@
                                 Grid.Row="0"
                                 Grid.Column="1"
                                 Margin="0,20,0,20"
-                                Text="{Binding HumanCosts.ObvzyakaProduction, Mode=TwoWay}" />
+                                Text="{Binding FrameSettings.FrameProduction, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="1"
@@ -512,7 +512,7 @@
                                 Grid.Row="1"
                                 Grid.Column="1"
                                 Margin="0,20,0,20"
-                                Text="{Binding HumanCosts.CollectorProduction, Mode=TwoWay}" />
+                                Text="{Binding FrameSettings.Painting, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="0"
@@ -523,7 +523,7 @@
                                 Grid.Row="0"
                                 Grid.Column="3"
                                 Margin="0,20,0,20"
-                                Text="{Binding HumanCosts.TimeForCheckStand, Mode=TwoWay}" />
+                                Text="{Binding FrameSettings.TimeForProductionFrame, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="1"
@@ -534,7 +534,7 @@
                                 Grid.Row="1"
                                 Grid.Column="3"
                                 Margin="0,20,0,20"
-                                Text="{Binding HumanCosts.TimeForFinalWork, Mode=TwoWay}" />
+                                Text="{Binding FrameSettings.TimeForPaintFrame, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="0"
@@ -545,7 +545,7 @@
                                 Grid.Row="0"
                                 Grid.Column="5"
                                 Margin="0,20,0,20"
-                                Text="{Binding HumanCosts.TimeForPrepareAllEquipment, Mode=TwoWay}" />
+                                Text="{Binding FrameSettings.TimeForPrepareFrame, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="1"
@@ -556,7 +556,7 @@
                                 Grid.Row="1"
                                 Grid.Column="5"
                                 Margin="0,20,0,20"
-                                Text="{Binding HumanCosts.TimeForDrillOneBus, Mode=TwoWay}" />
+                                Text="{Binding FrameSettings.TimeForPaintObv, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="2"
@@ -576,7 +576,7 @@
                                 Grid.Column="1"
                                 Grid.ColumnSpan="2"
                                 Margin="0,4,0,6"
-                                Text="{Binding HumanCosts.TimeForFinalWork, Mode=TwoWay}" />
+                                Text="{Binding FrameSettings.MaterialOne, Mode=TwoWay}" />
 
                             <Button
                                 Grid.Row="3"
@@ -595,7 +595,7 @@
                                 Grid.Column="4"
                                 Grid.ColumnSpan="2"
                                 Margin="140,5,2,7"
-                                Text="{Binding HumanCosts.TimeForPrepareAllEquipment, Mode=TwoWay}" />
+                                Text="{Binding FrameSettings.CountMaterialOne, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="4"
@@ -608,7 +608,7 @@
                                 Grid.Column="1"
                                 Grid.ColumnSpan="2"
                                 Margin="0,4,0,6"
-                                Text="{Binding HumanCosts.TimeForFinalWork, Mode=TwoWay}" />
+                                Text="{Binding FrameSettings.MaterialTwo, Mode=TwoWay}" />
 
                             <Button
                                 Grid.Row="4"
@@ -627,7 +627,7 @@
                                 Grid.Column="4"
                                 Grid.ColumnSpan="2"
                                 Margin="140,5,2,7"
-                                Text="{Binding HumanCosts.TimeForPrepareAllEquipment, Mode=TwoWay}" />
+                                Text="{Binding FrameSettings.CountMaterialTwo, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="5"
@@ -640,7 +640,7 @@
                                 Grid.Column="1"
                                 Grid.ColumnSpan="2"
                                 Margin="0,4,0,6"
-                                Text="{Binding HumanCosts.TimeForFinalWork, Mode=TwoWay}" />
+                                Text="{Binding FrameSettings.AssemblyCost, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="5"
@@ -653,7 +653,7 @@
                                 Grid.Column="4"
                                 Grid.ColumnSpan="2"
                                 Margin="0,4,0,6"
-                                Text="{Binding HumanCosts.TimeForFinalWork, Mode=TwoWay}" />
+                                Text="{Binding FrameSettings.TimeForAssemblyWork, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="6"
@@ -673,7 +673,7 @@
                                 Grid.Column="1"
                                 Grid.ColumnSpan="2"
                                 Margin="0,4,0,6"
-                                Text="{Binding HumanCosts.TimeForFinalWork, Mode=TwoWay}" />
+                                Text="{Binding FrameSettings.PillarCost, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="7"
@@ -686,7 +686,7 @@
                                 Grid.Column="4"
                                 Grid.ColumnSpan="2"
                                 Margin="0,4,0,6"
-                                Text="{Binding HumanCosts.TimeForFinalWork, Mode=TwoWay}" />
+                                Text="{Binding FrameSettings.TimePillarProduction, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="9"
@@ -706,7 +706,7 @@
                                 Grid.Column="1"
                                 Grid.ColumnSpan="2"
                                 Margin="0,4,0,6"
-                                Text="{Binding HumanCosts.TimeForFinalWork, Mode=TwoWay}" />
+                                Text="{Binding FrameSettings.ClosetWorkCost, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="10"
@@ -719,7 +719,7 @@
                                 Grid.Column="4"
                                 Grid.ColumnSpan="2"
                                 Margin="0,4,0,6"
-                                Text="{Binding HumanCosts.TimeForFinalWork, Mode=TwoWay}" />
+                                Text="{Binding FrameSettings.TimeClosetPrepare, Mode=TwoWay}" />
                         </Grid>
                     </TabItem>
 
@@ -747,7 +747,7 @@
                                 Grid.Row="0"
                                 Grid.Column="1"
                                 Margin="0,20,0,20"
-                                Text="{Binding HumanCosts.ObvzyakaProduction, Mode=TwoWay}" />
+                                Text="{Binding SandBlaste.SandBlastWork, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="1"
@@ -758,7 +758,7 @@
                                 Grid.Row="1"
                                 Grid.Column="1"
                                 Margin="0,20,0,20"
-                                Text="{Binding HumanCosts.CollectorProduction, Mode=TwoWay}" />
+                                Text="{Binding SandBlaste.TimeSandBlastWork, Mode=TwoWay}" />
                         </Grid>
                     </TabItem>
 
@@ -786,7 +786,7 @@
                                 Grid.Row="0"
                                 Grid.Column="1"
                                 Margin="0,20,0,20"
-                                Text="{Binding HumanCosts.ObvzyakaProduction, Mode=TwoWay}" />
+                                Text="{Binding ElectricalSettings.ElectricalMontage, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="1"
@@ -797,7 +797,7 @@
                                 Grid.Row="1"
                                 Grid.Column="1"
                                 Margin="0,20,0,20"
-                                Text="{Binding HumanCosts.CollectorProduction, Mode=TwoWay}" />
+                                Text="{Binding ElectricalSettings.TimeMontageWire, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="2"
@@ -808,7 +808,7 @@
                                 Grid.Row="2"
                                 Grid.Column="1"
                                 Margin="0,20,0,20"
-                                Text="{Binding HumanCosts.CollectorProduction, Mode=TwoWay}" />
+                                Text="{Binding ElectricalSettings.TimeMontageCable, Mode=TwoWay}" />
                         </Grid>
                     </TabItem>
                 </TabControl>

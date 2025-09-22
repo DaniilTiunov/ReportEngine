@@ -108,8 +108,6 @@ public class StandSettingsModel : BaseViewModel
             return;
 
         iniData.Adapt(this);
-
-        ;
     }
 
     public async Task SaveDataToIniAsync()
