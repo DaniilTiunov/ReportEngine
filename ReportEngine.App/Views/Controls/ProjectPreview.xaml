@@ -33,8 +33,21 @@
             Grid.Row="0"
             Grid.Column="0"
             Margin="5"
-            Padding="5"
-            Header="Стенды проекта">
+            Padding="5">
+            <GroupBox.Header>
+                <TextBlock>
+                    <Run FontSize="16" Text="Стенды в проекте — " />
+                    <Run
+                        FontSize="15"
+                        FontWeight="Bold"
+                        Text="{Binding CurrentProjectModel.Company, TargetNullValue='(нет данных)'}" />
+                    <Run FontSize="16" Text=" объекта — " />
+                    <Run
+                        FontSize="15"
+                        FontWeight="Bold"
+                        Text="{Binding CurrentProjectModel.Object, TargetNullValue='(нет данных)'}" />
+                </TextBlock>
+            </GroupBox.Header>
             <ListView ItemsSource="{Binding CurrentProjectModel.Stands}" SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}">
                 <ListView.View>
                     <GridView>
@@ -78,7 +91,7 @@
             Padding="5">
             <GroupBox.Header>
                 <TextBlock>
-                    <Run Text="Рамы в стенде — " />
+                    <Run FontSize="16" Text="Рамы в стенде — " />
                     <Run
                         FontSize="15"
                         FontWeight="Bold"
@@ -111,7 +124,7 @@
             Padding="5">
             <GroupBox.Header>
                 <TextBlock>
-                    <Run Text="Обвязки по стенду — " />
+                    <Run FontSize="16" Text="Обвязки по стенду — " />
                     <Run
                         FontSize="15"
                         FontWeight="Bold"
@@ -122,7 +135,7 @@
                 <ListView.View>
                     <GridView>
                         <GridViewColumn
-                            Width="100"
+                            Width="*"
                             DisplayMemberBinding="{Binding ObvyazkaName}"
                             Header="Тип" />
                         <GridViewColumn
@@ -145,6 +158,14 @@
                             Width="100"
                             DisplayMemberBinding="{Binding FirstSensorType}"
                             Header="Датчик 1" />
+                        <GridViewColumn
+                            Width="100"
+                            DisplayMemberBinding="{Binding SecondSensorType}"
+                            Header="Датчик 2" />
+                        <GridViewColumn
+                            Width="100"
+                            DisplayMemberBinding="{Binding ThirdSensorType}"
+                            Header="Датчик 3" />
                     </GridView>
                 </ListView.View>
                 <ListView.ContextMenu>
@@ -165,7 +186,7 @@
             Padding="5">
             <GroupBox.Header>
                 <TextBlock>
-                    <Run Text="Чертёж стенда и информация по обвязке — " />
+                    <Run FontSize="16" Text="Чертёж стенда и информация по обвязке — " />
                     <Run
                         FontSize="15"
                         FontWeight="Bold"
@@ -273,7 +294,7 @@
             Padding="5">
             <GroupBox.Header>
                 <TextBlock>
-                    <Run Text="Электрические компоненты в стенде — " />
+                    <Run FontSize="16" Text="Электрические компоненты в стенде — " />
                     <Run
                         FontSize="14"
                         FontWeight="Bold"
@@ -286,7 +307,10 @@
                 SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedElectricalComponent}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
-                    <DataGridTextColumn Binding="{Binding Material}" Header="Доп. комплектующее" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Material}"
+                        Header="Доп. комплектующее" />
                     <DataGridTextColumn Binding="{Binding Quantity}" Header="Кол-во" />
                     <DataGridTextColumn Binding="{Binding Measure}" Header="Ед. изм." />
                     <DataGridTextColumn Binding="{Binding CostPerUnit}" Header="Цена" />
@@ -320,7 +344,7 @@
             Padding="5">
             <GroupBox.Header>
                 <TextBlock>
-                    <Run Text="Дополнительные компоненты в стенде — " />
+                    <Run FontSize="16" Text="Дополнительные компоненты в стенде — " />
                     <Run
                         FontSize="14"
                         FontWeight="Bold"
@@ -333,7 +357,10 @@
                 SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedAdditionalEquip}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
-                    <DataGridTextColumn Binding="{Binding Material}" Header="Доп. комплектующее" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Material}"
+                        Header="Доп. комплектующее" />
                     <DataGridTextColumn Binding="{Binding Quantity}" Header="Кол-во" />
                     <DataGridTextColumn Binding="{Binding Measure}" Header="Ед. изм." />
                     <DataGridTextColumn Binding="{Binding CostPerUnit}" Header="Цена" />
@@ -367,7 +394,7 @@
             Padding="5">
             <GroupBox.Header>
                 <TextBlock>
-                    <Run Text="Дренаж в стенде — " />
+                    <Run FontSize="16" Text="Дренаж в стенде — " />
                     <Run
                         FontSize="14"
                         FontWeight="Bold"
@@ -380,7 +407,10 @@
                 SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedDrainagePurpose}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
-                    <DataGridTextColumn Binding="{Binding Material}" Header="Материал" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Material}"
+                        Header="Материал" />
                     <DataGridTextColumn Binding="{Binding Quantity}" Header="Кол-во" />
                     <DataGridTextColumn Binding="{Binding Measure}" Header="Ед. изм." />
                     <DataGridTextColumn Binding="{Binding CostPerUnit}" Header="Цена" />
