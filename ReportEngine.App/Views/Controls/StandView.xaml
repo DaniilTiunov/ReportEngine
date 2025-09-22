@@ -5,13 +5,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Background="{DynamicResource PrimaryColor}"
-    Foreground="{DynamicResource PrimaryForeground}"
     FontSize="14"
+    Foreground="{DynamicResource PrimaryForeground}"
     mc:Ignorable="d">
 
     <Grid Margin="20">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
@@ -34,7 +34,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="35" />
+                <RowDefinition Height="40" />
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
@@ -246,6 +246,7 @@
 
                 <ListView
                     Grid.Row="1"
+                    Grid.Column="4"
                     ItemsSource="{Binding CurrentProjectModel.Stands}"
                     SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}">
                     <ListView.View>
@@ -275,8 +276,7 @@
                     </ListView.View>
                     <ListView.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}"
-                                      Header="Удалить" />
+                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}" Header="Удалить" />
                         </ContextMenu>
                     </ListView.ContextMenu>
                 </ListView>

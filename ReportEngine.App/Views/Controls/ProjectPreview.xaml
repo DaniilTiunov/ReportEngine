@@ -48,7 +48,10 @@
                         Text="{Binding CurrentProjectModel.Object, TargetNullValue='(нет данных)'}" />
                 </TextBlock>
             </GroupBox.Header>
-            <ListView ItemsSource="{Binding CurrentProjectModel.Stands}" SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}">
+            <ListView
+                FontSize="15"
+                ItemsSource="{Binding CurrentProjectModel.Stands}"
+                SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn
@@ -100,17 +103,39 @@
             </GroupBox.Header>
             <ListView
                 DisplayMemberPath="Name"
+                FontSize="15"
                 ItemsSource="{Binding CurrentProjectModel.SelectedStand.FramesInStand}"
                 SelectedItem="{Binding CurrentStandModel.SelectedFrame}">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Наименование" />
-                        <GridViewColumn DisplayMemberBinding="{Binding FrameType}" Header="Тип" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Width}" Header="Ширина" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Height}" Header="Высота" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Depth}" Header="Глубина" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Weight}" Header="Масса" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Designe}" Header="Описание по КД" />
+                        <GridViewColumn
+                            Width="150"
+                            DisplayMemberBinding="{Binding Name}"
+                            Header="Наименование" />
+                        <GridViewColumn
+                            Width="150"
+                            DisplayMemberBinding="{Binding FrameType}"
+                            Header="Тип" />
+                        <GridViewColumn
+                            Width="80"
+                            DisplayMemberBinding="{Binding Width}"
+                            Header="Ширина" />
+                        <GridViewColumn
+                            Width="80"
+                            DisplayMemberBinding="{Binding Height}"
+                            Header="Высота" />
+                        <GridViewColumn
+                            Width="80"
+                            DisplayMemberBinding="{Binding Depth}"
+                            Header="Глубина" />
+                        <GridViewColumn
+                            Width="80"
+                            DisplayMemberBinding="{Binding Weight}"
+                            Header="Масса" />
+                        <GridViewColumn
+                            Width="150"
+                            DisplayMemberBinding="{Binding Designe}"
+                            Header="Описание по КД" />
                     </GridView>
                 </ListView.View>
             </ListView>
@@ -131,7 +156,10 @@
                         Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(нет данных)'}" />
                 </TextBlock>
             </GroupBox.Header>
-            <ListView ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}" SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand, Mode=TwoWay}">
+            <ListView
+                FontSize="15"
+                ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}"
+                SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand, Mode=TwoWay}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn
@@ -303,6 +331,7 @@
             </GroupBox.Header>
             <DataGrid
                 CanUserAddRows="True"
+                FontSize="15"
                 ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}"
                 SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedElectricalComponent}">
                 <DataGrid.Columns>
@@ -353,6 +382,7 @@
             </GroupBox.Header>
             <DataGrid
                 CanUserAddRows="True"
+                FontSize="15"
                 ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand}"
                 SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedAdditionalEquip}">
                 <DataGrid.Columns>
@@ -403,6 +433,7 @@
             </GroupBox.Header>
             <DataGrid
                 CanUserAddRows="True"
+                FontSize="15"
                 ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand}"
                 SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedDrainagePurpose}">
                 <DataGrid.Columns>
