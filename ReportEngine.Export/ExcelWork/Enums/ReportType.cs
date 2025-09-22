@@ -8,5 +8,6 @@ public enum ReportType
     ProductionReport,
     SummaryReport,
     ContainerReport,
-    NameplatesReport
+    NameplatesReport,
+    PassportsReport
 }

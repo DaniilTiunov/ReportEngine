@@ -29,7 +29,7 @@ public class ProjectCommandProvider
     public ICommand RemoveObvFromStandCommand { get; set; }
     public ICommand UpdateObvInStandCommand { get; set; }
     public ICommand CopyObvyazkaToStandsCommand { get; set; }
-
+    public ICommand CreatePassportReportCommand { get; set; }
     public ICommand FillStandFieldsFromObvyazkaCommand { get; set; }
     public ICommand RemoveFrameStandCommand { get; set; }
     public ICommand CreateContainerReportCommand { get; set; }

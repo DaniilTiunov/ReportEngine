@@ -35,8 +35,7 @@
             Margin="5"
             Padding="5"
             Header="Стенды проекта">
-            <ListView ItemsSource="{Binding CurrentProjectModel.Stands}"
-                      SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}">
+            <ListView ItemsSource="{Binding CurrentProjectModel.Stands}" SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn
@@ -119,8 +118,7 @@
                         Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(нет данных)'}" />
                 </TextBlock>
             </GroupBox.Header>
-            <ListView ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}"
-                      SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand, Mode=TwoWay}">
+            <ListView ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}" SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand, Mode=TwoWay}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn
@@ -151,8 +149,7 @@
                 </ListView.View>
                 <ListView.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}"
-                                  Header="Удалить обвязку из стенда" />
+                        <MenuItem Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}" Header="Удалить обвязку из стенда" />
                         <MenuItem Header="Копировать обвязку" />
                     </ContextMenu>
                 </ListView.ContextMenu>
@@ -308,10 +305,8 @@
                 </DataGrid.Columns>
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Command="{Binding ProjectCommandProvider.UpdateElectricalComponentInStandCommand}"
-                                  Header="Сохранить изменения" />
-                        <MenuItem Command="{Binding ProjectCommandProvider.DeleteElectricalComponentFromStandCommand}"
-                                  Header="Удалить" />
+                        <MenuItem Command="{Binding ProjectCommandProvider.UpdateElectricalComponentInStandCommand}" Header="Сохранить изменения" />
+                        <MenuItem Command="{Binding ProjectCommandProvider.DeleteElectricalComponentFromStandCommand}" Header="Удалить" />
                     </ContextMenu>
                 </DataGrid.ContextMenu>
             </DataGrid>
@@ -357,10 +352,8 @@
                 </DataGrid.Columns>
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Command="{Binding ProjectCommandProvider.UpdateAdditionalComponentInStandCommand}"
-                                  Header="Сохранить изменения" />
-                        <MenuItem Command="{Binding ProjectCommandProvider.DeleteAdditionalComponentFromStandCommand}"
-                                  Header="Удалить" />
+                        <MenuItem Command="{Binding ProjectCommandProvider.UpdateAdditionalComponentInStandCommand}" Header="Сохранить изменения" />
+                        <MenuItem Command="{Binding ProjectCommandProvider.DeleteAdditionalComponentFromStandCommand}" Header="Удалить" />
                     </ContextMenu>
                 </DataGrid.ContextMenu>
             </DataGrid>
@@ -406,10 +399,8 @@
                 </DataGrid.Columns>
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Command="{Binding ProjectCommandProvider.UpdateDrainageComponentInStandCommand}"
-                                  Header="Сохранить изменения" />
-                        <MenuItem Command="{Binding ProjectCommandProvider.DeleteDrainageComponentFromStandCommand}"
-                                  Header="Удалить" />
+                        <MenuItem Command="{Binding ProjectCommandProvider.UpdateDrainageComponentInStandCommand}" Header="Сохранить изменения" />
+                        <MenuItem Command="{Binding ProjectCommandProvider.DeleteDrainageComponentFromStandCommand}" Header="Удалить" />
                     </ContextMenu>
                 </DataGrid.ContextMenu>
             </DataGrid>
@@ -465,6 +456,12 @@
                 Margin="0,0,10,0"
                 Command="{Binding ProjectCommandProvider.CreateFinplanReportCommand}"
                 Content="Финплан" />
+            <Button
+                Width="70"
+                Height="30"
+                Margin="0,0,10,0"
+                Command="{Binding ProjectCommandProvider.CreatePassportReportCommand}"
+                Content="Паспорт" />
         </StackPanel>
     </Grid>
 </UserControl>

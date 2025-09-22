@@ -226,7 +226,7 @@ public class ComponentListReportGenerator : IReportGenerator
             .SelectMany(fr => fr.Frame.Components)
             .Select(comp => new
             {
-                name = comp.ComponentType,
+                name = comp.ComponentName,
                 unit = comp.Measure,
                 quantity = comp.Count
             })

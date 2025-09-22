@@ -49,7 +49,7 @@ public class ProjectService : IProjectService
             Object = projectModel.Object,
             StandCount = projectModel.StandCount,
             Cost = projectModel.Cost,
-            HumanCost = projectModel.HumanCost,
+            HumanCost = projectModel.HumanCost ?? 0.0f,
             Manager = projectModel.Manager,
             Status = ComboBoxHelper.ComboBoxChangedValue<ProjectStatus>(projectModel.Status),
             StartDate = DateOnly.FromDateTime(projectModel.StartDate),
@@ -61,6 +61,7 @@ public class ProjectService : IProjectService
             MarkPlus = projectModel.MarkPlus,
             IsGalvanized = projectModel.IsGalvanized
         };
+        
         await _projectRepository.UpdateAsync(projectInfo);
     }
 
@@ -101,6 +102,7 @@ public class ProjectService : IProjectService
             Object = projectInfo.Object,
             StandCount = projectInfo.StandCount,
             Cost = projectInfo.Cost,
+            HumanCost = projectInfo.HumanCost,
             Status = projectInfo.Status.ToString(),
             StartDate = projectInfo.StartDate.ToDateTime(TimeOnly.MinValue),
             OutOfProduction = projectInfo.OutOfProduction.ToDateTime(TimeOnly.MinValue),

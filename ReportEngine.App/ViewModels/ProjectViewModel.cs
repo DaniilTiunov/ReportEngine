@@ -327,6 +327,14 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
+    public async void OnCreatePassportReportCommandExecuted(object p)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await CreateReportAsync(ReportType.PassportsReport, "паспорт");
+        });
+    }
+
     public async void OnSaveChangesInStandCommandExecuted(object obj)
     {
         await ExceptionHelper.SafeExecuteAsync(SaveChangesInStandAsync);
@@ -734,6 +742,8 @@ public class ProjectViewModel : BaseViewModel
 
         CurrentStandModel.NewDrainage = new FormedDrainage();
         CurrentStandModel.InitializeDefaultPurposes();
+
+        await LoadPurposesInStandsAsync();
     }
 
     private async Task AddCustomElectricalComponentToStandAsync()
@@ -748,6 +758,8 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(AllAvailableElectricalComponents));
         CurrentStandModel.NewElectricalComponent = new FormedElectricalComponent();
         CurrentStandModel.InitializeDefaultPurposes();
+        
+        await LoadPurposesInStandsAsync();
     }
 
     private async Task AddCustomAdditionalEquipToStandAsync()
@@ -762,6 +774,8 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(AllAvailableAdditionalEquips));
         CurrentStandModel.NewAdditionalEquip = new FormedAdditionalEquip();
         CurrentStandModel.InitializeDefaultPurposes();
+        
+        await LoadPurposesInStandsAsync();
     }
 
     public async Task UpdateStandBlueprintAsync(byte[] imageData, string imageType)

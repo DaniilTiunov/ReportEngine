@@ -68,6 +68,9 @@ public static class ProjectCommandsInitializer
 
         vm.ProjectCommandProvider.CreateFinplanReportCommand =
             new RelayCommand(vm.OnCreateFinplanReportCommandExecuted, vm.CanAllCommandsExecute);
+        
+        vm.ProjectCommandProvider.CreatePassportReportCommand =
+            new RelayCommand(vm.OnCreatePassportReportCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.SaveChangesInStandCommand =
             new RelayCommand(vm.OnSaveChangesInStandCommandExecuted, vm.CanAllCommandsExecute);

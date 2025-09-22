@@ -23,7 +23,7 @@ public class ProjectModel : BaseViewModel
             Object = Object,
             StandCount = StandCount,
             Cost = Cost,
-            HumanCost = HumanCost,
+            HumanCost = HumanCost ?? 0.0f,
             Manager = Manager,
             Status = ComboBoxHelper.ComboBoxChangedValue<ProjectStatus>(Status),
             StartDate = DateOnly.FromDateTime(StartDate),
@@ -78,7 +78,7 @@ public class ProjectModel : BaseViewModel
 
 
     //
-    private float _humanCost; //Трудозатраты
+    private float? _humanCost; //Трудозатраты
 
     private string _manager;
 
@@ -155,7 +155,7 @@ public class ProjectModel : BaseViewModel
         set => Set(ref _cost, value);
     } //Стоимость
 
-    public float HumanCost
+    public float? HumanCost
     {
         get => _humanCost;
         set => Set(ref _humanCost, value);

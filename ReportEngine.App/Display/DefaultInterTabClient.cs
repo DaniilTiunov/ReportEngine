@@ -10,7 +10,7 @@ public class DefaultInterTabClient : IInterTabClient
         // Создаём новое окно-хост для «оторванной» вкладки
         var hostWindow = new Window
         {
-            Title = "Detached",
+            Title = "Смета КИП",
             Width = 1000,
             Height = 600,
             Owner = Application.Current?.MainWindow,
