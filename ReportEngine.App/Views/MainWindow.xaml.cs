@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
+using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
+using ReportEngine.App.ViewModels.CalculationSettings;
 using ReportEngine.App.Views.UpdateInformation;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
@@ -17,12 +19,16 @@ namespace ReportEngine.App;
 public partial class MainWindow : Window //Это так называемый "Code Behind" файл для MainWindow.xaml
 {
     private readonly MainWindowViewModel _mainViewModel;
+    private readonly IServiceProvider _serviceProvider;
 
-    public MainWindow(MainWindowViewModel mainViewModel)
+    public MainWindow(
+        MainWindowViewModel mainViewModel,
+        IServiceProvider serviceProvider)
     {
         InitializeComponent();
         DataContext = mainViewModel;
         _mainViewModel = mainViewModel;
+        _serviceProvider = serviceProvider;
 
         Loaded += MainWindow_Loaded;
         StateChanged += MindowWindow_StateChanges;
@@ -35,8 +41,17 @@ public partial class MainWindow : Window //Это так называемый "C
 
         MainWindow_StartUpState();
 
+        
         await _mainViewModel.ShowAllProjectsAsync();
         await _mainViewModel.CheckDbConnectionAsync();
+        
+        await LoadCalculationSettingsDataAsync();
+    }
+
+    private async Task LoadCalculationSettingsDataAsync()
+    {
+        var calcSettings = _serviceProvider.GetRequiredService<CalculationSettingsViewModel>();
+        await calcSettings.LoadSettingsAsync();
     }
 
     // Событие изменения состояния окна

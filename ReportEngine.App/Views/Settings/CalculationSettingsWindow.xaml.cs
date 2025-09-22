@@ -18,15 +18,9 @@ public partial class CalculationSettingsWindow : Window
 
         DataContext = viewModel;
         _viewModel = viewModel;
-
-        Loaded += CalculationSettingsWindow_Loaded;
+        
     }
-
-    private async void CalculationSettingsWindow_Loaded(object sender, RoutedEventArgs e)
-    {
-        await ExceptionHelper.SafeExecuteAsync(_viewModel.LoadSettingsAsync);
-    }
-
+    
     private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         if (e.ClickCount == 2)

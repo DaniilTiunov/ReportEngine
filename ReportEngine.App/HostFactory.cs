@@ -170,7 +170,7 @@ public class HostFactory
         {
             var navService = provider.GetRequiredService<NavigationService>();
             var viewModel = provider.GetRequiredService<MainWindowViewModel>();
-            var mainWindow = new MainWindow(viewModel);
+            var mainWindow = new MainWindow(viewModel, provider);
 
             navService.InitializeContentHost(mainWindow.FindName("MainContentControl") as ContentControl);
             return mainWindow;
