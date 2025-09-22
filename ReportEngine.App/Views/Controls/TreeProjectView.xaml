@@ -49,7 +49,23 @@
                                         <TreeViewItem Header="Предварительный просмотр стенда" Tag="ProjectPreview" />
                                         <TreeViewItem Header="Формирование упаковки" Tag="StandsContainer" />
                                     </TreeViewItem>
-                                    <TreeViewItem Header="Создание отчёта" />
+                                </TreeViewItem>
+                                <TreeViewItem Header="Создание отчётов" ToolTip="Нажмите ПКМ для выбор отчёта">
+                                    <TreeViewItem.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CalculateProjectCommand}" Header="Расчитать проект" />
+                                            <Separator />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateSummaryReportCommand}" Header="Cводная ведомость" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateNameplatesReportCommand}" Header="Шильдики и таблички" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateMarkReportCommand}" Header="Марикровка" />
+                                            <Separator />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateProductionReportCommand}" Header="Производство" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateFinplanReportCommand}" Header="Фин. план" />
+                                            <Separator />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateContainerReportCommand}" Header="Отчёт тара" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreatePassportReportCommand}" Header="Паспорт" />
+                                        </ContextMenu>
+                                    </TreeViewItem.ContextMenu>
                                 </TreeViewItem>
                             </TreeView>
                         </avalonDock:LayoutAnchorable>
