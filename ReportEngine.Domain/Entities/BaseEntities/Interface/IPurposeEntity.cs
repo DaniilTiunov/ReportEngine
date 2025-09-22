@@ -1,7 +1,6 @@
-﻿namespace ReportEngine.Domain.Entities.BaseEntities.Interface
+﻿namespace ReportEngine.Domain.Entities.BaseEntities.Interface;
+
+public interface IPurposeEntity
 {
-    public interface IPurposeEntity
-    {
-        int Id { get; set; }
-    }
+    int Id { get; set; }
 }

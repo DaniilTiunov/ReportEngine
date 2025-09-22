@@ -1,5 +1,5 @@
-﻿using ReportEngine.App.ViewModels;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
+using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Model.StandsModel;
 

@@ -1,10 +1,10 @@
-﻿using ReportEngine.App.AppHelpers;
-using ReportEngine.App.ViewModels;
-using ReportEngine.Shared.Config.DebugConsol;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using ReportEngine.App.AppHelpers;
+using ReportEngine.App.ViewModels;
+using ReportEngine.Shared.Config.DebugConsol;
 
 namespace ReportEngine.App.Views.Controls;
 
@@ -106,7 +106,7 @@ public partial class TreeProjectView : UserControl, IDisposable
                 "StandObv" => new StandObvView(_projectViewModel),
                 "FrameDrainages" => new FrameDrainagesView(_projectViewModel),
                 "ProjectPreview" => new ProjectPreview(_projectViewModel),
-                "StandsContainer" => new StandsContainerView(_projectViewModel),
+                "StandsContainer" => new StandsContainerView(_projectViewModel)
             };
 
             return control;
@@ -124,7 +124,7 @@ public partial class TreeProjectView : UserControl, IDisposable
         var header = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Margin = new Thickness(0, 0, 0, 0),
+            Margin = new Thickness(0, 0, 0, 0)
         };
 
         var headerText = new TextBlock

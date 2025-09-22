@@ -1,10 +1,10 @@
-﻿using ClosedXML.Excel;
+﻿using System.Diagnostics;
+using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
-using System.Diagnostics;
 
 namespace ReportEngine.Export.ExcelWork.Services;
 
@@ -25,8 +25,7 @@ public class ComponentListReportGenerator : IReportGenerator
 
         using (var wb = new XLWorkbook())
         {
-
-            int standNumber = 1;
+            var standNumber = 1;
 
             //заполняем листы по стендам
             foreach (var stand in project.Stands)
@@ -44,11 +43,8 @@ public class ComponentListReportGenerator : IReportGenerator
             var lastSheet = wb.Worksheets.Add("Сводная заявка");
 
 
-
             CreateCommonListTableHeader(lastSheet, project);
             FillCommonListTable(lastSheet, project);
-
-
 
 
             //применяем оформление ко всему документу
@@ -60,7 +56,6 @@ public class ComponentListReportGenerator : IReportGenerator
 
                 ws.Cells().Style.Alignment.WrapText = true;
                 ws.Columns().AdjustToContents();
-
             }
 
 
@@ -72,17 +67,15 @@ public class ComponentListReportGenerator : IReportGenerator
 
             Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
             wb.SaveAs(fullSavePath);
-
         }
     }
 
 
-    #region Заголовки 
+    #region Заголовки
 
     //Создает заголовок на листе (для стенда)
     private void CreateStandTableHeader(IXLWorksheet ws, Stand stand)
     {
-
         var headerRange = ws.Range("B1:D3");
 
         ws.Cell("B1").Value = $"Код-KKS: {stand.KKSCode}";
@@ -100,19 +93,16 @@ public class ComponentListReportGenerator : IReportGenerator
         ws.Columns().AdjustToContents();
 
 
-
         headerRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
         headerRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Medium);
 
         headerRange.Style.Font.SetBold();
-
     }
 
 
     //создание заголовка для сводной ведомости
     private void CreateCommonListTableHeader(IXLWorksheet ws, ProjectInfo project)
     {
-
         var headerRange = ws.Range("B1:D3");
 
         var customerCompanyRange = ws.Range("B1:D1").Merge();
@@ -126,28 +116,23 @@ public class ComponentListReportGenerator : IReportGenerator
         ws.Cell("D3").Value = "Кол.";
 
 
-
         ws.Columns().AdjustToContents();
-
 
 
         headerRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
         headerRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Medium);
 
         headerRange.Style.Font.SetBold();
-
     }
 
     #endregion
 
 
-    #region Заполнители 
-
+    #region Заполнители
 
     //Заполняет таблицу на листе (для стенда)
     private void FillStandTable(IXLWorksheet ws, Stand stand)
     {
-
         const string dbErrorString = "Ошибка получения данных из БД";
         var activeRow = 4;
 
@@ -187,7 +172,6 @@ public class ComponentListReportGenerator : IReportGenerator
             .ToList();
 
 
-
         //Формирование списка тройников и КМЧ
 
         var treeList = stand.ObvyazkiInStand
@@ -204,7 +188,6 @@ public class ComponentListReportGenerator : IReportGenerator
                 quantity: group.Sum(item => item.quantity).ToString() ?? dbErrorString
             ))
             .ToList();
-
 
 
         var kmchList = stand.ObvyazkiInStand
@@ -236,10 +219,7 @@ public class ComponentListReportGenerator : IReportGenerator
             .ToList();
 
 
-
         //Формирование списка рамных комплектующих
-
-
 
 
         var framesList = stand.StandFrames
@@ -257,8 +237,6 @@ public class ComponentListReportGenerator : IReportGenerator
                 quantity: group.Sum(frameComp => frameComp.quantity).ToString() ?? dbErrorString
             ))
             .ToList();
-
-
 
 
         //сомнительная хрень, хз что брать за источник информации
@@ -289,7 +267,6 @@ public class ComponentListReportGenerator : IReportGenerator
             .ToList();
 
 
-
         //формирование списка дополнительного оборудования
 
         var additionalParts = stand.StandAdditionalEquips
@@ -310,7 +287,6 @@ public class ComponentListReportGenerator : IReportGenerator
         var supplies = additionalParts
             .Except(othersParts)
             .ToList();
-
 
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
@@ -340,7 +316,6 @@ public class ComponentListReportGenerator : IReportGenerator
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Расходные материалы", ws);
         activeRow = FillSubtableData(activeRow, supplies, ws);
-
     }
 
     //создание сводной ведомости
@@ -386,7 +361,6 @@ public class ComponentListReportGenerator : IReportGenerator
             .ToList();
 
 
-
         //Формирование списка тройников и КМЧ
 
         var treeList = project.Stands
@@ -404,7 +378,6 @@ public class ComponentListReportGenerator : IReportGenerator
                 quantity: group.Sum(item => item.quantity).ToString() ?? dbErrorString
             ))
             .ToList();
-
 
 
         var kmchList = project.Stands
@@ -458,8 +431,6 @@ public class ComponentListReportGenerator : IReportGenerator
             .ToList();
 
 
-
-
         //сомнительная хрень, хз что брать за источник информации
         //формирование списка кронштейнов
 
@@ -490,7 +461,6 @@ public class ComponentListReportGenerator : IReportGenerator
             .ToList();
 
 
-
         //формирование списка дополнительного оборудования
 
         var additionalParts = project.Stands
@@ -515,7 +485,6 @@ public class ComponentListReportGenerator : IReportGenerator
 
 
         var activeRow = 4;
-
 
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
@@ -545,14 +514,12 @@ public class ComponentListReportGenerator : IReportGenerator
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Расходные материалы", ws);
         activeRow = FillSubtableData(activeRow, supplies, ws);
-
-
     }
 
     #endregion
 
 
-    #region Вспомогательные 
+    #region Вспомогательные
 
     //создает подзаголовок для подтаблицы и возвращает следующую строку
     private int CreateSubheaderOnWorksheet(int row, string title, IXLWorksheet ws)

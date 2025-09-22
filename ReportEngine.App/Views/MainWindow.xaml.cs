@@ -1,11 +1,11 @@
-﻿using ReportEngine.App.AppHelpers;
+﻿using System.Diagnostics;
+using System.Windows;
+using System.Windows.Input;
+using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.Views.UpdateInformation;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Input;
 using AboutProgram = ReportEngine.App.Views.Windows.AboutProgram;
 
 

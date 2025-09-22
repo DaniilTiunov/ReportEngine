@@ -1,13 +1,11 @@
-﻿using ReportEngine.Domain.Entities.BaseEntities.Interface;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using ReportEngine.Domain.Entities.BaseEntities.Interface;
 
 namespace ReportEngine.Domain.Entities;
 
 public class AdditionalEquipPurpose : IPurposeEntity
 {
-    [Key] public int Id { get; set; }
-
     public string Purpose { get; set; }
     public string? Material { get; set; }
     public float? Quantity { get; set; }
@@ -18,4 +16,6 @@ public class AdditionalEquipPurpose : IPurposeEntity
 
     [ForeignKey(nameof(FormedAdditionalEquipId))]
     public virtual FormedAdditionalEquip FormedAdditionalEquip { get; set; }
+
+    [Key] public int Id { get; set; }
 }

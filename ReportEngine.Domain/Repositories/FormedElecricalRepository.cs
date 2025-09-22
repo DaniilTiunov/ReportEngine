@@ -42,6 +42,7 @@ public class FormedElectricalRepository : IFormedElectricalRepository
             .Include(ec => ec.Purposes)
             .FirstOrDefaultAsync(ec => ec.Id == id);
     }
+
     public async Task UpdateAsync(ElectricalPurpose purpose)
     {
         if (purpose == null) return;
@@ -57,10 +58,7 @@ public class FormedElectricalRepository : IFormedElectricalRepository
         }
 
         var existing = await _context.ElectricalPurposes.FindAsync(purpose.Id);
-        if (existing == null)
-        {
-            return;
-        }
+        if (existing == null) return;
 
         existing.Purpose = purpose.Purpose;
         existing.Material = purpose.Material;

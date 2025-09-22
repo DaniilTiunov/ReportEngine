@@ -12,6 +12,7 @@ public class ElectricalSettings : IIniSettings<ElectricalSettingsData>
     private static readonly FileIniDataParser _parser = new();
     private static readonly string _iniFile = DirectoryHelper.GetIniConfigPath();
     private static readonly CultureInfo _csvCulture = CultureInfo.GetCultureInfo("ru-RU");
+
     public static ElectricalSettingsData ReadFromIni(IniData electricalData)
     {
         if (electricalData == null)
@@ -25,7 +26,7 @@ public class ElectricalSettings : IIniSettings<ElectricalSettingsData>
                 ? v
                 : 0.0;
         }
-        
+
         return new ElectricalSettingsData
         {
             ElectricalMontage = Parse(electricalData["ElectricalSettings"]["electricalMontage"]),
@@ -33,7 +34,7 @@ public class ElectricalSettings : IIniSettings<ElectricalSettingsData>
             TimeMontageCable = Parse(electricalData["ElectricalSettings"]["timeMontageCable"])
         };
     }
-    
+
     public static void WriteToIni(IniData sandData, ElectricalSettingsData settingsData)
     {
         if (sandData == null)
@@ -43,11 +44,11 @@ public class ElectricalSettings : IIniSettings<ElectricalSettingsData>
         {
             return v.ToString(_csvCulture);
         }
-        
+
         sandData["ElectricalSettings"]["electricalMontage"] = F(settingsData.ElectricalMontage);
         sandData["ElectricalSettings"]["timeMontageWire"] = F(settingsData.TimeMontageWire);
         sandData["ElectricalSettings"]["timeMontageCable"] = F(settingsData.TimeMontageCable);
-        
+
         _parser.WriteFile(_iniFile, sandData);
     }
 }

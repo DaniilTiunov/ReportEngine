@@ -1,22 +1,21 @@
-﻿using ReportEngine.App.Model;
+﻿using System.Collections.ObjectModel;
+using ReportEngine.App.AppHelpers;
+using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Enums;
-using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
-using System.Collections.ObjectModel;
-using ReportEngine.App.AppHelpers;
 
 namespace ReportEngine.App.Services.Core;
 
 public class ProjectService : IProjectService
 {
+    private readonly IContainerRepository _containerRepository;
     private readonly INotificationService _notificationService;
     private readonly IProjectInfoRepository _projectRepository;
-    private readonly IContainerRepository _containerRepository;
 
     public ProjectService(
         IProjectInfoRepository projectRepository,
@@ -139,7 +138,7 @@ public class ProjectService : IProjectService
         var obv = stand.SelectedObvyazkaInStand;
         if (stand == null || obv == null)
             return;
-        
+
         obv.ObvyazkaName = stand.ObvyazkaName;
         obv.MaterialLine = stand.MaterialLine;
         obv.MaterialLineCount = stand.MaterialLineCount;
@@ -181,13 +180,14 @@ public class ProjectService : IProjectService
         obv.TreeSocketCount = selectedObvyazka.TreeSocket;
         obv.HumanCost = selectedObvyazka.HumanCost;
         obv.ImageName = selectedObvyazka.ImageName;
-        
+
         CollectionRefreshHelper.SafeRefreshCollection(projectModel.SelectedStand.ObvyazkiInStand);
-        
-        await _projectRepository.UpdateObvInStandAsync(projectModel.SelectedStand.Id, projectModel.SelectedStand.SelectedObvyazkaInStand);
+
+        await _projectRepository.UpdateObvInStandAsync(projectModel.SelectedStand.Id,
+            projectModel.SelectedStand.SelectedObvyazkaInStand);
         _notificationService.ShowInfo("Обвязка обновлена");
     }
-    
+
     public async Task DeleteFrameFromStandAsync(ProjectModel projectModel)
     {
         var stand = projectModel.SelectedStand;
@@ -195,7 +195,7 @@ public class ProjectService : IProjectService
         var standFrame = frame.StandFrames?.FirstOrDefault(sf => sf.StandId == stand.Id && sf.FrameId == frame.Id);
 
         stand.FramesInStand.Remove(frame);
-        
+
         stand.SelectedFrame = null;
 
         projectModel.OnPropertyChanged(nameof(projectModel.SelectedStand.FramesInStand));
@@ -215,10 +215,7 @@ public class ProjectService : IProjectService
             .SelectMany(s => s.ObvyazkiInStand);
 
         projectModel.ObvyazkiInProject.Clear();
-        
-        foreach (var obvyazkiInStand in obvyazkiInStands)
-        {
-            projectModel.ObvyazkiInProject.Add(obvyazkiInStand);
-        }
+
+        foreach (var obvyazkiInStand in obvyazkiInStands) projectModel.ObvyazkiInProject.Add(obvyazkiInStand);
     }
 }

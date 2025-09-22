@@ -1,20 +1,20 @@
-﻿using ReportEngine.App.Model.StandsModel;
+﻿using System.Collections.ObjectModel;
+using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
-using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Services.Core;
 
 public class StandService : IStandService
 {
+    private readonly IContainerRepository _containerRepository;
     private readonly IFormedAdditionalEquipsRepository _formedAdditionalEquipsRepository;
     private readonly IFormedDrainagesRepository _formedDrainagesRepository;
     private readonly IFormedElectricalRepository _formedElectricalRepository;
     private readonly IFrameRepository _formedFrameRepository;
     private readonly INotificationService _notificationService;
     private readonly IProjectInfoRepository _projectRepository;
-    private readonly IContainerRepository _containerRepository;
 
     public StandService(IProjectInfoRepository projectRepository,
         IFrameRepository frameRepository,
@@ -240,7 +240,7 @@ public class StandService : IStandService
 
         return Task.FromResult(entity);
     }
-    
+
     public async Task FillStandFieldsFromObvyazka(StandModel stand, ObvyazkaInStand obv)
     {
         if (stand == null || obv == null)
@@ -259,7 +259,7 @@ public class StandService : IStandService
         stand.KMCH = obv.KMCH;
         stand.KMCHCount = obv.KMCHCount;
         stand.KMCHMeasure = obv.KMCHMeasure;
-        
+
         stand.FirstSensorType = obv.FirstSensorType;
         stand.FirstSensorKKS = obv.FirstSensorKKS;
         stand.FirstSensorMarkPlus = obv.FirstSensorMarkPlus;
@@ -310,5 +310,5 @@ public class StandService : IStandService
     public async Task DeleteDrainagePurposeAsync(int purposeId)
     {
         await _formedDrainagesRepository.DeletePurposeAsync(purposeId);
-    }    
+    }
 }

@@ -58,7 +58,7 @@ public class ContainerRepository : IContainerRepository
 
         var batch = await _context.ContainersBatch
             .Include(b => b.Containers)
-                .ThenInclude(c => c.Stands)
+            .ThenInclude(c => c.Stands)
             .FirstOrDefaultAsync(b => b.Id == id);
 
         if (batch == null) return 0;
@@ -101,7 +101,7 @@ public class ContainerRepository : IContainerRepository
             .Include(b => b.Containers)
             .ThenInclude(c => c.Stands)
             .ThenInclude(s => s.StandFrames)
-            .ThenInclude(sf=> sf.Frame)
+            .ThenInclude(sf => sf.Frame)
             .Where(b => b.ProjectInfoId == projectId)
             .AsNoTracking()
             .ToListAsync();
@@ -111,12 +111,12 @@ public class ContainerRepository : IContainerRepository
     {
         var batch = await _context.ContainersBatch
             .Include(b => b.Containers)
-                .ThenInclude(c => c.Stands)
+            .ThenInclude(c => c.Stands)
             .FirstOrDefaultAsync(b => b.Id == batchId);
 
         if (batch == null)
             throw new ArgumentException($"Batch with ID {batchId} not found.");
-        
+
         if (container.Id != 0)
         {
             // Если партия уже содержит контейнер с таким Id — ничего не делаем.
@@ -166,7 +166,7 @@ public class ContainerRepository : IContainerRepository
     {
         var batch = await _context.ContainersBatch
             .Include(b => b.Containers)
-                .ThenInclude(c => c.Stands)
+            .ThenInclude(c => c.Stands)
             .FirstOrDefaultAsync(b => b.Id == batchId);
 
         if (batch == null)
@@ -225,7 +225,7 @@ public class ContainerRepository : IContainerRepository
         {
             var batch = await _context.ContainersBatch
                 .Include(b => b.Containers)
-                    .ThenInclude(c => c.Stands)
+                .ThenInclude(c => c.Stands)
                 .FirstOrDefaultAsync(b => b.Id == container.ContainerBatchId.Value);
 
             if (batch != null)
@@ -261,7 +261,7 @@ public class ContainerRepository : IContainerRepository
         {
             var batch = await _context.ContainersBatch
                 .Include(b => b.Containers)
-                    .ThenInclude(c => c.Stands)
+                .ThenInclude(c => c.Stands)
                 .FirstOrDefaultAsync(b => b.Id == container.ContainerBatchId.Value);
 
             if (batch != null)
@@ -294,7 +294,7 @@ public class ContainerRepository : IContainerRepository
         {
             var batch = await _context.ContainersBatch
                 .Include(b => b.Containers)
-                    .ThenInclude(c => c.Stands)
+                .ThenInclude(c => c.Stands)
                 .FirstOrDefaultAsync(b => b.Id == container.ContainerBatchId.Value);
 
             if (batch != null)

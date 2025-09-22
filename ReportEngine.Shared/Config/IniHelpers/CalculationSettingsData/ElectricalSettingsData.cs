@@ -7,5 +7,4 @@ public class ElectricalSettingsData : IIniData
     public double ElectricalMontage { get; set; }
     public double TimeMontageWire { get; set; }
     public double TimeMontageCable { get; set; }
-    
 }

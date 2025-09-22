@@ -12,6 +12,7 @@ public class FrameSettings : IIniSettings<FrameSettingsData>
     private static readonly FileIniDataParser _parser = new();
     private static readonly string _iniFile = DirectoryHelper.GetIniConfigPath();
     private static readonly CultureInfo _csvCulture = CultureInfo.GetCultureInfo("ru-RU");
+
     public static FrameSettingsData ReadFromIni(IniData frameData)
     {
         if (frameData == null)
@@ -52,7 +53,10 @@ public class FrameSettings : IIniSettings<FrameSettingsData>
         if (frameData == null)
             return;
 
-        string F(double v) => v.ToString(_csvCulture);
+        string F(double v)
+        {
+            return v.ToString(_csvCulture);
+        }
 
         frameData["FrameSettings"]["frameProduction"] = F(settingsData.FrameProduction);
         frameData["FrameSettings"]["timeForProductionFrame"] = F(settingsData.TimeForProductionFrame);
@@ -73,5 +77,4 @@ public class FrameSettings : IIniSettings<FrameSettingsData>
 
         _parser.WriteFile(_iniFile, frameData);
     }
-
 }

@@ -1,10 +1,10 @@
-﻿using ClosedXML.Excel;
+﻿using System.Diagnostics;
+using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
-using System.Diagnostics;
 
 namespace ReportEngine.Export.ExcelWork.Services;
 
@@ -26,16 +26,16 @@ public class MarksReportGenerator : IReportGenerator
 
         using (var wb = new XLWorkbook())
         {
-            var ws = wb.Worksheets.Add($"Проект");
+            var ws = wb.Worksheets.Add("Проект");
 
             CreateWorksheetTableHeader(ws);
             FillWorksheetTable(ws, project);
 
-            
+
             ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
 
-            
+
             ws.Cells().Style.Alignment.WrapText = true;
             ws.Columns().AdjustToContents();
 
@@ -70,7 +70,7 @@ public class MarksReportGenerator : IReportGenerator
         var allRecords = project.Stands
             .SelectMany(
                 stand => stand.ObvyazkiInStand,
-                (stand,obv) => new
+                (stand, obv) => new
                 {
                     selectedStand = stand,
                     obvyazka = obv
@@ -92,8 +92,8 @@ public class MarksReportGenerator : IReportGenerator
             ws.Range($"A{upperRecordRow}:A{lowerRecordRow}").Merge().Value = recordNumber;
 
 
-            ws.Range($"B{upperRecordRow}:B{lowerRecordRow}").Merge().Value = $"{item.StandKKS} ({item.StandSerialNumber})";
-
+            ws.Range($"B{upperRecordRow}:B{lowerRecordRow}").Merge().Value =
+                $"{item.StandKKS} ({item.StandSerialNumber})";
 
 
             ws.Range($"C{upperRecordRow}:C{lowerRecordRow}").Merge().Value = item.SensorKKS;
@@ -149,7 +149,8 @@ public class MarksReportGenerator : IReportGenerator
         public string SensorMarkMinus;
 
 
-        public RecordData(string standSerialNumber, string standKKS, string sensorKKS, string sensorMarkPlus, string sensorMarkMinus)
+        public RecordData(string standSerialNumber, string standKKS, string sensorKKS, string sensorMarkPlus,
+            string sensorMarkMinus)
         {
             StandSerialNumber = standSerialNumber;
             StandKKS = standKKS;

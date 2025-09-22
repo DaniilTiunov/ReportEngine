@@ -1,33 +1,29 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Commands.Providers;
 using ReportEngine.App.Model;
 using ReportEngine.App.Services;
+using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Views.Controls;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Repositories.Interfaces;
-using System.Collections.ObjectModel;
-using System.Windows;
-using System.Windows.Controls;
-using ReportEngine.App.Services.Interfaces;
-using ReportEngine.Export.ExcelWork.Services.Interfaces;
 
 namespace ReportEngine.App.ViewModels;
 
 public class MainWindowViewModel : BaseViewModel
 {
-    private readonly IProjectInfoRepository _projectRepository;
-    private readonly NavigationService _navigation;
-    private readonly IServiceProvider _serviceProvider;
     private readonly ICalculationService _calculationService;
+    private readonly NavigationService _navigation;
     private readonly INotificationService _notificationService;
-    public MainWindowModel MainWindowModel { get; set; } = new();
-    public GenericEquipCommandProvider GenericEquipCommandProvider { get; set; } = new();
-    public MainWindowCommandProvider MainWindowCommandProvider { get; set; } = new();
+    private readonly IProjectInfoRepository _projectRepository;
+    private readonly IServiceProvider _serviceProvider;
 
     #region Конструктор
 
@@ -49,6 +45,10 @@ public class MainWindowViewModel : BaseViewModel
     }
 
     #endregion
+
+    public MainWindowModel MainWindowModel { get; set; } = new();
+    public GenericEquipCommandProvider GenericEquipCommandProvider { get; set; } = new();
+    public MainWindowCommandProvider MainWindowCommandProvider { get; set; } = new();
 
     #region Дженерик команды
 
@@ -85,7 +85,7 @@ public class MainWindowViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(RecalculateProjectAsync);
     }
-    
+
     public async void OnEditProjectCommandExecuted(object e)
     {
         if (MainWindowModel.SelectedProject == null) return;
@@ -173,18 +173,18 @@ public class MainWindowViewModel : BaseViewModel
             _notificationService.ShowInfo("Проект не выбран");
             return;
         }
-            
+
         var projectViewModel = _serviceProvider.GetRequiredService<ProjectViewModel>();
         var projectService = _serviceProvider.GetRequiredService<IProjectService>();
-            
+
         await projectViewModel.LoadProjectInfoAsync(MainWindowModel.SelectedProject.Id);
-            
+
         await _calculationService.CalculateProjectAsync(projectViewModel.CurrentProjectModel);
-            
+
         await projectService.UpdateProjectAsync(projectViewModel.CurrentProjectModel);
 
         CollectionRefreshHelper.SafeRefreshCollection(MainWindowModel.AllProjects);
-            
+
         _notificationService.ShowInfo("Переформирование завершено");
     }
 

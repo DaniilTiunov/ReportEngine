@@ -1,9 +1,9 @@
-﻿using ReportEngine.App.Model.StandsModel;
+﻿using System.Collections.ObjectModel;
+using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Enums;
 using ReportEngine.Shared.Helpers;
-using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Model;
 
@@ -72,10 +72,10 @@ public class ProjectModel : BaseViewModel
     private string? _markMinus; //Маркировка -
 
     private bool _isGalvanized; //Оцинковка
-    
+
     private ObservableCollection<ContainerStand> _containerStandsInSelectedBatch = new();
     private ObservableCollection<Stand> _standsInSelectedContainer = new();
-    
+
 
     //
     private float _humanCost; //Трудозатраты
@@ -97,6 +97,7 @@ public class ProjectModel : BaseViewModel
     #endregion
 
     #region Публичные свойства
+
     public IEnumerable<string> Statuses { get; set; } =
         new List<string> { "Расчёт", "ТКП", "Производство", "Завершен" };
 
@@ -222,34 +223,38 @@ public class ProjectModel : BaseViewModel
 
     // Упаковка
     public ObservableCollection<ContainerStand> ContainerStandsInProject
-    { 
-        get => _containerStandsInProject; 
+    {
+        get => _containerStandsInProject;
         set => Set(ref _containerStandsInProject, value);
-    }// Упаковки
+    } // Упаковки
+
     public ObservableCollection<ContainerBatch> ContainerBatchesInProject
-    { 
-        get => _containerBathInProject; 
+    {
+        get => _containerBathInProject;
         set => Set(ref _containerBathInProject, value);
-    }// Партии
+    } // Партии
 
     public ObservableCollection<StandModel> StandsInContainer
     {
         get => _standsInContainer;
         set => Set(ref _standsInContainer, value);
     }
-    public ContainerStand? ContainerStand 
-    { 
-        get => _containerStand; 
-        set => Set(ref _containerStand, value); 
-    }// Упаковка
-    public ContainerBatch? ContainerBatch 
+
+    public ContainerStand? ContainerStand
+    {
+        get => _containerStand;
+        set => Set(ref _containerStand, value);
+    } // Упаковка
+
+    public ContainerBatch? ContainerBatch
     {
         get => _containerBatch;
         set => Set(ref _containerBatch, value);
-    }// Партия
-    public ContainerStand? SelectedContainerStand 
-    { 
-        get => _selectedContainerStand; 
+    } // Партия
+
+    public ContainerStand? SelectedContainerStand
+    {
+        get => _selectedContainerStand;
         set
         {
             if (Set(ref _selectedContainerStand, value))
@@ -260,9 +265,10 @@ public class ProjectModel : BaseViewModel
                 OnPropertyChanged(nameof(StandsInSelectedContainer));
             }
         }
-    }// Выбранная упаковка
-    public ContainerBatch? SelectedContainerBatch 
-    { 
+    } // Выбранная упаковка
+
+    public ContainerBatch? SelectedContainerBatch
+    {
         get => _selectedContainerBatch;
         set
         {
@@ -279,8 +285,8 @@ public class ProjectModel : BaseViewModel
                     StandsInSelectedContainer = new ObservableCollection<Stand>();
             }
         }
-    }// Выбранная партия
-    
+    } // Выбранная партия
+
     public ObservableCollection<ContainerStand> ContainerStandsInSelectedBatch
     {
         get => _containerStandsInSelectedBatch;
@@ -292,7 +298,7 @@ public class ProjectModel : BaseViewModel
         get => _standsInSelectedContainer;
         set => Set(ref _standsInSelectedContainer, value);
     }
-    
+
     private Stand? _selectedStandInContainer;
     private StandModel? _selectedStandInProject;
 
@@ -310,7 +316,7 @@ public class ProjectModel : BaseViewModel
 
     private ObservableCollection<ObvyazkaInStand> _obvyazkiInProject = new();
     private ObvyazkaInStand _selectedObvyazkaToCopy = new();
-    
+
     public ObservableCollection<ObvyazkaInStand> ObvyazkiInProject
     {
         get => _obvyazkiInProject;
@@ -322,5 +328,6 @@ public class ProjectModel : BaseViewModel
         get => _selectedObvyazkaToCopy;
         set => Set(ref _selectedObvyazkaToCopy, value);
     }
+
     #endregion
 }

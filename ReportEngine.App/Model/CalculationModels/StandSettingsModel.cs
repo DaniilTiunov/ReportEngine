@@ -1,7 +1,5 @@
 ﻿using Mapster;
 using ReportEngine.App.ViewModels;
-using ReportEngine.Shared.Config.IniHeleprs;
-using ReportEngine.Shared.Config.IniHeleprs.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
@@ -10,19 +8,19 @@ namespace ReportEngine.App.Model.CalculationModels;
 
 public class StandSettingsModel : BaseViewModel
 {
-    private string? _steelChannel;
+    private string? _bracket;
+    private string? _cabelFourMM;
+    private string? _cabelSixMM;
+    private string? _frameGalvanizing;
     private string? _namePlate;
     private string? _nameTable;
-    private string? _frameGalvanizing;
-    private string? _bracket;
-    private string? _cabelSixMM;
-    private string? _cabelFourMM;
-    private string? _signalCable;
-    private string? _seniorEngineer;
+    private string? _oSiL;
     private string? _responsibleForAccept;
     private string? _secondLevelSpecialist;
-    private string? _oSiL;
+    private string? _seniorEngineer;
     private double? _sensorCountOnFrame;
+    private string? _signalCable;
+    private string? _steelChannel;
 
     public string? SteelChannel
     {
@@ -113,7 +111,7 @@ public class StandSettingsModel : BaseViewModel
 
         ;
     }
-    
+
     public async Task SaveDataToIniAsync()
     {
         var iniData = this.Adapt<StandSettingsData>();

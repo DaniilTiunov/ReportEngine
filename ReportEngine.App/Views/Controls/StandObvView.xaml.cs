@@ -1,6 +1,5 @@
-﻿using ReportEngine.App.ViewModels;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
+using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Views.Controls;
 
@@ -13,10 +12,10 @@ public partial class StandObvView : UserControl
     {
         InitializeComponent();
         DataContext = projectViewModel;
-        
+
         Loaded += async (_, __) => await InitializeDataAsync(projectViewModel);
     }
-    
+
     private async Task InitializeDataAsync(ProjectViewModel viewModel)
     {
         await viewModel.LoadStandsDataAsync();

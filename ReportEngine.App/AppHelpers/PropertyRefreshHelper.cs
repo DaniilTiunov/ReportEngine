@@ -22,7 +22,9 @@ public static class PropertyRefreshHelper
                     {
                         vm?.OnPropertyChanged(propertyName);
                     }
-                    catch { }
+                    catch
+                    {
+                    }
                 }));
         }
     }

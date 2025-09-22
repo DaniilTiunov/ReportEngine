@@ -1,4 +1,6 @@
-﻿using ReportEngine.App.AppHelpers;
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
+using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Commands.Providers;
 using ReportEngine.App.Model;
@@ -15,16 +17,14 @@ using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 
 namespace ReportEngine.App.ViewModels;
 
 public class ProjectViewModel : BaseViewModel
 {
-    private readonly IContainerRepository _containerRepository;
-
     private readonly ICalculationService _calculationService;
+    private readonly IContainerRepository _containerRepository;
+    private readonly ContainerService _containerService;
     private readonly IDialogService _dialogService;
     private readonly INotificationService _notificationService;
     private readonly IProjectDataLoaderService _projectDataLoaderService;
@@ -32,7 +32,6 @@ public class ProjectViewModel : BaseViewModel
     private readonly IProjectService _projectService;
     private readonly IReportService _reportService;
     private readonly IStandService _standService;
-    private readonly ContainerService _containerService;
 
     public ProjectViewModel(IProjectInfoRepository projectRepository,
         IDialogService dialogService,
@@ -69,27 +68,10 @@ public class ProjectViewModel : BaseViewModel
     public ProjectCommandProvider ProjectCommandProvider { get; set; } = new();
     public MaterialLinesModel CurrentMaterials { get; set; } = new();
 
-    #region Инициализация 
-    public void InitializeTime()
+    public bool CanAllCommandsExecute(object? e)
     {
-        CurrentProjectModel.CreationDate = DateTime.Now.Date;
-        CurrentProjectModel.StartDate = DateTime.Now.Date;
-        CurrentProjectModel.OutOfProduction = DateTime.Now.Date;
-        CurrentProjectModel.EndDate = DateTime.Now.Date;
+        return true;
     }
-
-    public void InitializeCommands()
-    {
-        ProjectCommandsInitializer.InitializeCommands(this);
-    }
-
-    public void InitializeGenericCommands()
-    {
-        ProjectCommandsInitializer.InitializeGenericCommands(this);
-    }
-    #endregion
-
-    public bool CanAllCommandsExecute(object? e) => true;
 
     public void OnOpenAllSortamentsDialogExecuted(object e)
     {
@@ -218,14 +200,14 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(DeleteObvFromStandAsync);
     }
-    
+
     public async void OnRemoveFrameFromStandCommandExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await _projectService.DeleteFrameFromStandAsync(CurrentProjectModel);
-            
-            _notificationService.ShowInfo($"Рама удалена из стенда");
+
+            _notificationService.ShowInfo("Рама удалена из стенда");
         });
     }
 
@@ -260,14 +242,14 @@ public class ProjectViewModel : BaseViewModel
         {
             var sourceObv = CurrentProjectModel.SelectedObvyazkaToCopy;
             var standId = CurrentProjectModel.SelectedStand.Id;
-            
+
             var newObvyazka = ObvyzkaModelWrapper.CloneForStand(sourceObv, standId);
-            
+
             await _standService.AddObvyazkaToStandAsync(standId, newObvyazka);
-            
+
             OnPropertyChanged(nameof(CurrentProjectModel.SelectedStand.ObvyazkiInStand));
             OnPropertyChanged(nameof(CurrentProjectModel.ObvyazkiInProject));
-            
+
             _notificationService.ShowInfo("Обвязка скопирована в стенд");
         });
     }
@@ -279,8 +261,9 @@ public class ProjectViewModel : BaseViewModel
             SelectedObvyazka = _dialogService.ShowObvyazkaDialog();
 
             CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.ImageName = SelectedObvyazka.ImageName;
-            
-            PropertyRefreshHelper.RefreshProperty(this, nameof(CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand));
+
+            PropertyRefreshHelper.RefreshProperty(this,
+                nameof(CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand));
         });
     }
 
@@ -323,19 +306,17 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnCreateProductionReportCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () => {
-
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
             await CreateReportAsync(ReportType.ProductionReport, "производство");
-
         });
     }
 
     public async void OnCreateFinplanReportCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () => {
-
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
             await CreateReportAsync(ReportType.FinPlanReport, "финплан");
-
         });
     }
 
@@ -349,9 +330,9 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await DeletePurposeAsync(CurrentProjectModel.SelectedStand.SelectedElectricalComponent,
-                                    _standService.DeleteElectricalPurposeAsync,
-                                    CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand,
-                                    "Электрический компонент удалён");
+                _standService.DeleteElectricalPurposeAsync,
+                CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand,
+                "Электрический компонент удалён");
         });
     }
 
@@ -360,8 +341,8 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await UpdatePurposeAsync(CurrentProjectModel.SelectedStand.SelectedElectricalComponent,
-                            _standService.UpdateElectricalPurposeAsync,
-                            "Электрические компоненты сохранены");
+                _standService.UpdateElectricalPurposeAsync,
+                "Электрические компоненты сохранены");
         });
     }
 
@@ -370,9 +351,9 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await DeletePurposeAsync(CurrentProjectModel.SelectedStand.SelectedAdditionalEquip,
-                            _standService.DeleteAdditionalPurposeAsync,
-                            CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand,
-                            "Доп. комплектующее удалено");
+                _standService.DeleteAdditionalPurposeAsync,
+                CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand,
+                "Доп. комплектующее удалено");
         });
     }
 
@@ -381,8 +362,8 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await UpdatePurposeAsync(CurrentProjectModel.SelectedStand.SelectedAdditionalEquip,
-                            _standService.UpdateAdditionalPurposeAsync,
-                            "Доп. комплектующие сохранены");
+                _standService.UpdateAdditionalPurposeAsync,
+                "Доп. комплектующие сохранены");
         });
     }
 
@@ -391,9 +372,9 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await DeletePurposeAsync(CurrentProjectModel.SelectedStand.SelectedDrainagePurpose,
-                            _standService.DeleteDrainagePurposeAsync,
-                            CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand,
-                            "Дренажное комплектующее удалено");
+                _standService.DeleteDrainagePurposeAsync,
+                CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand,
+                "Дренажное комплектующее удалено");
         });
     }
 
@@ -402,8 +383,8 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await UpdatePurposeAsync(CurrentProjectModel.SelectedStand.SelectedDrainagePurpose,
-                            _standService.UpdateDrainagePurposeAsync,
-                            "Дренажное комплектующее сохранено");
+                _standService.UpdateDrainagePurposeAsync,
+                "Дренажное комплектующее сохранено");
         });
     }
 
@@ -411,10 +392,11 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            _standService.FillStandFieldsFromObvyazka(CurrentProjectModel.SelectedStand, CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand);
+            _standService.FillStandFieldsFromObvyazka(CurrentProjectModel.SelectedStand,
+                CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand);
         });
     }
-    
+
     public async void OnUpdateObvInStandCommandExecuted(object obj)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -422,17 +404,18 @@ public class ProjectViewModel : BaseViewModel
             await _projectService.UpdateObvInStandAsync(CurrentProjectModel, SelectedObvyazka);
         });
     }
-    
+
     public async void OnCreateContainerStandCommandExecuted(object obj)
     {
-        await ExceptionHelper.SafeExecuteAsync(async() => await _containerService.CreateBatchAsync(CurrentProjectModel));
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+            await _containerService.CreateBatchAsync(CurrentProjectModel));
     }
-    
+
     public async void OnDeleteBatchCommandExecuted(object obj)
     {
-        await ExceptionHelper.SafeExecuteAsync(async() => _containerService.DeleteBanchAsync(CurrentProjectModel));
+        await ExceptionHelper.SafeExecuteAsync(async () => _containerService.DeleteBanchAsync(CurrentProjectModel));
     }
-    
+
     public async void OnRefreshBatchesCommandCommandExecuted(object obj)
     {
         await ExceptionHelper.SafeExecuteAsync(async () => _containerService.LoadBatchesAsync(CurrentProjectModel));
@@ -440,24 +423,28 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnAddContainerToBatchCommandExecuted(object obj)
     {
-        await ExceptionHelper.SafeExecuteAsync(async() => _containerService.AddContainerToBatchAsync(CurrentProjectModel));
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+            _containerService.AddContainerToBatchAsync(CurrentProjectModel));
     }
 
     public async void OnDeleteContainerCommandExecuted(object obj)
     {
-        await ExceptionHelper.SafeExecuteAsync(async() => _containerService.RemoveContainerFromBatchAsync(CurrentProjectModel));
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+            _containerService.RemoveContainerFromBatchAsync(CurrentProjectModel));
     }
 
     public async void OnAddStandToContainerCommandExecuted(object obj)
     {
-        await ExceptionHelper.SafeExecuteAsync(async() => _containerService.AddStandToContainerAsync(CurrentProjectModel));
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+            _containerService.AddStandToContainerAsync(CurrentProjectModel));
     }
 
     public async void OnRemoveStandFromContainerCommandExecuted(object obj)
     {
-        await ExceptionHelper.SafeExecuteAsync(async() => _containerService.RemoveStandFromContainerAsync(CurrentProjectModel));
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+            _containerService.RemoveStandFromContainerAsync(CurrentProjectModel));
     }
-    
+
     public void ResetProject()
     {
         CurrentProjectModel = new ProjectModel();
@@ -466,6 +453,28 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(CurrentProjectModel));
         OnPropertyChanged(nameof(CurrentStandModel));
     }
+
+    #region Инициализация
+
+    public void InitializeTime()
+    {
+        CurrentProjectModel.CreationDate = DateTime.Now.Date;
+        CurrentProjectModel.StartDate = DateTime.Now.Date;
+        CurrentProjectModel.OutOfProduction = DateTime.Now.Date;
+        CurrentProjectModel.EndDate = DateTime.Now.Date;
+    }
+
+    public void InitializeCommands()
+    {
+        ProjectCommandsInitializer.InitializeCommands(this);
+    }
+
+    public void InitializeGenericCommands()
+    {
+        ProjectCommandsInitializer.InitializeGenericCommands(this);
+    }
+
+    #endregion
 
     #region Методы загрузки данных на view
 
@@ -525,6 +534,7 @@ public class ProjectViewModel : BaseViewModel
             await _containerService.LoadAllData(CurrentProjectModel);
         });
     }
+
     #endregion
 
     #region Методы для CRUD с проектами и стендами
@@ -583,7 +593,7 @@ public class ProjectViewModel : BaseViewModel
         }
 
         await _projectService.UpdateProjectAsync(CurrentProjectModel);
-        
+
         _notificationService.ShowInfo("Изменения успешно сохранены!");
     }
 
@@ -775,7 +785,8 @@ public class ProjectViewModel : BaseViewModel
                     dp.CostPerUnit = selected.Cost;
                     dp.Measure = selected.Measure;
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewDrainage.Purposes);
-                    CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand);
+                    CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand
+                        .AllDrainagePurposesInStand);
                     return;
 
                 case AdditionalEquipPurpose ap:
@@ -783,7 +794,8 @@ public class ProjectViewModel : BaseViewModel
                     ap.CostPerUnit = selected.Cost;
                     ap.Measure = selected.Measure;
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
-                    CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand);
+                    CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand
+                        .AllAdditionalEquipPurposesInStand);
                     return;
 
                 case ElectricalPurpose ep:
@@ -791,9 +803,10 @@ public class ProjectViewModel : BaseViewModel
                     ep.CostPerUnit = selected.Cost;
                     ep.Measure = selected.Measure;
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewElectricalComponent.Purposes);
-                    CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand);
+                    CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand
+                        .AllElectricalPurposesInStand);
                     return;
-                
+
                 case ContainerStand cs:
                     cs.Name = selected.Name;
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.ContainerStandsInSelectedBatch);
@@ -810,9 +823,9 @@ public class ProjectViewModel : BaseViewModel
     }
 
     private async Task UpdatePurposeAsync<T>(T? purpose,
-                                            Func<T, Task> updateFunc,
-                                            string successMessage)
-    where T : class, IPurposeEntity
+        Func<T, Task> updateFunc,
+        string successMessage)
+        where T : class, IPurposeEntity
     {
         if (purpose is null)
             return;
@@ -822,10 +835,10 @@ public class ProjectViewModel : BaseViewModel
     }
 
     private async Task DeletePurposeAsync<T>(T? purpose,
-                                            Func<int, Task> deleteFunc,
-                                            ICollection<T> collection,
-                                            string successMessage)
-    where T : class, IPurposeEntity
+        Func<int, Task> deleteFunc,
+        ICollection<T> collection,
+        string successMessage)
+        where T : class, IPurposeEntity
     {
         if (purpose is null)
             return;
@@ -834,6 +847,7 @@ public class ProjectViewModel : BaseViewModel
         collection.Remove(purpose);
         _notificationService.ShowInfo(successMessage);
     }
+
     #endregion
 
     #region Методы расчёта и создания отчётности
@@ -843,7 +857,7 @@ public class ProjectViewModel : BaseViewModel
         await _calculationService.CalculateProjectAsync(CurrentProjectModel);
         OnPropertyChanged(nameof(CurrentProjectModel.Stands));
         OnPropertyChanged(nameof(CurrentProjectModel.Cost));
-        
+
         _notificationService.ShowInfo("Расчёт завершён");
     }
 
@@ -857,5 +871,6 @@ public class ProjectViewModel : BaseViewModel
             Process.Start("explorer.exe", reportDir);
         }
     }
-    #endregion   
+
+    #endregion
 }

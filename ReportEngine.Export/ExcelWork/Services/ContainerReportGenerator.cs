@@ -1,18 +1,20 @@
-﻿using ClosedXML.Excel;
+﻿using System.Diagnostics;
+using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
-using System.Diagnostics;
 
 namespace ReportEngine.Export.ExcelWork.Services;
 
 public class ContainerReportGenerator : IReportGenerator
 {
-    private readonly IProjectInfoRepository _projectInfoRepository;
     private readonly IContainerRepository _containerRepository;
-    public ContainerReportGenerator(IProjectInfoRepository projectInfoRepository, IContainerRepository containerRepository)
+    private readonly IProjectInfoRepository _projectInfoRepository;
+
+    public ContainerReportGenerator(IProjectInfoRepository projectInfoRepository,
+        IContainerRepository containerRepository)
     {
         _projectInfoRepository = projectInfoRepository;
         _containerRepository = containerRepository;
@@ -71,7 +73,6 @@ public class ContainerReportGenerator : IReportGenerator
 
     private async Task FillWorksheetTable(IXLWorksheet ws, ProjectInfo project)
     {
-
         const string dbErrorString = "Ошибка загрузки данных из БД";
         //создаем объекты всех контейнеров
         var containerBatches = await _containerRepository.GetAllByProjectIdAsync(project.Id);
@@ -83,31 +84,28 @@ public class ContainerReportGenerator : IReportGenerator
             .Select(container => new
             {
                 containerInstance = container,
-                containerContent = container.Stands,
+                containerContent = container.Stands
             });
-
 
 
         // выводим в таблицу
 
-        int containerStartRow = 2;
-        int standActiveRow = containerStartRow;
+        var containerStartRow = 2;
+        var standActiveRow = containerStartRow;
 
-        int containerNumber = 1;
+        var containerNumber = 1;
 
 
         foreach (var container in containers)
         {
-
-            int placeInContainerNumber = 1;
+            var placeInContainerNumber = 1;
 
 
             //сначала выводим все стенды
 
             foreach (var stand in container.containerContent)
             {
-
-                string placeInContainerString = $"{containerNumber}.{placeInContainerNumber}";
+                var placeInContainerString = $"{containerNumber}.{placeInContainerNumber}";
 
                 ws.Cell($"B{standActiveRow}").Value = placeInContainerString;
                 ws.Cell($"C{standActiveRow}").Value = stand.Design ?? dbErrorString;
@@ -118,19 +116,18 @@ public class ContainerReportGenerator : IReportGenerator
 
                 standActiveRow++;
                 placeInContainerNumber++;
-
             }
 
             //вычисляем где закончили выводиться стенды
             //заполняем инфу о таре
-            int containerEndRow = standActiveRow - 1;
-
+            var containerEndRow = standActiveRow - 1;
 
 
             var containerNumberRange = ws.Range($"A{containerStartRow}:A{containerEndRow}").Merge();
             containerNumberRange.Value = containerNumber;
 
-            var commonContainerWeight = ((container.containerInstance.ContainerWeight ?? 0f) + container.containerInstance.StandsWeight);
+            var commonContainerWeight = (container.containerInstance.ContainerWeight ?? 0f) +
+                                        container.containerInstance.StandsWeight;
 
             var containerWeightRange = ws.Range($"H{containerStartRow}:H{containerEndRow}").Merge();
             containerWeightRange.Value = commonContainerWeight;
@@ -143,8 +140,6 @@ public class ContainerReportGenerator : IReportGenerator
 
             containerStartRow = containerEndRow + 1;
             standActiveRow = containerStartRow;
-
         }
-
     }
 }

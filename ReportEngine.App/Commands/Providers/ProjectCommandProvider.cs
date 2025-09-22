@@ -24,12 +24,12 @@ public class ProjectCommandProvider
     public ICommand DeleteSelectedStandCommand { get; set; }
     public ICommand CreateMarkReportCommand { get; set; }
     public ICommand CreateNameplatesReportCommand { get; set; }
-    public ICommand CreateProductionReportCommand {  get; set; }
+    public ICommand CreateProductionReportCommand { get; set; }
     public ICommand CreateFinplanReportCommand { get; set; }
     public ICommand RemoveObvFromStandCommand { get; set; }
     public ICommand UpdateObvInStandCommand { get; set; }
     public ICommand CopyObvyazkaToStandsCommand { get; set; }
-    
+
     public ICommand FillStandFieldsFromObvyazkaCommand { get; set; }
     public ICommand RemoveFrameStandCommand { get; set; }
     public ICommand CreateContainerReportCommand { get; set; }
@@ -47,6 +47,7 @@ public class ProjectCommandProvider
     public ICommand DeleteBatchCommand { get; set; }
     public ICommand AddStandToContainerCommand { get; set; }
     public ICommand RemoveStandFromContainerCommand { get; set; }
+
     public ICommand Bind(ICommand command, Action<object> execute, Func<object, bool> canExecute = null)
     {
         return new RelayCommand(execute, canExecute);

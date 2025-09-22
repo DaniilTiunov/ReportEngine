@@ -12,6 +12,7 @@ public class StandSettings : IIniSettings<StandSettingsData>
     private static readonly FileIniDataParser _parser = new();
     private static readonly string _iniFile = DirectoryHelper.GetIniConfigPath();
     private static readonly CultureInfo _csvCulture = CultureInfo.GetCultureInfo("ru-RU");
+
     public static StandSettingsData ReadFromIni(IniData standData)
     {
         if (standData == null)
@@ -25,7 +26,7 @@ public class StandSettings : IIniSettings<StandSettingsData>
                 ? v
                 : 0.0;
         }
-        
+
         return new StandSettingsData
         {
             SteelChannel = standData["StandsSettings"]["steelChannel"],
@@ -53,7 +54,7 @@ public class StandSettings : IIniSettings<StandSettingsData>
         {
             return v.ToString(_csvCulture);
         }
-        
+
         standData["StandsSettings"]["steelChannel"] = settingsData.SteelChannel;
         standData["StandsSettings"]["namePlate"] = settingsData.NamePlate;
         standData["StandsSettings"]["nameTable"] = settingsData.NameTable;

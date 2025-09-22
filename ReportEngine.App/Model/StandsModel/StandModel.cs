@@ -1,7 +1,7 @@
-﻿using ReportEngine.App.Model.FormedEquipsModels;
+﻿using System.Collections.ObjectModel;
+using ReportEngine.App.Model.FormedEquipsModels;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
-using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Model.StandsModel;
 
@@ -57,6 +57,7 @@ public class StandModel : BaseViewModel
 
     // KKS код первого датчика (внутреннее поле)
     private string _firsSensorKksCode;
+    private string? _firstSensorDescription;
 
     // Маркировка + для первого датчика
     private string _firstSensorMarkMinus;
@@ -118,6 +119,7 @@ public class StandModel : BaseViewModel
 
     // Идентификатор проекта, которому принадлежит стенд
     private int _projectId;
+    private string? _secondSensorDescription;
 
     // Второй датчик: KKS
     private string? _secondSensorKksCode;
@@ -136,6 +138,7 @@ public class StandModel : BaseViewModel
 
     // Выбранный дренаж
     private FormedDrainage _selectedDrainage;
+    private DrainagePurpose _selectedDrainagePurpose;
 
     // Выбранный электрический компонент
     private ElectricalPurpose _selectedElectricalComponent;
@@ -154,6 +157,7 @@ public class StandModel : BaseViewModel
 
     // Суммарная стоимость стенда
     private decimal _standSummCost;
+    private string? _thirdSensorDescription;
 
     // Третий датчик: KKS
     private string? _thirdSensorKksCode;
@@ -177,10 +181,6 @@ public class StandModel : BaseViewModel
 
     // Ширина стенда
     private float _width;
-    private DrainagePurpose _selectedDrainagePurpose;
-    private string? _firstSensorDescription;
-    private string? _secondSensorDescription;
-    private string? _thirdSensorDescription;
 
     public StandModel()
     {
@@ -403,8 +403,8 @@ public class StandModel : BaseViewModel
         set => Set(ref _firstSensorMarkMinus, value);
     } //Марикровка -
 
-    public string? FirstSensorDescription 
-    { 
+    public string? FirstSensorDescription
+    {
         get => _firstSensorDescription;
         set => Set(ref _firstSensorDescription, value);
     }

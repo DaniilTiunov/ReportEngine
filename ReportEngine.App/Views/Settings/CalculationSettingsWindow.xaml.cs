@@ -1,67 +1,66 @@
-﻿using ReportEngine.App.AppHelpers;
-using ReportEngine.App.ViewModels.CalculationSettings;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
+using ReportEngine.App.AppHelpers;
+using ReportEngine.App.ViewModels.CalculationSettings;
 
-namespace ReportEngine.App.Views.Settings
+namespace ReportEngine.App.Views.Settings;
+
+/// <summary>
+///     Логика взаимодействия для CalculationSettingsWindow.xaml
+/// </summary>
+public partial class CalculationSettingsWindow : Window
 {
-    /// <summary>
-    /// Логика взаимодействия для CalculationSettingsWindow.xaml
-    /// </summary>
-    public partial class CalculationSettingsWindow : Window
+    private readonly CalculationSettingsViewModel _viewModel;
+
+    public CalculationSettingsWindow(CalculationSettingsViewModel viewModel)
     {
-        private readonly CalculationSettingsViewModel _viewModel;
+        InitializeComponent();
 
-        public CalculationSettingsWindow(CalculationSettingsViewModel viewModel)
+        DataContext = viewModel;
+        _viewModel = viewModel;
+
+        Loaded += CalculationSettingsWindow_Loaded;
+    }
+
+    private async void CalculationSettingsWindow_Loaded(object sender, RoutedEventArgs e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(_viewModel.LoadSettingsAsync);
+    }
+
+    private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ClickCount == 2)
+            MaxRestoreButton_Click(sender, e);
+        else
+            DragMove();
+    }
+
+    private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState.Minimized;
+    }
+
+    private void MaxRestoreButton_Click(object sender, RoutedEventArgs e)
+    {
+        var area = SystemParameters.WorkArea;
+        if (Width != area.Width || Height != area.Height || Left != area.Left || Top != area.Top)
         {
-            InitializeComponent();
-
-            DataContext = viewModel;
-            _viewModel = viewModel;
-
-            Loaded += CalculationSettingsWindow_Loaded;
+            Left = area.Left;
+            Top = area.Top;
+            Width = area.Width;
+            Height = area.Height;
         }
-
-        private async void CalculationSettingsWindow_Loaded(object sender, RoutedEventArgs e)
+        else
         {
-            await ExceptionHelper.SafeExecuteAsync(_viewModel.LoadSettingsAsync);
+            Width = 1100;
+            Height = 450;
+            Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
+            Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
         }
+    }
 
-        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ClickCount == 2)
-                MaxRestoreButton_Click(sender, e);
-            else
-                DragMove();
-        }
-
-        private void MinimizeButton_Click(object sender, RoutedEventArgs e)
-        {
-            WindowState = WindowState.Minimized;
-        }
-
-        private void MaxRestoreButton_Click(object sender, RoutedEventArgs e)
-        {
-            var area = SystemParameters.WorkArea;
-            if (Width != area.Width || Height != area.Height || Left != area.Left || Top != area.Top)
-            {
-                Left = area.Left;
-                Top = area.Top;
-                Width = area.Width;
-                Height = area.Height;
-            }
-            else
-            {
-                Width = 1100;
-                Height = 450;
-                Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
-                Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
-            }
-        }
-
-        private void CloseButton_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
+    private void CloseButton_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
     }
 }

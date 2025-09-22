@@ -10,13 +10,13 @@ public class CalculationService : ICalculationService
     private readonly IProjectService _projectService;
 
     public CalculationService(
-        IProjectService projectService, 
+        IProjectService projectService,
         INotificationService notificationService)
     {
         _projectService = projectService;
         _notificationService = notificationService;
     }
-    
+
     public async Task CalculateProjectAsync(ProjectModel project)
     {
         await CalculateStandsCountAsync(project);
@@ -29,8 +29,6 @@ public class CalculationService : ICalculationService
 
         await _projectService.UpdateProjectAsync(project);
         await _projectService.UpdateStandEntity(project);
-
-
     }
 
     private async Task CalculateStandsCountAsync(ProjectModel project)
