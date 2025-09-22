@@ -104,6 +104,7 @@
                             Margin="2,2,7,7"
                             Text="NN:" />
                         <TextBox
+                            x:Name="ObvImg"
                             Grid.Row="0"
                             Grid.Column="7"
                             Width="30"
@@ -593,8 +594,7 @@
                                 SelectedItem="{Binding CurrentStandModel.SelectedFrame}">
                                 <DataGrid.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Command="{Binding ProjectCommandProvider.AddFrameToStandCommand}"
-                                                  Header="Добавить выбранную раму" />
+                                        <MenuItem Command="{Binding ProjectCommandProvider.AddFrameToStandCommand}" Header="Добавить выбранную раму" />
                                     </ContextMenu>
                                 </DataGrid.ContextMenu>
                                 <DataGrid.Columns>
@@ -615,8 +615,7 @@
                                 SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedFrame}">
                                 <DataGrid.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Command="{Binding ProjectCommandProvider.RemoveFrameStandCommand}"
-                                                  Header="Удалить выбранную раму из стенда" />
+                                        <MenuItem Command="{Binding ProjectCommandProvider.RemoveFrameStandCommand}" Header="Удалить выбранную раму из стенда" />
                                     </ContextMenu>
                                 </DataGrid.ContextMenu>
                                 <DataGrid.Columns>
@@ -657,8 +656,7 @@
                         </DataGrid.Columns>
                         <DataGrid.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}"
-                                          Header="Скопировать в выбранный стенд" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}" Header="Скопировать в выбранный стенд" />
                             </ContextMenu>
                         </DataGrid.ContextMenu>
                     </DataGrid>
@@ -669,8 +667,7 @@
                     Margin="5,5,5,5"
                     Padding="5"
                     Header="Обвязки стенда">
-                    <ListView ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}"
-                              SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand}">
+                    <ListView ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}" SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand}">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn
@@ -709,11 +706,9 @@
                         </ListView.View>
                         <ListView.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding ProjectCommandProvider.FillStandFieldsFromObvyazkaCommand}"
-                                          Header="Редактировать обвязку" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.FillStandFieldsFromObvyazkaCommand}" Header="Редактировать обвязку" />
                                 <Separator />
-                                <MenuItem Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}"
-                                          Header="Удалить обвязку из стенда" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}" Header="Удалить обвязку из стенда" />
                             </ContextMenu>
                         </ListView.ContextMenu>
                     </ListView>

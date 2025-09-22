@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Windows.Controls;
+using System.Windows.Data;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Commands.Providers;
@@ -254,16 +256,21 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
+    // TODO: Вынести в отдельный класс
     public void OnSelectObvCommandExecuted(object p)
     {
         ExceptionHelper.SafeExecute(() =>
         {
             SelectedObvyazka = _dialogService.ShowObvyazkaDialog();
 
-            CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.ImageName = SelectedObvyazka.ImageName;
-
-            PropertyRefreshHelper.RefreshProperty(this,
-                nameof(CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand));
+            var stand = CurrentProjectModel.SelectedStand;
+            
+            var tmp = stand.SelectedObvyazkaInStand;
+            
+            tmp.ImageName = SelectedObvyazka.ImageName;
+            
+            stand.SelectedObvyazkaInStand = null;
+            stand.SelectedObvyazkaInStand = tmp;
         });
     }
 
