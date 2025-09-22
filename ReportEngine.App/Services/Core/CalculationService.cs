@@ -25,6 +25,7 @@ public class CalculationService : ICalculationService
             stand.StandSummCost = CalculateStandEquipCost(stand);
 
         project.Cost = project.Stands.Sum(stand => stand.StandSummCost);
+        
         project.HumanCost = project.Stands.Sum(ObvHumanCostCalculation);
         
         await _projectService.UpdateProjectAsync(project);
