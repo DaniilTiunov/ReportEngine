@@ -11,6 +11,7 @@ public class ProjectCommandProvider
     public ICommand SaveObvCommand { get; set; }
     public ICommand CreateNewCardCommand { get; set; }
     public ICommand AddNewStandCommand { get; set; }
+    public ICommand CopyStandsCommand { get; set; }
     public ICommand SaveChangesCommand { get; set; }
     public ICommand AddFrameToStandCommand { get; set; }
     public ICommand AddDrainageToStandCommand { get; set; }

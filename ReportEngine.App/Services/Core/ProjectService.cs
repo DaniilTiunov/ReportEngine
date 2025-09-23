@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using Microsoft.VisualBasic;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
@@ -35,6 +36,75 @@ public class ProjectService : IProjectService
         projectModel.CurrentProjectId = project.Id;
 
         _notificationService.ShowInfo($"Новая карточка проекта создана! ID: {project.Id}");
+    }
+
+    public async Task CopyStandsAsync(ProjectModel projectModel)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            int count = Convert.ToInt32(Interaction.InputBox("Введите количество копий", "Копирование стенда", "1"));
+            var selectedStand = projectModel.SelectedStand;
+            if (selectedStand == null)
+            {
+                _notificationService.ShowError("Стенд не выбран для копирования.");
+                return;
+            }
+            
+            var existingKKS = projectModel.Stands.Select(s => s.KKSCode).ToHashSet();
+            var existingDesign = projectModel.Stands.Select(s => s.Design).ToHashSet();
+
+            for (int i = 1; i <= count; i++)
+            {
+                // Генерируем уникальные значения
+                string newKKS = $"{selectedStand.KKSCode}_copy{i}";
+                string newDesign = $"{selectedStand.Design}_copy{i}";
+
+                // Проверяем уникальность
+                while (existingKKS.Contains(newKKS))
+                    newKKS += "_new";
+                while (existingDesign.Contains(newDesign))
+                    newDesign += "_new";
+
+                // Копируем стенд
+                var newStand = new StandModel
+                {
+                    Design = newDesign,
+                    KKSCode = newKKS,
+                    ProjectId = projectModel.CurrentProjectId,
+                    Armature = selectedStand.Armature,
+                    BraceType = selectedStand.BraceType,
+                    Devices = selectedStand.Devices,
+                    KMCH = selectedStand.KMCH,
+                    MaterialLine = selectedStand.MaterialLine,
+                    NN = selectedStand.NN,
+                    ObvyazkaName = selectedStand.ObvyazkaName,
+                    SerialNumber = selectedStand.SerialNumber,
+                    TreeSocket = selectedStand.TreeSocket,
+                    Weight = selectedStand.Weight,
+                    Width = selectedStand.Width,
+                    DesigneStand = selectedStand.DesigneStand,
+                    ObvyazkiInStand = selectedStand.ObvyazkiInStand,
+                    FramesInStand = selectedStand.FramesInStand,
+                    AdditionalEquipsInStand = selectedStand.AdditionalEquipsInStand,
+                    AllDrainagePurposesInStand = selectedStand.AllDrainagePurposesInStand,
+                    ElectricalComponentsInStand = selectedStand.ElectricalComponentsInStand,
+                };
+                
+                var newStandEntity = StandDataConverter.ConvertToStandEntity(newStand);
+                var addedStandEntity = await _projectRepository.AddStandAsync(projectModel.CurrentProjectId, newStandEntity);
+
+                newStand.Id = addedStandEntity.Id;
+                newStand.ProjectId = addedStandEntity.ProjectInfoId;
+                newStand.InitializeDefaultPurposes();
+                
+                projectModel.Stands.Add(newStand);
+                
+                existingKKS.Add(newKKS);
+                existingDesign.Add(newDesign);
+            }
+
+            _notificationService.ShowInfo($"Создано копий: {count}");
+        });
     }
 
     public async Task UpdateProjectAsync(ProjectModel projectModel)

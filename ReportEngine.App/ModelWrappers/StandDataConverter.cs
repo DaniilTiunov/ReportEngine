@@ -27,7 +27,7 @@ public static class StandDataConverter
             TreeSocket = stand.TreeSocket,
             KMCH = stand.KMCH,
             ImageData = stand.ImageData,
-            ImageType = stand.ImageType
+            ImageType = stand.ImageType,
         };
     }
 
@@ -54,7 +54,8 @@ public static class StandDataConverter
             TreeSocket = model.TreeSocket,
             KMCH = model.KMCH,
             ImageData = model.ImageData,
-            ImageType = model.ImageType
+            ImageType = model.ImageType,
+            ObvyazkiInStand = model.ObvyazkiInStand,
         };
     }
 }

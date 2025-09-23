@@ -292,7 +292,7 @@
                         SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}">
                         <ListView.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding EditStandCommand}" Header="Создать копию на основе прототипа" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.CopyStandsCommand}" Header="Создать копию на основе прототипа" />
                                 <Separator />
                                 <MenuItem Header="Удалить" />
                             </ContextMenu>

@@ -577,6 +577,11 @@
                                         Header="Обозначение" />
                                 </GridView>
                             </ListView.View>
+                            <ListView.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="{Binding ProjectCommandProvider.CopyStandsCommand}" Header="Создать копию на основе прототипа" />
+                                </ContextMenu>
+                            </ListView.ContextMenu>
                         </ListView>
                     </GroupBox>
 

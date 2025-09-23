@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Data;
+using Microsoft.VisualBasic;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Commands.Providers;
@@ -181,6 +182,15 @@ public class ProjectViewModel : BaseViewModel
     public async void OnAddNewStandCommandExecuted(object? e)
     {
         await ExceptionHelper.SafeExecuteAsync(AddNewStandToProjectAsync);
+    }
+
+    // TODO: Сделать красивое окно
+    public async void OnCopyStandsCommandExecuted(object? e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            _projectService.CopyStandsAsync(CurrentProjectModel);
+        });
     }
 
     public async void OnDeleteSelectedStandFromProjectExecuted(object? e)

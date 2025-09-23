@@ -14,6 +14,9 @@ public static class ProjectCommandsInitializer
 
         vm.ProjectCommandProvider.AddNewStandCommand =
             new RelayCommand(vm.OnAddNewStandCommandExecuted, vm.CanAllCommandsExecute);
+        
+        vm.ProjectCommandProvider.CopyStandsCommand = 
+            new RelayCommand(vm.OnCopyStandsCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.SaveChangesCommand =
             new RelayCommand(vm.OnSaveChangesCommandExecuted, vm.CanAllCommandsExecute);
