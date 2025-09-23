@@ -28,6 +28,12 @@ public class DirectoryHelper
             imageName + ".jpg");
     }
 
+    public static string GetImagesRootPath(string imageName)
+    {
+        return Path.Combine(GetDirectory(), "Resources", "Images",
+            imageName + ".jpg");
+    }
+
     public static string GetReportsTemplatePath(string templateName)
     {
         return Path.Combine(GetDirectory(), "ExcelTemplates", templateName + ".xlsx");
