@@ -7,26 +7,29 @@
     Background="{DynamicResource PrimaryColor}"
     Foreground="{DynamicResource PrimaryForeground}"
     mc:Ignorable="av">
-    <Grid Margin="10">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <!--  Справочник рам, дренажей и дополнительные секции  -->
-            <ColumnDefinition Width="550" />
-            <!--  Добавленные к стенду рамы и дренажи  -->
-            <ColumnDefinition Width="450" />
-            <!--  Список стендов  -->
-        </Grid.ColumnDefinitions>
 
-        <ScrollViewer
-            Grid.Column="0"
-            Margin="10"
-            CanContentScroll="True"
-            HorizontalScrollBarVisibility="Disabled"
-            VerticalScrollBarVisibility="Auto">
-            <StackPanel>
-                <!--  Доступные рамы  -->
-                <!--  Дренажи  -->
-                <GroupBox>
+    <ScrollViewer>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="240" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="2*" MinWidth="300" />
+                <ColumnDefinition Width="*" MinWidth="180" />
+            </Grid.ColumnDefinitions>
+
+
+
+            <GridSplitter
+                Grid.Column="1"
+                Width="6"
+                Margin="5"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Cursor="SizeWE"
+                ResizeDirection="Columns" />
+
+            <StackPanel Grid.Column="0">
+                <GroupBox Grid.Column="0">
                     <GroupBox.Header>
                         <TextBlock>
                             <Run FontSize="16" Text="Добавить дренажи и крепления в стенд — " />
@@ -102,8 +105,8 @@
                         </TabItem>
 
                     </TabControl>
-                </GroupBox>
 
+                </GroupBox>
                 <!--  Дополнительные комплектующие по стенду  -->
                 <GroupBox>
                     <GroupBox.Header>
@@ -161,8 +164,6 @@
                         </TextBlock>
                     </GroupBox.Header>
                     <StackPanel>
-                        <!-- <TextBox Margin="5"
-                                     Text="{Binding CurrentStandModel.NewElectricalComponent.Name, Mode=TwoWay}" />-->
                         <DataGrid
                             Margin="5"
                             AutoGenerateColumns="False"
@@ -197,123 +198,124 @@
                     </StackPanel>
                 </GroupBox>
             </StackPanel>
-        </ScrollViewer>
-        <!--  Добавленные к стенду рамы и дренажи  -->
-        <StackPanel Grid.Column="1" Margin="10">
-            <GroupBox>
-                <GroupBox.Header>
-                    <TextBlock>
-                        <Run FontSize="16" Text="Дренажные компелктующие в стенде -" />
-                        <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
-                    </TextBlock>
-                </GroupBox.Header>
-                <DataGrid ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand}" SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Назначение" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Material, Mode=TwoWay}"
-                            Header="Материал" />
-                        <DataGridTextColumn
-                            Width="70"
-                            Binding="{Binding Quantity, Mode=TwoWay}"
-                            Header="Кол-во" />
-                    </DataGrid.Columns>
-                </DataGrid>
-            </GroupBox>
-            <GroupBox>
-                <GroupBox.Header>
-                    <TextBlock>
-                        <Run FontSize="16" Text="Доп. комплектующие в стенде -" />
-                        <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
-                    </TextBlock>
-                </GroupBox.Header>
-                <DataGrid ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand}" SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Назначение" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Material, Mode=TwoWay}"
-                            Header="Материал" />
-                        <DataGridTextColumn
-                            Width="70"
-                            Binding="{Binding Quantity, Mode=TwoWay}"
-                            Header="Кол-во" />
-                    </DataGrid.Columns>
-                </DataGrid>
-            </GroupBox>
-            <GroupBox>
-                <GroupBox.Header>
-                    <TextBlock>
-                        <Run FontSize="16" Text="Электрические компоненты в стенде — " />
-                        <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
-                    </TextBlock>
-                </GroupBox.Header>
-                <DataGrid
-                    AutoGenerateColumns="False"
-                    CanUserAddRows="False"
-                    ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}"
-                    SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Назначение" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Material, Mode=TwoWay}"
-                            Header="Материал" />
-                        <DataGridTextColumn
-                            Width="70"
-                            Binding="{Binding Quantity, Mode=TwoWay}"
-                            Header="Кол-во" />
-                    </DataGrid.Columns>
-                </DataGrid>
-            </GroupBox>
-        </StackPanel>
 
-        <!--  Список стендов  -->
-        <Border
-            Grid.Column="2"
-            Margin="0,0,0,0"
-            BorderBrush="#DDDDDD"
-            BorderThickness="1">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <TextBlock
-                    Grid.Row="0"
-                    Margin="5"
-                    FontWeight="Bold"
-                    Text="Список стендов проекта" />
-                <ListView
-                    Grid.Row="1"
-                    ItemsSource="{Binding CurrentProjectModel.Stands}"
-                    SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}">
-                    <ListView.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Command="{Binding EditStandCommand}" Header="Создать копию на основе прототипа" />
-                            <Separator />
-                            <MenuItem Header="Удалить" />
-                        </ContextMenu>
-                    </ListView.ContextMenu>
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn
-                                Width="40"
-                                DisplayMemberBinding="{Binding Number}"
-                                Header="№" />
-                            <GridViewColumn
-                                Width="120"
-                                DisplayMemberBinding="{Binding KKSCode}"
-                                Header="KKS" />
-                            <GridViewColumn
-                                Width="200"
-                                DisplayMemberBinding="{Binding Design}"
-                                Header="Обозначение" />
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-            </Grid>
-        </Border>
-    </Grid>
+            <!--  Добавленные к стенду рамы и дренажи  -->
+            <StackPanel Grid.Column="2" Margin="10">
+                <GroupBox>
+                    <GroupBox.Header>
+                        <TextBlock>
+                            <Run FontSize="16" Text="Дренажные компелктующие в стенде -" />
+                            <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
+                        </TextBlock>
+                    </GroupBox.Header>
+                    <DataGrid ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand}" SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Назначение" />
+                            <DataGridTextColumn
+                                Width="*"
+                                Binding="{Binding Material, Mode=TwoWay}"
+                                Header="Материал" />
+                            <DataGridTextColumn
+                                Width="70"
+                                Binding="{Binding Quantity, Mode=TwoWay}"
+                                Header="Кол-во" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+                <GroupBox>
+                    <GroupBox.Header>
+                        <TextBlock>
+                            <Run FontSize="16" Text="Доп. комплектующие в стенде -" />
+                            <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
+                        </TextBlock>
+                    </GroupBox.Header>
+                    <DataGrid ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand}" SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Назначение" />
+                            <DataGridTextColumn
+                                Width="*"
+                                Binding="{Binding Material, Mode=TwoWay}"
+                                Header="Материал" />
+                            <DataGridTextColumn
+                                Width="70"
+                                Binding="{Binding Quantity, Mode=TwoWay}"
+                                Header="Кол-во" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+                <GroupBox>
+                    <GroupBox.Header>
+                        <TextBlock>
+                            <Run FontSize="16" Text="Электрические компоненты в стенде — " />
+                            <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
+                        </TextBlock>
+                    </GroupBox.Header>
+                    <DataGrid
+                        AutoGenerateColumns="False"
+                        CanUserAddRows="False"
+                        ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}"
+                        SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Назначение" />
+                            <DataGridTextColumn
+                                Width="*"
+                                Binding="{Binding Material, Mode=TwoWay}"
+                                Header="Материал" />
+                            <DataGridTextColumn
+                                Width="70"
+                                Binding="{Binding Quantity, Mode=TwoWay}"
+                                Header="Кол-во" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+            </StackPanel>
+
+            <!--  Список стендов  -->
+            <Border
+                Grid.Column="3"
+                Margin="0,0,0,0"
+                BorderBrush="#DDDDDD"
+                BorderThickness="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        Grid.Row="0"
+                        Margin="5"
+                        FontWeight="Bold"
+                        Text="Список стендов проекта" />
+                    <ListView
+                        Grid.Row="1"
+                        ItemsSource="{Binding CurrentProjectModel.Stands}"
+                        SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}">
+                        <ListView.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding EditStandCommand}" Header="Создать копию на основе прототипа" />
+                                <Separator />
+                                <MenuItem Header="Удалить" />
+                            </ContextMenu>
+                        </ListView.ContextMenu>
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn
+                                    Width="40"
+                                    DisplayMemberBinding="{Binding Number}"
+                                    Header="№" />
+                                <GridViewColumn
+                                    Width="120"
+                                    DisplayMemberBinding="{Binding KKSCode}"
+                                    Header="KKS" />
+                                <GridViewColumn
+                                    Width="200"
+                                    DisplayMemberBinding="{Binding Design}"
+                                    Header="Обозначение" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </Border>
+        </Grid>
+    </ScrollViewer>
 </UserControl>
