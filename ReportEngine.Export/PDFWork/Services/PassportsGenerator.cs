@@ -1,6 +1,4 @@
-﻿
-using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Drawing.Charts;
+﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using ReportEngine.Domain.Entities;
@@ -19,69 +17,48 @@ public class PassportsGenerator : IReportGenerator
 {
     private readonly IProjectInfoRepository _projectInfoRepository;
 
-    public ReportType Type => ReportType.PassportsReport;
-
-
 
     public PassportsGenerator(IProjectInfoRepository projectRepository)
     {
         _projectInfoRepository = projectRepository;
     }
 
+    public ReportType Type => ReportType.PassportsReport;
 
 
     public async Task GenerateAsync(int projectId)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
 
-        string savePath = SettingsManager.GetReportDirectory();
+        var savePath = SettingsManager.GetReportDirectory();
 
-        string fileName = "Паспорта___" + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + ".docx";
+        var fileName = "Паспорта___" + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + ".docx";
 
-        string filePath = Path.Combine(savePath, fileName);
+        var filePath = Path.Combine(savePath, fileName);
 
-        using (WordprocessingDocument wordDoc = WordprocessingDocument.Create(
+        using (var wordDoc = WordprocessingDocument.Create(
                    filePath, WordprocessingDocumentType.Document))
         {
-
-
             // Добавляем основную часть документа
-            MainDocumentPart mainPart = wordDoc.AddMainDocumentPart();
+            var mainPart = wordDoc.AddMainDocumentPart();
             mainPart.Document = new Document();
-            Body body = mainPart.Document.AppendChild(new Body());
+            var body = mainPart.Document.AppendChild(new Body());
 
             SetLandscapeOrientation(mainPart);
 
 
-
-            foreach (var stand in project.Stands)
-            {
-                CreateStandTitlePage(mainPart, stand);
-
-
-
-            }
-
+            foreach (var stand in project.Stands) CreateStandTitlePage(mainPart, stand);
 
 
             // Сохраняем изменения
             mainPart.Document.Save();
-
         }
-
-
     }
-
-
-
-
 
 
     public void CreateStandTitlePage(MainDocumentPart mainDocument, Stand stand)
     {
-
-        Paragraph paragraph = new Paragraph();
-
+        var paragraph = new Paragraph();
 
 
         //выводим лого EAC
@@ -127,20 +104,16 @@ public class PassportsGenerator : IReportGenerator
         paragraph.AppendChild(element);
 
         mainDocument.Document.AppendChild(paragraph);
-
     }
 
     public int CreateStandPasportBody(Stand stand, int docStartPage)
     {
-        int docPageNumber = docStartPage;
-
+        var docPageNumber = docStartPage;
 
 
         docPageNumber++;
         return docPageNumber;
     }
-
-
 
 
     #region Вспомогательные методы
@@ -151,7 +124,7 @@ public class PassportsGenerator : IReportGenerator
 
         // Размер страницы A4 в ландшафтной ориентации (в EMU)
 
-        var pageSize = new PageSize()
+        var pageSize = new PageSize
         {
             Width = 16838,
             Height = 11906,
@@ -160,14 +133,14 @@ public class PassportsGenerator : IReportGenerator
 
 
         // Поля страницы
-        PageMargin pageMargin = new PageMargin()
+        var pageMargin = new PageMargin
         {
-            Top = 1440,       // 2.54 см
-            Right = 1440,     // 2.54 см
-            Bottom = 1440,    // 2.54 см
-            Left = 1440,      // 2.54 см
-            Header = 720,     // 1.27 см
-            Footer = 720      // 1.27 см
+            Top = 1440, // 2.54 см
+            Right = 1440, // 2.54 см
+            Bottom = 1440, // 2.54 см
+            Left = 1440, // 2.54 см
+            Header = 720, // 1.27 см
+            Footer = 720 // 1.27 см
         };
 
 
@@ -186,18 +159,17 @@ public class PassportsGenerator : IReportGenerator
     private Run CreatePageBreak()
     {
         return new Run(
-            new Break() { Type = BreakValues.Page });
+            new Break { Type = BreakValues.Page });
     }
 
     private Run CreateLineBreak()
     {
         return new Run(
-               new Break() { Type = BreakValues.TextWrapping });
+            new Break { Type = BreakValues.TextWrapping });
     }
 
     private Run CreateImage(MainDocumentPart mainPart, string imagePath)
     {
-
         if (string.IsNullOrEmpty(imagePath) || !File.Exists(imagePath))
             return null;
 
@@ -211,15 +183,14 @@ public class PassportsGenerator : IReportGenerator
             ".bmp" => ImagePartType.Bmp,
             ".tiff" or ".tif" => ImagePartType.Tiff,
             _ => throw new InvalidOperationException("Unsupported image type: " + ext)
-
         };
-        ImagePart imagePart = mainPart.AddImagePart(partType);
-        using (FileStream stream = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
+        var imagePart = mainPart.AddImagePart(partType);
+        using (var stream = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
         {
             imagePart.FeedData(stream);
         }
 
-        string rId = mainPart.GetIdOfPart(imagePart);
+        var rId = mainPart.GetIdOfPart(imagePart);
 
         // Размеры картинки в EMU (здесь задаем ширину 200px высоту пропорционально, можно изменить)
         // Для простоты зададим фиксированные размеры
@@ -236,19 +207,22 @@ public class PassportsGenerator : IReportGenerator
                         new A.GraphicFrameLocks { NoChangeAspect = true }),
                     new A.Graphic(
                         new A.GraphicData(
-                            new PIC.Picture(
-                                new PIC.NonVisualPictureProperties(
-                                    new PIC.NonVisualDrawingProperties { Id = (UInt32Value)0U, Name = Path.GetFileName(imagePath) },
-                                    new PIC.NonVisualPictureDrawingProperties()),
-                                new PIC.BlipFill(
-                                    new A.Blip { Embed = rId },
-                                    new A.Stretch(new A.FillRectangle())),
-                                new PIC.ShapeProperties(
-                                    new A.Transform2D(new A.Offset { X = 0L, Y = 0L }, new A.Extents { Cx = cx, Cy = cy }),
-                                    new A.PresetGeometry(new A.AdjustValueList()) { Preset = A.ShapeTypeValues.Rectangle })
+                                new PIC.Picture(
+                                    new PIC.NonVisualPictureProperties(
+                                        new PIC.NonVisualDrawingProperties
+                                            { Id = (UInt32Value)0U, Name = Path.GetFileName(imagePath) },
+                                        new PIC.NonVisualPictureDrawingProperties()),
+                                    new PIC.BlipFill(
+                                        new A.Blip { Embed = rId },
+                                        new A.Stretch(new A.FillRectangle())),
+                                    new PIC.ShapeProperties(
+                                        new A.Transform2D(new A.Offset { X = 0L, Y = 0L },
+                                            new A.Extents { Cx = cx, Cy = cy }),
+                                        new A.PresetGeometry(new A.AdjustValueList())
+                                            { Preset = A.ShapeTypeValues.Rectangle })
+                                )
                             )
-                        )
-                        { Uri = "http://schemas.openxmlformats.org/drawingml/2006/picture" }
+                            { Uri = "http://schemas.openxmlformats.org/drawingml/2006/picture" }
                     )
                 )
                 {
@@ -263,5 +237,4 @@ public class PassportsGenerator : IReportGenerator
     }
 
     #endregion
-
 }

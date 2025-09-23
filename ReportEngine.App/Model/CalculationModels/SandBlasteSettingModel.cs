@@ -13,16 +13,16 @@ public class SandBlasteSettingModel : BaseViewModel
 
     public double SandBlastWork
     {
-        get => _sandBlastWork; 
+        get => _sandBlastWork;
         set => Set(ref _sandBlastWork, value);
     }
 
     public double TimeSandBlastWork
     {
-        get =>  _timeSandBlastWork; 
+        get => _timeSandBlastWork;
         set => Set(ref _timeSandBlastWork, value);
     }
-    
+
     public async Task LoadSandBlastDataFromIniAsync()
     {
         var iniData = await CalculationSettingsManager.LoadAsync<SandBlastSettings, SandBlasteSettingsData>();

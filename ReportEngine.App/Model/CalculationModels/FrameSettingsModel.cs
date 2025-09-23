@@ -8,22 +8,22 @@ namespace ReportEngine.App.Model.CalculationModels;
 
 public class FrameSettingsModel : BaseViewModel
 {
-    private double _frameProduction;
-    private double _timeForProductionFrame;
-    private double _timeForPrepareFrame;
-    private double _painting;
-    private double _timeForPaintFrame;
-    private double _timeForPaintObv;
-    private string _materialOne;
-    private string _materialTwo;
+    private double _assemblyCost;
+    private double _closetWorkCost;
     private double _countMaterialOne;
     private double _countMaterialTwo;
-    private double _assemblyCost;
-    private double _timeForAssemblyWork;
+    private double _frameProduction;
+    private string _materialOne;
+    private string _materialTwo;
+    private double _painting;
     private double _pillarCost;
-    private double _timePillarProduction;
-    private double _closetWorkCost;
     private double _timeClosetPrepare;
+    private double _timeForAssemblyWork;
+    private double _timeForPaintFrame;
+    private double _timeForPaintObv;
+    private double _timeForPrepareFrame;
+    private double _timeForProductionFrame;
+    private double _timePillarProduction;
 
     public double FrameProduction
     {
@@ -120,7 +120,7 @@ public class FrameSettingsModel : BaseViewModel
         get => _timeClosetPrepare;
         set => Set(ref _timeClosetPrepare, value);
     }
-    
+
     public async Task LoadFrameDataFromIniAsync()
     {
         var iniData = await CalculationSettingsManager.LoadAsync<FrameSettings, FrameSettingsData>();

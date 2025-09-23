@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using Npgsql;
 
 namespace ReportEngine.Shared.Config.JsonHelpers;
 

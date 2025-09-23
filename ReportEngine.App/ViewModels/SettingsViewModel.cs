@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -68,17 +67,16 @@ public class SettingsViewModel : BaseViewModel
         if (ConnectionString != currentConnectionString)
         {
             JsonHandler.SetConnectionString(configPath, ConnectionString);
-            
+
             Process.Start(new ProcessStartInfo
             {
                 FileName = Process.GetCurrentProcess().MainModule.FileName,
                 UseShellExecute = true
             });
-            
+
             _notificationService.ShowInfo("Строка подключения изменена.\nПриложение будет перезапущено");
-            
+
             Application.Current.Shutdown();
-            
         }
         else
         {

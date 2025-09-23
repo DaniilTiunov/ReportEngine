@@ -14,8 +14,8 @@ public static class ProjectCommandsInitializer
 
         vm.ProjectCommandProvider.AddNewStandCommand =
             new RelayCommand(vm.OnAddNewStandCommandExecuted, vm.CanAllCommandsExecute);
-        
-        vm.ProjectCommandProvider.CopyStandsCommand = 
+
+        vm.ProjectCommandProvider.CopyStandsCommand =
             new RelayCommand(vm.OnCopyStandsCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.SaveChangesCommand =
@@ -71,7 +71,7 @@ public static class ProjectCommandsInitializer
 
         vm.ProjectCommandProvider.CreateFinplanReportCommand =
             new RelayCommand(vm.OnCreateFinplanReportCommandExecuted, vm.CanAllCommandsExecute);
-        
+
         vm.ProjectCommandProvider.CreatePassportReportCommand =
             new RelayCommand(vm.OnCreatePassportReportCommandExecuted, vm.CanAllCommandsExecute);
 

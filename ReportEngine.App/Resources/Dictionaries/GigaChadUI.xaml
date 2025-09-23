@@ -145,7 +145,7 @@
 
     <Style TargetType="MenuItem">
         <Setter Property="OverridesDefaultStyle" Value="True" />
-        <Setter Property="FontFamily" Value="Bahnschrift"/>
+        <Setter Property="FontFamily" Value="Bahnschrift" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="MenuItem">

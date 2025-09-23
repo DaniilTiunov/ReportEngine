@@ -42,22 +42,22 @@ public class ProjectService : IProjectService
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            int count = Convert.ToInt32(Interaction.InputBox("Введите количество копий", "Копирование стенда", "1"));
+            var count = Convert.ToInt32(Interaction.InputBox("Введите количество копий", "Копирование стенда", "1"));
             var selectedStand = projectModel.SelectedStand;
             if (selectedStand == null)
             {
                 _notificationService.ShowError("Стенд не выбран для копирования.");
                 return;
             }
-            
+
             var existingKKS = projectModel.Stands.Select(s => s.KKSCode).ToHashSet();
             var existingDesign = projectModel.Stands.Select(s => s.Design).ToHashSet();
 
-            for (int i = 1; i <= count; i++)
+            for (var i = 1; i <= count; i++)
             {
                 // Генерируем уникальные значения
-                string newKKS = $"{selectedStand.KKSCode}_copy{i}";
-                string newDesign = $"{selectedStand.Design}_copy{i}";
+                var newKKS = $"{selectedStand.KKSCode}_copy{i}";
+                var newDesign = $"{selectedStand.Design}_copy{i}";
 
                 // Проверяем уникальность
                 while (existingKKS.Contains(newKKS))
@@ -87,18 +87,19 @@ public class ProjectService : IProjectService
                     FramesInStand = selectedStand.FramesInStand,
                     AdditionalEquipsInStand = selectedStand.AdditionalEquipsInStand,
                     AllDrainagePurposesInStand = selectedStand.AllDrainagePurposesInStand,
-                    ElectricalComponentsInStand = selectedStand.ElectricalComponentsInStand,
+                    ElectricalComponentsInStand = selectedStand.ElectricalComponentsInStand
                 };
-                
+
                 var newStandEntity = StandDataConverter.ConvertToStandEntity(newStand);
-                var addedStandEntity = await _projectRepository.AddStandAsync(projectModel.CurrentProjectId, newStandEntity);
+                var addedStandEntity =
+                    await _projectRepository.AddStandAsync(projectModel.CurrentProjectId, newStandEntity);
 
                 newStand.Id = addedStandEntity.Id;
                 newStand.ProjectId = addedStandEntity.ProjectInfoId;
                 newStand.InitializeDefaultPurposes();
-                
+
                 projectModel.Stands.Add(newStand);
-                
+
                 existingKKS.Add(newKKS);
                 existingDesign.Add(newDesign);
             }
@@ -131,7 +132,7 @@ public class ProjectService : IProjectService
             MarkPlus = projectModel.MarkPlus,
             IsGalvanized = projectModel.IsGalvanized
         };
-        
+
         await _projectRepository.UpdateAsync(projectInfo);
     }
 

@@ -43,11 +43,8 @@ public partial class MainWindow : Window //Это так называемый "C
 
         var canConnect = await _mainViewModel.CanAppConnect();
 
-        if (canConnect)
-        {
-            await _mainViewModel.ShowAllProjectsAsync();
-        }
-        
+        if (canConnect) await _mainViewModel.ShowAllProjectsAsync();
+
         await _mainViewModel.CheckDbConnectionAsync();
         await LoadCalculationSettingsDataAsync();
     }

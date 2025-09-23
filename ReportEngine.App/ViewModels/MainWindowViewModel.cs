@@ -155,11 +155,11 @@ public class MainWindowViewModel : BaseViewModel
 
     public async Task<bool> CanAppConnect()
     {
-        var  context = _serviceProvider.GetRequiredService<ReAppContext>();
-        
+        var context = _serviceProvider.GetRequiredService<ReAppContext>();
+
         if (context.Database.CanConnect())
             return true;
-        
+
         return false;
     }
 

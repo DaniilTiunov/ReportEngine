@@ -87,7 +87,8 @@
                     </ListView.View>
                     <ListView.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Command="{Binding ProjectCommandProvider.CopyStandsCommand}" Header="Создать копию на основе прототипа" />
+                            <MenuItem Command="{Binding ProjectCommandProvider.CopyStandsCommand}"
+                                      Header="Создать копию на основе прототипа" />
                         </ContextMenu>
                     </ListView.ContextMenu>
                 </ListView>
@@ -204,7 +205,8 @@
                     </ListView.View>
                     <ListView.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}" Header="Удалить обвязку из стенда" />
+                            <MenuItem Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}"
+                                      Header="Удалить обвязку из стенда" />
                             <MenuItem Header="Копировать обвязку" />
                         </ContextMenu>
                     </ListView.ContextMenu>
@@ -364,8 +366,12 @@
                     </DataGrid.Columns>
                     <DataGrid.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Command="{Binding ProjectCommandProvider.UpdateElectricalComponentInStandCommand}" Header="Сохранить изменения" />
-                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteElectricalComponentFromStandCommand}" Header="Удалить" />
+                            <MenuItem
+                                Command="{Binding ProjectCommandProvider.UpdateElectricalComponentInStandCommand}"
+                                Header="Сохранить изменения" />
+                            <MenuItem
+                                Command="{Binding ProjectCommandProvider.DeleteElectricalComponentFromStandCommand}"
+                                Header="Удалить" />
                         </ContextMenu>
                     </DataGrid.ContextMenu>
                 </DataGrid>
@@ -415,8 +421,12 @@
                     </DataGrid.Columns>
                     <DataGrid.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Command="{Binding ProjectCommandProvider.UpdateAdditionalComponentInStandCommand}" Header="Сохранить изменения" />
-                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteAdditionalComponentFromStandCommand}" Header="Удалить" />
+                            <MenuItem
+                                Command="{Binding ProjectCommandProvider.UpdateAdditionalComponentInStandCommand}"
+                                Header="Сохранить изменения" />
+                            <MenuItem
+                                Command="{Binding ProjectCommandProvider.DeleteAdditionalComponentFromStandCommand}"
+                                Header="Удалить" />
                         </ContextMenu>
                     </DataGrid.ContextMenu>
                 </DataGrid>
@@ -466,8 +476,11 @@
                     </DataGrid.Columns>
                     <DataGrid.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Command="{Binding ProjectCommandProvider.UpdateDrainageComponentInStandCommand}" Header="Сохранить изменения" />
-                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteDrainageComponentFromStandCommand}" Header="Удалить" />
+                            <MenuItem Command="{Binding ProjectCommandProvider.UpdateDrainageComponentInStandCommand}"
+                                      Header="Сохранить изменения" />
+                            <MenuItem
+                                Command="{Binding ProjectCommandProvider.DeleteDrainageComponentFromStandCommand}"
+                                Header="Удалить" />
                         </ContextMenu>
                     </DataGrid.ContextMenu>
                 </DataGrid>

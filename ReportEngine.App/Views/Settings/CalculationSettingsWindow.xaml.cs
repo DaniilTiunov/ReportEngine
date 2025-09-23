@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Input;
-using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels.CalculationSettings;
 
 namespace ReportEngine.App.Views.Settings;
@@ -18,9 +17,8 @@ public partial class CalculationSettingsWindow : Window
 
         DataContext = viewModel;
         _viewModel = viewModel;
-        
     }
-    
+
     private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         if (e.ClickCount == 2)

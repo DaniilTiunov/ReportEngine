@@ -1,8 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Windows.Controls;
-using System.Windows.Data;
-using Microsoft.VisualBasic;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Commands.Providers;
@@ -187,10 +184,7 @@ public class ProjectViewModel : BaseViewModel
     // TODO: Сделать красивое окно
     public async void OnCopyStandsCommandExecuted(object? e)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
-        {
-            _projectService.CopyStandsAsync(CurrentProjectModel);
-        });
+        await ExceptionHelper.SafeExecuteAsync(async () => { _projectService.CopyStandsAsync(CurrentProjectModel); });
     }
 
     public async void OnDeleteSelectedStandFromProjectExecuted(object? e)
@@ -274,11 +268,11 @@ public class ProjectViewModel : BaseViewModel
             SelectedObvyazka = _dialogService.ShowObvyazkaDialog();
 
             var stand = CurrentProjectModel.SelectedStand;
-            
+
             var tmp = stand.SelectedObvyazkaInStand;
-            
+
             tmp.ImageName = SelectedObvyazka.ImageName;
-            
+
             stand.SelectedObvyazkaInStand = null;
             stand.SelectedObvyazkaInStand = tmp;
         });
@@ -768,7 +762,7 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(AllAvailableElectricalComponents));
         CurrentStandModel.NewElectricalComponent = new FormedElectricalComponent();
         CurrentStandModel.InitializeDefaultPurposes();
-        
+
         await LoadPurposesInStandsAsync();
     }
 
@@ -784,7 +778,7 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(AllAvailableAdditionalEquips));
         CurrentStandModel.NewAdditionalEquip = new FormedAdditionalEquip();
         CurrentStandModel.InitializeDefaultPurposes();
-        
+
         await LoadPurposesInStandsAsync();
     }
 
