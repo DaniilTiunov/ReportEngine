@@ -153,6 +153,16 @@ public class MainWindowViewModel : BaseViewModel
             MainWindowModel.IsConnected ? "Соединение установлено" : "Соединение не установлено";
     }
 
+    public async Task<bool> CanAppConnect()
+    {
+        var  context = _serviceProvider.GetRequiredService<ReAppContext>();
+        
+        if (context.Database.CanConnect())
+            return true;
+        
+        return false;
+    }
+
     public async Task ShowAllProjectsAsync()
     {
         var projects = await _projectRepository.GetAllAsync();

@@ -41,10 +41,14 @@ public partial class MainWindow : Window //Это так называемый "C
 
         MainWindow_StartUpState();
 
+        var canConnect = await _mainViewModel.CanAppConnect();
+
+        if (canConnect)
+        {
+            await _mainViewModel.ShowAllProjectsAsync();
+        }
         
-        await _mainViewModel.ShowAllProjectsAsync();
         await _mainViewModel.CheckDbConnectionAsync();
-        
         await LoadCalculationSettingsDataAsync();
     }
 
