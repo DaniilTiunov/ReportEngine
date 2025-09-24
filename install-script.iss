@@ -1,6 +1,6 @@
 ; Inno Setup Script for Смета КИП
 #define MyAppName "Смета КИП"
-#define MyAppVersion "0.0.0.1"
+#define MyAppVersion "Эталон-Прибор"
 #define MyAppPublisher "ETALON"
 #define MyAppURL "https://www.example.com/"
 #define MyAppExeName "ReportEngine.App.exe"
@@ -38,7 +38,7 @@ Name: "dotnet"; Description: "Установить .NET 8.0?"; GroupDescription:
 
 [Files]
 ; Копируем все файлы из папки Release, включая Updater.exe
-Source: "C:\Work\Share\Output\ReportEngineRelease\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "T:\00 ОКП АСУ\01 Группа разработки ПО\Тиунов\Приложение Стенды КИП\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 ; .NET Runtime для первой установки
 Source: "C:\Work\Установщики\dotnet-sdk-8.0.317-win-x64.exe"; DestDir: "{tmp}"; Flags: ignoreversion
