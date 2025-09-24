@@ -171,8 +171,7 @@ public partial class MainWindow : Window //Это так называемый "C
                 MessageBox.Show("ReportUpdater.exe не найден!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-
-            // Просто запускаем апдейтер без аргументов
+            
             Process.Start(updaterPath);
 
             // Завершаем текущий WPF
