@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
@@ -156,5 +157,30 @@ public partial class MainWindow : Window //Это так называемый "C
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
         Application.Current.Shutdown();
+    }
+
+    private void AutoUpdate(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            string localPath = AppDomain.CurrentDomain.BaseDirectory;
+            string updaterPath = Path.Combine(localPath, "ReportUpdater.exe");
+
+            if (!File.Exists(updaterPath))
+            {
+                MessageBox.Show("ReportUpdater.exe не найден!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            // Просто запускаем апдейтер без аргументов
+            Process.Start(updaterPath);
+
+            // Завершаем текущий WPF
+            Application.Current.Shutdown();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Ошибка запуска обновления: {ex.Message}");
+        }
     }
 }
