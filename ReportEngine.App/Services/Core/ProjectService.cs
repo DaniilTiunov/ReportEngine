@@ -78,7 +78,7 @@ public class ProjectService : IProjectService
                     MaterialLine = selectedStand.MaterialLine,
                     NN = selectedStand.NN,
                     ObvyazkaName = selectedStand.ObvyazkaName,
-                    SerialNumber = selectedStand.SerialNumber,
+                    SerialNumber = StandUniqNameHelper.SetUniqNameForStand(selectedStand),
                     TreeSocket = selectedStand.TreeSocket,
                     Weight = selectedStand.Weight,
                     Width = selectedStand.Width,
@@ -95,7 +95,6 @@ public class ProjectService : IProjectService
                             ObvyzkaModelWrapper.CloneForStand(obv, 0) // 0 или newStand.Id, если уже есть
                     )
                 );
-                
                 
                 var newStandEntity = StandDataConverter.ConvertToStandEntity(newStand);
                 var addedStandEntity =

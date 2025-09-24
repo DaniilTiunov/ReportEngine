@@ -264,6 +264,10 @@
                                 DisplayMemberBinding="{Binding Design}"
                                 Header="Обозначение" />
                             <GridViewColumn
+                                Width="200"
+                                DisplayMemberBinding="{Binding SerialNumber}"
+                                Header="Серийный номер" />
+                            <GridViewColumn
                                 Width="100"
                                 DisplayMemberBinding="{Binding BraceType}"
                                 Header="Тип крепления" />
@@ -276,8 +280,7 @@
                     </ListView.View>
                     <ListView.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}"
-                                      Header="Удалить" />
+                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}" Header="Удалить" />
                         </ContextMenu>
                     </ListView.ContextMenu>
                 </ListView>

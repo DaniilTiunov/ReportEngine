@@ -68,6 +68,10 @@
                                 DisplayMemberBinding="{Binding Design}"
                                 Header="Обозначение" />
                             <GridViewColumn
+                                Width="200"
+                                DisplayMemberBinding="{Binding SerialNumber}"
+                                Header="Серийный номер" />
+                            <GridViewColumn
                                 Width="100"
                                 DisplayMemberBinding="{Binding BraceType}"
                                 Header="Тип крепления" />
