@@ -1,4 +1,5 @@
-﻿using ReportEngine.App.Model.StandsModel;
+﻿using System.Collections.ObjectModel;
+using ReportEngine.App.Model.StandsModel;
 using ReportEngine.Domain.Entities;
 
 namespace ReportEngine.App.ModelWrappers;
@@ -55,7 +56,33 @@ public static class StandDataConverter
             KMCH = model.KMCH,
             ImageData = model.ImageData,
             ImageType = model.ImageType,
-            ObvyazkiInStand = model.ObvyazkiInStand
+            ObvyazkiInStand = model.ObvyazkiInStand,
+            StandAdditionalEquips = model.AdditionalEquipsInStand
+                .Select(equip => new StandAdditionalEquip
+                {
+                    AdditionalEquipId = equip.Id
+                })
+                .ToList(),
+            
+            StandElectricalComponent = model.ElectricalComponentsInStand
+                .Select(equip => new StandElectricalComponent
+                {
+                    ElectricalComponentId = equip.Id
+                })
+                .ToList(),
+            
+            StandDrainages = model.DrainagesInStand
+                .Select(equip => new StandDrainage()
+                {
+                    DrainageId = equip.Id
+                }).ToList(),
+            
+            StandFrames = model.FramesInStand
+                .Select(equip => new StandFrame()
+                {
+                    FrameId = equip.Id
+                }).ToList()
+                    
         };
     }
 }

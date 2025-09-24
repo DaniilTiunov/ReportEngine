@@ -184,7 +184,13 @@ public class ProjectViewModel : BaseViewModel
     // TODO: Сделать красивое окно
     public async void OnCopyStandsCommandExecuted(object? e)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () => { _projectService.CopyStandsAsync(CurrentProjectModel); });
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await _projectService.CopyStandsAsync(CurrentProjectModel);
+            
+            await LoadPurposesInStandsAsync();
+            await LoadObvyazkiAsync();
+        });
     }
 
     public async void OnDeleteSelectedStandFromProjectExecuted(object? e)
@@ -255,6 +261,8 @@ public class ProjectViewModel : BaseViewModel
 
             OnPropertyChanged(nameof(CurrentProjectModel.SelectedStand.ObvyazkiInStand));
             OnPropertyChanged(nameof(CurrentProjectModel.ObvyazkiInProject));
+
+            await LoadObvyazkiAsync();
 
             _notificationService.ShowInfo("Обвязка скопирована в стенд");
         });

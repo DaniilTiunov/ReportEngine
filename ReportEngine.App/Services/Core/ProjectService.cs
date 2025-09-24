@@ -83,13 +83,20 @@ public class ProjectService : IProjectService
                     Weight = selectedStand.Weight,
                     Width = selectedStand.Width,
                     DesigneStand = selectedStand.DesigneStand,
-                    ObvyazkiInStand = selectedStand.ObvyazkiInStand,
                     FramesInStand = selectedStand.FramesInStand,
+                    DrainagesInStand = selectedStand.DrainagesInStand,
                     AdditionalEquipsInStand = selectedStand.AdditionalEquipsInStand,
                     AllDrainagePurposesInStand = selectedStand.AllDrainagePurposesInStand,
                     ElectricalComponentsInStand = selectedStand.ElectricalComponentsInStand
                 };
-
+                
+                newStand.ObvyazkiInStand = new ObservableCollection<ObvyazkaInStand>(
+                    selectedStand.ObvyazkiInStand.Select(obv =>
+                            ObvyzkaModelWrapper.CloneForStand(obv, 0) // 0 или newStand.Id, если уже есть
+                    )
+                );
+                
+                
                 var newStandEntity = StandDataConverter.ConvertToStandEntity(newStand);
                 var addedStandEntity =
                     await _projectRepository.AddStandAsync(projectModel.CurrentProjectId, newStandEntity);
