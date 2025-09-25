@@ -5,18 +5,17 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
+using ReportEngine.Export.Helpers;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
-using A = DocumentFormat.OpenXml.Drawing;
-using DW = DocumentFormat.OpenXml.Drawing.Wordprocessing;
-using PIC = DocumentFormat.OpenXml.Drawing.Pictures;
+
 
 namespace ReportEngine.Export.PDFWork.Services;
 
 public class PassportsGenerator : IReportGenerator
 {
     private readonly IProjectInfoRepository _projectInfoRepository;
-
+    
 
     public PassportsGenerator(IProjectInfoRepository projectRepository)
     {
@@ -34,26 +33,80 @@ public class PassportsGenerator : IReportGenerator
 
         var fileName = "Паспорта___" + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + ".docx";
 
-        var filePath = Path.Combine(savePath, fileName);
+        var fullSavePath = Path.Combine(savePath, fileName);
 
-        using (var wordDoc = WordprocessingDocument.Create(
-                   filePath, WordprocessingDocumentType.Document))
+
+
+        var templatePath = "C:\\Users\\pr-naladka14\\Source\\Repos\\ReportEngine\\ReportEngine.Export\\PDFWork\\Passport_template.docx";
+
+
+        File.Copy(templatePath, fullSavePath, true);
+
+        //using (var templateDoc = WordprocessingDocument.Open(templatePath, false))
+        //{
+        //    //создаем новый документ на основе шаблона
+        //    using (var newDoc = WordprocessingDocument.Create(fullSavePath, templateDoc.DocumentType))
+        //    {
+        //        //копируем все части из шаблона в новый документ
+        //        foreach (var part in templateDoc.Parts)
+        //        {
+        //           // newDoc.AddPart(part.OpenXmlPart, part.RelationshipId);
+        //        }
+        //    }
+        //}
+
+        using (var wordDoc = WordprocessingDocument.Open(fullSavePath, true))
         {
-            // Добавляем основную часть документа
-            var mainPart = wordDoc.AddMainDocumentPart();
-            mainPart.Document = new Document();
-            var body = mainPart.Document.AppendChild(new Body());
+            foreach (var stand in project.Stands)
+            {
+                //заменяем плейсхолдеры в шаблоне
+                var replaced = ReplacePlaceholdersText(wordDoc.MainDocumentPart);
 
-            SetLandscapeOrientation(mainPart);
-
-
-            foreach (var stand in project.Stands) CreateStandTitlePage(mainPart, stand);
-
-
-            // Сохраняем изменения
-            mainPart.Document.Save();
+                //объединяем в один документ
+               // wordDoc.MainDocumentPart.Document.Append(replaced.Document.ChildElements);
+            }
         }
     }
+
+
+
+    private MainDocumentPart ReplacePlaceholdersText(MainDocumentPart mainPart)
+    {
+
+
+        Dictionary<string, string> replacements = new Dictionary<string, string>()
+        {
+            { "{{stand KKS code}}", "KKS-код стенда" },
+            { "{{stand_Name}}", "Наименование стенда" },
+            { "{{stand_Manufacturer}}", "Изготовитель стенда" },
+            { "{{stand_SerialNumber}}", "Заводской номер стенда" },
+            { "{{stand_YearManufacture}}", "Год изготовления стенда" },
+            { "{{stand_Description}}", "Описание стенда" }
+        };
+
+
+        foreach (var record in replacements)
+        {
+
+            //фильтруем все текстовые элементы, содержащие ключ
+            var filteredDescendants = mainPart.Document.Body.Descendants<Text>();
+
+            
+            //заменяем во всех ключ на значение
+            foreach (var descendant in filteredDescendants)
+            {
+                descendant.Text = descendant.Text.Replace(record.Key, record.Value);
+            }
+
+        }
+
+        return mainPart;
+    }
+
+
+    
+
+
 
 
     public void CreateStandTitlePage(MainDocumentPart mainDocument, Stand stand)
@@ -61,47 +114,59 @@ public class PassportsGenerator : IReportGenerator
         var paragraph = new Paragraph();
 
 
+        // var splitterTable = OpenXmlHelper.AddVerticalLineWithTable();
+        //paragraph.AppendChild(splitterTable);
+
+
         //выводим лого EAC
         var eacLogoPath = DirectoryHelper.GetImagesRootPath("EAC");
-        var eacImage = CreateImage(mainDocument, eacLogoPath);
 
-
-        paragraph.AppendChild(eacImage);
-
-        var element = CreateLineBreak();
-        paragraph.AppendChild(element);
-
+        if (OpenXmlHelper.IsFilePathValid(eacLogoPath))
+        {
+            var eacImage = OpenXmlHelper.CreateImage(mainDocument, eacLogoPath, 0.5);
+            paragraph.AppendChild(eacImage);
+        }
 
         //выводим лого Эталона
         var etalonLogoPath = DirectoryHelper.GetImagesRootPath("Etalon");
-        var etalonImage = CreateImage(mainDocument, etalonLogoPath);
 
-        paragraph.AppendChild(etalonImage);
+        if (OpenXmlHelper.IsFilePathValid(etalonLogoPath))
+        {
+            var etalonImage = OpenXmlHelper.CreateImage(mainDocument, etalonLogoPath, 0.5);
+            paragraph.AppendChild(etalonImage);
+        }
 
-        element = CreateLineBreak();
+        var element = OpenXmlHelper.CreateLineBreak();
         paragraph.AppendChild(element);
 
 
         //выводим заголовок паспорта
-        element = CreateTextLine("Стенд датчиков КИПиА");
+        element = OpenXmlHelper.CreateTextLine("Стенд датчиков КИПиА");
         paragraph.AppendChild(element);
-        element = CreateLineBreak();
-        paragraph.AppendChild(element);
-
-        element = CreateTextLine($"{stand.KKSCode}");
-        paragraph.AppendChild(element);
-        element = CreateLineBreak();
+        element = OpenXmlHelper.CreateLineBreak();
         paragraph.AppendChild(element);
 
-        element = CreateTextLine("ПАСПОРТ");
+        element = OpenXmlHelper.CreateTextLine($"{stand.KKSCode}");
         paragraph.AppendChild(element);
-        element = CreateLineBreak();
+        element = OpenXmlHelper.CreateLineBreak();
         paragraph.AppendChild(element);
+
+        element = OpenXmlHelper.CreateTextLine("ПАСПОРТ");
+        paragraph.AppendChild(element);
+        element = OpenXmlHelper.CreateLineBreak();
+        paragraph.AppendChild(element);
+
+
+
 
 
         //вставляем разрыв страницы
-        element = CreatePageBreak();
+        element = OpenXmlHelper.CreatePageBreak();
         paragraph.AppendChild(element);
+
+
+
+
 
         mainDocument.Document.AppendChild(paragraph);
     }
@@ -116,125 +181,5 @@ public class PassportsGenerator : IReportGenerator
     }
 
 
-    #region Вспомогательные методы
 
-    private void SetLandscapeOrientation(MainDocumentPart mainDocument)
-    {
-        var sectionProps = new SectionProperties();
-
-        // Размер страницы A4 в ландшафтной ориентации (в EMU)
-
-        var pageSize = new PageSize
-        {
-            Width = 16838,
-            Height = 11906,
-            Orient = PageOrientationValues.Landscape
-        };
-
-
-        // Поля страницы
-        var pageMargin = new PageMargin
-        {
-            Top = 1440, // 2.54 см
-            Right = 1440, // 2.54 см
-            Bottom = 1440, // 2.54 см
-            Left = 1440, // 2.54 см
-            Header = 720, // 1.27 см
-            Footer = 720 // 1.27 см
-        };
-
-
-        sectionProps.Append(pageSize);
-        mainDocument.Document.Body.Append(sectionProps);
-    }
-
-
-    private Run CreateTextLine(string text)
-    {
-        return new Run(
-            new Text(text));
-    }
-
-
-    private Run CreatePageBreak()
-    {
-        return new Run(
-            new Break { Type = BreakValues.Page });
-    }
-
-    private Run CreateLineBreak()
-    {
-        return new Run(
-            new Break { Type = BreakValues.TextWrapping });
-    }
-
-    private Run CreateImage(MainDocumentPart mainPart, string imagePath)
-    {
-        if (string.IsNullOrEmpty(imagePath) || !File.Exists(imagePath))
-            return null;
-
-        // Определяем тип картинки по расширению
-        var ext = Path.GetExtension(imagePath).ToLowerInvariant();
-        var partType = ext switch
-        {
-            ".jpg" or ".jpeg" => ImagePartType.Jpeg,
-            ".png" => ImagePartType.Png,
-            ".gif" => ImagePartType.Gif,
-            ".bmp" => ImagePartType.Bmp,
-            ".tiff" or ".tif" => ImagePartType.Tiff,
-            _ => throw new InvalidOperationException("Unsupported image type: " + ext)
-        };
-        var imagePart = mainPart.AddImagePart(partType);
-        using (var stream = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
-        {
-            imagePart.FeedData(stream);
-        }
-
-        var rId = mainPart.GetIdOfPart(imagePart);
-
-        // Размеры картинки в EMU (здесь задаем ширину 200px высоту пропорционально, можно изменить)
-        // Для простоты зададим фиксированные размеры
-        const long cx = 990000; // приблизительно 1.25" (в EMU)
-        const long cy = 792000; // приблизительно 1" (в EMU)
-
-        var element =
-            new Drawing(
-                new DW.Inline(
-                    new DW.Extent { Cx = cx, Cy = cy },
-                    new DW.EffectExtent { LeftEdge = 0L, TopEdge = 0L, RightEdge = 0L, BottomEdge = 0L },
-                    new DW.DocProperties { Id = (UInt32Value)1U, Name = Path.GetFileName(imagePath) },
-                    new DW.NonVisualGraphicFrameDrawingProperties(
-                        new A.GraphicFrameLocks { NoChangeAspect = true }),
-                    new A.Graphic(
-                        new A.GraphicData(
-                                new PIC.Picture(
-                                    new PIC.NonVisualPictureProperties(
-                                        new PIC.NonVisualDrawingProperties
-                                            { Id = (UInt32Value)0U, Name = Path.GetFileName(imagePath) },
-                                        new PIC.NonVisualPictureDrawingProperties()),
-                                    new PIC.BlipFill(
-                                        new A.Blip { Embed = rId },
-                                        new A.Stretch(new A.FillRectangle())),
-                                    new PIC.ShapeProperties(
-                                        new A.Transform2D(new A.Offset { X = 0L, Y = 0L },
-                                            new A.Extents { Cx = cx, Cy = cy }),
-                                        new A.PresetGeometry(new A.AdjustValueList())
-                                            { Preset = A.ShapeTypeValues.Rectangle })
-                                )
-                            )
-                            { Uri = "http://schemas.openxmlformats.org/drawingml/2006/picture" }
-                    )
-                )
-                {
-                    DistanceFromTop = (UInt32Value)0U,
-                    DistanceFromBottom = (UInt32Value)0U,
-                    DistanceFromLeft = (UInt32Value)0U,
-                    DistanceFromRight = (UInt32Value)0U
-                }
-            );
-
-        return new Run(element);
-    }
-
-    #endregion
 }
