@@ -39,40 +39,41 @@ public class PassportsGenerator : IReportGenerator
 
         var templatePath = "C:\\Users\\pr-naladka14\\Source\\Repos\\ReportEngine\\ReportEngine.Export\\PDFWork\\Passport_template.docx";
 
-
-        File.Copy(templatePath, fullSavePath, true);
-
-        //using (var templateDoc = WordprocessingDocument.Open(templatePath, false))
-        //{
-        //    //создаем новый документ на основе шаблона
-        //    using (var newDoc = WordprocessingDocument.Create(fullSavePath, templateDoc.DocumentType))
-        //    {
-        //        //копируем все части из шаблона в новый документ
-        //        foreach (var part in templateDoc.Parts)
-        //        {
-        //           // newDoc.AddPart(part.OpenXmlPart, part.RelationshipId);
-        //        }
-        //    }
-        //}
-
-        using (var wordDoc = WordprocessingDocument.Open(fullSavePath, true))
+        //открываем шаблон
+        using (var templateDoc = WordprocessingDocument.Open(templatePath, false))
         {
-            foreach (var stand in project.Stands)
-            {
-                //заменяем плейсхолдеры в шаблоне
-                var replaced = ReplacePlaceholdersText(wordDoc.MainDocumentPart);
 
-                //объединяем в один документ
-               // wordDoc.MainDocumentPart.Document.Append(replaced.Document.ChildElements);
-            }
+            //создаем новый документ
+            using (var newDoc = WordprocessingDocument.Create(fullSavePath, templateDoc.DocumentType))
+            {
+
+                newDoc.AddMainDocumentPart();
+                newDoc.MainDocumentPart.Document = new Document();
+                newDoc.MainDocumentPart.Document.Body = new Body();
+
+                foreach (var stand in project.Stands)
+                {
+                    //копируем шаблон
+                    var standDoc = templateDoc.Clone();
+
+                    //заменяем плейсхолдеры в шаблоне
+                    ReplacePlaceholdersText(standDoc.MainDocumentPart);
+
+                    //объединяем в один документ
+                   // MergeDocuments(newDoc.MainDocumentPart, standDoc.MainDocumentPart);
+          
+                }
+
+                newDoc.Save();
+                
+            }   
         }
     }
 
 
 
-    private MainDocumentPart ReplacePlaceholdersText(MainDocumentPart mainPart)
+    private void ReplacePlaceholdersText(MainDocumentPart mainPart)
     {
-
 
         Dictionary<string, string> replacements = new Dictionary<string, string>()
         {
@@ -100,11 +101,22 @@ public class PassportsGenerator : IReportGenerator
 
         }
 
-        return mainPart;
     }
 
 
-    
+    private void MergeDocuments(MainDocumentPart mainPart, MainDocumentPart partToAdd)
+    {
+
+        //добавляем разрыв страницы перед вставкой нового документа
+        var pageBreak = OpenXmlHelper.CreatePageBreak();
+
+
+        // Копируем все элементы
+        foreach (var element in partToAdd.Document.Body.Elements())
+        {
+            mainPart.Document.Body.Append(element.CloneNode(true));
+        }
+    }
 
 
 
