@@ -306,6 +306,15 @@ public class ProjectViewModel : BaseViewModel
             await CreateReportAsync(ReportType.MarksReport, "маркировки");
         });
     }
+    
+    
+    public async Task OnCreateMarksReportAsyncCommandExecuted(object p)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await CreateReportAsync(ReportType.MarksReport, "маркировки");
+        });
+    }
 
     public async void OnCreateNameplatesReportCommandExecuted(object p)
     {

@@ -16,7 +16,7 @@ public class StartUp
             Log.Logger = LoggerConfig.InitializeLogger();
 
             var connString = JsonHandler.GetConnectionString(DirectoryHelper.GetConfigPath());
-
+            
             var host = HostFactory.BuildHost(connString);
             var app = host.Services.GetRequiredService<App>();
 

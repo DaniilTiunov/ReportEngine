@@ -59,6 +59,8 @@
                                             <MenuItem Command="{Binding ProjectCommandProvider.CreateNameplatesReportCommand}" Header="Шильдики и таблички" />
                                             <MenuItem Command="{Binding ProjectCommandProvider.CreateMarkReportCommand}" Header="Марикровка" />
                                             <Separator />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateMarkReportAsyncCommand}" Header="Тест ассинхронной Маркировки" />
+                                            <Separator />
                                             <MenuItem Command="{Binding ProjectCommandProvider.CreateProductionReportCommand}" Header="Производство" />
                                             <MenuItem Command="{Binding ProjectCommandProvider.CreateFinplanReportCommand}" Header="Фин. план" />
                                             <Separator />
