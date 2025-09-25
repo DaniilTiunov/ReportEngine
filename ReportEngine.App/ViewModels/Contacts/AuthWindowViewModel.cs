@@ -4,7 +4,9 @@ using ReportEngine.App.Commands;
 using ReportEngine.App.Model.Contacts;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Enums;
 using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.App.ViewModels.Contacts;
@@ -34,22 +36,41 @@ public class AuthWindowViewModel : BaseViewModel
         _notificationService = notificationService;
         
         LoginCommand = new RelayCommand(OnLogin, CanLogin);
+        ExitCommand = new RelayCommand(LogOut, CanLogin);
     }
     
     public ICommand LoginCommand { get; }
+    
+    public ICommand ExitCommand { get;  }
 
     private void OnLogin(object obj)
     {
         SessionService.CurrentUser = CurrentUser.SelectedUser;
         
         var mainViewModel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+        var authWindow = _serviceProvider.GetRequiredService<AuthWindow>();
     
         mainViewModel.OnPropertyChanged(nameof(mainViewModel.CurrentUser));
         mainViewModel.OnPropertyChanged(nameof(mainViewModel.CurrentUserLogin));
         
         _notificationService.ShowInfo("Вход выполнен успешно!");
-
-        ;
+        
+        authWindow.Close();
+    }
+    
+    private void LogOut(object obj)
+    {
+        SessionService.CurrentUser = new User{ SystemRole = SystemRole.User};
+        
+        var mainViewModel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+        var authWindow = _serviceProvider.GetRequiredService<AuthWindow>();
+        
+        mainViewModel.OnPropertyChanged(nameof(mainViewModel.CurrentUser));
+        mainViewModel.OnPropertyChanged(nameof(mainViewModel.CurrentUserLogin));
+        
+        _notificationService.ShowInfo("Выход из системы!");
+        
+        authWindow.Close();
     }
 
     private bool CanLogin(object obj) => CurrentUser.SelectedUser != null;

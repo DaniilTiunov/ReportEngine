@@ -24,7 +24,6 @@ public class StartUp
 
             var mainWindow = host.Services.GetRequiredService<MainWindow>();
             app.MainWindow = mainWindow;
-
             
             mainWindow.Show();
 

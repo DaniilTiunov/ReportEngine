@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Enums;
 
 namespace ReportEngine.App.Services.Core;
 
@@ -18,6 +19,11 @@ public static class SessionService
                 OnPropertyChanged(nameof(CurrentUser));
             }
         }
+    }
+    
+    static SessionService()
+    {
+        _currentUser = new User { SystemRole = SystemRole.User };
     }
 
     public static event PropertyChangedEventHandler? PropertyChanged;

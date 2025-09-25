@@ -11,6 +11,7 @@ using ReportEngine.App.Services;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Views.Controls;
+using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
@@ -67,12 +68,12 @@ public class MainWindowViewModel : BaseViewModel
 
     #region Методы
 
-    public void InitializeMainWindowCommands() // Нужно придумать как отрефакторить этого монстра 
+    public void InitializeMainWindowCommands()
     {
         MainWindowCommandsInitializer.InitializeCommands(this);
     }
 
-    public void InitializeGenericEquipCommands() // Нужно придумать как отрефакторить этого монстра
+    public void InitializeGenericEquipCommands()
     {
         MainWindowCommandsInitializer.InitializeGenericCommands(this);
     }
@@ -117,6 +118,15 @@ public class MainWindowViewModel : BaseViewModel
         where T : Window
     {
         ExceptionHelper.SafeExecute(() => _navigation.ShowWindow<T>());
+    }
+    
+    public void OpenAuthWindowCommandExecuted<T>(object e)
+        where T : Window
+    {
+        ExceptionHelper.SafeExecute(() =>
+        {
+            _navigation.ShowWindow<AuthWindow>();
+        });
     }
 
     public void OpenAnotherControlsCommandExecuted<T>(object e)
