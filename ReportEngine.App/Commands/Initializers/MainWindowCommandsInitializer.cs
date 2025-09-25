@@ -20,6 +20,9 @@ public static class MainWindowCommandsInitializer
     {
         if (vm == null)
             return;
+        
+        vm.MainWindowCommandProvider.OpenAuthWindowCommand = 
+            new RelayCommand(vm.OpenOthersWindowCommandExecuted<AuthWindow>, vm.CanAllCommandsExecute);
 
         vm.MainWindowCommandProvider.OpenAllUsersCommand =
             new RelayCommand(vm.OpenOthersWindowCommandExecuted<UsersView>, vm.CanAllCommandsExecute);

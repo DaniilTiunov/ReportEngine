@@ -163,6 +163,7 @@ public class HostFactory
         services.AddScoped<AllSortamentsViewModel>();
         services.AddScoped<SettingsViewModel>();
         services.AddScoped<CalculationSettingsViewModel>();
+        services.AddScoped<AuthWindowViewModel>();
     }
 
     private static void ConfigureViews(IServiceCollection services)
@@ -191,5 +192,6 @@ public class HostFactory
         services.AddTransient<SettingsWindow>();
         services.AddTransient<CalculationSettingsWindow>();
         services.AddTransient<StandsContainerView>();
+        services.AddTransient<AuthWindow>();
     }
 }

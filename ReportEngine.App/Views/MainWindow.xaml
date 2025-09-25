@@ -106,6 +106,7 @@
                 <Separator />
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenCalculationSettingsWindow}" Header="Настройки расчета" />
             </MenuItem>
+            <MenuItem Command="{Binding MainWindowCommandProvider.OpenAuthWindowCommand}" Header="Авторизация" />
             <MenuItem Header="Вид" Tag="ThemeItemChanger">
                 <MenuItem
                     Click="ChangeDarkTheme"
@@ -201,6 +202,14 @@
                     FontSize="14"
                     Text="Текущий пользователь:" />
             </StatusBarItem>
+
+            <StatusBarItem>
+                <TextBlock
+                    Margin="5,0,0,0"
+                    FontSize="14"
+                    Text="{Binding CurrentUserLogin}" />
+            </StatusBarItem>
+
 
             <StatusBarItem HorizontalAlignment="Stretch">
                 <Separator Visibility="Hidden" />

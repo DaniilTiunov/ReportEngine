@@ -1,0 +1,101 @@
+﻿<Window
+    x:Class="ReportEngine.App.Views.Windows.AuthWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ReportEngine.App.Views.Windows"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Окно авторизации"
+    Width="600"
+    Height="350"
+    Background="{DynamicResource PrimaryColor}"
+    FontFamily="Bahnschrift"
+    FontSize="14"
+    Foreground="{DynamicResource PrimaryForeground}"
+    ResizeMode="NoResize"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
+    mc:Ignorable="d">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="0"
+            CornerRadius="0"
+            GlassFrameThickness="0" />
+    </WindowChrome.WindowChrome>
+
+    <Border Style="{DynamicResource WindowBorder}">
+        <DockPanel>
+            <Border
+                x:Name="WindowTitle"
+                Height="34"
+                Background="#2D2D30"
+                DockPanel.Dock="Top">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <Image
+                            Width="18"
+                            Height="18"
+                            Margin="0,0,8,0"
+                            Source="/Resources/Icons/estimate_cost_icon_213382.ico" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            Foreground="White"
+                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <Button
+                            x:Name="CloseButton"
+                            Width="40"
+                            Height="30"
+                            Margin="10,0,10,0"
+                            Click="CloseButton_Click"
+                            FontSize="16"
+                            ToolTip="Закрыть">
+                            ✕
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <StackPanel
+                    Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                    <TextBlock Margin="0,0,0,10" Text="Выберите пользователя:" />
+                    <ComboBox
+                        x:Name="UserComboBox"
+                        Width="250"
+                        DisplayMemberPath="UserLogin"
+                        ItemsSource="{Binding CurrentUser.AllUsers}"
+                        SelectedItem="{Binding CurrentUser.SelectedUser, Mode=TwoWay}" />
+                    <Button
+                        Width="120"
+                        Margin="0,20,0,0"
+                        Command="{Binding LoginCommand}"
+                        Content="Войти" />
+                </StackPanel>
+            </Grid>
+        </DockPanel>
+    </Border>
+</Window>

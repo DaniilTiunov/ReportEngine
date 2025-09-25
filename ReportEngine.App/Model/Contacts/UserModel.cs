@@ -16,7 +16,9 @@ public class UserModel : BaseViewModel
             Email = SelectedUser.Email,
             Cabinet = SelectedUser.Cabinet,
             Position = SelectedUser.Position,
-            PhoneContact = SelectedUser.PhoneContact
+            PhoneContact = SelectedUser.PhoneContact,
+            SystemRole = SelectedUser.SystemRole,
+            UserLogin = SelectedUser.UserLogin,
         };
     }
 

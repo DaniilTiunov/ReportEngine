@@ -8,6 +8,7 @@ using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Commands.Providers;
 using ReportEngine.App.Model;
 using ReportEngine.App.Services;
+using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Views.Controls;
 using ReportEngine.Domain.Database.Context;
@@ -49,6 +50,10 @@ public class MainWindowViewModel : BaseViewModel
     public MainWindowModel MainWindowModel { get; set; } = new();
     public GenericEquipCommandProvider GenericEquipCommandProvider { get; set; } = new();
     public MainWindowCommandProvider MainWindowCommandProvider { get; set; } = new();
+    
+    public User? CurrentUser => SessionService.CurrentUser;
+    public string? CurrentUserLogin => SessionService.CurrentUser?.UserLogin;
+
 
     #region Дженерик команды
 

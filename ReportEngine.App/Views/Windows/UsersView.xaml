@@ -154,6 +154,10 @@
                             Width="*"
                             Binding="{Binding PhoneContact, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                             Header="Номер для связи" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding SystemRole, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                            Header="Права доступа" />
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
