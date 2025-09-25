@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using ReportEngine.App.Services.Core;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
 
@@ -15,7 +16,7 @@ public class MainWindowModel : BaseViewModel
     #endregion
 
     #region Публичные поля для привязки
-
+    
     public ProjectInfo SelectedProject
     {
         get => _selectedProject;

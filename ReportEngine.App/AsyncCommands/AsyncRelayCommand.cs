@@ -3,15 +3,21 @@
 public class AsyncRelayCommand : AsyncBaseCommand
 {
     private readonly Func<object, bool> _canExecute;
-    private readonly Action<object> _execute;
+    private readonly Func<object, Task> _executeAsync;
+    
+    public AsyncRelayCommand(Func<object, Task> executeAsync, Func<object, bool>? canExecute = null)
+    {
+        _executeAsync = executeAsync ?? throw new ArgumentNullException(nameof(executeAsync));
+        _canExecute = canExecute;
+    }
 
     public override bool CanExecute(object parameter)
     {
-        throw new NotImplementedException();
+        return _canExecute?.Invoke(parameter) ?? true;
     }
 
     public override Task ExecuteAsync(object parameter)
     {
-        throw new NotImplementedException();
+        return _executeAsync(parameter);
     }
 }

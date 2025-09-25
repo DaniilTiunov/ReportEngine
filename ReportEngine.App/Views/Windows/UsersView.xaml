@@ -7,11 +7,11 @@
     Title="Управление пользователями"
     Width="1000"
     Height="700"
-    WindowStyle="None"
-    FontFamily="Bahnschrift"
-    WindowStartupLocation="CenterScreen"
     Background="{DynamicResource PrimaryColor}"
+    FontFamily="Bahnschrift"
     Foreground="{DynamicResource PrimaryForeground}"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
     mc:Ignorable="d">
 
     <WindowChrome.WindowChrome>
@@ -154,6 +154,10 @@
                             Width="*"
                             Binding="{Binding PhoneContact, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                             Header="Номер для связи" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding SystemRole, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                            Header="Права доступа" />
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

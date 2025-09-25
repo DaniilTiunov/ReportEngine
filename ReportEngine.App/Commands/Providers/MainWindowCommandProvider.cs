@@ -4,6 +4,7 @@ namespace ReportEngine.App.Commands;
 
 public class MainWindowCommandProvider
 {
+    public ICommand OpenAuthWindowCommand { get; set; }
     public ICommand OpenMainWindowCommand { get; set; }
     public ICommand OpenAllObvyazkiCommand { get; set; }
     public ICommand OpenTreeViewCommand { get; set; }

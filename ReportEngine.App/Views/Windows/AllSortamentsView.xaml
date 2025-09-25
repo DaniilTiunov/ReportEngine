@@ -7,10 +7,10 @@
     Title="Просмотр всего сортамента"
     Width="1100"
     Height="450"
-    FontFamily="Bahnschrift"
-    WindowStyle="None"
     Background="{DynamicResource PrimaryColor}"
+    FontFamily="Bahnschrift"
     Foreground="{DynamicResource PrimaryForeground}"
+    WindowStyle="None"
     mc:Ignorable="d">
 
     <WindowChrome.WindowChrome>

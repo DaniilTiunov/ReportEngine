@@ -1,4 +1,5 @@
-﻿using ReportEngine.App.ViewModels;
+﻿using ReportEngine.App.AsyncCommands;
+using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Commands.Initializers;
 
@@ -128,6 +129,9 @@ public static class ProjectCommandsInitializer
 
         vm.ProjectCommandProvider.RemoveStandFromContainerCommand =
             new RelayCommand(vm.OnRemoveStandFromContainerCommandExecuted, vm.CanAllCommandsExecute);
+        
+        vm.ProjectCommandProvider.CreateMarkReportAsyncCommand =
+            new AsyncRelayCommand(vm.OnCreateMarksReportAsyncCommandExecuted, vm.CanAllCommandsExecute);
     }
 
     public static void InitializeGenericCommands(ProjectViewModel vm)
