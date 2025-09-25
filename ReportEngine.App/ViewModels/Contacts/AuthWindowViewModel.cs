@@ -48,6 +48,8 @@ public class AuthWindowViewModel : BaseViewModel
         mainViewModel.OnPropertyChanged(nameof(mainViewModel.CurrentUserLogin));
         
         _notificationService.ShowInfo("Вход выполнен успешно!");
+
+        ;
     }
 
     private bool CanLogin(object obj) => CurrentUser.SelectedUser != null;

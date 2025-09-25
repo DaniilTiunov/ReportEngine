@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using ReportEngine.App.Services.Core;
+using ReportEngine.Domain.Enums;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
 using ReportEngine.Shared.Config.Logger;
@@ -22,6 +24,8 @@ public class StartUp
 
             var mainWindow = host.Services.GetRequiredService<MainWindow>();
             app.MainWindow = mainWindow;
+
+            
             mainWindow.Show();
 
             app.Run();

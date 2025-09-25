@@ -2,8 +2,10 @@
     x:Class="ReportEngine.App.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:ReportEngine.App.Display"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:session="clr-namespace:ReportEngine.App.Services.Core"
     Title="Стенды КИП"
     Background="{DynamicResource PrimaryColor}"
     FontFamily="Bahnschrift"
@@ -25,6 +27,8 @@
     <Window.Resources>
         <ResourceDictionary>
             <Image x:Key="refresh-button.png" Source="/Resources/Images/refresh-button.png" />
+            <converters:RoleToVisibilityConverter x:Key="AdminVisibilityConverter" />
+            <converters:TranslateUserRole x:Key="TranslateUserRole" />
         </ResourceDictionary>
     </Window.Resources>
 
@@ -207,7 +211,23 @@
                 <TextBlock
                     Margin="5,0,0,0"
                     FontSize="14"
+                    FontWeight="Bold"
                     Text="{Binding CurrentUserLogin}" />
+            </StatusBarItem>
+
+            <StatusBarItem>
+                <TextBlock
+                    Margin="5,0,0,0"
+                    FontSize="14"
+                    Text="Права доступа:" />
+            </StatusBarItem>
+
+            <StatusBarItem>
+                <TextBlock
+                    Margin="5,0,0,0"
+                    FontSize="14"
+                    FontWeight="Bold"
+                    Text="{Binding CurrentUser.SystemRole, Converter={StaticResource TranslateUserRole}}" />
             </StatusBarItem>
 
 
@@ -306,7 +326,10 @@
                         <Separator />
                         <MenuItem Command="{Binding MainWindowCommandProvider.RecalculateProjectCommand}" Header="Переформировать" />
                         <Separator />
-                        <MenuItem Command="{Binding MainWindowCommandProvider.DeleteSelectedProjectCommand}" Header="Удалить проект" />
+                        <MenuItem
+                            Command="{Binding MainWindowCommandProvider.DeleteSelectedProjectCommand}"
+                            Header="Удалить проект"
+                            Visibility="{Binding CurrentUser.SystemRole, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource AdminVisibilityConverter}, ConverterParameter=Admin}" />
                     </ContextMenu>
                 </DataGrid.ContextMenu>
             </DataGrid>
