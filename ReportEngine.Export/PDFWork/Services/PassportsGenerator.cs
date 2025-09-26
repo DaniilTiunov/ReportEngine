@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
+﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
@@ -15,7 +14,7 @@ namespace ReportEngine.Export.PDFWork.Services;
 public class PassportsGenerator : IReportGenerator
 {
     private readonly IProjectInfoRepository _projectInfoRepository;
-    
+
 
     public PassportsGenerator(IProjectInfoRepository projectRepository)
     {
@@ -47,9 +46,19 @@ public class PassportsGenerator : IReportGenerator
             using (var newDoc = WordprocessingDocument.Create(fullSavePath, templateDoc.DocumentType))
             {
 
-                newDoc.AddMainDocumentPart();
+
+                
+                newDoc.AddMainDocumentPart();        
                 newDoc.MainDocumentPart.Document = new Document();
-                newDoc.MainDocumentPart.Document.Body = new Body();
+
+               // var templateDocSettings = templateDoc.MainDocumentPart.Document.Body.Descendants<SectionProperties>().First();
+
+                var docSettings = OpenXmlHelper.CreateDefaultPageSettings();
+                newDoc.MainDocumentPart.Document.Body = new Body(docSettings);
+
+              
+
+             
 
                 foreach (var stand in project.Stands)
                 {
@@ -59,14 +68,14 @@ public class PassportsGenerator : IReportGenerator
                     //заменяем плейсхолдеры в шаблоне
                     ReplacePlaceholdersText(standDoc.MainDocumentPart);
 
-                    //объединяем в один документ
-                   // MergeDocuments(newDoc.MainDocumentPart, standDoc.MainDocumentPart);
-          
+                    // объединяем в один документ
+                    MergeDocuments(newDoc, standDoc);
+
                 }
 
                 newDoc.Save();
-                
-            }   
+
+            }
         }
     }
 
@@ -91,8 +100,8 @@ public class PassportsGenerator : IReportGenerator
 
             //фильтруем все текстовые элементы, содержащие ключ
             var filteredDescendants = mainPart.Document.Body.Descendants<Text>();
+            ;
 
-            
             //заменяем во всех ключ на значение
             foreach (var descendant in filteredDescendants)
             {
@@ -104,18 +113,34 @@ public class PassportsGenerator : IReportGenerator
     }
 
 
-    private void MergeDocuments(MainDocumentPart mainPart, MainDocumentPart partToAdd)
+    private void MergeDocuments(WordprocessingDocument mainDoc, WordprocessingDocument docToAdd)
     {
+        AlternativeFormatImportPart chunk = mainDoc.MainDocumentPart.AddAlternativeFormatImportPart(
+                AlternativeFormatImportPartType.WordprocessingML);
 
-        //добавляем разрыв страницы перед вставкой нового документа
-        var pageBreak = OpenXmlHelper.CreatePageBreak();
 
-
-        // Копируем все элементы
-        foreach (var element in partToAdd.Document.Body.Elements())
+        using (var stream = new MemoryStream())
         {
-            mainPart.Document.Body.Append(element.CloneNode(true));
+            docToAdd.Clone(stream);
+            //docToAdd.MainDocumentPart.Document.Save(stream);
+
+
+            stream.Position = 0;
+
+            chunk.FeedData(stream);
+
+            AltChunk altChunk = new AltChunk();
+
+
+            altChunk.Id = mainDoc.MainDocumentPart.GetIdOfPart(chunk);
+
+            mainDoc.MainDocumentPart.Document.Body.AppendChild(altChunk);
         }
+
+        
+
+
+
     }
 
 

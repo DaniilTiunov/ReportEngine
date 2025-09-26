@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <None Remove="PDFWork\Passport_template.docx" />
-    </ItemGroup>
-
-    <ItemGroup>
         <COMReference Include="Microsoft.Office.Interop.Excel">
             <WrapperTool>tlbimp</WrapperTool>
             <VersionMinor>9</VersionMinor>
@@ -20,12 +16,6 @@
             <Isolated>false</Isolated>
             <EmbedInteropTypes>true</EmbedInteropTypes>
         </COMReference>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Include="PDFWork\Passport_template.docx">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
     </ItemGroup>
 
     <ItemGroup>
