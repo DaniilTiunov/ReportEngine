@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.ViewModels.Contacts;
 
@@ -35,5 +37,13 @@ public partial class AuthWindow : Window
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
         Close();
+    }
+    
+    private void AdminPasswordBox_OnPasswordChanged(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is AuthWindowViewModel vm)
+        {
+            vm.InputMegaSecretPassword = ((PasswordBox)sender).Password;
+        }
     }
 }

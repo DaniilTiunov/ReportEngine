@@ -293,7 +293,7 @@
                             <ContextMenu>
                                 <MenuItem Command="{Binding ProjectCommandProvider.CopyStandsCommand}" Header="Создать копию на основе прототипа" />
                                 <Separator />
-                                <MenuItem Header="Удалить" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}" Header="Удалить стенд из проекта" />
                             </ContextMenu>
                         </ListView.ContextMenu>
                         <ListView.View>

@@ -109,8 +109,8 @@
                     <PasswordBox
                         x:Name="AdminPasswordBox"
                         Width="250"
-                        Margin="0,15,0,0"
-                        PasswordChar="*"
+                        Margin="0,0,0,15"
+                        PasswordChanged="AdminPasswordBox_OnPasswordChanged"
                         Visibility="{Binding CurrentUser.SelectedUser.SystemRole, Converter={StaticResource AdminVisibilityConverter}}" />
 
                     <StackPanel
