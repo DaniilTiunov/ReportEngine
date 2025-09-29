@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.CalculationSettings;
-using ReportEngine.App.Views.UpdateInformation;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
 using AboutProgram = ReportEngine.App.Views.Windows.AboutProgram;
@@ -61,16 +60,6 @@ public partial class MainWindow : Window //Это так называемый "C
     {
         if (WindowState == WindowState.Maximized)
             WindowState = WindowState.Normal;
-    }
-
-    private void CheckForUpdates(object sender, RoutedEventArgs e)
-    {
-        ExceptionHelper.SafeExecute(() =>
-        {
-            var appSettingsConfigPath = DirectoryHelper.GetConfigPath();
-            Updater.CheckForUpdate(JsonHandler.GetVersionOnServer(appSettingsConfigPath),
-                JsonHandler.GetLocalVersion(appSettingsConfigPath));
-        });
     }
 
     private void ShowAboutProgram(object sender, RoutedEventArgs e) //Просто простые синхронные операции
