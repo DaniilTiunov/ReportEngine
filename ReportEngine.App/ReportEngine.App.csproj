@@ -98,7 +98,6 @@
     <ItemGroup>
         <PackageReference Include="Dirkster.AvalonDock" Version="4.72.1" />
         <PackageReference Include="Dragablz" Version="0.0.3.234" />
-        <PackageReference Include="FastReport.OpenSource" Version="2025.2.12" />
         <PackageReference Include="MahApps.Metro" Version="2.4.10" />
         <PackageReference Include="Mapster" Version="7.4.0" />
         <PackageReference Include="MaterialDesignColors" Version="5.2.1" />

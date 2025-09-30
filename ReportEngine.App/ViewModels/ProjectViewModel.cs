@@ -559,6 +559,10 @@ public class ProjectViewModel : BaseViewModel
             CurrentProjectModel = loadedModel;
             CurrentStandModel = loadedModel.SelectedStand ?? new StandModel();
             CurrentStandModel.InitializeDefaultPurposes();
+
+            await LoadObvyazkiAsync();
+            await LoadStandsDataAsync();
+
             OnPropertyChanged(nameof(CurrentStandModel));
         });
     }

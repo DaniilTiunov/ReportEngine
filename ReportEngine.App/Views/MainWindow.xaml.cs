@@ -78,7 +78,7 @@ public partial class MainWindow : Window //Это так называемый "C
     {
         Process.Start("notepad.exe");
     }
-
+  
     private void ChangeDarkTheme(object sender, RoutedEventArgs e)
     {
         ChangesTheme("/Resources/Dictionaries/DarkTheme.xaml");

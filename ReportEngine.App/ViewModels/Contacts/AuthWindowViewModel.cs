@@ -64,7 +64,7 @@ public class AuthWindowViewModel : BaseViewModel
             mainViewModel.OnPropertyChanged(nameof(mainViewModel.CurrentUser));
             mainViewModel.OnPropertyChanged(nameof(mainViewModel.CurrentUserLogin));
 
-            _notificationService.ShowInfo("Вход выполнен успешно!");
+            _notificationService.ShowInfo($"Вход выполнен под {CurrentUser.SelectedUser.UserLogin}!");
 
             authWindow.Close();
         }
