@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using ReportEngine.App.Model.StandsModel;
+﻿using ReportEngine.App.Model.StandsModel;
 
 namespace ReportEngine.App.AppHelpers;
 

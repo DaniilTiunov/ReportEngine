@@ -7,7 +7,7 @@ namespace ReportEngine.Export.ExcelWork.Services.Generators;
 public class SummuryReportGenerator : ComponentListReportGenerator, IReportGenerator
 {
     private readonly IProjectInfoRepository _projectInfoRepository;
-    
+
     public ReportType Type => ReportType.SummaryReport;
 
     public SummuryReportGenerator(IProjectInfoRepository projectInfoRepository)
@@ -15,7 +15,7 @@ public class SummuryReportGenerator : ComponentListReportGenerator, IReportGener
     {
         _projectInfoRepository = projectInfoRepository;
     }
-    
+
     public new async Task GenerateAsync(int projectId)
     {
         await base.GenerateAsync(projectId);

@@ -1,11 +1,11 @@
-﻿using System.Diagnostics;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Generators.DTO;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
+using System.Diagnostics;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -38,20 +38,20 @@ public class ComponentListReportGenerator : IReportGenerator
 
                 standNumber++;
             }
-            
+
             //заполняем сводную ведомость
             var lastSheet = wb.Worksheets.Add("Сводная заявка");
-            
+
             CreateCommonListTableHeader(lastSheet, project, XLAlignmentHorizontalValues.Center);
             FillCommonListTable(lastSheet, project);
-            
+
             //применяем оформление ко всему документу
             foreach (var ws in wb.Worksheets)
             {
                 ws.Cells().Style.Alignment.WrapText = true;
                 ws.Columns().AdjustToContents();
             }
-            
+
             var savePath = SettingsManager.GetReportDirectory();
             var fileName = GetReportFileName();
             var fullSavePath = Path.Combine(savePath, fileName);
@@ -75,13 +75,13 @@ public class ComponentListReportGenerator : IReportGenerator
         var commonListStringRange = ws.Range("B2:D2").Merge();
         commonListStringRange.Value = "Сводная ведомость комплектующих";
         commonListStringRange.Style.Alignment.Horizontal = alignment;
-        
+
         ws.Cell("B3").Value = "Наименование";
         ws.Cell("C3").Value = "Ед. изм";
         ws.Cell("D3").Value = "Кол.";
 
         ws.Columns().AdjustToContents();
-        
+
         headerRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
         headerRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Medium);
         headerRange.Style.Alignment.Horizontal = alignment;
@@ -100,13 +100,13 @@ public class ComponentListReportGenerator : IReportGenerator
         var commonListStringRange = ws.Range("B2:D2").Merge();
         commonListStringRange.Value = "Сводная ведомость комплектующих";
         commonListStringRange.Style.Alignment.Horizontal = alignment;
-        
+
         ws.Cell("B3").Value = "Наименование";
         ws.Cell("C3").Value = "Ед.изм.";
         ws.Cell("D3").Value = "Кол.";
-        
+
         ws.Columns().AdjustToContents();
-        
+
         headerRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
         headerRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Medium);
         headerRange.Style.Alignment.Horizontal = alignment;
@@ -152,7 +152,7 @@ public class ComponentListReportGenerator : IReportGenerator
     private void FillCommonListTable(IXLWorksheet ws, ProjectInfo project)
     {
         const string dbErrorString = "Ошибка получения данных из БД";
-        
+
         //Формирование списка труб
 
         var pipesList = project.Stands
@@ -288,7 +288,7 @@ public class ComponentListReportGenerator : IReportGenerator
             .Except(othersParts)
             .ToList();
         var activeRow = 4;
-        
+
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws, XLAlignmentHorizontalValues.Center);
         activeRow = FillSubtableData(activeRow, pipesList, ws, XLAlignmentHorizontalValues.Left);
 
@@ -487,7 +487,7 @@ public class ComponentListReportGenerator : IReportGenerator
             ws.Cell($"B{currentRow}").Value = item.name;
             ws.Cell($"C{currentRow}").Value = item.unit;
             ws.Cell($"D{currentRow}").Value = item.quantity;
-            
+
             currentRow++;
         }
         return currentRow;

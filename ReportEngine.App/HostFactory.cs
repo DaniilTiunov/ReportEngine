@@ -1,5 +1,4 @@
-﻿using System.Windows.Controls;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -29,9 +28,9 @@ using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Services;
 using ReportEngine.Export.ExcelWork.Services.Generators;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Export.PDFWork.Services;
 using ReportEngine.Export.PDFWork.Services.Generators;
 using Serilog;
+using System.Windows.Controls;
 
 namespace ReportEngine.App;
 

@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using Microsoft.VisualBasic;
+﻿using Microsoft.VisualBasic;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
@@ -9,23 +8,21 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Enums;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
+using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Services.Core;
 
 public class ProjectService : IProjectService
 {
-    private readonly IContainerRepository _containerRepository;
     private readonly INotificationService _notificationService;
     private readonly IProjectInfoRepository _projectRepository;
 
     public ProjectService(
         IProjectInfoRepository projectRepository,
-        INotificationService notificationService,
-        IContainerRepository containerRepository)
+        INotificationService notificationService)
     {
         _projectRepository = projectRepository;
         _notificationService = notificationService;
-        _containerRepository = containerRepository;
     }
 
     public async Task CreateProjectAsync(ProjectModel projectModel)
@@ -83,19 +80,27 @@ public class ProjectService : IProjectService
                     Weight = selectedStand.Weight,
                     Width = selectedStand.Width,
                     DesigneStand = selectedStand.DesigneStand,
-                    FramesInStand = selectedStand.FramesInStand,
-                    DrainagesInStand = selectedStand.DrainagesInStand,
-                    AdditionalEquipsInStand = selectedStand.AdditionalEquipsInStand,
-                    AllDrainagePurposesInStand = selectedStand.AllDrainagePurposesInStand,
-                    ElectricalComponentsInStand = selectedStand.ElectricalComponentsInStand
-                };
-                
-                newStand.ObvyazkiInStand = new ObservableCollection<ObvyazkaInStand>(
+                    FramesInStand = new ObservableCollection<FormedFrame>(
+                        selectedStand.FramesInStand.Select(f => CloneFrame(f))
+                    ),
+                    DrainagesInStand = new ObservableCollection<FormedDrainage>(
+                        selectedStand.DrainagesInStand.Select(d => CloneDrainage(d))
+                    ),
+                    AdditionalEquipsInStand = new ObservableCollection<FormedAdditionalEquip>(
+                        selectedStand.AdditionalEquipsInStand.Select(a => CloneAdditionalEquip(a))
+                    ),
+                    AllDrainagePurposesInStand = new ObservableCollection<DrainagePurpose>(
+                        selectedStand.AllDrainagePurposesInStand.Select(p => CloneDrainagePurpose(p))
+                    ),
+                    ElectricalComponentsInStand = new ObservableCollection<FormedElectricalComponent>(
+                        selectedStand.ElectricalComponentsInStand.Select(e => CloneElectricalComponent(e))
+                    ),
+                    ObvyazkiInStand = new ObservableCollection<ObvyazkaInStand>(
                     selectedStand.ObvyazkiInStand.Select(obv =>
                             ObvyzkaModelWrapper.CloneForStand(obv, 0) // 0 или newStand.Id, если уже есть
-                    )
-                );
-                
+                    ))
+                };
+
                 var newStandEntity = StandDataConverter.ConvertToStandEntity(newStand);
                 var addedStandEntity =
                     await _projectRepository.AddStandAsync(projectModel.CurrentProjectId, newStandEntity);
@@ -297,5 +302,94 @@ public class ProjectService : IProjectService
         projectModel.ObvyazkiInProject.Clear();
 
         foreach (var obvyazkiInStand in obvyazkiInStands) projectModel.ObvyazkiInProject.Add(obvyazkiInStand);
+    }
+
+    private FormedFrame CloneFrame(FormedFrame frame)
+    {
+        if (frame == null) return null;
+        return new FormedFrame
+        {
+            Name = frame.Name,
+            FrameType = frame.FrameType,
+            Width = frame.Width,
+            Height = frame.Height,
+            Depth = frame.Depth,
+            Weight = frame.Weight,
+            Designe = frame.Designe
+        };
+    }
+
+    private FormedDrainage CloneDrainage(FormedDrainage drainage)
+    {
+        if (drainage == null) return null;
+        return new FormedDrainage
+        {
+            Name = drainage.Name,
+            Purposes = drainage.Purposes?.Select(CloneDrainagePurpose).ToList() ?? new List<DrainagePurpose>()
+            // Клонируйте другие нужные свойства
+        };
+    }
+
+    private DrainagePurpose CloneDrainagePurpose(DrainagePurpose purpose)
+    {
+        if (purpose == null) return null;
+        return new DrainagePurpose
+        {
+            Purpose = purpose.Purpose,
+            Material = purpose.Material,
+            Quantity = purpose.Quantity,
+            CostPerUnit = purpose.CostPerUnit,
+            Measure = purpose.Measure,
+            FormedDrainageId = 0 // Привязка будет установлена при добавлении в новый дренаж
+        };
+    }
+
+    private FormedAdditionalEquip CloneAdditionalEquip(FormedAdditionalEquip equip)
+    {
+        if (equip == null) return null;
+        return new FormedAdditionalEquip
+        {
+            Name = equip.Name,
+            Purposes = equip.Purposes?.Select(CloneAdditionalEquipPurpose).ToList() ?? new List<AdditionalEquipPurpose>()
+            // Клонируйте другие нужные свойства
+        };
+    }
+
+    private AdditionalEquipPurpose CloneAdditionalEquipPurpose(AdditionalEquipPurpose purpose)
+    {
+        if (purpose == null) return null;
+        return new AdditionalEquipPurpose
+        {
+            Purpose = purpose.Purpose,
+            Material = purpose.Material,
+            Quantity = purpose.Quantity,
+            CostPerUnit = purpose.CostPerUnit,
+            Measure = purpose.Measure,
+            FormedAdditionalEquipId = 0
+        };
+    }
+
+    private FormedElectricalComponent CloneElectricalComponent(FormedElectricalComponent component)
+    {
+        if (component == null) return null;
+        return new FormedElectricalComponent
+        {
+            Name = component.Name,
+            Purposes = component.Purposes?.Select(CloneElectricalPurpose).ToList() ?? new List<ElectricalPurpose>()
+        };
+    }
+
+    private ElectricalPurpose CloneElectricalPurpose(ElectricalPurpose purpose)
+    {
+        if (purpose == null) return null;
+        return new ElectricalPurpose
+        {
+            Purpose = purpose.Purpose,
+            Material = purpose.Material,
+            Quantity = purpose.Quantity,
+            CostPerUnit = purpose.CostPerUnit,
+            Measure = purpose.Measure,
+            FormedElectricalComponentId = 0
+        };
     }
 }

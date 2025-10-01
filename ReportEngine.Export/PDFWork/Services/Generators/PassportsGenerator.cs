@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
+﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
@@ -15,7 +14,7 @@ namespace ReportEngine.Export.PDFWork.Services.Generators;
 public class PassportsGenerator : IReportGenerator
 {
     private readonly IProjectInfoRepository _projectInfoRepository;
-    
+
 
     public PassportsGenerator(IProjectInfoRepository projectRepository)
     {
@@ -63,7 +62,7 @@ public class PassportsGenerator : IReportGenerator
                 var replaced = ReplacePlaceholdersText(wordDoc.MainDocumentPart);
 
                 //объединяем в один документ
-               // wordDoc.MainDocumentPart.Document.Append(replaced.Document.ChildElements);
+                // wordDoc.MainDocumentPart.Document.Append(replaced.Document.ChildElements);
             }
         }
     }
@@ -91,7 +90,7 @@ public class PassportsGenerator : IReportGenerator
             //фильтруем все текстовые элементы, содержащие ключ
             var filteredDescendants = mainPart.Document.Body.Descendants<Text>();
 
-            
+
             //заменяем во всех ключ на значение
             foreach (var descendant in filteredDescendants)
             {
@@ -104,7 +103,7 @@ public class PassportsGenerator : IReportGenerator
     }
 
 
-    
+
 
 
 

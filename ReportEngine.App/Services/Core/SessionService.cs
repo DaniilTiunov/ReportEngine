@@ -1,6 +1,6 @@
-﻿using System.ComponentModel;
-using ReportEngine.Domain.Entities;
+﻿using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Enums;
+using System.ComponentModel;
 
 namespace ReportEngine.App.Services.Core;
 
@@ -20,7 +20,7 @@ public static class SessionService
             }
         }
     }
-    
+
     static SessionService()
     {
         _currentUser = new User { SystemRole = SystemRole.User };
