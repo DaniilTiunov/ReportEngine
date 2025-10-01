@@ -49,10 +49,17 @@ public class FormedElectricalRepository : IFormedElectricalRepository
 
         if (purpose.Id == 0)
         {
-            if (purpose.FormedElectricalComponentId == 0)
-                throw new ArgumentException("Для добавления новой цели необходим FormedElectricalComponentId");
+            // Получаем компонент, к которому добавляем новую цель
+            var component = await _context.FormedElectricalComponents
+                .Include(c => c.Purposes)
+                .FirstOrDefaultAsync(c => c.Id == purpose.FormedElectricalComponentId);
 
-            await _context.ElectricalPurposes.AddAsync(purpose);
+            if (component == null)
+                throw new ArgumentException("FormedElectricalComponent не найден");
+
+            // Добавляем новую цель в коллекцию
+            component.Purposes.Add(purpose);
+
             await _context.SaveChangesAsync();
             return;
         }

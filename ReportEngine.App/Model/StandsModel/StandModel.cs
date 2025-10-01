@@ -630,7 +630,8 @@ public class StandModel : BaseViewModel
         set => Set(ref _allAdditionalEquipPurposesInStand, value);
     }
 
-    public void InitializeDefaultPurposes()
+
+    public void InitializeDrainagePurposes()
     {
         NewDrainage = new FormedDrainage
         {
@@ -643,7 +644,9 @@ public class StandModel : BaseViewModel
                 new() { Purpose = "Клапан" }
             }
         };
-
+    }
+    public void InitializeAdditionalEquip()
+    {
         NewAdditionalEquip = new FormedAdditionalEquip
         {
             Purposes = new ObservableCollection<AdditionalEquipPurpose>
@@ -655,7 +658,9 @@ public class StandModel : BaseViewModel
                 new() { Purpose = "Кронштейны перепадников" }
             }
         };
-
+    }
+    public void InitializeElectricalComponent()
+    {
         NewElectricalComponent = new FormedElectricalComponent
         {
             Purposes = new ObservableCollection<ElectricalPurpose>
@@ -669,5 +674,12 @@ public class StandModel : BaseViewModel
                 new() { Purpose = "Кронштейн коробки" }
             }
         };
+    }
+
+    public void InitializeDefaultPurposes()
+    {
+        InitializeElectricalComponent();
+        InitializeAdditionalEquip();
+        InitializeDrainagePurposes();
     }
 }

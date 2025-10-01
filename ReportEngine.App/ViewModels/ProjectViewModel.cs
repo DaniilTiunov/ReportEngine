@@ -384,7 +384,23 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            await UpdatePurposeAsync(CurrentProjectModel.SelectedStand.SelectedElectricalComponent,
+            var selectedPurpose = CurrentProjectModel.SelectedStand.SelectedElectricalComponent;
+
+            if (selectedPurpose.Id == 0)
+            {
+                var selectedComponent = CurrentProjectModel.SelectedStand.ElectricalComponentsInStand.FirstOrDefault();
+                if (selectedComponent != null)
+                {
+                    selectedPurpose.FormedElectricalComponentId = selectedComponent.Id;
+                }
+                else
+                {
+                    _notificationService.ShowError("Нет электрического компонента для назначения.");
+                    return;
+                }
+            }
+
+            await UpdatePurposeAsync(selectedPurpose,
                 _standService.UpdateElectricalPurposeAsync,
                 "Электрические компоненты сохранены");
         });
@@ -405,6 +421,22 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
+            var selectedPurpose = CurrentProjectModel.SelectedStand.SelectedAdditionalEquip;
+
+            if (selectedPurpose.Id == 0)
+            {
+                var selectedComponent = CurrentProjectModel.SelectedStand.AdditionalEquipsInStand.FirstOrDefault();
+                if (selectedComponent != null)
+                {
+                    selectedPurpose.FormedAdditionalEquipId = selectedComponent.Id;
+                }
+                else
+                {
+                    _notificationService.ShowError("Нет дополнительного компонента для назначения.");
+                    return;
+                }
+            }
+
             await UpdatePurposeAsync(CurrentProjectModel.SelectedStand.SelectedAdditionalEquip,
                 _standService.UpdateAdditionalPurposeAsync,
                 "Доп. комплектующие сохранены");
@@ -426,6 +458,22 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
+            var selectedPurpose = CurrentProjectModel.SelectedStand.SelectedDrainagePurpose;
+
+            if (selectedPurpose.Id == 0)
+            {
+                var selectedComponent = CurrentProjectModel.SelectedStand.DrainagesInStand.FirstOrDefault();
+                if (selectedComponent != null)
+                {
+                    selectedPurpose.FormedDrainageId = selectedComponent.Id;
+                }
+                else
+                {
+                    _notificationService.ShowError("Нет дренажа для назначения.");
+                    return;
+                }
+            }
+
             await UpdatePurposeAsync(CurrentProjectModel.SelectedStand.SelectedDrainagePurpose,
                 _standService.UpdateDrainagePurposeAsync,
                 "Дренажное комплектующее сохранено");
@@ -774,7 +822,7 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(AllAvailableDrainages));
 
         CurrentStandModel.NewDrainage = new FormedDrainage();
-        CurrentStandModel.InitializeDefaultPurposes();
+        CurrentStandModel.InitializeDrainagePurposes();
 
         await LoadPurposesInStandsAsync();
     }
@@ -790,7 +838,7 @@ public class ProjectViewModel : BaseViewModel
 
         OnPropertyChanged(nameof(AllAvailableElectricalComponents));
         CurrentStandModel.NewElectricalComponent = new FormedElectricalComponent();
-        CurrentStandModel.InitializeDefaultPurposes();
+        CurrentStandModel.InitializeElectricalComponent();
 
         await LoadPurposesInStandsAsync();
     }
@@ -806,7 +854,7 @@ public class ProjectViewModel : BaseViewModel
 
         OnPropertyChanged(nameof(AllAvailableAdditionalEquips));
         CurrentStandModel.NewAdditionalEquip = new FormedAdditionalEquip();
-        CurrentStandModel.InitializeDefaultPurposes();
+        CurrentStandModel.InitializeAdditionalEquip();
 
         await LoadPurposesInStandsAsync();
     }
@@ -841,6 +889,8 @@ public class ProjectViewModel : BaseViewModel
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewDrainage.Purposes);
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand
                         .AllDrainagePurposesInStand);
+                    CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand
+                        .DrainagesInStand);
                     return;
 
                 case AdditionalEquipPurpose ap:
@@ -850,6 +900,8 @@ public class ProjectViewModel : BaseViewModel
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand
                         .AllAdditionalEquipPurposesInStand);
+                    CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand
+                        .AdditionalEquipsInStand);
                     return;
 
                 case ElectricalPurpose ep:
@@ -859,6 +911,8 @@ public class ProjectViewModel : BaseViewModel
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewElectricalComponent.Purposes);
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand
                         .AllElectricalPurposesInStand);
+                    CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand
+                        .ElectricalComponentsInStand);
                     return;
 
                 case ContainerStand cs:
