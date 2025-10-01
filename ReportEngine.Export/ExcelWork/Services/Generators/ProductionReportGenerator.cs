@@ -6,7 +6,7 @@ using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
 
-namespace ReportEngine.Export.ExcelWork.Services;
+namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
 public class ProductionReportGenerator : IReportGenerator
 {

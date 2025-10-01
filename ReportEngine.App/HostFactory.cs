@@ -27,8 +27,10 @@ using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Services;
+using ReportEngine.Export.ExcelWork.Services.Generators;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Export.PDFWork.Services;
+using ReportEngine.Export.PDFWork.Services.Generators;
 using Serilog;
 
 namespace ReportEngine.App;
@@ -147,6 +149,7 @@ public class HostFactory
         services.AddScoped<IReportGenerator, ContainerReportGenerator>();
         services.AddScoped<IReportGenerator, NameplatesReportGenerator>();
         services.AddScoped<IReportGenerator, ComponentListReportGenerator>();
+        services.AddScoped<IReportGenerator, SummuryReportGenerator>();
         services.AddScoped<IReportGenerator, FinPlanReportGenerator>();
         services.AddScoped<IReportGenerator, PassportsGenerator>();
     }

@@ -291,11 +291,19 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(CalculateProjectAsync);
     }
 
-    public async void OnCreateSummaryReportCommandExecuted(object p)
+    public async void OnComponentsListReportCommandExecuted(object p)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await CreateReportAsync(ReportType.ComponentsListReport, "комплектующих");
+        });
+    }
+    
+    public async void OnCreateSummaryReportCommandExecuted(object p)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await CreateReportAsync(ReportType.SummaryReport, "сводная");
         });
     }
 

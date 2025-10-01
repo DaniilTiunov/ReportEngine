@@ -46,6 +46,9 @@ public static class ProjectCommandsInitializer
         vm.ProjectCommandProvider.CalculateProjectCommand =
             new RelayCommand(vm.OnCalculateProjectCommandExecuted, vm.CanAllCommandsExecute);
 
+        vm.ProjectCommandProvider.CreateComponentsListReportCommand =
+            new RelayCommand(vm.OnComponentsListReportCommandExecuted, vm.CanAllCommandsExecute);
+        
         vm.ProjectCommandProvider.CreateSummaryReportCommand =
             new RelayCommand(vm.OnCreateSummaryReportCommandExecuted, vm.CanAllCommandsExecute);
 

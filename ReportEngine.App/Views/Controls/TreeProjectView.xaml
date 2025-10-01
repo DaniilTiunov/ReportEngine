@@ -55,7 +55,9 @@
                                         <ContextMenu>
                                             <MenuItem Command="{Binding ProjectCommandProvider.CalculateProjectCommand}" Header="Расчитать проект" />
                                             <Separator />
-                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateSummaryReportCommand}" Header="Cводная ведомость" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateSummaryReportCommand}" Header="Сводная ведомость" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateComponentsListReportCommand}" Header="Ведомость комплектующих" />
+                                            <Separator />
                                             <MenuItem Command="{Binding ProjectCommandProvider.CreateNameplatesReportCommand}" Header="Шильдики и таблички" />
                                             <MenuItem Command="{Binding ProjectCommandProvider.CreateMarkReportCommand}" Header="Марикровка" />
                                             <Separator />

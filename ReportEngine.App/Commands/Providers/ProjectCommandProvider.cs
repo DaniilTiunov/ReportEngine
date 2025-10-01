@@ -20,13 +20,12 @@ public class ProjectCommandProvider
     public ICommand AddCustomAdditionalEquipToStandCommand { get; set; }
     public ICommand SelectObvFromDialogCommand { get; set; }
     public ICommand CalculateProjectCommand { get; set; }
+    public ICommand CreateComponentsListReportCommand { get; set; }
     public ICommand CreateSummaryReportCommand { get; set; }
     public ICommand OpenAllSortamentsDialogCommand { get; set; } // Новая команда для открытия окна ассортиментов
     public ICommand DeleteSelectedStandCommand { get; set; }
     public ICommand CreateMarkReportCommand { get; set; }
-    
     public ICommand CreateMarkReportAsyncCommand { get; set; }
-    
     public ICommand CreateNameplatesReportCommand { get; set; }
     public ICommand CreateProductionReportCommand { get; set; }
     public ICommand CreateFinplanReportCommand { get; set; }
