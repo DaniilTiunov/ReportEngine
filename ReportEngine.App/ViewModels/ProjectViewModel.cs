@@ -314,8 +314,7 @@ public class ProjectViewModel : BaseViewModel
             await CreateReportAsync(ReportType.MarksReport, "маркировки");
         });
     }
-
-
+    
     public async Task OnCreateMarksReportAsyncCommandExecuted(object p)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -361,6 +360,14 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await CreateReportAsync(ReportType.PassportsReport, "паспорт");
+        });
+    }
+
+    public async void OnCreateTechnologicalCardsCommandExecute(object p)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await CreateReportAsync(ReportType.TechnologicalCards, "технологические карты");
         });
     }
 
