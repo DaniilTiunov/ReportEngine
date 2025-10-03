@@ -2,12 +2,13 @@
 
 public enum ReportType
 {
-    FinPlanReport,
-    ComponentsListReport,
-    MarksReport,
-    ProductionReport,
-    SummaryReport,
-    ContainerReport,
-    NameplatesReport,
-    PassportsReport
+    FinPlanReport, // Фин план
+    ComponentsListReport, // Ведомость комплектующих
+    MarksReport, // Маркировка
+    ProductionReport, // Производство 
+    SummaryReport, // Сводная ведомость
+    ContainerReport, // Тара
+    NameplatesReport, // Шильдики и таблички 
+    PassportsReport, // Паспорт
+    TechnologicalCards // Технологические карты
 }

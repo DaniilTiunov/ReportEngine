@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ReportEngine.Domain.Entities.BaseEntities.Interface;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using ReportEngine.Domain.Entities.BaseEntities.Interface;
 
 namespace ReportEngine.Domain.Entities;
 

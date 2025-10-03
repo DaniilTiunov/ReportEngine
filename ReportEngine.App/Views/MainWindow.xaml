@@ -110,7 +110,7 @@
                 <Separator />
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenCalculationSettingsWindow}" Header="Настройки расчета" />
             </MenuItem>
-            <MenuItem Command="{Binding MainWindowCommandProvider.OpenAuthWindowCommand}" Header="Авторизация" />
+            
             <MenuItem Header="Вид" Tag="ThemeItemChanger">
                 <MenuItem
                     Click="ChangeDarkTheme"
@@ -193,6 +193,7 @@
                 <Separator />
                 <MenuItem Click="AutoUpdate" Header="Обновить приложение" />
             </MenuItem>
+            <MenuItem Command="{Binding MainWindowCommandProvider.OpenAuthWindowCommand}" Header="Авторизация" />
         </Menu>
 
         <StatusBar
@@ -245,7 +246,7 @@
                         Text="{Binding MainWindowModel.ConnectionStatusMessage}" />
                     <Button
                         Height="24"
-                        Margin="5,0,5,0"
+                        Margin="0,0,0,0"
                         BorderThickness="0"
                         Command="{Binding MainWindowCommandProvider.ChekDbConnectionCommand}"
                         Content="{StaticResource refresh-button.png}" />

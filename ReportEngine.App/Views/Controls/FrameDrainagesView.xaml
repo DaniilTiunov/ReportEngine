@@ -11,10 +11,10 @@
     <ScrollViewer>
         <Grid Margin="10">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" MinWidth="240" />
+                <ColumnDefinition Width="*" MinWidth="600" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="2*" MinWidth="300" />
-                <ColumnDefinition Width="*" MinWidth="180" />
+                <ColumnDefinition Width="*" MinWidth="250" />
             </Grid.ColumnDefinitions>
 
 
@@ -293,7 +293,7 @@
                             <ContextMenu>
                                 <MenuItem Command="{Binding ProjectCommandProvider.CopyStandsCommand}" Header="Создать копию на основе прототипа" />
                                 <Separator />
-                                <MenuItem Header="Удалить" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}" Header="Удалить стенд из проекта" />
                             </ContextMenu>
                         </ListView.ContextMenu>
                         <ListView.View>

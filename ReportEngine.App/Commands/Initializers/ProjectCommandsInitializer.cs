@@ -46,6 +46,9 @@ public static class ProjectCommandsInitializer
         vm.ProjectCommandProvider.CalculateProjectCommand =
             new RelayCommand(vm.OnCalculateProjectCommandExecuted, vm.CanAllCommandsExecute);
 
+        vm.ProjectCommandProvider.CreateComponentsListReportCommand =
+            new RelayCommand(vm.OnComponentsListReportCommandExecuted, vm.CanAllCommandsExecute);
+
         vm.ProjectCommandProvider.CreateSummaryReportCommand =
             new RelayCommand(vm.OnCreateSummaryReportCommandExecuted, vm.CanAllCommandsExecute);
 
@@ -129,7 +132,7 @@ public static class ProjectCommandsInitializer
 
         vm.ProjectCommandProvider.RemoveStandFromContainerCommand =
             new RelayCommand(vm.OnRemoveStandFromContainerCommandExecuted, vm.CanAllCommandsExecute);
-        
+
         vm.ProjectCommandProvider.CreateMarkReportAsyncCommand =
             new AsyncRelayCommand(vm.OnCreateMarksReportAsyncCommandExecuted, vm.CanAllCommandsExecute);
     }

@@ -1,6 +1,6 @@
-﻿using System.Globalization;
+﻿using ReportEngine.Domain.Enums;
+using System.Globalization;
 using System.Windows.Data;
-using ReportEngine.Domain.Enums;
 
 namespace ReportEngine.App.Display;
 
@@ -14,7 +14,7 @@ public class TranslateUserRole : IValueConverter
                 return "Администратор";
             case SystemRole.User:
                 return "Пользователь";
-            case SystemRole.Manager :
+            case SystemRole.Manager:
                 return "Менеджер";
             default:
                 return "Ошибка";

@@ -157,34 +157,34 @@ namespace ReportEngine.Export.Helpers
 
         public static Table AddVerticalLineWithTable()
         {
-    
-                // Создаем таблицу с двумя колонками и вертикальной границей посередине
-                Table table = new Table();
 
-                TableProperties tableProperties = new TableProperties(
-                    new TableBorders(
-                        new InsideVerticalBorder() { Val = BorderValues.Dashed, Size = 12 } // Толщина линии
-                    ),
-                    new TableWidth() { Width = "100%", Type = TableWidthUnitValues.Pct }
-                );
+            // Создаем таблицу с двумя колонками и вертикальной границей посередине
+            Table table = new Table();
 
-                TableRow row = new TableRow();
+            TableProperties tableProperties = new TableProperties(
+                new TableBorders(
+                    new InsideVerticalBorder() { Val = BorderValues.Dashed, Size = 12 } // Толщина линии
+                ),
+                new TableWidth() { Width = "100%", Type = TableWidthUnitValues.Pct }
+            );
 
-                // Первая колонка
-                TableCell cell1 = new TableCell(
-                    new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Pct, Width = "50%" }),
-                    new Paragraph(new Run(new Text("Левая часть")))
-                );
+            TableRow row = new TableRow();
 
-                // Вторая колонка
-                TableCell cell2 = new TableCell(
-                    new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Pct, Width = "50%" }),
-                    new Paragraph(new Run(new Text("Правая часть")))
-                );
+            // Первая колонка
+            TableCell cell1 = new TableCell(
+                new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Pct, Width = "50%" }),
+                new Paragraph(new Run(new Text("Левая часть")))
+            );
 
-                row.Append(cell1, cell2);
-                table.Append(tableProperties, row);
-                return table;
+            // Вторая колонка
+            TableCell cell2 = new TableCell(
+                new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Pct, Width = "50%" }),
+                new Paragraph(new Run(new Text("Правая часть")))
+            );
+
+            row.Append(cell1, cell2);
+            table.Append(tableProperties, row);
+            return table;
 
         }
 

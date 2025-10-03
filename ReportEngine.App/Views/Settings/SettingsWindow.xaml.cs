@@ -1,7 +1,7 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using ReportEngine.App.AppHelpers;
+﻿using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace ReportEngine.App.Views;
 

@@ -8,7 +8,7 @@ using ReportEngine.Shared.Config.IniHeleprs;
 
 //using System.Diagnostics;
 
-namespace ReportEngine.Export.ExcelWork.Services;
+namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
 public class FinPlanReportGenerator : IReportGenerator
 {

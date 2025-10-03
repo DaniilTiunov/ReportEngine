@@ -1,9 +1,7 @@
-﻿using System.Globalization;
+﻿using ReportEngine.Domain.Enums;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using ReportEngine.App.Services.Core;
-using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Enums;
 
 namespace ReportEngine.App.Display;
 

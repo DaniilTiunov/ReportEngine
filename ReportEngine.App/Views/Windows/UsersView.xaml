@@ -2,6 +2,7 @@
     x:Class="ReportEngine.App.Views.Windows.UsersView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:ReportEngine.App.Display"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Управление пользователями"
@@ -13,6 +14,12 @@
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d">
+    
+    <Window.Resources>
+        <ResourceDictionary>
+            <converters:TranslateUserRole x:Key="TranslateUserRole" />
+        </ResourceDictionary>
+    </Window.Resources>
 
     <WindowChrome.WindowChrome>
         <WindowChrome
@@ -156,8 +163,8 @@
                             Header="Номер для связи" />
                         <DataGridTextColumn
                             Width="*"
-                            Binding="{Binding SystemRole, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                            Header="Права доступа" />
+                            Binding="{Binding UserLogin}"
+                            Header="Имя в системе" />
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

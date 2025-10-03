@@ -9,7 +9,7 @@ using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
 
 
-namespace ReportEngine.Export.PDFWork.Services;
+namespace ReportEngine.Export.PDFWork.Services.Generators;
 
 public class PassportsGenerator : IReportGenerator
 {
@@ -75,6 +75,8 @@ public class PassportsGenerator : IReportGenerator
 
                 newDoc.Save();
 
+                //объединяем в один документ
+                // wordDoc.MainDocumentPart.Document.Append(replaced.Document.ChildElements);
             }
         }
     }
@@ -101,6 +103,8 @@ public class PassportsGenerator : IReportGenerator
             //фильтруем все текстовые элементы, содержащие ключ
             var filteredDescendants = mainPart.Document.Body.Descendants<Text>();
             ;
+
+
 
             //заменяем во всех ключ на значение
             foreach (var descendant in filteredDescendants)
@@ -142,6 +146,8 @@ public class PassportsGenerator : IReportGenerator
 
 
     }
+
+
 
 
 

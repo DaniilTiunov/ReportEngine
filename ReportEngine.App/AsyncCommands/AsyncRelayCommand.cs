@@ -4,7 +4,7 @@ public class AsyncRelayCommand : AsyncBaseCommand
 {
     private readonly Func<object, bool> _canExecute;
     private readonly Func<object, Task> _executeAsync;
-    
+
     public AsyncRelayCommand(Func<object, Task> executeAsync, Func<object, bool>? canExecute = null)
     {
         _executeAsync = executeAsync ?? throw new ArgumentNullException(nameof(executeAsync));

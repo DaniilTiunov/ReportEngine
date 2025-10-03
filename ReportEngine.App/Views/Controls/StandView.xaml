@@ -217,12 +217,6 @@
                     Margin="0,0,10,0"
                     Command="{Binding ProjectCommandProvider.AddNewStandCommand}"
                     Content="Добавить новый" />
-
-                <Button
-                    Width="100"
-                    Margin="0,0,0,0"
-                    Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}"
-                    Content="Удалить" />
             </StackPanel>
 
         </Grid>

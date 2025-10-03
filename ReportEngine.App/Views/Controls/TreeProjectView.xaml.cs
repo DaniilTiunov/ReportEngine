@@ -1,10 +1,10 @@
-﻿using System.Windows;
+﻿using ReportEngine.App.AppHelpers;
+using ReportEngine.App.ViewModels;
+using ReportEngine.Shared.Config.DebugConsol;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using ReportEngine.App.AppHelpers;
-using ReportEngine.App.ViewModels;
-using ReportEngine.Shared.Config.DebugConsol;
 
 namespace ReportEngine.App.Views.Controls;
 
