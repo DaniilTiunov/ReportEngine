@@ -41,10 +41,6 @@ public class PassportsGenerator : IReportGenerator
 
       
 
-
-
-
-
         var template = DOCXT.DocxTemplate.Open(templatePath);
 
 
