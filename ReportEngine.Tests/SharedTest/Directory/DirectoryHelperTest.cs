@@ -27,7 +27,7 @@ public class DirectoryHelperTest
         var expectedPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ExcelTemplates", "Тара" + ".xlsx");
 
         // Act
-        var result = DirectoryHelper.GetReportsTemplatePath("Тара",".xlsx");
+        var result = DirectoryHelper.GetReportsTemplatePath("Тара", ".xlsx");
 
         Assert.AreEqual(expectedPath, result);
     }
