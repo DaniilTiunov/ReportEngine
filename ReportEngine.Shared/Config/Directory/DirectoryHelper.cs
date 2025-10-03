@@ -34,9 +34,9 @@ public class DirectoryHelper
             imageName + ".jpg");
     }
 
-    public static string GetReportsTemplatePath(string templateName)
+    public static string GetReportsTemplatePath(string templateName, string fileFormat)
     {
-        return Path.Combine(GetDirectory(), "ExcelTemplates", templateName + ".xlsx");
+        return Path.Combine(GetDirectory(), "ReportTemplates", templateName + fileFormat);
     }
 
     public static string GetReportsDirectory()
@@ -50,4 +50,6 @@ public class DirectoryHelper
 
         return Path.Combine(dir, fileName);
     }
+
+   
 }

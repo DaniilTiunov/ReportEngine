@@ -1,5 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
+using DOCXT = DocxTemplater;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
@@ -7,6 +9,8 @@ using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Export.Helpers;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
+using System.Dynamic;
+
 
 
 namespace ReportEngine.Export.PDFWork.Services.Generators;
@@ -36,49 +40,34 @@ public class PassportsGenerator : IReportGenerator
 
 
 
-        var templatePath = "C:\\Users\\pr-naladka14\\Source\\Repos\\ReportEngine\\ReportEngine.Export\\PDFWork\\Passport_template.docx";
+        var templatePath = DirectoryHelper.GetReportsTemplatePath("Passport_template", ".docx");
 
-        //открываем шаблон
-        using (var templateDoc = WordprocessingDocument.Open(templatePath, false))
+
+        Dictionary<string, object> replacements = new Dictionary<string, object>()
         {
+            { "Title", "ЖОПА" },
+            { "stand_KKS_code", "KKS-код стенда" },
+            { "stand_Name", "Наименование стенда" },
+            { "stand_Manufacturer", "Изготовитель стенда" },
+            { "stand_SerialNumber", "Заводской номер стенда" },
+            { "stand_YearManufacture", "Год изготовления стенда" },
+            { "stand_Description", "Описание стенда" }
+        };
 
-            //создаем новый документ
-            using (var newDoc = WordprocessingDocument.Create(fullSavePath, templateDoc.DocumentType))
-            {
 
 
-                
-                newDoc.AddMainDocumentPart();        
-                newDoc.MainDocumentPart.Document = new Document();
 
-               // var templateDocSettings = templateDoc.MainDocumentPart.Document.Body.Descendants<SectionProperties>().First();
+        var template = DOCXT.DocxTemplate.Open(templatePath);
 
-                var docSettings = OpenXmlHelper.CreateDefaultPageSettings();
-                newDoc.MainDocumentPart.Document.Body = new Body(docSettings);
+    
+       template.BindModel("", replacements);
 
-              
 
-             
+    
 
-                foreach (var stand in project.Stands)
-                {
-                    //копируем шаблон
-                    var standDoc = templateDoc.Clone();
+        template.Save(fullSavePath);
 
-                    //заменяем плейсхолдеры в шаблоне
-                    ReplacePlaceholdersText(standDoc.MainDocumentPart);
 
-                    // объединяем в один документ
-                    MergeDocuments(newDoc, standDoc);
-
-                }
-
-                newDoc.Save();
-
-                //объединяем в один документ
-                // wordDoc.MainDocumentPart.Document.Append(replaced.Document.ChildElements);
-            }
-        }
     }
 
 
@@ -102,7 +91,7 @@ public class PassportsGenerator : IReportGenerator
 
             //фильтруем все текстовые элементы, содержащие ключ
             var filteredDescendants = mainPart.Document.Body.Descendants<Text>();
-            ;
+
 
 
 
@@ -141,7 +130,7 @@ public class PassportsGenerator : IReportGenerator
             mainDoc.MainDocumentPart.Document.Body.AppendChild(altChunk);
         }
 
-        
+
 
 
 
