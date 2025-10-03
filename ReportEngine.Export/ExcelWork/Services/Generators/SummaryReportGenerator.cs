@@ -6,13 +6,13 @@ using ReportEngine.Export.ExcelWork.Services.Interfaces;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
-public class SummuryReportGenerator : ComponentListReportGenerator, IReportGenerator
+public class SummaryReportGenerator : ComponentListReportGenerator, IReportGenerator
 {
     private readonly IProjectInfoRepository _projectInfoRepository;
 
     public ReportType Type => ReportType.SummaryReport;
 
-    public SummuryReportGenerator(IProjectInfoRepository projectInfoRepository)
+    public SummaryReportGenerator(IProjectInfoRepository projectInfoRepository)
         : base(projectInfoRepository)
     {
         _projectInfoRepository = projectInfoRepository;
@@ -32,7 +32,7 @@ public class SummuryReportGenerator : ComponentListReportGenerator, IReportGener
         exportDays.Style.Alignment.Horizontal = alignment;
         exportDays.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
         exportDays.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
-        
+
         base.CreateStandTableHeader(ws, stand, alignment);
 
         ws.Cell("B1").Value = "";
@@ -43,14 +43,14 @@ public class SummuryReportGenerator : ComponentListReportGenerator, IReportGener
         ws.Range("C1:F1").Merge();
         ws.Range("C1:F1").Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
         ws.Range("C1:F1").Value = $"Код-KKS: {stand.KKSCode}";
-        
+
         ws.Cells("E3").Value = "Цена за\nшт.";
         ws.Cells("E3").Style.Font.Bold = true;
         ws.Cells("E3").Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
         ws.Cells("F3").Value = "Цена руб.";
         ws.Cells("F3").Style.Font.Bold = true;
         ws.Cells("F3").Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
-        
+
     }
 
     protected override string GetReportFileName()

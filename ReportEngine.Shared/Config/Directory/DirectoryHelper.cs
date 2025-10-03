@@ -51,5 +51,5 @@ public class DirectoryHelper
         return Path.Combine(dir, fileName);
     }
 
-   
+
 }
