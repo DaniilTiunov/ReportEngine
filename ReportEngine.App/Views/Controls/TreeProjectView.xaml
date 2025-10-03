@@ -67,7 +67,9 @@
                                             <MenuItem Command="{Binding ProjectCommandProvider.CreateFinplanReportCommand}" Header="Фин. план" />
                                             <Separator />
                                             <MenuItem Command="{Binding ProjectCommandProvider.CreateContainerReportCommand}" Header="Отчёт тара" />
+                                            <Separator />
                                             <MenuItem Command="{Binding ProjectCommandProvider.CreatePassportReportCommand}" Header="Паспорт" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateTechnologicalCardsReportCommand}" Header="Технологические карты" />
                                         </ContextMenu>
                                     </TreeViewItem.ContextMenu>
                                 </TreeViewItem>

@@ -27,8 +27,7 @@ public class PassportsGenerator : IReportGenerator
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
 
         var savePath = SettingsManager.GetReportDirectory();
-
-
+        
         var fileName = "Паспорта___" + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + ".docx";
 
         var fullSavePath = Path.Combine(savePath, fileName);
@@ -36,11 +35,8 @@ public class PassportsGenerator : IReportGenerator
         var templatePath = DirectoryHelper.GetReportsTemplatePath("Passport_template", ".docx");
 
         var template = DOCXT.DocxTemplate.Open(templatePath);
-
-        foreach (var stand in project.Stands)
-        {
-            template.BindModel("", TemplateMapper.GetPassportMapping(stand));
-        }
+        
+        template.BindModel("", TemplateMapper.GetPassportMapping(project.Stands.First()));
         
         template.Save(fullSavePath);
 
