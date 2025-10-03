@@ -6,43 +6,37 @@ using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
 using DOCXT = DocxTemplater;
 
-
-
-
 namespace ReportEngine.Export.PDFWork.Services.Generators;
 
-public class PassportsGenerator : IReportGenerator
+public class TechnologicalCardsGenerator : IReportGenerator
 {
     private readonly IProjectInfoRepository _projectInfoRepository;
+    public ReportType Type => ReportType.TechnologicalCards;
 
-    public ReportType Type => ReportType.PassportsReport;
-
-    public PassportsGenerator(IProjectInfoRepository projectRepository)
+    public TechnologicalCardsGenerator(IProjectInfoRepository projectInfoRepository)
     {
-        _projectInfoRepository = projectRepository;
+        _projectInfoRepository = projectInfoRepository;
     }
-
+    
     public async Task GenerateAsync(int projectId)
     {
-        var project = await _projectInfoRepository.GetByIdAsync(projectId);
-
+        var projectInfo = await _projectInfoRepository.GetByIdAsync(projectId);
+        
         var savePath = SettingsManager.GetReportDirectory();
-
-        var fileName = "Паспорта___" + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + ".docx";
-
+        
+        var fileName = "Технологические карты___" + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + ".docx";
+        
         var fullSavePath = Path.Combine(savePath, fileName);
-
-        var templatePath = DirectoryHelper.GetReportsTemplatePath("Passport_template", ".docx");
-
+        
+        var templatePath = DirectoryHelper.GetReportsTemplatePath("TechnologicalCards_template", ".docx");
+        
         var template = DOCXT.DocxTemplate.Open(templatePath);
 
-        foreach (var stand in project.Stands)
+        foreach (var stand in projectInfo.Stands)
         {
-            template.BindModel("", TemplateMapper.GetPassportMapping(stand));
+            template.BindModel("", TemplateMapper.GetTechnologicalCardsMapping(stand));
         }
         
         template.Save(fullSavePath);
-
     }
-
 }
