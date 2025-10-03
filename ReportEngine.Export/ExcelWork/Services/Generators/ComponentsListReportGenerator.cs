@@ -36,6 +36,8 @@ public class ComponentListReportGenerator : IReportGenerator
                 CreateStandTableHeader(ws, stand, XLAlignmentHorizontalValues.Center);
                 FillStandTable(ws, stand);
 
+                ws.Columns().AdjustToContents();
+                ws.Rows().AdjustToContents();
                 standNumber++;
             }
 
@@ -48,8 +50,10 @@ public class ComponentListReportGenerator : IReportGenerator
             //применяем оформление ко всему документу
             foreach (var ws in wb.Worksheets)
             {
+                ws.Cells().Style.Font.FontName = "Times New Roman";
                 ws.Cells().Style.Alignment.WrapText = true;
                 ws.Columns().AdjustToContents();
+                ws.Rows().AdjustToContents();
             }
 
             var savePath = SettingsManager.GetReportDirectory();
@@ -62,15 +66,16 @@ public class ComponentListReportGenerator : IReportGenerator
     }
     #region Заголовки
     //Создает заголовок на листе (для стенда)
-    private void CreateStandTableHeader(IXLWorksheet ws, Stand stand, XLAlignmentHorizontalValues alignment)
+    protected virtual void CreateStandTableHeader(IXLWorksheet ws, Stand stand, XLAlignmentHorizontalValues alignment)
     {
         var headerRange = ws.Range("B1:D3");
 
         ws.Cell("B1").Value = $"Код-KKS: {stand.KKSCode}";
 
         var standNameRange = ws.Range("C1:D1").Merge();
-        standNameRange.Value = $"Наименование: {stand.Design}";
+        standNameRange.Value = $"Наименование:\n{stand.Design}";
         standNameRange.Style.Alignment.Horizontal = alignment;
+        standNameRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
 
         var commonListStringRange = ws.Range("B2:D2").Merge();
         commonListStringRange.Value = "Сводная ведомость комплектующих";
@@ -89,7 +94,7 @@ public class ComponentListReportGenerator : IReportGenerator
     }
 
     //создание заголовка для сводной ведомости
-    private void CreateCommonListTableHeader(IXLWorksheet ws, ProjectInfo project, XLAlignmentHorizontalValues alignment)
+    protected virtual void CreateCommonListTableHeader(IXLWorksheet ws, ProjectInfo project, XLAlignmentHorizontalValues alignment)
     {
         var headerRange = ws.Range("B1:D3");
 
@@ -117,7 +122,7 @@ public class ComponentListReportGenerator : IReportGenerator
     //Заполняет таблицу на листе (для стенда)
     protected virtual void FillStandTable(IXLWorksheet ws, Stand stand)
     {
-        var data = GetStandsReportData(stand);
+        var data = GetStandReportData(stand);
         var activeRow = 4;
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws, XLAlignmentHorizontalValues.Center);
@@ -319,7 +324,7 @@ public class ComponentListReportGenerator : IReportGenerator
     }
     #endregion
     #region Вспомогательные
-    protected virtual StandsReportData GetStandsReportData(Stand stand)
+    protected virtual StandsReportData GetStandReportData(Stand stand)
     {
         const string dbErrorString = "Ошибка получения данных из БД";
         var activeRow = 4;
@@ -463,7 +468,7 @@ public class ComponentListReportGenerator : IReportGenerator
         );
     }
     //создает подзаголовок для подтаблицы и возвращает следующую строку
-    private int CreateSubheaderOnWorksheet(int row, string title, IXLWorksheet ws, XLAlignmentHorizontalValues alignment)
+    protected virtual int CreateSubheaderOnWorksheet(int row, string title, IXLWorksheet ws, XLAlignmentHorizontalValues alignment)
     {
         var subHeaderRange = ws.Range($"B{row}:D{row}");
         subHeaderRange.Merge();
