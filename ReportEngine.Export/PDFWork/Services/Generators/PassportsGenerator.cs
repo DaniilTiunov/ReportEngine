@@ -22,7 +22,10 @@ public class PassportsGenerator : IReportGenerator
         _projectInfoRepository = projectRepository;
     }
 
+
+
     public ReportType Type => ReportType.PassportsReport;
+
 
 
     public async Task GenerateAsync(int projectId)
@@ -31,26 +34,34 @@ public class PassportsGenerator : IReportGenerator
 
         var savePath = SettingsManager.GetReportDirectory();
 
+
         var fileName = "Паспорта___" + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + ".docx";
 
         var fullSavePath = Path.Combine(savePath, fileName);
 
-
-
         var templatePath = DirectoryHelper.GetReportsTemplatePath("Passport_template", ".docx");
 
-      
+
+        foreach (var stand in project.Stands)
+        {
+    
+
+
+        }
 
         var template = DOCXT.DocxTemplate.Open(templatePath);
 
-
         template.BindModel("", TemplateMapper.PassportMapping);
-
-
-
 
         template.Save(fullSavePath);
 
+
+
+    }
+
+
+    private void MergeDocuments()
+    {
 
     }
 
