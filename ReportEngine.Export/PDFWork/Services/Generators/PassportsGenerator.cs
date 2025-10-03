@@ -1,5 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
+using DOCXT = DocxTemplater;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
@@ -7,6 +9,8 @@ using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Export.Helpers;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
+using System.Dynamic;
+
 
 
 namespace ReportEngine.Export.PDFWork.Services.Generators;
@@ -36,42 +40,40 @@ public class PassportsGenerator : IReportGenerator
 
 
 
-        var templatePath = "C:\\Users\\pr-naladka14\\Source\\Repos\\ReportEngine\\ReportEngine.Export\\PDFWork\\Passport_template.docx";
+        var templatePath = DirectoryHelper.GetReportsTemplatePath("Passport_template", ".docx");
 
 
-        File.Copy(templatePath, fullSavePath, true);
-
-        //using (var templateDoc = WordprocessingDocument.Open(templatePath, false))
-        //{
-        //    //создаем новый документ на основе шаблона
-        //    using (var newDoc = WordprocessingDocument.Create(fullSavePath, templateDoc.DocumentType))
-        //    {
-        //        //копируем все части из шаблона в новый документ
-        //        foreach (var part in templateDoc.Parts)
-        //        {
-        //           // newDoc.AddPart(part.OpenXmlPart, part.RelationshipId);
-        //        }
-        //    }
-        //}
-
-        using (var wordDoc = WordprocessingDocument.Open(fullSavePath, true))
+        Dictionary<string, object> replacements = new Dictionary<string, object>()
         {
-            foreach (var stand in project.Stands)
-            {
-                //заменяем плейсхолдеры в шаблоне
-                var replaced = ReplacePlaceholdersText(wordDoc.MainDocumentPart);
+            { "Title", "ЖОПА" },
+            { "stand_KKS_code", "KKS-код стенда" },
+            { "stand_Name", "Наименование стенда" },
+            { "stand_Manufacturer", "Изготовитель стенда" },
+            { "stand_SerialNumber", "Заводской номер стенда" },
+            { "stand_YearManufacture", "Год изготовления стенда" },
+            { "stand_Description", "Описание стенда" }
+        };
 
-                //объединяем в один документ
-                // wordDoc.MainDocumentPart.Document.Append(replaced.Document.ChildElements);
-            }
-        }
+
+
+
+        var template = DOCXT.DocxTemplate.Open(templatePath);
+
+    
+       template.BindModel("", replacements);
+
+
+    
+
+        template.Save(fullSavePath);
+
+
     }
 
 
 
-    private MainDocumentPart ReplacePlaceholdersText(MainDocumentPart mainPart)
+    private void ReplacePlaceholdersText(MainDocumentPart mainPart)
     {
-
 
         Dictionary<string, string> replacements = new Dictionary<string, string>()
         {
@@ -91,6 +93,8 @@ public class PassportsGenerator : IReportGenerator
             var filteredDescendants = mainPart.Document.Body.Descendants<Text>();
 
 
+
+
             //заменяем во всех ключ на значение
             foreach (var descendant in filteredDescendants)
             {
@@ -99,9 +103,38 @@ public class PassportsGenerator : IReportGenerator
 
         }
 
-        return mainPart;
     }
 
+
+    private void MergeDocuments(WordprocessingDocument mainDoc, WordprocessingDocument docToAdd)
+    {
+        AlternativeFormatImportPart chunk = mainDoc.MainDocumentPart.AddAlternativeFormatImportPart(
+                AlternativeFormatImportPartType.WordprocessingML);
+
+
+        using (var stream = new MemoryStream())
+        {
+            docToAdd.Clone(stream);
+            //docToAdd.MainDocumentPart.Document.Save(stream);
+
+
+            stream.Position = 0;
+
+            chunk.FeedData(stream);
+
+            AltChunk altChunk = new AltChunk();
+
+
+            altChunk.Id = mainDoc.MainDocumentPart.GetIdOfPart(chunk);
+
+            mainDoc.MainDocumentPart.Document.Body.AppendChild(altChunk);
+        }
+
+
+
+
+
+    }
 
 
 
