@@ -10,7 +10,7 @@ namespace ReportEngine.Export.Mapping
             
             return new Dictionary<string, object>
             {
-                { "stand_KKS_code", standInfo?.KKSCode?? "N/A" },
+                { "stand_KKS_code", standInfo?.KKSCode ?? "N/A" },
                 { "stand_Name", standInfo?.Design ?? "N/A" },
                 { "stand_Manufacturer", "Изготовитель стенда?? Хз где брать" ?? "N/A" },
                 { "stand_SerialNumber", standInfo?.SerialNumber ?? "N/A" },
@@ -25,7 +25,7 @@ namespace ReportEngine.Export.Mapping
             
             return new Dictionary<string, object>
             {
-                { "stand_KKS_code", standInfo?.KKSCode?? "N/A" },
+                { "stand_KKS_code", standInfo?.KKSCode ?? "N/A" },
                 { "stand_Name", standInfo?.Design ?? "N/A" },
                 { "stand_Manufacturer", "Изготовитель стенда?? Хз где брать" ?? "N/A" },
                 { "stand_SerialNumber", standInfo?.SerialNumber ?? "N/A" },

@@ -5,6 +5,8 @@ using ReportEngine.Export.Mapping;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
 using DOCXT = DocxTemplater;
+using OpenXmlPowerTools;
+using Xceed.Words.NET;
 
 
 
@@ -28,7 +30,6 @@ public class PassportsGenerator : IReportGenerator
 
         var savePath = SettingsManager.GetReportDirectory();
 
-
         var fileName = "Паспорта___" + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + ".docx";
 
         var fullSavePath = Path.Combine(savePath, fileName);
@@ -37,12 +38,18 @@ public class PassportsGenerator : IReportGenerator
 
         var template = DOCXT.DocxTemplate.Open(templatePath);
 
-        foreach (var stand in project.Stands)
-        {
-            template.BindModel("", TemplateMapper.GetPassportMapping(stand));
-        }
+      
+        template.BindModel("", TemplateMapper.GetPassportMapping(project.Stands.First()));
+       
         
         template.Save(fullSavePath);
+        
+    }
+    
+    private void MergeDocuments(string targetDocumentPath, string documentToAddPath)
+    {
+
+     
 
     }
 
