@@ -1,6 +1,6 @@
-﻿using ReportEngine.Domain.Enums;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Windows.Data;
+using ReportEngine.Domain.Enums;
 
 namespace ReportEngine.App.Display;
 

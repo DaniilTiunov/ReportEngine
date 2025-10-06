@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic;
+﻿using System.Collections.ObjectModel;
+using Microsoft.VisualBasic;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
@@ -8,7 +9,6 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Enums;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
-using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Services.Core;
 
@@ -96,9 +96,9 @@ public class ProjectService : IProjectService
                         selectedStand.ElectricalComponentsInStand.Select(e => CloneElectricalComponent(e))
                     ),
                     ObvyazkiInStand = new ObservableCollection<ObvyazkaInStand>(
-                    selectedStand.ObvyazkiInStand.Select(obv =>
-                            ObvyzkaModelWrapper.CloneForStand(obv, 0) // 0 или newStand.Id, если уже есть
-                    ))
+                        selectedStand.ObvyazkiInStand.Select(obv =>
+                                ObvyzkaModelWrapper.CloneForStand(obv, 0) // 0 или newStand.Id, если уже есть
+                        ))
                 };
 
                 var newStandEntity = StandDataConverter.ConvertToStandEntity(newStand);
@@ -350,7 +350,8 @@ public class ProjectService : IProjectService
         return new FormedAdditionalEquip
         {
             Name = equip.Name,
-            Purposes = equip.Purposes?.Select(CloneAdditionalEquipPurpose).ToList() ?? new List<AdditionalEquipPurpose>()
+            Purposes = equip.Purposes?.Select(CloneAdditionalEquipPurpose).ToList() ??
+                       new List<AdditionalEquipPurpose>()
             // Клонируйте другие нужные свойства
         };
     }

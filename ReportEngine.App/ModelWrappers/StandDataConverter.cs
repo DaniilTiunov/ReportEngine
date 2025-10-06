@@ -71,17 +71,16 @@ public static class StandDataConverter
                 .ToList(),
 
             StandDrainages = model.DrainagesInStand
-                .Select(equip => new StandDrainage()
+                .Select(equip => new StandDrainage
                 {
                     DrainageId = equip.Id
                 }).ToList(),
 
             StandFrames = model.FramesInStand
-                .Select(equip => new StandFrame()
+                .Select(equip => new StandFrame
                 {
                     FrameId = equip.Id
                 }).ToList()
-
         };
     }
 }

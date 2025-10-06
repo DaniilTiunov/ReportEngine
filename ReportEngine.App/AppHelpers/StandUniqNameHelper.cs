@@ -9,17 +9,17 @@ public static class StandUniqNameHelper
         var standSerialNumber = standModel.SerialNumber; // например "Эп.25-02.222"
 
         // Выделяем префикс (всё до первой цифры)
-        int firstDigitIndex = standSerialNumber.IndexOfAny("0123456789".ToCharArray());
-        string prefix = firstDigitIndex > 0 ? standSerialNumber.Substring(0, firstDigitIndex) : "";
-        string baseAndNumber = standSerialNumber.Substring(firstDigitIndex); // "25-02.222"
+        var firstDigitIndex = standSerialNumber.IndexOfAny("0123456789".ToCharArray());
+        var prefix = firstDigitIndex > 0 ? standSerialNumber.Substring(0, firstDigitIndex) : "";
+        var baseAndNumber = standSerialNumber.Substring(firstDigitIndex); // "25-02.222"
 
         // Разделяем на базовую часть и числовой суффикс
         var parts = baseAndNumber.Split('.');
         if (parts.Length != 2)
             throw new Exception("Некорректный формат серийного номера");
 
-        string baseName = parts[0]; // "25-02"
-        if (!int.TryParse(parts[1], out int number))
+        var baseName = parts[0]; // "25-02"
+        if (!int.TryParse(parts[1], out var number))
             throw new Exception("Некорректный числовой суффикс");
 
         // Увеличиваем номер

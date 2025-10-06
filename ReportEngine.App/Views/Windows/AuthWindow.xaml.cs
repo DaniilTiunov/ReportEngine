@@ -1,7 +1,7 @@
-﻿using ReportEngine.App.Services.Core;
-using ReportEngine.App.ViewModels.Contacts;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
+using ReportEngine.App.Services.Core;
+using ReportEngine.App.ViewModels.Contacts;
 
 namespace ReportEngine.App.Views.Windows;
 
@@ -11,7 +11,6 @@ public partial class AuthWindow : Window
 
     public AuthWindow(AuthWindowViewModel viewModel)
     {
-
         InitializeComponent();
         DataContext = viewModel;
 
@@ -40,9 +39,6 @@ public partial class AuthWindow : Window
 
     private void AdminPasswordBox_OnPasswordChanged(object sender, RoutedEventArgs e)
     {
-        if (DataContext is AuthWindowViewModel vm)
-        {
-            vm.InputMegaSecretPassword = ((PasswordBox)sender).Password;
-        }
+        if (DataContext is AuthWindowViewModel vm) vm.InputMegaSecretPassword = ((PasswordBox)sender).Password;
     }
 }
