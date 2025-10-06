@@ -14,10 +14,9 @@
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d">
-    
+
     <Window.Resources>
         <ResourceDictionary>
-            <converters:TranslateUserRole x:Key="TranslateUserRole" />
         </ResourceDictionary>
     </Window.Resources>
 

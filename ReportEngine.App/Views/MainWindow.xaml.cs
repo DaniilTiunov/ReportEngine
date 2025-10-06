@@ -9,7 +9,6 @@ using ReportEngine.App.AppHelpers;
 using ReportEngine.Shared.Config.Directory;
 using AboutProgram = ReportEngine.App.Views.Windows.AboutProgram;
 
-
 namespace ReportEngine.App;
 
 /// <summary>

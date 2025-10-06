@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="clr-namespace:ReportEngine.App.Display"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:ReportEngine.App.Views.Windows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Окно авторизации"
     Width="600"
@@ -28,7 +27,6 @@
     <Window.Resources>
         <ResourceDictionary>
             <converters:AdminVisibilityConverter x:Key="AdminVisibilityConverter" />
-            <converters:TranslateUserRole x:Key="TranslateUserRole" />
         </ResourceDictionary>
     </Window.Resources>
 
