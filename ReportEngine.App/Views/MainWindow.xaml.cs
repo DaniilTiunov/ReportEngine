@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using ReportEngine.App.ViewModels;
-using ReportEngine.App.ViewModels.CalculationSettings;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
+using ReportEngine.App.ViewModels;
+using ReportEngine.App.ViewModels.CalculationSettings;
 using ReportEngine.Shared.Config.Directory;
 using AboutProgram = ReportEngine.App.Views.Windows.AboutProgram;
 
@@ -150,8 +150,8 @@ public partial class MainWindow : Window //Это так называемый "C
     {
         try
         {
-            string localPath = AppDomain.CurrentDomain.BaseDirectory;
-            string updaterPath = Path.Combine(localPath, "ReportUpdater.exe");
+            var localPath = AppDomain.CurrentDomain.BaseDirectory;
+            var updaterPath = Path.Combine(localPath, "ReportUpdater.exe");
 
             if (!File.Exists(updaterPath))
             {
@@ -172,8 +172,8 @@ public partial class MainWindow : Window //Это так называемый "C
 
     private void OpenHelp(object sender, RoutedEventArgs e)
     {
-        string helpPath = Path.Combine(DirectoryHelper.GetDirectory(), "Help", "HelpDesk.chm");
-        
+        var helpPath = Path.Combine(DirectoryHelper.GetDirectory(), "Help", "HelpDesk.chm");
+
         ExceptionHelper.SafeExecute(() =>
         {
             Process.Start(new ProcessStartInfo
