@@ -32,9 +32,9 @@ public class TechnologicalCardsGenerator : IReportGenerator
         var templatePath = DirectoryHelper.GetReportsTemplatePath("TechnologicalCards_template", ".docx");
 
         var template = DOCXT.DocxTemplate.Open(templatePath);
-
-        template.BindModel("", TemplateMapper.GetTechnologicalCardsMapping(projectInfo.Stands.First()));
-
+        
+        template.BindModel("", TemplateMapper.GetTechnologicalCardsMapping(projectInfo.Stands.FirstOrDefault()));
+      
         template.Save(fullSavePath);
     }
 }
