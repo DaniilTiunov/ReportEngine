@@ -189,7 +189,7 @@
             <MenuItem Header="Справка">
                 <MenuItem Click="ShowAboutProgram" Header="О программе" />
                 <Separator />
-                <MenuItem Header="Открыть справку" />
+                <MenuItem Click="OpenHelp" Header="Помощь" />
                 <Separator />
                 <MenuItem Click="AutoUpdate" Header="Обновить приложение" />
             </MenuItem>

@@ -129,6 +129,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Folder Include="Help\" />
         <Folder Include="logs\" />
         <Folder Include="..\Resources\Icons\" />
     </ItemGroup>
@@ -376,6 +377,12 @@
         <Resource Include="Resources\Images\refresh-button.png">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Resource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Help\HelpDesk.chm">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
