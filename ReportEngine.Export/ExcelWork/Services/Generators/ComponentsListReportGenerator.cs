@@ -1,11 +1,11 @@
-﻿using ClosedXML.Excel;
+﻿using System.Diagnostics;
+using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Generators.DTO;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
-using System.Diagnostics;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -64,7 +64,9 @@ public class ComponentListReportGenerator : IReportGenerator
             wb.SaveAs(fullSavePath);
         }
     }
+
     #region Заголовки
+
     //Создает заголовок на листе (для стенда)
     protected virtual void CreateStandTableHeader(IXLWorksheet ws, Stand stand, XLAlignmentHorizontalValues alignment)
     {
@@ -94,7 +96,8 @@ public class ComponentListReportGenerator : IReportGenerator
     }
 
     //создание заголовка для сводной ведомости
-    protected virtual void CreateCommonListTableHeader(IXLWorksheet ws, ProjectInfo project, XLAlignmentHorizontalValues alignment)
+    protected virtual void CreateCommonListTableHeader(IXLWorksheet ws, ProjectInfo project,
+        XLAlignmentHorizontalValues alignment)
     {
         var headerRange = ws.Range("B1:D3");
 
@@ -117,8 +120,11 @@ public class ComponentListReportGenerator : IReportGenerator
         headerRange.Style.Alignment.Horizontal = alignment;
         headerRange.Style.Font.SetBold();
     }
+
     #endregion
+
     #region Заполнители
+
     //Заполняет таблицу на листе (для стенда)
     protected virtual void FillStandTable(IXLWorksheet ws, Stand stand)
     {
@@ -138,21 +144,25 @@ public class ComponentListReportGenerator : IReportGenerator
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Дренаж", ws, XLAlignmentHorizontalValues.Center);
         activeRow = FillSubtableData(activeRow, data.DrainageParts, ws, XLAlignmentHorizontalValues.Left);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Рамные комплектующие", ws, XLAlignmentHorizontalValues.Center);
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Рамные комплектующие", ws,
+            XLAlignmentHorizontalValues.Center);
         activeRow = FillSubtableData(activeRow, data.FramesList, ws, XLAlignmentHorizontalValues.Left);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Кронштейны", ws, XLAlignmentHorizontalValues.Center);
         activeRow = FillSubtableData(activeRow, data.SensorsHolders, ws, XLAlignmentHorizontalValues.Left);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Электрические компоненты", ws, XLAlignmentHorizontalValues.Center);
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Электрические компоненты", ws,
+            XLAlignmentHorizontalValues.Center);
         activeRow = FillSubtableData(activeRow, data.ElectricalParts, ws, XLAlignmentHorizontalValues.Left);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Прочие", ws, XLAlignmentHorizontalValues.Center);
         activeRow = FillSubtableData(activeRow, data.OthersParts, ws, XLAlignmentHorizontalValues.Left);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Расходные материалы", ws, XLAlignmentHorizontalValues.Center);
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Расходные материалы", ws,
+            XLAlignmentHorizontalValues.Center);
         activeRow = FillSubtableData(activeRow, data.Supplies, ws, XLAlignmentHorizontalValues.Left);
     }
+
     //создание сводной ведомости
     private void FillCommonListTable(IXLWorksheet ws, ProjectInfo project)
     {
@@ -307,23 +317,29 @@ public class ComponentListReportGenerator : IReportGenerator
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Дренаж", ws, XLAlignmentHorizontalValues.Center);
         activeRow = FillSubtableData(activeRow, drainageParts, ws, XLAlignmentHorizontalValues.Left);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Рамные комплектующие", ws, XLAlignmentHorizontalValues.Center);
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Рамные комплектующие", ws,
+            XLAlignmentHorizontalValues.Center);
         activeRow = FillSubtableData(activeRow, framesList, ws, XLAlignmentHorizontalValues.Left);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Кронштейны", ws, XLAlignmentHorizontalValues.Center);
         activeRow = FillSubtableData(activeRow, sensorsHolders, ws, XLAlignmentHorizontalValues.Left);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Электрические компоненты", ws, XLAlignmentHorizontalValues.Center);
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Электрические компоненты", ws,
+            XLAlignmentHorizontalValues.Center);
         activeRow = FillSubtableData(activeRow, electricalParts, ws, XLAlignmentHorizontalValues.Left);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Прочие", ws, XLAlignmentHorizontalValues.Center);
         activeRow = FillSubtableData(activeRow, othersParts, ws, XLAlignmentHorizontalValues.Left);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Расходные материалы", ws, XLAlignmentHorizontalValues.Center);
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Расходные материалы", ws,
+            XLAlignmentHorizontalValues.Center);
         activeRow = FillSubtableData(activeRow, supplies, ws, XLAlignmentHorizontalValues.Left);
     }
+
     #endregion
+
     #region Вспомогательные
+
     protected virtual StandsReportData GetStandReportData(Stand stand)
     {
         const string dbErrorString = "Ошибка получения данных из БД";
@@ -467,8 +483,10 @@ public class ComponentListReportGenerator : IReportGenerator
             supplies
         );
     }
+
     //создает подзаголовок для подтаблицы и возвращает следующую строку
-    protected virtual int CreateSubheaderOnWorksheet(int row, string title, IXLWorksheet ws, XLAlignmentHorizontalValues alignment)
+    protected virtual int CreateSubheaderOnWorksheet(int row, string title, IXLWorksheet ws,
+        XLAlignmentHorizontalValues alignment)
     {
         var subHeaderRange = ws.Range($"B{row}:D{row}");
         subHeaderRange.Merge();
@@ -480,8 +498,10 @@ public class ComponentListReportGenerator : IReportGenerator
         row++;
         return row;
     }
+
     //Заполняет подтаблицу и возвращает следующую строку
-    private int FillSubtableData(int startRow, List<(string name, string unit, string quantity)> items, IXLWorksheet ws, XLAlignmentHorizontalValues alignment)
+    private int FillSubtableData(int startRow, List<(string name, string unit, string quantity)> items, IXLWorksheet ws,
+        XLAlignmentHorizontalValues alignment)
     {
         var currentRow = startRow;
         foreach (var item in items)
@@ -495,6 +515,7 @@ public class ComponentListReportGenerator : IReportGenerator
 
             currentRow++;
         }
+
         return currentRow;
     }
 
@@ -504,5 +525,6 @@ public class ComponentListReportGenerator : IReportGenerator
                DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") +
                ".xlsx";
     }
+
     #endregion
 }

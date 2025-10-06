@@ -9,20 +9,18 @@ using OpenXmlPowerTools;
 using Xceed.Words.NET;
 
 
-
-
 namespace ReportEngine.Export.PDFWork.Services.Generators;
 
 public class PassportsGenerator : IReportGenerator
 {
     private readonly IProjectInfoRepository _projectInfoRepository;
 
-    public ReportType Type => ReportType.PassportsReport;
-
     public PassportsGenerator(IProjectInfoRepository projectRepository)
     {
         _projectInfoRepository = projectRepository;
     }
+
+    public ReportType Type => ReportType.PassportsReport;
 
     public async Task GenerateAsync(int projectId)
     {
@@ -52,5 +50,4 @@ public class PassportsGenerator : IReportGenerator
      
 
     }
-
 }

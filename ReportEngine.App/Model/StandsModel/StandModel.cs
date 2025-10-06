@@ -1,7 +1,7 @@
-﻿using ReportEngine.App.Model.FormedEquipsModels;
+﻿using System.Collections.ObjectModel;
+using ReportEngine.App.Model.FormedEquipsModels;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
-using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Model.StandsModel;
 
@@ -645,6 +645,7 @@ public class StandModel : BaseViewModel
             }
         };
     }
+
     public void InitializeAdditionalEquip()
     {
         NewAdditionalEquip = new FormedAdditionalEquip
@@ -659,6 +660,7 @@ public class StandModel : BaseViewModel
             }
         };
     }
+
     public void InitializeElectricalComponent()
     {
         NewElectricalComponent = new FormedElectricalComponent

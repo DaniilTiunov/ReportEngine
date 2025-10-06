@@ -1,7 +1,7 @@
-﻿using ReportEngine.Domain.Enums;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+using ReportEngine.Domain.Enums;
 
 namespace ReportEngine.App.Display;
 
@@ -16,5 +16,7 @@ public class AdminVisibilityConverter : IValueConverter
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        => throw new NotImplementedException();
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -10,13 +10,13 @@ public class SummaryReportGenerator : ComponentListReportGenerator, IReportGener
 {
     private readonly IProjectInfoRepository _projectInfoRepository;
 
-    public ReportType Type => ReportType.SummaryReport;
-
     public SummaryReportGenerator(IProjectInfoRepository projectInfoRepository)
         : base(projectInfoRepository)
     {
         _projectInfoRepository = projectInfoRepository;
     }
+
+    public ReportType Type => ReportType.SummaryReport;
 
     public new async Task GenerateAsync(int projectId)
     {
@@ -50,13 +50,12 @@ public class SummaryReportGenerator : ComponentListReportGenerator, IReportGener
         ws.Cells("F3").Value = "Цена руб.";
         ws.Cells("F3").Style.Font.Bold = true;
         ws.Cells("F3").Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
-
     }
 
     protected override string GetReportFileName()
     {
         return "Сводная ведомость___" +
-                      DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") +
-                      ".xlsx";
+               DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") +
+               ".xlsx";
     }
 }

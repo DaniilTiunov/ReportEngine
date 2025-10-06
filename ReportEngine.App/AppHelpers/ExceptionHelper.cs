@@ -1,6 +1,6 @@
-﻿using ReportEngine.App.Display;
+﻿using System.Diagnostics;
+using ReportEngine.App.Display;
 using ReportEngine.Shared.Config.DebugConsol;
-using System.Diagnostics;
 
 namespace ReportEngine.App.AppHelpers;
 
