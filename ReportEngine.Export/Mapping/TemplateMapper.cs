@@ -1,4 +1,6 @@
-﻿using ReportEngine.Domain.Entities;
+﻿using System.Diagnostics;
+using System.Drawing;
+using ReportEngine.Domain.Entities;
 
 namespace ReportEngine.Export.Mapping;
 
@@ -27,6 +29,7 @@ public static class TemplateMapper
         {
             { "stand_KKS_code", standInfo?.KKSCode ?? "N/A" },
             { "stand_Name", standInfo?.Design ?? "N/A" },
+            { "stand_Blueprint", ByteToImage(standInfo?.ImageData)},
             { "stand_Manufacturer", "Изготовитель стенда?? Хз где брать" ?? "N/A" },
             { "stand_SerialNumber", standInfo?.SerialNumber ?? "N/A" },
             { "stand_YearManufacture", "Год изготовления стенда?? Хз где брать" ?? "N/A" },
@@ -34,5 +37,27 @@ public static class TemplateMapper
             //{ "stand_Frame", standInfo?.StandFrames.First().Frame.Name ?? "N/A" },
             //{ "stand_FrameDesign", standInfo?.StandFrames?.First()?.Frame?.Designe ?? "N/A" }
         };
+    }
+
+    private static string ByteToImage(byte[] bytes)
+    {
+        try
+        {
+            if (bytes == null || bytes.Length == 0)
+                return null;
+
+            var tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".png");
+            using (var ms = new MemoryStream(bytes))
+            using (var img = Image.FromStream(ms))
+            {
+                img.Save(tempPath, System.Drawing.Imaging.ImageFormat.Png);
+            }
+            return tempPath;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
+            return null;
+        }
     }
 }
