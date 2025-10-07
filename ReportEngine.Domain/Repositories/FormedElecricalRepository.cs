@@ -77,12 +77,31 @@ public class FormedElectricalRepository : IFormedElectricalRepository
         await _context.SaveChangesAsync();
     }
 
-
     public async Task DeletePurposeAsync(int purposeId)
     {
         var entity = await _context.Set<ElectricalPurpose>().FindAsync(purposeId);
         if (entity == null) return;
         _context.Set<ElectricalPurpose>().Remove(entity);
+        await _context.SaveChangesAsync();
+    }
+    
+    public async Task AddPurposesAsync(IEnumerable<ElectricalPurpose> purposes, int componentId)
+    {
+        if (purposes == null) return;
+
+        foreach (var original in purposes)
+        {
+            var newPurpose = new ElectricalPurpose
+            {
+                Purpose = original.Purpose,
+                Material = original.Material,
+                Quantity = original.Quantity,
+                CostPerUnit = original.CostPerUnit,
+                Measure = original.Measure,
+                FormedElectricalComponentId = componentId
+            };
+            await _context.ElectricalPurposes.AddAsync(newPurpose);
+        }
         await _context.SaveChangesAsync();
     }
 }
