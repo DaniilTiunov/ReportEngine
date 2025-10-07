@@ -10,4 +10,5 @@ public interface IFormedElectricalRepository
     Task<FormedElectricalComponent> GetByIdWithPurposesAsync(int id);
     Task UpdateAsync(ElectricalPurpose purpose);
     Task DeletePurposeAsync(int purposeId);
+    Task AddPurposesAsync(IEnumerable<ElectricalPurpose> purposes, int componentId);
 }
