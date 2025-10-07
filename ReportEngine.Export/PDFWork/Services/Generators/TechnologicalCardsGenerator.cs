@@ -4,7 +4,6 @@ using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Export.Mapping;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
-using DOCXT = DocxTemplater;
 
 namespace ReportEngine.Export.PDFWork.Services.Generators;
 
@@ -31,10 +30,10 @@ public class TechnologicalCardsGenerator : IReportGenerator
 
         var templatePath = DirectoryHelper.GetReportsTemplatePath("TechnologicalCards_template", ".docx");
 
-        var template = DOCXT.DocxTemplate.Open(templatePath);
+       // var template = Open(templatePath);
         
-        template.BindModel("", TemplateMapper.GetTechnologicalCardsMapping(projectInfo.Stands.First()));
+       // template.BindModel("", TemplateMapper.GetTechnologicalCardsMapping(projectInfo.Stands.First()));
         
-        template.Save(fullSavePath);
+       // template.Save(fullSavePath);
     }
 }
