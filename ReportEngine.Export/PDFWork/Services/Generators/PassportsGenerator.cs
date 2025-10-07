@@ -1,12 +1,13 @@
-﻿using ReportEngine.Domain.Repositories.Interfaces;
+﻿using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Export.Mapping;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
-using DOCXT = DocxTemplater;
-using OpenXmlPowerTools;
-using Xceed.Words.NET;
+using Xceed.Document.NET;
+using XceedDocx = Xceed.Words.NET.DocX;
+
 
 
 namespace ReportEngine.Export.PDFWork.Services.Generators;
@@ -22,6 +23,7 @@ public class PassportsGenerator : IReportGenerator
 
     public ReportType Type => ReportType.PassportsReport;
 
+   
     public async Task GenerateAsync(int projectId)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
@@ -34,20 +36,65 @@ public class PassportsGenerator : IReportGenerator
 
         var templatePath = DirectoryHelper.GetReportsTemplatePath("Passport_template", ".docx");
 
-        var template = DOCXT.DocxTemplate.Open(templatePath);
+        
 
-      
-        template.BindModel("", TemplateMapper.GetPassportMapping(project.Stands.First()));
-       
-        
-        template.Save(fullSavePath);
-        
+        using (var myDoc = XceedDocx.Load(templatePath))
+        {
+            XceedDocx resultDoc = null;
+
+            foreach (var stand in project.Stands)
+            {
+                var replacedTemplatedDoc = (XceedDocx) myDoc.Copy();
+
+                ReplaceTextInTemplate(replacedTemplatedDoc, stand);
+
+                resultDoc = (resultDoc == null) ? replacedTemplatedDoc : MergeDocuments(resultDoc, replacedTemplatedDoc);
+            }
+
+            // Если не было ни одного стэнда, resultDoc может быть null — в таком случае сохраним пустую копию шаблона
+            if (resultDoc == null)
+            {
+                using var emptyCopy = (XceedDocx)myDoc.Copy();
+                emptyCopy.SaveAs(fullSavePath);
+            }
+            else
+            {
+                resultDoc.SaveAs(fullSavePath);
+            }
+        }
+    }
+
+
+
+    private XceedDocx ReplaceTextInTemplate(XceedDocx templateDoc, Stand stand)
+    {
+        var replacements = TemplateMapper.GetPassportMapping(stand);
+
+        foreach (var replacement in replacements)
+        {
+
+            var options = new StringReplaceTextOptions()
+            {
+                SearchValue = replacement.Key ?? string.Empty,
+                NewValue = replacement.Value ?? string.Empty,
+                EscapeRegEx = false
+            };
+
+            templateDoc.ReplaceText(options);
+        }
+
+        return templateDoc;
     }
     
-    private void MergeDocuments(string targetDocumentPath, string documentToAddPath)
+
+
+    private XceedDocx MergeDocuments(XceedDocx targetDocument, XceedDocx documentToAdd)
     {
-
-     
-
+        using var ms = new MemoryStream();
+        targetDocument.SaveAs(ms); // сериализуем targetDocument в поток
+        ms.Position = 0;
+        var resultingDoc = XceedDocx.Load(ms); // загружаем независимый экземпляр
+        resultingDoc.InsertDocument(documentToAdd);
+        return resultingDoc;
     }
 }
