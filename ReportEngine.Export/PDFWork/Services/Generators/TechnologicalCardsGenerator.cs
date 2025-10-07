@@ -10,7 +10,6 @@ using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Export.Mapping;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
-using DOCXT = DocxTemplater;
 
 namespace ReportEngine.Export.PDFWork.Services.Generators;
 
