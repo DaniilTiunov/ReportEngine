@@ -27,7 +27,6 @@ public class PassportsGenerator : IReportGenerator
     public async Task GenerateAsync(int projectId)
     {
 
-
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
 
         var savePath = SettingsManager.GetReportDirectory();
