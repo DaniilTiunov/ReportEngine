@@ -24,6 +24,8 @@ public class PassportsGenerator : IReportGenerator
 
     public ReportType Type => ReportType.PassportsReport;
 
+
+
     public async Task GenerateAsync(int projectId)
     {
 
@@ -41,6 +43,8 @@ public class PassportsGenerator : IReportGenerator
 
         using (var myDoc = XceedDocx.Load(templatePath))
         {
+
+
             XceedDocx resultDoc = null;
 
             foreach (var stand in project.Stands)
