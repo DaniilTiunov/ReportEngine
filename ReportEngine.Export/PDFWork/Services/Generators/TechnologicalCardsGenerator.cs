@@ -46,6 +46,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
             {
                 var replacedTemplatedDoc = (XceedDocx)myDoc.Copy();
                 ReplaceTextInTemplate(replacedTemplatedDoc, stand);
+                InsertBlueprintInTemplate(replacedTemplatedDoc, stand);
                 resultDoc = resultDoc == null ? replacedTemplatedDoc : MergeDocuments(resultDoc, replacedTemplatedDoc);
             }
 
@@ -64,7 +65,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
     }
 
 
-    private XceedDocx ReplaceTextInTemplate(XceedDocx templateDoc, Stand stand)
+    private void ReplaceTextInTemplate(XceedDocx templateDoc, Stand stand)
     {
         var replacements = TemplateMapper.GetPassportMapping(stand);
 
@@ -80,19 +81,26 @@ public class TechnologicalCardsGenerator : IReportGenerator
             templateDoc.ReplaceText(options);
         }
 
-        //меняем на картинку
+    }
+
+
+    private void InsertBlueprintInTemplate(XceedDocx templateDoc, Stand stand)
+    {
+        //ищем параграф с маркером
         var pictureMarker = "{{stand_blueprint}}";
 
         var findedParagraph = templateDoc.Paragraphs
             .Where(p => p.Text.Contains(pictureMarker))
             .First();
 
-
         //подгружаем картинку
         using (var imageMemoryStream = new MemoryStream(stand.ImageData))
         {
             var img = templateDoc.AddImage(imageMemoryStream);
             var picture = img.CreatePicture();
+            picture.Height = 400;
+            picture.Width = 230;
+
 
 
             findedParagraph.InsertPicture(picture);
@@ -108,9 +116,9 @@ public class TechnologicalCardsGenerator : IReportGenerator
 
         findedParagraph.ReplaceText(opt);
 
-
-        return templateDoc;
     }
+
+
 
 
     private XceedDocx MergeDocuments(XceedDocx targetDocument, XceedDocx documentToAdd)
