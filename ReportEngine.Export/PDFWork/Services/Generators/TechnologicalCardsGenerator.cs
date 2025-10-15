@@ -109,8 +109,8 @@ public class TechnologicalCardsGenerator : IReportGenerator
         using (var imageMemoryStream = new MemoryStream(stand.ImageData))
         {
             var img = templateDoc.AddImage(imageMemoryStream);
-            var picture = img.CreatePicture();
-           
+            var picture = img.CreatePicture();         
+
 
             findedParagraph.InsertPicture(picture);
         }
@@ -135,11 +135,14 @@ public class TechnologicalCardsGenerator : IReportGenerator
 
     private XceedDocx MergeDocuments(XceedDocx targetDocument, XceedDocx documentToAdd)
     {
+        // сериализуем targetDocument в поток
         using var ms = new MemoryStream();
-        targetDocument.SaveAs(ms); // сериализуем targetDocument в поток
+        targetDocument.SaveAs(ms);
 
-        var resultingDoc = XceedDocx.Load(ms); // загружаем независимый экземпляр
+        // загружаем независимый экземпляр
+        var resultingDoc = XceedDocx.Load(ms); 
         resultingDoc.InsertDocument(documentToAdd);
+
         return resultingDoc;
     }
 
