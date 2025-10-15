@@ -15,17 +15,8 @@ public class SettingsViewModel : BaseViewModel
 {
     private readonly INotificationService _notificationService;
     private string _connectionString;
-
     private string _savereportPath;
-
-    public SettingsViewModel(INotificationService notificationService)
-    {
-        ApplySettingsCommand = new RelayCommand(ExecuteSaveCommand, _ => true);
-        OpenDialog = new RelayCommand(ExecuteOpenDialog, _ => true);
-
-        _notificationService = notificationService;
-    }
-
+    
     public string SaveReportDirPath
     {
         get => _savereportPath;
@@ -36,6 +27,14 @@ public class SettingsViewModel : BaseViewModel
     {
         get => _connectionString;
         set => Set(ref _connectionString, value);
+    }
+    
+    public SettingsViewModel(INotificationService notificationService)
+    {
+        ApplySettingsCommand = new RelayCommand(ExecuteSaveCommand, _ => true);
+        OpenDialog = new RelayCommand(ExecuteOpenDialog, _ => true);
+
+        _notificationService = notificationService;
     }
 
     public ICommand ApplySettingsCommand { get; set; }

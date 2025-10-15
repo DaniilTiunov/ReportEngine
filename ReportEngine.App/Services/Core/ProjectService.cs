@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.VisualBasic;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Model;
@@ -15,12 +14,12 @@ namespace ReportEngine.App.Services.Core;
 
 public class ProjectService : IProjectService
 {
+    private readonly IFormedAdditionalEquipsRepository _additionalEquipsRepository;
+    private readonly IFormedDrainagesRepository _drainagesRepository;
+    private readonly IFormedElectricalRepository _electricalRepository;
     private readonly INotificationService _notificationService;
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IStandService _standService;
-    private readonly IFormedElectricalRepository _electricalRepository;
-    private readonly IFormedAdditionalEquipsRepository _additionalEquipsRepository;
-    private readonly IFormedDrainagesRepository _drainagesRepository;
 
     public ProjectService(
         IProjectInfoRepository projectRepository,
@@ -76,7 +75,9 @@ public class ProjectService : IProjectService
                     newDesign += "_new";
 
                 // Копируем стенд
-                var newStand = await CopyStandFromSourceStandAsync(selectedStand, newKKS, newDesign, projectModel.CurrentProjectId);
+                var newStand =
+                    await CopyStandFromSourceStandAsync(selectedStand, newKKS, newDesign,
+                        projectModel.CurrentProjectId);
 
                 projectModel.Stands.Add(newStand);
 
@@ -275,7 +276,8 @@ public class ProjectService : IProjectService
         foreach (var obvyazkiInStand in obvyazkiInStands) projectModel.ObvyazkiInProject.Add(obvyazkiInStand);
     }
 
-    private async Task<StandModel> CopyStandFromSourceStandAsync(StandModel sourceStand, string newDesign, string newKKS, int projectId)
+    private async Task<StandModel> CopyStandFromSourceStandAsync(StandModel sourceStand, string newDesign,
+        string newKKS, int projectId)
     {
         var newStand = new StandModel
         {
@@ -297,9 +299,9 @@ public class ProjectService : IProjectService
             ObvyazkiInStand = new ObservableCollection<ObvyazkaInStand>(
                 sourceStand.ObvyazkiInStand.Select(obv =>
                         ObvyzkaModelWrapper.CloneForStand(obv, 0) // 0 или newStand.Id, если уже есть
-             ))
+                ))
         };
-        
+
         var newStandEntity = StandDataConverter.ConvertToStandEntity(newStand);
         var addedStandEntity = await _projectRepository.AddStandAsync(projectId, newStandEntity);
 
@@ -310,10 +312,10 @@ public class ProjectService : IProjectService
         await CopyDrainagesToNewStandAsync(newStand.Id, sourceStand.DrainagesInStand.First());
         await CopyAdditionalEquipsToNewStandAsync(newStand.Id, sourceStand.AdditionalEquipsInStand.First());
         await CopyElectricalComponentsToNewStandAsync(newStand.Id, sourceStand.ElectricalComponentsInStand.First());
-        
+
         return newStand;
     }
-    
+
     private async Task CopyFramesToNewStandAsync(StandModel newStand, ObservableCollection<FormedFrame> frames)
     {
         foreach (var frame in frames)
@@ -326,9 +328,9 @@ public class ProjectService : IProjectService
         {
             Name = source.Name,
             Purposes = new List<DrainagePurpose>(),
-            StandDrainages = new List<StandDrainage>(),
+            StandDrainages = new List<StandDrainage>()
         };
-        
+
         await _drainagesRepository.AddAsync(newComponent);
 
         foreach (var purpose in source.Purposes)
@@ -342,22 +344,22 @@ public class ProjectService : IProjectService
                 CostPerUnit = purpose.CostPerUnit,
                 FormedDrainageId = newComponent.Id
             };
-        
+
             newComponent.Purposes.Add(newPurpose);
         }
-            
+
         await _projectRepository.AddDrainageToStandAsync(newStandId, newComponent.Id);
     }
-    
+
     private async Task CopyAdditionalEquipsToNewStandAsync(int newStandId, FormedAdditionalEquip source)
     {
         var newComponent = new FormedAdditionalEquip
         {
             Name = source.Name,
             Purposes = new List<AdditionalEquipPurpose>(),
-            StandAdditionalEquips = new List<StandAdditionalEquip>(),
+            StandAdditionalEquips = new List<StandAdditionalEquip>()
         };
-        
+
         await _additionalEquipsRepository.AddAsync(newComponent);
 
         foreach (var purpose in source.Purposes)
@@ -371,23 +373,22 @@ public class ProjectService : IProjectService
                 CostPerUnit = purpose.CostPerUnit,
                 FormedAdditionalEquipId = newComponent.Id
             };
-        
+
             newComponent.Purposes.Add(newPurpose);
-            
+
             await _projectRepository.AddAdditionalEquipToStandAsync(newStandId, newComponent.Id);
         }
     }
-    
+
     private async Task CopyElectricalComponentsToNewStandAsync(int newStandId, FormedElectricalComponent source)
     {
-        
         var newComponent = new FormedElectricalComponent
         {
             Name = source.Name,
             Purposes = new List<ElectricalPurpose>(),
             StandElectricalComponents = new List<StandElectricalComponent>()
         };
-        
+
         await _electricalRepository.AddAsync(newComponent);
 
         foreach (var purpose in source.Purposes)
@@ -401,7 +402,7 @@ public class ProjectService : IProjectService
                 CostPerUnit = purpose.CostPerUnit,
                 FormedElectricalComponentId = newComponent.Id
             };
-        
+
             newComponent.Purposes.Add(newPurpose);
         }
 

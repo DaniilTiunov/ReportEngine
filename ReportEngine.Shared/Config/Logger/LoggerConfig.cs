@@ -10,7 +10,7 @@ public class LoggerConfig
 #if DEBUG
         var logPath = @"C:\Work\Prjs\ReportEngine\ReportEngine.App\logs\log.txt";
 #else
-        string logPath = DirectoryHelper.GetLogsPath();
+        var logPath = DirectoryHelper.GetLogsPath();
 #endif
         Log.Logger = new LoggerConfiguration() // Конфигурация Serilog
             .Enrich.FromLogContext()

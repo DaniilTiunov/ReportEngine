@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using ReportEngine.Domain.Entities;
 
 namespace ReportEngine.Export.Mapping;
@@ -25,12 +26,12 @@ public static class TemplateMapper
     public static Dictionary<string, object> GetTechnologicalCardsMapping(Stand stand)
     {
         var standInfo = stand;
-        
+
         return new Dictionary<string, object>
         {
             { "stand_KKS_code", standInfo?.KKSCode ?? "N/A" },
             { "stand_Name", standInfo?.Design ?? "N/A" },
-            { "stand_Blueprint", ByteToImage(standInfo?.ImageData)},
+            { "stand_Blueprint", ByteToImage(standInfo?.ImageData) },
             { "stand_Manufacturer", "Изготовитель стенда?? Хз где брать" ?? "N/A" },
             { "stand_SerialNumber", standInfo?.SerialNumber ?? "N/A" },
             { "stand_YearManufacture", "Год изготовления стенда?? Хз где брать" ?? "N/A" },
@@ -51,8 +52,9 @@ public static class TemplateMapper
             using (var ms = new MemoryStream(bytes))
             using (var img = Image.FromStream(ms))
             {
-                img.Save(tempPath, System.Drawing.Imaging.ImageFormat.Png);
+                img.Save(tempPath, ImageFormat.Png);
             }
+
             return tempPath;
         }
         catch (Exception ex)
