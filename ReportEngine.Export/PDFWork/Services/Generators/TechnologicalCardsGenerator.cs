@@ -1,12 +1,6 @@
-﻿using Microsoft.Office.Interop.Excel;
-using QuestPDF.Companion;
-using QuestPDF.Fluent;
-using QuestPDF.Helpers;
-using QuestPDF.Infrastructure;
-using ReportEngine.Domain.Entities;
+﻿using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
-using ReportEngine.Export.ExcelWork.Services.Generators.DTO;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Export.Mapping;
 using ReportEngine.Shared.Config.Directory;
@@ -18,7 +12,7 @@ namespace ReportEngine.Export.PDFWork.Services.Generators;
 
 public class TechnologicalCardsGenerator : IReportGenerator
 {
-    private readonly static string _savePath = SettingsManager.GetReportDirectory();
+    private static readonly string _savePath = SettingsManager.GetReportDirectory();
 
     private readonly IProjectInfoRepository _projectInfoRepository;
 
@@ -28,9 +22,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
     }
 
 
-
     public ReportType Type => ReportType.TechnologicalCards;
-
 
 
     public async Task GenerateAsync(int projectId)
@@ -46,20 +38,16 @@ public class TechnologicalCardsGenerator : IReportGenerator
         var templatePath = DirectoryHelper.GetReportsTemplatePath("TechnologicalCards_template", ".docx");
 
 
-
         using (var myDoc = XceedDocx.Load(templatePath))
         {
             XceedDocx resultDoc = null;
 
             foreach (var stand in project.Stands)
             {
-
-                var replacedTemplatedDoc = (XceedDocx) myDoc.Copy();
+                var replacedTemplatedDoc = (XceedDocx)myDoc.Copy();
                 ReplaceTextInTemplate(replacedTemplatedDoc, stand);
-                resultDoc = (resultDoc == null) ? replacedTemplatedDoc : MergeDocuments(resultDoc, replacedTemplatedDoc);
-
+                resultDoc = resultDoc == null ? replacedTemplatedDoc : MergeDocuments(resultDoc, replacedTemplatedDoc);
             }
-
 
 
             //resultDoc может быть null — в таком случае сохраним пустую копию шаблона
@@ -70,24 +58,19 @@ public class TechnologicalCardsGenerator : IReportGenerator
             }
             else
             {
-
                 resultDoc.SaveAs(fullSavePath);
             }
         }
     }
 
 
-
-
     private XceedDocx ReplaceTextInTemplate(XceedDocx templateDoc, Stand stand)
     {
-
         var replacements = TemplateMapper.GetPassportMapping(stand);
 
         foreach (var replacement in replacements)
         {
-
-            var options = new StringReplaceTextOptions()
+            var options = new StringReplaceTextOptions
             {
                 SearchValue = replacement.Key ?? string.Empty,
                 NewValue = replacement.Value ?? string.Empty,
@@ -98,7 +81,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
         }
 
         //меняем на картинку
-        string pictureMarker = "{{stand_blueprint}}";
+        var pictureMarker = "{{stand_blueprint}}";
 
         var findedParagraph = templateDoc.Paragraphs
             .Where(p => p.Text.Contains(pictureMarker))
@@ -109,14 +92,14 @@ public class TechnologicalCardsGenerator : IReportGenerator
         using (var imageMemoryStream = new MemoryStream(stand.ImageData))
         {
             var img = templateDoc.AddImage(imageMemoryStream);
-            var picture = img.CreatePicture();         
+            var picture = img.CreatePicture();
 
 
             findedParagraph.InsertPicture(picture);
         }
 
         //убираем текстовый маркер 
-        var opt = new StringReplaceTextOptions()
+        var opt = new StringReplaceTextOptions
         {
             SearchValue = pictureMarker,
             NewValue = "",
@@ -126,11 +109,8 @@ public class TechnologicalCardsGenerator : IReportGenerator
         findedParagraph.ReplaceText(opt);
 
 
-
-
         return templateDoc;
     }
-
 
 
     private XceedDocx MergeDocuments(XceedDocx targetDocument, XceedDocx documentToAdd)
@@ -145,19 +125,4 @@ public class TechnologicalCardsGenerator : IReportGenerator
 
         return resultingDoc;
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
- 

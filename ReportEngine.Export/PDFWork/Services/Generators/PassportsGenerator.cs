@@ -11,8 +11,6 @@ using XceedDocx = Xceed.Words.NET.DocX;
 
 namespace ReportEngine.Export.PDFWork.Services.Generators;
 
-
-
 public class PassportsGenerator : IReportGenerator
 {
     private readonly IProjectInfoRepository _projectInfoRepository;
@@ -25,10 +23,8 @@ public class PassportsGenerator : IReportGenerator
     public ReportType Type => ReportType.PassportsReport;
 
 
-
     public async Task GenerateAsync(int projectId)
     {
-
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
 
         var savePath = SettingsManager.GetReportDirectory();
@@ -40,20 +36,16 @@ public class PassportsGenerator : IReportGenerator
         var templatePath = DirectoryHelper.GetReportsTemplatePath("Passport_template", ".docx");
 
 
-
         using (var myDoc = XceedDocx.Load(templatePath))
         {
-
-
             XceedDocx resultDoc = null;
 
             foreach (var stand in project.Stands)
             {
                 var replacedTemplatedDoc = (XceedDocx)myDoc.Copy();
                 ReplaceTextInTemplate(replacedTemplatedDoc, stand);
-                resultDoc = (resultDoc == null) ? replacedTemplatedDoc : MergeDocuments(resultDoc, replacedTemplatedDoc);
+                resultDoc = resultDoc == null ? replacedTemplatedDoc : MergeDocuments(resultDoc, replacedTemplatedDoc);
             }
-
 
 
             //resultDoc может быть null — в таком случае сохраним пустую копию шаблона
@@ -64,23 +56,10 @@ public class PassportsGenerator : IReportGenerator
             }
             else
             {
-               
                 resultDoc.SaveAs(fullSavePath);
             }
-        
- 
         }
     }
-
-
-
-
-
-
-
-
-
-
 
 
     private XceedDocx ReplaceTextInTemplate(XceedDocx templateDoc, Stand stand)
@@ -89,8 +68,7 @@ public class PassportsGenerator : IReportGenerator
 
         foreach (var replacement in replacements)
         {
-
-            var options = new StringReplaceTextOptions()
+            var options = new StringReplaceTextOptions
             {
                 SearchValue = replacement.Key ?? string.Empty,
                 NewValue = replacement.Value ?? string.Empty,
@@ -102,7 +80,6 @@ public class PassportsGenerator : IReportGenerator
 
         return templateDoc;
     }
-
 
 
     private XceedDocx MergeDocuments(XceedDocx targetDocument, XceedDocx documentToAdd)

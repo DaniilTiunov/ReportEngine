@@ -84,7 +84,7 @@ public class FormedElectricalRepository : IFormedElectricalRepository
         _context.Set<ElectricalPurpose>().Remove(entity);
         await _context.SaveChangesAsync();
     }
-    
+
     public async Task AddPurposesAsync(IEnumerable<ElectricalPurpose> purposes, int componentId)
     {
         if (purposes == null) return;
@@ -102,6 +102,7 @@ public class FormedElectricalRepository : IFormedElectricalRepository
             };
             await _context.ElectricalPurposes.AddAsync(newPurpose);
         }
+
         await _context.SaveChangesAsync();
     }
 }
