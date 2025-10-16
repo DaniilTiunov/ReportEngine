@@ -1,4 +1,5 @@
-﻿using ReportEngine.Domain.Entities;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
@@ -47,6 +48,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
                 var replacedTemplatedDoc = (XceedDocx)myDoc.Copy();
                 ReplaceTextInTemplate(replacedTemplatedDoc, stand);
                 InsertBlueprintInTemplate(replacedTemplatedDoc, stand);
+                InsertTablesInTemplate(replacedTemplatedDoc, stand);
                 resultDoc = resultDoc == null ? replacedTemplatedDoc : MergeDocuments(resultDoc, replacedTemplatedDoc);
             }
 
@@ -118,7 +120,97 @@ public class TechnologicalCardsGenerator : IReportGenerator
 
     }
 
+    private void InsertTablesInTemplate(XceedDocx templateDoc, Stand stand)
+    {
+        string framesCollectionPrefix = "frames";
 
+        var framesCollectionPostfixs = new List<string>()
+        {
+            "size",
+            "doc_name",
+            "quantity"
+        };
+
+
+
+        //вытаскиваем все записи по рамам
+        var framesRecords = stand.StandFrames
+            .Select(frame => new Dictionary<string, string>()
+            {
+                { "size", frame.Frame.Width.ToString() },
+                { "doc_name", "N/A"},
+                { "quantity", "1"}
+            });
+
+
+
+        //группируем все записи по ключам в словарях
+        var gpoupedFrameRecords = framesRecords
+            .SelectMany(frameRecord => frameRecord)
+            .GroupBy(kvp => kvp.Key);
+
+
+
+
+        //формируем записи для каждой колонки таблицы
+        var columns = framesCollectionPostfixs
+            .Select(postfix => new
+            {
+                //добавляем полную текстовую метку
+                postfixMark = postfix,
+                fullMark = "{{" + $"{framesCollectionPrefix}.{postfix}" + "}}",
+            })
+            .Select(markInfo => new
+            {
+                //ищем место меток в документе
+                markInfo.postfixMark,
+                markInfo.fullMark,
+                placeToInsert = templateDoc.Paragraphs
+                    .Where(p => p.Text.Contains(markInfo.fullMark))
+                    .First()
+            })
+            .Select(column => new
+            {
+                //набиваем колонку данными
+                column.postfixMark,
+                column.fullMark,
+                column.placeToInsert,
+                columnData = gpoupedFrameRecords
+                        .First(group => group.Key == column.postfixMark)
+                        .Select(choicedGroup => choicedGroup.Value)
+            })
+            .Select(column => new { 
+
+                //склеиваем данные в единую строку для каждого столбца (опционально)
+                column.postfixMark,
+                column.fullMark,
+                column.placeToInsert,
+                dataToInsert = string.Join(Environment.NewLine,column.columnData)
+            });
+
+
+
+        foreach (var column in columns)
+        {
+
+            var options = new StringReplaceTextOptions
+            {
+                SearchValue = column.fullMark ?? string.Empty,
+                NewValue = column.dataToInsert ?? string.Empty,
+                EscapeRegEx = false
+            };
+
+
+            templateDoc.ReplaceText(options);
+
+
+        }
+
+
+
+
+
+    }
 
 
     private XceedDocx MergeDocuments(XceedDocx targetDocument, XceedDocx documentToAdd)
@@ -128,7 +220,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
         targetDocument.SaveAs(ms);
 
         // загружаем независимый экземпляр
-        var resultingDoc = XceedDocx.Load(ms); 
+        var resultingDoc = XceedDocx.Load(ms);
         resultingDoc.InsertDocument(documentToAdd);
 
         return resultingDoc;
