@@ -111,7 +111,7 @@
         <dragablz:TabablzControl
             x:Name="MainTabControl"
             Grid.Column="2"
-            Background="{DynamicResource PrimaryColor}"
+            Background="{DynamicResource SecondaryColor}"
             ConsolidateOrphanedItems="True"
             InterTabController="{StaticResource InterTabController}"
             ShowDefaultCloseButton="True" />

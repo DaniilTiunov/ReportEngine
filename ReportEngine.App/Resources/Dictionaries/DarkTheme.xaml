@@ -351,21 +351,37 @@
     </Style>
     <!--  Стили для TabItem  -->
     <Style TargetType="TabItem">
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
         <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
-        <Style.Triggers>
-            <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
-                <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
-                <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
-            </Trigger>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
-                <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
-                <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
-            </Trigger>
-        </Style.Triggers>
+        <Setter Property="Padding" Value="6,2"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TabItem">
+                    <Border Name="Border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="2,2,0,0"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter x:Name="ContentSite"
+                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="Center"
+                                          ContentSource="Header"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource PrimaryColor}"/>
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource PrimaryColor}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
     <!--  Стили для ContextMenu  -->
     <Style TargetType="ContextMenu">
