@@ -389,6 +389,18 @@
         <Page Update="Resources\Dictionaries\GigaChadUI.xaml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Page>
+        <Page Update="Resources\Dictionaries\BubbleGumTheme.xaml">
+          <Generator>MSBuild:Compile</Generator>
+          <XamlRuntime>Wpf</XamlRuntime>
+          <SubType>Designer</SubType>
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Page>
+        <Page Update="Resources\Dictionaries\MangoParadiseTheme.xaml">
+          <Generator>MSBuild:Compile</Generator>
+          <XamlRuntime>Wpf</XamlRuntime>
+          <SubType>Designer</SubType>
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Page>
     </ItemGroup>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Release'">

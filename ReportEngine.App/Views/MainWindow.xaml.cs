@@ -183,4 +183,14 @@ public partial class MainWindow : Window //Это так называемый "C
             });
         });
     }
+
+    private void MangoParadiseTheme(object sender, RoutedEventArgs e)
+    {
+        ChangesTheme("/Resources/Dictionaries/MangoParadiseTheme.xaml");
+    }
+
+    private void BubbleGumTheme(object sender, RoutedEventArgs e)
+    {
+        ChangesTheme("/Resources/Dictionaries/BubbleGumTheme.xaml");
+    }
 }
