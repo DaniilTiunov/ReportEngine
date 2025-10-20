@@ -1,10 +1,13 @@
-﻿using ReportEngine.Domain.Entities;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Spreadsheet;
+using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Export.Mapping;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
+using System.Security.Cryptography;
 using Xceed.Document.NET;
 using XceedDocx = Xceed.Words.NET.DocX;
 
@@ -46,6 +49,8 @@ public class TechnologicalCardsGenerator : IReportGenerator
             {
                 var replacedTemplatedDoc = (XceedDocx)myDoc.Copy();
                 ReplaceTextInTemplate(replacedTemplatedDoc, stand);
+                InsertBlueprintInTemplate(replacedTemplatedDoc, stand);
+                InsertTablesInTemplate(replacedTemplatedDoc, stand);
                 resultDoc = resultDoc == null ? replacedTemplatedDoc : MergeDocuments(resultDoc, replacedTemplatedDoc);
             }
 
@@ -64,7 +69,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
     }
 
 
-    private XceedDocx ReplaceTextInTemplate(XceedDocx templateDoc, Stand stand)
+    private void ReplaceTextInTemplate(XceedDocx templateDoc, Stand stand)
     {
         var replacements = TemplateMapper.GetPassportMapping(stand);
 
@@ -80,46 +85,146 @@ public class TechnologicalCardsGenerator : IReportGenerator
             templateDoc.ReplaceText(options);
         }
 
-        //меняем на картинку
+    }
+
+
+    private void InsertBlueprintInTemplate(XceedDocx templateDoc, Stand stand)
+    {
+        //ищем параграф с маркером
         var pictureMarker = "{{stand_blueprint}}";
 
         var findedParagraph = templateDoc.Paragraphs
             .Where(p => p.Text.Contains(pictureMarker))
             .First();
 
-
         //подгружаем картинку
         using (var imageMemoryStream = new MemoryStream(stand.ImageData))
         {
             var img = templateDoc.AddImage(imageMemoryStream);
             var picture = img.CreatePicture();
+            picture.Height = 400;
+            picture.Width = 230;
+
 
 
             findedParagraph.InsertPicture(picture);
         }
 
         //убираем текстовый маркер 
-        var opt = new StringReplaceTextOptions
+        var options = new StringReplaceTextOptions
         {
             SearchValue = pictureMarker,
             NewValue = "",
             EscapeRegEx = false
         };
 
-        findedParagraph.ReplaceText(opt);
+        findedParagraph.ReplaceText(options);
+
+    }
 
 
-        return templateDoc;
+
+
+
+
+    private void InsertTablesInTemplate(XceedDocx templateDoc, Stand stand)
+    {
+
+        string framesCollectionPrefix = "frames";
+
+        var framesCollectionPostfixs = new List<string>()
+        {
+            "size",
+            "doc_name",
+            "quantity"
+        };
+
+
+
+        //формируем все записи по рамам
+        var framesTableRecords = stand.StandFrames
+            .Select(frame => new Dictionary<string,string>()
+            {
+                {"size", frame.Frame.Width.ToString() },
+                {"doc_name", "\"N/A\"" },
+                {"quantity",  "1" }
+            });
+
+
+
+        //разворачиваем в колонки
+        var columns = new Dictionary<string, IEnumerable<string>>()
+        {
+            {"size",  framesTableRecords.Select(dict => dict["size"]) },
+            {"doc_name", framesTableRecords.Select(dict => dict["doc_name"]) },
+            {"quantity",  framesTableRecords.Select(dict => dict["quantity"]) }
+        };
+
+
+
+
+
+
+
+
+
+
+        var marksInfo = framesCollectionPostfixs
+            .Select(postfix => new
+            {
+                //добавляем полную текстовую метку
+                postfixMark = postfix,
+                fullMark = "{{" + $"{framesCollectionPrefix}.{postfix}" + "}}",
+            })
+            .Select(mark => new
+            {
+                //ищем место меток в документе
+                mark.postfixMark,
+                mark.fullMark,
+                placesToInsert = templateDoc.Paragraphs
+                    .Where(p => p.Text.Contains(mark.fullMark))
+            })
+            .Select(mark => new
+            {
+                mark.postfixMark,
+                mark.fullMark,
+                mark.placesToInsert,
+                data = columns
+                    .Where(dict => dict.Key == mark.postfixMark)
+                    .Select(dict => dict.Value)
+            });
+
+        foreach (var mark in marksInfo)
+        {
+            //заменяем текстовый маркер
+            var options = new StringReplaceTextOptions
+            {
+                SearchValue = mark.fullMark,
+                NewValue = string.Join(Environment.NewLine,mark.data.ToList()),
+                EscapeRegEx = false
+            };
+
+            //в каждом найденном месте меняем
+            foreach (var place in mark.placesToInsert)
+            {
+                place.ReplaceText(options);
+            }
+
+        }
+
     }
 
 
     private XceedDocx MergeDocuments(XceedDocx targetDocument, XceedDocx documentToAdd)
     {
+        // сериализуем targetDocument в поток
         using var ms = new MemoryStream();
-        targetDocument.SaveAs(ms); // сериализуем targetDocument в поток
+        targetDocument.SaveAs(ms);
 
-        var resultingDoc = XceedDocx.Load(ms); // загружаем независимый экземпляр
+        // загружаем независимый экземпляр
+        var resultingDoc = XceedDocx.Load(ms);
         resultingDoc.InsertDocument(documentToAdd);
+
         return resultingDoc;
     }
 }

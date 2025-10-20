@@ -41,6 +41,10 @@ public static class TemplateMapper
         };
     }
 
+
+
+
+
     private static string ByteToImage(byte[] bytes)
     {
         try
