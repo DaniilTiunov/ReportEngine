@@ -45,7 +45,9 @@ public class ObvyazkaInStand
     public int? OtherLineCount { get; set; } //Колво др. линий
     public float? Weight { get; set; } //Масса
     public float? HumanCost { get; set; } //Трудозатраты чел/час
+
     public string? ImageName { get; set; } //Название картинки
+
     // Датчики (до 3-х)
     public string? FirstSensorType { get; set; }
     public string? FirstSensorKKS { get; set; }

@@ -1,13 +1,13 @@
-﻿using Microsoft.WindowsAPICodePack.Dialogs;
+﻿using System.Diagnostics;
+using System.Windows;
+using System.Windows.Input;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
 using ReportEngine.Shared.Config.JsonHelpers;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -16,6 +16,14 @@ public class SettingsViewModel : BaseViewModel
     private readonly INotificationService _notificationService;
     private string _connectionString;
     private string _savereportPath;
+
+    public SettingsViewModel(INotificationService notificationService)
+    {
+        ApplySettingsCommand = new RelayCommand(ExecuteSaveCommand, _ => true);
+        OpenDialog = new RelayCommand(ExecuteOpenDialog, _ => true);
+
+        _notificationService = notificationService;
+    }
 
     public string SaveReportDirPath
     {
@@ -27,14 +35,6 @@ public class SettingsViewModel : BaseViewModel
     {
         get => _connectionString;
         set => Set(ref _connectionString, value);
-    }
-
-    public SettingsViewModel(INotificationService notificationService)
-    {
-        ApplySettingsCommand = new RelayCommand(ExecuteSaveCommand, _ => true);
-        OpenDialog = new RelayCommand(ExecuteOpenDialog, _ => true);
-
-        _notificationService = notificationService;
     }
 
     public ICommand ApplySettingsCommand { get; set; }

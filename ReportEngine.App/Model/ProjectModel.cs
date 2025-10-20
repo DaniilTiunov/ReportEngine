@@ -1,9 +1,9 @@
-﻿using ReportEngine.App.Model.StandsModel;
+﻿using System.Collections.ObjectModel;
+using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Enums;
 using ReportEngine.Shared.Helpers;
-using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Model;
 
@@ -27,8 +27,8 @@ public class ProjectModel : BaseViewModel
             Manager = Manager,
             Status = ComboBoxHelper.ComboBoxChangedValue<ProjectStatus>(Status),
             StartDate = DateOnly.FromDateTime(StartDate),
-            OutOfProduction = DateOnly.FromDateTime(OutOfProduction),
-            EndDate = DateOnly.FromDateTime(EndDate),
+            OutOfProduction = DateOnly.FromDateTime(OutOfProduction ?? DateTime.MinValue),
+            EndDate = DateOnly.FromDateTime(EndDate ?? DateTime.MinValue),
             OrderCustomer = OrderCustomer,
             RequestProduction = RequestProduction,
             MarkMinus = MarkMinus,
@@ -59,9 +59,9 @@ public class ProjectModel : BaseViewModel
 
     private DateTime _startDate; //Старта проекта
 
-    private DateTime _outOfProduction; //Выход из производства
+    private DateTime? _outOfProduction; //Выход из производства
 
-    private DateTime _endDate; //Окончание догвора
+    private DateTime? _endDate; //Окончание догвора
 
     private string? _orderCustomer; //Заказ покупателя
 
@@ -179,13 +179,13 @@ public class ProjectModel : BaseViewModel
         set => Set(ref _startDate, value);
     } //Старта проекта
 
-    public DateTime OutOfProduction
+    public DateTime? OutOfProduction
     {
         get => _outOfProduction;
         set => Set(ref _outOfProduction, value);
     } //Выход из производства
 
-    public DateTime EndDate
+    public DateTime? EndDate
     {
         get => _endDate;
         set => Set(ref _endDate, value);

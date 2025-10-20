@@ -1,7 +1,7 @@
-﻿using ReportEngine.Domain.Entities;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using ReportEngine.Domain.Entities;
 
 namespace ReportEngine.Export.Mapping;
 
@@ -40,9 +40,6 @@ public static class TemplateMapper
             //{ "stand_FrameDesign", standInfo?.StandFrames?.First()?.Frame?.Designe ?? "N/A" }
         };
     }
-
-
-
 
 
     private static string ByteToImage(byte[] bytes)

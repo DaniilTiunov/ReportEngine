@@ -1,6 +1,6 @@
-﻿using ReportEngine.App.ViewModels.CalculationSettings;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
+using ReportEngine.App.ViewModels.CalculationSettings;
 
 namespace ReportEngine.App.Views.Settings;
 

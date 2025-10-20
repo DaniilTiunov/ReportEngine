@@ -1,4 +1,7 @@
-﻿using ReportEngine.App.Display;
+﻿using System.Reflection;
+using System.Windows.Controls;
+using System.Windows.Data;
+using ReportEngine.App.Display;
 using ReportEngine.App.Model;
 using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
@@ -10,9 +13,6 @@ using ReportEngine.Domain.Entities.Frame;
 using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
-using System.Reflection;
-using System.Windows.Controls;
-using System.Windows.Data;
 
 namespace ReportEngine.App.ViewModels;
 

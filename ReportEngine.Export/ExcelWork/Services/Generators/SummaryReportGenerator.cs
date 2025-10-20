@@ -24,7 +24,6 @@ public class SummaryReportGenerator : ComponentListReportGenerator, IReportGener
     }
 
 
-
     protected override void CreateStandTableHeader(IXLWorksheet ws, Stand stand, XLAlignmentHorizontalValues alignment)
     {
         ws.Cell("A1").Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
@@ -60,12 +59,11 @@ public class SummaryReportGenerator : ComponentListReportGenerator, IReportGener
         var activeRow = 4;
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws, XLAlignmentHorizontalValues.Center);
-
-
-
     }
 
-    private int FillSubtableData(int startRow, List<(string exportDays, string name, string unit, string quantity, string costPerUnit, string totalCost)> items, IXLWorksheet ws,
+    private int FillSubtableData(int startRow,
+        List<(string exportDays, string name, string unit, string quantity, string costPerUnit, string totalCost)>
+            items, IXLWorksheet ws,
         XLAlignmentHorizontalValues alignment)
     {
         var currentRow = startRow;
