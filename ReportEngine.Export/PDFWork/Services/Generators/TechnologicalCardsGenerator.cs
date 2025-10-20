@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Spreadsheet;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
@@ -6,6 +7,7 @@ using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Export.Mapping;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
+using System.Security.Cryptography;
 using Xceed.Document.NET;
 using XceedDocx = Xceed.Words.NET.DocX;
 
@@ -109,19 +111,25 @@ public class TechnologicalCardsGenerator : IReportGenerator
         }
 
         //убираем текстовый маркер 
-        var opt = new StringReplaceTextOptions
+        var options = new StringReplaceTextOptions
         {
             SearchValue = pictureMarker,
             NewValue = "",
             EscapeRegEx = false
         };
 
-        findedParagraph.ReplaceText(opt);
+        findedParagraph.ReplaceText(options);
 
     }
 
+
+
+
+
+
     private void InsertTablesInTemplate(XceedDocx templateDoc, Stand stand)
     {
+
         string framesCollectionPrefix = "frames";
 
         var framesCollectionPostfixs = new List<string>()
@@ -133,82 +141,76 @@ public class TechnologicalCardsGenerator : IReportGenerator
 
 
 
-        //вытаскиваем все записи по рамам
-        var framesRecords = stand.StandFrames
-            .Select(frame => new Dictionary<string, string>()
+        //формируем все записи по рамам
+        var framesTableRecords = stand.StandFrames
+            .Select(frame => new Dictionary<string,string>()
             {
-                { "size", frame.Frame.Width.ToString() },
-                { "doc_name", "N/A"},
-                { "quantity", "1"}
+                {"size", frame.Frame.Width.ToString() },
+                {"doc_name", "\"N/A\"" },
+                {"quantity",  "1" }
             });
 
 
 
-        //группируем все записи по ключам в словарях
-        var gpoupedFrameRecords = framesRecords
-            .SelectMany(frameRecord => frameRecord)
-            .GroupBy(kvp => kvp.Key);
+        //разворачиваем в колонки
+        var columns = new Dictionary<string, IEnumerable<string>>()
+        {
+            {"size",  framesTableRecords.Select(dict => dict["size"]) },
+            {"doc_name", framesTableRecords.Select(dict => dict["doc_name"]) },
+            {"quantity",  framesTableRecords.Select(dict => dict["quantity"]) }
+        };
 
 
 
 
-        //формируем записи для каждой колонки таблицы
-        var columns = framesCollectionPostfixs
+
+
+
+
+
+
+        var marksInfo = framesCollectionPostfixs
             .Select(postfix => new
             {
                 //добавляем полную текстовую метку
                 postfixMark = postfix,
                 fullMark = "{{" + $"{framesCollectionPrefix}.{postfix}" + "}}",
             })
-            .Select(markInfo => new
+            .Select(mark => new
             {
                 //ищем место меток в документе
-                markInfo.postfixMark,
-                markInfo.fullMark,
-                placeToInsert = templateDoc.Paragraphs
-                    .Where(p => p.Text.Contains(markInfo.fullMark))
-                    .First()
+                mark.postfixMark,
+                mark.fullMark,
+                placesToInsert = templateDoc.Paragraphs
+                    .Where(p => p.Text.Contains(mark.fullMark))
             })
-            .Select(column => new
+            .Select(mark => new
             {
-                //набиваем колонку данными
-                column.postfixMark,
-                column.fullMark,
-                column.placeToInsert,
-                columnData = gpoupedFrameRecords
-                        .First(group => group.Key == column.postfixMark)
-                        .Select(choicedGroup => choicedGroup.Value)
-            })
-            .Select(column => new { 
-
-                //склеиваем данные в единую строку для каждого столбца (опционально)
-                column.postfixMark,
-                column.fullMark,
-                column.placeToInsert,
-                dataToInsert = string.Join(Environment.NewLine,column.columnData)
+                mark.postfixMark,
+                mark.fullMark,
+                mark.placesToInsert,
+                data = columns
+                    .Where(dict => dict.Key == mark.postfixMark)
+                    .Select(dict => dict.Value)
             });
 
-
-
-        foreach (var column in columns)
+        foreach (var mark in marksInfo)
         {
-
+            //заменяем текстовый маркер
             var options = new StringReplaceTextOptions
             {
-                SearchValue = column.fullMark ?? string.Empty,
-                NewValue = column.dataToInsert ?? string.Empty,
+                SearchValue = mark.fullMark,
+                NewValue = string.Join(Environment.NewLine,mark.data.ToList()),
                 EscapeRegEx = false
             };
 
-
-            templateDoc.ReplaceText(options);
-
+            //в каждом найденном месте меняем
+            foreach (var place in mark.placesToInsert)
+            {
+                place.ReplaceText(options);
+            }
 
         }
-
-
-
-
 
     }
 
