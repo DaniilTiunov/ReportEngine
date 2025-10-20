@@ -16,7 +16,7 @@ public class Obvyazka
     public int Sensor { get; set; } //Датчики
     public string SensorType { get; set; } //Тип датчиков
     public float Clamp { get; set; } //Хомуты
-    public float WidthOnFrame { get; set; } //Длина на раме
+    public float WidthOnFrame { get; set; } //Ширина на раме
     public int OtherLineCount { get; set; } //Колво др. линий
     public float Weight { get; set; } //Масса
     public float HumanCost { get; set; } //Трудозатраты чел/час

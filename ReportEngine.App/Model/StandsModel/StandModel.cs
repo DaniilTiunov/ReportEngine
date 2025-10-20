@@ -1,7 +1,7 @@
-﻿using ReportEngine.App.Model.FormedEquipsModels;
+﻿using System.Collections.ObjectModel;
+using ReportEngine.App.Model.FormedEquipsModels;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
-using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Model.StandsModel;
 
@@ -31,6 +31,7 @@ public class StandModel : BaseViewModel
 
     // Арматура стенда (текст)
     private string _armature;
+    private string? _armatureCostPerUnit;
     private float? _armatureCount;
     private string? _armatureMeasure;
 
@@ -88,11 +89,13 @@ public class StandModel : BaseViewModel
 
     // КМЧ
     private string _kmch;
+    private string? _kmchCostPerUnit;
     private float? _kmchCount;
     private string? _kmchMeasure;
 
     // Материал линии
     private string _materialLine;
+    private string _materialLineCostPerUnit;
     private float? _materialLineCount;
     private string? _materialLineMeasure;
 
@@ -173,6 +176,7 @@ public class StandModel : BaseViewModel
 
     // Тройник/разветвитель
     private string _treeScoket;
+    private string? _treeSocketMaterialCostPerUnit;
     private float? _treeSocketMaterialCount;
     private string? _treeSocketMaterialMeasure;
 
@@ -181,10 +185,6 @@ public class StandModel : BaseViewModel
 
     // Ширина стенда
     private float _width;
-    private string _materialLineCostPerUnit;
-    private string? _armatureCostPerUnit;
-    private string? _kmchCostPerUnit;
-    private string? _treeSocketMaterialCostPerUnit;
 
     public StandModel()
     {
@@ -333,11 +333,13 @@ public class StandModel : BaseViewModel
         get => _armatureCostPerUnit;
         set => Set(ref _armatureCostPerUnit, value);
     }
+
     public string? KMCHCostPerUnit
     {
         get => _kmchCostPerUnit;
         set => Set(ref _kmchCostPerUnit, value);
     }
+
     public string? TreeSocketMaterialCostPerUnit
     {
         get => _treeSocketMaterialCostPerUnit;

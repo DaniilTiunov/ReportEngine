@@ -157,7 +157,9 @@
         <Resource Include="Resources\Images\logo.png">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Resource>
-        <Content Include="Resources\Icons\estimate_cost_icon_213382_prev.ico"/>
+        <Content Include="Resources\Icons\estimate_cost_icon_213382_prev.ico">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         <Content Include="Resources\Images\Obvyazka\1.jpg">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
@@ -390,16 +392,16 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Page>
         <Page Update="Resources\Dictionaries\BubbleGumTheme.xaml">
-          <Generator>MSBuild:Compile</Generator>
-          <XamlRuntime>Wpf</XamlRuntime>
-          <SubType>Designer</SubType>
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Generator>MSBuild:Compile</Generator>
+            <XamlRuntime>Wpf</XamlRuntime>
+            <SubType>Designer</SubType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Page>
         <Page Update="Resources\Dictionaries\MangoParadiseTheme.xaml">
-          <Generator>MSBuild:Compile</Generator>
-          <XamlRuntime>Wpf</XamlRuntime>
-          <SubType>Designer</SubType>
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Generator>MSBuild:Compile</Generator>
+            <XamlRuntime>Wpf</XamlRuntime>
+            <SubType>Designer</SubType>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Page>
     </ItemGroup>
 

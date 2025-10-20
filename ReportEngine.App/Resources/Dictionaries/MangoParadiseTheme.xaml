@@ -1,22 +1,22 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- Манговый рай -->
-    <SolidColorBrush x:Key="PrimaryColor" Color="#2A1E1A"/>          <!-- глубокий коричнево-манговый -->
-    <SolidColorBrush x:Key="SecondaryColor" Color="#3B2924"/>        <!-- чуть светлее -->
-    <SolidColorBrush x:Key="AccentColor" Color="#FFB84C"/>           <!-- манговый акцент -->
-    <SolidColorBrush x:Key="BorderColor" Color="#4A3A2E"/>
-    <SolidColorBrush x:Key="RowHoverColor" Color="#4D362C"/>
-    <SolidColorBrush x:Key="SelectedRowBackground" Color="#FF9A3C"/>
-    <SolidColorBrush x:Key="SelectedRowForeground" Color="#1A1A1A"/>
-    <SolidColorBrush x:Key="PrimaryForeground" Color="#F5E8D0"/>
-    <SolidColorBrush x:Key="SecondaryForeground" Color="#DCC7A8"/>
-    <SolidColorBrush x:Key="WindowBorderColor" Color="#4A3A2E"/>
-    <SolidColorBrush x:Key="ButtonBackground" Color="#C97E28"/>
-    <SolidColorBrush x:Key="ButtonHoverBackground" Color="#D89132"/>
-    <SolidColorBrush x:Key="ButtonPressedBackground" Color="#EFAE45"/>
-    <SolidColorBrush x:Key="ButtonDisabledBackground" Color="#3B2924"/>
-    <SolidColorBrush x:Key="ButtonDisabledForeground" Color="#AA8865"/>
-    <SolidColorBrush x:Key="DisabledForeground" Color="#A58B6C"/>
+    <SolidColorBrush x:Key="PrimaryColor" Color="#2A1E1A" />          <!-- глубокий коричнево-манговый -->
+    <SolidColorBrush x:Key="SecondaryColor" Color="#3B2924" />        <!-- чуть светлее -->
+    <SolidColorBrush x:Key="AccentColor" Color="#FFB84C" />           <!-- манговый акцент -->
+    <SolidColorBrush x:Key="BorderColor" Color="#4A3A2E" />
+    <SolidColorBrush x:Key="RowHoverColor" Color="#4D362C" />
+    <SolidColorBrush x:Key="SelectedRowBackground" Color="#FF9A3C" />
+    <SolidColorBrush x:Key="SelectedRowForeground" Color="#1A1A1A" />
+    <SolidColorBrush x:Key="PrimaryForeground" Color="#F5E8D0" />
+    <SolidColorBrush x:Key="SecondaryForeground" Color="#DCC7A8" />
+    <SolidColorBrush x:Key="WindowBorderColor" Color="#4A3A2E" />
+    <SolidColorBrush x:Key="ButtonBackground" Color="#C97E28" />
+    <SolidColorBrush x:Key="ButtonHoverBackground" Color="#D89132" />
+    <SolidColorBrush x:Key="ButtonPressedBackground" Color="#EFAE45" />
+    <SolidColorBrush x:Key="ButtonDisabledBackground" Color="#3B2924" />
+    <SolidColorBrush x:Key="ButtonDisabledForeground" Color="#AA8865" />
+    <SolidColorBrush x:Key="DisabledForeground" Color="#A58B6C" />
 
     <!--  Стили для Window  -->
     <Style TargetType="Window">
@@ -259,7 +259,8 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border Background="{TemplateBinding Background}" CornerRadius="2" Padding="{TemplateBinding Padding}">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="2"
+                            Padding="{TemplateBinding Padding}">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Border>
                     <ControlTemplate.Triggers>
@@ -349,11 +350,11 @@
     </Style>
     <!--  Стили для TabItem  -->
     <Style TargetType="TabItem">
-        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
-        <Setter Property="Padding" Value="6,2"/>
+        <Setter Property="Padding" Value="6,2" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TabItem">
@@ -366,22 +367,22 @@
                         <ContentPresenter x:Name="ContentSite"
                                           VerticalAlignment="Center"
                                           HorizontalAlignment="Center"
-                                          ContentSource="Header"/>
+                                          ContentSource="Header" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource PrimaryColor}"/>
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource PrimaryColor}" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource BorderColor}" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource PrimaryColor}"/>
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource PrimaryColor}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <!--  Стили для ContextMenu  -->
     <Style TargetType="ContextMenu">
         <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />

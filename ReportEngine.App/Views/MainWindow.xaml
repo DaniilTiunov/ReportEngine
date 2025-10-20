@@ -138,7 +138,7 @@
                 <Separator />
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllCompaniesCommand}" Header="Заказчики" />
             </MenuItem>
-            <MenuItem Header="Сортаменты">
+            <MenuItem Header="Комплектующие">
                 <MenuItem Header="Сортамент труб">
                     <MenuItem Command="{Binding GenericEquipCommandProvider.OpenHeaterPipeCommand}"
                               Header="Жаропрочная сталь" />

@@ -1,10 +1,10 @@
-﻿using ReportEngine.App.AppHelpers;
-using ReportEngine.App.ViewModels;
-using ReportEngine.Shared.Config.DebugConsol;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using ReportEngine.App.AppHelpers;
+using ReportEngine.App.ViewModels;
+using ReportEngine.Shared.Config.DebugConsol;
 
 namespace ReportEngine.App.Views.Controls;
 
@@ -82,7 +82,7 @@ public partial class TreeProjectView : UserControl, IDisposable
             var tabItem = new TabItem
             {
                 Tag = tag,
-                Content = content,
+                Content = content
             };
 
             tabItem.Header = CreaterTabItemHeader(header, tabItem);

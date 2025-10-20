@@ -1,14 +1,15 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.Display;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Repositories.Interfaces;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 
 namespace ReportEngine.App.Services;
+
 /// <summary>
 ///     Фабрика для создания окон, отображающих типовое оборудование.
 /// </summary>
