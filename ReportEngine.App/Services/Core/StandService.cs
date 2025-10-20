@@ -1,8 +1,8 @@
-﻿using System.Collections.ObjectModel;
-using ReportEngine.App.Model.StandsModel;
+﻿using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
+using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Services.Core;
 
@@ -212,15 +212,19 @@ public class StandService : IStandService
             MaterialLine = standModel.MaterialLine,
             MaterialLineCount = standModel.MaterialLineCount,
             MaterialLineMeasure = standModel.MaterialLineMeasure,
+            MaterialLineCostPerUnit = standModel.MaterialLineCostPerUnit,
             Armature = standModel.Armature,
             ArmatureCount = standModel.ArmatureCount,
             ArmatureMeasure = standModel.ArmatureMeasure,
+            ArmatureCostPerUnit = standModel.ArmatureCostPerUnit,
             TreeSocket = standModel.TreeSocket,
             TreeSocketMaterialCount = standModel.TreeSocketMaterialCount,
             TreeSocketMaterialMeasure = standModel.TreeSocketMaterialMeasure,
+            TreeSocketMaterialCostPerUnit = standModel.TreeSocketMaterialCostPerUnit,
             KMCH = standModel.KMCH,
             KMCHCount = standModel.KMCHCount,
             KMCHMeasure = standModel.KMCHMeasure,
+            KMCHCostPerUnit = standModel.KMCHCostPerUnit,
             FirstSensorType = standModel.FirstSensorType,
             FirstSensorKKS = standModel.FirstSensorKKS,
             FirstSensorMarkPlus = standModel.FirstSensorMarkPlus,
@@ -259,6 +263,11 @@ public class StandService : IStandService
         stand.KMCH = obv.KMCH;
         stand.KMCHCount = obv.KMCHCount;
         stand.KMCHMeasure = obv.KMCHMeasure;
+
+        stand.MaterialLineCostPerUnit = obv.MaterialLineCostPerUnit;
+        stand.TreeSocketMaterialCostPerUnit = obv.TreeSocketMaterialCostPerUnit;
+        stand.KMCHCostPerUnit = obv.KMCHCostPerUnit;
+        stand.ArmatureCostPerUnit = obv.ArmatureCostPerUnit;
 
         stand.FirstSensorType = obv.FirstSensorType;
         stand.FirstSensorKKS = obv.FirstSensorKKS;

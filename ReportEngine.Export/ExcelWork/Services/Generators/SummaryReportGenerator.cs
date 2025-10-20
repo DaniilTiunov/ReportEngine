@@ -23,6 +23,8 @@ public class SummaryReportGenerator : ComponentListReportGenerator, IReportGener
         await base.GenerateAsync(projectId);
     }
 
+
+
     protected override void CreateStandTableHeader(IXLWorksheet ws, Stand stand, XLAlignmentHorizontalValues alignment)
     {
         ws.Cell("A1").Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
@@ -50,6 +52,40 @@ public class SummaryReportGenerator : ComponentListReportGenerator, IReportGener
         ws.Cells("F3").Value = "Цена руб.";
         ws.Cells("F3").Style.Font.Bold = true;
         ws.Cells("F3").Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
+    }
+
+    protected override void FillStandTable(IXLWorksheet ws, Stand stand)
+    {
+        var standData = GetStandReportData(stand);
+        var activeRow = 4;
+
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws, XLAlignmentHorizontalValues.Center);
+
+
+
+    }
+
+    private int FillSubtableData(int startRow, List<(string exportDays, string name, string unit, string quantity, string costPerUnit, string totalCost)> items, IXLWorksheet ws,
+        XLAlignmentHorizontalValues alignment)
+    {
+        var currentRow = startRow;
+        foreach (var item in items)
+        {
+            ws.Cell($"A{currentRow}").Value = item.exportDays;
+            ws.Cell($"B{currentRow}").Value = item.name;
+            ws.Cell($"C{currentRow}").Value = item.unit;
+            ws.Cell($"D{currentRow}").Value = item.quantity;
+            ws.Cell($"E{currentRow}").Value = item.costPerUnit;
+            ws.Cell($"F{currentRow}").Value = item.totalCost;
+
+            ws.Cell($"B{currentRow}").Style.Alignment.Horizontal = alignment;
+            ws.Cell($"C{currentRow}").Style.Alignment.Horizontal = alignment;
+            ws.Cell($"D{currentRow}").Style.Alignment.Horizontal = alignment;
+
+            currentRow++;
+        }
+
+        return currentRow;
     }
 
     protected override string GetReportFileName()

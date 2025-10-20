@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ReportEngine.Domain.Database.Context;
@@ -11,9 +12,11 @@ using ReportEngine.Domain.Database.Context;
 namespace ReportEngine.Domain.Migrations
 {
     [DbContext(typeof(ReAppContext))]
-    partial class ReAppContextModelSnapshot : ModelSnapshot
+    [Migration("20251020055320_UpdateCostObv")]
+    partial class UpdateCostObv
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1053,7 +1056,7 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("ArmatureMeasure")
                         .HasColumnType("text");
 
-                    b.Property<float?>("Clamp")
+                    b.Property<float>("Clamp")
                         .HasColumnType("real");
 
                     b.Property<string>("FirstSensorDescription")
@@ -1071,10 +1074,11 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("FirstSensorType")
                         .HasColumnType("text");
 
-                    b.Property<float?>("HumanCost")
+                    b.Property<float>("HumanCost")
                         .HasColumnType("real");
 
                     b.Property<string>("ImageName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("KMCH")
@@ -1089,7 +1093,7 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("KMCHMeasure")
                         .HasColumnType("text");
 
-                    b.Property<float?>("LineLength")
+                    b.Property<float>("LineLength")
                         .HasColumnType("real");
 
                     b.Property<string>("MaterialLine")
@@ -1113,7 +1117,7 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("ObvyazkaName")
                         .HasColumnType("text");
 
-                    b.Property<int?>("OtherLineCount")
+                    b.Property<int>("OtherLineCount")
                         .HasColumnType("integer");
 
                     b.Property<string>("SecondSensorDescription")
@@ -1131,10 +1135,11 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("SecondSensorType")
                         .HasColumnType("text");
 
-                    b.Property<int?>("Sensor")
+                    b.Property<int>("Sensor")
                         .HasColumnType("integer");
 
                     b.Property<string>("SensorType")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("StandId")
@@ -1158,7 +1163,7 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("TreeSocket")
                         .HasColumnType("text");
 
-                    b.Property<float?>("TreeSocketCount")
+                    b.Property<float>("TreeSocketCount")
                         .HasColumnType("real");
 
                     b.Property<string>("TreeSocketMaterialCostPerUnit")
@@ -1170,13 +1175,13 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("TreeSocketMaterialMeasure")
                         .HasColumnType("text");
 
-                    b.Property<float?>("Weight")
+                    b.Property<float>("Weight")
                         .HasColumnType("real");
 
-                    b.Property<float?>("WidthOnFrame")
+                    b.Property<float>("WidthOnFrame")
                         .HasColumnType("real");
 
-                    b.Property<float?>("ZraCount")
+                    b.Property<float>("ZraCount")
                         .HasColumnType("real");
 
                     b.HasKey("Id");

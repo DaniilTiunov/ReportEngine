@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Diagnostics;
-using ReportEngine.App.AppHelpers;
+﻿using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Commands.Providers;
 using ReportEngine.App.Model;
@@ -17,6 +15,8 @@ using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -90,17 +90,20 @@ public class ProjectViewModel : BaseViewModel
             case "Жаропрочные":
                 SelectEquipment<HeaterPipe>(
                     name => CurrentProjectModel.SelectedStand.MaterialLine = name,
-                    measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure);
+                    measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
+                    cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost);
                 break;
             case "Нержавеющие":
                 SelectEquipment<StainlessPipe>(
                     name => CurrentProjectModel.SelectedStand.MaterialLine = name,
-                    measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure);
+                    measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
+                    cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost);
                 break;
             case "Углеродистые":
                 SelectEquipment<CarbonPipe>(
                     name => CurrentProjectModel.SelectedStand.MaterialLine = name,
-                    measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure);
+                    measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
+                    cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost);
                 break;
         }
     }
@@ -112,17 +115,20 @@ public class ProjectViewModel : BaseViewModel
             case "Жаропрочные":
                 SelectEquipment<HeaterArmature>(
                     name => CurrentProjectModel.SelectedStand.Armature = name,
-                    measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure);
+                    measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
+                    cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost);
                 break;
             case "Нержавеющие":
                 SelectEquipment<StainlessArmature>(
                     name => CurrentProjectModel.SelectedStand.Armature = name,
-                    measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure);
+                    measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
+                    cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost);
                 break;
             case "Углеродистые":
                 SelectEquipment<CarbonArmature>(
                     name => CurrentProjectModel.SelectedStand.Armature = name,
-                    measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure);
+                    measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
+                    cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost);
                 break;
         }
     }
@@ -134,17 +140,20 @@ public class ProjectViewModel : BaseViewModel
             case "Жаропрочные":
                 SelectEquipment<HeaterSocket>(
                     name => CurrentProjectModel.SelectedStand.TreeSocket = name,
-                    measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure);
+                    measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
+                    cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost);
                 break;
             case "Нержавеющие":
                 SelectEquipment<StainlessSocket>(
                     name => CurrentProjectModel.SelectedStand.TreeSocket = name,
-                    measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure);
+                    measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
+                    cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost);
                 break;
             case "Углеродистые":
                 SelectEquipment<CarbonSocket>(
                     name => CurrentProjectModel.SelectedStand.TreeSocket = name,
-                    measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure);
+                    measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
+                    cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost);
                 break;
         }
     }
@@ -156,17 +165,20 @@ public class ProjectViewModel : BaseViewModel
             case "Жаропрочные":
                 SelectEquipment<HeaterSocket>(
                     name => CurrentProjectModel.SelectedStand.KMCH = name,
-                    measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure);
+                    measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
+                    cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost);
                 break;
             case "Нержавеющие":
                 SelectEquipment<StainlessSocket>(
                     name => CurrentProjectModel.SelectedStand.KMCH = name,
-                    measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure);
+                    measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
+                    cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost);
                 break;
             case "Углеродистые":
                 SelectEquipment<CarbonSocket>(
                     name => CurrentProjectModel.SelectedStand.KMCH = name,
-                    measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure);
+                    measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
+                    cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost);
                 break;
         }
     }
@@ -778,7 +790,7 @@ public class ProjectViewModel : BaseViewModel
         CurrentStandModel = new StandModel();
     }
 
-    private void SelectEquipment<T>(Action<string> setProperty, Action<string> setMeasure)
+    private void SelectEquipment<T>(Action<string> setProperty, Action<string> setMeasure, Action<string> setCost)
         where T : class, IBaseEquip, new()
     {
         ExceptionHelper.SafeExecute(() =>
@@ -788,6 +800,7 @@ public class ProjectViewModel : BaseViewModel
             {
                 setProperty(equipment.Name);
                 setMeasure(equipment.Measure);
+                setCost(equipment.Cost.ToString());
             }
         });
     }

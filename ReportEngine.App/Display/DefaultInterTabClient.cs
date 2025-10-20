@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using Dragablz;
+﻿using Dragablz;
+using System.Windows;
 
 namespace ReportEngine.App.Display;
 
@@ -20,7 +20,7 @@ public class DefaultInterTabClient : IInterTabClient
         // Создаём TabablzControl внутри нового окна
         var tabablz = new TabablzControl
         {
-            ShowDefaultCloseButton = true
+            ShowDefaultCloseButton = true,
         };
 
         // Создаём InterTabController и привязываем к тому же interTabClient

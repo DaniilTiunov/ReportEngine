@@ -1,11 +1,11 @@
-﻿using System.Diagnostics;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Generators.DTO;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
+using System.Diagnostics;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -350,7 +350,7 @@ public class ComponentListReportGenerator : IReportGenerator
             {
                 name = obv.MaterialLine,
                 units = obv.MaterialLineMeasure,
-                length = obv.MaterialLineCount
+                length = obv.MaterialLineCount,
             })
             .GroupBy(pipe => pipe.name)
             .Select(group => (
@@ -500,7 +500,7 @@ public class ComponentListReportGenerator : IReportGenerator
     }
 
     //Заполняет подтаблицу и возвращает следующую строку
-    private int FillSubtableData(int startRow, List<(string name, string unit, string quantity)> items, IXLWorksheet ws,
+    protected virtual int FillSubtableData(int startRow, List<(string name, string unit, string quantity)> items, IXLWorksheet ws,
         XLAlignmentHorizontalValues alignment)
     {
         var currentRow = startRow;

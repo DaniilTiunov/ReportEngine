@@ -1,7 +1,7 @@
-﻿using System.Collections.ObjectModel;
-using ReportEngine.App.Model.FormedEquipsModels;
+﻿using ReportEngine.App.Model.FormedEquipsModels;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
+using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Model.StandsModel;
 
@@ -181,6 +181,10 @@ public class StandModel : BaseViewModel
 
     // Ширина стенда
     private float _width;
+    private string _materialLineCostPerUnit;
+    private string? _armatureCostPerUnit;
+    private string? _kmchCostPerUnit;
+    private string? _treeSocketMaterialCostPerUnit;
 
     public StandModel()
     {
@@ -316,6 +320,28 @@ public class StandModel : BaseViewModel
     {
         get => _materialLineMeasure;
         set => Set(ref _materialLineMeasure, value);
+    }
+
+    public string? MaterialLineCostPerUnit
+    {
+        get => _materialLineCostPerUnit;
+        set => Set(ref _materialLineCostPerUnit, value);
+    }
+
+    public string? ArmatureCostPerUnit
+    {
+        get => _armatureCostPerUnit;
+        set => Set(ref _armatureCostPerUnit, value);
+    }
+    public string? KMCHCostPerUnit
+    {
+        get => _kmchCostPerUnit;
+        set => Set(ref _kmchCostPerUnit, value);
+    }
+    public string? TreeSocketMaterialCostPerUnit
+    {
+        get => _treeSocketMaterialCostPerUnit;
+        set => Set(ref _treeSocketMaterialCostPerUnit, value);
     }
 
     // Арматура
