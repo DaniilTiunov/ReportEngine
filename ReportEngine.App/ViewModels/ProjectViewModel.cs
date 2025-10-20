@@ -218,6 +218,8 @@ public class ProjectViewModel : BaseViewModel
     public async void OnSaveObvCommandExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(AddObvToStandAsync);
+
+        CurrentProjectModel.SelectedStand = null;
     }
 
     public async void OnRemoveObvCommandExecuted(object e)
