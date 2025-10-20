@@ -1,11 +1,10 @@
-﻿using System.Windows;
+﻿using ReportEngine.App.AppHelpers;
+using ReportEngine.App.ViewModels;
+using ReportEngine.Shared.Config.DebugConsol;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using DocumentFormat.OpenXml.Presentation;
-using ReportEngine.App.AppHelpers;
-using ReportEngine.App.ViewModels;
-using ReportEngine.Shared.Config.DebugConsol;
 
 namespace ReportEngine.App.Views.Controls;
 
@@ -84,12 +83,10 @@ public partial class TreeProjectView : UserControl, IDisposable
             {
                 Tag = tag,
                 Content = content,
-                OverridesDefaultStyle = true,
-                Style = FindResource(typeof(TabItem)) as Style,
             };
-            
+
             tabItem.Header = CreaterTabItemHeader(header, tabItem);
-            
+
             MainTabControl.Items.Add(tabItem);
             MainTabControl.SelectedItem = tabItem;
         });
@@ -129,7 +126,7 @@ public partial class TreeProjectView : UserControl, IDisposable
             Orientation = Orientation.Horizontal,
             Margin = new Thickness(0, 0, 0, 0)
         };
-        
+
         var headerText = new TextBlock
         {
             Text = headerName,
@@ -138,7 +135,7 @@ public partial class TreeProjectView : UserControl, IDisposable
             FontSize = 16,
             FontFamily = new FontFamily("Bahnschrift")
         };
-        
+
         var closeButton = new Button
         {
             Content = "✕",

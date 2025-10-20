@@ -21,29 +21,31 @@ public class ObvyazkaInStand
     public string? MaterialLine { get; set; }
     public float? MaterialLineCount { get; set; }
     public string? MaterialLineMeasure { get; set; }
+    public string? MaterialLineCostPerUnit { get; set; }
     public string? TreeSocket { get; set; }
     public float? TreeSocketMaterialCount { get; set; }
     public string? TreeSocketMaterialMeasure { get; set; }
+    public string? TreeSocketMaterialCostPerUnit { get; set; }
     public string? KMCH { get; set; }
     public float? KMCHCount { get; set; }
     public string? KMCHMeasure { get; set; }
+    public string? KMCHCostPerUnit { get; set; }
     public string? Armature { get; set; }
     public float? ArmatureCount { get; set; }
     public string? ArmatureMeasure { get; set; }
+    public string? ArmatureCostPerUnit { get; set; }
     public int? NN { get; set; }
-
-    public float LineLength { get; set; } // Длина линии
-    public float ZraCount { get; set; } //Количество ЗРА
-    public float TreeSocketCount { get; set; } //Кол-во тройников
-    public int Sensor { get; set; } //Датчики
-    public string SensorType { get; set; } //Тип датчиков
-    public float Clamp { get; set; } //Хомуты
-    public float WidthOnFrame { get; set; } //Длина на раме
-    public int OtherLineCount { get; set; } //Колво др. линий
-    public float Weight { get; set; } //Масса
-    public float HumanCost { get; set; } //Трудозатраты чел/час
-    public string ImageName { get; set; } //Название картинки
-
+    public float? LineLength { get; set; } // Длина линии
+    public float? ZraCount { get; set; } //Количество ЗРА
+    public float? TreeSocketCount { get; set; } //Кол-во тройников
+    public int? Sensor { get; set; } //Датчики
+    public string? SensorType { get; set; } //Тип датчиков
+    public float? Clamp { get; set; } //Хомуты
+    public float? WidthOnFrame { get; set; } //Длина на раме
+    public int? OtherLineCount { get; set; } //Колво др. линий
+    public float? Weight { get; set; } //Масса
+    public float? HumanCost { get; set; } //Трудозатраты чел/час
+    public string? ImageName { get; set; } //Название картинки
     // Датчики (до 3-х)
     public string? FirstSensorType { get; set; }
     public string? FirstSensorKKS { get; set; }

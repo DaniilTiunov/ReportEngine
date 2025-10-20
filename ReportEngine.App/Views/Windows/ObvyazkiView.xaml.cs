@@ -1,6 +1,6 @@
-﻿using System.Windows;
+﻿using ReportEngine.App.ViewModels;
+using System.Windows;
 using System.Windows.Input;
-using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Views.Windows;
 
