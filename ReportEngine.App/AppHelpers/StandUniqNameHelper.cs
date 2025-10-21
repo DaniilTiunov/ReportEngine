@@ -6,26 +6,20 @@ public static class StandUniqNameHelper
 {
     public static string SetUniqNameForStand(StandModel standModel)
     {
-        var standSerialNumber = standModel.SerialNumber; // например "Эп.25-02.222"
+        var standSerialNumber = standModel.SerialNumber; // например "25-02.222"
 
-        // Выделяем префикс (всё до первой цифры)
-        var firstDigitIndex = standSerialNumber.IndexOfAny("0123456789".ToCharArray());
-        var prefix = firstDigitIndex > 0 ? standSerialNumber.Substring(0, firstDigitIndex) : "";
-        var baseAndNumber = standSerialNumber.Substring(firstDigitIndex); // "25-02.222"
-
-        // Разделяем на базовую часть и числовой суффикс
-        var parts = baseAndNumber.Split('.');
+        var parts = standSerialNumber.Split('.');
         if (parts.Length != 2)
             throw new Exception("Некорректный формат серийного номера");
 
         var baseName = parts[0]; // "25-02"
-        if (!int.TryParse(parts[1], out var number))
+
+        if (!int.TryParse(parts[1], out var currentNumber))
             throw new Exception("Некорректный числовой суффикс");
 
         // Увеличиваем номер
-        number++;
+        var nextNumber = currentNumber + 1;
 
-        // Формируем новый серийный номер
-        return $"{prefix}{baseName}.{number}";
+        return $"{baseName}.{nextNumber:D3}";
     }
 }

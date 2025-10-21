@@ -22,207 +22,413 @@
 
         <!--  Форма редактирования стенда  -->
         <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="40" />
-            </Grid.RowDefinitions>
+            <GroupBox Grid.Row="0">
+                <GroupBox.Header>
+                    <TextBlock>
+                        <Run
+                            FontSize="16"
+                            FontWeight="Bold"
+                            Text="Добавление нового стенда в проект" />
+                    </TextBlock>
+                </GroupBox.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="40" />
+                    </Grid.RowDefinitions>
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="160" />
-                <ColumnDefinition Width="200" />
-                <ColumnDefinition Width="160" />
-                <ColumnDefinition Width="200" />
-            </Grid.ColumnDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="200" />
+                    </Grid.ColumnDefinitions>
 
-            <!--  № п/п и KKS-код стенда  -->
-            <TextBlock
-                Grid.Row="0"
-                Grid.Column="0"
-                Margin="0,5"
-                VerticalAlignment="Center"
-                Text="№ п/п:" />
-            <TextBox
-                Grid.Row="0"
-                Grid.Column="1"
-                Width="50"
-                Margin="0,5,150,5"
-                Text="{Binding CurrentStandModel.Number, Mode=TwoWay}" />
-            <TextBlock
-                Grid.Row="0"
-                Grid.Column="2"
-                Margin="10,5,0,5"
-                VerticalAlignment="Center"
-                Text="KKS-код стенда:" />
-            <TextBox
-                Grid.Row="0"
-                Grid.Column="3"
-                Margin="0,5"
-                Text="{Binding CurrentStandModel.KKSCode, Mode=TwoWay}" />
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Margin="0,5"
+                        VerticalAlignment="Center"
+                        Text="№ п/п:" />
+                    <TextBox
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Width="50"
+                        Margin="0,5,150,5"
+                        Text="{Binding CurrentStandModel.Number, Mode=TwoWay}" />
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Margin="10,5,0,5"
+                        VerticalAlignment="Center"
+                        Text="KKS-код стенда:" />
+                    <TextBox
+                        Grid.Row="0"
+                        Grid.Column="3"
+                        Margin="0,5"
+                        Text="{Binding CurrentStandModel.KKSCode, Mode=TwoWay}" />
 
-            <!--  Обозначение стенда  -->
-            <TextBlock
-                Grid.Row="1"
-                Grid.Column="0"
-                Margin="0,5"
-                VerticalAlignment="Center"
-                Text="Обозначение стенда:" />
-            <TextBox
-                Grid.Row="1"
-                Grid.Column="1"
-                Grid.ColumnSpan="3"
-                Margin="0,5"
-                Text="{Binding CurrentStandModel.Design, Mode=TwoWay}" />
+                    <!--  Обозначение стенда  -->
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Margin="0,5"
+                        VerticalAlignment="Center"
+                        Text="Обозначение стенда:" />
+                    <TextBox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Grid.ColumnSpan="3"
+                        Margin="0,5"
+                        Text="{Binding CurrentStandModel.Design, Mode=TwoWay}" />
 
-            <!--  Приборы и чекбокс  -->
-            <TextBlock
-                Grid.Row="2"
-                Grid.Column="0"
-                Margin="0,5"
-                VerticalAlignment="Center"
-                Text="Приборы:" />
-            <TextBox
-                Grid.Row="2"
-                Grid.Column="1"
-                Width="50"
-                Margin="0,5,150,5"
-                Text="{Binding CurrentStandModel.Devices, Mode=TwoWay}" />
+                    <!--  Приборы и чекбокс  -->
+                    <TextBlock
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Margin="0,5"
+                        VerticalAlignment="Center"
+                        Text="Приборы:" />
+                    <TextBox
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Width="50"
+                        Margin="0,5,150,5"
+                        Text="{Binding CurrentStandModel.Devices, Mode=TwoWay}" />
 
-            <!--  Тип крепления датчика + кнопка  -->
-            <TextBlock
-                Grid.Row="3"
-                Grid.Column="0"
-                Margin="0,5"
-                VerticalAlignment="Center"
-                Text="Тип крепления датчика:" />
-            <ComboBox
-                Grid.Row="3"
-                Grid.Column="1"
-                Margin="0,5"
-                ItemsSource="{Binding CurrentStandModel.BraceSensor}"
-                SelectedItem="{Binding CurrentStandModel.BraceType, Mode=TwoWay}" />
+                    <!--  Тип крепления датчика + кнопка  -->
+                    <TextBlock
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        Margin="0,5"
+                        VerticalAlignment="Center"
+                        Text="Тип крепления датчика:" />
+                    <ComboBox
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        Margin="0,5"
+                        ItemsSource="{Binding CurrentStandModel.BraceSensor}"
+                        SelectedItem="{Binding CurrentStandModel.BraceType, Mode=TwoWay}" />
 
-            <TextBlock
-                Grid.Row="4"
-                Grid.Column="2"
-                Margin="10,5,0,5"
-                VerticalAlignment="Center"
-                Text="Ширина:" />
-            <TextBox
-                Grid.Row="4"
-                Grid.Column="3"
-                Width="100"
-                Margin="0,5,100,5"
-                Text="{Binding CurrentStandModel.Width, Mode=TwoWay}" />
+                    <TextBlock
+                        Grid.Row="4"
+                        Grid.Column="2"
+                        Margin="10,5,0,5"
+                        VerticalAlignment="Center"
+                        Text="Ширина:" />
+                    <TextBox
+                        Grid.Row="4"
+                        Grid.Column="3"
+                        Width="100"
+                        Margin="0,5,100,5"
+                        Text="{Binding CurrentStandModel.Width, Mode=TwoWay}" />
 
-            <!--  Серийный номер  -->
-            <TextBlock
-                Grid.Row="5"
-                Grid.Column="0"
-                Margin="0,5"
-                VerticalAlignment="Center"
-                Text="Серийный номер:" />
-            <TextBox
-                Grid.Row="5"
-                Grid.Column="1"
-                Grid.ColumnSpan="3"
-                Margin="0,5"
-                Text="{Binding CurrentStandModel.SerialNumber, Mode=TwoWay}" />
+                    <!--  Серийный номер  -->
+                    <TextBlock
+                        Grid.Row="5"
+                        Grid.Column="0"
+                        Margin="0,5"
+                        VerticalAlignment="Center"
+                        Text="Серийный номер:" />
+                    <TextBox
+                        Grid.Row="5"
+                        Grid.Column="1"
+                        Grid.ColumnSpan="3"
+                        Margin="0,5"
+                        Text="{Binding CurrentStandModel.SerialNumber, Mode=TwoWay}" />
 
-            <!--  Масса  -->
-            <TextBlock
-                Grid.Row="6"
-                Grid.Column="0"
-                Margin="0,5"
-                VerticalAlignment="Center"
-                Text="Масса:" />
-            <TextBox
-                Grid.Row="6"
-                Grid.Column="1"
-                Width="100"
-                Margin="0,5,100,5"
-                Text="{Binding CurrentStandModel.Weight, Mode=TwoWay}" />
+                    <!--  Масса  -->
+                    <TextBlock
+                        Grid.Row="6"
+                        Grid.Column="0"
+                        Margin="0,5"
+                        VerticalAlignment="Center"
+                        Text="Масса:" />
+                    <TextBox
+                        Grid.Row="6"
+                        Grid.Column="1"
+                        Width="100"
+                        Margin="0,5,100,5"
+                        Text="{Binding CurrentStandModel.Weight, Mode=TwoWay}" />
 
-            <!--  Сумма стенда  -->
-            <TextBlock
-                Grid.Row="7"
-                Grid.Column="0"
-                Margin="0,5"
-                VerticalAlignment="Center"
-                Text="Сумма стенда:" />
-            <TextBox
-                Grid.Row="7"
-                Grid.Column="1"
-                Width="100"
-                Margin="0,5,100,5"
-                Text="{Binding CurrentStandModel.StandSummCost, Mode=TwoWay}" />
+                    <!--  Сумма стенда  -->
+                    <TextBlock
+                        Grid.Row="7"
+                        Grid.Column="0"
+                        Margin="0,5"
+                        VerticalAlignment="Center"
+                        Text="Сумма стенда:" />
+                    <TextBox
+                        Grid.Row="7"
+                        Grid.Column="1"
+                        Width="100"
+                        Margin="0,5,100,5"
+                        Text="{Binding CurrentStandModel.StandSummCost, Mode=TwoWay}" />
 
-            <!--  Комментарии  -->
-            <TextBlock
-                Grid.Row="9"
-                Grid.Column="0"
-                Margin="0,5"
-                VerticalAlignment="Center"
-                Text="Комментарии:" />
-            <TextBox
-                Grid.Row="9"
-                Grid.Column="1"
-                Grid.ColumnSpan="3"
-                Margin="0,5"
-                Text="{Binding CurrentStandModel.Comments, Mode=TwoWay}" />
+                    <!--  Комментарии  -->
+                    <TextBlock
+                        Grid.Row="9"
+                        Grid.Column="0"
+                        Margin="0,5"
+                        VerticalAlignment="Center"
+                        Text="Комментарии:" />
+                    <TextBox
+                        Grid.Row="9"
+                        Grid.Column="1"
+                        Grid.ColumnSpan="3"
+                        Margin="0,5"
+                        Text="{Binding CurrentStandModel.Comments, Mode=TwoWay}" />
 
-            <!--  Примечание  -->
-            <TextBlock
-                Grid.Row="10"
-                Grid.Column="0"
-                Margin="0,5"
-                VerticalAlignment="Top"
-                Text="Примечание:" />
-            <TextBox
-                Grid.Row="10"
-                Grid.Column="1"
-                Grid.ColumnSpan="3"
-                Height="100"
-                Margin="0,5"
-                AcceptsReturn="True"
-                Text="{Binding CurrentStandModel.DesignStand, Mode=TwoWay}"
-                TextWrapping="Wrap" />
+                    <!--  Примечание  -->
+                    <TextBlock
+                        Grid.Row="10"
+                        Grid.Column="0"
+                        Margin="0,5"
+                        VerticalAlignment="Top"
+                        Text="Примечание:" />
+                    <TextBox
+                        Grid.Row="10"
+                        Grid.Column="1"
+                        Grid.ColumnSpan="3"
+                        Height="100"
+                        Margin="0,5"
+                        AcceptsReturn="True"
+                        Text="{Binding CurrentStandModel.DesignStand, Mode=TwoWay}"
+                        TextWrapping="Wrap" />
 
-            <!--  Кнопки управления  -->
-            <StackPanel
-                Grid.Row="11"
-                Grid.Column="0"
-                Grid.ColumnSpan="4"
-                Margin="0,10,0,0"
-                HorizontalAlignment="Right"
-                Orientation="Horizontal">
+                    <!--  Кнопки управления  -->
+                    <StackPanel
+                        Grid.Row="11"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="4"
+                        Margin="0,10,0,0"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
 
-                <Button
-                    Width="150"
-                    Margin="0,0,10,0"
-                    Command="{Binding ProjectCommandProvider.SaveChangesInStandCommand}"
-                    Content="Сохранить изменения" />
-
-                <Button
-                    Width="150"
-                    Margin="0,0,10,0"
-                    Command="{Binding ProjectCommandProvider.AddNewStandCommand}"
-                    Content="Добавить новый" />
-            </StackPanel>
-
+                        <Button
+                            Width="150"
+                            Margin="0,0,10,0"
+                            Command="{Binding ProjectCommandProvider.AddNewStandCommand}"
+                            Content="Добавить новый" />
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
         </Grid>
+
+        <GroupBox Grid.Row="1" Grid.Column="0">
+            <GroupBox.Header>
+                <TextBlock>
+                    <Run
+                        FontSize="16"
+                        FontWeight="Bold"
+                        Text="Редактирование выбранного стенда" />
+                </TextBlock>
+            </GroupBox.Header>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="40" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="160" />
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="160" />
+                    <ColumnDefinition Width="200" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="0,5"
+                    VerticalAlignment="Center"
+                    Text="№ п/п:" />
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Width="50"
+                    Margin="0,5,150,5"
+                    Text="{Binding CurrentProjectModel.SelectedStand.Number, Mode=TwoWay}" />
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Margin="10,5,0,5"
+                    VerticalAlignment="Center"
+                    Text="KKS-код стенда:" />
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="3"
+                    Margin="0,5"
+                    Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, Mode=TwoWay}" />
+
+                <!--  Обозначение стенда  -->
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Margin="0,5"
+                    VerticalAlignment="Center"
+                    Text="Обозначение стенда:" />
+                <TextBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="3"
+                    Margin="0,5"
+                    Text="{Binding CurrentProjectModel.SelectedStand.Design, Mode=TwoWay}" />
+
+                <!--  Приборы и чекбокс  -->
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Margin="0,5"
+                    VerticalAlignment="Center"
+                    Text="Приборы:" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Width="50"
+                    Margin="0,5,150,5"
+                    Text="{Binding CurrentProjectModel.SelectedStand.Devices, Mode=TwoWay}" />
+
+                <!--  Тип крепления датчика + кнопка  -->
+                <TextBlock
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Margin="0,5"
+                    VerticalAlignment="Center"
+                    Text="Тип крепления датчика:" />
+                <ComboBox
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Margin="0,5"
+                    ItemsSource="{Binding CurrentProjectModel.SelectedStand.BraceSensor}"
+                    SelectedItem="{Binding CurrentProjectModel.SelectedStand.BraceType, Mode=TwoWay}" />
+
+                <TextBlock
+                    Grid.Row="4"
+                    Grid.Column="2"
+                    Margin="10,5,0,5"
+                    VerticalAlignment="Center"
+                    Text="Ширина:" />
+                <TextBox
+                    Grid.Row="4"
+                    Grid.Column="3"
+                    Width="100"
+                    Margin="0,5,100,5"
+                    Text="{Binding CurrentProjectModel.SelectedStand.Width, Mode=TwoWay}" />
+
+                <!--  Серийный номер  -->
+                <TextBlock
+                    Grid.Row="5"
+                    Grid.Column="0"
+                    Margin="0,5"
+                    VerticalAlignment="Center"
+                    Text="Серийный номер:" />
+                <TextBox
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="3"
+                    Margin="0,5"
+                    Text="{Binding CurrentProjectModel.SelectedStand.SerialNumber, Mode=TwoWay}" />
+
+                <!--  Масса  -->
+                <TextBlock
+                    Grid.Row="6"
+                    Grid.Column="0"
+                    Margin="0,5"
+                    VerticalAlignment="Center"
+                    Text="Масса:" />
+                <TextBox
+                    Grid.Row="6"
+                    Grid.Column="1"
+                    Width="100"
+                    Margin="0,5,100,5"
+                    Text="{Binding CurrentProjectModel.SelectedStand.Weight, Mode=TwoWay}" />
+
+                <!--  Сумма стенда  -->
+                <TextBlock
+                    Grid.Row="7"
+                    Grid.Column="0"
+                    Margin="0,5"
+                    VerticalAlignment="Center"
+                    Text="Сумма стенда:" />
+                <TextBox
+                    Grid.Row="7"
+                    Grid.Column="1"
+                    Width="100"
+                    Margin="0,5,100,5"
+                    Text="{Binding CurrentProjectModel.SelectedStand.StandSummCost, Mode=TwoWay}" />
+
+                <!--  Комментарии  -->
+                <TextBlock
+                    Grid.Row="9"
+                    Grid.Column="0"
+                    Margin="0,5"
+                    VerticalAlignment="Center"
+                    Text="Комментарии:" />
+                <TextBox
+                    Grid.Row="9"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="3"
+                    Margin="0,5"
+                    Text="{Binding CurrentProjectModel.SelectedStand.Comments, Mode=TwoWay}" />
+
+                <!--  Примечание  -->
+                <TextBlock
+                    Grid.Row="10"
+                    Grid.Column="0"
+                    Margin="0,5"
+                    VerticalAlignment="Top"
+                    Text="Примечание:" />
+                <TextBox
+                    Grid.Row="10"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="3"
+                    Height="100"
+                    Margin="0,5"
+                    AcceptsReturn="True"
+                    Text="{Binding CurrentProjectModel.SelectedStand.DesignStand, Mode=TwoWay}"
+                    TextWrapping="Wrap" />
+
+                <StackPanel
+                    Grid.Row="11"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="4"
+                    Margin="0,10,0,0"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+
+                    <Button
+                        Width="150"
+                        Margin="0,0,10,0"
+                        Command="{Binding ProjectCommandProvider.SaveChangesInStandCommand}"
+                        Content="Сохранить изменения" />
+                </StackPanel>
+            </Grid>
+        </GroupBox>
         <!--  Список стендов  -->
         <Border
             Grid.Column="1"
+            MinHeight="500"
             Margin="20,0,0,0"
             BorderBrush="#DDDDDD"
             BorderThickness="1">
@@ -240,7 +446,7 @@
 
                 <ListView
                     Grid.Row="1"
-                    Grid.Column="4"
+                    VerticalAlignment="Top"
                     ItemsSource="{Binding CurrentProjectModel.Stands}"
                     SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}">
                     <ListView.View>
@@ -274,8 +480,7 @@
                     </ListView.View>
                     <ListView.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}"
-                                      Header="Удалить" />
+                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}" Header="Удалить" />
                         </ContextMenu>
                     </ListView.ContextMenu>
                 </ListView>

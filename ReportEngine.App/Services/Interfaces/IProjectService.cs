@@ -17,4 +17,5 @@ public interface IProjectService
     Task UpdateObvInStandAsync(ProjectModel projectModel, Obvyazka selectedObvyazka);
     Task DeleteFrameFromStandAsync(ProjectModel projectModel);
     Task LoadAllObvyazkiInProject(ProjectModel projectModel);
+    Task GetOrAddCompnayAsync(string name);
 }

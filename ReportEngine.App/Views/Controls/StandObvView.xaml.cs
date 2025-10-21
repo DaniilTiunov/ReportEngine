@@ -21,5 +21,6 @@ public partial class StandObvView : UserControl
         await viewModel.LoadStandsDataAsync();
         await viewModel.LoadObvyazkiAsync();
         await viewModel.LoadAllAvaileDataAsync();
+        await viewModel.LoadPurposesInStandsAsync();
     }
 }
