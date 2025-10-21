@@ -67,7 +67,7 @@ public class StandModel : BaseViewModel
     private string _firstSensorMarkPlus;
 
     // Тип первого датчика
-    private string _firstSensorType = "Датчик перепада давления";
+    private string _firstSensorType;
 
     // Модель компонентов рамы (вспомогательная модель)
     private FormedFrameModel _formedFrameComponents = new();
@@ -134,7 +134,7 @@ public class StandModel : BaseViewModel
     private string? _secondSensorMarkPlus;
 
     // Тип второго датчика
-    private string _secondSensorType = "Датчик перепада давления";
+    private string _secondSensorType;
 
     // Выбранное дополнительное комплектующее
     private AdditionalEquipPurpose _selectedAdditionalEquip;
@@ -172,7 +172,7 @@ public class StandModel : BaseViewModel
     private string? _thirdSensorMarkPlus;
 
     // Тип третьего датчика
-    private string _thirdSensorType = "Датчик перепада давления";
+    private string _thirdSensorType;
 
     // Тройник/разветвитель
     private string _treeScoket;
