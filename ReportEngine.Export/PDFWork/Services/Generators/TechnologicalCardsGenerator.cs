@@ -5,7 +5,8 @@ using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Export.Mapping;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
-using Xceed.Document.NET;
+using System.Security.Cryptography;
+using XceedNet = Xceed.Document.NET;
 using XceedDocx = Xceed.Words.NET.DocX;
 
 namespace ReportEngine.Export.PDFWork.Services.Generators;
@@ -72,7 +73,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
 
         foreach (var replacement in replacements)
         {
-            var options = new StringReplaceTextOptions
+            var options = new XceedNet.StringReplaceTextOptions
             {
                 SearchValue = replacement.Key ?? string.Empty,
                 NewValue = replacement.Value ?? string.Empty,
@@ -106,7 +107,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
         }
 
         //убираем текстовый маркер 
-        var options = new StringReplaceTextOptions
+        var options = new XceedNet.StringReplaceTextOptions
         {
             SearchValue = pictureMarker,
             NewValue = "",
@@ -115,6 +116,21 @@ public class TechnologicalCardsGenerator : IReportGenerator
 
         findedParagraph.ReplaceText(options);
     }
+
+
+
+    private IEnumerable<XceedNet.Table> GetTablesByPrefix(XceedDocx templateDoc,string prefix)
+    {
+        return templateDoc.Tables
+            .Where(table => table.Paragraphs
+                .Any(par => par.Text.Contains(prefix)));
+    }
+
+
+
+
+
+
 
 
     private void InsertTablesInTemplate(XceedDocx templateDoc, Stand stand)
@@ -131,13 +147,16 @@ public class TechnologicalCardsGenerator : IReportGenerator
 
         //формируем все записи по рамам
         var framesTableRecords = stand.StandFrames
-            .Select(frame => new Dictionary<string, string>
+            .Select(frame => new Dictionary<string, string>()
             {
-                { "size", frame.Frame.Width.ToString() },
-                { "doc_name", "\"N/A\"" },
-                { "quantity", "1" }
+                {"size", frame.Frame.Width.ToString() },
+                {"doc_name", "N/A" },
+                {"quantity",  "1" }
             });
 
+        var frameTable = GetTablesByPrefix(templateDoc, framesCollectionPrefix).First(); 
+
+        
 
         //разворачиваем в колонки
         var columns = new Dictionary<string, IEnumerable<string>>
@@ -146,6 +165,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
             { "doc_name", framesTableRecords.Select(dict => dict["doc_name"]) },
             { "quantity", framesTableRecords.Select(dict => dict["quantity"]) }
         };
+
 
 
         var marksInfo = framesCollectionPostfixs
@@ -170,22 +190,43 @@ public class TechnologicalCardsGenerator : IReportGenerator
                 mark.placesToInsert,
                 data = columns
                     .Where(dict => dict.Key == mark.postfixMark)
-                    .Select(dict => dict.Value)
+                    .SelectMany(dict => dict.Value)
+
             });
+
+
+
+
+
+
+
+
 
         foreach (var mark in marksInfo)
         {
-            //заменяем текстовый маркер
-            var options = new StringReplaceTextOptions
+            foreach (var dataValue in mark.data)
             {
-                SearchValue = mark.fullMark,
-                NewValue = string.Join(Environment.NewLine, mark.data.ToList()),
-                EscapeRegEx = false
-            };
+                //заменяем текстовый маркер
+                var options = new XceedNet.StringReplaceTextOptions
+                {
+                    SearchValue = mark.fullMark,
+                    NewValue = dataValue,
+                    EscapeRegEx = false
+                };
 
-            //в каждом найденном месте меняем
-            foreach (var place in mark.placesToInsert) place.ReplaceText(options);
+
+                //в каждом найденном месте меняем
+                foreach (var place in mark.placesToInsert)
+                {
+                    place.ReplaceText(options);
+                }
+
+             
+
+
+            }
         }
+
     }
 
 

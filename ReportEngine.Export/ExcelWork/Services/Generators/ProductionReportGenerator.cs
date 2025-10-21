@@ -1,10 +1,11 @@
-﻿using System.Diagnostics;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
+using ReportEngine.Export.Mapping;
 using ReportEngine.Shared.Config.IniHeleprs;
+using System.Diagnostics;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -40,7 +41,7 @@ public class ProductionReportGenerator : IReportGenerator
 
             var savePath = SettingsManager.GetReportDirectory();
 
-            var fileName = "Производство___" + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + ".xlsx";
+            var fileName = ExcelReportHelper.CreateReportName("Производство", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
 
             Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
