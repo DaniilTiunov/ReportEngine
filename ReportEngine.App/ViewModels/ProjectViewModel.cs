@@ -768,7 +768,8 @@ public class ProjectViewModel : BaseViewModel
         newStandModel.InitializeDefaultPurposes();
 
         CurrentProjectModel.Stands.Add(newStandModel);
-        CurrentProjectModel.SelectedStand = newStandModel;
+
+        CurrentStandModel = new StandModel();
 
         _notificationService.ShowInfo($"Стенд успешно добавлен! {addedStandEntity.Id}");
     }

@@ -62,9 +62,6 @@ public class ProjectService : IProjectService
             Number = companies.Count() + 1
         };
 
-        if (newCompany.Id != 0)
-            MessageBox.Show("Id должен быть равен 0 для новой компании!");
-
         await _companyRepository.AddAsync(newCompany);
 
         _notificationService.ShowInfo($"Новый заказчик добавлен в базу!: {newCompany.Name}");
@@ -95,31 +92,19 @@ public class ProjectService : IProjectService
             var existingKKS = projectModel.Stands.Select(s => s.KKSCode).ToHashSet();
             var existingDesign = projectModel.Stands.Select(s => s.Design).ToHashSet();
 
+            // Создаем временный объект для итеративного копирования
+            var currentStand = selectedStand;
+
             for (var i = 1; i <= count; i++)
             {
-                // Генерируем уникальные значения
-                var newKKS = $"{selectedStand.KKSCode}_copy{i}";
-                var newDesign = $"{selectedStand.Design}_copy{i}";
-
-                // Проверяем уникальность
-                while (existingKKS.Contains(newKKS))
-                    newKKS += "_new";
-                while (existingDesign.Contains(newDesign))
-                    newDesign += "_new";
-
-                // Копируем стенд
-                var newStand =
-                    await CopyStandFromSourceStandAsync(selectedStand, newKKS, newDesign,
-                        projectModel.CurrentProjectId);
+                var newStand = await CopyStandFromSourceStandAsync(currentStand, projectModel.CurrentProjectId);
 
                 projectModel.Stands.Add(newStand);
 
-                existingKKS.Add(newKKS);
-                existingDesign.Add(newDesign);
-
-                await _standService.LoadStandsDataAsync(projectModel.Stands);
+                currentStand = newStand;
             }
 
+            await _standService.LoadStandsDataAsync(projectModel.Stands);
             _notificationService.ShowInfo($"Создано копий: {count}");
         });
     }
@@ -309,20 +294,19 @@ public class ProjectService : IProjectService
         foreach (var obvyazkiInStand in obvyazkiInStands) projectModel.ObvyazkiInProject.Add(obvyazkiInStand);
     }
 
-    private async Task<StandModel> CopyStandFromSourceStandAsync(StandModel sourceStand, string newDesign,
-        string newKKS, int projectId)
+    private async Task<StandModel> CopyStandFromSourceStandAsync(StandModel sourceStand, int projectId)
     {
         var newStand = new StandModel
         {
-            Design = newDesign,
-            KKSCode = newKKS,
+            Design = sourceStand.Design,
+            KKSCode = sourceStand.KKSCode,
             ProjectId = projectId,
             Armature = sourceStand.Armature,
             BraceType = sourceStand.BraceType,
             Devices = sourceStand.Devices,
             KMCH = sourceStand.KMCH,
             MaterialLine = sourceStand.MaterialLine,
-            NN = sourceStand.NN,
+            NN = sourceStand.NN + 1,
             ObvyazkaName = sourceStand.ObvyazkaName,
             SerialNumber = StandUniqNameHelper.SetUniqNameForStand(sourceStand),
             TreeSocket = sourceStand.TreeSocket,
