@@ -138,6 +138,9 @@ public static class ProjectCommandsInitializer
 
         vm.ProjectCommandProvider.CreateMarkReportAsyncCommand =
             new AsyncRelayCommand(vm.OnCreateMarksReportAsyncCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.ShowCompanyDialogCommand =
+            new RelayCommand(vm.OnShowCompanyDialogExecuted, vm.CanAllCommandsExecute);
     }
 
     public static void InitializeGenericCommands(ProjectViewModel vm)

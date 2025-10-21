@@ -8,12 +8,12 @@
     Width="1000"
     Height="600"
     Background="{DynamicResource PrimaryColor}"
-    Foreground="{DynamicResource PrimaryForeground}"
     FontFamily="Bahnschrift"
-    ResizeMode="CanResize"
-    WindowStyle="None"
-    WindowStartupLocation="CenterScreen"
     FontSize="14"
+    Foreground="{DynamicResource PrimaryForeground}"
+    ResizeMode="CanResize"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
     mc:Ignorable="d">
 
     <WindowChrome.WindowChrome>
@@ -111,6 +111,7 @@
                     CanUserReorderColumns="True"
                     CanUserSortColumns="True"
                     ItemsSource="{Binding CurrentCompany.AllCompanies, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    MouseDoubleClick="CompaniesDataGrid_MouseDoubleClick"
                     RowHeaderWidth="40"
                     SelectedItem="{Binding CurrentCompany.SelectedCompany, Mode=TwoWay}"
                     SelectionUnit="FullRow">

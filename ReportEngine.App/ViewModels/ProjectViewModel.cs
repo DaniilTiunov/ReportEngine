@@ -82,6 +82,13 @@ public class ProjectViewModel : BaseViewModel
         ApplySelectedEquipToPurpose(e, selected);
     }
 
+    public async void OnShowCompanyDialogExecuted(object e)
+    {
+        var companyName = _dialogService.ShowCompanyDialog();
+
+        CurrentProjectModel.Company = companyName;
+    }
+
     // TODO: Сделать тут рефакторинг команд
     public void OnSelectMaterialFromDialogCommandExecuted(object e)
     {

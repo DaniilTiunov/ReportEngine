@@ -11,4 +11,6 @@ public interface IDialogService
     Obvyazka? ShowObvyazkaDialog();
 
     IBaseEquip? ShowAllSortamentsDialog();
+
+    string ShowCompanyDialog();
 }

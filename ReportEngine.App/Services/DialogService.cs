@@ -2,9 +2,11 @@
 using ReportEngine.App.Display;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.ViewModels;
+using ReportEngine.App.ViewModels.Contacts;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
+using System.Windows;
 
 namespace ReportEngine.App.Services;
 
@@ -81,6 +83,27 @@ public class DialogService : IDialogService
         {
             MessageBoxHelper.ShowError(ex.Message);
             return null;
+        }
+    }
+
+    public string ShowCompanyDialog()
+    {
+        try
+        {
+            string selected = null;
+
+            var viewModel = _serviceProvider.GetRequiredService<CompanyViewModel>();
+
+            viewModel.SelectedItem = item => { selected = item; };
+
+            var window = new CompanyView(viewModel);
+            window.ShowDialog();
+            return selected;
+        }
+        catch (Exception ex)
+        {
+            MessageBoxHelper.ShowError(ex.Message);
+            return string.Empty;
         }
     }
 }

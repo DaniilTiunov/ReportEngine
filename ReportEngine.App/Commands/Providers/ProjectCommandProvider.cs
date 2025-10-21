@@ -51,6 +51,8 @@ public class ProjectCommandProvider
     public ICommand DeleteBatchCommand { get; set; }
     public ICommand AddStandToContainerCommand { get; set; }
     public ICommand RemoveStandFromContainerCommand { get; set; }
+    public ICommand CreateContainerReportCommandAsync { get; set; }
+    public ICommand ShowCompanyDialogCommand { get; set; }
 
     public ICommand Bind(ICommand command, Action<object> execute, Func<object, bool> canExecute = null)
     {
