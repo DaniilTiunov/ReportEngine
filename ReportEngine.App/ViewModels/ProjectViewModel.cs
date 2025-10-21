@@ -32,6 +32,7 @@ public class ProjectViewModel : BaseViewModel
     private readonly IProjectService _projectService;
     private readonly IReportService _reportService;
     private readonly IStandService _standService;
+    private readonly IBaseRepository<Company> _companyRepository;
 
     public ProjectViewModel(IProjectInfoRepository projectRepository,
         IDialogService dialogService,
@@ -75,7 +76,6 @@ public class ProjectViewModel : BaseViewModel
 
     public void OnOpenAllSortamentsDialogExecuted(object e)
     {
-        // e приходит из XAML CommandParameter — это объект назначения (DrainagePurpose / AdditionalEquipPurpose / ElectricalPurpose)
         var selected = _dialogService.ShowAllSortamentsDialog();
         if (selected == null) return;
 
@@ -84,9 +84,12 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnShowCompanyDialogExecuted(object e)
     {
-        var companyName = _dialogService.ShowCompanyDialog();
+        await ExceptionHelper.SafeExecuteAsync(async ()=>
+        {
+            var companyName = _dialogService.ShowCompanyDialog();
 
-        CurrentProjectModel.Company = companyName;
+            CurrentProjectModel.Company = companyName;
+        });
     }
 
     // TODO: Сделать тут рефакторинг команд
@@ -192,7 +195,11 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnCreateNewCardCommandExecuted(object? e)
     {
-        await ExceptionHelper.SafeExecuteAsync(CreateNewProjectCardAsync);
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await CreateNewProjectCardAsync();
+            await _projectService.GetOrAddCompnayAsync(CurrentProjectModel.Company);
+        });
     }
 
     public async void OnAddNewStandCommandExecuted(object? e)

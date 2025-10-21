@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Windows;
 using Microsoft.VisualBasic;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Model;
@@ -20,6 +21,7 @@ public class ProjectService : IProjectService
     private readonly INotificationService _notificationService;
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IStandService _standService;
+    private readonly IBaseRepository<Company> _companyRepository;
 
     public ProjectService(
         IProjectInfoRepository projectRepository,
@@ -27,7 +29,8 @@ public class ProjectService : IProjectService
         IStandService standService,
         IFormedElectricalRepository electricalRepository,
         IFormedAdditionalEquipsRepository additionalEquipsRepository,
-        IFormedDrainagesRepository drainagesRepository)
+        IFormedDrainagesRepository drainagesRepository,
+        IBaseRepository<Company> companyRepository)
     {
         _drainagesRepository = drainagesRepository;
         _additionalEquipsRepository = additionalEquipsRepository;
@@ -35,6 +38,36 @@ public class ProjectService : IProjectService
         _standService = standService;
         _projectRepository = projectRepository;
         _notificationService = notificationService;
+        _companyRepository = companyRepository;
+    }
+
+
+    public async Task GetOrAddCompnayAsync(string name)
+    {
+        var companies = await _companyRepository.GetAllAsync();
+
+        var existingCompany = companies.FirstOrDefault(c =>
+            string.Equals(c.Name, name, StringComparison.OrdinalIgnoreCase));
+
+        if (existingCompany != null)
+        {
+            return;
+        }
+
+        var newCompany = new Company
+        {
+            Id = 0,
+            Name = name,
+            RegisterDate = DateOnly.FromDateTime(DateTime.Now),
+            Number = companies.Count() + 1
+        };
+
+        if (newCompany.Id != 0)
+            MessageBox.Show("Id должен быть равен 0 для новой компании!");
+
+        await _companyRepository.AddAsync(newCompany);
+
+        _notificationService.ShowInfo($"Новый заказчик добавлен в базу!: {newCompany.Name}");
     }
 
     public async Task CreateProjectAsync(ProjectModel projectModel)
