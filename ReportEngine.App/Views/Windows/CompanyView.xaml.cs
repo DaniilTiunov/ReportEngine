@@ -15,6 +15,16 @@ public partial class CompanyView : Window
         DataContext = companyViewModel;
     }
 
+    private void CompaniesDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (DataContext is CompanyViewModel vm && vm.CurrentCompany.SelectedCompany != null)
+        {
+            vm.SelectedItem?.Invoke(vm.CurrentCompany.SelectedCompany.Name);
+            DialogResult = true;
+            Close();
+        }
+    }
+
     private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         if (e.ClickCount == 2)

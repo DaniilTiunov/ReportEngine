@@ -82,6 +82,13 @@ public class ProjectViewModel : BaseViewModel
         ApplySelectedEquipToPurpose(e, selected);
     }
 
+    public async void OnShowCompanyDialogExecuted(object e)
+    {
+        var companyName = _dialogService.ShowCompanyDialog();
+
+        CurrentProjectModel.Company = companyName;
+    }
+
     // TODO: Сделать тут рефакторинг команд
     public void OnSelectMaterialFromDialogCommandExecuted(object e)
     {
@@ -299,7 +306,7 @@ public class ProjectViewModel : BaseViewModel
             stand.ArmatureCount = SelectedObvyazka.ZraCount;
             stand.TreeSocketMaterialCount = SelectedObvyazka.TreeSocket;
             stand.KMCHCount = SelectedObvyazka.Clamp;
-
+            
             stand.SelectedObvyazkaInStand = null;
             stand.SelectedObvyazkaInStand = tmp;
         });
@@ -578,8 +585,6 @@ public class ProjectViewModel : BaseViewModel
     {
         CurrentProjectModel.CreationDate = DateTime.Now.Date;
         CurrentProjectModel.StartDate = DateTime.Now.Date;
-        CurrentProjectModel.OutOfProduction = DateTime.Now.Date;
-        CurrentProjectModel.EndDate = DateTime.Now.Date;
     }
 
     public void InitializeCommands()

@@ -47,6 +47,11 @@ public partial class MainWindow : Window //Это так называемый "C
         await LoadCalculationSettingsDataAsync();
     }
 
+    private void MainDataGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        _mainViewModel.OnEditProjectCommandExecuted(e);
+    }
+    
     private async Task LoadCalculationSettingsDataAsync()
     {
         var calcSettings = _serviceProvider.GetRequiredService<CalculationSettingsViewModel>();
@@ -193,4 +198,6 @@ public partial class MainWindow : Window //Это так называемый "C
     {
         ChangesTheme("/Resources/Dictionaries/BubbleGumTheme.xaml");
     }
+
+
 }

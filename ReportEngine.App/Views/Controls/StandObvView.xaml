@@ -16,8 +16,6 @@
 
 
     <ScrollViewer>
-
-
         <Grid Margin="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="950" />
@@ -35,20 +33,18 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <!--  Обвязка Section  -->
+                <!--  Обвязка  -->
                 <GroupBox
                     Grid.Row="0"
                     Margin="0,0,0,10"
                     Padding="8"
                     Header="Обвязка">
-                    <!--  outer grid: left = form, right = preview (preview вынесен из формы чтобы не растягивать строки)  -->
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="230" />
                         </Grid.ColumnDefinitions>
 
-                        <!--  left: существующая форма (колонки для полей)  -->
                         <Grid Grid.Column="0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -85,7 +81,6 @@
                                 Margin="0,0,0,3"
                                 Text="Выбрать обвязку" />
 
-                            <!--  Тип обвязки  -->
                             <TextBlock
                                 Grid.Row="0"
                                 Grid.Column="0"
@@ -115,7 +110,6 @@
                                 Margin="5,5,5,5"
                                 Text="{Binding CurrentProjectModel.SelectedStand.NN}" />
 
-                            <!--  Материал линии  -->
                             <TextBlock
                                 Grid.Row="1"
                                 Grid.Column="0"
@@ -154,7 +148,6 @@
                                 Command="{Binding ProjectCommandProvider.SelectMaterialLineDialogCommand}"
                                 Content="..." />
 
-                            <!--  Арматура  -->
                             <TextBlock
                                 Grid.Row="2"
                                 Grid.Column="0"
@@ -193,7 +186,6 @@
                                 Command="{Binding ProjectCommandProvider.SelectArmatureDialogCommand}"
                                 Content="..." />
 
-                            <!--  Тройник  -->
                             <TextBlock
                                 Grid.Row="3"
                                 Grid.Column="0"
@@ -232,7 +224,6 @@
                                 Command="{Binding ProjectCommandProvider.SelectTreeSocketDialogCommand}"
                                 Content="..." />
 
-                            <!--  КМЧ  -->
                             <TextBlock
                                 Grid.Row="4"
                                 Grid.Column="0"
@@ -271,7 +262,6 @@
                                 Content="..." />
                         </Grid>
 
-                        <!--  right: preview — не входит в layout строк формы, поэтому не растягивает их  -->
                         <Border
                             Grid.Column="1"
                             Margin="8,0,0,0"
@@ -293,7 +283,6 @@
                     </Grid>
                 </GroupBox>
 
-                <!--  Датчик 1  -->
                 <Expander
                     Grid.Row="1"
                     Margin="0,0,0,10"
@@ -372,7 +361,6 @@
                     </GroupBox>
                 </Expander>
 
-                <!--  остальные части формы без изменений  -->
                 <Expander
                     Grid.Row="2"
                     Margin="0,0,0,10"
@@ -527,7 +515,6 @@
                     </GroupBox>
                 </Expander>
 
-                <!--  Список обвязок остался в правой панели (под списком стендов)  -->
                 <StackPanel
                     Grid.Row="5"
                     Margin="0,10,0,0"
@@ -547,7 +534,6 @@
                 </StackPanel>
             </Grid>
 
-            <!--  Правая панель: список стендов + обвязки под ним  -->
             <Border
                 Grid.Column="1"
                 Margin="0,0,0,0"
@@ -592,10 +578,8 @@
                             </ListView.View>
                             <ListView.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Command="{Binding ProjectCommandProvider.CopyStandsCommand}"
-                                              Header="Создать копию на основе прототипа" />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}"
-                                              Header="Удалить стенд из проекта" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.CopyStandsCommand}" Header="Создать копию на основе прототипа" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}" Header="Удалить стенд из проекта" />
                                 </ContextMenu>
                             </ListView.ContextMenu>
                         </ListView>
@@ -619,8 +603,7 @@
                                     SelectedItem="{Binding CurrentStandModel.SelectedFrame}">
                                     <DataGrid.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem Command="{Binding ProjectCommandProvider.AddFrameToStandCommand}"
-                                                      Header="Добавить выбранную раму" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.AddFrameToStandCommand}" Header="Добавить выбранную раму" />
                                         </ContextMenu>
                                     </DataGrid.ContextMenu>
                                     <DataGrid.Columns>
@@ -641,9 +624,7 @@
                                     SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedFrame}">
                                     <DataGrid.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem
-                                                Command="{Binding ProjectCommandProvider.RemoveFrameStandCommand}"
-                                                Header="Удалить выбранную раму из стенда" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.RemoveFrameStandCommand}" Header="Удалить выбранную раму из стенда" />
                                         </ContextMenu>
                                     </DataGrid.ContextMenu>
                                     <DataGrid.Columns>
@@ -667,10 +648,6 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn
                                     Width="150"
-                                    Binding="{Binding Stand.Name}"
-                                    Header="Стенд" />
-                                <DataGridTextColumn
-                                    Width="150"
                                     Binding="{Binding ObvyazkaName}"
                                     Header="Тип" />
                                 <DataGridTextColumn
@@ -684,8 +661,7 @@
                             </DataGrid.Columns>
                             <DataGrid.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}"
-                                              Header="Скопировать в выбранный стенд" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}" Header="Скопировать в выбранный стенд" />
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
                         </DataGrid>
@@ -696,8 +672,7 @@
                         Margin="5,5,5,5"
                         Padding="5"
                         Header="Обвязки стенда">
-                        <ListView ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}"
-                                  SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand}">
+                        <ListView ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}" SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand}">
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn
@@ -736,14 +711,10 @@
                             </ListView.View>
                             <ListView.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem
-                                        Command="{Binding ProjectCommandProvider.FillStandFieldsFromObvyazkaCommand}"
-                                        Header="Редактировать обвязку" />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}"
-                                              Header="Скопировать в выбранный стенд" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.FillStandFieldsFromObvyazkaCommand}" Header="Редактировать обвязку" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}" Header="Скопировать в выбранный стенд" />
                                     <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}"
-                                              Header="Удалить обвязку из стенда" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}" Header="Удалить обвязку из стенда" />
                                 </ContextMenu>
                             </ListView.ContextMenu>
                         </ListView>

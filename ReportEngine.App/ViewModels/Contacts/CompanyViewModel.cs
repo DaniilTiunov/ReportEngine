@@ -26,6 +26,7 @@ public class CompanyViewModel
         LoadAllCompaniesAsync();
     }
 
+    public Action<string> SelectedItem { get; set; }
     public CompanyModel CurrentCompany { get; set; } = new();
     public ICommand LoadAllCompaniesCommand { get; set; }
     public ICommand AddNewCompanyCommand { get; set; }
