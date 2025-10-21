@@ -1,6 +1,4 @@
-﻿using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Spreadsheet;
-using ReportEngine.Domain.Entities;
+﻿using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
@@ -84,7 +82,6 @@ public class TechnologicalCardsGenerator : IReportGenerator
 
             templateDoc.ReplaceText(options);
         }
-
     }
 
 
@@ -106,7 +103,6 @@ public class TechnologicalCardsGenerator : IReportGenerator
             picture.Width = 230;
 
 
-
             findedParagraph.InsertPicture(picture);
         }
 
@@ -119,7 +115,6 @@ public class TechnologicalCardsGenerator : IReportGenerator
         };
 
         findedParagraph.ReplaceText(options);
-
     }
 
 
@@ -140,16 +135,14 @@ public class TechnologicalCardsGenerator : IReportGenerator
 
     private void InsertTablesInTemplate(XceedDocx templateDoc, Stand stand)
     {
+        var framesCollectionPrefix = "frames";
 
-        string framesCollectionPrefix = "frames";
-
-        var framesCollectionPostfixs = new List<string>()
+        var framesCollectionPostfixs = new List<string>
         {
             "size",
             "doc_name",
             "quantity"
         };
-
 
 
         //формируем все записи по рамам
@@ -166,11 +159,11 @@ public class TechnologicalCardsGenerator : IReportGenerator
         
 
         //разворачиваем в колонки
-        var columns = new Dictionary<string, IEnumerable<string>>()
+        var columns = new Dictionary<string, IEnumerable<string>>
         {
-            {"size",  framesTableRecords.Select(dict => dict["size"]) },
-            {"doc_name", framesTableRecords.Select(dict => dict["doc_name"]) },
-            {"quantity",  framesTableRecords.Select(dict => dict["quantity"]) }
+            { "size", framesTableRecords.Select(dict => dict["size"]) },
+            { "doc_name", framesTableRecords.Select(dict => dict["doc_name"]) },
+            { "quantity", framesTableRecords.Select(dict => dict["quantity"]) }
         };
 
 
@@ -180,7 +173,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
             {
                 //добавляем полную текстовую метку
                 postfixMark = postfix,
-                fullMark = "{{" + $"{framesCollectionPrefix}.{postfix}" + "}}",
+                fullMark = "{{" + $"{framesCollectionPrefix}.{postfix}" + "}}"
             })
             .Select(mark => new
             {

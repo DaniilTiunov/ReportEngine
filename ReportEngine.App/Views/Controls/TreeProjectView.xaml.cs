@@ -151,7 +151,7 @@ public partial class TreeProjectView : UserControl, IDisposable
 
         header.Children.Add(headerText);
         header.Children.Add(closeButton);
-
+        header.SetResourceReference(BackgroundProperty, "SecondaryColor");
         return header;
     }
 

@@ -31,6 +31,7 @@ public class StandModel : BaseViewModel
 
     // Арматура стенда (текст)
     private string _armature;
+    private string? _armatureCostPerUnit;
     private float? _armatureCount;
     private string? _armatureMeasure;
 
@@ -88,11 +89,13 @@ public class StandModel : BaseViewModel
 
     // КМЧ
     private string _kmch;
+    private string? _kmchCostPerUnit;
     private float? _kmchCount;
     private string? _kmchMeasure;
 
     // Материал линии
     private string _materialLine;
+    private string _materialLineCostPerUnit;
     private float? _materialLineCount;
     private string? _materialLineMeasure;
 
@@ -173,6 +176,7 @@ public class StandModel : BaseViewModel
 
     // Тройник/разветвитель
     private string _treeScoket;
+    private string? _treeSocketMaterialCostPerUnit;
     private float? _treeSocketMaterialCount;
     private string? _treeSocketMaterialMeasure;
 
@@ -316,6 +320,30 @@ public class StandModel : BaseViewModel
     {
         get => _materialLineMeasure;
         set => Set(ref _materialLineMeasure, value);
+    }
+
+    public string? MaterialLineCostPerUnit
+    {
+        get => _materialLineCostPerUnit;
+        set => Set(ref _materialLineCostPerUnit, value);
+    }
+
+    public string? ArmatureCostPerUnit
+    {
+        get => _armatureCostPerUnit;
+        set => Set(ref _armatureCostPerUnit, value);
+    }
+
+    public string? KMCHCostPerUnit
+    {
+        get => _kmchCostPerUnit;
+        set => Set(ref _kmchCostPerUnit, value);
+    }
+
+    public string? TreeSocketMaterialCostPerUnit
+    {
+        get => _treeSocketMaterialCostPerUnit;
+        set => Set(ref _treeSocketMaterialCostPerUnit, value);
     }
 
     // Арматура

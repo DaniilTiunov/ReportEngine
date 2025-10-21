@@ -505,7 +505,8 @@ public class ComponentListReportGenerator : IReportGenerator
     }
 
     //Заполняет подтаблицу и возвращает следующую строку
-    private int FillSubtableData(int startRow, List<(string name, string unit, string quantity)> items, IXLWorksheet ws,
+    protected virtual int FillSubtableData(int startRow, List<(string name, string unit, string quantity)> items,
+        IXLWorksheet ws,
         XLAlignmentHorizontalValues alignment)
     {
         var currentRow = startRow;

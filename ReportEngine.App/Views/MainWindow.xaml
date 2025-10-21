@@ -114,24 +114,31 @@
 
             <MenuItem Header="Вид" Tag="ThemeItemChanger">
                 <MenuItem
-                    Click="ChangeDarkTheme"
-                    Header="Тёмная тема"
-                    Tag="Dark" />
-                <MenuItem
                     Click="StandartTheme"
                     Header="Светлая тема"
                     Tag="Standart" />
+                <Separator />
                 <MenuItem
-                    Click="TestTheme"
-                    Header="Тестовая тема"
-                    Tag="Test" />
+                    Click="ChangeDarkTheme"
+                    Header="Тёмная тема"
+                    Tag="Dark" />
+                <Separator />
+                <MenuItem
+                    Click="MangoParadiseTheme"
+                    Header="Манговый рай"
+                    Tag="Mango" />
+                <Separator />
+                <MenuItem
+                    Click="BubbleGumTheme"
+                    Header="Жвачка"
+                    Tag="Bubble" />
             </MenuItem>
             <MenuItem Header="Контакты">
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllUsersCommand}" Header="Сотрудники" />
                 <Separator />
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllCompaniesCommand}" Header="Заказчики" />
             </MenuItem>
-            <MenuItem Header="Сортаменты">
+            <MenuItem Header="Комплектующие">
                 <MenuItem Header="Сортамент труб">
                     <MenuItem Command="{Binding GenericEquipCommandProvider.OpenHeaterPipeCommand}"
                               Header="Жаропрочная сталь" />
@@ -306,15 +313,15 @@
                         Header="Статус" />
                     <DataGridTextColumn
                         Width="*"
-                        Binding="{Binding StartDate}"
+                        Binding="{Binding StartDate, StringFormat={}{0:dd-MM-yy}}"
                         Header="Старт проекта" />
                     <DataGridTextColumn
                         Width="*"
-                        Binding="{Binding OutOfProduction}"
+                        Binding="{Binding OutOfProduction, StringFormat={}{0:dd-MM-yy}}"
                         Header="Выход из производства" />
                     <DataGridTextColumn
                         Width="*"
-                        Binding="{Binding EndDate}"
+                        Binding="{Binding EndDate, StringFormat={}{0:dd-MM-yy}}"
                         Header="Дата окончания договора" />
                     <DataGridTextColumn
                         Width="*"

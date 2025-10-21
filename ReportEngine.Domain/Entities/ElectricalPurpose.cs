@@ -6,7 +6,7 @@ namespace ReportEngine.Domain.Entities;
 
 public class ElectricalPurpose : IPurposeEntity
 {
-    public string Purpose { get; set; }
+    public string? Purpose { get; set; }
     public string? Material { get; set; }
     public float? Quantity { get; set; }
     public float? CostPerUnit { get; set; }

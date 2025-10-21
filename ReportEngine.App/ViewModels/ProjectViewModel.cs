@@ -90,17 +90,20 @@ public class ProjectViewModel : BaseViewModel
             case "Жаропрочные":
                 SelectEquipment<HeaterPipe>(
                     name => CurrentProjectModel.SelectedStand.MaterialLine = name,
-                    measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure);
+                    measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
+                    cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost);
                 break;
             case "Нержавеющие":
                 SelectEquipment<StainlessPipe>(
                     name => CurrentProjectModel.SelectedStand.MaterialLine = name,
-                    measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure);
+                    measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
+                    cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost);
                 break;
             case "Углеродистые":
                 SelectEquipment<CarbonPipe>(
                     name => CurrentProjectModel.SelectedStand.MaterialLine = name,
-                    measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure);
+                    measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
+                    cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost);
                 break;
         }
     }
@@ -112,17 +115,20 @@ public class ProjectViewModel : BaseViewModel
             case "Жаропрочные":
                 SelectEquipment<HeaterArmature>(
                     name => CurrentProjectModel.SelectedStand.Armature = name,
-                    measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure);
+                    measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
+                    cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost);
                 break;
             case "Нержавеющие":
                 SelectEquipment<StainlessArmature>(
                     name => CurrentProjectModel.SelectedStand.Armature = name,
-                    measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure);
+                    measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
+                    cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost);
                 break;
             case "Углеродистые":
                 SelectEquipment<CarbonArmature>(
                     name => CurrentProjectModel.SelectedStand.Armature = name,
-                    measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure);
+                    measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
+                    cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost);
                 break;
         }
     }
@@ -134,17 +140,20 @@ public class ProjectViewModel : BaseViewModel
             case "Жаропрочные":
                 SelectEquipment<HeaterSocket>(
                     name => CurrentProjectModel.SelectedStand.TreeSocket = name,
-                    measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure);
+                    measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
+                    cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost);
                 break;
             case "Нержавеющие":
                 SelectEquipment<StainlessSocket>(
                     name => CurrentProjectModel.SelectedStand.TreeSocket = name,
-                    measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure);
+                    measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
+                    cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost);
                 break;
             case "Углеродистые":
                 SelectEquipment<CarbonSocket>(
                     name => CurrentProjectModel.SelectedStand.TreeSocket = name,
-                    measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure);
+                    measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
+                    cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost);
                 break;
         }
     }
@@ -156,17 +165,20 @@ public class ProjectViewModel : BaseViewModel
             case "Жаропрочные":
                 SelectEquipment<HeaterSocket>(
                     name => CurrentProjectModel.SelectedStand.KMCH = name,
-                    measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure);
+                    measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
+                    cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost);
                 break;
             case "Нержавеющие":
                 SelectEquipment<StainlessSocket>(
                     name => CurrentProjectModel.SelectedStand.KMCH = name,
-                    measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure);
+                    measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
+                    cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost);
                 break;
             case "Углеродистые":
                 SelectEquipment<CarbonSocket>(
                     name => CurrentProjectModel.SelectedStand.KMCH = name,
-                    measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure);
+                    measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
+                    cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost);
                 break;
         }
     }
@@ -206,6 +218,8 @@ public class ProjectViewModel : BaseViewModel
     public async void OnSaveObvCommandExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(AddObvToStandAsync);
+
+        CurrentProjectModel.SelectedStand = null;
     }
 
     public async void OnRemoveObvCommandExecuted(object e)
@@ -280,6 +294,11 @@ public class ProjectViewModel : BaseViewModel
             var tmp = stand.SelectedObvyazkaInStand;
 
             tmp.ImageName = SelectedObvyazka.ImageName;
+
+            stand.MaterialLineCount = SelectedObvyazka.LineLength;
+            stand.ArmatureCount = SelectedObvyazka.ZraCount;
+            stand.TreeSocketMaterialCount = SelectedObvyazka.TreeSocket;
+            stand.KMCHCount = SelectedObvyazka.Clamp;
 
             stand.SelectedObvyazkaInStand = null;
             stand.SelectedObvyazkaInStand = tmp;
@@ -778,7 +797,7 @@ public class ProjectViewModel : BaseViewModel
         CurrentStandModel = new StandModel();
     }
 
-    private void SelectEquipment<T>(Action<string> setProperty, Action<string> setMeasure)
+    private void SelectEquipment<T>(Action<string> setProperty, Action<string> setMeasure, Action<string> setCost)
         where T : class, IBaseEquip, new()
     {
         ExceptionHelper.SafeExecute(() =>
@@ -788,6 +807,7 @@ public class ProjectViewModel : BaseViewModel
             {
                 setProperty(equipment.Name);
                 setMeasure(equipment.Measure);
+                setCost(equipment.Cost.ToString());
             }
         });
     }

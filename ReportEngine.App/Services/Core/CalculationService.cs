@@ -64,6 +64,6 @@ public class CalculationService : ICalculationService
 
     private float ObvHumanCostCalculation(StandModel stand)
     {
-        return stand.ObvyazkiInStand.Sum(obv => obv.HumanCost);
+        return stand.ObvyazkiInStand.Sum(obv => obv.HumanCost ?? 0f);
     }
 }

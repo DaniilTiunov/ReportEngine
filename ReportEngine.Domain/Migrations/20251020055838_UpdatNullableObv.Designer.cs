@@ -12,8 +12,8 @@ using ReportEngine.Domain.Database.Context;
 namespace ReportEngine.Domain.Migrations
 {
     [DbContext(typeof(ReAppContext))]
-    [Migration("20250912051003_UpdateObvyazki")]
-    partial class UpdateObvyazki
+    [Migration("20251020055838_UpdatNullableObv")]
+    partial class UpdatNullableObv
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -289,6 +289,74 @@ namespace ReportEngine.Domain.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Companies");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ContainerBatch", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BatchOrder")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ContainersCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<int>("ProjectInfoId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StandsCount")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectInfoId");
+
+                    b.ToTable("ContainersBatch");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ContainerStand", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("ContainerBatchId")
+                        .HasColumnType("integer");
+
+                    b.Property<float?>("ContainerWeight")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<int>("ProjectInfoId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StandsCount")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("StandsWeight")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContainerBatchId");
+
+                    b.HasIndex("ProjectInfoId");
+
+                    b.ToTable("ContainersStand");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.Drainage.Drainage", b =>
@@ -888,6 +956,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<int>("ComponentId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("ComponentName")
+                        .HasColumnType("text");
+
                     b.Property<string>("ComponentType")
                         .IsRequired()
                         .HasColumnType("text");
@@ -976,16 +1047,19 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Armature")
                         .HasColumnType("text");
 
+                    b.Property<string>("ArmatureCostPerUnit")
+                        .HasColumnType("text");
+
                     b.Property<float?>("ArmatureCount")
                         .HasColumnType("real");
 
                     b.Property<string>("ArmatureMeasure")
                         .HasColumnType("text");
 
-                    b.Property<float>("Clamp")
+                    b.Property<float?>("Clamp")
                         .HasColumnType("real");
 
-                    b.Property<string>("FirstDescription")
+                    b.Property<string>("FirstSensorDescription")
                         .HasColumnType("text");
 
                     b.Property<string>("FirstSensorKKS")
@@ -1000,14 +1074,16 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("FirstSensorType")
                         .HasColumnType("text");
 
-                    b.Property<float>("HumanCost")
+                    b.Property<float?>("HumanCost")
                         .HasColumnType("real");
 
                     b.Property<string>("ImageName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("KMCH")
+                        .HasColumnType("text");
+
+                    b.Property<string>("KMCHCostPerUnit")
                         .HasColumnType("text");
 
                     b.Property<float?>("KMCHCount")
@@ -1016,10 +1092,13 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("KMCHMeasure")
                         .HasColumnType("text");
 
-                    b.Property<float>("LineLength")
+                    b.Property<float?>("LineLength")
                         .HasColumnType("real");
 
                     b.Property<string>("MaterialLine")
+                        .HasColumnType("text");
+
+                    b.Property<string>("MaterialLineCostPerUnit")
                         .HasColumnType("text");
 
                     b.Property<float?>("MaterialLineCount")
@@ -1037,10 +1116,10 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("ObvyazkaName")
                         .HasColumnType("text");
 
-                    b.Property<int>("OtherLineCount")
+                    b.Property<int?>("OtherLineCount")
                         .HasColumnType("integer");
 
-                    b.Property<string>("SecondDescription")
+                    b.Property<string>("SecondSensorDescription")
                         .HasColumnType("text");
 
                     b.Property<string>("SecondSensorKKS")
@@ -1055,17 +1134,16 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("SecondSensorType")
                         .HasColumnType("text");
 
-                    b.Property<int>("Sensor")
+                    b.Property<int?>("Sensor")
                         .HasColumnType("integer");
 
                     b.Property<string>("SensorType")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("StandId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("ThirdDescription")
+                    b.Property<string>("ThirdSensorDescription")
                         .HasColumnType("text");
 
                     b.Property<string>("ThirdSensorKKS")
@@ -1083,8 +1161,11 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("TreeSocket")
                         .HasColumnType("text");
 
-                    b.Property<float>("TreeSocketCount")
+                    b.Property<float?>("TreeSocketCount")
                         .HasColumnType("real");
+
+                    b.Property<string>("TreeSocketMaterialCostPerUnit")
+                        .HasColumnType("text");
 
                     b.Property<float?>("TreeSocketMaterialCount")
                         .HasColumnType("real");
@@ -1092,13 +1173,13 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("TreeSocketMaterialMeasure")
                         .HasColumnType("text");
 
-                    b.Property<float>("Weight")
+                    b.Property<float?>("Weight")
                         .HasColumnType("real");
 
-                    b.Property<float>("WidthOnFrame")
+                    b.Property<float?>("WidthOnFrame")
                         .HasColumnType("real");
 
-                    b.Property<float>("ZraCount")
+                    b.Property<float?>("ZraCount")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -1401,6 +1482,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Comments")
                         .HasColumnType("text");
 
+                    b.Property<int?>("ContainerStandId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Design")
                         .HasColumnType("text");
 
@@ -1453,6 +1537,8 @@ namespace ReportEngine.Domain.Migrations
                         .HasColumnType("real");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ContainerStandId");
 
                     b.HasIndex("ProjectInfoId");
 
@@ -1580,6 +1666,12 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("SecondName")
                         .HasColumnType("text");
 
+                    b.Property<int?>("SystemRole")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserLogin")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");
@@ -1594,6 +1686,34 @@ namespace ReportEngine.Domain.Migrations
                         .IsRequired();
 
                     b.Navigation("FormedAdditionalEquip");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ContainerBatch", b =>
+                {
+                    b.HasOne("ReportEngine.Domain.Entities.ProjectInfo", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectInfoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ContainerStand", b =>
+                {
+                    b.HasOne("ReportEngine.Domain.Entities.ContainerBatch", "Batch")
+                        .WithMany("Containers")
+                        .HasForeignKey("ContainerBatchId");
+
+                    b.HasOne("ReportEngine.Domain.Entities.ProjectInfo", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectInfoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Batch");
+
+                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.DrainagePurpose", b =>
@@ -1650,6 +1770,10 @@ namespace ReportEngine.Domain.Migrations
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.Stand", b =>
                 {
+                    b.HasOne("ReportEngine.Domain.Entities.ContainerStand", null)
+                        .WithMany("Stands")
+                        .HasForeignKey("ContainerStandId");
+
                     b.HasOne("ReportEngine.Domain.Entities.ProjectInfo", "Project")
                         .WithMany("Stands")
                         .HasForeignKey("ProjectInfoId")
@@ -1733,6 +1857,16 @@ namespace ReportEngine.Domain.Migrations
                     b.Navigation("Frame");
 
                     b.Navigation("Stand");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ContainerBatch", b =>
+                {
+                    b.Navigation("Containers");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ContainerStand", b =>
+                {
+                    b.Navigation("Stands");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.FormedAdditionalEquip", b =>
