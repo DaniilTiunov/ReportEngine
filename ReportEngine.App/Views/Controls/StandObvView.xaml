@@ -714,6 +714,8 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+
                     </Grid.RowDefinitions>
 
                     <GroupBox
@@ -887,6 +889,87 @@
                                 </ContextMenu>
                             </ListView.ContextMenu>
                         </ListView>
+                    </GroupBox>
+
+                    <GroupBox
+                        Grid.Row="6"
+                        Grid.Column="0"
+                        Margin="10"
+                        Header="Комплектующие стенда">
+                        <StackPanel>
+                            <GroupBox Margin="5">
+                                <GroupBox.Header>
+                                    <TextBlock>
+                                        <Run FontSize="16" Text="Дренажные комплектующие в стенде — " />
+                                        <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
+                                    </TextBlock>
+                                </GroupBox.Header>
+
+                                <DataGrid ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand}" SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
+                                        <DataGridTextColumn
+                                            Width="*"
+                                            Binding="{Binding Material}"
+                                            Header="Материал" />
+                                        <DataGridTextColumn
+                                            Width="70"
+                                            Binding="{Binding Quantity}"
+                                            Header="Кол-во" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </GroupBox>
+
+                            <GroupBox Margin="5">
+                                <GroupBox.Header>
+                                    <TextBlock>
+                                        <Run FontSize="16" Text="Доп. комплектующие в стенде — " />
+                                        <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
+                                    </TextBlock>
+                                </GroupBox.Header>
+
+                                <DataGrid ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand}" SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
+                                        <DataGridTextColumn
+                                            Width="*"
+                                            Binding="{Binding Material}"
+                                            Header="Материал" />
+                                        <DataGridTextColumn
+                                            Width="70"
+                                            Binding="{Binding Quantity}"
+                                            Header="Кол-во" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </GroupBox>
+
+                            <GroupBox Margin="5">
+                                <GroupBox.Header>
+                                    <TextBlock>
+                                        <Run FontSize="16" Text="Электрические компоненты в стенде — " />
+                                        <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
+                                    </TextBlock>
+                                </GroupBox.Header>
+
+                                <DataGrid
+                                    AutoGenerateColumns="False"
+                                    CanUserAddRows="False"
+                                    ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}"
+                                    SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
+                                        <DataGridTextColumn
+                                            Width="*"
+                                            Binding="{Binding Material}"
+                                            Header="Материал" />
+                                        <DataGridTextColumn
+                                            Width="70"
+                                            Binding="{Binding Quantity}"
+                                            Header="Кол-во" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </GroupBox>
+                        </StackPanel>
                     </GroupBox>
                 </Grid>
             </Border>

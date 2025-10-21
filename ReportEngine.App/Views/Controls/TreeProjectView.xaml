@@ -44,8 +44,8 @@
                                         Tag="ProjectCard" />
                                     <TreeViewItem Header="Редактирование стенда">
                                         <TreeViewItem Header="Стенды" Tag="Stand" />
-                                        <TreeViewItem Header="Создание обвязок стенда" Tag="StandObv" />
-                                        <TreeViewItem Header="Формирование стенда" Tag="FrameDrainages" />
+                                        <TreeViewItem Header="Обвязки и комплектующие" Tag="StandObv" />
+                                        <!--<TreeViewItem Header="Формирование стенда" Tag="FrameDrainages" />-->
                                         <TreeViewItem Header="Предварительный просмотр стенда" Tag="ProjectPreview" />
                                         <TreeViewItem Header="Формирование упаковки" Tag="StandsContainer" />
                                     </TreeViewItem>
@@ -53,45 +53,23 @@
                                 <TreeViewItem Header="Создание отчётов" ToolTip="Нажмите ПКМ для выбор отчёта">
                                     <TreeViewItem.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem
-                                                Command="{Binding ProjectCommandProvider.CalculateProjectCommand}"
-                                                Header="Расчитать проект" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CalculateProjectCommand}" Header="Расчитать проект" />
                                             <Separator />
-                                            <MenuItem
-                                                Command="{Binding ProjectCommandProvider.CreateSummaryReportCommand}"
-                                                Header="Сводная ведомость" />
-                                            <MenuItem
-                                                Command="{Binding ProjectCommandProvider.CreateComponentsListReportCommand}"
-                                                Header="Ведомость комплектующих" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateSummaryReportCommand}" Header="Сводная ведомость" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateComponentsListReportCommand}" Header="Ведомость комплектующих" />
                                             <Separator />
-                                            <MenuItem
-                                                Command="{Binding ProjectCommandProvider.CreateNameplatesReportCommand}"
-                                                Header="Шильдики и таблички" />
-                                            <MenuItem
-                                                Command="{Binding ProjectCommandProvider.CreateMarkReportCommand}"
-                                                Header="Марикровка" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateNameplatesReportCommand}" Header="Шильдики и таблички" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateMarkReportCommand}" Header="Марикровка" />
                                             <Separator />
-                                            <MenuItem
-                                                Command="{Binding ProjectCommandProvider.CreateMarkReportAsyncCommand}"
-                                                Header="Тест ассинхронной Маркировки" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateMarkReportAsyncCommand}" Header="Тест ассинхронной Маркировки" />
                                             <Separator />
-                                            <MenuItem
-                                                Command="{Binding ProjectCommandProvider.CreateProductionReportCommand}"
-                                                Header="Производство" />
-                                            <MenuItem
-                                                Command="{Binding ProjectCommandProvider.CreateFinplanReportCommand}"
-                                                Header="Фин. план" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateProductionReportCommand}" Header="Производство" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateFinplanReportCommand}" Header="Фин. план" />
                                             <Separator />
-                                            <MenuItem
-                                                Command="{Binding ProjectCommandProvider.CreateContainerReportCommand}"
-                                                Header="Отчёт тара" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateContainerReportCommand}" Header="Отчёт тара" />
                                             <Separator />
-                                            <MenuItem
-                                                Command="{Binding ProjectCommandProvider.CreatePassportReportCommand}"
-                                                Header="Паспорт" />
-                                            <MenuItem
-                                                Command="{Binding ProjectCommandProvider.CreateTechnologicalCardsReportCommand}"
-                                                Header="Технологические карты" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreatePassportReportCommand}" Header="Паспорт" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateTechnologicalCardsReportCommand}" Header="Технологические карты" />
                                         </ContextMenu>
                                     </TreeViewItem.ContextMenu>
                                 </TreeViewItem>
