@@ -18,4 +18,5 @@ public interface IProjectService
     Task DeleteFrameFromStandAsync(ProjectModel projectModel);
     Task LoadAllObvyazkiInProject(ProjectModel projectModel);
     Task GetOrAddCompnayAsync(string name);
+    Task GetOrAddSubjectAsync(string objectName, string companyName);
 }

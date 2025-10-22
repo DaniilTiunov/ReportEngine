@@ -113,6 +113,7 @@
             Height="28"
             Margin="2,2,149,0"
             VerticalAlignment="Top"
+            Command="{Binding ProjectCommandProvider.ShowSubjectDialogCommand}"
             Content="..." />
 
         <!--  Количество стендов  -->
