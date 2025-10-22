@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="clr-namespace:ReportEngine.App.Display"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Background="{DynamicResource PrimaryColor}"
     FontSize="14"
@@ -12,7 +13,9 @@
 
     <UserControl.Resources>
         <converters:ObvyazkaImagePathConverter x:Key="ObvyazkaImagePathConverter" />
+
     </UserControl.Resources>
+
 
 
     <ScrollViewer>
@@ -141,6 +144,7 @@
                                 Margin="0,0,5,5"
                                 ItemsSource="{Binding CurrentMaterials.MaterialLineTypes}"
                                 SelectedItem="{Binding CurrentMaterials.SelectedMaterialLine, Mode=TwoWay}" />
+
                             <Button
                                 Grid.Row="1"
                                 Grid.Column="5"
@@ -314,7 +318,8 @@
                             <ComboBox
                                 Grid.Row="0"
                                 Grid.Column="1"
-                                Margin="0,0,600,5"
+                                Margin="0,0,450,5"
+                                materialDesign:HintAssist.Hint="Выбор типа датчика"
                                 ItemsSource="{Binding CurrentProjectModel.SelectedStand.SensorType}"
                                 SelectedIndex="1"
                                 SelectedItem="{Binding CurrentProjectModel.SelectedStand.FirstSensorType, Mode=TwoWay}" />
@@ -394,7 +399,8 @@
                             <ComboBox
                                 Grid.Row="0"
                                 Grid.Column="1"
-                                Margin="0,0,600,5"
+                                Margin="0,0,450,5"
+                                materialDesign:HintAssist.Hint="Выбор типа датчика"
                                 ItemsSource="{Binding CurrentProjectModel.SelectedStand.SensorType}"
                                 SelectedItem="{Binding CurrentProjectModel.SelectedStand.SecondSensorType}" />
 
@@ -473,7 +479,8 @@
                             <ComboBox
                                 Grid.Row="0"
                                 Grid.Column="1"
-                                Margin="0,0,600,5"
+                                Margin="0,0,450,5"
+                                materialDesign:HintAssist.Hint="Выбор типа датчика"
                                 ItemsSource="{Binding CurrentProjectModel.SelectedStand.SensorType}"
                                 SelectedItem="{Binding CurrentProjectModel.SelectedStand.ThirdSensorType}" />
 
