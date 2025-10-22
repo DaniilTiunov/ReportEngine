@@ -1,9 +1,9 @@
-﻿using System.Globalization;
-using IniParser;
+﻿using IniParser;
 using IniParser.Model;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs.CalculationSettings.Interfaces;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
+using System.Globalization;
 
 namespace ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 

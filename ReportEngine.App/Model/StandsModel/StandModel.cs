@@ -1,7 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Model.FormedEquipsModels;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
+using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Model.StandsModel;
 
@@ -658,6 +659,7 @@ public class StandModel : BaseViewModel
         set => Set(ref _allAdditionalEquipPurposesInStand, value);
     }
 
+    public StandSettingsModel DefaultStandSettings { get; set; } = new();
 
     public void InitializeDrainagePurposes()
     {
@@ -680,11 +682,13 @@ public class StandModel : BaseViewModel
         {
             Purposes = new ObservableCollection<AdditionalEquipPurpose>
             {
-                new() { Purpose = "Шильдик" },
-                new() { Purpose = "Швеллер" },
+                new() { Purpose = "Шильдик" , Material = DefaultStandSettings.NamePlate},
+                new() { Purpose = "Швеллер" , Material = DefaultStandSettings.SteelChannel},
                 new() { Purpose = "Хомуты" },
-                new() { Purpose = "Табличка" },
+                new() { Purpose = "Табличка", Material = DefaultStandSettings.NameTable },
                 new() { Purpose = "Кронштейны перепадников" }
+
+
             }
         };
     }
@@ -699,15 +703,17 @@ public class StandModel : BaseViewModel
                 new() { Purpose = "Кабельные вводы" },
                 new() { Purpose = "Сигнальный кабель" },
                 new() { Purpose = "Металлорукав" },
-                new() { Purpose = "Кабель 6мм" },
-                new() { Purpose = "Кабель 4мм" },
-                new() { Purpose = "Кронштейн коробки" }
+                new() { Purpose = "Кабель 6мм" , Material = DefaultStandSettings.CabelSixMM},
+                new() { Purpose = "Кабель 4мм" , Material = DefaultStandSettings.CabelFourMM},
+                new() { Purpose = "Кронштейн коробки"}
             }
         };
     }
 
-    public void InitializeDefaultPurposes()
+    public async Task InitializeDefaultPurposes()
     {
+        await DefaultStandSettings.LoadStandsSettingsDataAsync();
+
         InitializeElectricalComponent();
         InitializeAdditionalEquip();
         InitializeDrainagePurposes();

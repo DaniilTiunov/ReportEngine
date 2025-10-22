@@ -1,8 +1,8 @@
-﻿using System.Collections.ObjectModel;
-using ReportEngine.App.Model.StandsModel;
+﻿using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
+using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Services.Core;
 

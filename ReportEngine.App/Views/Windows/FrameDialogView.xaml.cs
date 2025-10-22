@@ -1,7 +1,6 @@
-﻿using System.Windows;
+﻿using ReportEngine.App.ViewModels.FormedEquips;
+using System.Windows;
 using System.Windows.Input;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using ReportEngine.App.ViewModels.FormedEquips;
 
 namespace ReportEngine.App.Views.Windows;
 
@@ -12,7 +11,7 @@ public partial class FrameDialogView : Window
         InitializeComponent();
         DataContext = viewModel;
     }
-    
+
     private void FormedFrameGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
         if (DataContext is FormedFrameViewModel vm && vm.FormedFrameModel.SelectedFrame != null)
@@ -22,12 +21,12 @@ public partial class FrameDialogView : Window
             Close();
         }
     }
-    
+
     private void Window_MouseLeftButtonDown(object sender, RoutedEventArgs e)
     {
         DragMove();
     }
-    
+
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
         Close();

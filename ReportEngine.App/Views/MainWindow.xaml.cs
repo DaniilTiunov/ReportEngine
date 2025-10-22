@@ -1,12 +1,12 @@
-﻿using System.Diagnostics;
-using System.IO;
-using System.Windows;
-using System.Windows.Input;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.CalculationSettings;
 using ReportEngine.Shared.Config.Directory;
+using System.Diagnostics;
+using System.IO;
+using System.Windows;
+using System.Windows.Input;
 using AboutProgram = ReportEngine.App.Views.Windows.AboutProgram;
 
 namespace ReportEngine.App;
@@ -51,7 +51,7 @@ public partial class MainWindow : Window //Это так называемый "C
     {
         _mainViewModel.OnEditProjectCommandExecuted(e);
     }
-    
+
     private async Task LoadCalculationSettingsDataAsync()
     {
         var calcSettings = _serviceProvider.GetRequiredService<CalculationSettingsViewModel>();

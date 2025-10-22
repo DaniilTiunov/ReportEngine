@@ -1,11 +1,11 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows.Input;
-using ReportEngine.App.AppHelpers;
+﻿using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model.Contacts;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels.Contacts;
 
@@ -18,18 +18,18 @@ public class SubjectViewModel
         INotificationService notificationService)
     {
         InitializeCommands();
-        
+
         _subjectsRepository = subjectsRepository;
         _notificationService = notificationService;
     }
-    
+
     public Action<string> SelectedItem { get; set; }
     public SubjectModel CurrentSubject { get; set; } = new();
     public ICommand LoadAllSubjectsCommand { get; set; }
     public ICommand AddNewSubjectCommand { get; set; }
     public ICommand SaveChangesCommand { get; set; }
     public ICommand DeleteSubjectCommand { get; set; }
-    
+
     public void InitializeCommands()
     {
         LoadAllSubjectsCommand = new RelayCommand(OnLoadAllSubjectsExecuted, CanAllCommandsExecute);
@@ -51,16 +51,19 @@ public class SubjectViewModel
     public async void OnAddNewSubjectCommandExecuted(object p)
     {
         await AddNewSubjectAsync();
+        _notificationService.ShowInfo("Новый объект добавлен в базу");
     }
 
     public async void OnSaveChangesCommandExecuted(object p)
     {
         await SaveChangesAsync();
+        _notificationService.ShowInfo("Изменения сохранены");
     }
 
     public async void OnDeleteSubjectCommandExecuted(object p)
     {
         await DeleteSelectedSubjectAsync();
+        _notificationService.ShowInfo("Объект удалён из базы");
     }
 
     public async Task LoadAllSubjectsAsync()
@@ -89,7 +92,6 @@ public class SubjectViewModel
             if (CurrentSubject.SelectedSubject != null)
             {
                 await _subjectsRepository.UpdateAsync(CurrentSubject.SelectedSubject);
-                _notificationService.ShowInfo("Изменения сохранены");
             }
         });
     }

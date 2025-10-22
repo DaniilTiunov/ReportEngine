@@ -5,9 +5,8 @@ using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Export.Mapping;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
-using System.Security.Cryptography;
-using XceedNet = Xceed.Document.NET;
 using XceedDocx = Xceed.Words.NET.DocX;
+using XceedNet = Xceed.Document.NET;
 
 namespace ReportEngine.Export.PDFWork.Services.Generators;
 
@@ -119,7 +118,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
 
 
 
-    private IEnumerable<XceedNet.Table> GetTablesByPrefix(XceedDocx templateDoc,string prefix)
+    private IEnumerable<XceedNet.Table> GetTablesByPrefix(XceedDocx templateDoc, string prefix)
     {
         return templateDoc.Tables
             .Where(table => table.Paragraphs
@@ -154,9 +153,9 @@ public class TechnologicalCardsGenerator : IReportGenerator
                 {"quantity",  "1" }
             });
 
-        var frameTable = GetTablesByPrefix(templateDoc, framesCollectionPrefix).First(); 
+        var frameTable = GetTablesByPrefix(templateDoc, framesCollectionPrefix).First();
 
-        
+
 
         //разворачиваем в колонки
         var columns = new Dictionary<string, IEnumerable<string>>
@@ -221,7 +220,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
                     place.ReplaceText(options);
                 }
 
-             
+
 
 
             }

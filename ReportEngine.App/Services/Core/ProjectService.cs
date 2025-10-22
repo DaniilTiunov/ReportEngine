@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows;
-using Microsoft.VisualBasic;
+﻿using Microsoft.VisualBasic;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
@@ -10,6 +8,7 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Enums;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
+using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Services.Core;
 
@@ -58,7 +57,6 @@ public class ProjectService : IProjectService
 
         var newCompany = new Company
         {
-            Id = 0,
             Name = name,
             RegisterDate = DateOnly.FromDateTime(DateTime.Now),
             Number = companies.Count() + 1
@@ -71,10 +69,10 @@ public class ProjectService : IProjectService
 
     public async Task GetOrAddSubjectAsync(string objectName, string companyName)
     {
-        var subjects =  await _subjectRepository.GetAllAsync();
+        var subjects = await _subjectRepository.GetAllAsync();
         var existingSubject = subjects.FirstOrDefault(s =>
             string.Equals(s.ObjectName, objectName, StringComparison.OrdinalIgnoreCase));
-        
+
         if (existingSubject != null)
         {
             return;
@@ -85,11 +83,11 @@ public class ProjectService : IProjectService
             ObjectName = objectName,
             CompanyName = companyName
         };
-        
+
         await _subjectRepository.AddAsync(newSubject);
-        
+
         _notificationService.ShowInfo($"Новый объект добавлен в базу!: {newSubject.ObjectName}"
-                                      +$"\nУправляющая компания: {newSubject.CompanyName}");
+                                      + $"\nУправляющая компания: {newSubject.CompanyName}");
     }
 
     public async Task CreateProjectAsync(ProjectModel projectModel)

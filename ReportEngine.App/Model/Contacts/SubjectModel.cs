@@ -26,7 +26,7 @@ namespace ReportEngine.App.Model.Contacts
         public string CompanyName
         {
             get => companyName;
-            set => Set(ref  companyName, value);
+            set => Set(ref companyName, value);
         }
 
         public Subject SelectedSubject

@@ -44,7 +44,7 @@ public class ContainerReportGenerator : IReportGenerator
             var savePath = SettingsManager.GetReportDirectory();
 
 
-            var fileName = ExcelReportHelper.CreateReportName("Тара", "xlsx");  
+            var fileName = ExcelReportHelper.CreateReportName("Тара", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
 
             Debug.WriteLine("Отчёт сохранён: " + fullSavePath);

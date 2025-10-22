@@ -1,6 +1,6 @@
-﻿using System.Windows;
+﻿using ReportEngine.App.ViewModels.Contacts;
+using System.Windows;
 using System.Windows.Input;
-using ReportEngine.App.ViewModels.Contacts;
 
 namespace ReportEngine.App.Views.Windows;
 
@@ -13,7 +13,7 @@ public partial class SubjectsView : Window
     {
         InitializeComponent();
         DataContext = viewModel;
-        
+
         Loaded += async (_, __) => await InitializeDataAsync(viewModel);
     }
 

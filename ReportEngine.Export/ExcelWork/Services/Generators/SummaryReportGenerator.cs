@@ -196,7 +196,7 @@ public class SummaryReportGenerator : IReportGenerator
                 quantity: group.Sum(arm => arm.quantity).ToString() ?? dbErrorString
             ))
             .ToList();
-            
+
         //Формирование списка тройников и КМЧ
         var treeList = project.Stands
             .SelectMany(stand => stand.ObvyazkiInStand)
@@ -553,7 +553,7 @@ public class SummaryReportGenerator : IReportGenerator
         );
     }
 
-   
+
 
     #endregion
 }

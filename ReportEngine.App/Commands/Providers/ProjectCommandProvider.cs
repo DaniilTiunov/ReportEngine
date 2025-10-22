@@ -55,7 +55,7 @@ public class ProjectCommandProvider
     public ICommand ShowCompanyDialogCommand { get; set; }
     public ICommand ShowFrameDialogCommand { get; set; }
     public ICommand ShowSubjectDialogCommand { get; set; }
-    
+
 
     public ICommand Bind(ICommand command, Action<object> execute, Func<object, bool> canExecute = null)
     {
