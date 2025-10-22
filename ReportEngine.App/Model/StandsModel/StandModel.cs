@@ -701,7 +701,7 @@ public class StandModel : BaseViewModel
             {
                 new() { Purpose = "Клеммная коробка" },
                 new() { Purpose = "Кабельные вводы" },
-                new() { Purpose = "Сигнальный кабель" },
+                new() { Purpose = "Сигнальный кабель" , Material = DefaultStandSettings.SignalCable},
                 new() { Purpose = "Металлорукав" },
                 new() { Purpose = "Кабель 6мм" , Material = DefaultStandSettings.CabelSixMM},
                 new() { Purpose = "Кабель 4мм" , Material = DefaultStandSettings.CabelFourMM},
