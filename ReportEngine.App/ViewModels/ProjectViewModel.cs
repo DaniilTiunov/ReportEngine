@@ -92,6 +92,24 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
+    public async void OnShowFrameDialogExecuted(object e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            var selectedFrame = _dialogService.ShowFrameDialog();
+
+            if (selectedFrame != null)
+            {
+                await _standService.AddFrameToStandAsync(
+                    CurrentProjectModel.SelectedStand.Id,
+                    selectedFrame.Id
+                );
+
+                CurrentProjectModel.SelectedStand.FramesInStand.Add(selectedFrame);
+            }
+        });
+    }
+
     // TODO: Сделать тут рефакторинг команд
     public void OnSelectMaterialFromDialogCommandExecuted(object e)
     {

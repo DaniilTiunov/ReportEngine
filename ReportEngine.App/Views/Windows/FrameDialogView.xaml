@@ -1,0 +1,99 @@
+﻿<Window x:Class="ReportEngine.App.Views.Windows.FrameDialogView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:ReportEngine.App.Views.Windows"
+        Title="Выбор рамы"
+        Width="800"
+        Height="700"
+        Background="{DynamicResource PrimaryColor}"
+        FontFamily="Bahnschrift"
+        FontSize="14"
+        Foreground="{DynamicResource PrimaryForeground}"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        mc:Ignorable="d">
+    
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="0"
+            CornerRadius="0"
+            GlassFrameThickness="0" />
+    </WindowChrome.WindowChrome>
+    
+    <Border Style="{DynamicResource WindowBorder}">
+            <DockPanel>
+                <Border
+                    x:Name="WindowTitle"
+                    Height="34"
+                    Background="#2D2D30"
+                    DockPanel.Dock="Top"
+                    MouseLeftButtonDown="Window_MouseLeftButtonDown">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel
+                            Margin="10,0,0,0"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
+                            <Image
+                                Width="18"
+                                Height="18"
+                                Margin="0,0,8,0"
+                                Source="/Resources/Icons/estimate_cost_icon_213382.ico" />
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="14"
+                                Foreground="White"
+                                Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
+                        </StackPanel>
+
+                        <StackPanel
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
+                            <Button
+                                x:Name="CloseButton"
+                                Width="40"
+                                Height="30"
+                                Margin="10,0,10,0"
+                                Click="CloseButton_Click"
+                                FontSize="16"
+                                ToolTip="Закрыть">
+                                ✕
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <DataGrid
+                        Grid.Column="0"
+                        Margin="5"
+                        AutoGenerateColumns="False"
+                        CanUserAddRows="False"
+                        ItemsSource="{Binding FormedFrameModel.AllFrames}"
+                        SelectedItem="{Binding FormedFrameModel.SelectedFrame}"
+                        MouseDoubleClick="FormedFrameGrid_MouseDoubleClick">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
+                            <DataGridTextColumn Binding="{Binding FrameType}" Header="Тип" />
+                            <DataGridTextColumn Binding="{Binding Width}" Header="Ширина" />
+                            <DataGridTextColumn Binding="{Binding Height}" Header="Высота" />
+                            <DataGridTextColumn Binding="{Binding Depth}" Header="Глубина" />
+                            <DataGridTextColumn Binding="{Binding Weight}" Header="Масса" />
+                            <DataGridTextColumn Binding="{Binding Designe}" Header="Описание по КД" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </DockPanel>
+    </Border>
+</Window>
