@@ -1,11 +1,11 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows.Input;
-using ReportEngine.App.AppHelpers;
+﻿using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model.Contacts;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels.Contacts;
 
@@ -18,18 +18,18 @@ public class SubjectViewModel
         INotificationService notificationService)
     {
         InitializeCommands();
-        
+
         _subjectsRepository = subjectsRepository;
         _notificationService = notificationService;
     }
-    
+
     public Action<string> SelectedItem { get; set; }
     public SubjectModel CurrentSubject { get; set; } = new();
     public ICommand LoadAllSubjectsCommand { get; set; }
     public ICommand AddNewSubjectCommand { get; set; }
     public ICommand SaveChangesCommand { get; set; }
     public ICommand DeleteSubjectCommand { get; set; }
-    
+
     public void InitializeCommands()
     {
         LoadAllSubjectsCommand = new RelayCommand(OnLoadAllSubjectsExecuted, CanAllCommandsExecute);

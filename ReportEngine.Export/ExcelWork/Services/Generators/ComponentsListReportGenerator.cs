@@ -100,7 +100,7 @@ public class ComponentListReportGenerator : IReportGenerator
 
 
     //создание заголовка для сводной ведомости
-    protected virtual void CreateCommonListTableHeader(IXLWorksheet ws, ProjectInfo project,  XLAlignmentHorizontalValues alignment)
+    protected virtual void CreateCommonListTableHeader(IXLWorksheet ws, ProjectInfo project, XLAlignmentHorizontalValues alignment)
     {
         var headerRange = ws.Range("B1:D3");
 

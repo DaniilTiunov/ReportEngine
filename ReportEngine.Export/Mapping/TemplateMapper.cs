@@ -1,7 +1,7 @@
-﻿using System.Diagnostics;
+﻿using ReportEngine.Domain.Entities;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
-using ReportEngine.Domain.Entities;
 
 namespace ReportEngine.Export.Mapping;
 

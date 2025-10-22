@@ -3,11 +3,10 @@ using ReportEngine.App.Display;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.Contacts;
+using ReportEngine.App.ViewModels.FormedEquips;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
-using System.Windows;
-using ReportEngine.App.ViewModels.FormedEquips;
 
 namespace ReportEngine.App.Services;
 
@@ -117,7 +116,7 @@ public class DialogService : IDialogService
             var viewModel = _serviceProvider.GetRequiredService<SubjectViewModel>();
 
             viewModel.SelectedItem = item => { selected = item; };
-            
+
             var window = new SubjectsView(viewModel);
             window.ShowDialog();
             return selected;
@@ -134,17 +133,17 @@ public class DialogService : IDialogService
         try
         {
             FormedFrame selected = null;
-            
+
             var viewModel = _serviceProvider.GetRequiredService<FormedFrameViewModel>();
             var window = new FrameDialogView(viewModel);
-            
+
             viewModel.SelectedItem = item => { selected = item; };
-            
+
             window.ShowDialog();
 
             return selected;
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             MessageBoxHelper.ShowError(ex.Message);
             return null;

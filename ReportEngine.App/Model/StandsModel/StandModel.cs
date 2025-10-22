@@ -1,8 +1,8 @@
-﻿using System.Collections.ObjectModel;
-using ReportEngine.App.Model.CalculationModels;
+﻿using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Model.FormedEquipsModels;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
+using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Model.StandsModel;
 
@@ -659,7 +659,6 @@ public class StandModel : BaseViewModel
         set => Set(ref _allAdditionalEquipPurposesInStand, value);
     }
 
-    public ElectricalSettingsModel DefaultElectricalSettings { get; set; } = new();
     public StandSettingsModel DefaultStandSettings { get; set; } = new();
 
     public void InitializeDrainagePurposes()
@@ -691,7 +690,7 @@ public class StandModel : BaseViewModel
 
 
             }
-        };  
+        };
     }
 
     public void InitializeElectricalComponent()
@@ -706,7 +705,7 @@ public class StandModel : BaseViewModel
                 new() { Purpose = "Металлорукав" },
                 new() { Purpose = "Кабель 6мм" , Material = DefaultStandSettings.CabelSixMM},
                 new() { Purpose = "Кабель 4мм" , Material = DefaultStandSettings.CabelFourMM},
-                new() { Purpose = "Кронштейн коробки" , Material = DefaultStandSettings.Bracket}
+                new() { Purpose = "Кронштейн коробки"}
             }
         };
     }

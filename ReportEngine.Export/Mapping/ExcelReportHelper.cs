@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ReportEngine.Export.Mapping
+﻿namespace ReportEngine.Export.Mapping
 {
     public static class ExcelReportHelper
     {
@@ -13,6 +7,6 @@ namespace ReportEngine.Export.Mapping
             return prefix + "___" + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + "." + fileExtension;
         }
 
-       
+
     }
 }

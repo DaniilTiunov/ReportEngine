@@ -65,7 +65,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
             var savePath = SettingsManager.GetReportDirectory();
 
-            var fileName = ExcelReportHelper.CreateReportName("Финплан","xlsx");        
+            var fileName = ExcelReportHelper.CreateReportName("Финплан", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
 
             // Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
