@@ -7,10 +7,8 @@ public interface IDialogService
 {
     T? ShowEquipDialog<T>()
         where T : class, IBaseEquip, new();
-
     Obvyazka? ShowObvyazkaDialog();
-
     IBaseEquip? ShowAllSortamentsDialog();
-
     string ShowCompanyDialog();
+    FormedFrame ShowFrameDialog();
 }

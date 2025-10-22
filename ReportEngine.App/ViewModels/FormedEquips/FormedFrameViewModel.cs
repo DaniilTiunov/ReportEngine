@@ -36,6 +36,8 @@ public class FormedFrameViewModel : BaseViewModel
     }
 
     public FormedFrameModel FormedFrameModel { get; } = new();
+    
+    public Action<FormedFrame> SelectedItem { get; set; }
 
     public async void LoadDetailsData()
     {
