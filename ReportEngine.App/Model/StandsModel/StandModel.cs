@@ -1,8 +1,8 @@
-﻿using ReportEngine.App.Model.CalculationModels;
+﻿using System.Collections.ObjectModel;
+using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Model.FormedEquipsModels;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
-using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Model.StandsModel;
 
@@ -682,13 +682,11 @@ public class StandModel : BaseViewModel
         {
             Purposes = new ObservableCollection<AdditionalEquipPurpose>
             {
-                new() { Purpose = "Шильдик" , Material = DefaultStandSettings.NamePlate},
-                new() { Purpose = "Швеллер" , Material = DefaultStandSettings.SteelChannel},
+                new() { Purpose = "Шильдик", Material = DefaultStandSettings.NamePlate },
+                new() { Purpose = "Швеллер", Material = DefaultStandSettings.SteelChannel },
                 new() { Purpose = "Хомуты" },
                 new() { Purpose = "Табличка", Material = DefaultStandSettings.NameTable },
                 new() { Purpose = "Кронштейны перепадников" }
-
-
             }
         };
     }
@@ -701,11 +699,11 @@ public class StandModel : BaseViewModel
             {
                 new() { Purpose = "Клеммная коробка" },
                 new() { Purpose = "Кабельные вводы" },
-                new() { Purpose = "Сигнальный кабель" , Material = DefaultStandSettings.SignalCable},
+                new() { Purpose = "Сигнальный кабель", Material = DefaultStandSettings.SignalCable },
                 new() { Purpose = "Металлорукав" },
-                new() { Purpose = "Кабель 6мм" , Material = DefaultStandSettings.CabelSixMM},
-                new() { Purpose = "Кабель 4мм" , Material = DefaultStandSettings.CabelFourMM},
-                new() { Purpose = "Кронштейн коробки"}
+                new() { Purpose = "Кабель 6мм", Material = DefaultStandSettings.CabelSixMM },
+                new() { Purpose = "Кабель 4мм", Material = DefaultStandSettings.CabelFourMM },
+                new() { Purpose = "Кронштейн коробки" }
             }
         };
     }

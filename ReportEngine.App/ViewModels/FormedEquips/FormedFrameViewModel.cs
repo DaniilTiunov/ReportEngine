@@ -1,4 +1,5 @@
-﻿using ReportEngine.App.AppHelpers;
+﻿using System.Windows.Input;
+using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model.FormedEquipsModels;
 using ReportEngine.App.Services.Interfaces;
@@ -6,7 +7,6 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.Frame;
 using ReportEngine.Domain.Repositories.Interfaces;
-using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels.FormedEquips;
 
