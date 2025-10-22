@@ -1,4 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Views.Controls;
@@ -22,5 +25,14 @@ public partial class StandObvView : UserControl
         await viewModel.LoadObvyazkiAsync();
         await viewModel.LoadAllAvaileDataAsync();
         await viewModel.LoadPurposesInStandsAsync();
+    }
+
+    private void ComboBox_DropDownOpened(object sender, EventArgs e)
+    {
+        if (sender is ComboBox comboBox && comboBox.Template.FindName("PART_Popup", comboBox) is Popup popup)
+        {
+            if (popup.Child is Border border)
+                border.Background = (Brush)Application.Current.Resources["SecondaryColor"];
+        }
     }
 }
