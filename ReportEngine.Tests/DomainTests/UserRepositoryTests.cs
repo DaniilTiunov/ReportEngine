@@ -1,9 +1,9 @@
 global using Moq;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories;
-using System.Linq.Expressions;
 
 namespace ReportEngine.Tests.DomainTests;
 

@@ -117,19 +117,12 @@ public class TechnologicalCardsGenerator : IReportGenerator
     }
 
 
-
     private IEnumerable<XceedNet.Table> GetTablesByPrefix(XceedDocx templateDoc, string prefix)
     {
         return templateDoc.Tables
             .Where(table => table.Paragraphs
                 .Any(par => par.Text.Contains(prefix)));
     }
-
-
-
-
-
-
 
 
     private void InsertTablesInTemplate(XceedDocx templateDoc, Stand stand)
@@ -146,15 +139,14 @@ public class TechnologicalCardsGenerator : IReportGenerator
 
         //формируем все записи по рамам
         var framesTableRecords = stand.StandFrames
-            .Select(frame => new Dictionary<string, string>()
+            .Select(frame => new Dictionary<string, string>
             {
-                {"size", frame.Frame.Width.ToString() },
-                {"doc_name", "N/A" },
-                {"quantity",  "1" }
+                { "size", frame.Frame.Width.ToString() },
+                { "doc_name", "N/A" },
+                { "quantity", "1" }
             });
 
         var frameTable = GetTablesByPrefix(templateDoc, framesCollectionPrefix).First();
-
 
 
         //разворачиваем в колонки
@@ -164,7 +156,6 @@ public class TechnologicalCardsGenerator : IReportGenerator
             { "doc_name", framesTableRecords.Select(dict => dict["doc_name"]) },
             { "quantity", framesTableRecords.Select(dict => dict["quantity"]) }
         };
-
 
 
         var marksInfo = framesCollectionPostfixs
@@ -190,42 +181,24 @@ public class TechnologicalCardsGenerator : IReportGenerator
                 data = columns
                     .Where(dict => dict.Key == mark.postfixMark)
                     .SelectMany(dict => dict.Value)
-
             });
 
 
-
-
-
-
-
-
-
         foreach (var mark in marksInfo)
+        foreach (var dataValue in mark.data)
         {
-            foreach (var dataValue in mark.data)
+            //заменяем текстовый маркер
+            var options = new XceedNet.StringReplaceTextOptions
             {
-                //заменяем текстовый маркер
-                var options = new XceedNet.StringReplaceTextOptions
-                {
-                    SearchValue = mark.fullMark,
-                    NewValue = dataValue,
-                    EscapeRegEx = false
-                };
+                SearchValue = mark.fullMark,
+                NewValue = dataValue,
+                EscapeRegEx = false
+            };
 
 
-                //в каждом найденном месте меняем
-                foreach (var place in mark.placesToInsert)
-                {
-                    place.ReplaceText(options);
-                }
-
-
-
-
-            }
+            //в каждом найденном месте меняем
+            foreach (var place in mark.placesToInsert) place.ReplaceText(options);
         }
-
     }
 
 

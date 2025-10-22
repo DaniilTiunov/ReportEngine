@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic;
+﻿using System.Collections.ObjectModel;
+using Microsoft.VisualBasic;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
@@ -8,19 +9,18 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Enums;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
-using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Services.Core;
 
 public class ProjectService : IProjectService
 {
     private readonly IFormedAdditionalEquipsRepository _additionalEquipsRepository;
+    private readonly IBaseRepository<Company> _companyRepository;
     private readonly IFormedDrainagesRepository _drainagesRepository;
     private readonly IFormedElectricalRepository _electricalRepository;
     private readonly INotificationService _notificationService;
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IStandService _standService;
-    private readonly IBaseRepository<Company> _companyRepository;
     private readonly IBaseRepository<Subject> _subjectRepository;
 
     public ProjectService(
@@ -50,10 +50,7 @@ public class ProjectService : IProjectService
         var existingCompany = companies.FirstOrDefault(c =>
             string.Equals(c.Name, name, StringComparison.OrdinalIgnoreCase));
 
-        if (existingCompany != null)
-        {
-            return;
-        }
+        if (existingCompany != null) return;
 
         var newCompany = new Company
         {
@@ -73,10 +70,7 @@ public class ProjectService : IProjectService
         var existingSubject = subjects.FirstOrDefault(s =>
             string.Equals(s.ObjectName, objectName, StringComparison.OrdinalIgnoreCase));
 
-        if (existingSubject != null)
-        {
-            return;
-        }
+        if (existingSubject != null) return;
 
         var newSubject = new Subject
         {

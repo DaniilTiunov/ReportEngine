@@ -1,18 +1,18 @@
-﻿using ReportEngine.App.AppHelpers;
+﻿using System.Collections.ObjectModel;
+using System.Windows.Input;
+using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model.Contacts;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels.Contacts;
 
 public class SubjectViewModel
 {
-    private readonly IBaseRepository<Subject> _subjectsRepository;
     private readonly INotificationService _notificationService;
+    private readonly IBaseRepository<Subject> _subjectsRepository;
 
     public SubjectViewModel(IBaseRepository<Subject> subjectsRepository,
         INotificationService notificationService)
@@ -90,9 +90,7 @@ public class SubjectViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             if (CurrentSubject.SelectedSubject != null)
-            {
                 await _subjectsRepository.UpdateAsync(CurrentSubject.SelectedSubject);
-            }
         });
     }
 

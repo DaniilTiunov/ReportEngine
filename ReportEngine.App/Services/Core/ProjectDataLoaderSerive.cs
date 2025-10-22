@@ -1,7 +1,7 @@
-﻿using ReportEngine.App.Services.Interfaces;
+﻿using System.Collections.ObjectModel;
+using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
-using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Services.Core;
 
