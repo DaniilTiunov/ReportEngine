@@ -14,16 +14,14 @@ public class CompanyViewModel
     private readonly IBaseRepository<Company> _companyRepository;
     private readonly INotificationService _notificationService;
 
-    public CompanyViewModel(IBaseRepository<Company> companyRepository,
+    public CompanyViewModel(
+        IBaseRepository<Company> companyRepository,
         INotificationService notificationService)
     {
         InitializeCommands();
 
         _companyRepository = companyRepository;
         _notificationService = notificationService;
-
-
-        LoadAllCompaniesAsync();
     }
 
     public Action<string> SelectedItem { get; set; }
@@ -54,19 +52,22 @@ public class CompanyViewModel
     public async void OnAddNewCompanyCommandExecuted(object p)
     {
         await AddNewCompanyAsync();
+        _notificationService.ShowInfo("Новый заказчик добавлен в базу");
     }
 
     public async void OnSaveChangesCommandExecuted(object p)
     {
         await SaveChangesAsync();
+        _notificationService.ShowInfo("Изменения сохранены");
     }
 
     public async void OnDeleteCompanyCommandExecuted(object p)
     {
         await DeleteSelectedCompanyAsync();
+        _notificationService.ShowInfo("Заказчик удалён из базы");
     }
 
-    private async Task LoadAllCompaniesAsync()
+    public async Task LoadAllCompaniesAsync()
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
@@ -92,7 +93,6 @@ public class CompanyViewModel
             if (CurrentCompany.SelectedCompany != null)
             {
                 await _companyRepository.UpdateAsync(CurrentCompany.SelectedCompany);
-                _notificationService.ShowInfo("Изменения сохранены");
             }
         });
     }

@@ -9,10 +9,17 @@ namespace ReportEngine.App.Views.Windows;
 /// </summary>
 public partial class CompanyView : Window
 {
-    public CompanyView(CompanyViewModel companyViewModel)
+    public CompanyView(CompanyViewModel viewModel)
     {
         InitializeComponent();
-        DataContext = companyViewModel;
+        DataContext = viewModel;
+        
+        Loaded += async (_, __) => await InitializeDataAsync(viewModel);
+    }
+    
+    private async Task InitializeDataAsync(CompanyViewModel viewModel)
+    {
+        await viewModel.LoadAllCompaniesAsync();
     }
 
     private void CompaniesDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)

@@ -58,7 +58,6 @@ public class ProjectService : IProjectService
 
         var newCompany = new Company
         {
-            Id = 0,
             Name = name,
             RegisterDate = DateOnly.FromDateTime(DateTime.Now),
             Number = companies.Count() + 1

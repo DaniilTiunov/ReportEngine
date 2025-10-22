@@ -51,16 +51,19 @@ public class SubjectViewModel
     public async void OnAddNewSubjectCommandExecuted(object p)
     {
         await AddNewSubjectAsync();
+        _notificationService.ShowInfo("Новый объект добавлен в базу");
     }
 
     public async void OnSaveChangesCommandExecuted(object p)
     {
         await SaveChangesAsync();
+        _notificationService.ShowInfo("Изменения сохранены");
     }
 
     public async void OnDeleteSubjectCommandExecuted(object p)
     {
         await DeleteSelectedSubjectAsync();
+        _notificationService.ShowInfo("Объект удалён из базы");
     }
 
     public async Task LoadAllSubjectsAsync()
@@ -89,7 +92,6 @@ public class SubjectViewModel
             if (CurrentSubject.SelectedSubject != null)
             {
                 await _subjectsRepository.UpdateAsync(CurrentSubject.SelectedSubject);
-                _notificationService.ShowInfo("Изменения сохранены");
             }
         });
     }
