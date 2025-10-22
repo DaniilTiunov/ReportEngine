@@ -79,6 +79,7 @@ public class HostFactory
         // Обычные репозитории
         services.AddScoped<IBaseRepository<User>, UserRepository>();
         services.AddScoped<IBaseRepository<Company>, CompanyRepository>();
+        services.AddScoped<IBaseRepository<Subject>, SubjectsRepository>();
         services.AddScoped<IProjectInfoRepository, ProjectInfoRepository>();
         services.AddScoped<IObvyazkaRepository, ObvyazkaRepository>();
         services.AddScoped<IFrameRepository, FormedFrameRepository>();
@@ -167,6 +168,7 @@ public class HostFactory
         services.AddScoped<SettingsViewModel>();
         services.AddScoped<CalculationSettingsViewModel>();
         services.AddScoped<AuthWindowViewModel>();
+        services.AddScoped<SubjectViewModel>();
     }
 
     private static void ConfigureViews(IServiceCollection services)
@@ -196,5 +198,6 @@ public class HostFactory
         services.AddTransient<CalculationSettingsWindow>();
         services.AddTransient<StandsContainerView>();
         services.AddTransient<AuthWindow>();
+        services.AddTransient<SubjectsView>();
     }
 }

@@ -91,6 +91,16 @@ public class ProjectViewModel : BaseViewModel
             CurrentProjectModel.Company = companyName;
         });
     }
+    
+    public async void OnShowSubjectDialogExecuted(object e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async ()=>
+        {
+            var subjectName = _dialogService.ShowSubjectDialog();
+            
+            CurrentProjectModel.Object = subjectName;
+        });
+    }
 
     public async void OnShowFrameDialogExecuted(object e)
     {
@@ -217,6 +227,7 @@ public class ProjectViewModel : BaseViewModel
         {
             await CreateNewProjectCardAsync();
             await _projectService.GetOrAddCompnayAsync(CurrentProjectModel.Company);
+            await _projectService.GetOrAddSubjectAsync(CurrentProjectModel.Object, CurrentProjectModel.Company);
         });
     }
 

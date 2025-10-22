@@ -10,5 +10,6 @@ public interface IDialogService
     Obvyazka? ShowObvyazkaDialog();
     IBaseEquip? ShowAllSortamentsDialog();
     string ShowCompanyDialog();
+    string ShowSubjectDialog();
     FormedFrame ShowFrameDialog();
 }

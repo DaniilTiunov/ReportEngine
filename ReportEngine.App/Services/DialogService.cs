@@ -108,6 +108,27 @@ public class DialogService : IDialogService
         }
     }
 
+    public string ShowSubjectDialog()
+    {
+        try
+        {
+            string selected = null;
+
+            var viewModel = _serviceProvider.GetRequiredService<SubjectViewModel>();
+
+            viewModel.SelectedItem = item => { selected = item; };
+            
+            var window = new SubjectsView(viewModel);
+            window.ShowDialog();
+            return selected;
+        }
+        catch (Exception ex)
+        {
+            MessageBoxHelper.ShowError(ex.Message);
+            return string.Empty;
+        }
+    }
+
     public FormedFrame ShowFrameDialog()
     {
         try
