@@ -12,16 +12,12 @@ namespace ReportEngine.App.ViewModels;
 
 public class ObvyazkaViewModel
 {
-    private readonly IDialogService _dialogService;
-    private readonly NavigationService _navigation;
+
     private readonly IObvyazkaRepository _obvyazkaRepository;
 
-    public ObvyazkaViewModel(IObvyazkaRepository obvyazkaRepository, NavigationService navigation,
-        IDialogService dialogService)
+    public ObvyazkaViewModel(IObvyazkaRepository obvyazkaRepository)
     {
         _obvyazkaRepository = obvyazkaRepository;
-        _navigation = navigation;
-        _dialogService = dialogService;
         InitializeCommands();
     }
 
