@@ -141,6 +141,12 @@ public static class ProjectCommandsInitializer
 
         vm.ProjectCommandProvider.ShowCompanyDialogCommand =
             new RelayCommand(vm.OnShowCompanyDialogExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.ShowFrameDialogCommand =
+            new RelayCommand(vm.OnShowFrameDialogExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.ShowSubjectDialogCommand =
+            new RelayCommand(vm.OnShowSubjectDialogExecuted, vm.CanAllCommandsExecute);
     }
 
     public static void InitializeGenericCommands(ProjectViewModel vm)

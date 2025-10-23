@@ -42,6 +42,9 @@ public static class MainWindowCommandsInitializer
         vm.MainWindowCommandProvider.OpenSettingsWindow =
             new RelayCommand(vm.OpenOthersWindowCommandExecuted<SettingsWindow>, vm.CanAllCommandsExecute);
 
+        vm.MainWindowCommandProvider.OpenAllSubjectsCommand =
+            new RelayCommand(vm.OpenOthersWindowCommandExecuted<SubjectsView>, vm.CanAllCommandsExecute);
+
         vm.MainWindowCommandProvider.OpenCalculationSettingsWindow =
             new RelayCommand(vm.OpenOthersWindowCommandExecuted<CalculationSettingsWindow>, vm.CanAllCommandsExecute);
 

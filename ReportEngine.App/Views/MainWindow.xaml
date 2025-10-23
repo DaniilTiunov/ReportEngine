@@ -137,6 +137,8 @@
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllUsersCommand}" Header="Сотрудники" />
                 <Separator />
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllCompaniesCommand}" Header="Заказчики" />
+                <Separator />
+                <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllSubjectsCommand}" Header="Объекты" />
             </MenuItem>
             <MenuItem Header="Комплектующие">
                 <MenuItem Header="Сортамент труб">

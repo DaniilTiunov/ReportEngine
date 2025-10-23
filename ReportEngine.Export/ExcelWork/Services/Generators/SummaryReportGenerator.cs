@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel;
+﻿using System.Diagnostics;
+using ClosedXML.Excel;
 using QuestPDF.Infrastructure;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
@@ -77,6 +78,155 @@ public class SummaryReportGenerator : IReportGenerator
     }
 
 
+    #region Вспомогательные
+
+    private StandsReportData GetStandReportData(Stand stand)
+    {
+        const string dbErrorString = "Ошибка получения данных из БД";
+
+        var activeRow = 4;
+        //Формирование списка труб
+        var pipesList = stand.ObvyazkiInStand
+            .Select(obv => new
+            {
+                name = obv.MaterialLine,
+                units = obv.MaterialLineMeasure,
+                length = obv.MaterialLineCount
+            })
+            .GroupBy(pipe => pipe.name)
+            .Select(group => (
+                name: group.Key ?? dbErrorString,
+                unit: group.First().units ?? dbErrorString,
+                quantity: group.Sum(pipe => pipe.length).ToString() ?? dbErrorString
+            ))
+            .ToList();
+        //Формирование списка арматуры
+        var armaturesList = stand.ObvyazkiInStand
+            .Select(obv => new
+            {
+                name = obv.Armature,
+                units = obv.ArmatureMeasure,
+                quantity = obv.ArmatureCount
+            })
+            .GroupBy(arm => arm.name)
+            .Select(group => (
+                name: group.Key ?? dbErrorString,
+                unit: group.First().units ?? dbErrorString,
+                quantity: group.Sum(arm => arm.quantity).ToString() ?? dbErrorString
+            ))
+            .ToList();
+        //Формирование списка тройников и КМЧ
+        var treeList = stand.ObvyazkiInStand
+            .Select(obv => new
+            {
+                name = obv.TreeSocket,
+                units = obv.TreeSocketMaterialMeasure,
+                quantity = obv.TreeSocketCount
+            })
+            .GroupBy(item => item.name)
+            .Select(group => (
+                name: group.Key ?? dbErrorString,
+                unit: group.First().units ?? dbErrorString,
+                quantity: group.Sum(item => item.quantity).ToString() ?? dbErrorString
+            ))
+            .ToList();
+
+        var kmchList = stand.ObvyazkiInStand
+            .Select(obv => new
+            {
+                name = obv.KMCH,
+                units = obv.KMCHMeasure,
+                quantity = obv.KMCHCount
+            })
+            .GroupBy(item => item.name)
+            .Select(group => (
+                name: group.Key ?? dbErrorString,
+                unit: group.First().units ?? dbErrorString,
+                quantity: group.Sum(item => item.quantity).ToString() ?? dbErrorString
+            ))
+            .ToList();
+        //формирование дренажа
+        var drainageParts = stand.StandDrainages
+            .SelectMany(drainage => drainage.Drainage.Purposes)
+            .GroupBy(purpose => purpose.Material)
+            .Select(group => (
+                name: group.Key ?? dbErrorString,
+                unit: group.First().Measure ?? dbErrorString,
+                quantity: group.Sum(groupElement => groupElement.Quantity).ToString() ?? dbErrorString
+            ))
+            .ToList();
+        //Формирование списка рамных комплектующих
+        var framesList = stand.StandFrames
+            .SelectMany(fr => fr.Frame.Components)
+            .Select(comp => new
+            {
+                name = comp.ComponentName,
+                unit = comp.Measure,
+                quantity = comp.Count
+            })
+            .GroupBy(frameComp => frameComp.name)
+            .Select(group => (
+                name: group.Key ?? dbErrorString,
+                unit: group.First().unit ?? dbErrorString,
+                quantity: group.Sum(frameComp => frameComp.quantity).ToString() ?? dbErrorString
+            ))
+            .ToList();
+        //сомнительная хрень, хз что брать за источник информации
+        //формирование списка кронштейнов
+        var sensorsHolders = stand.StandAdditionalEquips
+            .SelectMany(equip => equip.AdditionalEquip.Purposes)
+            .Where(purpose => purpose.Purpose.Contains("Кронштейн"))
+            .GroupBy(purpose => purpose.Material)
+            .Select(group => (
+                name: group.Key ?? dbErrorString,
+                unit: group.First().Measure ?? dbErrorString,
+                quantity: group.Sum(groupElement => groupElement.Quantity).ToString() ?? dbErrorString
+            ))
+            .ToList();
+        //формирование списка электрических комплектующих
+        var electricalParts = stand.StandElectricalComponent
+            .SelectMany(equip => equip.ElectricalComponent.Purposes)
+            .GroupBy(purpose => purpose.Material)
+            .Select(group => (
+                name: group.Key ?? dbErrorString,
+                unit: group.First().Measure ?? dbErrorString,
+                quantity: group.Sum(item => item.Quantity).ToString() ?? dbErrorString
+            ))
+            .ToList();
+        //формирование списка дополнительного оборудования
+        var additionalParts = stand.StandAdditionalEquips
+            .SelectMany(equip => equip.AdditionalEquip.Purposes)
+            .GroupBy(purpose => purpose.Material)
+            .Select(group => (
+                name: group.Key ?? dbErrorString,
+                unit: group.First().Measure ?? dbErrorString,
+                quantity: group.Sum(item => item.Quantity).ToString() ?? dbErrorString
+            ))
+            .Except(sensorsHolders);
+        var othersParts = additionalParts
+            .Where(part => part.name.Contains("Шильдик") || part.name.Contains("Табличка"))
+            .ToList();
+
+        var supplies = additionalParts
+            .Except(othersParts)
+            .ToList();
+
+        return new StandsReportData(
+            pipesList,
+            armaturesList,
+            treeList,
+            kmchList,
+            drainageParts,
+            framesList,
+            sensorsHolders,
+            electricalParts,
+            othersParts,
+            supplies
+        );
+    }
+
+    #endregion
+
 
     #region Заголовки
 
@@ -115,7 +265,8 @@ public class SummaryReportGenerator : IReportGenerator
     }
 
     //создает заголовок сводной ведомости
-    private void CreateCommonListTableHeader(IXLWorksheet ws, ProjectInfo project, XLAlignmentHorizontalValues alignment)
+    private void CreateCommonListTableHeader(IXLWorksheet ws, ProjectInfo project,
+        XLAlignmentHorizontalValues alignment)
     {
         var headerRange = ws.Range("B1:F3");
 
@@ -157,10 +308,7 @@ public class SummaryReportGenerator : IReportGenerator
         return row;
     }
 
-
-
     #endregion
-
 
 
     #region Заполнители

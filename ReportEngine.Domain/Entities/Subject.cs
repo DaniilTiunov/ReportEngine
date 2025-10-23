@@ -3,13 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReportEngine.Domain.Entities;
 
-public class Company
+public class Subject
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    public int? Number { get; set; } // Номер
-    public string? Name { get; set; } // Наименование
-    public DateOnly? RegisterDate { get; set; } // Дата регистрации
+    public string? ObjectName { get; set; } // Объект
+    public string? CompanyName { get; set; } // Упр. компания
 }

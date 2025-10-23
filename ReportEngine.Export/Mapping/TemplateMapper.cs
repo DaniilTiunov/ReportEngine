@@ -19,7 +19,7 @@ public static class TemplateMapper
             { "{{stand_SerialNumber}}", standInfo?.SerialNumber ?? "N/A" },
             { "{{stand_YearManufacture}}", "Год изготовления стенда?? Хз где брать" ?? "N/A" },
             { "{{stand_Description}}", standInfo?.DesigneStand ?? "N/A" }
-           // { "is_galvanized}}", }
+            // { "is_galvanized}}", }
         };
     }
 

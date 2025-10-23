@@ -490,6 +490,7 @@
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="4" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
     </Style>
 
 

@@ -7,9 +7,9 @@ namespace ReportEngine.App.Views.Windows;
 /// <summary>
 ///     Логика взаимодействия для CompanyView.xaml
 /// </summary>
-public partial class CompanyView : Window
+public partial class SubjectsView : Window
 {
-    public CompanyView(CompanyViewModel viewModel)
+    public SubjectsView(SubjectViewModel viewModel)
     {
         InitializeComponent();
         DataContext = viewModel;
@@ -17,16 +17,16 @@ public partial class CompanyView : Window
         Loaded += async (_, __) => await InitializeDataAsync(viewModel);
     }
 
-    private async Task InitializeDataAsync(CompanyViewModel viewModel)
+    private async Task InitializeDataAsync(SubjectViewModel viewModel)
     {
-        await viewModel.LoadAllCompaniesAsync();
+        await viewModel.LoadAllSubjectsAsync();
     }
 
-    private void CompaniesDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    private void SubjectsDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-        if (DataContext is CompanyViewModel vm && vm.CurrentCompany.SelectedCompany != null)
+        if (DataContext is SubjectViewModel vm && vm.CurrentSubject.SelectedSubject != null)
         {
-            vm.SelectedItem?.Invoke(vm.CurrentCompany.SelectedCompany.Name);
+            vm.SelectedItem?.Invoke(vm.CurrentSubject.SelectedSubject.ObjectName);
             DialogResult = true;
             Close();
         }

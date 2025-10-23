@@ -9,7 +9,6 @@ public class MainWindowCommandProvider
     public ICommand OpenAllObvyazkiCommand { get; set; }
     public ICommand OpenTreeViewCommand { get; set; }
     public ICommand OpenFormedFramesCommand { get; set; }
-    public ICommand CloseAppCommand { get; set; }
     public ICommand OpenAllUsersCommand { get; set; }
     public ICommand OpenAllCompaniesCommand { get; set; }
     public ICommand ChekDbConnectionCommand { get; set; }
@@ -21,4 +20,5 @@ public class MainWindowCommandProvider
     public ICommand OpenSettingsWindow { get; set; }
     public ICommand OpenCalculationSettingsWindow { get; set; }
     public ICommand RecalculateProjectCommand { get; set; }
+    public ICommand OpenAllSubjectsCommand { get; set; }
 }

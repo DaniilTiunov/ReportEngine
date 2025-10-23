@@ -23,6 +23,7 @@ namespace ReportEngine.App.ViewModels;
 public class ProjectViewModel : BaseViewModel
 {
     private readonly ICalculationService _calculationService;
+    private readonly IBaseRepository<Company> _companyRepository;
     private readonly IContainerRepository _containerRepository;
     private readonly ContainerService _containerService;
     private readonly IDialogService _dialogService;
@@ -32,7 +33,6 @@ public class ProjectViewModel : BaseViewModel
     private readonly IProjectService _projectService;
     private readonly IReportService _reportService;
     private readonly IStandService _standService;
-    private readonly IBaseRepository<Company> _companyRepository;
 
     public ProjectViewModel(IProjectInfoRepository projectRepository,
         IDialogService dialogService,
@@ -84,11 +84,39 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnShowCompanyDialogExecuted(object e)
     {
-        await ExceptionHelper.SafeExecuteAsync(async ()=>
+        await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             var companyName = _dialogService.ShowCompanyDialog();
 
             CurrentProjectModel.Company = companyName;
+        });
+    }
+
+    public async void OnShowSubjectDialogExecuted(object e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            var subjectName = _dialogService.ShowSubjectDialog();
+
+            CurrentProjectModel.Object = subjectName;
+        });
+    }
+
+    public async void OnShowFrameDialogExecuted(object e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            var selectedFrame = _dialogService.ShowFrameDialog();
+
+            if (selectedFrame != null)
+            {
+                await _standService.AddFrameToStandAsync(
+                    CurrentProjectModel.SelectedStand.Id,
+                    selectedFrame.Id
+                );
+
+                CurrentProjectModel.SelectedStand.FramesInStand.Add(selectedFrame);
+            }
         });
     }
 
@@ -199,6 +227,7 @@ public class ProjectViewModel : BaseViewModel
         {
             await CreateNewProjectCardAsync();
             await _projectService.GetOrAddCompnayAsync(CurrentProjectModel.Company);
+            await _projectService.GetOrAddSubjectAsync(CurrentProjectModel.Object, CurrentProjectModel.Company);
         });
     }
 
@@ -313,7 +342,7 @@ public class ProjectViewModel : BaseViewModel
             stand.ArmatureCount = SelectedObvyazka.ZraCount;
             stand.TreeSocketMaterialCount = SelectedObvyazka.TreeSocket;
             stand.KMCHCount = SelectedObvyazka.Clamp;
-            
+
             stand.SelectedObvyazkaInStand = null;
             stand.SelectedObvyazkaInStand = tmp;
         });

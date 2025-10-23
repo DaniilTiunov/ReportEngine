@@ -51,7 +51,7 @@ public partial class MainWindow : Window //Это так называемый "C
     {
         _mainViewModel.OnEditProjectCommandExecuted(e);
     }
-    
+
     private async Task LoadCalculationSettingsDataAsync()
     {
         var calcSettings = _serviceProvider.GetRequiredService<CalculationSettingsViewModel>();
@@ -198,6 +198,4 @@ public partial class MainWindow : Window //Это так называемый "C
     {
         ChangesTheme("/Resources/Dictionaries/BubbleGumTheme.xaml");
     }
-
-
 }

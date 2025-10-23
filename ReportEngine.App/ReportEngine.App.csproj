@@ -382,6 +382,12 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Compile Update="Views\Windows\SubjectsView.xaml.cs">
+            <SubType>Code</SubType>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
         <None Update="Help\HelpDesk.chm">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>

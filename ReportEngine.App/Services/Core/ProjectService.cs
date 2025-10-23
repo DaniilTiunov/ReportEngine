@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Windows;
 using Microsoft.VisualBasic;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Model;
@@ -16,12 +15,13 @@ namespace ReportEngine.App.Services.Core;
 public class ProjectService : IProjectService
 {
     private readonly IFormedAdditionalEquipsRepository _additionalEquipsRepository;
+    private readonly IBaseRepository<Company> _companyRepository;
     private readonly IFormedDrainagesRepository _drainagesRepository;
     private readonly IFormedElectricalRepository _electricalRepository;
     private readonly INotificationService _notificationService;
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IStandService _standService;
-    private readonly IBaseRepository<Company> _companyRepository;
+    private readonly IBaseRepository<Subject> _subjectRepository;
 
     public ProjectService(
         IProjectInfoRepository projectRepository,
@@ -30,7 +30,8 @@ public class ProjectService : IProjectService
         IFormedElectricalRepository electricalRepository,
         IFormedAdditionalEquipsRepository additionalEquipsRepository,
         IFormedDrainagesRepository drainagesRepository,
-        IBaseRepository<Company> companyRepository)
+        IBaseRepository<Company> companyRepository,
+        IBaseRepository<Subject> subjectRepository)
     {
         _drainagesRepository = drainagesRepository;
         _additionalEquipsRepository = additionalEquipsRepository;
@@ -39,8 +40,8 @@ public class ProjectService : IProjectService
         _projectRepository = projectRepository;
         _notificationService = notificationService;
         _companyRepository = companyRepository;
+        _subjectRepository = subjectRepository;
     }
-
 
     public async Task GetOrAddCompnayAsync(string name)
     {
@@ -49,14 +50,10 @@ public class ProjectService : IProjectService
         var existingCompany = companies.FirstOrDefault(c =>
             string.Equals(c.Name, name, StringComparison.OrdinalIgnoreCase));
 
-        if (existingCompany != null)
-        {
-            return;
-        }
+        if (existingCompany != null) return;
 
         var newCompany = new Company
         {
-            Id = 0,
             Name = name,
             RegisterDate = DateOnly.FromDateTime(DateTime.Now),
             Number = companies.Count() + 1
@@ -65,6 +62,26 @@ public class ProjectService : IProjectService
         await _companyRepository.AddAsync(newCompany);
 
         _notificationService.ShowInfo($"Новый заказчик добавлен в базу!: {newCompany.Name}");
+    }
+
+    public async Task GetOrAddSubjectAsync(string objectName, string companyName)
+    {
+        var subjects = await _subjectRepository.GetAllAsync();
+        var existingSubject = subjects.FirstOrDefault(s =>
+            string.Equals(s.ObjectName, objectName, StringComparison.OrdinalIgnoreCase));
+
+        if (existingSubject != null) return;
+
+        var newSubject = new Subject
+        {
+            ObjectName = objectName,
+            CompanyName = companyName
+        };
+
+        await _subjectRepository.AddAsync(newSubject);
+
+        _notificationService.ShowInfo($"Новый объект добавлен в базу!: {newSubject.ObjectName}"
+                                      + $"\nУправляющая компания: {newSubject.CompanyName}");
     }
 
     public async Task CreateProjectAsync(ProjectModel projectModel)
