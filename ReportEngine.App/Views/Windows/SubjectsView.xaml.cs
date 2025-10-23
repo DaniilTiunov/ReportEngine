@@ -1,6 +1,10 @@
-﻿using System.Windows;
+﻿using ReportEngine.App.ViewModels.Contacts;
+using ReportEngine.Domain.Entities;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
-using ReportEngine.App.ViewModels.Contacts;
 
 namespace ReportEngine.App.Views.Windows;
 
@@ -9,6 +13,8 @@ namespace ReportEngine.App.Views.Windows;
 /// </summary>
 public partial class SubjectsView : Window
 {
+    private ICollectionView _subjectsView;
+
     public SubjectsView(SubjectViewModel viewModel)
     {
         InitializeComponent();
@@ -20,6 +26,34 @@ public partial class SubjectsView : Window
     private async Task InitializeDataAsync(SubjectViewModel viewModel)
     {
         await viewModel.LoadAllSubjectsAsync();
+
+        _subjectsView = CollectionViewSource.GetDefaultView(viewModel.CurrentSubject.AllSubjects);
+
+        SubjectsDataGrid.ItemsSource = _subjectsView;
+    }
+
+    private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (_subjectsView == null)
+            return;
+
+        string query = SearchTextBox.Text.Trim().ToLower();
+
+        if (string.IsNullOrEmpty(query))
+        {
+            _subjectsView.Filter = null; // сброс фильтра
+        }
+        else
+        {
+            _subjectsView.Filter = obj =>
+            {
+                if (obj is Subject c)
+                    return !string.IsNullOrEmpty(c.ObjectName) && c.ObjectName.ToLower().Contains(query);
+                return false;
+            };
+        }
+
+        _subjectsView.Refresh();
     }
 
     private void SubjectsDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)

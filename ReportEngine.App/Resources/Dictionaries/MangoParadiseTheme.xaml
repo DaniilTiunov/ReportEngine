@@ -432,7 +432,7 @@
     </Style>
 
     <!--  ComboBox  -->
-    <Style BasedOn="{StaticResource MaterialDesignComboBox}" TargetType="ComboBox">
+    <Style TargetType="ComboBox">
         <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
