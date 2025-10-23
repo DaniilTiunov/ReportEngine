@@ -170,195 +170,39 @@ public class SummaryReportGenerator : IReportGenerator
     private void FillStandTable(IXLWorksheet ws, Stand stand)
     {
         var activeRow = 4;
-        const string dbErrorString = "Ошибка получения данных из БД";
+
+        var temp = new List<Stand>();
+        temp.Add(stand);
+        var generatedData = GenerateStandsData(temp);
 
 
-        var data = GetStandReportData(stand);
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
+        activeRow = FillSubtableData(activeRow, generatedData.PipesList, ws);
 
-        //Формирование списка труб
-        var pipesList = project.Stands
-            .SelectMany(stand => stand.ObvyazkiInStand)
-            .Select(obv => new
-            {
-                name = obv.MaterialLine,
-                units = obv.MaterialLineMeasure,
-                length = obv.MaterialLineCount,
-                price = obv.MaterialLineCostPerUnit
-            })
-            .GroupBy(pipe => pipe.name)
-            .Select(group => (
-                name: group.Key ?? dbErrorString,
-                unit: group.First().units ?? dbErrorString,
-                quantity: group.Sum(pipe => pipe.length),
-                costPerUnit: group.First().price
-            ))
-            .Select(group => new
-            {
-                group.name,
-                group.unit,
-                group.quantity,
-                group.costPerUnit,
-                commonPrice = (Single.Parse(group.costPerUnit ?? "0.0") * (group.quantity ?? 0f)).ToString()
-            })
-            .ToList();
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Арматура", ws);
+        activeRow = FillSubtableData(activeRow, generatedData.ArmaturesList, ws);
 
-        //Формирование списка арматуры
-        var armaturesList = project.Stands
-            .SelectMany(stand => stand.ObvyazkiInStand)
-            .Select(obv => new
-            {
-                name = obv.Armature,
-                units = obv.ArmatureMeasure,
-                quantity = obv.ArmatureCount
-            })
-            .GroupBy(arm => arm.name)
-            .Select(group => (
-                name: group.Key ?? dbErrorString,
-                unit: group.First().units ?? dbErrorString,
-                quantity: group.Sum(arm => arm.quantity).ToString() ?? dbErrorString
-            ))
-            .ToList();
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Тройники и КМЧ", ws);
+        activeRow = FillSubtableData(activeRow, generatedData.TreeList, ws);
+        activeRow = FillSubtableData(activeRow, generatedData.KmchList, ws);
 
-        //Формирование списка тройников и КМЧ
-        var treeList = project.Stands
-            .SelectMany(stand => stand.ObvyazkiInStand)
-            .Select(obv => new
-            {
-                name = obv.TreeSocket,
-                units = obv.TreeSocketMaterialMeasure,
-                quantity = obv.TreeSocketCount
-            })
-            .GroupBy(item => item.name)
-            .Select(group => (
-                name: group.Key ?? dbErrorString,
-                unit: group.First().units ?? dbErrorString,
-                quantity: group.Sum(item => item.quantity).ToString() ?? dbErrorString
-            ))
-            .ToList();
-        var kmchList = project.Stands
-            .SelectMany(stand => stand.ObvyazkiInStand)
-            .Select(obv => new
-            {
-                name = obv.KMCH,
-                units = obv.KMCHMeasure,
-                quantity = obv.KMCHCount
-            })
-            .GroupBy(item => item.name)
-            .Select(group => (
-                name: group.Key ?? dbErrorString,
-                unit: group.First().units ?? dbErrorString,
-                quantity: group.Sum(item => item.quantity).ToString() ?? dbErrorString
-            ))
-            .ToList();
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Дренаж", ws);
+        activeRow = FillSubtableData(activeRow, generatedData.DrainageParts, ws);
 
-        //формирование дренажа
-        var drainageParts = project.Stands
-            .SelectMany(stand => stand.StandDrainages)
-            .SelectMany(drainage => drainage.Drainage.Purposes)
-            .GroupBy(purpose => purpose.Material)
-            .Select(group => (
-                name: group.Key ?? dbErrorString,
-                unit: group.First().Measure ?? dbErrorString,
-                quantity: group.Sum(groupElement => groupElement.Quantity).ToString() ?? dbErrorString
-            ))
-            .ToList();
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Рамные комплектующие", ws);
+        activeRow = FillSubtableData(activeRow, generatedData.FramesList, ws);
 
-        //Формирование списка рамных комплектующих
-        var framesList = project.Stands
-            .SelectMany(stand => stand.StandFrames)
-            .SelectMany(fr => fr.Frame.Components)
-            .Select(comp => new
-            {
-                name = comp.ComponentName,
-                unit = comp.Measure,
-                quantity = comp.Count
-            })
-            .GroupBy(frameComp => frameComp.name)
-            .Select(group => (
-                name: group.Key ?? dbErrorString,
-                unit: group.First().unit ?? dbErrorString,
-                quantity: group.Sum(frameComp => frameComp.quantity).ToString() ?? dbErrorString
-            ))
-            .ToList();
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Кронштейны", ws);
+        activeRow = FillSubtableData(activeRow, generatedData.SensorsHolders, ws);
 
-        //сомнительная хрень, хз что брать за источник информации
-        //формирование списка кронштейнов
-        var sensorsHolders = project.Stands
-            .SelectMany(stand => stand.StandAdditionalEquips)
-            .SelectMany(equip => equip.AdditionalEquip.Purposes)
-            .Where(purpose => purpose.Purpose.Contains("Кронштейн"))
-            .GroupBy(purpose => purpose.Material)
-            .Select(group => (
-                name: group.Key ?? dbErrorString,
-                unit: group.First().Measure ?? dbErrorString,
-                quantity: group.Sum(groupElement => groupElement.Quantity).ToString() ?? dbErrorString
-            ))
-            .ToList();
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Электрические компоненты", ws);
+        activeRow = FillSubtableData(activeRow, generatedData.ElectricalParts, ws);
 
-        //формирование списка электрических комплектующих
-        var electricalParts = project.Stands
-            .SelectMany(stand => stand.StandElectricalComponent)
-            .SelectMany(equip => equip.ElectricalComponent.Purposes)
-            .GroupBy(purpose => purpose.Material)
-            .Select(group => (
-                name: group.Key ?? dbErrorString,
-                unit: group.First().Measure ?? dbErrorString,
-                quantity: group.Sum(item => item.Quantity).ToString() ?? dbErrorString
-            ))
-            .ToList();
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Прочие", ws);
+        activeRow = FillSubtableData(activeRow, generatedData.OthersParts, ws);
 
-        //формирование списка дополнительного оборудования
-        var additionalParts = project.Stands
-            .SelectMany(stand => stand.StandAdditionalEquips)
-            .SelectMany(equip => equip.AdditionalEquip.Purposes)
-            .GroupBy(purpose => purpose.Material)
-            .Select(group => (
-                name: group.Key ?? dbErrorString,
-                unit: group.First().Measure ?? dbErrorString,
-                quantity: group.Sum(item => item.Quantity).ToString() ?? dbErrorString
-            ))
-            .Except(sensorsHolders);
-
-        var othersParts = additionalParts
-            .Where(part => part.name.Contains("Шильдик") || part.name.Contains("Табличка"))
-            .ToList();
-
-        var supplies = additionalParts
-            .Except(othersParts)
-            .ToList();
-
-
-
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws, XLAlignmentHorizontalValues.Center);
-        activeRow = FillSubtableData(activeRow, pipesList, ws, XLAlignmentHorizontalValues.Left);
-
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Арматура", ws, XLAlignmentHorizontalValues.Center);
-        activeRow = FillSubtableData(activeRow, armaturesList, ws, XLAlignmentHorizontalValues.Left);
-
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Тройники и КМЧ", ws, XLAlignmentHorizontalValues.Center);
-        activeRow = FillSubtableData(activeRow, treeList, ws, XLAlignmentHorizontalValues.Left);
-        activeRow = FillSubtableData(activeRow, kmchList, ws, XLAlignmentHorizontalValues.Left);
-
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Дренаж", ws, XLAlignmentHorizontalValues.Center);
-        activeRow = FillSubtableData(activeRow, drainageParts, ws, XLAlignmentHorizontalValues.Left);
-
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Рамные комплектующие", ws,
-            XLAlignmentHorizontalValues.Center);
-        activeRow = FillSubtableData(activeRow, framesList, ws, XLAlignmentHorizontalValues.Left);
-
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Кронштейны", ws, XLAlignmentHorizontalValues.Center);
-        activeRow = FillSubtableData(activeRow, sensorsHolders, ws, XLAlignmentHorizontalValues.Left);
-
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Электрические компоненты", ws,
-            XLAlignmentHorizontalValues.Center);
-        activeRow = FillSubtableData(activeRow, electricalParts, ws, XLAlignmentHorizontalValues.Left);
-
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Прочие", ws, XLAlignmentHorizontalValues.Center);
-        activeRow = FillSubtableData(activeRow, othersParts, ws, XLAlignmentHorizontalValues.Left);
-
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Расходные материалы", ws,
-            XLAlignmentHorizontalValues.Center);
-        activeRow = FillSubtableData(activeRow, supplies, ws, XLAlignmentHorizontalValues.Left);
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Расходные материалы", ws);
+        activeRow = FillSubtableData(activeRow, generatedData.Supplies, ws);
 
 
 
@@ -393,37 +237,37 @@ public class SummaryReportGenerator : IReportGenerator
     //заполняет сводную ведомость
     private void FillCommonListTable(IXLWorksheet ws, ProjectInfo project)
     {
-       var generatedStandData = GenerateStandsData(project.Stands);
+       var generatedData = GenerateStandsData(project.Stands);
 
         var activeRow = 4;
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
-        activeRow = FillSubtableData(activeRow, generatedStandData.PipesList, ws);
+        activeRow = FillSubtableData(activeRow, generatedData.PipesList, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Арматура", ws);
-        activeRow = FillSubtableData(activeRow, generatedStandData.ArmaturesList, ws);
+        activeRow = FillSubtableData(activeRow, generatedData.ArmaturesList, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Тройники и КМЧ", ws);
-        activeRow = FillSubtableData(activeRow, generatedStandData.TreeList, ws);
-        activeRow = FillSubtableData(activeRow, generatedStandData.KmchList, ws);
+        activeRow = FillSubtableData(activeRow, generatedData.TreeList, ws);
+        activeRow = FillSubtableData(activeRow, generatedData.KmchList, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Дренаж", ws);
-        activeRow = FillSubtableData(activeRow, generatedStandData.DrainageParts, ws);
+        activeRow = FillSubtableData(activeRow, generatedData.DrainageParts, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Рамные комплектующие", ws);
-        activeRow = FillSubtableData(activeRow, generatedStandData.FramesList, ws);
+        activeRow = FillSubtableData(activeRow, generatedData.FramesList, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Кронштейны", ws);
-        activeRow = FillSubtableData(activeRow, generatedStandData.SensorsHolders, ws);
+        activeRow = FillSubtableData(activeRow, generatedData.SensorsHolders, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Электрические компоненты", ws);
-        activeRow = FillSubtableData(activeRow, generatedStandData.ElectricalParts, ws);
+        activeRow = FillSubtableData(activeRow, generatedData.ElectricalParts, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Прочие", ws);
-        activeRow = FillSubtableData(activeRow, generatedStandData.OthersParts, ws);
+        activeRow = FillSubtableData(activeRow, generatedData.OthersParts, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Расходные материалы", ws);
-        activeRow = FillSubtableData(activeRow, generatedStandData.Supplies, ws);
+        activeRow = FillSubtableData(activeRow, generatedData.Supplies, ws);
     }
 
 
