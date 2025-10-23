@@ -1,12 +1,12 @@
-﻿using ReportEngine.App.AppHelpers;
+﻿using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Input;
+using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
-using System.Collections.ObjectModel;
-using System.Windows;
-using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -79,14 +79,14 @@ public class ObvyazkaViewModel
         }
         catch (Exception ex)
         {
-
-            MessageBox.Show($"Ошибка при добавлении обвязки: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show($"Ошибка при добавлении обвязки: {ex.Message}", "Ошибка", MessageBoxButton.OK,
+                MessageBoxImage.Error);
         }
     }
 
     public async void OnUpdateChangesExecuted(object e)
     {
-        await ExceptionHelper.SafeExecuteAsync(async() => await UpdateObvyazkaAsync(CurrentObvyazka.SelectedObvyazka));
+        await ExceptionHelper.SafeExecuteAsync(async () => await UpdateObvyazkaAsync(CurrentObvyazka.SelectedObvyazka));
         _notificationService.ShowInfo("Изменения выбранной обвязки сохранены");
     }
 
@@ -96,6 +96,7 @@ public class ObvyazkaViewModel
         CurrentObvyazka.Obvyazki.Remove(CurrentObvyazka.SelectedObvyazka);
         _notificationService.ShowInfo("Выбранная обвязка удалена");
     }
+
     #endregion
 
     #region Методы
