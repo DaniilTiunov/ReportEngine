@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using ClosedXML.Excel;
-using QuestPDF.Infrastructure;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
@@ -52,11 +51,23 @@ public class SummaryReportGenerator : IReportGenerator
                 standNumber++;
             }
 
-            //заполняем сводную ведомость
-            var lastSheet = wb.Worksheets.Add("Сводная заявка");
 
-            CreateCommonListTableHeader(lastSheet, project, XLAlignmentHorizontalValues.Center);
-            FillCommonListTable(lastSheet, project);
+
+            //заполняем сводную ведомость
+            var summarySheet = wb.Worksheets.Add("Сводная заявка");
+
+            CreateCommonListTableHeader(summarySheet, project);
+            FillCommonListTable(summarySheet, project);
+
+
+
+            //заполняем калькуляцию
+            var calculationSheet = wb.Worksheets.Add("Калькуляция");
+
+            CreateCalcullationTableHeader(calculationSheet, project);
+            //FillCalculationTable(calculationSheet, project);
+
+
 
             //применяем оформление ко всему документу
             foreach (var ws in wb.Worksheets)
@@ -78,158 +89,25 @@ public class SummaryReportGenerator : IReportGenerator
     }
 
 
-    #region Вспомогательные
 
-    private StandsReportData GetStandReportData(Stand stand)
-    {
-        const string dbErrorString = "Ошибка получения данных из БД";
-
-        var activeRow = 4;
-        //Формирование списка труб
-        var pipesList = stand.ObvyazkiInStand
-            .Select(obv => new
-            {
-                name = obv.MaterialLine,
-                units = obv.MaterialLineMeasure,
-                length = obv.MaterialLineCount
-            })
-            .GroupBy(pipe => pipe.name)
-            .Select(group => (
-                name: group.Key ?? dbErrorString,
-                unit: group.First().units ?? dbErrorString,
-                quantity: group.Sum(pipe => pipe.length).ToString() ?? dbErrorString
-            ))
-            .ToList();
-        //Формирование списка арматуры
-        var armaturesList = stand.ObvyazkiInStand
-            .Select(obv => new
-            {
-                name = obv.Armature,
-                units = obv.ArmatureMeasure,
-                quantity = obv.ArmatureCount
-            })
-            .GroupBy(arm => arm.name)
-            .Select(group => (
-                name: group.Key ?? dbErrorString,
-                unit: group.First().units ?? dbErrorString,
-                quantity: group.Sum(arm => arm.quantity).ToString() ?? dbErrorString
-            ))
-            .ToList();
-        //Формирование списка тройников и КМЧ
-        var treeList = stand.ObvyazkiInStand
-            .Select(obv => new
-            {
-                name = obv.TreeSocket,
-                units = obv.TreeSocketMaterialMeasure,
-                quantity = obv.TreeSocketCount
-            })
-            .GroupBy(item => item.name)
-            .Select(group => (
-                name: group.Key ?? dbErrorString,
-                unit: group.First().units ?? dbErrorString,
-                quantity: group.Sum(item => item.quantity).ToString() ?? dbErrorString
-            ))
-            .ToList();
-
-        var kmchList = stand.ObvyazkiInStand
-            .Select(obv => new
-            {
-                name = obv.KMCH,
-                units = obv.KMCHMeasure,
-                quantity = obv.KMCHCount
-            })
-            .GroupBy(item => item.name)
-            .Select(group => (
-                name: group.Key ?? dbErrorString,
-                unit: group.First().units ?? dbErrorString,
-                quantity: group.Sum(item => item.quantity).ToString() ?? dbErrorString
-            ))
-            .ToList();
-        //формирование дренажа
-        var drainageParts = stand.StandDrainages
-            .SelectMany(drainage => drainage.Drainage.Purposes)
-            .GroupBy(purpose => purpose.Material)
-            .Select(group => (
-                name: group.Key ?? dbErrorString,
-                unit: group.First().Measure ?? dbErrorString,
-                quantity: group.Sum(groupElement => groupElement.Quantity).ToString() ?? dbErrorString
-            ))
-            .ToList();
-        //Формирование списка рамных комплектующих
-        var framesList = stand.StandFrames
-            .SelectMany(fr => fr.Frame.Components)
-            .Select(comp => new
-            {
-                name = comp.ComponentName,
-                unit = comp.Measure,
-                quantity = comp.Count
-            })
-            .GroupBy(frameComp => frameComp.name)
-            .Select(group => (
-                name: group.Key ?? dbErrorString,
-                unit: group.First().unit ?? dbErrorString,
-                quantity: group.Sum(frameComp => frameComp.quantity).ToString() ?? dbErrorString
-            ))
-            .ToList();
-        //сомнительная хрень, хз что брать за источник информации
-        //формирование списка кронштейнов
-        var sensorsHolders = stand.StandAdditionalEquips
-            .SelectMany(equip => equip.AdditionalEquip.Purposes)
-            .Where(purpose => purpose.Purpose.Contains("Кронштейн"))
-            .GroupBy(purpose => purpose.Material)
-            .Select(group => (
-                name: group.Key ?? dbErrorString,
-                unit: group.First().Measure ?? dbErrorString,
-                quantity: group.Sum(groupElement => groupElement.Quantity).ToString() ?? dbErrorString
-            ))
-            .ToList();
-        //формирование списка электрических комплектующих
-        var electricalParts = stand.StandElectricalComponent
-            .SelectMany(equip => equip.ElectricalComponent.Purposes)
-            .GroupBy(purpose => purpose.Material)
-            .Select(group => (
-                name: group.Key ?? dbErrorString,
-                unit: group.First().Measure ?? dbErrorString,
-                quantity: group.Sum(item => item.Quantity).ToString() ?? dbErrorString
-            ))
-            .ToList();
-        //формирование списка дополнительного оборудования
-        var additionalParts = stand.StandAdditionalEquips
-            .SelectMany(equip => equip.AdditionalEquip.Purposes)
-            .GroupBy(purpose => purpose.Material)
-            .Select(group => (
-                name: group.Key ?? dbErrorString,
-                unit: group.First().Measure ?? dbErrorString,
-                quantity: group.Sum(item => item.Quantity).ToString() ?? dbErrorString
-            ))
-            .Except(sensorsHolders);
-        var othersParts = additionalParts
-            .Where(part => part.name.Contains("Шильдик") || part.name.Contains("Табличка"))
-            .ToList();
-
-        var supplies = additionalParts
-            .Except(othersParts)
-            .ToList();
-
-        return new StandsReportData(
-            pipesList,
-            armaturesList,
-            treeList,
-            kmchList,
-            drainageParts,
-            framesList,
-            sensorsHolders,
-            electricalParts,
-            othersParts,
-            supplies
-        );
-    }
-
-    #endregion
 
 
     #region Заголовки
 
+    //создает подзаголовок для подтаблицы и возвращает следующую строку
+    private int CreateSubheaderOnWorksheet(int row, string title, IXLWorksheet ws)
+    {
+        var subHeaderRange = ws.Range($"B{row}:F{row}");
+        subHeaderRange.Merge();
+        subHeaderRange.Value = title;
+        subHeaderRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        subHeaderRange.Style.Font.SetFontSize(10);
+        subHeaderRange.Style.Font.SetBold();
+
+        row++;
+        return row;
+    }
+    
     //создает заголовок для стенда
     private void CreateStandTableHeader(IXLWorksheet ws, Stand stand, XLAlignmentHorizontalValues alignment)
     {
@@ -265,18 +143,17 @@ public class SummaryReportGenerator : IReportGenerator
     }
 
     //создает заголовок сводной ведомости
-    private void CreateCommonListTableHeader(IXLWorksheet ws, ProjectInfo project,
-        XLAlignmentHorizontalValues alignment)
+    private void CreateCommonListTableHeader(IXLWorksheet ws, ProjectInfo project)
     {
         var headerRange = ws.Range("B1:F3");
 
         var customerCompanyRange = ws.Range("B1:F1").Merge();
         customerCompanyRange.Value = $"{project.Company}";
-        customerCompanyRange.Style.Alignment.Horizontal = alignment;
+        customerCompanyRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
         var commonListStringRange = ws.Range("B2:F2").Merge();
         commonListStringRange.Value = "Сводная ведомость комплектующих";
-        commonListStringRange.Style.Alignment.Horizontal = alignment;
+        commonListStringRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center; 
 
         ws.Cell("B3").Value = "Наименование";
         ws.Cell("C3").Value = "Ед.изм.";
@@ -288,24 +165,65 @@ public class SummaryReportGenerator : IReportGenerator
 
         headerRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
         headerRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Medium);
-        headerRange.Style.Alignment.Horizontal = alignment;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center; ;
         headerRange.Style.Font.SetBold();
 
 
     }
 
-    //создает подзаголовок для подтаблицы и возвращает следующую строку
-    private int CreateSubheaderOnWorksheet(int row, string title, IXLWorksheet ws)
+    //создает заголовок листа калькуляции
+    private void CreateCalcullationTableHeader(IXLWorksheet ws, ProjectInfo project)
     {
-        var subHeaderRange = ws.Range($"B{row}:F{row}");
-        subHeaderRange.Merge();
-        subHeaderRange.Value = title;
-        subHeaderRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-        subHeaderRange.Style.Font.SetFontSize(10);
-        subHeaderRange.Style.Font.SetBold();
+        var headerRange = ws.Range("A3:B6");
 
-        row++;
-        return row;
+        //headerRange = headerRange + ws.Range("C1:K6");
+
+        var customerCompanyRange = ws.Range("C1:K2").Merge();
+        customerCompanyRange.Value = $"{project.Company}";
+
+        var descriptionRange = ws.Range("A3:A6").Merge();
+        descriptionRange.Value = "Примечание";
+
+        var deliveryTimeRange = ws.Range("B3:B6").Merge();
+        deliveryTimeRange.Value = "Срок поставки комплектующих, дней";
+
+        var devicesListRange = ws.Range("C3:K4").Merge();
+        devicesListRange.Value = "Перечень оборудования, планируемого к поставке";
+
+        var numberRange = ws.Range("C5:C6").Merge();
+        numberRange.Value = "№ п/п";
+     
+        var standNameRange = ws.Range("D5:D6").Merge();
+        standNameRange.Value = "Наименование стенда";
+        
+        var kksCodeRange = ws.Range("E5:E6").Merge();
+        kksCodeRange.Value = "Код-KKS";
+        
+        var unitsRange = ws.Range("F5:F6").Merge();
+        unitsRange.Value = "Ед.изм.";
+        
+        var quantityRange = ws.Range("G5:G6").Merge();
+        quantityRange.Value = "Кол-во";
+        
+        var massRange = ws.Range("H5:H6").Merge();
+        massRange.Value = "Масса, кг";
+        
+        var widthRange = ws.Range("I5:I6").Merge();
+        widthRange.Value = "Ширина стенда, мм";
+        
+        var costPerUnitRange = ws.Range("J5:J6").Merge();
+        costPerUnitRange.Value = "Цена за единицу, руб.";
+        
+        var priceRange = ws.Range("K5:K6").Merge();
+        priceRange.Value = "Стоимость, руб";
+
+
+
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+
+
     }
 
     #endregion
