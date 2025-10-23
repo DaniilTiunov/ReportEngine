@@ -8,6 +8,10 @@
         <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign2.Defaults.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
+    <SolidColorBrush x:Key="MaterialDesignPaper" Color="Red" />
+    <SolidColorBrush x:Key="MaterialDesign.DropDown.Background" Color="Aqua" />
+    <SolidColorBrush x:Key="MaterialDesign.Brush.ComboBox.Popup.Background" Color="#CCFF0000" />
+
     <!--  Цветовые ресурсы для светлой темы  -->
     <SolidColorBrush x:Key="PrimaryColor" Color="#FFFFFF" />
     <SolidColorBrush x:Key="SecondaryColor" Color="#F5F5F5" />
@@ -25,9 +29,6 @@
     <SolidColorBrush x:Key="ButtonDisabledBackground" Color="#2A2A2A" />
     <SolidColorBrush x:Key="ButtonDisabledForeground" Color="#777777" />
     <SolidColorBrush x:Key="DisabledForeground" Color="Gray" />
-
-    <SolidColorBrush x:Key="MaterialDesignComboBoxPopupBackground" Color="Blue" />
-    <SolidColorBrush x:Key="MaterialDesign.Brush.ComboBox.Popup.Background" Color="#CCFF0000" />
 
     <!--  Стили для Window  -->
     <Style TargetType="Window">
@@ -488,15 +489,17 @@
         <Setter Property="BorderBrush" Value="{DynamicResource SecondaryColor}" />
     </Style>
 
-    <Style TargetType="materialDesign:ComboBoxPopup">
-        <Setter Property="Background" Value="Red" />
+    <Style TargetType="materialDesign:PopupBox">
+        <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SecondaryColor}" />
     </Style>
 
     <!--  ComboBox  -->
-    <Style BasedOn="{StaticResource MaterialDesignComboBox}" TargetType="{x:Type ComboBox}">
+    <Style TargetType="ComboBox">
         <Setter Property="Opacity" Value="1" />
-
     </Style>
+
 
     <!--  ComboBoxItem стиль  -->
     <Style BasedOn="{StaticResource MaterialDesignComboBoxItemStyle}" TargetType="ComboBoxItem">

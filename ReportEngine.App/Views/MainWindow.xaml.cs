@@ -35,16 +35,19 @@ public partial class MainWindow : Window //Это так называемый "C
     // Событие загрузки окна
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
-        StandartTheme(null, null);
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            StandartTheme(null, null);
 
-        MainWindow_StartUpState();
+            MainWindow_StartUpState();
 
-        var canConnect = await _mainViewModel.CanAppConnect();
+            var canConnect = await _mainViewModel.CanAppConnect();
 
-        if (canConnect) await _mainViewModel.ShowAllProjectsAsync();
+            if (canConnect) await _mainViewModel.ShowAllProjectsAsync();
 
-        await _mainViewModel.CheckDbConnectionAsync();
-        await LoadCalculationSettingsDataAsync();
+            await _mainViewModel.CheckDbConnectionAsync();
+            await LoadCalculationSettingsDataAsync();
+        });
     }
 
     private void MainDataGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)

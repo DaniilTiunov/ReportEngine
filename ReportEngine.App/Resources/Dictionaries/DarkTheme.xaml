@@ -32,6 +32,7 @@
     <SolidColorBrush x:Key="ButtonDisabledForeground" Color="#777777" />
     <SolidColorBrush x:Key="DisabledForeground" Color="#888888" />
 
+    <SolidColorBrush x:Key="MaterialDesignComboBoxPopupBackground" Color="#FFFFFFFF" />
 
     <!--  Стили для Window  -->
     <Style TargetType="Window">
@@ -436,7 +437,7 @@
     </Style>
 
     <!--  ComboBox  -->
-    <Style BasedOn="{StaticResource MaterialDesignComboBox}" TargetType="ComboBox">
+    <Style TargetType="ComboBox">
         <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />

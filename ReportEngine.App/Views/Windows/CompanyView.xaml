@@ -98,8 +98,25 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="50" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
+
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="0,0,30,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Text="Поиск:" />
+
+                <TextBox
+                    x:Name="SearchTextBox"
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="0,0,0,0"
+                    VerticalAlignment="Center"
+                    TextChanged="SearchTextBox_TextChanged" />
 
                 <DataGrid
                     x:Name="CompaniesDataGrid"
@@ -110,7 +127,6 @@
                     CanUserDeleteRows="True"
                     CanUserReorderColumns="True"
                     CanUserSortColumns="True"
-                    ItemsSource="{Binding CurrentCompany.AllCompanies, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     MouseDoubleClick="CompaniesDataGrid_MouseDoubleClick"
                     RowHeaderWidth="40"
                     SelectedItem="{Binding CurrentCompany.SelectedCompany, Mode=TwoWay}"

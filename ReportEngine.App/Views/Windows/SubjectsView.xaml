@@ -98,17 +98,35 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="50" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="0,0,30,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Text="Поиск:" />
+
+                <TextBox
+                    x:Name="SearchTextBox"
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="0,0,0,0"
+                    VerticalAlignment="Center"
+                    TextChanged="SearchTextBox_TextChanged" />
+
                 <DataGrid
+                    x:Name="SubjectsDataGrid"
+                    Grid.Row="1"
                     Grid.ColumnSpan="4"
                     Margin="10,14,5,75"
                     CanUserAddRows="True"
                     CanUserDeleteRows="True"
                     CanUserReorderColumns="True"
                     CanUserSortColumns="True"
-                    ItemsSource="{Binding CurrentSubject.AllSubjects, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     MouseDoubleClick="SubjectsDataGrid_MouseDoubleClick"
                     RowHeaderWidth="40"
                     SelectedItem="{Binding CurrentSubject.SelectedSubject, Mode=TwoWay}"

@@ -17,7 +17,6 @@
     </UserControl.Resources>
 
 
-
     <ScrollViewer>
         <Grid Margin="10">
             <Grid.ColumnDefinitions>
@@ -137,6 +136,7 @@
                                 Margin="0,0,5,5"
                                 Text="{Binding CurrentProjectModel.SelectedStand.MaterialLineMeasure}"
                                 ToolTip="Ед. измерения" />
+
                             <ComboBox
                                 Grid.Row="1"
                                 Grid.Column="4"
