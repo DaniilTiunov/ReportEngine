@@ -343,7 +343,7 @@ public class ComponentListReportGenerator : IReportGenerator
 
     #region Вспомогательные
 
-    protected virtual StandsReportData GetStandReportData(Stand stand)
+    protected virtual ComponentsReportStandsData GetStandReportData(Stand stand)
     {
         const string dbErrorString = "Ошибка получения данных из БД";
         var activeRow = 4;
@@ -473,7 +473,7 @@ public class ComponentListReportGenerator : IReportGenerator
             .Except(othersParts)
             .ToList();
 
-        return new StandsReportData(
+        return new ComponentsReportStandsData(
             pipesList,
             armaturesList,
             treeList,
