@@ -1,10 +1,10 @@
-﻿using ReportEngine.App.ViewModels.Contacts;
-using ReportEngine.Domain.Entities;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using ReportEngine.App.ViewModels.Contacts;
+using ReportEngine.Domain.Entities;
 
 namespace ReportEngine.App.Views.Windows;
 
@@ -37,21 +37,17 @@ public partial class SubjectsView : Window
         if (_subjectsView == null)
             return;
 
-        string query = SearchTextBox.Text.Trim().ToLower();
+        var query = SearchTextBox.Text.Trim().ToLower();
 
         if (string.IsNullOrEmpty(query))
-        {
             _subjectsView.Filter = null; // сброс фильтра
-        }
         else
-        {
             _subjectsView.Filter = obj =>
             {
                 if (obj is Subject c)
                     return !string.IsNullOrEmpty(c.ObjectName) && c.ObjectName.ToLower().Contains(query);
                 return false;
             };
-        }
 
         _subjectsView.Refresh();
     }

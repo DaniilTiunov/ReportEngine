@@ -1,10 +1,10 @@
-﻿using ReportEngine.App.ViewModels.Contacts;
-using ReportEngine.Domain.Entities;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using ReportEngine.App.ViewModels.Contacts;
+using ReportEngine.Domain.Entities;
 
 namespace ReportEngine.App.Views.Windows;
 
@@ -47,21 +47,17 @@ public partial class CompanyView : Window
         if (_companiesView == null)
             return;
 
-        string query = SearchTextBox.Text.Trim().ToLower();
+        var query = SearchTextBox.Text.Trim().ToLower();
 
         if (string.IsNullOrEmpty(query))
-        {
             _companiesView.Filter = null; // сброс фильтра
-        }
         else
-        {
             _companiesView.Filter = obj =>
             {
                 if (obj is Company c)
                     return !string.IsNullOrEmpty(c.Name) && c.Name.ToLower().Contains(query);
                 return false;
             };
-        }
 
         _companiesView.Refresh();
     }
@@ -102,5 +98,4 @@ public partial class CompanyView : Window
     {
         Close();
     }
-
 }

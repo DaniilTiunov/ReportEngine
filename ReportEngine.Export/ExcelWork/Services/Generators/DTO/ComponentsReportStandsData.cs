@@ -1,7 +1,5 @@
 ﻿namespace ReportEngine.Export.ExcelWork.Services.Generators.DTO;
 
-
-
 public record ComponentsReportStandsData(
     List<(string name, string unit, string quantity)> PipesList,
     List<(string name, string unit, string quantity)> ArmaturesList,
@@ -15,24 +13,21 @@ public record ComponentsReportStandsData(
     List<(string name, string unit, string quantity)> Supplies
 );
 
-
-
 public record SummaryReportStandsData(
-     List<ReportStandData> PipesList,
-     List<ReportStandData> ArmaturesList,
-     List<ReportStandData> TreeList,
-     List<ReportStandData> KmchList,
-     List<ReportStandData> DrainageParts,
-     List<ReportStandData> FramesList,
-     List<ReportStandData> SensorsHolders,
-     List<ReportStandData> ElectricalParts,
-     List<ReportStandData> OthersParts,
-     List<ReportStandData> Supplies
+    List<ReportStandData> PipesList,
+    List<ReportStandData> ArmaturesList,
+    List<ReportStandData> TreeList,
+    List<ReportStandData> KmchList,
+    List<ReportStandData> DrainageParts,
+    List<ReportStandData> FramesList,
+    List<ReportStandData> SensorsHolders,
+    List<ReportStandData> ElectricalParts,
+    List<ReportStandData> OthersParts,
+    List<ReportStandData> Supplies
 );
 
 public struct ReportStandData
 {
-
     public string Name { get; set; }
     public string Unit { get; set; }
     public string Quantity { get; set; }

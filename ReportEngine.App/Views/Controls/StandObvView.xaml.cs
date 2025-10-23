@@ -30,9 +30,7 @@ public partial class StandObvView : UserControl
     private void ComboBox_DropDownOpened(object sender, EventArgs e)
     {
         if (sender is ComboBox comboBox && comboBox.Template.FindName("PART_Popup", comboBox) is Popup popup)
-        {
             if (popup.Child is Border border)
                 border.Background = (Brush)Application.Current.Resources["SecondaryColor"];
-        }
     }
 }
