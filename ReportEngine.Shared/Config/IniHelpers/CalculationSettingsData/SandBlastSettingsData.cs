@@ -2,7 +2,7 @@
 
 namespace ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
 
-public class SandBlasteSettingsData : IIniData
+public class SandBlastSettingsData : IIniData
 {
     public double SandBlastWork { get; set; }
     public double TimeSandBlastWork { get; set; }

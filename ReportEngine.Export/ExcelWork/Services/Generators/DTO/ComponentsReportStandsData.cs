@@ -26,6 +26,17 @@ public record SummaryReportStandsData(
     List<ReportStandData> Supplies
 );
 
+public record SummaryReportLaborData(
+    ReportStandData frameProduction,
+    ReportStandData obvProduction,
+    ReportStandData collectorProduction,
+    ReportStandData qualityTests,
+    ReportStandData sandblasting,
+    ReportStandData paintingWorks,
+    ReportStandData electricalWorks,
+    ReportStandData commonStandCheck
+ );
+
 public struct ReportStandData
 {
     public string Name { get; set; }
