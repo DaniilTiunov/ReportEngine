@@ -590,31 +590,46 @@ public class SummaryReportGenerator : IReportGenerator
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
         activeRow = FillSubtableData(activeRow, generatedData.PipesList, ws);
+        activeRow = CreateTotalRecord(activeRow, generatedData.PipesList, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Арматура", ws);
         activeRow = FillSubtableData(activeRow, generatedData.ArmaturesList, ws);
+        activeRow = CreateTotalRecord(activeRow, generatedData.ArmaturesList, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Тройники и КМЧ", ws);
         activeRow = FillSubtableData(activeRow, generatedData.TreeList, ws);
         activeRow = FillSubtableData(activeRow, generatedData.KmchList, ws);
 
+        //общий список, чтобы запихнуть в метод
+        var treeAndKmchList = new List<ReportStandData>();
+        treeAndKmchList.AddRange(generatedData.TreeList);
+        treeAndKmchList.AddRange(generatedData.KmchList);
+
+        activeRow = CreateTotalRecord(activeRow, treeAndKmchList, ws);
+
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Дренаж", ws);
         activeRow = FillSubtableData(activeRow, generatedData.DrainageParts, ws);
+        activeRow = CreateTotalRecord(activeRow, generatedData.DrainageParts, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Рамные комплектующие", ws);
         activeRow = FillSubtableData(activeRow, generatedData.FramesList, ws);
+        activeRow = CreateTotalRecord(activeRow, generatedData.FramesList, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Кронштейны", ws);
         activeRow = FillSubtableData(activeRow, generatedData.SensorsHolders, ws);
+        activeRow = CreateTotalRecord(activeRow, generatedData.SensorsHolders, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Электрические компоненты", ws);
         activeRow = FillSubtableData(activeRow, generatedData.ElectricalParts, ws);
+        activeRow = CreateTotalRecord(activeRow, generatedData.ElectricalParts, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Прочие", ws);
         activeRow = FillSubtableData(activeRow, generatedData.OthersParts, ws);
+        activeRow = CreateTotalRecord(activeRow, generatedData.OthersParts, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Расходные материалы", ws);
         activeRow = FillSubtableData(activeRow, generatedData.Supplies, ws);
+        activeRow = CreateTotalRecord(activeRow, generatedData.Supplies, ws);
     }
 
     //заполняет лист калькуляции
