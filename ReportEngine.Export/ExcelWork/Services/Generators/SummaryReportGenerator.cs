@@ -9,8 +9,6 @@ using ReportEngine.Shared.Config.IniHeleprs;
 using ReportEngine.Shared.Config.IniHelpers;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
-using System.Collections.Frozen;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
@@ -374,7 +372,7 @@ public class SummaryReportGenerator : IReportGenerator
         );
     }
 
-    private void GenerateLaborData(IEnumerable<Stand> stands)
+    private SummaryReportLaborData GenerateLaborData(IEnumerable<Stand> stands)
     {
         const string settingsErrorString = "Ошибка получения настроек расчета";
         const string dbErrorString = "Ошибка получения данных из БД";
@@ -386,23 +384,32 @@ public class SummaryReportGenerator : IReportGenerator
         var sandblastSettings = CalculationSettingsManager.Load<SandBlastSettings, SandBlastSettingsData>();
 
 
+
+
+        //трудозатраты на изготовление
+        var frameProductionHumanCostSum = stands
+            .Select(_ => frameSettings?.TimeForProductionFrame)
+            .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
+
+        var frameProductionRecord = new ReportStandData
+        {
+            Name = "Изготовление рам",
+            Unit = "чел/час",
+            Quantity = frameProductionHumanCostSum?.ToString() ?? settingsErrorString,
+            CostPerUnit = frameSettings?.FrameProduction.ToString() ?? settingsErrorString,
+            CommonCost = (frameProductionHumanCostSum * frameSettings?.FrameProduction).ToString() ?? settingsErrorString
+        };
+
+
+
+
+
+        
+
         foreach (var stand in stands)
         {
 
-            //трудозатраты на изготовление
-            var frameProductionRecord = new ReportStandData
-            {
-                Name = "Изготовление рам",
-                Unit = "чел/час",
-                Quantity = frameSettings?.TimeForProductionFrame.ToString() ?? settingsErrorString,
-                CostPerUnit = frameSettings?.FrameProduction.ToString() ?? settingsErrorString,
-                CommonCost = (frameSettings?.TimeForProductionFrame * frameSettings?.FrameProduction).ToString() ?? settingsErrorString
-            };
-
-
             //трудозатраты на обвязки
-
-
             var allObvHumanCosts = stands
                 .SelectMany(stand => stand.ObvyazkiInStand)
                 .Select(obv => obv.HumanCost);
@@ -415,13 +422,15 @@ public class SummaryReportGenerator : IReportGenerator
                 .Sum();
 
 
+
             //формируем строчку для количества
             string resultQuantitySumString = humanCostsSum.ToString() + "\n";
-            
+
             if (invalidQuantityData)
             {
                 resultQuantitySumString += dbErrorString + "\n";
             }
+
 
 
             //формируем строчку для общих затрат
@@ -449,13 +458,78 @@ public class SummaryReportGenerator : IReportGenerator
             };
 
 
+            //трудозатраты на коллектор
+            var collectorProductionRecord = new ReportStandData
+            {
+                Name = "Изготовление коллектора",
+                Unit = "чел/час",
+                Quantity = humanCostSettings?.TimeForCollectorBoil.ToString() ?? settingsErrorString,
+                CostPerUnit = humanCostSettings?.CollectorProduction.ToString() ?? settingsErrorString,
+                CommonCost = (humanCostSettings?.TimeForCollectorBoil * humanCostSettings?.CollectorProduction).ToString() ?? settingsErrorString
+            };
 
 
+            //трудозатраты на испытания
+            var qualityTestRecord = new ReportStandData
+            {
+                Name = "Испытание на прочность и герметичность",
+                Unit = "чел/час",
+                Quantity = "N/A",
+                CostPerUnit = "N/A",
+                CommonCost = "N/A"
+            };
+
+            //трудозатраты на пескоструйные работы
+            var sandblastingRecord = new ReportStandData
+            {
+                Name = "Пескоструйные работы",
+                Unit = "чел/час",
+                Quantity = "N/A",
+                CostPerUnit = "N/A",
+                CommonCost = "N/A"
+            };
 
 
+            //трудозатраты на покраску
+            var paintingRecord = new ReportStandData
+            {
+                Name = "Покраска",
+                Unit = "чел/час",
+                Quantity = "N/A",
+                CostPerUnit = "N/A",
+                CommonCost = "N/A"
+            };
 
+            //трудозатраты на электромонтаж
+            var electricRecord = new ReportStandData
+            {
+                Name = "Электромонтаж",
+                Unit = "чел/час",
+                Quantity = "N/A",
+                CostPerUnit = "N/A",
+                CommonCost = "N/A"
+            };
+
+            //трудозатраты на общую проверку стенда
+            var commonCheckRecord = new ReportStandData
+            {
+                Name = "Общая проверка стенда",
+                Unit = "чел/час",
+                Quantity = "N/A",
+                CostPerUnit = "N/A",
+                CommonCost = "N/A"
+            };
         }
 
+        return new SummaryReportLaborData(
+      frameProductionRecord,
+      obvProductionRecord,
+      collectorProductionRecord,
+      qualityTestRecord,
+      sandblastingRecord,
+      paintingRecord,
+      electricRecord,
+      commonCheckRecord);
     }
 
     #endregion
@@ -531,7 +605,7 @@ public class SummaryReportGenerator : IReportGenerator
         headerRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
         headerRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Medium);
         headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-        
+
         headerRange.Style.Font.SetBold();
     }
 
@@ -539,7 +613,7 @@ public class SummaryReportGenerator : IReportGenerator
     private void CreateCalcullationTableHeader(IXLWorksheet ws, ProjectInfo project)
     {
         var headerRange = ws.Range("A1:K6");
-        
+
 
         var customerCompanyRange = ws.Range("C1:K2").Merge();
         customerCompanyRange.Value = $"{project.Company}";
@@ -590,8 +664,8 @@ public class SummaryReportGenerator : IReportGenerator
         customerCompanyRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
         customerCompanyRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Medium);
 
-        headerRange.Style.Font.SetBold();     
-         
+        headerRange.Style.Font.SetBold();
+
     }
 
 
@@ -607,7 +681,7 @@ public class SummaryReportGenerator : IReportGenerator
     {
         var activeRow = 4;
 
-        var generatedData = GenerateStandsData(new List<Stand>{ stand });
+        var generatedData = GenerateStandsData(new List<Stand> { stand });
 
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
@@ -757,7 +831,7 @@ public class SummaryReportGenerator : IReportGenerator
     //TODO: переделать эту хуйню
     private int CreateGroupTotalRecord(int row, List<ReportStandData> equipmentList, IXLWorksheet ws)
     {
-        
+
         var activeRow = row;
 
         ws.Cell($"B{activeRow}").Value = "Итого по категории:";
@@ -803,18 +877,18 @@ public class SummaryReportGenerator : IReportGenerator
 
 
         //парсим все в nullable float
-       // var parsedCosts = partsInfo
+        // var parsedCosts = partsInfo
 
 
-        
-        
+
+
 
         var allCosts = new List<float?>();
 
         var recordProperties = partsInfo.GetType().GetProperties();
 
         //обрабатываем все стоимости из каждого перечня
-        foreach (var recordProperty in recordProperties) 
+        foreach (var recordProperty in recordProperties)
         {
             var partsListObject = recordProperty.GetValue(partsInfo);
             var partsList = partsListObject as List<ReportStandData>;
@@ -823,7 +897,7 @@ public class SummaryReportGenerator : IReportGenerator
 
             allCosts.AddRange(partsCosts);
         }
-        
+
         string resultSumString = "";
 
         ////проверка на элементы null в списке
