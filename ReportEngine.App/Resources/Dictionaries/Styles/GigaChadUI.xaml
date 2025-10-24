@@ -5,32 +5,8 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary
-            Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign2.Defaults.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign2.Defaults.xaml" />
     </ResourceDictionary.MergedDictionaries>
-
-    <!--  Бабл Гам  -->
-    <SolidColorBrush x:Key="PrimaryColor" Color="#2A2236" />
-    <!--  тёмно-фиолетовый фон  -->
-    <SolidColorBrush x:Key="SecondaryColor" Color="#3B2E4A" />
-    <!--  чуть светлее  -->
-    <SolidColorBrush x:Key="AccentColor" Color="#FF66B3" />
-    <!--  розовый акцент  -->
-    <SolidColorBrush x:Key="BorderColor" Color="#4E3A5E" />
-    <SolidColorBrush x:Key="RowHoverColor" Color="#4A3D55" />
-    <SolidColorBrush x:Key="SelectedRowBackground" Color="#FF80C0" />
-    <SolidColorBrush x:Key="SelectedRowForeground" Color="#2A2236" />
-    <SolidColorBrush x:Key="PrimaryForeground" Color="#E8DFF5" />
-    <!--  мягкий бело-лиловый  -->
-    <SolidColorBrush x:Key="SecondaryForeground" Color="#C9B6E4" />
-    <SolidColorBrush x:Key="WindowBorderColor" Color="#5A4570" />
-    <SolidColorBrush x:Key="ButtonBackground" Color="#A258A7" />
-    <SolidColorBrush x:Key="ButtonHoverBackground" Color="#B66BBC" />
-    <SolidColorBrush x:Key="ButtonPressedBackground" Color="#C67DC8" />
-    <SolidColorBrush x:Key="ButtonDisabledBackground" Color="#3B2E4A" />
-    <SolidColorBrush x:Key="ButtonDisabledForeground" Color="#8E7CA4" />
-    <SolidColorBrush x:Key="DisabledForeground" Color="#A893B8" />
-
 
     <!--  Стили для Window  -->
     <Style TargetType="Window">
@@ -267,7 +243,7 @@
     <!--  Button  -->
     <Style TargetType="Button">
         <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
-        <Setter Property="Foreground" Value="{DynamicResource SelectedRowForeground}" />
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ButtonBackground}" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="Template">
@@ -491,24 +467,23 @@
         <Setter Property="BorderBrush" Value="{DynamicResource SecondaryColor}" />
     </Style>
 
-    <Style TargetType="materialDesign:ComboBoxPopup">
+    <Style TargetType="materialDesign:PopupBox">
         <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
-        <Setter Property="Opacity" Value="1" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SecondaryColor}" />
     </Style>
 
     <!--  ComboBox  -->
-    <Style TargetType="ComboBox">
-        <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
-        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+    <Style BasedOn="{x:Null}" TargetType="ComboBox">
         <Setter Property="Opacity" Value="1" />
     </Style>
 
+
     <!--  ComboBoxItem стиль  -->
     <Style BasedOn="{StaticResource MaterialDesignComboBoxItemStyle}" TargetType="ComboBoxItem">
-        <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
-        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="Opacity" Value="1" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+        <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{DynamicResource RowHoverColor}" />
@@ -527,5 +502,125 @@
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="4" />
+    </Style>
+
+    <Style TargetType="ScrollViewer">
+        <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+        <Setter Property="BorderThickness" Value="4" />
+    </Style>
+
+    <Style BasedOn="{x:Null}" TargetType="ScrollBar">
+        <Setter Property="Foreground" Value="{DynamicResource AccentColor}" />
+        <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+        <Setter Property="Width" Value="14" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ScrollBar">
+                    <Grid Background="{TemplateBinding Background}">
+                        <Grid x:Name="VerticalTemplate" Visibility="Visible">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <RepeatButton
+                                Grid.Row="0"
+                                Height="20"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                Command="ScrollBar.LineUpCommand"
+                                Content="▲" />
+                            <Track
+                                x:Name="PART_Track"
+                                Grid.Row="1"
+                                IsDirectionReversed="True"
+                                Orientation="Vertical">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Command="ScrollBar.PageUpCommand" />
+                                </Track.DecreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb>
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Border
+                                                    Margin="2"
+                                                    Background="{DynamicResource AccentColor}"
+                                                    CornerRadius="3" />
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Command="ScrollBar.PageDownCommand" />
+                                </Track.IncreaseRepeatButton>
+                            </Track>
+                            <RepeatButton
+                                Grid.Row="2"
+                                Height="14"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                Command="ScrollBar.LineDownCommand">
+                                <Path Data="M 0,5 L 10,0 L 10,10 Z" Fill="{DynamicResource PrimaryForeground}" />
+                            </RepeatButton>
+                        </Grid>
+                        <Grid x:Name="HorizontalTemplate" Visibility="Collapsed">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <RepeatButton
+                                Grid.Column="0"
+                                Width="14"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                Command="ScrollBar.LineLeftCommand"
+                                Content="◄" />
+                            <Track
+                                x:Name="PART_HorizontalTrack"
+                                Grid.Column="1"
+                                IsDirectionReversed="False"
+                                Orientation="Horizontal">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Command="ScrollBar.PageLeftCommand" />
+                                </Track.DecreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb>
+                                        <Thumb.Template>
+                                            <ControlTemplate x:Name="HorizontalThumb" TargetType="Thumb">
+                                                <Border
+                                                    Margin="2"
+                                                    Background="{DynamicResource AccentColor}"
+                                                    CornerRadius="3" />
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Command="ScrollBar.PageRightCommand" />
+                                </Track.IncreaseRepeatButton>
+                            </Track>
+                            <RepeatButton
+                                Grid.Column="2"
+                                Width="14"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                Command="ScrollBar.LineRightCommand"
+                                Content="►" />
+                        </Grid>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Orientation" Value="Horizontal">
+                            <Setter TargetName="VerticalTemplate" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="HorizontalTemplate" Property="Visibility" Value="Visible" />
+                            <Setter Property="Height" Value="14" />
+                            <Setter Property="Width" Value="Auto" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 </ResourceDictionary>
