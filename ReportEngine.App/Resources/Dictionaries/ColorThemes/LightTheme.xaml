@@ -26,4 +26,15 @@
     <SolidColorBrush x:Key="ButtonDisabledBackground" Color="#2A2A2A" />
     <SolidColorBrush x:Key="ButtonDisabledForeground" Color="#777777" />
     <SolidColorBrush x:Key="DisabledForeground" Color="Gray" />
+
+    <SolidColorBrush x:Key="ControlLightColor" Color="#FFF0F0F0" />
+    <SolidColorBrush x:Key="ControlMouseOverColor" Color="#E0E0E0" />
+    <SolidColorBrush x:Key="ControlPressedColor" Color="#FF184461" />
+    <SolidColorBrush x:Key="BorderLightColor" Color="#FFCCCCCC" />
+    <SolidColorBrush x:Key="BorderMediumColor" Color="DarkGray" />
+    <SolidColorBrush x:Key="GlyphColor" Color="#FF444444" />
+    <SolidColorBrush x:Key="SelectedBackgroundColor" Color="#666666" />
+    <SolidColorBrush x:Key="DisabledForegroundColor" Color="#FF888888" />
+    <SolidColorBrush x:Key="DisabledControlDarkColor" Color="#FFDDDDDD" />
+
 </ResourceDictionary>
