@@ -6,6 +6,9 @@ using ReportEngine.Export.ExcelWork.Services.Generators.DTO;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Export.Mapping;
 using ReportEngine.Shared.Config.IniHeleprs;
+using ReportEngine.Shared.Config.IniHelpers;
+using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
+using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -82,6 +85,11 @@ public class SummaryReportGenerator : IReportGenerator
 
 
     #region Вспомогательные
+
+    private float? TryToParseFloat(string str)
+    {
+        return float.TryParse(str, out float parseResult) ? parseResult : null;
+    }
 
     private SummaryReportStandsData GenerateStandsData(IEnumerable<Stand> stands)
     {
@@ -366,6 +374,90 @@ public class SummaryReportGenerator : IReportGenerator
         );
     }
 
+    private void GenerateLaborData(IEnumerable<Stand> stands)
+    {
+        const string settingsErrorString = "Ошибка получения настроек расчета";
+        const string dbErrorString = "Ошибка получения данных из БД";
+
+        var frameSettings = CalculationSettingsManager.Load<FrameSettings, FrameSettingsData>();
+        var electicalSettings = CalculationSettingsManager.Load<ElectricalSettings, ElectricalSettingsData>();
+        var humanCostSettings = CalculationSettingsManager.Load<HumanCostSettings, HumanCostSettingsData>();
+        var standSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
+        var sandblastSettings = CalculationSettingsManager.Load<SandBlastSettings, SandBlastSettingsData>();
+
+
+        foreach (var stand in stands)
+        {
+
+            //трудозатраты на изготовление
+            var frameProductionRecord = new ReportStandData
+            {
+                Name = "Изготовление рам",
+                Unit = "чел/час",
+                Quantity = frameSettings?.TimeForProductionFrame.ToString() ?? settingsErrorString,
+                CostPerUnit = frameSettings?.FrameProduction.ToString() ?? settingsErrorString,
+                CommonCost = (frameSettings?.TimeForProductionFrame * frameSettings?.FrameProduction).ToString() ?? settingsErrorString
+            };
+
+
+            //трудозатраты на обвязки
+
+
+            var allObvHumanCosts = stands
+                .SelectMany(stand => stand.ObvyazkiInStand)
+                .Select(obv => obv.HumanCost);
+
+            var invalidQuantityData = allObvHumanCosts
+                .Any(cost => cost == null);
+
+            var humanCostsSum = allObvHumanCosts
+                .Where(cost => cost != null)
+                .Sum();
+
+
+            //формируем строчку для количества
+            string resultQuantitySumString = humanCostsSum.ToString() + "\n";
+            
+            if (invalidQuantityData)
+            {
+                resultQuantitySumString += dbErrorString + "\n";
+            }
+
+
+            //формируем строчку для общих затрат
+            var resultCommonCost = humanCostsSum * (humanCostSettings?.ObvzyakaProduction ?? 0.0f);
+
+            string resultCommonCostString = resultCommonCost.ToString() + "\n";
+
+            if (invalidQuantityData)
+            {
+                resultCommonCostString += dbErrorString + "\n";
+            }
+
+            if (humanCostSettings == null)
+            {
+                resultCommonCostString += settingsErrorString + "\n";
+            }
+
+            var obvProductionRecord = new ReportStandData
+            {
+                Name = "Изготовление обвязок",
+                Unit = "чел/час",
+                Quantity = resultQuantitySumString,
+                CostPerUnit = humanCostSettings?.ObvzyakaProduction.ToString() ?? settingsErrorString,
+                CommonCost = resultCommonCostString
+            };
+
+
+
+
+
+
+
+        }
+
+    }
+
     #endregion
 
 
@@ -503,6 +595,7 @@ public class SummaryReportGenerator : IReportGenerator
     }
 
 
+
     #endregion
 
 
@@ -634,6 +727,8 @@ public class SummaryReportGenerator : IReportGenerator
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Расходные материалы", ws);
         activeRow = FillSubtableData(activeRow, generatedData.Supplies, ws);
         activeRow = CreateGroupTotalRecord(activeRow, generatedData.Supplies, ws);
+
+        activeRow = CreatePartsTotalRecord(activeRow, generatedData, ws);
     }
 
     //заполняет лист калькуляции
@@ -642,16 +737,24 @@ public class SummaryReportGenerator : IReportGenerator
 
     }
 
-
-
-    private float? TryToParseFloat(string str)
+    //создает записи трудозатрат
+    private int FillLaborCostSubtable(int startRow, IXLWorksheet ws, SummaryReportLaborData laborCostData)
     {
-        return float.TryParse(str, out float parseResult) ? parseResult : null;
+        var activeRow = startRow;
+
+
+
+        return activeRow;
+
     }
 
+    #endregion
+
+
+
+    #region Итоговые
 
     //TODO: переделать эту хуйню
-    //Создает запись "Итого"
     private int CreateGroupTotalRecord(int row, List<ReportStandData> equipmentList, IXLWorksheet ws)
     {
         
@@ -741,6 +844,8 @@ public class SummaryReportGenerator : IReportGenerator
         activeRow++;
         return activeRow;
     }
+
+
 
     #endregion
 }

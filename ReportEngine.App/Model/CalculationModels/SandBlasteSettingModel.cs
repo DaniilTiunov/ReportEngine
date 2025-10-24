@@ -25,7 +25,7 @@ public class SandBlasteSettingModel : BaseViewModel
 
     public async Task LoadSandBlastDataFromIniAsync()
     {
-        var iniData = await CalculationSettingsManager.LoadAsync<SandBlastSettings, SandBlasteSettingsData>();
+        var iniData = await CalculationSettingsManager.LoadAsync<SandBlastSettings, SandBlastSettingsData>();
 
         if (iniData == null)
             return;
@@ -35,7 +35,7 @@ public class SandBlasteSettingModel : BaseViewModel
 
     public async Task SaveSandBlastDataToIniAsync()
     {
-        var iniData = this.Adapt<SandBlasteSettingsData>();
-        await CalculationSettingsManager.SaveAsync<SandBlastSettings, SandBlasteSettingsData>(iniData);
+        var iniData = this.Adapt<SandBlastSettingsData>();
+        await CalculationSettingsManager.SaveAsync<SandBlastSettings, SandBlastSettingsData>(iniData);
     }
 }
