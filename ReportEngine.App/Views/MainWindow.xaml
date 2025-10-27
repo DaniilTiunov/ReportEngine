@@ -297,7 +297,8 @@
                     <DataGridTextColumn
                         Width="*"
                         Binding="{Binding Number}"
-                        Header="№п/п" />
+                        Header="№п/п" 
+                        SortMemberPath="Number"/>
                     <DataGridTextColumn
                         Width="*"
                         Binding="{Binding Company}"

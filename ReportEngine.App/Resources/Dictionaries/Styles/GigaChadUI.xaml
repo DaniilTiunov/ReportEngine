@@ -41,7 +41,7 @@
     </Style>
 
     <!--  Стили для DataGrid  -->
-    <Style TargetType="DataGrid">
+    <Style TargetType="DataGrid" BasedOn="{StaticResource MaterialDesignDataGrid}">
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="BorderThickness" Value="1" />
@@ -57,18 +57,19 @@
         <Setter Property="GridLinesVisibility" Value="None" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="HeadersVisibility" Value="Column" />
+        <Setter Property="ColumnWidth" Value="*"/>
     </Style>
 
-    <Style TargetType="DataGridColumnHeader">
+    <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
         <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="BorderThickness" Value="0,0,1,1" />
-        <Setter Property="Padding" Value="8,4" />
+        <Setter Property="Padding" Value="20,5,5,5" />
     </Style>
-
-    <Style TargetType="DataGridCell">
+    
+    <Style TargetType="DataGridCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="BorderThickness" Value="0,0,1,1" />
         <Setter Property="Padding" Value="8,4" />
@@ -98,6 +99,11 @@
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{DynamicResource RowHoverColor}" />
                 <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+            </Trigger>
+            <Trigger Property="IsTabStop" Value="True">
+                <Setter Property="Background" Value="{DynamicResource SelectedRowBackground}"/>
+                <Setter Property="Foreground" Value="{DynamicResource RowHoverColor}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -783,4 +789,11 @@
     </Style>
 
     <Style BasedOn="{x:Null}" TargetType="CheckBox" />
+    
+    <Style TargetType="GridSplitter" BasedOn="{x:Null}">
+        <Setter Property="Background" Value="{DynamicResource PrimaryForeground}"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+    </Style>
+    
 </ResourceDictionary>

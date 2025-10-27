@@ -284,18 +284,12 @@
                                 Source="{Binding CurrentProjectModel.SelectedStand.ImageData, Converter={StaticResource ByteArrayImageConverter}}"
                                 Stretch="Uniform" />
                         </Border>
-
-                        <!--
-                            GridSplitter между чертежом и правой панелью.
-                            ResizeBehavior="PreviousAndNext" заставляет менять ширину колонки 0 и колонки 2,
-                            а так как правая панель — одна колонка, при утачивании её ширина может уйти в 0.
-                        -->
+                        
                         <GridSplitter
                             Grid.Column="1"
                             Width="6"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Stretch"
-                            Background="#22000000"
                             Cursor="SizeWE"
                             ResizeBehavior="PreviousAndNext"
                             ResizeDirection="Columns" />
