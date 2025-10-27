@@ -418,10 +418,13 @@ public class SummaryReportGenerator : IReportGenerator
         //формируем строчку для количества
         var resultQuantitySumString = humanCostsSum.ToString();
 
-        if (invalidQuantityData)
-        {
-            resultQuantitySumString += "\n" + dbErrorString;
-        }
+            //формируем строчку для количества
+            string resultQuantitySumString = humanCostsSum.ToString() + "\n";
+
+            if (invalidQuantityData)
+            {
+                resultQuantitySumString += dbErrorString + "\n";
+            }
 
 
 
@@ -926,6 +929,9 @@ public class SummaryReportGenerator : IReportGenerator
         ws.Cell($"B{activeRow}").Style.Font.SetBold();
         ws.Cell($"B{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Left);
 
+
+        //парсим все в nullable float
+        // var parsedCosts = partsInfo
 
 
 

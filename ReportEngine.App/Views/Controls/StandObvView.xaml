@@ -120,12 +120,14 @@
                             <TextBox
                                 Grid.Row="1"
                                 Grid.Column="1"
+                                Height="25"
                                 Margin="0,0,5,5"
                                 Text="{Binding CurrentProjectModel.SelectedStand.MaterialLine}" />
                             <TextBox
                                 Grid.Row="1"
                                 Grid.Column="2"
                                 Width="50"
+                                Height="25"
                                 Margin="0,0,5,5"
                                 Text="{Binding CurrentProjectModel.SelectedStand.MaterialLineCount}"
                                 ToolTip="Количество материала линии" />
@@ -133,6 +135,7 @@
                                 Grid.Row="1"
                                 Grid.Column="3"
                                 Width="50"
+                                Height="25"
                                 Margin="0,0,5,5"
                                 Text="{Binding CurrentProjectModel.SelectedStand.MaterialLineMeasure}"
                                 ToolTip="Ед. измерения" />
@@ -149,6 +152,7 @@
                                 Grid.Row="1"
                                 Grid.Column="5"
                                 Width="24"
+                                Height="25"
                                 Margin="5,0,5,5"
                                 Command="{Binding ProjectCommandProvider.SelectMaterialLineDialogCommand}"
                                 Content="..." />
@@ -160,12 +164,14 @@
                             <TextBox
                                 Grid.Row="2"
                                 Grid.Column="1"
+                                Height="25"
                                 Margin="0,0,5,5"
                                 Text="{Binding CurrentProjectModel.SelectedStand.Armature}" />
                             <TextBox
                                 Grid.Row="2"
                                 Grid.Column="2"
                                 Width="50"
+                                Height="25"
                                 Margin="0,0,5,5"
                                 Text="{Binding CurrentProjectModel.SelectedStand.ArmatureCount}"
                                 ToolTip="Количество арматуры" />
@@ -173,6 +179,7 @@
                                 Grid.Row="2"
                                 Grid.Column="3"
                                 Width="50"
+                                Height="25"
                                 Margin="0,0,5,5"
                                 Text="{Binding CurrentProjectModel.SelectedStand.ArmatureMeasure}"
                                 ToolTip="Ед. измерения" />
@@ -198,12 +205,14 @@
                             <TextBox
                                 Grid.Row="3"
                                 Grid.Column="1"
+                                Height="25"
                                 Margin="0,0,5,5"
                                 Text="{Binding CurrentProjectModel.SelectedStand.TreeSocket}" />
                             <TextBox
                                 Grid.Row="3"
                                 Grid.Column="2"
                                 Width="50"
+                                Height="25"
                                 Margin="0,0,5,5"
                                 Text="{Binding CurrentProjectModel.SelectedStand.TreeSocketMaterialCount}"
                                 ToolTip="Количество тройников" />
@@ -211,6 +220,7 @@
                                 Grid.Row="3"
                                 Grid.Column="3"
                                 Width="50"
+                                Height="25"
                                 Margin="0,0,5,5"
                                 Text="{Binding CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure}"
                                 ToolTip="Ед. измерения" />
@@ -236,12 +246,14 @@
                             <TextBox
                                 Grid.Row="4"
                                 Grid.Column="1"
+                                Height="25"
                                 Margin="0,0,5,0"
                                 Text="{Binding CurrentProjectModel.SelectedStand.KMCH}" />
                             <TextBox
                                 Grid.Row="4"
                                 Grid.Column="2"
                                 Width="50"
+                                Height="25"
                                 Margin="0,0,5,0"
                                 Text="{Binding CurrentProjectModel.SelectedStand.KMCHCount}"
                                 ToolTip="Количество КМЧ" />
@@ -249,6 +261,7 @@
                                 Grid.Row="4"
                                 Grid.Column="3"
                                 Width="50"
+                                Height="25"
                                 Margin="0,0,5,0"
                                 Text="{Binding CurrentProjectModel.SelectedStand.KMCHMeasure}"
                                 ToolTip="Ед. измерения" />

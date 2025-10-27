@@ -1,5 +1,4 @@
-﻿using System.Windows.Input;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model.Contacts;
 using ReportEngine.App.Services.Core;
@@ -8,6 +7,7 @@ using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Enums;
 using ReportEngine.Domain.Repositories.Interfaces;
+using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels.Contacts;
 

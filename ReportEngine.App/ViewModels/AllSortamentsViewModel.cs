@@ -1,7 +1,4 @@
-﻿using System.Reflection;
-using System.Windows.Controls;
-using System.Windows.Data;
-using ReportEngine.App.Display;
+﻿using ReportEngine.App.Display;
 using ReportEngine.App.Model;
 using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
@@ -13,6 +10,8 @@ using ReportEngine.Domain.Entities.Frame;
 using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
+using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -82,23 +81,19 @@ public class AllSortamentsViewModel : BaseViewModel
         CurrentSortamentsModel.SetEquipGroup(groupKey, items);
     }
 
-    // TODO: Не использовать рефлексию
     public void GenerateDataGridByTag(DataGrid grid, string groupKey)
     {
-        if (!_equipTypeMap.TryGetValue(groupKey, out var type)) return;
+        if (!_equipTypeMap.TryGetValue(groupKey, out var type))
+            return;
 
-        var method = GetType()
-            .GetMethod("GenerateDataGrid", BindingFlags.NonPublic | BindingFlags.Instance)
-            .MakeGenericMethod(type);
-
-        method.Invoke(this, new object[] { grid });
+        GenerateDataGrid(type, grid);
     }
 
-    private void GenerateDataGrid<T>(DataGrid dataGrid)
-        where T : class, IBaseEquip
+    private void GenerateDataGrid(Type equipType, DataGrid dataGrid)
     {
         dataGrid.Columns.Clear();
-        var properties = typeof(T).GetProperties();
+        var properties = equipType.GetProperties()
+            .OrderByDescending(x => x.Name == "Name").ToArray();
 
         foreach (var property in properties)
         {
@@ -108,8 +103,12 @@ public class AllSortamentsViewModel : BaseViewModel
             var column = new DataGridTextColumn
             {
                 Header = GenericEquipMapper.GetColumnName(property.Name),
-                Binding = new Binding(property.Name)
+                Binding = new Binding(property.Name),
             };
+
+            if (property.Name == "Name")
+                column.Width = new DataGridLength(1, DataGridLengthUnitType.SizeToCells);
+
 
             if (property == properties[properties.Length - 1])
                 column.Width = new DataGridLength(1, DataGridLengthUnitType.Star);
