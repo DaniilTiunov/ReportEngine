@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using ReportEngine.Domain.Entities.BaseEntities.Interface;
+﻿using ReportEngine.Domain.Entities.BaseEntities.Interface;
+using System.ComponentModel.DataAnnotations;
 
 namespace ReportEngine.Domain.Entities;
 

@@ -1,10 +1,10 @@
-﻿using System.ComponentModel;
+﻿using ReportEngine.App.ViewModels.Contacts;
+using ReportEngine.Domain.Entities;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using ReportEngine.App.ViewModels.Contacts;
-using ReportEngine.Domain.Entities;
 
 namespace ReportEngine.App.Views.Windows;
 

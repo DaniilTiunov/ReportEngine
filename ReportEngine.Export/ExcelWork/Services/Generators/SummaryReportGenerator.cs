@@ -9,8 +9,6 @@ using ReportEngine.Shared.Config.IniHeleprs;
 using ReportEngine.Shared.Config.IniHelpers;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
-using System.Collections.Frozen;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
@@ -417,7 +415,7 @@ public class SummaryReportGenerator : IReportGenerator
 
             //формируем строчку для количества
             string resultQuantitySumString = humanCostsSum.ToString() + "\n";
-            
+
             if (invalidQuantityData)
             {
                 resultQuantitySumString += dbErrorString + "\n";
@@ -531,7 +529,7 @@ public class SummaryReportGenerator : IReportGenerator
         headerRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
         headerRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Medium);
         headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-        
+
         headerRange.Style.Font.SetBold();
     }
 
@@ -539,7 +537,7 @@ public class SummaryReportGenerator : IReportGenerator
     private void CreateCalcullationTableHeader(IXLWorksheet ws, ProjectInfo project)
     {
         var headerRange = ws.Range("A1:K6");
-        
+
 
         var customerCompanyRange = ws.Range("C1:K2").Merge();
         customerCompanyRange.Value = $"{project.Company}";
@@ -590,8 +588,8 @@ public class SummaryReportGenerator : IReportGenerator
         customerCompanyRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
         customerCompanyRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Medium);
 
-        headerRange.Style.Font.SetBold();     
-         
+        headerRange.Style.Font.SetBold();
+
     }
 
 
@@ -607,7 +605,7 @@ public class SummaryReportGenerator : IReportGenerator
     {
         var activeRow = 4;
 
-        var generatedData = GenerateStandsData(new List<Stand>{ stand });
+        var generatedData = GenerateStandsData(new List<Stand> { stand });
 
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
@@ -757,7 +755,7 @@ public class SummaryReportGenerator : IReportGenerator
     //TODO: переделать эту хуйню
     private int CreateGroupTotalRecord(int row, List<ReportStandData> equipmentList, IXLWorksheet ws)
     {
-        
+
         var activeRow = row;
 
         ws.Cell($"B{activeRow}").Value = "Итого по категории:";
@@ -803,18 +801,18 @@ public class SummaryReportGenerator : IReportGenerator
 
 
         //парсим все в nullable float
-       // var parsedCosts = partsInfo
+        // var parsedCosts = partsInfo
 
 
-        
-        
+
+
 
         var allCosts = new List<float?>();
 
         var recordProperties = partsInfo.GetType().GetProperties();
 
         //обрабатываем все стоимости из каждого перечня
-        foreach (var recordProperty in recordProperties) 
+        foreach (var recordProperty in recordProperties)
         {
             var partsListObject = recordProperty.GetValue(partsInfo);
             var partsList = partsListObject as List<ReportStandData>;
@@ -823,7 +821,7 @@ public class SummaryReportGenerator : IReportGenerator
 
             allCosts.AddRange(partsCosts);
         }
-        
+
         string resultSumString = "";
 
         ////проверка на элементы null в списке

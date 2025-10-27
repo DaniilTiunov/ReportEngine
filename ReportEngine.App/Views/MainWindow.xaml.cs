@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Packaging;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.CalculationSettings;
@@ -116,7 +115,7 @@ public partial class MainWindow : Window //Это так называемый "C
         {
             if (mergedDicts[i].Source != null && mergedDicts[i].Source.OriginalString.Contains("ColorThemes"))
             {
-                mergedDicts[i] = themeDict; 
+                mergedDicts[i] = themeDict;
                 return;
             }
         }

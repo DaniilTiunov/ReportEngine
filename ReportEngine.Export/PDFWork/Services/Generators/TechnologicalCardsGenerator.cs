@@ -185,20 +185,20 @@ public class TechnologicalCardsGenerator : IReportGenerator
 
 
         foreach (var mark in marksInfo)
-        foreach (var dataValue in mark.data)
-        {
-            //заменяем текстовый маркер
-            var options = new XceedNet.StringReplaceTextOptions
+            foreach (var dataValue in mark.data)
             {
-                SearchValue = mark.fullMark,
-                NewValue = dataValue,
-                EscapeRegEx = false
-            };
+                //заменяем текстовый маркер
+                var options = new XceedNet.StringReplaceTextOptions
+                {
+                    SearchValue = mark.fullMark,
+                    NewValue = dataValue,
+                    EscapeRegEx = false
+                };
 
 
-            //в каждом найденном месте меняем
-            foreach (var place in mark.placesToInsert) place.ReplaceText(options);
-        }
+                //в каждом найденном месте меняем
+                foreach (var place in mark.placesToInsert) place.ReplaceText(options);
+            }
     }
 
 

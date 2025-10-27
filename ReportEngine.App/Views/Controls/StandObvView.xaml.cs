@@ -1,8 +1,8 @@
-﻿using System.Windows;
+﻿using ReportEngine.App.ViewModels;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
-using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Views.Controls;
 
