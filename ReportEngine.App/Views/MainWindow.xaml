@@ -200,6 +200,8 @@
                 <MenuItem Click="OpenHelp" Header="Помощь" />
                 <Separator />
                 <MenuItem Click="AutoUpdate" Header="Обновить приложение" />
+                <Separator />
+                <MenuItem Click="ShowUpdateIndo" Header="История обновлений" />
             </MenuItem>
             <MenuItem Command="{Binding MainWindowCommandProvider.OpenAuthWindowCommand}" Header="Авторизация" />
         </Menu>

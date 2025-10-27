@@ -2,6 +2,7 @@
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.CalculationSettings;
+using ReportEngine.App.Views.Windows;
 using ReportEngine.Shared.Config.Directory;
 using System.Diagnostics;
 using System.IO;
@@ -71,8 +72,13 @@ public partial class MainWindow : Window //Это так называемый "C
     private void ShowAboutProgram(object sender, RoutedEventArgs e) //Просто простые синхронные операции
     {
         var aboutWindow = new AboutProgram();
-
         aboutWindow.Show();
+    }
+
+    private void ShowUpdateIndo(object sender, RoutedEventArgs e)
+    {
+        var updateInfo = new UpdateInfoView();
+        updateInfo.Show();
     }
 
     private void ShowCalculator(object sender, RoutedEventArgs e)
