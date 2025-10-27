@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel;
+﻿using System.Diagnostics;
+using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
@@ -6,7 +7,6 @@ using ReportEngine.Export.ExcelWork.Services.Generators.DTO;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Export.Mapping;
 using ReportEngine.Shared.Config.IniHeleprs;
-using System.Diagnostics;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -97,10 +97,9 @@ public class ComponentListReportGenerator : IReportGenerator
     }
 
 
-
-
     //создание заголовка для сводной ведомости
-    protected virtual void CreateCommonListTableHeader(IXLWorksheet ws, ProjectInfo project, XLAlignmentHorizontalValues alignment)
+    protected virtual void CreateCommonListTableHeader(IXLWorksheet ws, ProjectInfo project,
+        XLAlignmentHorizontalValues alignment)
     {
         var headerRange = ws.Range("B1:D3");
 
@@ -125,7 +124,6 @@ public class ComponentListReportGenerator : IReportGenerator
     }
 
     #endregion
-
 
 
     #region Заполнители
@@ -345,7 +343,7 @@ public class ComponentListReportGenerator : IReportGenerator
 
     #region Вспомогательные
 
-    protected virtual StandsReportData GetStandReportData(Stand stand)
+    protected virtual ComponentsReportStandsData GetStandReportData(Stand stand)
     {
         const string dbErrorString = "Ошибка получения данных из БД";
         var activeRow = 4;
@@ -475,7 +473,7 @@ public class ComponentListReportGenerator : IReportGenerator
             .Except(othersParts)
             .ToList();
 
-        return new StandsReportData(
+        return new ComponentsReportStandsData(
             pipesList,
             armaturesList,
             treeList,
@@ -524,7 +522,6 @@ public class ComponentListReportGenerator : IReportGenerator
 
         return currentRow;
     }
-
 
     #endregion
 }

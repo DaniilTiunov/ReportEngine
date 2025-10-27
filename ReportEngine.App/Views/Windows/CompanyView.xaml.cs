@@ -1,6 +1,10 @@
-﻿using ReportEngine.App.ViewModels.Contacts;
+﻿using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
+using ReportEngine.App.ViewModels.Contacts;
+using ReportEngine.Domain.Entities;
 
 namespace ReportEngine.App.Views.Windows;
 
@@ -9,6 +13,8 @@ namespace ReportEngine.App.Views.Windows;
 /// </summary>
 public partial class CompanyView : Window
 {
+    private ICollectionView _companiesView;
+
     public CompanyView(CompanyViewModel viewModel)
     {
         InitializeComponent();
@@ -20,6 +26,10 @@ public partial class CompanyView : Window
     private async Task InitializeDataAsync(CompanyViewModel viewModel)
     {
         await viewModel.LoadAllCompaniesAsync();
+
+        _companiesView = CollectionViewSource.GetDefaultView(viewModel.CurrentCompany.AllCompanies);
+
+        CompaniesDataGrid.ItemsSource = _companiesView;
     }
 
     private void CompaniesDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -30,6 +40,26 @@ public partial class CompanyView : Window
             DialogResult = true;
             Close();
         }
+    }
+
+    private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (_companiesView == null)
+            return;
+
+        var query = SearchTextBox.Text.Trim().ToLower();
+
+        if (string.IsNullOrEmpty(query))
+            _companiesView.Filter = null; // сброс фильтра
+        else
+            _companiesView.Filter = obj =>
+            {
+                if (obj is Company c)
+                    return !string.IsNullOrEmpty(c.Name) && c.Name.ToLower().Contains(query);
+                return false;
+            };
+
+        _companiesView.Refresh();
     }
 
     private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

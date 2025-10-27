@@ -67,7 +67,8 @@
             Grid.Row="1"
             Grid.Column="1"
             Grid.ColumnSpan="2"
-            Margin="0,8,194,7"
+            Width="200"
+            Margin="0,5,640,5"
             SelectedDate="{Binding CurrentProjectModel.CreationDate, Mode=TwoWay}" />
 
         <!--  Заказчик  -->
@@ -153,7 +154,8 @@
             Grid.Row="5"
             Grid.Column="1"
             Grid.ColumnSpan="2"
-            Margin="0,8,194,7"
+            Width="200"
+            Margin="0,8,640,7"
             ItemsSource="{Binding CurrentProjectModel.Statuses}"
             SelectedItem="{Binding CurrentProjectModel.Status, Mode=TwoWay}" />
 
@@ -167,7 +169,7 @@
             Grid.Row="6"
             Grid.Column="1"
             Grid.ColumnSpan="2"
-            Margin="0,11,194,4"
+            Margin="0,11,640,4"
             SelectedDate="{Binding CurrentProjectModel.StartDate, Mode=TwoWay}" />
 
         <!--  Выход из производства  -->
@@ -179,7 +181,7 @@
         <DatePicker
             Grid.Row="6"
             Grid.Column="3"
-            Margin="0,9,0,6"
+            Margin="0,5,450,10"
             SelectedDate="{Binding CurrentProjectModel.OutOfProduction, Mode=TwoWay}" />
 
         <!--  Дата окончания договора  -->
@@ -192,7 +194,7 @@
         <DatePicker
             Grid.Row="7"
             Grid.Column="3"
-            Margin="0,10,0,5"
+            Margin="0,5,450,0"
             SelectedDate="{Binding CurrentProjectModel.EndDate, Mode=TwoWay}" />
 
         <!--  Заказ покупателя  -->
@@ -285,14 +287,19 @@
         <StackPanel
             Grid.Row="13"
             Grid.Column="3"
+            Margin="50,50,0,100"
             HorizontalAlignment="Right"
             Orientation="Horizontal">
             <Button
-                Width="118"
+                MinWidth="170"
+                MinHeight="30"
                 Margin="0,0,10,0"
                 Command="{Binding ProjectCommandProvider.CreateNewCardCommand}"
                 Content="Добавить новый" />
-            <Button Command="{Binding ProjectCommandProvider.SaveChangesCommand}" Content="Сохранить изменения" />
+            <Button
+                MinWidth="170"
+                Command="{Binding ProjectCommandProvider.SaveChangesCommand}"
+                Content="Сохранить изменения" />
         </StackPanel>
     </Grid>
 </UserControl>

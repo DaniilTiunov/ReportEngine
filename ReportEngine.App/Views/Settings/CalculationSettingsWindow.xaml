@@ -484,115 +484,117 @@
                                 <RowDefinition Height="30" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="126*" />
+                                <ColumnDefinition Width="15*"/>
+                                <ColumnDefinition Width="111*" />
+                                <ColumnDefinition Width="29*"/>
+                                <ColumnDefinition Width="141*" />
+                                <ColumnDefinition Width="141*" />
+                                <ColumnDefinition Width="141*" />
+                                <ColumnDefinition Width="141*" />
                             </Grid.ColumnDefinitions>
 
                             <TextBlock
                                 Grid.Row="0"
                                 Grid.Column="0"
-                                Margin="5,15,0,10"
-                                Text="Изготовление&#x0a;рам: " />
+                                Margin="5,15,111,10"
+                                Text="Изготовление&#x0a;рам: " Grid.ColumnSpan="3" />
                             <TextBox
                                 Grid.Row="0"
-                                Grid.Column="1"
-                                Margin="0,20,0,20"
-                                Text="{Binding FrameSettings.FrameProduction, Mode=TwoWay}" />
+                                Grid.Column="2"
+                                Margin="0,20,141,20"
+                                Text="{Binding FrameSettings.FrameProduction, Mode=TwoWay}" Grid.ColumnSpan="3" />
 
                             <TextBlock
                                 Grid.Row="1"
                                 Grid.Column="0"
-                                Margin="5,15,0,10"
-                                Text="Покраска: " />
+                                Margin="5,15,111,10"
+                                Text="Покраска: " Grid.ColumnSpan="3" />
                             <TextBox
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                Margin="0,20,0,20"
-                                Text="{Binding FrameSettings.Painting, Mode=TwoWay}" />
-
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="2"
-                                Margin="5,15,0,10"
-                                Text="Время проверки 1:&#x0a;рамы: " />
-                            <TextBox
-                                Grid.Row="0"
-                                Grid.Column="3"
-                                Margin="0,20,0,20"
-                                Text="{Binding FrameSettings.TimeForProductionFrame, Mode=TwoWay}" />
-
-                            <TextBlock
                                 Grid.Row="1"
                                 Grid.Column="2"
-                                Margin="5,15,0,10"
-                                Text="Время покраски&#x0a;рамы: " />
-                            <TextBox
-                                Grid.Row="1"
-                                Grid.Column="3"
-                                Margin="0,20,0,20"
-                                Text="{Binding FrameSettings.TimeForPaintFrame, Mode=TwoWay}" />
+                                Margin="0,20,141,20"
+                                Text="{Binding FrameSettings.Painting, Mode=TwoWay}" Grid.ColumnSpan="3" />
 
                             <TextBlock
                                 Grid.Row="0"
                                 Grid.Column="4"
+                                Margin="5,15,140,10" Grid.ColumnSpan="2"
+                                ><Run Text="Время п"/><Run Language="ru-ru" Text="роизводства"/><Run Text=" 1"/><Run Language="ru-ru" Text=" рамы"/><Run Text=":&#xA;рамы: "/></TextBlock>
+                            <TextBox
+                                Grid.Row="0"
+                                Grid.Column="5"
+                                Margin="0,20,140,20"
+                                Text="{Binding FrameSettings.TimeForProductionFrame, Mode=TwoWay}" Grid.ColumnSpan="2" />
+
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="4"
+                                Margin="5,15,140,10"
+                                Text="Время покраски&#x0a;рамы: " Grid.ColumnSpan="2" />
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="5"
+                                Margin="0,20,140,20"
+                                Text="{Binding FrameSettings.TimeForPaintFrame, Mode=TwoWay}" Grid.ColumnSpan="2" />
+
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="6"
                                 Margin="5,15,0,10"
                                 Text="Время подгототовки&#x0a;рамы: " />
                             <TextBox
                                 Grid.Row="0"
-                                Grid.Column="5"
-                                Margin="0,20,0,20"
-                                Text="{Binding FrameSettings.TimeForPrepareFrame, Mode=TwoWay}" />
+                                Grid.Column="6"
+                                Margin="140,20,0,20"
+                                Text="{Binding FrameSettings.TimeForPrepareFrame, Mode=TwoWay}" Grid.ColumnSpan="2" />
 
                             <TextBlock
                                 Grid.Row="1"
-                                Grid.Column="4"
+                                Grid.Column="6"
                                 Margin="5,15,0,10"
                                 Text="Время покраски&#x0a;обвязки: " />
                             <TextBox
                                 Grid.Row="1"
-                                Grid.Column="5"
-                                Margin="0,20,0,20"
-                                Text="{Binding FrameSettings.TimeForPaintObv, Mode=TwoWay}" />
+                                Grid.Column="6"
+                                Margin="140,20,0,20"
+                                Text="{Binding FrameSettings.TimeForPaintObv, Mode=TwoWay}" Grid.ColumnSpan="2" />
 
                             <TextBlock
                                 Grid.Row="2"
-                                Grid.Column="1"
-                                Margin="5,5,0,6"
+                                Grid.Column="2"
+                                Margin="5,5,141,6"
                                 FontWeight="Bold"
-                                Text="Разбрные рамы " />
+                                Grid.ColumnSpan="3" ><Run Text="Разб"/><Run Language="ru-ru" Text="о"/><Run Text="рные рамы "/></TextBlock>
 
                             <TextBlock
                                 Grid.Row="3"
                                 Grid.Column="0"
-                                Grid.ColumnSpan="2"
-                                Margin="5,6,140,7"
+                                Grid.ColumnSpan="3"
+                                Margin="5,6,111,7"
                                 Text="Материал №1: " />
                             <TextBox
                                 Grid.Row="3"
-                                Grid.Column="1"
-                                Grid.ColumnSpan="2"
-                                Margin="0,4,0,6"
+                                Grid.Column="2"
+                                Grid.ColumnSpan="4"
+                                Margin="0,4,140,6"
                                 Text="{Binding FrameSettings.MaterialOne, Mode=TwoWay}" />
 
                             <Button
                                 Grid.Row="3"
-                                Grid.Column="3"
+                                Grid.Column="5"
                                 Margin="50,2,55,3"
                                 Content="..."
                                 RenderTransformOrigin="0.5,0.5" />
 
                             <TextBlock
                                 Grid.Row="3"
-                                Grid.Column="4"
+                                Grid.Column="6"
                                 Margin="5,4,0,6"
                                 Text="Кол-во:" />
                             <TextBox
                                 Grid.Row="3"
-                                Grid.Column="4"
+                                Grid.Column="6"
                                 Grid.ColumnSpan="2"
                                 Margin="140,5,2,7"
                                 Text="{Binding FrameSettings.CountMaterialOne, Mode=TwoWay}" />
@@ -600,31 +602,31 @@
                             <TextBlock
                                 Grid.Row="4"
                                 Grid.Column="0"
-                                Grid.ColumnSpan="2"
-                                Margin="5,6,140,7"
+                                Grid.ColumnSpan="3"
+                                Margin="5,6,111,7"
                                 Text="Материал №2: " />
                             <TextBox
                                 Grid.Row="4"
-                                Grid.Column="1"
-                                Grid.ColumnSpan="2"
-                                Margin="0,4,0,6"
+                                Grid.Column="2"
+                                Grid.ColumnSpan="4"
+                                Margin="0,4,140,6"
                                 Text="{Binding FrameSettings.MaterialTwo, Mode=TwoWay}" />
 
                             <Button
                                 Grid.Row="4"
-                                Grid.Column="3"
+                                Grid.Column="5"
                                 Margin="50,2,55,3"
                                 Content="..."
                                 RenderTransformOrigin="0.5,0.5" />
 
                             <TextBlock
                                 Grid.Row="4"
-                                Grid.Column="4"
+                                Grid.Column="6"
                                 Margin="5,4,0,6"
                                 Text="Кол-во:" />
                             <TextBox
                                 Grid.Row="4"
-                                Grid.Column="4"
+                                Grid.Column="6"
                                 Grid.ColumnSpan="2"
                                 Margin="140,5,2,7"
                                 Text="{Binding FrameSettings.CountMaterialTwo, Mode=TwoWay}" />
@@ -632,93 +634,93 @@
                             <TextBlock
                                 Grid.Row="5"
                                 Grid.Column="0"
-                                Grid.ColumnSpan="2"
-                                Margin="5,6,140,7"
+                                Grid.ColumnSpan="3"
+                                Margin="5,6,111,7"
                                 Text="Стоимость сборки: " />
                             <TextBox
                                 Grid.Row="5"
-                                Grid.Column="1"
-                                Grid.ColumnSpan="2"
-                                Margin="0,4,0,6"
+                                Grid.Column="2"
+                                Grid.ColumnSpan="4"
+                                Margin="0,4,140,6"
                                 Text="{Binding FrameSettings.AssemblyCost, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="5"
-                                Grid.Column="3"
+                                Grid.Column="5"
                                 Grid.ColumnSpan="2"
                                 Margin="5,6,140,7"
                                 Text="Время на сборку: " />
                             <TextBox
                                 Grid.Row="5"
-                                Grid.Column="4"
-                                Grid.ColumnSpan="2"
-                                Margin="0,4,0,6"
+                                Grid.Column="5"
+                                Grid.ColumnSpan="3"
+                                Margin="140,4,0,6"
                                 Text="{Binding FrameSettings.TimeForAssemblyWork, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="6"
-                                Grid.Column="1"
-                                Margin="5,5,0,6"
+                                Grid.Column="2"
+                                Margin="5,5,141,6"
                                 FontWeight="Bold"
-                                Text="Стойки " />
+                                Text="Стойки " Grid.ColumnSpan="3" />
 
                             <TextBlock
                                 Grid.Row="7"
                                 Grid.Column="0"
-                                Grid.ColumnSpan="2"
-                                Margin="5,6,140,7"
+                                Grid.ColumnSpan="3"
+                                Margin="5,6,111,7"
                                 Text="Стоимость: " />
                             <TextBox
                                 Grid.Row="7"
-                                Grid.Column="1"
-                                Grid.ColumnSpan="2"
-                                Margin="0,4,0,6"
+                                Grid.Column="2"
+                                Grid.ColumnSpan="4"
+                                Margin="0,4,140,6"
                                 Text="{Binding FrameSettings.PillarCost, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="7"
-                                Grid.Column="3"
+                                Grid.Column="5"
                                 Grid.ColumnSpan="2"
                                 Margin="5,6,140,7"
                                 Text="Время изготовления: " />
                             <TextBox
                                 Grid.Row="7"
-                                Grid.Column="4"
-                                Grid.ColumnSpan="2"
-                                Margin="0,4,0,6"
+                                Grid.Column="5"
+                                Grid.ColumnSpan="3"
+                                Margin="140,4,0,6"
                                 Text="{Binding FrameSettings.TimePillarProduction, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="9"
-                                Grid.Column="1"
-                                Margin="5,5,0,6"
+                                Grid.Column="2"
+                                Margin="5,5,141,6"
                                 FontWeight="Bold"
-                                Text="Шкафы " />
+                                Text="Шкафы " Grid.ColumnSpan="3" />
 
                             <TextBlock
                                 Grid.Row="10"
                                 Grid.Column="0"
-                                Grid.ColumnSpan="2"
-                                Margin="5,6,140,7"
+                                Grid.ColumnSpan="3"
+                                Margin="5,6,111,7"
                                 Text="Стоимость работы: " />
                             <TextBox
                                 Grid.Row="10"
-                                Grid.Column="1"
-                                Grid.ColumnSpan="2"
-                                Margin="0,4,0,6"
+                                Grid.Column="2"
+                                Grid.ColumnSpan="4"
+                                Margin="0,4,140,6"
                                 Text="{Binding FrameSettings.ClosetWorkCost, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="10"
-                                Grid.Column="3"
+                                Grid.Column="5"
                                 Grid.ColumnSpan="2"
                                 Margin="5,6,140,7"
                                 Text="Время подготовки: " />
                             <TextBox
                                 Grid.Row="10"
-                                Grid.Column="4"
-                                Grid.ColumnSpan="2"
-                                Margin="0,4,0,6"
+                                Grid.Column="5"
+                                Grid.ColumnSpan="3"
+                                Margin="140,4,0,6"
                                 Text="{Binding FrameSettings.TimeClosetPrepare, Mode=TwoWay}" />
                         </Grid>
                     </TabItem>

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using DocumentFormat.OpenXml.Packaging;
+using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.CalculationSettings;
@@ -35,16 +36,19 @@ public partial class MainWindow : Window //Это так называемый "C
     // Событие загрузки окна
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
-        StandartTheme(null, null);
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            StandartTheme(null, null);
 
-        MainWindow_StartUpState();
+            MainWindow_StartUpState();
 
-        var canConnect = await _mainViewModel.CanAppConnect();
+            var canConnect = await _mainViewModel.CanAppConnect();
 
-        if (canConnect) await _mainViewModel.ShowAllProjectsAsync();
+            if (canConnect) await _mainViewModel.ShowAllProjectsAsync();
 
-        await _mainViewModel.CheckDbConnectionAsync();
-        await LoadCalculationSettingsDataAsync();
+            await _mainViewModel.CheckDbConnectionAsync();
+            await LoadCalculationSettingsDataAsync();
+        });
     }
 
     private void MainDataGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -84,25 +88,41 @@ public partial class MainWindow : Window //Это так называемый "C
 
     private void ChangeDarkTheme(object sender, RoutedEventArgs e)
     {
-        ChangesTheme("/Resources/Dictionaries/DarkTheme.xaml");
+        ChangesTheme("/Resources/Dictionaries/ColorThemes/DarkTheme.xaml");
     }
 
     private void StandartTheme(object sender, RoutedEventArgs e)
     {
-        ChangesTheme("/Resources/Dictionaries/GigaChadUI.xaml");
+        ChangesTheme("/Resources/Dictionaries/ColorThemes/LightTheme.xaml");
     }
 
-    private void TestTheme(object sender, RoutedEventArgs e)
+    private void MangoParadiseTheme(object sender, RoutedEventArgs e)
     {
-        ChangesTheme("/Resources/Dictionaries/TestTheme.xaml");
+        ChangesTheme("/Resources/Dictionaries/ColorThemes/MangoParadiseTheme.xaml");
+    }
+
+    private void BubbleGumTheme(object sender, RoutedEventArgs e)
+    {
+        ChangesTheme("/Resources/Dictionaries/ColorThemes/BubbleGumTheme.xaml");
     }
 
     private void ChangesTheme(string dictPath)
     {
-        var uri = new Uri(dictPath, UriKind.RelativeOrAbsolute);
-        var resourceDict = Application.LoadComponent(uri) as ResourceDictionary;
-        Application.Current.Resources.Clear();
-        Application.Current.Resources.MergedDictionaries.Add(resourceDict);
+        var uri = new Uri(dictPath, UriKind.Relative);
+        var themeDict = Application.LoadComponent(uri) as ResourceDictionary;
+
+        var mergedDicts = Application.Current.Resources.MergedDictionaries;
+        for (int i = 0; i < mergedDicts.Count; i++)
+        {
+            if (mergedDicts[i].Source != null && mergedDicts[i].Source.OriginalString.Contains("ColorThemes"))
+            {
+                mergedDicts[i] = themeDict; 
+                return;
+            }
+        }
+
+        // Если цветовая тема ещё не подключена
+        mergedDicts.Add(themeDict);
     }
 
     private void MainWindow_StartUpState()
@@ -188,16 +208,4 @@ public partial class MainWindow : Window //Это так называемый "C
             });
         });
     }
-
-    private void MangoParadiseTheme(object sender, RoutedEventArgs e)
-    {
-        ChangesTheme("/Resources/Dictionaries/MangoParadiseTheme.xaml");
-    }
-
-    private void BubbleGumTheme(object sender, RoutedEventArgs e)
-    {
-        ChangesTheme("/Resources/Dictionaries/BubbleGumTheme.xaml");
-    }
-
-
 }

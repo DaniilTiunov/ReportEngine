@@ -91,6 +91,7 @@
         <None Remove="Resources\Images\Obvyazka\71.jpg" />
         <None Remove="Resources\Images\Obvyazka\73.jpg" />
         <None Remove="Resources\Images\Obvyazka\8.jpg" />
+        <None Remove="Resources\Images\Obvyazka\80.jpg" />
         <None Remove="Resources\Images\Obvyazka\9.jpg" />
         <None Remove="Resources\Images\refresh-button.png" />
     </ItemGroup>
@@ -100,16 +101,16 @@
         <PackageReference Include="Dragablz" Version="0.0.3.234" />
         <PackageReference Include="MahApps.Metro" Version="2.4.10" />
         <PackageReference Include="Mapster" Version="7.4.0" />
-        <PackageReference Include="MaterialDesignColors" Version="5.2.1" />
+        <PackageReference Include="MaterialDesignColors" Version="5.3.0" />
         <PackageReference Include="MaterialDesignExtensions" Version="3.3.0" />
-        <PackageReference Include="MaterialDesignThemes" Version="5.2.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
+        <PackageReference Include="MaterialDesignThemes" Version="5.3.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.10">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.9" />
-        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.9" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.10" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.10" />
         <PackageReference Include="Serilog" Version="4.3.0" />
         <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />
         <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.2" />
@@ -123,9 +124,9 @@
         <ProjectReference Include="..\ReportEngine.Domain\ReportEngine.Domain.csproj" />
         <ProjectReference Include="..\ReportEngine.Export\ReportEngine.Export.csproj" />
         <ProjectReference Include="..\ReportEngine.Shared\ReportEngine.Shared.csproj" />
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.9" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.9" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.9" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.10" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.10" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.10" />
     </ItemGroup>
 
     <ItemGroup>
@@ -152,6 +153,9 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Include="Resources\Images\Etalon.jpg">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\Images\Obvyazka\80.jpg">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Resource Include="Resources\Images\logo.png">
@@ -382,9 +386,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Views\Windows\SubjectsView.xaml.cs">
-        <SubType>Code</SubType>
-      </Compile>
+        <Compile Update="Views\Windows\SubjectsView.xaml.cs">
+            <SubType>Code</SubType>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>
@@ -394,16 +398,16 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Page Update="Resources\Dictionaries\GigaChadUI.xaml">
+        <Page Update="Resources\Dictionaries\Styles\GigaChadUI.xaml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Page>
-        <Page Update="Resources\Dictionaries\BubbleGumTheme.xaml">
+        <Page Update="Resources\Dictionaries\ColorThemes\BubbleGumTheme.xaml">
             <Generator>MSBuild:Compile</Generator>
             <XamlRuntime>Wpf</XamlRuntime>
             <SubType>Designer</SubType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Page>
-        <Page Update="Resources\Dictionaries\MangoParadiseTheme.xaml">
+        <Page Update="Resources\Dictionaries\ColorThemes\MangoParadiseTheme.xaml">
             <Generator>MSBuild:Compile</Generator>
             <XamlRuntime>Wpf</XamlRuntime>
             <SubType>Designer</SubType>

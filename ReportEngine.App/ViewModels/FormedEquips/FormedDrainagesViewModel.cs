@@ -1,11 +1,11 @@
-﻿using ReportEngine.App.AppHelpers;
+﻿using System.Collections.ObjectModel;
+using System.Windows.Input;
+using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model.FormedEquipsModels;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Drainage;
 using ReportEngine.Domain.Repositories.Interfaces;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels.FormedEquips;
 
