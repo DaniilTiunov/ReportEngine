@@ -346,7 +346,7 @@ public class ComponentListReportGenerator : IReportGenerator
     protected virtual ComponentsReportStandsData GetStandReportData(Stand stand)
     {
         const string dbErrorString = "Ошибка получения данных из БД";
-        var activeRow = 4;
+        
         //Формирование списка труб
         var pipesList = stand.ObvyazkiInStand
             .Select(obv => new

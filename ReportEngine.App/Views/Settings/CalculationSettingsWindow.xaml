@@ -113,7 +113,10 @@
                                 <RowDefinition Height="45" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="85.175" />
+                                <ColumnDefinition Width="32.391"/>
+                                <ColumnDefinition Width="19.794"/>
+                                <ColumnDefinition Width="12.64"/>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="50" />
                             </Grid.ColumnDefinitions>
@@ -121,15 +124,15 @@
                                 Grid.Row="0"
                                 Grid.Column="0"
                                 Margin="15,5,5,5"
-                                Text="Швеллер: " />
+                                Text="Швеллер: " Grid.ColumnSpan="4" />
                             <TextBox
                                 Grid.Row="0"
-                                Grid.Column="1"
+                                Grid.Column="4"
                                 Margin="15,5,5,5"
                                 Text="{Binding StandSettings.SteelChannel}" />
                             <Button
                                 Grid.Row="0"
-                                Grid.Column="2"
+                                Grid.Column="5"
                                 Margin="5,5,15,5"
                                 Content="..." />
 
@@ -137,15 +140,15 @@
                                 Grid.Row="1"
                                 Grid.Column="0"
                                 Margin="15,5,5,5"
-                                Text="Шилдьик: " />
+                                Text="Шильдик: " Grid.ColumnSpan="4" />
                             <TextBox
                                 Grid.Row="1"
-                                Grid.Column="1"
+                                Grid.Column="4"
                                 Margin="15,5,5,5"
                                 Text="{Binding StandSettings.NamePlate, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="1"
-                                Grid.Column="2"
+                                Grid.Column="5"
                                 Margin="5,5,15,5"
                                 Content="..." />
 
@@ -153,15 +156,15 @@
                                 Grid.Row="2"
                                 Grid.Column="0"
                                 Margin="15,5,5,5"
-                                Text="Табличка: " />
+                                Text="Табличка: " Grid.ColumnSpan="4" />
                             <TextBox
                                 Grid.Row="2"
-                                Grid.Column="1"
+                                Grid.Column="4"
                                 Margin="15,5,5,5"
                                 Text="{Binding StandSettings.NameTable, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="2"
-                                Grid.Column="3"
+                                Grid.Column="5"
                                 Margin="5,5,15,5"
                                 Content="..." />
 
@@ -169,15 +172,15 @@
                                 Grid.Row="3"
                                 Grid.Column="0"
                                 Margin="15,5,5,5"
-                                Text="Оцинковка рам: " />
+                                Text="Оцинковка рам: " Grid.ColumnSpan="4" />
                             <TextBox
                                 Grid.Row="3"
-                                Grid.Column="1"
+                                Grid.Column="4"
                                 Margin="15,5,5,5"
                                 Text="{Binding StandSettings.FrameGalvanizing, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="3"
-                                Grid.Column="3"
+                                Grid.Column="5"
                                 Margin="5,5,15,5"
                                 Content="..." />
 
@@ -185,15 +188,15 @@
                                 Grid.Row="4"
                                 Grid.Column="0"
                                 Margin="15,5,5,5"
-                                Text="Кронштейн: " />
+                                Text="Кронштейн: " Grid.ColumnSpan="4" />
                             <TextBox
                                 Grid.Row="4"
-                                Grid.Column="1"
+                                Grid.Column="4"
                                 Margin="15,5,5,5"
                                 Text="{Binding StandSettings.Bracket, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="4"
-                                Grid.Column="3"
+                                Grid.Column="5"
                                 Margin="5,5,15,5"
                                 Content="..." />
 
@@ -201,26 +204,26 @@
                                 Grid.Row="5"
                                 Grid.Column="0"
                                 Margin="15,5,5,5"
-                                Text="Кабель 6мм: " />
+                                Text="Кабель 6мм: " Grid.ColumnSpan="4" />
                             <TextBox
                                 Grid.Row="5"
-                                Grid.Column="1"
+                                Grid.Column="4"
                                 Margin="15,5,397,5"
                                 Text="{Binding StandSettings.CabelSixMM, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="5"
-                                Grid.Column="1"
+                                Grid.Column="4"
                                 Margin="250,5,360,5"
                                 Content="..." />
 
                             <TextBlock
                                 Grid.Row="5"
-                                Grid.Column="1"
+                                Grid.Column="4"
                                 Margin="310,5,230,5"
                                 Text="кол-во кабеля: " />
                             <TextBox
                                 Grid.Row="5"
-                                Grid.Column="1"
+                                Grid.Column="4"
                                 Margin="425,5,5,5"
                                 Text="{Binding StandSettings.SensorCountOnFrame, Mode=TwoWay}" />
 
@@ -228,15 +231,15 @@
                                 Grid.Row="6"
                                 Grid.Column="0"
                                 Margin="15,5,5,5"
-                                Text="Кабель 4мм: " />
+                                Text="Кабель 4мм: " Grid.ColumnSpan="4" />
                             <TextBox
                                 Grid.Row="6"
-                                Grid.Column="1"
+                                Grid.Column="4"
                                 Margin="15,5,397,5"
                                 Text="{Binding StandSettings.CabelFourMM, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="6"
-                                Grid.Column="1"
+                                Grid.Column="4"
                                 Margin="250,5,360,5"
                                 Content="..." />
 
@@ -244,15 +247,15 @@
                                 Grid.Row="7"
                                 Grid.Column="0"
                                 Margin="15,5,5,5"
-                                Text="Сигн. кабель: " />
+                                Text="Сигн. кабель: " Grid.ColumnSpan="4" />
                             <TextBox
                                 Grid.Row="7"
-                                Grid.Column="1"
+                                Grid.Column="4"
                                 Margin="15,5,397,5"
                                 Text="{Binding StandSettings.SignalCable, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="7"
-                                Grid.Column="1"
+                                Grid.Column="4"
                                 Margin="250,5,360,5"
                                 Content="..." />
 
@@ -260,10 +263,10 @@
                                 Grid.Row="8"
                                 Grid.Column="0"
                                 Margin="15,5,5,5"
-                                Text="Ведущий инженер: " />
+                                Text="Ведущий инженер: " Grid.ColumnSpan="4" />
                             <TextBox
                                 Grid.Row="8"
-                                Grid.Column="1"
+                                Grid.Column="4"
                                 Margin="15,5,5,5"
                                 Text="{Binding StandSettings.SeniorEngineer, Mode=TwoWay}" />
 
@@ -271,10 +274,10 @@
                                 Grid.Row="9"
                                 Grid.Column="0"
                                 Margin="15,5,5,5"
-                                Text="Отвественный за &#x0a;прёмку: " />
+                                Text="Отвественный за &#x0a;приёмку: " Grid.ColumnSpan="4" />
                             <TextBox
                                 Grid.Row="9"
-                                Grid.Column="1"
+                                Grid.Column="4"
                                 Margin="15,5,5,5"
                                 Text="{Binding StandSettings.ResponsibleForAccept, Mode=TwoWay}" />
 
@@ -282,10 +285,10 @@
                                 Grid.Row="10"
                                 Grid.Column="0"
                                 Margin="15,5,5,5"
-                                Text="Специалист &#x0a;II-уровня: " />
+                                Text="Специалист &#x0a;II-уровня: " Grid.ColumnSpan="4" />
                             <TextBox
                                 Grid.Row="10"
-                                Grid.Column="1"
+                                Grid.Column="4"
                                 Margin="15,5,5,5"
                                 Text="{Binding StandSettings.SecondLevelSpecialist, Mode=TwoWay}" />
 
@@ -293,10 +296,10 @@
                                 Grid.Row="11"
                                 Grid.Column="0"
                                 Margin="15,5,5,5"
-                                Text="Представитель &#x0a;Осил: " />
+                                Text="Представитель &#x0a;Осил: " Grid.ColumnSpan="4" />
                             <TextBox
                                 Grid.Row="11"
-                                Grid.Column="1"
+                                Grid.Column="4"
                                 Margin="15,5,5,5"
                                 Text="{Binding StandSettings.OSiL, Mode=TwoWay}" />
 
