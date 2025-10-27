@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Diagnostics;
-using ReportEngine.App.AppHelpers;
+﻿using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Commands.Providers;
 using ReportEngine.App.Model;
@@ -17,6 +15,8 @@ using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace ReportEngine.App.ViewModels;
 

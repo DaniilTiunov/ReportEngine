@@ -8,6 +8,10 @@
         <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign2.Defaults.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
+    <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#373A6B" />
+    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="Green" />
+
+
     <!--  Стили для Window  -->
     <Style TargetType="Window">
         <Setter Property="FontFamily" Value="Bahnschrift" />
@@ -41,7 +45,7 @@
     </Style>
 
     <!--  Стили для DataGrid  -->
-    <Style TargetType="DataGrid">
+    <Style BasedOn="{StaticResource MaterialDesignDataGrid}" TargetType="DataGrid">
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="BorderThickness" Value="1" />
@@ -57,18 +61,19 @@
         <Setter Property="GridLinesVisibility" Value="None" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="HeadersVisibility" Value="Column" />
+        <Setter Property="ColumnWidth" Value="*" />
     </Style>
 
-    <Style TargetType="DataGridColumnHeader">
+    <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="DataGridColumnHeader">
         <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="BorderThickness" Value="0,0,1,1" />
-        <Setter Property="Padding" Value="8,4" />
+        <Setter Property="Padding" Value="20,5,5,5" />
     </Style>
 
-    <Style TargetType="DataGridCell">
+    <Style BasedOn="{StaticResource MaterialDesignDataGridCell}" TargetType="DataGridCell">
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="BorderThickness" Value="0,0,1,1" />
         <Setter Property="Padding" Value="8,4" />
@@ -97,6 +102,11 @@
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{DynamicResource RowHoverColor}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+            </Trigger>
+            <Trigger Property="IsTabStop" Value="True">
+                <Setter Property="Background" Value="{DynamicResource SelectedRowBackground}" />
+                <Setter Property="Foreground" Value="{DynamicResource RowHoverColor}" />
                 <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
             </Trigger>
         </Style.Triggers>
@@ -475,9 +485,7 @@
 
     <!--  ComboBox  -->
     <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
-        <!--  Минимальный шаблон: пустой, ToggleButton будет прозрачным оверлеем  -->
         <Border Background="Transparent" />
-
     </ControlTemplate>
 
     <ControlTemplate x:Key="ComboBoxTextBox" TargetType="{x:Type TextBox}">
@@ -498,7 +506,6 @@
         <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
-
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBox}">
@@ -649,25 +656,35 @@
         </Style.Triggers>
     </Style>
 
-
-    <!--  ComboBoxItem стиль BasedOn="{StaticResource MaterialDesignComboBoxItemStyle}"  -->
-
-
     <!--  DatePicker стиль  -->
-    <Style TargetType="DatePicker">
+    <Style BasedOn="{x:Null}" TargetType="DatePicker">
         <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Padding" Value="4" />
     </Style>
 
+    <!--  Calendar стиль  -->
+    <Style BasedOn="{StaticResource MaterialDesignCalendarPortrait}" TargetType="Calendar">
+        <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+    </Style>
+
+    <Style BasedOn="{StaticResource MaterialDesignCalendarItemPortrait}" TargetType="CalendarItem">
+        <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <!--  ScrollViewer стиль  -->
     <Style TargetType="ScrollViewer">
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="BorderThickness" Value="4" />
     </Style>
 
+    <!--  ScrollBar стиль  -->
     <Style BasedOn="{x:Null}" TargetType="ScrollBar">
         <Setter Property="Foreground" Value="{DynamicResource AccentColor}" />
         <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
@@ -782,5 +799,13 @@
         </Setter>
     </Style>
 
-    <Style BasedOn="{x:Null}" TargetType="CheckBox" />
+    <Style BasedOn="{x:Null}" TargetType="CheckBox">
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+    </Style>
+
+    <Style BasedOn="{x:Null}" TargetType="GridSplitter">
+        <Setter Property="Background" Value="{DynamicResource PrimaryForeground}" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+    </Style>
 </ResourceDictionary>

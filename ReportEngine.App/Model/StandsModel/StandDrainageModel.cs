@@ -1,5 +1,5 @@
-﻿using System.Collections.ObjectModel;
-using ReportEngine.Domain.Entities;
+﻿using ReportEngine.Domain.Entities;
+using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Model.StandsModel;
 
