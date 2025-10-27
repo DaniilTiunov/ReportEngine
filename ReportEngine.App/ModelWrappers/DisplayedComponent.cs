@@ -1,5 +1,5 @@
-﻿using System.ComponentModel;
-using ReportEngine.Domain.Entities.BaseEntities.Interface;
+﻿using ReportEngine.Domain.Entities.BaseEntities.Interface;
+using System.ComponentModel;
 
 namespace ReportEngine.App.ModelWrappers;
 

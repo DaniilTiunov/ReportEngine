@@ -1,7 +1,7 @@
-﻿using System.Windows;
-using System.Windows.Input;
-using ReportEngine.App.AppHelpers;
+﻿using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
+using System.Windows;
+using System.Windows.Input;
 
 namespace ReportEngine.App.Views.Windows;
 
