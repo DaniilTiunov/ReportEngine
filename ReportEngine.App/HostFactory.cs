@@ -199,5 +199,6 @@ public class HostFactory
         services.AddTransient<StandsContainerView>();
         services.AddTransient<AuthWindow>();
         services.AddTransient<SubjectsView>();
+        services.AddTransient<UpdateInfoView>();
     }
 }
