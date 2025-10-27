@@ -1034,7 +1034,7 @@ public class SummaryReportGenerator : IReportGenerator
         return activeRow;
     }
 
-    private int CreatePartsAndLabotTotalRecord(int row, SummaryReportLaborData laborData, SummaryReportStandsData partsInfo, IXLWorksheet ws)
+    private int CreatePartsAndLaborTotalRecord(int row, SummaryReportLaborData laborData, SummaryReportStandsData partsInfo, IXLWorksheet ws)
     {
         
         var activeRow = row;
