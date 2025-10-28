@@ -13,11 +13,7 @@ public static class ExcelReportHelper
     }
 
 
-    public static string DbErrorString => "В БД отсутствуют необходимые значения.";
-
-    public static string SettingsErrorString => "Ошибка получения необходимых настроек расчета.";
-
-    public static string UnreliableDataString => "Рассчитанные данные могут быть недостоверны.";
+    public static string EmptyDataString => "N/A";
 
     public static string CommonErrorString => "Ошибка получения/формирования данных.";
 
