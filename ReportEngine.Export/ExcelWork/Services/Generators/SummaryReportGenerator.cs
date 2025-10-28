@@ -10,7 +10,6 @@ using ReportEngine.Shared.Config.IniHelpers;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
 using System.Diagnostics;
-using System.Runtime.ConstrainedExecution;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -103,20 +102,27 @@ public class SummaryReportGenerator : IReportGenerator
             .Select(group => new
             {
                 name = group.Key,
-                unit = group.First().units,
+                unit = group.FirstOrDefault().units,
                 quantity = group.Sum(pipe => pipe.length),
-                costPerUnit = group.First().price,
-                exportDays = group.First().exportDays
+                costPerUnit = group.FirstOrDefault().price,
+                exportDays = group.FirstOrDefault().exportDays
             })
             .Select(group => new ReportStandData
             {
-                ExportDays = group.exportDays,
-                Name = group.name,
-                Unit = group.unit,
-                Quantity = group.quantity,
-                CostPerUnit = ExcelReportHelper.TryToParseFloat(group.costPerUnit),
-                CommonCost = ExcelReportHelper.TryToParseFloat(group.costPerUnit) * group.quantity
+                ExportDays = new ValidatedField<int?>(group.exportDays.Value, group.exportDays.HasValue),
+                Name = new ValidatedField<string?>(group.name, group.name != null),
+                Unit = new ValidatedField<string?>(group.unit, group.unit != null),
+                Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
+                CostPerUnit = new ValidatedField<float?>(ExcelReportHelper.TryToParseFloat(group.costPerUnit), group.costPerUnit != null),
             })
+            .Select(record =>
+            {
+                record.CommonCost = new ValidatedField<float?>(
+                   record.Quantity.Value * record.CostPerUnit.Value,
+                   (record.Quantity.Value * record.CostPerUnit.Value) != null);
+
+                return record;
+            })         
             .ToList();
 
 
@@ -144,12 +150,19 @@ public class SummaryReportGenerator : IReportGenerator
             })
             .Select(group => new ReportStandData
             {
-                ExportDays = group.exportDays,
-                Name = group.name,
-                Unit = group.unit,
-                Quantity = group.quantity,
-                CostPerUnit = ExcelReportHelper.TryToParseFloat(group.costPerUnit),
-                CommonCost =  ExcelReportHelper.TryToParseFloat(group.costPerUnit) * group.quantity
+                 ExportDays = new ValidatedField<int?>(group.exportDays.Value, group.exportDays.HasValue),
+                 Name = new ValidatedField<string?>(group.name, group.name != null),
+                 Unit = new ValidatedField<string?>(group.unit, group.unit != null),
+                 Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
+                 CostPerUnit = new ValidatedField<float?>(ExcelReportHelper.TryToParseFloat(group.costPerUnit), group.costPerUnit != null),
+            })
+            .Select(record =>
+            {
+                record.CommonCost = new ValidatedField<float?>(
+                   record.Quantity.Value * record.CostPerUnit.Value,
+                   (record.Quantity.Value * record.CostPerUnit.Value) != null);
+
+                return record;
             })
             .ToList();
 
@@ -174,14 +187,21 @@ public class SummaryReportGenerator : IReportGenerator
                 costPerUnit = group.First().price,
                 exportDays = group.First().exportDays
             })
-            .Select(group => new ReportStandData
+           .Select(group => new ReportStandData
             {
-                ExportDays = group.exportDays,
-                Name = group.name,
-                Unit = group.unit,
-                Quantity = group.quantity,
-                CostPerUnit = ExcelReportHelper.TryToParseFloat(group.costPerUnit),
-                CommonCost = ExcelReportHelper.TryToParseFloat(group.costPerUnit) * group.quantity
+               ExportDays = new ValidatedField<int?>(group.exportDays.Value, group.exportDays.HasValue),
+               Name = new ValidatedField<string?>(group.name, group.name != null),
+               Unit = new ValidatedField<string?>(group.unit, group.unit != null),
+               Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
+               CostPerUnit = new ValidatedField<float?>(ExcelReportHelper.TryToParseFloat(group.costPerUnit), group.costPerUnit != null),
+            })
+            .Select(record =>
+            {
+                record.CommonCost = new ValidatedField<float?>(
+                   record.Quantity.Value * record.CostPerUnit.Value,
+                   (record.Quantity.Value * record.CostPerUnit.Value) != null);
+
+                return record;
             })
             .ToList();
 
@@ -205,14 +225,21 @@ public class SummaryReportGenerator : IReportGenerator
                 costPerUnit = group.First().price,
                 exportDays = group.First().exportDays
             })
-            .Select(group => new ReportStandData
+           .Select(group => new ReportStandData
+           {
+               ExportDays = new ValidatedField<int?>(group.exportDays.Value, group.exportDays.HasValue),
+               Name = new ValidatedField<string?>(group.name, group.name != null),
+               Unit = new ValidatedField<string?>(group.unit, group.unit != null),
+               Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
+               CostPerUnit = new ValidatedField<float?>(ExcelReportHelper.TryToParseFloat(group.costPerUnit), group.costPerUnit != null),
+           })
+            .Select(record =>
             {
-                ExportDays = group.exportDays,
-                Name = group.name,
-                Unit = group.unit,
-                Quantity = group.quantity,
-                CostPerUnit = ExcelReportHelper.TryToParseFloat(group.costPerUnit),
-                CommonCost = ExcelReportHelper.TryToParseFloat(group.costPerUnit) * group.quantity
+                record.CommonCost = new ValidatedField<float?>(
+                   record.Quantity.Value * record.CostPerUnit.Value,
+                   (record.Quantity.Value * record.CostPerUnit.Value) != null);
+
+                return record;
             })
             .ToList();
 
@@ -230,14 +257,21 @@ public class SummaryReportGenerator : IReportGenerator
                 costPerUnit = group.First().CostPerUnit,
                 exportDays = group.First().ExportDays
             })
-            .Select(group => new ReportStandData
+           .Select(group => new ReportStandData
+           {
+               ExportDays = new ValidatedField<int?>(group.exportDays.Value, group.exportDays.HasValue),
+               Name = new ValidatedField<string?>(group.name, group.name != null),
+               Unit = new ValidatedField<string?>(group.unit, group.unit != null),
+               Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
+               CostPerUnit = new ValidatedField<float?>(group.costPerUnit, group.costPerUnit.HasValue),
+            })
+            .Select(record =>
             {
-                ExportDays = group.exportDays,
-                Name = group.name,
-                Unit = group.unit,
-                Quantity = group.quantity,
-                CostPerUnit = group.costPerUnit,
-                CommonCost = group.costPerUnit * group.quantity
+                record.CommonCost = new ValidatedField<float?>(
+                   record.Quantity.Value * record.CostPerUnit.Value,
+                   (record.Quantity.Value * record.CostPerUnit.Value) != null);
+
+                return record;
             })
             .ToList();
 
@@ -251,24 +285,34 @@ public class SummaryReportGenerator : IReportGenerator
                 name = comp.ComponentName,
                 unit = comp.Measure,
                 quantity = comp.Count,
-                costPerUnit = comp.CostComponent
-                
+                costPerUnit = comp.CostComponent,
+                exportDays = comp.ExportDays
+
             })
             .GroupBy(frameComp => frameComp.name)
             .Select(group => new
             {
                 name = group.Key,
-                group.First().unit,
+                unit = group.First().unit,
                 quantity = group.Sum(frameComp => frameComp.quantity),
-                group.First().costPerUnit
+                costPerUnit = group.First().costPerUnit,
+                exportDays = group.First().exportDays
             })
-            .Select(record => new ReportStandData
+           .Select(group => new ReportStandData
+           {
+               ExportDays = new ValidatedField<int?>(group.exportDays.Value, group.exportDays.HasValue),
+               Name = new ValidatedField<string?>(group.name, group.name != null),
+               Unit = new ValidatedField<string?>(group.unit, group.unit != null),
+               Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
+               CostPerUnit = new ValidatedField<float?>(group.costPerUnit, group.costPerUnit.HasValue),
+           })
+            .Select(record =>
             {
-                Name = record.name,
-                Unit = record.unit,
-                Quantity = record.quantity,
-                CostPerUnit = record.costPerUnit,
-                CommonCost = record.costPerUnit * record.quantity
+                record.CommonCost = new ValidatedField<float?>(
+                   record.Quantity.Value * record.CostPerUnit.Value,
+                   (record.Quantity.Value * record.CostPerUnit.Value) != null);
+
+                return record;
             })
             .ToList();
 
@@ -284,15 +328,24 @@ public class SummaryReportGenerator : IReportGenerator
                 name = group.Key,
                 unit = group.First().Measure,
                 quantity = group.Sum(groupElement => groupElement.Quantity),
-                costPerUnit = group.First().CostPerUnit
+                costPerUnit = group.First().CostPerUnit,
+                exportDays = group.First().ExportDays
             })
-            .Select(record => new ReportStandData
+            .Select(group => new ReportStandData
             {
-                Name = record.name,
-                Unit = record.unit,
-                Quantity = record.quantity,
-                CostPerUnit = record.costPerUnit,
-                CommonCost = record.costPerUnit * record.quantity
+                ExportDays = new ValidatedField<int?>(group.exportDays.Value, group.exportDays.HasValue),
+                Name = new ValidatedField<string?>(group.name, group.name != null),
+                Unit = new ValidatedField<string?>(group.unit, group.unit != null),
+                Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
+                CostPerUnit = new ValidatedField<float?>(group.costPerUnit, group.costPerUnit.HasValue),
+            })
+            .Select(record =>
+            {
+                record.CommonCost = new ValidatedField<float?>(
+                   record.Quantity.Value * record.CostPerUnit.Value,
+                   (record.Quantity.Value * record.CostPerUnit.Value) != null);
+
+                return record;
             })
             .ToList();
 
@@ -307,15 +360,24 @@ public class SummaryReportGenerator : IReportGenerator
                 name = group.Key,
                 unit = group.First().Measure,
                 quantity = group.Sum(item => item.Quantity),
-                costPerUnit = group.First().CostPerUnit
+                costPerUnit = group.First().CostPerUnit,
+                exportDays = group.First().ExportDays
             })
-            .Select(record => new ReportStandData
+           .Select(group => new ReportStandData
             {
-                Name = record.name,
-                Unit = record.unit ,
-                Quantity = record.quantity,
-                CostPerUnit = record.costPerUnit,
-                CommonCost = record.costPerUnit * record.quantity
+               ExportDays = new ValidatedField<int?>(group.exportDays.Value, group.exportDays.HasValue),
+               Name = new ValidatedField<string?>(group.name, group.name != null),
+               Unit = new ValidatedField<string?>(group.unit, group.unit != null),
+               Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
+               CostPerUnit = new ValidatedField<float?>(group.costPerUnit, group.costPerUnit.HasValue),
+            })
+            .Select(record =>
+            {
+                record.CommonCost = new ValidatedField<float?>(
+                   record.Quantity.Value * record.CostPerUnit.Value,
+                   (record.Quantity.Value * record.CostPerUnit.Value) != null);
+
+                return record;
             })
             .ToList();
 
@@ -330,21 +392,35 @@ public class SummaryReportGenerator : IReportGenerator
                 name = group.Key,
                 unit = group.First().Measure,
                 quantity = group.Sum(item => item.Quantity),
-                costPerUnit = group.First().CostPerUnit
+                costPerUnit = group.First().CostPerUnit,
+                exportDays = group.First().ExportDays
             })
-            .Select(record => new ReportStandData
+           .Select(group => new ReportStandData
+           {
+               ExportDays = new ValidatedField<int?>(group.exportDays.Value, group.exportDays.HasValue),
+               Name = new ValidatedField<string?>(group.name, group.name != null),
+               Unit = new ValidatedField<string?>(group.unit, group.unit != null),
+               Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
+               CostPerUnit = new ValidatedField<float?>(group.costPerUnit, group.costPerUnit.HasValue),
+           })
+            .Select(record =>
             {
-                Name = record.name,
-                Unit = record.unit ,
-                Quantity = record.quantity,
-                CostPerUnit = record.costPerUnit,
-                CommonCost = record.costPerUnit * record.quantity
+                record.CommonCost = new ValidatedField<float?>(
+                   record.Quantity.Value * record.CostPerUnit.Value,
+                   (record.Quantity.Value * record.CostPerUnit.Value) != null);
+
+                return record;
             })
             .Except(sensorsHolders);
 
+
+
         var othersParts = additionalParts
-            .Where(part => part.Name.Contains("Шильдик") || part.Name.Contains("Табличка")) //тоже сомнительно
+            .Where(part => part.Name.Value != null)
+            .Where(part => part.Name.Value.Contains("Шильдик") || part.Name.Value.Contains("Табличка")) //тоже сомнительно
             .ToList();
+
+
 
         var supplies = additionalParts
             .Except(othersParts)
@@ -365,6 +441,8 @@ public class SummaryReportGenerator : IReportGenerator
         );
     }
 
+
+
     private SummaryReportLaborData GenerateLaborData(IEnumerable<Stand> stands)
     {
 
@@ -384,11 +462,15 @@ public class SummaryReportGenerator : IReportGenerator
 
         var frameProductionRecord = new ReportStandData
         {
-            Name = "Изготовление рам",
-            Unit = "чел/час",
-            Quantity = (float?) frameProductionHumanCostSum,
-            CostPerUnit = (float?) frameSettings?.FrameProduction,
-            CommonCost = (float?) (frameProductionHumanCostSum * frameSettings?.FrameProduction)
+            ExportDays = new ValidatedField<int?>(null, true),
+            Name = new ValidatedField<string?>("Изготовление рам", true),
+            Unit = new ValidatedField<string?>("чел/час",true),
+            Quantity = new ValidatedField<float?>((float?)frameProductionHumanCostSum, frameProductionHumanCostSum.HasValue),
+            CostPerUnit = new ValidatedField<float?>((float?)frameSettings?.FrameProduction, (frameSettings?.FrameProduction != null)),   
+            CommonCost = new ValidatedField<float?> (
+                (float?)(frameProductionHumanCostSum * frameSettings?.FrameProduction),
+                (frameProductionHumanCostSum * frameSettings?.FrameProduction) != null)
+            
         };
 
 
@@ -400,17 +482,17 @@ public class SummaryReportGenerator : IReportGenerator
 
         var obvProductionRecord = new ReportStandData
         {
-            Name = "Изготовление обвязок",
-            Unit = "чел/час",
-            Quantity = allObvHumanCosts.Sum(),
-            CostPerUnit = (float?) humanCostSettings?.ObvzyakaProduction,
+            ExportDays = new ValidatedField<int?>(null, true),
+            Name = new ValidatedField<string?>("Изготовление обвязок", true),
+            Unit = new ValidatedField<string?>("чел/час", true),
+            Quantity = new ValidatedField<float?>( allObvHumanCosts.Sum(), allObvHumanCosts.All(cost => cost.HasValue)),
+            CostPerUnit = new ValidatedField<float?> ((float?)humanCostSettings?.ObvzyakaProduction, (humanCostSettings?.ObvzyakaProduction != null))        
         };
 
-        obvProductionRecord.QuantityValid = allObvHumanCosts.Any(cost => cost == null);
-        obvProductionRecord.CostPerUnitValid = obvProductionRecord.CostPerUnit.HasValue;
+        obvProductionRecord.CommonCost = new ValidatedField<float?>(
+            obvProductionRecord.Quantity.Value * obvProductionRecord.CostPerUnit.Value,
+            (obvProductionRecord.Quantity.Value * obvProductionRecord.CostPerUnit.Value) != null && obvProductionRecord.Quantity.IsValid);
 
-        obvProductionRecord.CommonCost = obvProductionRecord.Quantity * obvProductionRecord.CostPerUnit;
-        obvProductionRecord.CommonCostValid = obvProductionRecord.Quantity.HasValue && obvProductionRecord.CostPerUnit.HasValue;
 
 
         //трудозатраты на коллектор
@@ -420,16 +502,17 @@ public class SummaryReportGenerator : IReportGenerator
 
         var collectorProductionRecord = new ReportStandData
         {
-            Name = "Изготовление коллектора",
-            Unit = "чел/час",
-            Quantity = (float?) collectorProductionHumanCostSum,
-            CostPerUnit = (float?) humanCostSettings?.CollectorProduction,
-            CommonCost = (float?) (collectorProductionHumanCostSum * humanCostSettings?.CollectorProduction)
+            ExportDays = new ValidatedField<int?>(null, true),
+            Name = new ValidatedField<string?>("Изготовление коллектора", true),
+            Unit = new ValidatedField<string?>("чел/час", true),
+            Quantity = new ValidatedField<float?>((float?)collectorProductionHumanCostSum, collectorProductionHumanCostSum.HasValue),
+            CostPerUnit = new ValidatedField<float?>((float?)humanCostSettings?.CollectorProduction, (humanCostSettings?.CollectorProduction != null)),
+            CommonCost = new ValidatedField<float?>(
+                (float?)(collectorProductionHumanCostSum * humanCostSettings?.CollectorProduction),
+                (collectorProductionHumanCostSum * humanCostSettings?.CollectorProduction) != null)
         };
 
-        collectorProductionRecord.QuantityValid = collectorProductionHumanCostSum.HasValue;
-        collectorProductionRecord.CostPerUnitValid = collectorProductionRecord.CostPerUnit.HasValue;
-        collectorProductionRecord.CommonCostValid = collectorProductionRecord.Quantity.HasValue && collectorProductionRecord.CostPerUnit.HasValue;
+ 
 
 
 
@@ -440,16 +523,17 @@ public class SummaryReportGenerator : IReportGenerator
 
         var qualityTestRecord = new ReportStandData
         {
-            Name = "Испытание на прочность и герметичность",
-            Unit = "чел/час",
-            Quantity = (float?) testsHumanCostSum,
-            CostPerUnit = (float?)humanCostSettings?.Tests,
-            CommonCost = (float?) (testsHumanCostSum * humanCostSettings?.Tests)
+
+            ExportDays = new ValidatedField<int?>(null, true),
+            Name = new ValidatedField<string?>("Испытание на прочность и герметичность", true),
+            Unit = new ValidatedField<string?>("чел/час", true),
+            Quantity = new ValidatedField<float?>((float?)testsHumanCostSum, testsHumanCostSum.HasValue),
+            CostPerUnit = new ValidatedField<float?>((float?)humanCostSettings?.Tests, (humanCostSettings?.Tests != null)),
+            CommonCost = new ValidatedField<float?>(
+                (float?)(testsHumanCostSum * humanCostSettings?.Tests),
+                (testsHumanCostSum * humanCostSettings?.Tests) != null)
         };
 
-        qualityTestRecord.QuantityValid = qualityTestRecord.Quantity.HasValue;
-        qualityTestRecord.CostPerUnitValid = qualityTestRecord.CostPerUnit.HasValue;
-        qualityTestRecord.CommonCostValid = qualityTestRecord.Quantity.HasValue && qualityTestRecord.CostPerUnit.HasValue;
 
 
 
@@ -463,9 +547,9 @@ public class SummaryReportGenerator : IReportGenerator
         {
             Name = "Пескоструйные работы",
             Unit = "чел/час",
-            Quantity = (float?) sandBlastingHumanCostSum,
-            CostPerUnit = (float?) sandblastSettings?.SandBlastWork,
-            CommonCost = (float?) (sandBlastingHumanCostSum * sandblastSettings?.SandBlastWork)
+            Quantity = (float?)sandBlastingHumanCostSum,
+            CostPerUnit = (float?)sandblastSettings?.SandBlastWork,
+            CommonCost = (float?)(sandBlastingHumanCostSum * sandblastSettings?.SandBlastWork)
         };
 
         sandblastingRecord.QuantityValid = sandblastingRecord.Quantity.HasValue;
@@ -483,10 +567,10 @@ public class SummaryReportGenerator : IReportGenerator
         var paintingRecord = new ReportStandData
         {
             Name = "Покраска",
-            Unit = "чел/час", 
-            Quantity = (float?) paintingHumanCostSum,
-            CostPerUnit = (float?) frameSettings?.Painting,
-            CommonCost = (float?) (paintingHumanCostSum * frameSettings?.Painting)
+            Unit = "чел/час",
+            Quantity = (float?)paintingHumanCostSum,
+            CostPerUnit = (float?)frameSettings?.Painting,
+            CommonCost = (float?)(paintingHumanCostSum * frameSettings?.Painting)
         };
 
         paintingRecord.QuantityValid = paintingRecord.Quantity.HasValue;
@@ -503,9 +587,9 @@ public class SummaryReportGenerator : IReportGenerator
         {
             Name = "Электромонтаж",
             Unit = "чел/час",
-            Quantity = (float?) electricHumanCost,
-            CostPerUnit = (float? )electicalSettings?.ElectricalMontage,
-            CommonCost = (float?) (electricHumanCost * electicalSettings?.ElectricalMontage)
+            Quantity = (float?)electricHumanCost,
+            CostPerUnit = (float?)electicalSettings?.ElectricalMontage,
+            CommonCost = (float?)(electricHumanCost * electicalSettings?.ElectricalMontage)
         };
 
         electricRecord.QuantityValid = electricRecord.Quantity.HasValue;
@@ -519,14 +603,14 @@ public class SummaryReportGenerator : IReportGenerator
             .Select(_ => humanCostSettings?.TimeForCheckStand)
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
-       
+
         var commonCheckRecord = new ReportStandData
         {
             Name = "Общая проверка стенда",
             Unit = "чел/час",
-            Quantity = (float?) commonHumanCost,
-            CostPerUnit = (float?) humanCostSettings?.CommonCheckStand,
-            CommonCost = (float?) (commonHumanCost * humanCostSettings?.CommonCheckStand)
+            Quantity = (float?)commonHumanCost,
+            CostPerUnit = (float?)humanCostSettings?.CommonCheckStand,
+            CommonCost = (float?)(commonHumanCost * humanCostSettings?.CommonCheckStand)
         };
 
         electricRecord.QuantityValid = electricRecord.Quantity.HasValue;
@@ -545,22 +629,79 @@ public class SummaryReportGenerator : IReportGenerator
               commonCheckRecord);
     }
 
-
+    //валидация и вывод в таблицу
     private void PastePartRecord(int row, ReportStandData partRecord, IXLWorksheet ws)
     {
+        if (partRecord.ExportDays.Value.HasValue)
+        {
+            ws.Cell($"A{row}").Value = partRecord.ExportDays.Value.ToString();
+        }
+        if (!partRecord.ExportDays.IsValid)
+        {
+            ws.Cell($"A{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
+        }
 
-        ws.Cell($"B{row}").Value = partRecord.Name ?? ExcelReportHelper.CommonErrorString;
-        ws.Cell($"C{row}").Value = partRecord.Unit ?? ExcelReportHelper.CommonErrorString;
-        ws.Cell($"D{row}").Value = partRecord.Quantity.ToString() ?? ExcelReportHelper.CommonErrorString;
-        ws.Cell($"E{row}").Value = partRecord.CostPerUnit.ToString() ?? ExcelReportHelper.CommonErrorString;
-        ws.Cell($"F{row}").Value = partRecord.CommonCost.ToString() ?? ExcelReportHelper.CommonErrorString;
-        
+
+
+        if (partRecord.Name.Value != null)
+        {
+            ws.Cell($"B{row}").Value = partRecord.Name.Value.ToString();
+        }
+        if (!partRecord.Name.IsValid)
+        {
+            ws.Cell($"B{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
+        }
+
+
+
+
+        if (partRecord.Unit.Value != null)
+        {
+            ws.Cell($"C{row}").Value = partRecord.Unit.Value.ToString();
+        }
+        if (!partRecord.Unit.IsValid)
+        {
+            ws.Cell($"C{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
+        }
+
+
+
+        if (partRecord.Quantity.Value.HasValue)
+        {
+            ws.Cell($"D{row}").Value = partRecord.Quantity.Value.ToString();
+        }
+        if (!partRecord.Quantity.IsValid)
+        {
+            ws.Cell($"D{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
+        }
+
+
+        if (partRecord.CostPerUnit.Value.HasValue)
+        {
+            ws.Cell($"E{row}").Value = partRecord.CostPerUnit.Value.ToString();
+        }
+        if (!partRecord.CostPerUnit.IsValid)
+        {
+            ws.Cell($"E{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
+        }
+
+
+
+        if (partRecord.CommonCost.Value.HasValue)
+        {
+            ws.Cell($"F{row}").Value = partRecord.CommonCost.Value.ToString();
+        }
+        if (!partRecord.CommonCost.IsValid)
+        {
+            ws.Cell($"F{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
+        }
+
     }
 
     #endregion
 
 
-    #region Элементы таблицы
+    #region Заголовки
 
     //создает подзаголовок для подтаблицы и возвращает следующую строку
     private int CreateSubheaderOnWorksheet(int row, string title, IXLWorksheet ws)
@@ -770,13 +911,14 @@ public class SummaryReportGenerator : IReportGenerator
 
         foreach (var item in items)
         {
-            ws.Cell($"B{currentRow}").Value = item.Name;
-            ws.Cell($"C{currentRow}").Value = item.Unit;
-            ws.Cell($"D{currentRow}").Value = item.Quantity;
-            ws.Cell($"E{currentRow}").Value = item.CostPerUnit;
-            ws.Cell($"F{currentRow}").Value = item.CommonCost;
+            PastePartRecord(currentRow, item, ws);
 
-            ws.Range($"B{currentRow}:F{currentRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            ws.Cell($"A{currentRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            ws.Cell($"B{currentRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
+            ws.Cell($"C{currentRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            ws.Cell($"D{currentRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+            ws.Cell($"E{currentRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+            ws.Cell($"E{currentRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
 
             currentRow++;
         }
@@ -1015,7 +1157,7 @@ public class SummaryReportGenerator : IReportGenerator
 
         if (invalidHumanCostData)
         {
-            resultHumanCostSumString += "\n" +  ExcelReportHelper.SettingsErrorString + "\n";
+            resultHumanCostSumString += "\n" + ExcelReportHelper.SettingsErrorString + "\n";
             resultHumanCostSumString += ExcelReportHelper.UnreliableDataString;
         }
 

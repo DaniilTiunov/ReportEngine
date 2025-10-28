@@ -39,16 +39,24 @@ public record SummaryReportLaborData(
 
 public struct ReportStandData
 {
-    public int? ExportDays {  get; set; } 
-    public string? Name { get; set; }
-    public string? Unit { get; set; }
-    public float? Quantity { get; set; }
-    public float? CostPerUnit { get; set; }
-    public float? CommonCost { get; set; }
+    public ValidatedField<int?> ExportDays {  get; set; } 
+    public ValidatedField<string?> Name { get; set; }
+    public ValidatedField<string?> Unit { get; set; }
+    public ValidatedField<float?> Quantity { get; set; }
+    public ValidatedField<float?> CostPerUnit { get; set; }
+    public ValidatedField<float?> CommonCost { get; set; }
 
-    public bool ExportDaysValid 
-    public bool QuantityValid { get; set; }
-    public bool CostPerUnitValid { get; set; }
-    public bool CommonCostValid { get; set;  }
-    
+}
+
+public struct ValidatedField<T>
+{
+    public T Value { get; set; }
+    public bool IsValid { get; set; }
+
+    public ValidatedField(T value, bool isValid)
+    {
+        Value = value;
+        IsValid = isValid;
+    }
+
 }
