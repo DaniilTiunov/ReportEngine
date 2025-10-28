@@ -15,12 +15,16 @@ public partial class SubjectsView : Window
 {
     private ICollectionView _subjectsView;
 
-    public SubjectsView(SubjectViewModel viewModel)
+    private readonly bool _isDialog;
+    public SubjectsView(SubjectViewModel viewModel, bool isDialog = false)
     {
         InitializeComponent();
         DataContext = viewModel;
 
+        _isDialog = isDialog;
+
         Loaded += async (_, __) => await InitializeDataAsync(viewModel);
+        _isDialog = isDialog;
     }
 
     private async Task InitializeDataAsync(SubjectViewModel viewModel)
@@ -54,7 +58,7 @@ public partial class SubjectsView : Window
 
     private void SubjectsDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-        if (DataContext is SubjectViewModel vm && vm.CurrentSubject.SelectedSubject != null)
+        if (DataContext is SubjectViewModel vm && vm.CurrentSubject.SelectedSubject != null && _isDialog)
         {
             vm.SelectedItem?.Invoke(vm.CurrentSubject.SelectedSubject.ObjectName);
             DialogResult = true;

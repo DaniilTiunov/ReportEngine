@@ -17,7 +17,6 @@ using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Runtime.Intrinsics.Arm;
 
 namespace ReportEngine.App.ViewModels;
 

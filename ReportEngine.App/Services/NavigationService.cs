@@ -35,7 +35,7 @@ public class NavigationService
         where T : class, IBaseEquip, new()
     {
         var factory = _serviceProvider.GetRequiredService<GenericEquipWindowFactory>(); // Получаем фабрику окон
-        _currentWindow = factory.CreateWindow<T>(); // Создаем окно с помощью фабрики
+        _currentWindow = factory.CreateWindow<T>(false); // Создаем окно с помощью фабрики
         _currentWindow.Show(); // Отображаем окно
     }
 
