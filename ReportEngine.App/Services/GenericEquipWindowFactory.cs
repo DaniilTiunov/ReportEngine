@@ -22,14 +22,14 @@ public class GenericEquipWindowFactory
         _serviceProvider = serviceProvider;
     }
 
-    public Window CreateWindow<T>() where T : class, IBaseEquip, new()
+    public Window CreateWindow<T>(bool isDialog) where T : class, IBaseEquip, new()
     {
         // Получаем репозиторий из DI
         var repository = _serviceProvider.GetRequiredService<IGenericBaseRepository<T, T>>();
         // Создаем ViewModel
         var viewModel = new GenericEquipViewModel<T>(repository);
         // Создаем окно
-        var window = new GenericEquipView();
+        var window = new GenericEquipView(isDialog);
         // Устанавливаем DataContext окна на созданную ViewModel
         // Это позволяет окну использовать ViewModel для привязки данных
         window.DataContext = viewModel;
@@ -37,6 +37,11 @@ public class GenericEquipWindowFactory
         GenerateDataGridColumns<T>(window);
         // Выполняем команду для отображения всего оборудования
         viewModel.OnShowAllEquipCommandExecuted(null);
+
+        if (isDialog)
+        {
+            window.GenericEquipDataGrid.IsReadOnly = true;
+        }
         // Возвращаем созданное и настроенное окно
         return window;
     }

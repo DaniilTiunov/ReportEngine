@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic;
+using OpenXmlPowerTools;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
@@ -235,15 +236,19 @@ public class ProjectService : IProjectService
         obv.MaterialLine = stand.MaterialLine;
         obv.MaterialLineCount = stand.MaterialLineCount;
         obv.MaterialLineMeasure = stand.MaterialLineMeasure;
+        obv.MaterialLineExportDays = stand.MaterialLineExportDays;
         obv.Armature = stand.Armature;
         obv.ArmatureCount = stand.ArmatureCount;
         obv.ArmatureMeasure = stand.ArmatureMeasure;
+        obv.ArmatureExportDays = stand.ArmatureExportDays;
         obv.TreeSocket = stand.TreeSocket;
         obv.TreeSocketMaterialCount = stand.TreeSocketMaterialCount;
         obv.TreeSocketMaterialMeasure = stand.TreeSocketMaterialMeasure;
+        obv.TreeSocketExportDays = stand.TreeSocketExportDays;
         obv.KMCH = stand.KMCH;
         obv.KMCHCount = stand.KMCHCount;
         obv.KMCHMeasure = stand.KMCHMeasure;
+        obv.KMCHExportDays = stand.KMCHExportDays;
         obv.NN = stand.NN;
         obv.FirstSensorType = stand.FirstSensorType;
         obv.FirstSensorKKS = stand.FirstSensorKKS;
@@ -376,6 +381,7 @@ public class ProjectService : IProjectService
                 Quantity = purpose.Quantity,
                 Measure = purpose.Measure,
                 CostPerUnit = purpose.CostPerUnit,
+                ExportDays = purpose.ExportDays,
                 FormedDrainageId = newComponent.Id
             };
 
@@ -405,6 +411,7 @@ public class ProjectService : IProjectService
                 Quantity = purpose.Quantity,
                 Measure = purpose.Measure,
                 CostPerUnit = purpose.CostPerUnit,
+                ExportDays = purpose.ExportDays,
                 FormedAdditionalEquipId = newComponent.Id
             };
 
@@ -434,6 +441,7 @@ public class ProjectService : IProjectService
                 Quantity = purpose.Quantity,
                 Measure = purpose.Measure,
                 CostPerUnit = purpose.CostPerUnit,
+                ExportDays = purpose.ExportDays,
                 FormedElectricalComponentId = newComponent.Id
             };
 

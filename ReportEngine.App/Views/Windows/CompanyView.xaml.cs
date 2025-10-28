@@ -15,10 +15,13 @@ public partial class CompanyView : Window
 {
     private ICollectionView _companiesView;
 
-    public CompanyView(CompanyViewModel viewModel)
+    private readonly bool _isDialog;
+
+    public CompanyView(CompanyViewModel viewModel, bool IsDialog = false)
     {
         InitializeComponent();
         DataContext = viewModel;
+        _isDialog = IsDialog;
 
         Loaded += async (_, __) => await InitializeDataAsync(viewModel);
     }
@@ -34,7 +37,7 @@ public partial class CompanyView : Window
 
     private void CompaniesDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-        if (DataContext is CompanyViewModel vm && vm.CurrentCompany.SelectedCompany != null)
+        if (DataContext is CompanyViewModel vm && vm.CurrentCompany.SelectedCompany != null && _isDialog)
         {
             vm.SelectedItem?.Invoke(vm.CurrentCompany.SelectedCompany.Name);
             DialogResult = true;

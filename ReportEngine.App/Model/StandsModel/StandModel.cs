@@ -94,6 +94,7 @@ public class StandModel : BaseViewModel
     private float? _kmchCount;
     private string? _kmchMeasure;
 
+
     // Материал линии
     private string _materialLine;
     private string _materialLineCostPerUnit;
@@ -186,6 +187,10 @@ public class StandModel : BaseViewModel
 
     // Ширина стенда
     private float _width;
+    private int? _materialLineExportDays;
+    private int? _armatureExportDays;
+    private int? _kMCHExportDays;
+    private int? _treeSocketExportDays;
 
     public StandModel()
     {
@@ -323,6 +328,12 @@ public class StandModel : BaseViewModel
         set => Set(ref _materialLineMeasure, value);
     }
 
+    public int? MaterialLineExportDays
+    {
+        get => _materialLineExportDays;
+        set => Set(ref _materialLineExportDays, value);
+    }
+
     public string? MaterialLineCostPerUnit
     {
         get => _materialLineCostPerUnit;
@@ -335,16 +346,33 @@ public class StandModel : BaseViewModel
         set => Set(ref _armatureCostPerUnit, value);
     }
 
+    public int? ArmatureExportDays
+    {
+        get => _armatureExportDays;
+        set => Set(ref _armatureExportDays, value);
+    }
+
     public string? KMCHCostPerUnit
     {
         get => _kmchCostPerUnit;
         set => Set(ref _kmchCostPerUnit, value);
+    }
+    public int? KMCHExportDays
+    {
+        get => _kMCHExportDays;
+        set => Set(ref _kMCHExportDays, value);
     }
 
     public string? TreeSocketMaterialCostPerUnit
     {
         get => _treeSocketMaterialCostPerUnit;
         set => Set(ref _treeSocketMaterialCostPerUnit, value);
+    }
+
+    public int? TreeSocketExportDays
+    {
+        get => _treeSocketExportDays;
+        set => Set(ref _treeSocketExportDays, value);
     }
 
     // Арматура
