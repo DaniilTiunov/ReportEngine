@@ -26,7 +26,8 @@ public class DialogService : IDialogService
         {
             T selectedItem = null;
             var factory = _serviceProvider.GetRequiredService<GenericEquipWindowFactory>();
-            var window = factory.CreateWindow<T>();
+            var window = factory.CreateWindow<T>(true);
+
 
             if (window.DataContext is GenericEquipViewModel<T> viewModel)
                 viewModel.SelectionHandler = item =>
@@ -34,6 +35,8 @@ public class DialogService : IDialogService
                     selectedItem = item;
                     window.Close();
                 };
+
+
             window.ShowDialog();
             return selectedItem;
         }
@@ -74,7 +77,10 @@ public class DialogService : IDialogService
 
             viewModel.SelectionHandler = item => { selected = item; };
 
-            var window = new AllSortamentsView(viewModel);
+            var window = new AllSortamentsView(viewModel, true);
+
+            window.EquipDataGrid.IsReadOnly = true;
+
             window.ShowDialog();
 
             return selected;
@@ -96,7 +102,9 @@ public class DialogService : IDialogService
 
             viewModel.SelectedItem = item => { selected = item; };
 
-            var window = new CompanyView(viewModel);
+            var window = new CompanyView(viewModel, true);
+            window.CompaniesDataGrid.IsReadOnly = true;
+
             window.ShowDialog();
             return selected;
         }
@@ -117,7 +125,9 @@ public class DialogService : IDialogService
 
             viewModel.SelectedItem = item => { selected = item; };
 
-            var window = new SubjectsView(viewModel);
+            var window = new SubjectsView(viewModel, true);
+            window.SubjectsDataGrid.IsReadOnly = true;
+
             window.ShowDialog();
             return selected;
         }
@@ -139,6 +149,7 @@ public class DialogService : IDialogService
 
             viewModel.SelectedItem = item => { selected = item; };
 
+            window.FrameDataGrid.IsReadOnly = true;
             window.ShowDialog();
 
             return selected;
