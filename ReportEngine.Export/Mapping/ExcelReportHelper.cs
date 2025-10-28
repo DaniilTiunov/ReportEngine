@@ -19,9 +19,7 @@ public static class ExcelReportHelper
 
     public static string UnreliableDataString => "Рассчитанные данные могут быть недостоверны.";
 
-
-
-
+    public static string CommonErrorString => "Ошибка получения/формирования данных.";
 
 
 }

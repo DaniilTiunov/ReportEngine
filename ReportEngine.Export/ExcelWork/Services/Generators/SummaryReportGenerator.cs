@@ -1,5 +1,4 @@
 ﻿using ClosedXML.Excel;
-using Microsoft.Extensions.Primitives;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
@@ -11,7 +10,7 @@ using ReportEngine.Shared.Config.IniHelpers;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
 using System.Diagnostics;
-using System.Linq;
+using System.Runtime.ConstrainedExecution;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -86,11 +85,8 @@ public class SummaryReportGenerator : IReportGenerator
 
     #region Вспомогательные
 
-
-
     private SummaryReportStandsData GenerateStandsData(IEnumerable<Stand> stands)
     {
-        const string dbErrorString = "Ошибка получения данных из БД";
 
         //Формирование списка труб
         var pipesList = stands
@@ -112,15 +108,15 @@ public class SummaryReportGenerator : IReportGenerator
             })
             .Select(group => new ReportStandData
             {
-                Name = group.name ?? dbErrorString,
-                Unit = group.unit ?? dbErrorString,
-                Quantity = group.quantity.ToString() ?? dbErrorString,
-                CostPerUnit = group.costPerUnit ?? dbErrorString,
-                CommonCost = group.costPerUnit == null || group.quantity == null
-                    ? dbErrorString
-                    : (float.Parse(group.costPerUnit) * group.quantity).ToString()
+                ExportDays = 5,
+                Name = group.name,
+                Unit = group.unit,
+                Quantity = group.quantity,
+                CostPerUnit = ExcelReportHelper.TryToParseFloat(group.costPerUnit),
+                CommonCost = ExcelReportHelper.TryToParseFloat(group.costPerUnit) * group.quantity
             })
             .ToList();
+
 
 
         //Формирование списка арматуры
@@ -143,13 +139,11 @@ public class SummaryReportGenerator : IReportGenerator
             })
             .Select(group => new ReportStandData
             {
-                Name = group.name ?? dbErrorString,
-                Unit = group.unit ?? dbErrorString,
-                Quantity = group.quantity.ToString() ?? dbErrorString,
-                CostPerUnit = group.costPerUnit ?? dbErrorString,
-                CommonCost = group.costPerUnit == null || group.quantity == null
-                    ? dbErrorString
-                    : (float.Parse(group.costPerUnit) * group.quantity).ToString()
+                Name = group.name,
+                Unit = group.unit,
+                Quantity = group.quantity,
+                CostPerUnit = ExcelReportHelper.TryToParseFloat(group.costPerUnit),
+                CommonCost =  ExcelReportHelper.TryToParseFloat(group.costPerUnit) * group.quantity
             })
             .ToList();
 
@@ -174,13 +168,11 @@ public class SummaryReportGenerator : IReportGenerator
             })
             .Select(group => new ReportStandData
             {
-                Name = group.name ?? dbErrorString,
-                Unit = group.unit ?? dbErrorString,
-                Quantity = group.quantity.ToString() ?? dbErrorString,
-                CostPerUnit = group.costPerUnit ?? dbErrorString,
-                CommonCost = group.costPerUnit == null || group.quantity == null
-                    ? dbErrorString
-                    : (float.Parse(group.costPerUnit) * group.quantity).ToString()
+                Name = group.name,
+                Unit = group.unit,
+                Quantity = group.quantity,
+                CostPerUnit = ExcelReportHelper.TryToParseFloat(group.costPerUnit),
+                CommonCost = ExcelReportHelper.TryToParseFloat(group.costPerUnit) * group.quantity
             })
             .ToList();
 
@@ -204,13 +196,11 @@ public class SummaryReportGenerator : IReportGenerator
             })
             .Select(group => new ReportStandData
             {
-                Name = group.name ?? dbErrorString,
-                Unit = group.unit ?? dbErrorString,
-                Quantity = group.quantity.ToString() ?? dbErrorString,
-                CostPerUnit = group.costPerUnit ?? dbErrorString,
-                CommonCost = group.costPerUnit == null || group.quantity == null
-                    ? dbErrorString
-                    : (float.Parse(group.costPerUnit) * group.quantity).ToString()
+                Name = group.name,
+                Unit = group.unit,
+                Quantity = group.quantity,
+                CostPerUnit = ExcelReportHelper.TryToParseFloat(group.costPerUnit),
+                CommonCost = ExcelReportHelper.TryToParseFloat(group.costPerUnit) * group.quantity
             })
             .ToList();
 
@@ -229,13 +219,11 @@ public class SummaryReportGenerator : IReportGenerator
             })
             .Select(group => new ReportStandData
             {
-                Name = group.name ?? dbErrorString,
-                Unit = group.unit ?? dbErrorString,
-                Quantity = group.quantity.ToString() ?? dbErrorString,
-                CostPerUnit = group.costPerUnit.ToString() ?? dbErrorString,
-                CommonCost = group.costPerUnit == null || group.quantity == null
-                    ? dbErrorString
-                    : (group.costPerUnit * group.quantity).ToString()
+                Name = group.name,
+                Unit = group.unit,
+                Quantity = group.quantity,
+                CostPerUnit = group.costPerUnit,
+                CommonCost = group.costPerUnit * group.quantity
             })
             .ToList();
 
@@ -261,13 +249,11 @@ public class SummaryReportGenerator : IReportGenerator
             })
             .Select(record => new ReportStandData
             {
-                Name = record.name ?? dbErrorString,
-                Unit = record.unit ?? dbErrorString,
-                Quantity = record.quantity.ToString() ?? dbErrorString,
-                CostPerUnit = record.costPerUnit.ToString() ?? dbErrorString,
-                CommonCost = record.costPerUnit == null || record.quantity == null
-                    ? dbErrorString
-                    : (record.costPerUnit * record.quantity).ToString()
+                Name = record.name,
+                Unit = record.unit,
+                Quantity = record.quantity,
+                CostPerUnit = record.costPerUnit,
+                CommonCost = record.costPerUnit * record.quantity
             })
             .ToList();
 
@@ -288,13 +274,11 @@ public class SummaryReportGenerator : IReportGenerator
             })
             .Select(record => new ReportStandData
             {
-                Name = record.name ?? dbErrorString,
-                Unit = record.unit ?? dbErrorString,
-                Quantity = record.quantity.ToString() ?? dbErrorString,
-                CostPerUnit = record.costPerUnit.ToString() ?? dbErrorString,
-                CommonCost = record.costPerUnit == null || record.quantity == null
-                    ? dbErrorString
-                    : (record.costPerUnit * record.quantity).ToString()
+                Name = record.name,
+                Unit = record.unit,
+                Quantity = record.quantity,
+                CostPerUnit = record.costPerUnit,
+                CommonCost = record.costPerUnit * record.quantity
             })
             .ToList();
 
@@ -313,13 +297,11 @@ public class SummaryReportGenerator : IReportGenerator
             })
             .Select(record => new ReportStandData
             {
-                Name = record.name ?? dbErrorString,
-                Unit = record.unit ?? dbErrorString,
-                Quantity = record.quantity.ToString() ?? dbErrorString,
-                CostPerUnit = record.costPerUnit.ToString() ?? dbErrorString,
-                CommonCost = record.costPerUnit == null || record.quantity == null
-                    ? dbErrorString
-                    : (record.costPerUnit * record.quantity).ToString()
+                Name = record.name,
+                Unit = record.unit ,
+                Quantity = record.quantity,
+                CostPerUnit = record.costPerUnit,
+                CommonCost = record.costPerUnit * record.quantity
             })
             .ToList();
 
@@ -338,13 +320,11 @@ public class SummaryReportGenerator : IReportGenerator
             })
             .Select(record => new ReportStandData
             {
-                Name = record.name ?? dbErrorString,
-                Unit = record.unit ?? dbErrorString,
-                Quantity = record.quantity.ToString() ?? dbErrorString,
-                CostPerUnit = record.costPerUnit.ToString() ?? dbErrorString,
-                CommonCost = record.costPerUnit == null || record.quantity == null
-                    ? dbErrorString
-                    : (record.costPerUnit * record.quantity).ToString()
+                Name = record.name,
+                Unit = record.unit ,
+                Quantity = record.quantity,
+                CostPerUnit = record.costPerUnit,
+                CommonCost = record.costPerUnit * record.quantity
             })
             .Except(sensorsHolders);
 
@@ -373,8 +353,6 @@ public class SummaryReportGenerator : IReportGenerator
 
     private SummaryReportLaborData GenerateLaborData(IEnumerable<Stand> stands)
     {
-        const string settingsErrorString = "Ошибка получения настроек расчета";
-        const string dbErrorString = "Ошибка получения данных из БД";
 
         var frameSettings = CalculationSettingsManager.Load<FrameSettings, FrameSettingsData>();
         var electicalSettings = CalculationSettingsManager.Load<ElectricalSettings, ElectricalSettingsData>();
@@ -394,9 +372,9 @@ public class SummaryReportGenerator : IReportGenerator
         {
             Name = "Изготовление рам",
             Unit = "чел/час",
-            Quantity = frameProductionHumanCostSum?.ToString() ?? settingsErrorString,
-            CostPerUnit = frameSettings?.FrameProduction.ToString() ?? settingsErrorString,
-            CommonCost = (frameProductionHumanCostSum * frameSettings?.FrameProduction).ToString() ?? settingsErrorString
+            Quantity = (float?) frameProductionHumanCostSum,
+            CostPerUnit = (float?) frameSettings?.FrameProduction,
+            CommonCost = (float?) (frameProductionHumanCostSum * frameSettings?.FrameProduction)
         };
 
 
@@ -406,54 +384,19 @@ public class SummaryReportGenerator : IReportGenerator
             .SelectMany(stand => stand.ObvyazkiInStand)
             .Select(obv => obv.HumanCost);
 
-        var invalidQuantityData = allObvHumanCosts
-            .Any(cost => cost == null);
-
-        var humanCostsSum = allObvHumanCosts
-            .Where(cost => cost != null)
-            .Sum();
-
-
-
-        //формируем строчку для количества
-        var resultQuantitySumString = humanCostsSum.ToString();
-
-            //формируем строчку для количества
-            string resultQuantitySumString = humanCostsSum.ToString() + "\n";
-
-            if (invalidQuantityData)
-            {
-                resultQuantitySumString += dbErrorString + "\n";
-            }
-
-
-
-        //формируем строчку для общих затрат
-        var resultCommonCost = humanCostsSum * (humanCostSettings?.ObvzyakaProduction ?? 0.0f);
-
-        var resultCommonCostString = resultCommonCost.ToString();
-
-        if (invalidQuantityData)
-        {
-            resultCommonCostString += "\n" + dbErrorString;
-        }
-
-        if (humanCostSettings == null)
-        {
-            resultCommonCostString += "\n" + settingsErrorString;
-        }
-
-
-
         var obvProductionRecord = new ReportStandData
         {
             Name = "Изготовление обвязок",
             Unit = "чел/час",
-            Quantity = resultQuantitySumString,
-            CostPerUnit = humanCostSettings?.ObvzyakaProduction.ToString() ?? settingsErrorString,
-            CommonCost = resultCommonCostString
+            Quantity = allObvHumanCosts.Sum(),
+            CostPerUnit = (float?) humanCostSettings?.ObvzyakaProduction,
         };
 
+        obvProductionRecord.QuantityValid = allObvHumanCosts.Any(cost => cost == null);
+        obvProductionRecord.CostPerUnitValid = obvProductionRecord.CostPerUnit.HasValue;
+
+        obvProductionRecord.CommonCost = obvProductionRecord.Quantity * obvProductionRecord.CostPerUnit;
+        obvProductionRecord.CommonCostValid = obvProductionRecord.Quantity.HasValue && obvProductionRecord.CostPerUnit.HasValue;
 
 
         //трудозатраты на коллектор
@@ -461,15 +404,20 @@ public class SummaryReportGenerator : IReportGenerator
             .Select(_ => humanCostSettings?.TimeForCollectorBoil)
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
-       
         var collectorProductionRecord = new ReportStandData
         {
             Name = "Изготовление коллектора",
             Unit = "чел/час",
-            Quantity = collectorProductionHumanCostSum?.ToString() ?? settingsErrorString,
-            CostPerUnit = humanCostSettings?.CollectorProduction.ToString() ?? settingsErrorString,
-            CommonCost = (collectorProductionHumanCostSum * humanCostSettings?.CollectorProduction).ToString() ?? settingsErrorString
+            Quantity = (float?) collectorProductionHumanCostSum,
+            CostPerUnit = (float?) humanCostSettings?.CollectorProduction,
+            CommonCost = (float?) (collectorProductionHumanCostSum * humanCostSettings?.CollectorProduction)
         };
+
+        collectorProductionRecord.QuantityValid = collectorProductionHumanCostSum.HasValue;
+        collectorProductionRecord.CostPerUnitValid = collectorProductionRecord.CostPerUnit.HasValue;
+        collectorProductionRecord.CommonCostValid = collectorProductionRecord.Quantity.HasValue && collectorProductionRecord.CostPerUnit.HasValue;
+
+
 
         //трудозатраты на испытания
         var testsHumanCostSum = stands
@@ -480,10 +428,15 @@ public class SummaryReportGenerator : IReportGenerator
         {
             Name = "Испытание на прочность и герметичность",
             Unit = "чел/час",
-            Quantity = testsHumanCostSum?.ToString() ?? settingsErrorString,
-            CostPerUnit = humanCostSettings?.Tests.ToString() ?? settingsErrorString,
-            CommonCost = (testsHumanCostSum * humanCostSettings?.Tests).ToString() ?? settingsErrorString
+            Quantity = (float?) testsHumanCostSum,
+            CostPerUnit = (float?)humanCostSettings?.Tests,
+            CommonCost = (float?) (testsHumanCostSum * humanCostSettings?.Tests)
         };
+
+        qualityTestRecord.QuantityValid = qualityTestRecord.Quantity.HasValue;
+        qualityTestRecord.CostPerUnitValid = qualityTestRecord.CostPerUnit.HasValue;
+        qualityTestRecord.CommonCostValid = qualityTestRecord.Quantity.HasValue && qualityTestRecord.CostPerUnit.HasValue;
+
 
 
 
@@ -491,60 +444,80 @@ public class SummaryReportGenerator : IReportGenerator
         var sandBlastingHumanCostSum = stands
             .Select(_ => sandblastSettings.TimeSandBlastWork)
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
-       
+
         var sandblastingRecord = new ReportStandData
         {
             Name = "Пескоструйные работы",
             Unit = "чел/час",
-            Quantity = sandBlastingHumanCostSum.ToString() ?? settingsErrorString,
-            CostPerUnit = sandblastSettings?.SandBlastWork.ToString() ?? settingsErrorString,
-            CommonCost = (sandBlastingHumanCostSum * sandblastSettings?.SandBlastWork).ToString() ?? settingsErrorString
+            Quantity = (float?) sandBlastingHumanCostSum,
+            CostPerUnit = (float?) sandblastSettings?.SandBlastWork,
+            CommonCost = (float?) (sandBlastingHumanCostSum * sandblastSettings?.SandBlastWork)
         };
+
+        sandblastingRecord.QuantityValid = sandblastingRecord.Quantity.HasValue;
+        sandblastingRecord.CostPerUnitValid = sandblastingRecord.CostPerUnit.HasValue;
+        sandblastingRecord.CommonCostValid = sandblastingRecord.Quantity.HasValue && sandblastingRecord.CostPerUnit.HasValue;
+
+
 
         //трудозатраты на покраску
         var paintingHumanCostSum = stands
           .Select(_ => (frameSettings?.TimeForPaintFrame + frameSettings?.TimeForPaintObv))
           .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
-       
+
         var paintingRecord = new ReportStandData
         {
             Name = "Покраска",
-            Unit = "чел/час",
-            Quantity = paintingHumanCostSum?.ToString() ?? settingsErrorString,
-            CostPerUnit = frameSettings?.Painting.ToString() ?? settingsErrorString,
-            CommonCost = (paintingHumanCostSum * frameSettings?.Painting).ToString() ?? settingsErrorString 
+            Unit = "чел/час", 
+            Quantity = (float?) paintingHumanCostSum,
+            CostPerUnit = (float?) frameSettings?.Painting,
+            CommonCost = (float?) (paintingHumanCostSum * frameSettings?.Painting)
         };
+
+        paintingRecord.QuantityValid = paintingRecord.Quantity.HasValue;
+        paintingRecord.CostPerUnitValid = paintingRecord.CostPerUnit.HasValue;
+        paintingRecord.CommonCostValid = paintingRecord.Quantity.HasValue && paintingRecord.CostPerUnit.HasValue;
 
 
         //трудозатраты на электромонтаж
         var electricHumanCost = stands
             .Select(_ => electicalSettings?.TimeMontageCable + electicalSettings?.TimeMontageWire)
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
-  
+
         var electricRecord = new ReportStandData
         {
             Name = "Электромонтаж",
             Unit = "чел/час",
-            Quantity = electricHumanCost?.ToString() ?? settingsErrorString,
-            CostPerUnit = electicalSettings?.ElectricalMontage.ToString() ?? settingsErrorString,
-            CommonCost = (electricHumanCost * electicalSettings?.ElectricalMontage).ToString() ?? settingsErrorString
+            Quantity = (float?) electricHumanCost,
+            CostPerUnit = (float? )electicalSettings?.ElectricalMontage,
+            CommonCost = (float?) (electricHumanCost * electicalSettings?.ElectricalMontage)
         };
 
+        electricRecord.QuantityValid = electricRecord.Quantity.HasValue;
+        electricRecord.CostPerUnitValid = electricRecord.CostPerUnit.HasValue;
+        electricRecord.CommonCostValid = electricRecord.Quantity.HasValue && electricRecord.CostPerUnit.HasValue;
+
+
+
+        //трудозатраты на общую проверку стенда
         var commonHumanCost = stands
             .Select(_ => humanCostSettings?.TimeForCheckStand)
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
-        //трудозатраты на общую проверку стенда
+       
         var commonCheckRecord = new ReportStandData
         {
             Name = "Общая проверка стенда",
             Unit = "чел/час",
-            Quantity = commonHumanCost?.ToString() ?? settingsErrorString,
-            CostPerUnit = humanCostSettings?.CommonCheckStand.ToString() ?? settingsErrorString,
-            CommonCost = (commonHumanCost * humanCostSettings?.CommonCheckStand).ToString() ?? settingsErrorString
+            Quantity = (float?) commonHumanCost,
+            CostPerUnit = (float?) humanCostSettings?.CommonCheckStand,
+            CommonCost = (float?) (commonHumanCost * humanCostSettings?.CommonCheckStand)
         };
 
+        electricRecord.QuantityValid = electricRecord.Quantity.HasValue;
+        electricRecord.CostPerUnitValid = electricRecord.CostPerUnit.HasValue;
+        electricRecord.CommonCostValid = electricRecord.Quantity.HasValue && electricRecord.CostPerUnit.HasValue;
 
 
         return new SummaryReportLaborData(
@@ -558,6 +531,17 @@ public class SummaryReportGenerator : IReportGenerator
               commonCheckRecord);
     }
 
+
+    private void PastePartRecord(int row, ReportStandData partRecord, IXLWorksheet ws)
+    {
+
+        ws.Cell($"B{row}").Value = partRecord.Name ?? ExcelReportHelper.CommonErrorString;
+        ws.Cell($"C{row}").Value = partRecord.Unit ?? ExcelReportHelper.CommonErrorString;
+        ws.Cell($"D{row}").Value = partRecord.Quantity.ToString() ?? ExcelReportHelper.CommonErrorString;
+        ws.Cell($"E{row}").Value = partRecord.CostPerUnit.ToString() ?? ExcelReportHelper.CommonErrorString;
+        ws.Cell($"F{row}").Value = partRecord.CommonCost.ToString() ?? ExcelReportHelper.CommonErrorString;
+        
+    }
 
     #endregion
 
@@ -711,16 +695,16 @@ public class SummaryReportGenerator : IReportGenerator
         var generatedPartsData = GenerateStandsData(standList);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.PipesList, ws);
+        activeRow = FillPartsSubtableData(activeRow, generatedPartsData.PipesList, ws);
         activeRow = CreateGroupTotalRecord(activeRow, generatedPartsData.PipesList, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Арматура", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.ArmaturesList, ws);
+        activeRow = FillPartsSubtableData(activeRow, generatedPartsData.ArmaturesList, ws);
         activeRow = CreateGroupTotalRecord(activeRow, generatedPartsData.ArmaturesList, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Тройники и КМЧ", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.TreeList, ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.KmchList, ws);
+        activeRow = FillPartsSubtableData(activeRow, generatedPartsData.TreeList, ws);
+        activeRow = FillPartsSubtableData(activeRow, generatedPartsData.KmchList, ws);
 
         //общий список, чтобы запихнуть в метод
         var treeAndKmchList = new List<ReportStandData>();
@@ -730,27 +714,27 @@ public class SummaryReportGenerator : IReportGenerator
         activeRow = CreateGroupTotalRecord(activeRow, treeAndKmchList, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Дренаж", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.DrainageParts, ws);
+        activeRow = FillPartsSubtableData(activeRow, generatedPartsData.DrainageParts, ws);
         activeRow = CreateGroupTotalRecord(activeRow, generatedPartsData.DrainageParts, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Рамные комплектующие", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.FramesList, ws);
+        activeRow = FillPartsSubtableData(activeRow, generatedPartsData.FramesList, ws);
         activeRow = CreateGroupTotalRecord(activeRow, generatedPartsData.FramesList, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Кронштейны", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.SensorsHolders, ws);
+        activeRow = FillPartsSubtableData(activeRow, generatedPartsData.SensorsHolders, ws);
         activeRow = CreateGroupTotalRecord(activeRow, generatedPartsData.SensorsHolders, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Электрические компоненты", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.ElectricalParts, ws);
+        activeRow = FillPartsSubtableData(activeRow, generatedPartsData.ElectricalParts, ws);
         activeRow = CreateGroupTotalRecord(activeRow, generatedPartsData.ElectricalParts, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Прочие", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.OthersParts, ws);
+        activeRow = FillPartsSubtableData(activeRow, generatedPartsData.OthersParts, ws);
         activeRow = CreateGroupTotalRecord(activeRow, generatedPartsData.OthersParts, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Расходные материалы", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.Supplies, ws);
+        activeRow = FillPartsSubtableData(activeRow, generatedPartsData.Supplies, ws);
         activeRow = CreateGroupTotalRecord(activeRow, generatedPartsData.Supplies, ws);
 
         activeRow = CreatePartsTotalRecord(activeRow, generatedPartsData, ws);
@@ -761,10 +745,12 @@ public class SummaryReportGenerator : IReportGenerator
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Трудозатраты", ws);
         activeRow = FillLaborCostSubtable(activeRow, ws, generatedLaborData);
         activeRow = CreateLaborTotalRecord(activeRow, generatedLaborData, ws);
+
+        activeRow = CreatePartsAndLaborTotalRecord(activeRow, generatedLaborData, generatedPartsData, ws);
     }
 
     //Заполняет подтаблицу и возвращает следующую строку
-    private int FillSubtableData(int startRow, List<ReportStandData> items, IXLWorksheet ws)
+    private int FillPartsSubtableData(int startRow, List<ReportStandData> items, IXLWorksheet ws)
     {
         var currentRow = startRow;
 
@@ -784,6 +770,31 @@ public class SummaryReportGenerator : IReportGenerator
         return currentRow;
     }
 
+    //создает записи трудозатрат
+    private int FillLaborCostSubtable(int startRow, IXLWorksheet ws, SummaryReportLaborData laborCostData)
+    {
+        var activeRow = startRow;
+
+        var laborRecordProperties = laborCostData.GetType().GetProperties();
+
+        //обрабатываем все стоимости из каждого перечня
+        foreach (var property in laborRecordProperties)
+        {
+            var propertyValue = property.GetValue(laborCostData);
+            ReportStandData laborRecord = (ReportStandData)propertyValue;
+
+            ws.Cell($"B{activeRow}").Value = laborRecord.Name;
+            ws.Cell($"C{activeRow}").Value = laborRecord.Unit;
+            ws.Cell($"D{activeRow}").Value = laborRecord.Quantity;
+            ws.Cell($"E{activeRow}").Value = laborRecord.CostPerUnit;
+            ws.Cell($"F{activeRow}").Value = laborRecord.CommonCost;
+
+            activeRow++;
+        }
+
+        return activeRow;
+    }
+
     //заполняет сводную ведомость
     private void FillCommonListTable(IXLWorksheet ws, ProjectInfo project)
     {
@@ -792,16 +803,16 @@ public class SummaryReportGenerator : IReportGenerator
         var activeRow = 4;
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
-        activeRow = FillSubtableData(activeRow, generatedData.PipesList, ws);
+        activeRow = FillPartsSubtableData(activeRow, generatedData.PipesList, ws);
         activeRow = CreateGroupTotalRecord(activeRow, generatedData.PipesList, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Арматура", ws);
-        activeRow = FillSubtableData(activeRow, generatedData.ArmaturesList, ws);
+        activeRow = FillPartsSubtableData(activeRow, generatedData.ArmaturesList, ws);
         activeRow = CreateGroupTotalRecord(activeRow, generatedData.ArmaturesList, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Тройники и КМЧ", ws);
-        activeRow = FillSubtableData(activeRow, generatedData.TreeList, ws);
-        activeRow = FillSubtableData(activeRow, generatedData.KmchList, ws);
+        activeRow = FillPartsSubtableData(activeRow, generatedData.TreeList, ws);
+        activeRow = FillPartsSubtableData(activeRow, generatedData.KmchList, ws);
 
         //общий список, чтобы запихнуть в метод
         var treeAndKmchList = new List<ReportStandData>();
@@ -811,27 +822,27 @@ public class SummaryReportGenerator : IReportGenerator
         activeRow = CreateGroupTotalRecord(activeRow, treeAndKmchList, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Дренаж", ws);
-        activeRow = FillSubtableData(activeRow, generatedData.DrainageParts, ws);
+        activeRow = FillPartsSubtableData(activeRow, generatedData.DrainageParts, ws);
         activeRow = CreateGroupTotalRecord(activeRow, generatedData.DrainageParts, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Рамные комплектующие", ws);
-        activeRow = FillSubtableData(activeRow, generatedData.FramesList, ws);
+        activeRow = FillPartsSubtableData(activeRow, generatedData.FramesList, ws);
         activeRow = CreateGroupTotalRecord(activeRow, generatedData.FramesList, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Кронштейны", ws);
-        activeRow = FillSubtableData(activeRow, generatedData.SensorsHolders, ws);
+        activeRow = FillPartsSubtableData(activeRow, generatedData.SensorsHolders, ws);
         activeRow = CreateGroupTotalRecord(activeRow, generatedData.SensorsHolders, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Электрические компоненты", ws);
-        activeRow = FillSubtableData(activeRow, generatedData.ElectricalParts, ws);
+        activeRow = FillPartsSubtableData(activeRow, generatedData.ElectricalParts, ws);
         activeRow = CreateGroupTotalRecord(activeRow, generatedData.ElectricalParts, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Прочие", ws);
-        activeRow = FillSubtableData(activeRow, generatedData.OthersParts, ws);
+        activeRow = FillPartsSubtableData(activeRow, generatedData.OthersParts, ws);
         activeRow = CreateGroupTotalRecord(activeRow, generatedData.OthersParts, ws);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Расходные материалы", ws);
-        activeRow = FillSubtableData(activeRow, generatedData.Supplies, ws);
+        activeRow = FillPartsSubtableData(activeRow, generatedData.Supplies, ws);
         activeRow = CreateGroupTotalRecord(activeRow, generatedData.Supplies, ws);
 
         activeRow = CreatePartsTotalRecord(activeRow, generatedData, ws);
@@ -851,30 +862,6 @@ public class SummaryReportGenerator : IReportGenerator
 
     }
 
-    //создает записи трудозатрат
-    private int FillLaborCostSubtable(int startRow, IXLWorksheet ws, SummaryReportLaborData laborCostData)
-    {
-        var activeRow = startRow;
-
-        var laborRecordProperties = laborCostData.GetType().GetProperties();
-
-        //обрабатываем все стоимости из каждого перечня
-        foreach (var property in laborRecordProperties)
-        {
-            var propertyValue = property.GetValue(laborCostData);
-            ReportStandData laborRecord = (ReportStandData) propertyValue;
-
-            ws.Cell($"B{activeRow}").Value = laborRecord.Name;
-            ws.Cell($"C{activeRow}").Value = laborRecord.Unit;
-            ws.Cell($"D{activeRow}").Value = laborRecord.Quantity;
-            ws.Cell($"E{activeRow}").Value = laborRecord.CostPerUnit;
-            ws.Cell($"F{activeRow}").Value = laborRecord.CommonCost;
-
-            activeRow++;
-        }
-
-        return activeRow;
-    }
 
     #endregion
 
@@ -895,7 +882,7 @@ public class SummaryReportGenerator : IReportGenerator
 
         //парсим все в nullable float
         var parsedCosts = equipmentList
-            .Select(equipment => ExcelReportHelper.TryToParseFloat(equipment.CommonCost));
+            .Select(equipment => equipment.CommonCost);
 
 
 
@@ -905,8 +892,8 @@ public class SummaryReportGenerator : IReportGenerator
         if (parsedCosts.Any(cost => cost == null))
         {
             resultSumString = parsedCosts.Where(cost => cost != null).Sum().ToString() + "\n";
-            resultSumString += "В БД отсутствуют необходимые значения для суммирования \n";
-            resultSumString += "Результат может быть недостоверным";
+            resultSumString += "\n" + ExcelReportHelper.DbErrorString + "\n";
+            resultSumString += ExcelReportHelper.UnreliableDataString;
         }
         else
         {
@@ -947,7 +934,7 @@ public class SummaryReportGenerator : IReportGenerator
             var partsListObject = recordProperty.GetValue(partsInfo);
             var partsList = partsListObject as List<ReportStandData>;
 
-            var partsCosts = partsList.Select(part => ExcelReportHelper.TryToParseFloat(part.CommonCost));
+            var partsCosts = partsList.Select(part => part.CommonCost);
 
             allCosts.AddRange(partsCosts);
         }
@@ -975,7 +962,7 @@ public class SummaryReportGenerator : IReportGenerator
 
     private int CreateLaborTotalRecord(int row, SummaryReportLaborData laborData, IXLWorksheet ws)
     {
-       
+
         var activeRow = row;
 
         ws.Cell($"B{activeRow}").Value = "Итого по трудозатратам:";
@@ -992,29 +979,29 @@ public class SummaryReportGenerator : IReportGenerator
         foreach (var recordProperty in recordProperties)
         {
             var laborProperty = recordProperty.GetValue(laborData);
-            var laborObject = (ReportStandData) laborProperty;
+            var laborObject = (ReportStandData)laborProperty;
 
-            allHumanCosts.Add(ExcelReportHelper.TryToParseFloat(laborObject.Quantity));
-            allCommonCosts.Add(ExcelReportHelper.TryToParseFloat(laborObject.CommonCost));
+            allHumanCosts.Add(laborObject.Quantity);
+            allCommonCosts.Add(laborObject.CommonCost);
 
         }
 
         var resultHumanCostSumString = (allHumanCosts
             .Where(cost => cost != null)
             .Sum() ?? 0.0f)
-            .ToString() + "\n";
+            .ToString();
 
         var resultCommonCostSumString = (allCommonCosts
             .Where(cost => cost != null)
             .Sum() ?? 0.0f)
-            .ToString() + "\n";
+            .ToString();
 
         //проверка на элементы null в списке
         var invalidHumanCostData = allHumanCosts.Any(cost => cost == null);
 
         if (invalidHumanCostData)
-        {  
-            resultHumanCostSumString += ExcelReportHelper.SettingsErrorString + "\n";
+        {
+            resultHumanCostSumString += "\n" +  ExcelReportHelper.SettingsErrorString + "\n";
             resultHumanCostSumString += ExcelReportHelper.UnreliableDataString;
         }
 
@@ -1022,7 +1009,7 @@ public class SummaryReportGenerator : IReportGenerator
 
         if (invalidCommonCostData)
         {
-            resultCommonCostSumString += ExcelReportHelper.SettingsErrorString + "\n";
+            resultCommonCostSumString += "\n" + ExcelReportHelper.SettingsErrorString + "\n";
             resultCommonCostSumString += ExcelReportHelper.UnreliableDataString;
         }
 
@@ -1042,7 +1029,7 @@ public class SummaryReportGenerator : IReportGenerator
 
     private int CreatePartsAndLaborTotalRecord(int row, SummaryReportLaborData laborData, SummaryReportStandsData partsInfo, IXLWorksheet ws)
     {
-        
+
         var activeRow = row;
 
         ws.Cell($"B{activeRow}").Value = "Итого по комплектующим и трудозатратам:";
@@ -1055,5 +1042,6 @@ public class SummaryReportGenerator : IReportGenerator
         activeRow++;
         return activeRow;
     }
+
     #endregion
 }
