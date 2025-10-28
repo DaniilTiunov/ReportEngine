@@ -17,6 +17,7 @@ using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Runtime.Intrinsics.Arm;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -129,19 +130,22 @@ public class ProjectViewModel : BaseViewModel
                 SelectEquipment<HeaterPipe>(
                     name => CurrentProjectModel.SelectedStand.MaterialLine = name,
                     measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost);
+                    cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
+                    exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays);
                 break;
             case "Нержавеющие":
                 SelectEquipment<StainlessPipe>(
                     name => CurrentProjectModel.SelectedStand.MaterialLine = name,
                     measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost);
+                    cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
+                    exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays);
                 break;
             case "Углеродистые":
                 SelectEquipment<CarbonPipe>(
                     name => CurrentProjectModel.SelectedStand.MaterialLine = name,
                     measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost);
+                    cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
+                    exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays);
                 break;
         }
     }
@@ -154,19 +158,22 @@ public class ProjectViewModel : BaseViewModel
                 SelectEquipment<HeaterArmature>(
                     name => CurrentProjectModel.SelectedStand.Armature = name,
                     measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost);
+                    cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
+                    exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays);
                 break;
             case "Нержавеющие":
                 SelectEquipment<StainlessArmature>(
                     name => CurrentProjectModel.SelectedStand.Armature = name,
                     measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost);
+                    cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
+                    exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays);
                 break;
             case "Углеродистые":
                 SelectEquipment<CarbonArmature>(
                     name => CurrentProjectModel.SelectedStand.Armature = name,
                     measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost);
+                    cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
+                    exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays);
                 break;
         }
     }
@@ -179,19 +186,22 @@ public class ProjectViewModel : BaseViewModel
                 SelectEquipment<HeaterSocket>(
                     name => CurrentProjectModel.SelectedStand.TreeSocket = name,
                     measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost);
+                    cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
+                    exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays);
                 break;
             case "Нержавеющие":
                 SelectEquipment<StainlessSocket>(
                     name => CurrentProjectModel.SelectedStand.TreeSocket = name,
                     measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost);
+                    cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
+                    exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays);
                 break;
             case "Углеродистые":
                 SelectEquipment<CarbonSocket>(
                     name => CurrentProjectModel.SelectedStand.TreeSocket = name,
                     measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost);
+                    cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
+                    exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays);
                 break;
         }
     }
@@ -204,19 +214,22 @@ public class ProjectViewModel : BaseViewModel
                 SelectEquipment<HeaterSocket>(
                     name => CurrentProjectModel.SelectedStand.KMCH = name,
                     measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost);
+                    cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
+                    exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays);
                 break;
             case "Нержавеющие":
                 SelectEquipment<StainlessSocket>(
                     name => CurrentProjectModel.SelectedStand.KMCH = name,
                     measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost);
+                    cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
+                    exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays);
                 break;
             case "Углеродистые":
                 SelectEquipment<CarbonSocket>(
                     name => CurrentProjectModel.SelectedStand.KMCH = name,
                     measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost);
+                    cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
+                    exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays);
                 break;
         }
     }
@@ -839,7 +852,7 @@ public class ProjectViewModel : BaseViewModel
         CurrentStandModel = new StandModel();
     }
 
-    private void SelectEquipment<T>(Action<string> setProperty, Action<string> setMeasure, Action<string> setCost)
+    private void SelectEquipment<T>(Action<string> setProperty, Action<string> setMeasure, Action<string> setCost, Action<int> setExportDays)
         where T : class, IBaseEquip, new()
     {
         ExceptionHelper.SafeExecute(() =>
@@ -850,6 +863,7 @@ public class ProjectViewModel : BaseViewModel
                 setProperty(equipment.Name);
                 setMeasure(equipment.Measure);
                 setCost(equipment.Cost.ToString());
+                setExportDays(equipment.ExportDays);
             }
         });
     }
@@ -955,6 +969,7 @@ public class ProjectViewModel : BaseViewModel
                     dp.Material = selected.Name;
                     dp.CostPerUnit = selected.Cost;
                     dp.Measure = selected.Measure;
+                    dp.ExportDays = selected.ExportDays;
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewDrainage.Purposes);
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand
                         .AllDrainagePurposesInStand);
@@ -966,6 +981,7 @@ public class ProjectViewModel : BaseViewModel
                     ap.Material = selected.Name;
                     ap.CostPerUnit = selected.Cost;
                     ap.Measure = selected.Measure;
+                    ap.ExportDays = selected.ExportDays;
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand
                         .AllAdditionalEquipPurposesInStand);
@@ -977,6 +993,7 @@ public class ProjectViewModel : BaseViewModel
                     ep.Material = selected.Name;
                     ep.CostPerUnit = selected.Cost;
                     ep.Measure = selected.Measure;
+                    ep.ExportDays = selected.ExportDays;
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewElectricalComponent.Purposes);
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand
                         .AllElectricalPurposesInStand);

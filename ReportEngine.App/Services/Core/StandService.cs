@@ -131,7 +131,8 @@ public class StandService : IStandService
                 Material = p.Material,
                 Quantity = p.Quantity,
                 CostPerUnit = p.CostPerUnit,
-                Measure = p.Measure
+                Measure = p.Measure,
+                ExportDays = p.ExportDays
             }).ToList()
         };
 
@@ -157,7 +158,8 @@ public class StandService : IStandService
                 Material = p.Material,
                 Quantity = p.Quantity,
                 CostPerUnit = p.CostPerUnit,
-                Measure = p.Measure
+                Measure = p.Measure,
+                ExportDays = p.ExportDays
             }).ToList()
         };
 
@@ -177,7 +179,8 @@ public class StandService : IStandService
                 Material = p.Material,
                 Quantity = p.Quantity,
                 CostPerUnit = p.CostPerUnit,
-                Measure = p.Measure
+                Measure = p.Measure,
+                ExportDays = p.ExportDays
             }).ToList()
         };
 
@@ -213,18 +216,22 @@ public class StandService : IStandService
             MaterialLineCount = standModel.MaterialLineCount,
             MaterialLineMeasure = standModel.MaterialLineMeasure,
             MaterialLineCostPerUnit = standModel.MaterialLineCostPerUnit,
+            MaterialLineExportDays = standModel.MaterialLineExportDays,
             Armature = standModel.Armature,
             ArmatureCount = standModel.ArmatureCount,
             ArmatureMeasure = standModel.ArmatureMeasure,
             ArmatureCostPerUnit = standModel.ArmatureCostPerUnit,
+            ArmatureExportDays = standModel.ArmatureExportDays,
             TreeSocket = standModel.TreeSocket,
             TreeSocketMaterialCount = standModel.TreeSocketMaterialCount,
             TreeSocketMaterialMeasure = standModel.TreeSocketMaterialMeasure,
             TreeSocketMaterialCostPerUnit = standModel.TreeSocketMaterialCostPerUnit,
+            TreeSocketExportDays = standModel.TreeSocketExportDays,
             KMCH = standModel.KMCH,
             KMCHCount = standModel.KMCHCount,
             KMCHMeasure = standModel.KMCHMeasure,
             KMCHCostPerUnit = standModel.KMCHCostPerUnit,
+            KMCHExportDays = standModel.KMCHExportDays,
             FirstSensorType = standModel.FirstSensorType,
             FirstSensorKKS = standModel.FirstSensorKKS,
             FirstSensorMarkPlus = standModel.FirstSensorMarkPlus,

@@ -10,6 +10,7 @@ public class DrainagePurpose : IPurposeEntity
     public float? Quantity { get; set; } // Количество
     public float? CostPerUnit { get; set; }
     public string? Measure { get; set; }
+    public int? ExportDays { get; set; }
 
     // Внешний ключ на дренаж
     public int FormedDrainageId { get; set; }

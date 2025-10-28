@@ -93,7 +93,8 @@ public class FormedDrainagesModel : BaseViewModel
         {
             Purpose = string.IsNullOrWhiteSpace(NewPurpose.Purpose) ? "Назначение" : NewPurpose.Purpose,
             Material = NewPurpose.Material,
-            Quantity = NewPurpose.Quantity
+            Quantity = NewPurpose.Quantity,
+            ExportDays = NewPurpose.ExportDays
         };
     }
 
