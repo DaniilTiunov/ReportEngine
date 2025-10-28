@@ -419,7 +419,6 @@ public class SummaryReportGenerator : IReportGenerator
         var resultQuantitySumString = humanCostsSum.ToString();
 
             //формируем строчку для количества
-            string resultQuantitySumString = humanCostsSum.ToString() + "\n";
 
             if (invalidQuantityData)
             {
