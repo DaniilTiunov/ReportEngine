@@ -1043,7 +1043,13 @@ public class SummaryReportGenerator : IReportGenerator
         var allLaborsList = GenerateAllLaborsCollection(generatedLaborData);
         activeRow = CreateLaborTotalRecord(activeRow, allLaborsList, ws);
 
-        // activeRow = CreatePartsAndLaborTotalRecord(activeRow, generatedLaborData, generatedPartsData, ws);
+
+        var allData = new List<ReportRecordData>();
+
+        allData.AddRange(allPartsList);
+        allData.AddRange(allLaborsList);
+
+        activeRow = CreatePartsAndLaborTotalRecord(activeRow, allData, ws);
     }
 
     //заполняет сводную ведомость
@@ -1110,6 +1116,13 @@ public class SummaryReportGenerator : IReportGenerator
         var allLaborsList = GenerateAllLaborsCollection(generatedLaborData);
         activeRow = CreateLaborTotalRecord(activeRow, allLaborsList, ws);
 
+        var allData = new List<ReportRecordData>();
+
+        allData.AddRange(allPartsList);
+        allData.AddRange(allLaborsList);
+
+        activeRow = CreatePartsAndLaborTotalRecord(activeRow, allData, ws);
+
     }
 
     //заполняет лист калькуляции
@@ -1142,18 +1155,19 @@ public class SummaryReportGenerator : IReportGenerator
 
         ws.Cell($"B{activeRow}").Style.Font.SetBold();
         ws.Cell($"B{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Left);
-        ws.Cell($"F{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+        ws.Cell($"F{activeRow}").Style.Font.SetBold();
+        ws.Cell($"F{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
 
 
         activeRow++;
         return activeRow;
     }
 
-    private int CreatePartsTotalRecord(int row, List<ReportRecordData> recordsList, IXLWorksheet ws)
+    private int CreatePartsTotalRecord(int row, List<ReportRecordData> partsRecordsList, IXLWorksheet ws)
     {
         var activeRow = row;
 
-        var totalRecord = GenerateTotalRecord(recordsList);
+        var totalRecord = GenerateTotalRecord(partsRecordsList);
         totalRecord.ExportDays = new ValidatedField<int?>(null, true);
         totalRecord.Name = new ValidatedField<string?>("Итого по комплектующим", true);
         totalRecord.Quantity = new ValidatedField<float?>(null, true);
@@ -1164,18 +1178,19 @@ public class SummaryReportGenerator : IReportGenerator
 
         ws.Cell($"B{activeRow}").Style.Font.SetBold();
         ws.Cell($"B{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Left);
-        ws.Cell($"F{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+        ws.Cell($"F{activeRow}").Style.Font.SetBold();
+        ws.Cell($"F{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
 
 
         activeRow++;
         return activeRow;
     }
 
-    private int CreateLaborTotalRecord(int row, List<ReportRecordData> recordsList, IXLWorksheet ws)
+    private int CreateLaborTotalRecord(int row, List<ReportRecordData> laborsRecordsList, IXLWorksheet ws)
     {
         var activeRow = row;
 
-        var totalRecord = GenerateTotalRecord(recordsList);
+        var totalRecord = GenerateTotalRecord(laborsRecordsList);
         totalRecord.ExportDays = new ValidatedField<int?>(null, true);
         totalRecord.Name = new ValidatedField<string?>("Итого по трудозатратам", true);
         totalRecord.CostPerUnit = new ValidatedField<float?>(null, true);
@@ -1185,7 +1200,10 @@ public class SummaryReportGenerator : IReportGenerator
 
         ws.Cell($"B{activeRow}").Style.Font.SetBold();
         ws.Cell($"B{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Left);
-        ws.Cell($"F{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+        ws.Cell($"D{activeRow}").Style.Font.SetBold();
+        ws.Cell($"D{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+        ws.Cell($"F{activeRow}").Style.Font.SetBold();
+        ws.Cell($"F{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
 
 
         activeRow++;
@@ -1207,7 +1225,8 @@ public class SummaryReportGenerator : IReportGenerator
 
         ws.Cell($"B{activeRow}").Style.Font.SetBold();
         ws.Cell($"B{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Left);
-        ws.Cell($"F{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+        ws.Cell($"F{activeRow}").Style.Font.SetBold();
+        ws.Cell($"F{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
 
 
         activeRow++;
