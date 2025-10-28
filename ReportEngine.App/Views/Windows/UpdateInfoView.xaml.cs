@@ -1,4 +1,5 @@
-﻿using ReportEngine.Shared.Config.Directory;
+﻿using ReportEngine.App.AppHelpers;
+using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
 using System.IO;
 using System.Text.Json;
@@ -23,20 +24,23 @@ namespace ReportEngine.App.Views.Windows
 
         private void LoadUpdateHistory()
         {
-            var filePath = DirectoryHelper.GetUpdateInfoPath();
-
-            if (File.Exists(filePath))
+            ExceptionHelper.SafeExecute(() =>
             {
-                var json = File.ReadAllText(filePath);
+                var filePath = DirectoryHelper.GetUpdateInfoPath();
 
-                var updates = JsonSerializer.Deserialize<List<UpdateInfo>>(json);
+                if (File.Exists(filePath))
+                {
+                    var json = File.ReadAllText(filePath);
 
-                UpdatesList.ItemsSource = updates;
-            }
-            else
-            {
-                Updates = new List<UpdateInfo>();
-            }
+                    var updates = JsonSerializer.Deserialize<List<UpdateInfo>>(json);
+
+                    UpdatesList.ItemsSource = updates;
+                }
+                else
+                {
+                    Updates = new List<UpdateInfo>();
+                }
+            });
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
