@@ -742,7 +742,7 @@ public class SummaryReportGenerator : IReportGenerator
     }
 
 
-
+    //превращает данные о комплектующих в список
     private List<ReportRecordData> GenerateAllPartsCollection(SummaryReportStandsData partsData)
     {
         //складываем все поля record в общий список
@@ -762,7 +762,7 @@ public class SummaryReportGenerator : IReportGenerator
 
         return allPartsList;
     }
-
+    //превращает данные о трудозатратах в список
     private List<ReportRecordData> GenerateAllLaborsCollection(SummaryReportLaborData partsData)
     {
         //складываем все поля record в общий список
@@ -924,8 +924,7 @@ public class SummaryReportGenerator : IReportGenerator
 
     #region Заполнители
 
-    
-
+ 
     //Заполняет подтаблицу и возвращает следующую строку
     private int FillPartsSubtableData(int startRow, List<ReportRecordData> items, IXLWorksheet ws)
     {
@@ -1138,7 +1137,7 @@ public class SummaryReportGenerator : IReportGenerator
 
     #region Итоговые
 
-   
+   //создает итого по группе комплектующих
     private int CreateGroupTotalRecord(int row, List<ReportRecordData> recordsList, IXLWorksheet ws)
     {
 
@@ -1163,6 +1162,7 @@ public class SummaryReportGenerator : IReportGenerator
         return activeRow;
     }
 
+    //создает итого по всем комплектующим
     private int CreatePartsTotalRecord(int row, List<ReportRecordData> partsRecordsList, IXLWorksheet ws)
     {
         var activeRow = row;
@@ -1186,6 +1186,7 @@ public class SummaryReportGenerator : IReportGenerator
         return activeRow;
     }
 
+    //создает итого по трудозатрам
     private int CreateLaborTotalRecord(int row, List<ReportRecordData> laborsRecordsList, IXLWorksheet ws)
     {
         var activeRow = row;
@@ -1210,6 +1211,7 @@ public class SummaryReportGenerator : IReportGenerator
         return activeRow;
     }
 
+    //создает итого по комплектующим и трудозатратам
     private int CreatePartsAndLaborTotalRecord(int row, List<ReportRecordData> recordsList, IXLWorksheet ws)
     {
         var activeRow = row;
