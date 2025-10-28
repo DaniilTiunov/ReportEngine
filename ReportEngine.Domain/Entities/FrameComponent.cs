@@ -19,4 +19,5 @@ public class FrameComponent
     public float? CostComponent { get; set; }
     public float? Length { get; set; } // Метраж
     public string? Measure { get; set; }
+    public int? ExportDays { get; set; }
 }

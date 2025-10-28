@@ -129,7 +129,7 @@ public class FormedFrameModel : BaseViewModel
                     Component = component,
                     Count = frameComponent.Count,
                     CostComponent = frameComponent.CostComponent,
-                    Measure = frameComponent.Measure
+                    Measure = frameComponent.Measure,
                 };
 
                 var isMeter = (component as BaseFrame)?.Measure == "м" || frameComponent.Measure == "м";
