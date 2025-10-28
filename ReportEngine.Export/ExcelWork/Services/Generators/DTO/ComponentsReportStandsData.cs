@@ -39,9 +39,16 @@ public record SummaryReportLaborData(
 
 public struct ReportStandData
 {
-    public string Name { get; set; }
-    public string Unit { get; set; }
-    public string Quantity { get; set; }
-    public string CostPerUnit { get; set; }
-    public string CommonCost { get; set; }
+    public int? ExportDays {  get; set; } 
+    public string? Name { get; set; }
+    public string? Unit { get; set; }
+    public float? Quantity { get; set; }
+    public float? CostPerUnit { get; set; }
+    public float? CommonCost { get; set; }
+
+
+    public bool QuantityValid { get; set; }
+    public bool CostPerUnitValid { get; set; }
+    public bool CommonCostValid { get; set;  }
+    
 }
