@@ -96,7 +96,8 @@ public class SummaryReportGenerator : IReportGenerator
                 name = obv.MaterialLine,
                 units = obv.MaterialLineMeasure,
                 length = obv.MaterialLineCount,
-                price = obv.MaterialLineCostPerUnit
+                price = obv.MaterialLineCostPerUnit,
+                exportDays = obv.MaterialLineExportDays
             })
             .GroupBy(pipe => pipe.name)
             .Select(group => new
@@ -104,11 +105,12 @@ public class SummaryReportGenerator : IReportGenerator
                 name = group.Key,
                 unit = group.First().units,
                 quantity = group.Sum(pipe => pipe.length),
-                costPerUnit = group.First().price
+                costPerUnit = group.First().price,
+                exportDays = group.First().exportDays
             })
             .Select(group => new ReportStandData
             {
-                ExportDays = 5,
+                ExportDays = group.exportDays,
                 Name = group.name,
                 Unit = group.unit,
                 Quantity = group.quantity,
@@ -127,7 +129,8 @@ public class SummaryReportGenerator : IReportGenerator
                 name = obv.Armature,
                 units = obv.ArmatureMeasure,
                 quantity = obv.ArmatureCount,
-                price = obv.ArmatureCostPerUnit
+                price = obv.ArmatureCostPerUnit,
+                exportDays = obv.MaterialLineExportDays
             })
             .GroupBy(arm => arm.name)
             .Select(group => new
@@ -135,10 +138,13 @@ public class SummaryReportGenerator : IReportGenerator
                 name = group.Key,
                 unit = group.First().units,
                 quantity = group.Sum(arm => arm.quantity),
-                costPerUnit = group.First().price
+                costPerUnit = group.First().price,
+                exportDays = group.First().exportDays
+
             })
             .Select(group => new ReportStandData
             {
+                ExportDays = group.exportDays,
                 Name = group.name,
                 Unit = group.unit,
                 Quantity = group.quantity,
@@ -156,7 +162,8 @@ public class SummaryReportGenerator : IReportGenerator
                 name = obv.TreeSocket,
                 units = obv.TreeSocketMaterialMeasure,
                 quantity = obv.TreeSocketCount,
-                price = obv.TreeSocketMaterialCostPerUnit
+                price = obv.TreeSocketMaterialCostPerUnit,
+                exportDays = obv.MaterialLineExportDays
             })
             .GroupBy(item => item.name)
             .Select(group => new
@@ -164,10 +171,12 @@ public class SummaryReportGenerator : IReportGenerator
                 name = group.Key,
                 unit = group.First().units,
                 quantity = group.Sum(tree => tree.quantity),
-                costPerUnit = group.First().price
+                costPerUnit = group.First().price,
+                exportDays = group.First().exportDays
             })
             .Select(group => new ReportStandData
             {
+                ExportDays = group.exportDays,
                 Name = group.name,
                 Unit = group.unit,
                 Quantity = group.quantity,
@@ -184,7 +193,8 @@ public class SummaryReportGenerator : IReportGenerator
                 name = obv.KMCH,
                 units = obv.KMCHMeasure,
                 quantity = obv.KMCHCount,
-                price = obv.KMCHCostPerUnit
+                price = obv.KMCHCostPerUnit,
+                exportDays = obv.MaterialLineExportDays
             })
             .GroupBy(item => item.name)
             .Select(group => new
@@ -192,10 +202,12 @@ public class SummaryReportGenerator : IReportGenerator
                 name = group.Key,
                 unit = group.First().units,
                 quantity = group.Sum(tree => tree.quantity),
-                costPerUnit = group.First().price
+                costPerUnit = group.First().price,
+                exportDays = group.First().exportDays
             })
             .Select(group => new ReportStandData
             {
+                ExportDays = group.exportDays,
                 Name = group.name,
                 Unit = group.unit,
                 Quantity = group.quantity,
@@ -215,10 +227,12 @@ public class SummaryReportGenerator : IReportGenerator
                 name = group.Key,
                 unit = group.First().Measure,
                 quantity = group.Sum(groupElement => groupElement.Quantity),
-                costPerUnit = group.First().CostPerUnit
+                costPerUnit = group.First().CostPerUnit,
+                exportDays = group.First().ExportDays
             })
             .Select(group => new ReportStandData
             {
+                ExportDays = group.exportDays,
                 Name = group.name,
                 Unit = group.unit,
                 Quantity = group.quantity,
@@ -238,6 +252,7 @@ public class SummaryReportGenerator : IReportGenerator
                 unit = comp.Measure,
                 quantity = comp.Count,
                 costPerUnit = comp.CostComponent
+                
             })
             .GroupBy(frameComp => frameComp.name)
             .Select(group => new
@@ -262,8 +277,7 @@ public class SummaryReportGenerator : IReportGenerator
         var sensorsHolders = stands
             .SelectMany(stand => stand.StandAdditionalEquips)
             .SelectMany(equip => equip.AdditionalEquip.Purposes)
-            .Where(purpose =>
-                purpose.Purpose.Contains("Кронштейн")) //сомнительная хрень, хз что брать за источник информации
+            .Where(purpose => purpose.Purpose.Contains("Кронштейн")) //сомнительная хрень, хз что брать за источник информации
             .GroupBy(purpose => purpose.Material)
             .Select(group => new
             {
