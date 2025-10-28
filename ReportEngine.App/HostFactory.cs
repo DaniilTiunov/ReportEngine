@@ -134,6 +134,7 @@ public class HostFactory
         services.AddSingleton<IServiceProvider>(provider => provider);
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<INotificationService, NotificationService>();
+        services.AddSingleton<EquipChangesListener>();
         services.AddScoped<ICalculationService, CalculationService>();
         services.AddScoped<IStandService, StandService>();
         services.AddScoped<IProjectService, ProjectService>();
