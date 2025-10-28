@@ -14,30 +14,30 @@ public record ComponentsReportStandsData(
 );
 
 public record SummaryReportStandsData(
-    List<ReportStandData> PipesList,
-    List<ReportStandData> ArmaturesList,
-    List<ReportStandData> TreeList,
-    List<ReportStandData> KmchList,
-    List<ReportStandData> DrainageParts,
-    List<ReportStandData> FramesList,
-    List<ReportStandData> SensorsHolders,
-    List<ReportStandData> ElectricalParts,
-    List<ReportStandData> OthersParts,
-    List<ReportStandData> Supplies
+    List<ReportRecordData> PipesList,
+    List<ReportRecordData> ArmaturesList,
+    List<ReportRecordData> TreeList,
+    List<ReportRecordData> KmchList,
+    List<ReportRecordData> DrainageParts,
+    List<ReportRecordData> FramesList,
+    List<ReportRecordData> SensorsHolders,
+    List<ReportRecordData> ElectricalParts,
+    List<ReportRecordData> OthersParts,
+    List<ReportRecordData> Supplies
 );
 
 public record SummaryReportLaborData(
-    ReportStandData frameProduction,
-    ReportStandData obvProduction,
-    ReportStandData collectorProduction,
-    ReportStandData qualityTests,
-    ReportStandData sandblasting,
-    ReportStandData paintingWorks,
-    ReportStandData electricalWorks,
-    ReportStandData commonStandCheck
+    ReportRecordData frameProduction,
+    ReportRecordData obvProduction,
+    ReportRecordData collectorProduction,
+    ReportRecordData qualityTests,
+    ReportRecordData sandblasting,
+    ReportRecordData paintingWorks,
+    ReportRecordData electricalWorks,
+    ReportRecordData commonStandCheck
  );
 
-public struct ReportStandData
+public struct ReportRecordData
 {
     public ValidatedField<int?> ExportDays {  get; set; } 
     public ValidatedField<string?> Name { get; set; }

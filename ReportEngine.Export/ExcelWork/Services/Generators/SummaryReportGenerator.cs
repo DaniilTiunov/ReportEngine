@@ -84,6 +84,7 @@ public class SummaryReportGenerator : IReportGenerator
 
     #region Вспомогательные
 
+    //создаем 
     private SummaryReportStandsData GenerateStandsData(IEnumerable<Stand> stands)
     {
 
@@ -107,7 +108,7 @@ public class SummaryReportGenerator : IReportGenerator
                 costPerUnit = group.FirstOrDefault().price,
                 exportDays = group.FirstOrDefault().exportDays
             })
-            .Select(group => new ReportStandData
+            .Select(group => new ReportRecordData
             {
                 ExportDays = new ValidatedField<int?>(group.exportDays.Value, group.exportDays.HasValue),
                 Name = new ValidatedField<string?>(group.name, group.name != null),
@@ -148,7 +149,7 @@ public class SummaryReportGenerator : IReportGenerator
                 exportDays = group.First().exportDays
 
             })
-            .Select(group => new ReportStandData
+            .Select(group => new ReportRecordData
             {
                  ExportDays = new ValidatedField<int?>(group.exportDays.Value, group.exportDays.HasValue),
                  Name = new ValidatedField<string?>(group.name, group.name != null),
@@ -187,7 +188,7 @@ public class SummaryReportGenerator : IReportGenerator
                 costPerUnit = group.First().price,
                 exportDays = group.First().exportDays
             })
-           .Select(group => new ReportStandData
+           .Select(group => new ReportRecordData
             {
                ExportDays = new ValidatedField<int?>(group.exportDays.Value, group.exportDays.HasValue),
                Name = new ValidatedField<string?>(group.name, group.name != null),
@@ -225,7 +226,7 @@ public class SummaryReportGenerator : IReportGenerator
                 costPerUnit = group.First().price,
                 exportDays = group.First().exportDays
             })
-           .Select(group => new ReportStandData
+           .Select(group => new ReportRecordData
            {
                ExportDays = new ValidatedField<int?>(group.exportDays.Value, group.exportDays.HasValue),
                Name = new ValidatedField<string?>(group.name, group.name != null),
@@ -257,7 +258,7 @@ public class SummaryReportGenerator : IReportGenerator
                 costPerUnit = group.First().CostPerUnit,
                 exportDays = group.First().ExportDays
             })
-           .Select(group => new ReportStandData
+           .Select(group => new ReportRecordData
            {
                ExportDays = new ValidatedField<int?>(group.exportDays.Value, group.exportDays.HasValue),
                Name = new ValidatedField<string?>(group.name, group.name != null),
@@ -298,7 +299,7 @@ public class SummaryReportGenerator : IReportGenerator
                 costPerUnit = group.First().costPerUnit,
                 exportDays = group.First().exportDays
             })
-           .Select(group => new ReportStandData
+           .Select(group => new ReportRecordData
            {
                ExportDays = new ValidatedField<int?>(group.exportDays.Value, group.exportDays.HasValue),
                Name = new ValidatedField<string?>(group.name, group.name != null),
@@ -331,7 +332,7 @@ public class SummaryReportGenerator : IReportGenerator
                 costPerUnit = group.First().CostPerUnit,
                 exportDays = group.First().ExportDays
             })
-            .Select(group => new ReportStandData
+            .Select(group => new ReportRecordData
             {
                 ExportDays = new ValidatedField<int?>(group.exportDays.Value, group.exportDays.HasValue),
                 Name = new ValidatedField<string?>(group.name, group.name != null),
@@ -363,7 +364,7 @@ public class SummaryReportGenerator : IReportGenerator
                 costPerUnit = group.First().CostPerUnit,
                 exportDays = group.First().ExportDays
             })
-           .Select(group => new ReportStandData
+           .Select(group => new ReportRecordData
             {
                ExportDays = new ValidatedField<int?>(group.exportDays.Value, group.exportDays.HasValue),
                Name = new ValidatedField<string?>(group.name, group.name != null),
@@ -395,7 +396,7 @@ public class SummaryReportGenerator : IReportGenerator
                 costPerUnit = group.First().CostPerUnit,
                 exportDays = group.First().ExportDays
             })
-           .Select(group => new ReportStandData
+           .Select(group => new ReportRecordData
            {
                ExportDays = new ValidatedField<int?>(group.exportDays.Value, group.exportDays.HasValue),
                Name = new ValidatedField<string?>(group.name, group.name != null),
@@ -440,9 +441,8 @@ public class SummaryReportGenerator : IReportGenerator
             supplies
         );
     }
-
-
-
+    
+    //создаем инфу о трудозатратах
     private SummaryReportLaborData GenerateLaborData(IEnumerable<Stand> stands)
     {
 
@@ -460,7 +460,7 @@ public class SummaryReportGenerator : IReportGenerator
             .Select(_ => frameSettings?.TimeForProductionFrame)
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
-        var frameProductionRecord = new ReportStandData
+        var frameProductionRecord = new ReportRecordData
         {
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Изготовление рам", true),
@@ -480,7 +480,7 @@ public class SummaryReportGenerator : IReportGenerator
             .SelectMany(stand => stand.ObvyazkiInStand)
             .Select(obv => obv.HumanCost);
 
-        var obvProductionRecord = new ReportStandData
+        var obvProductionRecord = new ReportRecordData
         {
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Изготовление обвязок", true),
@@ -500,7 +500,7 @@ public class SummaryReportGenerator : IReportGenerator
             .Select(_ => humanCostSettings?.TimeForCollectorBoil)
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
-        var collectorProductionRecord = new ReportStandData
+        var collectorProductionRecord = new ReportRecordData
         {
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Изготовление коллектора", true),
@@ -521,9 +521,8 @@ public class SummaryReportGenerator : IReportGenerator
               .Select(_ => humanCostSettings?.TimeForCheckStand)
               .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
-        var qualityTestRecord = new ReportStandData
+        var qualityTestRecord = new ReportRecordData
         {
-
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Испытание на прочность и герметичность", true),
             Unit = new ValidatedField<string?>("чел/час", true),
@@ -543,18 +542,18 @@ public class SummaryReportGenerator : IReportGenerator
             .Select(_ => sandblastSettings.TimeSandBlastWork)
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
-        var sandblastingRecord = new ReportStandData
+        var sandblastingRecord = new ReportRecordData
         {
-            Name = "Пескоструйные работы",
-            Unit = "чел/час",
-            Quantity = (float?)sandBlastingHumanCostSum,
-            CostPerUnit = (float?)sandblastSettings?.SandBlastWork,
-            CommonCost = (float?)(sandBlastingHumanCostSum * sandblastSettings?.SandBlastWork)
-        };
+            ExportDays = new ValidatedField<int?>(null, true),
+            Name = new ValidatedField<string?>("Пескоструйные работы", true),
+            Unit = new ValidatedField<string?>("чел/час", true),
+            Quantity = new ValidatedField<float?>((float?)sandBlastingHumanCostSum, sandBlastingHumanCostSum != null),
+            CostPerUnit = new ValidatedField<float?>((float?)sandblastSettings?.SandBlastWork, (sandblastSettings?.SandBlastWork != null)),
+            CommonCost = new ValidatedField<float?>(
+                (float?)(sandBlastingHumanCostSum * sandblastSettings?.SandBlastWork),
+                (sandBlastingHumanCostSum * sandblastSettings?.SandBlastWork) != null)
 
-        sandblastingRecord.QuantityValid = sandblastingRecord.Quantity.HasValue;
-        sandblastingRecord.CostPerUnitValid = sandblastingRecord.CostPerUnit.HasValue;
-        sandblastingRecord.CommonCostValid = sandblastingRecord.Quantity.HasValue && sandblastingRecord.CostPerUnit.HasValue;
+        };
 
 
 
@@ -564,18 +563,18 @@ public class SummaryReportGenerator : IReportGenerator
           .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
 
-        var paintingRecord = new ReportStandData
+        var paintingRecord = new ReportRecordData
         {
-            Name = "Покраска",
-            Unit = "чел/час",
-            Quantity = (float?)paintingHumanCostSum,
-            CostPerUnit = (float?)frameSettings?.Painting,
-            CommonCost = (float?)(paintingHumanCostSum * frameSettings?.Painting)
+            ExportDays = new ValidatedField<int?>(null, true),
+            Name = new ValidatedField<string?>("Покраска", true),
+            Unit = new ValidatedField<string?>("чел/час", true),
+            Quantity = new ValidatedField<float?>((float?)paintingHumanCostSum, paintingHumanCostSum.HasValue),
+            CostPerUnit = new ValidatedField<float?>((float?)frameSettings?.Painting, (frameSettings?.Painting != null)),
+            CommonCost = new ValidatedField<float?>(
+                (float?)(paintingHumanCostSum * frameSettings?.Painting),
+                (paintingHumanCostSum * frameSettings?.Painting) != null)
         };
 
-        paintingRecord.QuantityValid = paintingRecord.Quantity.HasValue;
-        paintingRecord.CostPerUnitValid = paintingRecord.CostPerUnit.HasValue;
-        paintingRecord.CommonCostValid = paintingRecord.Quantity.HasValue && paintingRecord.CostPerUnit.HasValue;
 
 
         //трудозатраты на электромонтаж
@@ -583,18 +582,17 @@ public class SummaryReportGenerator : IReportGenerator
             .Select(_ => electicalSettings?.TimeMontageCable + electicalSettings?.TimeMontageWire)
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
-        var electricRecord = new ReportStandData
+        var electricRecord = new ReportRecordData
         {
-            Name = "Электромонтаж",
-            Unit = "чел/час",
-            Quantity = (float?)electricHumanCost,
-            CostPerUnit = (float?)electicalSettings?.ElectricalMontage,
-            CommonCost = (float?)(electricHumanCost * electicalSettings?.ElectricalMontage)
+            ExportDays = new ValidatedField<int?>(null, true),
+            Name = new ValidatedField<string?>("Электромонтаж", true),
+            Unit = new ValidatedField<string?>("чел/час", true),
+            Quantity = new ValidatedField<float?>((float?)electricHumanCost, electricHumanCost.HasValue),
+            CostPerUnit = new ValidatedField<float?>((float?)electicalSettings?.ElectricalMontage, (electicalSettings?.ElectricalMontage != null)),
+            CommonCost = new ValidatedField<float?>(
+                (float?)(electricHumanCost * electicalSettings?.ElectricalMontage),
+                (electricHumanCost * electicalSettings?.ElectricalMontage) != null)
         };
-
-        electricRecord.QuantityValid = electricRecord.Quantity.HasValue;
-        electricRecord.CostPerUnitValid = electricRecord.CostPerUnit.HasValue;
-        electricRecord.CommonCostValid = electricRecord.Quantity.HasValue && electricRecord.CostPerUnit.HasValue;
 
 
 
@@ -604,18 +602,17 @@ public class SummaryReportGenerator : IReportGenerator
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
 
-        var commonCheckRecord = new ReportStandData
+        var commonCheckRecord = new ReportRecordData
         {
-            Name = "Общая проверка стенда",
-            Unit = "чел/час",
-            Quantity = (float?)commonHumanCost,
-            CostPerUnit = (float?)humanCostSettings?.CommonCheckStand,
-            CommonCost = (float?)(commonHumanCost * humanCostSettings?.CommonCheckStand)
+            ExportDays = new ValidatedField<int?>(null, true),
+            Name = new ValidatedField<string?>("Общая проверка стенда", true),
+            Unit = new ValidatedField<string?>("чел/час", true),
+            Quantity = new ValidatedField<float?>((float?)commonHumanCost, commonHumanCost.HasValue),
+            CostPerUnit = new ValidatedField<float?>((float?)humanCostSettings?.CommonCheckStand, (humanCostSettings?.CommonCheckStand != null)),
+            CommonCost = new ValidatedField<float?>(
+                (float?)(commonHumanCost * humanCostSettings?.CommonCheckStand),
+                (commonHumanCost * humanCostSettings?.CommonCheckStand) != null)
         };
-
-        electricRecord.QuantityValid = electricRecord.Quantity.HasValue;
-        electricRecord.CostPerUnitValid = electricRecord.CostPerUnit.HasValue;
-        electricRecord.CommonCostValid = electricRecord.Quantity.HasValue && electricRecord.CostPerUnit.HasValue;
 
 
         return new SummaryReportLaborData(
@@ -629,8 +626,52 @@ public class SummaryReportGenerator : IReportGenerator
               commonCheckRecord);
     }
 
+    //высчитываем итого по записям
+    private ReportRecordData GenerateTotalRecord(IEnumerable<ReportRecordData> records)
+    {
+        var commonCostsFields = records
+            .Select(record => record.CommonCost);
+
+        var exportDaysField = records
+            .Select(record => record.ExportDays);
+       
+
+        var quantityField = records
+            .Select(record => record.Quantity);
+
+        var costField = records
+            .Select(record => record.CostPerUnit);
+
+        return new ReportRecordData
+        {
+
+            ExportDays = new ValidatedField<int?>(
+                exportDaysField.Sum(field => field.Value),
+                exportDaysField.All(field => field.IsValid)),
+
+            Quantity = new ValidatedField<float?>(
+                quantityField.Sum(field => field.Value),
+                quantityField.All(field => field.IsValid)),
+
+
+            CostPerUnit = new ValidatedField<float?>(
+                costField.Sum(field => field.Value),
+                costField.All(field => field.IsValid)),
+
+
+            CommonCost = new ValidatedField<float?>(
+                 commonCostsFields.Sum(field => field.Value),
+                 commonCostsFields.All(field => field.IsValid)),
+
+            Name = new ValidatedField<string?>(null, true),
+            Unit = new ValidatedField<string?>(null, true)
+        };
+
+    
+    }
+
     //валидация и вывод в таблицу
-    private void PastePartRecord(int row, ReportStandData partRecord, IXLWorksheet ws)
+    private void PasteRecord(int row, ReportRecordData partRecord, IXLWorksheet ws)
     {
         if (partRecord.ExportDays.Value.HasValue)
         {
@@ -862,7 +903,7 @@ public class SummaryReportGenerator : IReportGenerator
         activeRow = FillPartsSubtableData(activeRow, generatedPartsData.KmchList, ws);
 
         //общий список, чтобы запихнуть в метод
-        var treeAndKmchList = new List<ReportStandData>();
+        var treeAndKmchList = new List<ReportRecordData>();
         treeAndKmchList.AddRange(generatedPartsData.TreeList);
         treeAndKmchList.AddRange(generatedPartsData.KmchList);
 
@@ -892,26 +933,26 @@ public class SummaryReportGenerator : IReportGenerator
         activeRow = FillPartsSubtableData(activeRow, generatedPartsData.Supplies, ws);
         activeRow = CreateGroupTotalRecord(activeRow, generatedPartsData.Supplies, ws);
 
-        activeRow = CreatePartsTotalRecord(activeRow, generatedPartsData, ws);
+       // activeRow = CreatePartsTotalRecord(activeRow, generatedPartsData, ws);
 
 
         var generatedLaborData = GenerateLaborData(standList);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Трудозатраты", ws);
         activeRow = FillLaborCostSubtable(activeRow, ws, generatedLaborData);
-        activeRow = CreateLaborTotalRecord(activeRow, generatedLaborData, ws);
+       // activeRow = CreateLaborTotalRecord(activeRow, generatedLaborData, ws);
 
-        activeRow = CreatePartsAndLaborTotalRecord(activeRow, generatedLaborData, generatedPartsData, ws);
+       // activeRow = CreatePartsAndLaborTotalRecord(activeRow, generatedLaborData, generatedPartsData, ws);
     }
 
     //Заполняет подтаблицу и возвращает следующую строку
-    private int FillPartsSubtableData(int startRow, List<ReportStandData> items, IXLWorksheet ws)
+    private int FillPartsSubtableData(int startRow, List<ReportRecordData> items, IXLWorksheet ws)
     {
         var currentRow = startRow;
 
         foreach (var item in items)
         {
-            PastePartRecord(currentRow, item, ws);
+            PasteRecord(currentRow, item, ws);
 
             ws.Cell($"A{currentRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             ws.Cell($"B{currentRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
@@ -937,13 +978,11 @@ public class SummaryReportGenerator : IReportGenerator
         foreach (var property in laborRecordProperties)
         {
             var propertyValue = property.GetValue(laborCostData);
-            ReportStandData laborRecord = (ReportStandData)propertyValue;
+            ReportRecordData laborRecord = (ReportRecordData)propertyValue;
 
-            ws.Cell($"B{activeRow}").Value = laborRecord.Name;
-            ws.Cell($"C{activeRow}").Value = laborRecord.Unit;
-            ws.Cell($"D{activeRow}").Value = laborRecord.Quantity;
-            ws.Cell($"E{activeRow}").Value = laborRecord.CostPerUnit;
-            ws.Cell($"F{activeRow}").Value = laborRecord.CommonCost;
+
+            PasteRecord(activeRow, laborRecord, ws);
+
 
             activeRow++;
         }
@@ -971,7 +1010,7 @@ public class SummaryReportGenerator : IReportGenerator
         activeRow = FillPartsSubtableData(activeRow, generatedData.KmchList, ws);
 
         //общий список, чтобы запихнуть в метод
-        var treeAndKmchList = new List<ReportStandData>();
+        var treeAndKmchList = new List<ReportRecordData>();
         treeAndKmchList.AddRange(generatedData.TreeList);
         treeAndKmchList.AddRange(generatedData.KmchList);
 
@@ -1001,14 +1040,14 @@ public class SummaryReportGenerator : IReportGenerator
         activeRow = FillPartsSubtableData(activeRow, generatedData.Supplies, ws);
         activeRow = CreateGroupTotalRecord(activeRow, generatedData.Supplies, ws);
 
-        activeRow = CreatePartsTotalRecord(activeRow, generatedData, ws);
+       // activeRow = CreatePartsTotalRecord(activeRow, generatedData, ws);
 
 
         var generatedLaborData = GenerateLaborData(project.Stands);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Трудозатраты", ws);
         activeRow = FillLaborCostSubtable(activeRow, ws, generatedLaborData);
-        activeRow = CreateLaborTotalRecord(activeRow, generatedLaborData, ws);
+      //  activeRow = CreateLaborTotalRecord(activeRow, generatedLaborData, ws);
 
     }
 
@@ -1025,174 +1064,91 @@ public class SummaryReportGenerator : IReportGenerator
 
     #region Итоговые
 
-    //TODO: переделать эту хуйню
-    private int CreateGroupTotalRecord(int row, List<ReportStandData> equipmentList, IXLWorksheet ws)
+   
+    private int CreateGroupTotalRecord(int row, List<ReportRecordData> recordsList, IXLWorksheet ws)
     {
 
         var activeRow = row;
 
-        ws.Cell($"B{activeRow}").Value = "Итого по категории:";
+        var totalRecord = GenerateTotalRecord(recordsList);
+        totalRecord.ExportDays = new ValidatedField<int?>(null, true);
+        totalRecord.Name = new ValidatedField<string?>("Итого по категории", true);
+        totalRecord.Quantity = new ValidatedField<float?>(null, true);
+        totalRecord.CostPerUnit = new ValidatedField<float?>(null, true);
+
+        PasteRecord(activeRow, totalRecord, ws);
+
+
         ws.Cell($"B{activeRow}").Style.Font.SetBold();
         ws.Cell($"B{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Left);
-
-
-        //парсим все в nullable float
-        var parsedCosts = equipmentList
-            .Select(equipment => equipment.CommonCost);
-
-
-
-        string resultSumString = "";
-
-        //проверка на элементы null в списке
-        if (parsedCosts.Any(cost => cost == null))
-        {
-            resultSumString = parsedCosts.Where(cost => cost != null).Sum().ToString() + "\n";
-            resultSumString += "\n" + ExcelReportHelper.DbErrorString + "\n";
-            resultSumString += ExcelReportHelper.UnreliableDataString;
-        }
-        else
-        {
-            resultSumString = parsedCosts.Sum().ToString();
-        }
-
-        ws.Cell($"F{activeRow}").Value = resultSumString;
         ws.Cell($"F{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
 
-        activeRow++;
-        return activeRow;
-    }
-
-    private int CreatePartsTotalRecord(int row, SummaryReportStandsData partsInfo, IXLWorksheet ws)
-    {
-
-        var activeRow = row;
-
-        ws.Cell($"B{activeRow}").Value = "Итого по комплектующим:";
-        ws.Cell($"B{activeRow}").Style.Font.SetBold();
-        ws.Cell($"B{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Left);
-
-
-        //парсим все в nullable float
-        // var parsedCosts = partsInfo
-
-
-
-
-
-        var allCosts = new List<float?>();
-
-        var recordProperties = partsInfo.GetType().GetProperties();
-
-        //обрабатываем все стоимости из каждого перечня
-        foreach (var recordProperty in recordProperties)
-        {
-            var partsListObject = recordProperty.GetValue(partsInfo);
-            var partsList = partsListObject as List<ReportStandData>;
-
-            var partsCosts = partsList.Select(part => part.CommonCost);
-
-            allCosts.AddRange(partsCosts);
-        }
-
-        string resultSumString = "";
-
-        ////проверка на элементы null в списке
-        if (allCosts.Any(cost => cost == null))
-        {
-            resultSumString = allCosts.Where(cost => cost != null).Sum().ToString() + "\n";
-            resultSumString += "В БД отсутствуют необходимые значения. \n";
-            resultSumString += "Результат может быть недостоверным.";
-        }
-        else
-        {
-            resultSumString = allCosts.Sum().ToString();
-        }
-
-        ws.Cell($"F{activeRow}").Value = resultSumString;
-        ws.Cell($"F{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
 
         activeRow++;
         return activeRow;
     }
 
-    private int CreateLaborTotalRecord(int row, SummaryReportLaborData laborData, IXLWorksheet ws)
+    private int CreatePartsTotalRecord(int row, List<ReportRecordData> recordsList, IXLWorksheet ws)
     {
-
         var activeRow = row;
 
-        ws.Cell($"B{activeRow}").Value = "Итого по трудозатратам:";
+        var totalRecord = GenerateTotalRecord(recordsList);
+        totalRecord.ExportDays = new ValidatedField<int?>(null, true);
+        totalRecord.Name = new ValidatedField<string?>("Итого по комплектующим", true);
+        totalRecord.Quantity = new ValidatedField<float?>(null, true);
+        totalRecord.CostPerUnit = new ValidatedField<float?>(null,true);
+
+        PasteRecord(activeRow, totalRecord, ws);
+
+
         ws.Cell($"B{activeRow}").Style.Font.SetBold();
         ws.Cell($"B{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Left);
+        ws.Cell($"F{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
 
-
-        var recordProperties = laborData.GetType().GetProperties();
-
-        var allHumanCosts = new List<float?>();
-        var allCommonCosts = new List<float?>();
-
-        //обрабатываем все стоимости из каждого перечня
-        foreach (var recordProperty in recordProperties)
-        {
-            var laborProperty = recordProperty.GetValue(laborData);
-            var laborObject = (ReportStandData)laborProperty;
-
-            allHumanCosts.Add(laborObject.Quantity);
-            allCommonCosts.Add(laborObject.CommonCost);
-
-        }
-
-        var resultHumanCostSumString = (allHumanCosts
-            .Where(cost => cost != null)
-            .Sum() ?? 0.0f)
-            .ToString();
-
-        var resultCommonCostSumString = (allCommonCosts
-            .Where(cost => cost != null)
-            .Sum() ?? 0.0f)
-            .ToString();
-
-        //проверка на элементы null в списке
-        var invalidHumanCostData = allHumanCosts.Any(cost => cost == null);
-
-        if (invalidHumanCostData)
-        {
-            resultHumanCostSumString += "\n" + ExcelReportHelper.SettingsErrorString + "\n";
-            resultHumanCostSumString += ExcelReportHelper.UnreliableDataString;
-        }
-
-        var invalidCommonCostData = allCommonCosts.Any(cost => cost == null);
-
-        if (invalidCommonCostData)
-        {
-            resultCommonCostSumString += "\n" + ExcelReportHelper.SettingsErrorString + "\n";
-            resultCommonCostSumString += ExcelReportHelper.UnreliableDataString;
-        }
-
-        ws.Cell($"D{activeRow}").Value = resultHumanCostSumString;
-        ws.Cell($"F{activeRow}").Value = resultCommonCostSumString;
-
-
-        ws.Cell($"D{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
-        ws.Cell($"D{activeRow}").Style.Font.SetBold();
-
-        ws.Cell($"F{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
-        ws.Cell($"F{activeRow}").Style.Font.SetBold();
 
         activeRow++;
         return activeRow;
     }
 
-    private int CreatePartsAndLaborTotalRecord(int row, SummaryReportLaborData laborData, SummaryReportStandsData partsInfo, IXLWorksheet ws)
+    private int CreateLaborTotalRecord(int row, List<ReportRecordData> recordsList, IXLWorksheet ws)
     {
 
         var activeRow = row;
 
-        ws.Cell($"B{activeRow}").Value = "Итого по комплектующим и трудозатратам:";
+        var totalRecord = GenerateTotalRecord(recordsList);
+        totalRecord.ExportDays = new ValidatedField<int?>(null, true);
+        totalRecord.Name = new ValidatedField<string?>("Итого по трудозатратам", true);
+        totalRecord.CostPerUnit = new ValidatedField<float?>(null, true);
+
+        PasteRecord(activeRow, totalRecord, ws);
+
+
         ws.Cell($"B{activeRow}").Style.Font.SetBold();
         ws.Cell($"B{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Left);
+        ws.Cell($"F{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
 
 
+        activeRow++;
+        return activeRow;
+    }
+
+    private int CreatePartsAndLaborTotalRecord(int row, List<ReportRecordData> recordsList, IXLWorksheet ws)
+    {
+
+        var activeRow = row;
+
+        var totalRecord = GenerateTotalRecord(recordsList);
+        totalRecord.ExportDays = new ValidatedField<int?>(null, true);
+        totalRecord.Name = new ValidatedField<string?>("Итого по комплектующим и трудозатратам", true);
+        totalRecord.Quantity = new ValidatedField<float?>(null, true);
+        totalRecord.CostPerUnit = new ValidatedField<float?>(null, true);
+
+        PasteRecord(activeRow, totalRecord, ws);
+
+
+        ws.Cell($"B{activeRow}").Style.Font.SetBold();
+        ws.Cell($"B{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Left);
+        ws.Cell($"F{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
 
 
         activeRow++;
