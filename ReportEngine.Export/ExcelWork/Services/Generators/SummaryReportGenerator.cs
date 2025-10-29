@@ -11,16 +11,19 @@ using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
 public class SummaryReportGenerator : IReportGenerator
 {
     private readonly IProjectInfoRepository _projectInfoRepository;
+    private readonly IContainerRepository _containerRepository;
 
-    public SummaryReportGenerator(IProjectInfoRepository projectInfoRepository)
+    public SummaryReportGenerator(IProjectInfoRepository projectInfoRepository, IContainerRepository containerRepository)
     {
         _projectInfoRepository = projectInfoRepository;
+        _containerRepository = containerRepository;
     }
 
 
@@ -626,6 +629,34 @@ public class SummaryReportGenerator : IReportGenerator
               commonCheckRecord);
     }
 
+    private async Task<List<ReportRecordData>> GeneratePackDataAsync(ProjectInfo project)
+    {
+        var containerBatches = await _containerRepository.GetAllByProjectIdAsync(project.Id);
+        var containers = containerBatches
+            .SelectMany(batch => batch.Containers)
+            .GroupBy(container => container.Name)
+            .Select(group => new ReportRecordData
+            {
+                ExportDays = new ValidatedField<int?>(null, true),
+                Name = new ValidatedField<string?>(group.FirstOrDefault().Name, group.FirstOrDefault().Name != null),
+                Unit = new ValidatedField<string?>(null, true),
+                Quantity = new ValidatedField<float?>(group.Count(), true),
+                CostPerUnit = new ValidatedField<float?>(null,true),                
+            })
+            .Select(record =>
+            {
+                record.CommonCost = new ValidatedField<float?>(record.Quantity.Value * record.CostPerUnit.Value,
+                                                              (record.Quantity.Value * record.CostPerUnit.Value) != null);
+
+                return record;
+            }).
+            ToList();
+
+       
+        return containers;
+
+    }
+
     //высчитываем итого по записям
     private ReportRecordData GenerateTotalRecord(IEnumerable<ReportRecordData> records)
     {
@@ -1049,6 +1080,9 @@ public class SummaryReportGenerator : IReportGenerator
         allData.AddRange(allLaborsList);
 
         activeRow = CreatePartsAndLaborTotalRecord(activeRow, allData, ws);
+
+        activeRow = CreateSubheaderOnWorksheet(activeRow, "Упаковка", ws);
+
     }
 
     //заполняет сводную ведомость
