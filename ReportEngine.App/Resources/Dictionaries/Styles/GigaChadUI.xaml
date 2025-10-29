@@ -86,6 +86,13 @@
                 <Setter Property="Background" Value="{DynamicResource SelectedRowBackground}" />
                 <Setter Property="Foreground" Value="{DynamicResource SelectedRowForeground}" />
             </Trigger>
+            <Trigger Property="IsManipulationEnabled" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+            </Trigger>
+            <Trigger Property="IsEditing" Value="True">
+                <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
+                <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+            </Trigger>
         </Style.Triggers>
     </Style>
 

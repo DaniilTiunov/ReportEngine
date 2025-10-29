@@ -1002,6 +1002,7 @@ public class ProjectViewModel : BaseViewModel
 
                 case ContainerStand cs:
                     cs.Name = selected.Name;
+                    cs.ContainerCost = selected.Cost;
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.ContainerStandsInSelectedBatch);
                     return;
             }
