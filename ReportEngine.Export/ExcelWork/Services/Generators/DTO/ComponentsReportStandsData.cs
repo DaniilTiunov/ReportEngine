@@ -45,8 +45,7 @@ public struct ReportStandData
     public float? Quantity { get; set; }
     public float? CostPerUnit { get; set; }
     public float? CommonCost { get; set; }
-
-    public bool ExportDaysValid 
+    public bool ExportDaysValid { get; set; } 
     public bool QuantityValid { get; set; }
     public bool CostPerUnitValid { get; set; }
     public bool CommonCostValid { get; set;  }
