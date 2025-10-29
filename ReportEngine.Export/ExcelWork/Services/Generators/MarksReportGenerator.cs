@@ -139,7 +139,6 @@ public class MarksReportGenerator : IReportGenerator
         return resultRecords;
     }
 
-
     //структура для одной записи таблицы
     public struct RecordData
     {

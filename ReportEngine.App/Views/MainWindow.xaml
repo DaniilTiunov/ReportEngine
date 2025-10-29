@@ -184,7 +184,7 @@
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllSortamentsCommand}" Header="Весь сортамент" />
             </MenuItem>
             <MenuItem Header="Формирование комплектующих">
-                <MenuItem Command="{Binding MainWindowCommandProvider.OpenFormedFramesCommand}" Header="Создание и редактировние рам" />
+                <MenuItem Command="{Binding MainWindowCommandProvider.OpenFormedFramesCommand}" Header="Создание и редактирование рам" />
                 <Separator />
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllObvyazkiCommand}" Header="Обвязки" />
                 <Separator />
