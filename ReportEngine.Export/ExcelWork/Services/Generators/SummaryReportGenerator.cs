@@ -652,7 +652,6 @@ public class SummaryReportGenerator : IReportGenerator
             {
                 record.CommonCost = new ValidatedField<float?>(record.Quantity.Value * record.CostPerUnit.Value,
                                                               (record.Quantity.Value * record.CostPerUnit.Value) != null);
-
                 return record;
             }).
             ToList();
@@ -681,7 +680,6 @@ public class SummaryReportGenerator : IReportGenerator
 
         return new ReportRecordData
         {
-
             ExportDays = new ValidatedField<int?>(
                 exportDaysField.Sum(field => field.Value),
                 exportDaysField.All(field => field.IsValid)),
@@ -1138,7 +1136,7 @@ public class SummaryReportGenerator : IReportGenerator
     }
 
     //заполняет лист калькуляции
-    private void FillCalculationTable(IXLWorksheet ws, ProjectInfo project)
+    private async Task FillCalculationTable(IXLWorksheet ws, ProjectInfo project)
     {
         var activeRow = 7;       
 
@@ -1146,9 +1144,8 @@ public class SummaryReportGenerator : IReportGenerator
             .GroupBy(stand => stand.Design)
             .Select(group =>
             {
-                var generatedPartsData = GeneratePartsData(new List<Stand> {group.FirstOrDefault()});
+                var generatedPartsData = GeneratePartsData(new List<Stand>{ group.FirstOrDefault() });
                 var partsRecords = GenerateAllPartsCollection(generatedPartsData); 
-
 
                 var exportDays = partsRecords.Max(part => part.ExportDays.Value); 
                 var name = group.FirstOrDefault().Design;
@@ -1182,32 +1179,105 @@ public class SummaryReportGenerator : IReportGenerator
         foreach (var stand in standsRecords)
         {
             ws.Cell($"B{activeRow}").Value = stand.exportDays;
-            ws.Cell($"C{activeRow}").Value = standNumber;
-            ws.Cell($"D{activeRow}").Value = stand.name;
-            ws.Cell($"E{activeRow}").Value = stand.kks;
-            ws.Cell($"F{activeRow}").Value = stand.unit;
-            ws.Cell($"G{activeRow}").Value = stand.quantity;
-            ws.Cell($"H{activeRow}").Value = stand.weight;
-            ws.Cell($"I{activeRow}").Value = stand.width;
-            ws.Cell($"J{activeRow}").Value = stand.cost;
-            ws.Cell($"K{activeRow}").Value = stand.commonCost;
-
-
             ws.Cell($"B{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+            ws.Cell($"C{activeRow}").Value = standNumber;
             ws.Cell($"C{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+
+            ws.Cell($"D{activeRow}").Value = stand.name;
             ws.Cell($"D{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
+
+            ws.Cell($"E{activeRow}").Value = stand.kks;
             ws.Cell($"E{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
+
+            ws.Cell($"F{activeRow}").Value = stand.unit;
             ws.Cell($"F{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+            ws.Cell($"G{activeRow}").Value = stand.quantity;
             ws.Cell($"G{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+            ws.Cell($"H{activeRow}").Value = stand.weight;
             ws.Cell($"H{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+            ws.Cell($"I{activeRow}").Value = stand.width;
             ws.Cell($"I{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+            ws.Cell($"J{activeRow}").Value = stand.cost;
             ws.Cell($"J{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+
+            ws.Cell($"K{activeRow}").Value = stand.commonCost;
             ws.Cell($"K{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+
 
 
             standNumber++;
             activeRow++;
         }
+
+
+        
+
+        var standsPriceLabelRange = ws.Range($"C{activeRow}:J{activeRow}").Merge();
+        standsPriceLabelRange.Value = $"Общее количество стендов {standNumber - 1} на сумму (без учета упаковки и транспортных расходов), без НДС, руб.";
+        standsPriceLabelRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        standsPriceLabelRange.Style.Font.SetBold();
+
+        var standsPrice = standsRecords.Sum(stand => stand.commonCost);
+
+        var standsPriceValueCell = ws.Cell($"K{activeRow}");
+        standsPriceValueCell.Value = standsPrice;
+        standsPriceValueCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+        standsPriceValueCell.Style.Font.SetBold();
+
+        activeRow++;
+
+
+
+        var transportPrice = 0.0f;
+
+        var transportPriceLabelRange = ws.Range($"C{activeRow}:J{activeRow}").Merge();
+        transportPriceLabelRange.Value = $"Транспортные расходы на сумму, без НДС, руб.";
+        transportPriceLabelRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        transportPriceLabelRange.Style.Font.SetBold();
+
+        var transportPriceValueCell = ws.Cell($"K{activeRow}");
+        transportPriceValueCell.Value = transportPrice;
+        transportPriceValueCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+        transportPriceValueCell.Style.Font.SetBold();
+
+        activeRow++;
+
+
+
+        var containers = await GenerateContainersDataAsync(project);
+        var containerPrice = containers.Sum(container => container.CommonCost.Value);
+
+        var containerPriceLabelRange = ws.Range($"C{activeRow}:J{activeRow}").Merge();
+        containerPriceLabelRange.Value = $"Стоимость упаковки на сумму, без НДС, руб.";
+        containerPriceLabelRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        containerPriceLabelRange.Style.Font.SetBold();
+
+        var containerPriceValueCell = ws.Cell($"K{activeRow}");
+        containerPriceValueCell.Value = containerPrice;
+        containerPriceValueCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+        containerPriceValueCell.Style.Font.SetBold();
+
+        activeRow++;
+
+
+
+        var totalPrice = (float)standsPrice + transportPrice + containerPrice;
+
+        var totalLabelRange = ws.Range($"C{activeRow}:J{activeRow}").Merge();
+        totalLabelRange.Value = $"Итого, руб.";
+        totalLabelRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        totalLabelRange.Style.Font.SetBold();
+
+        var totalValueCell = ws.Cell($"K{activeRow}"); ;
+        totalValueCell.Value = totalPrice;
+        totalValueCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+        totalValueCell.Style.Font.SetBold();
+
     }
 
     #endregion
