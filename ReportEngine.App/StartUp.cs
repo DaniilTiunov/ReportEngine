@@ -18,6 +18,7 @@ public class StartUp
             var connString = JsonHandler.GetConnectionString(DirectoryHelper.GetConfigPath());
 
             var host = HostFactory.BuildHost(connString);
+
             var app = host.Services.GetRequiredService<App>();
 
             var mainWindow = host.Services.GetRequiredService<MainWindow>();
@@ -26,6 +27,8 @@ public class StartUp
             mainWindow.Show();
 
             app.Run();
+
+            host.StopAsync().GetAwaiter().GetResult();
         }
         catch (Exception ex)
         {

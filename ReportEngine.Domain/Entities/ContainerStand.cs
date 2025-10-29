@@ -29,6 +29,8 @@ public class ContainerStand
     // Описание
     public string? Description { get; set; }
 
+    public float? ContainerCost { get; set; }
+
     // Ссылка на партию (batch)
     public int? ContainerBatchId { get; set; }
 
