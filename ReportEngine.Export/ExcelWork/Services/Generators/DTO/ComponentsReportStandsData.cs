@@ -14,40 +14,49 @@ public record ComponentsReportStandsData(
 );
 
 public record SummaryReportStandsData(
-    List<ReportStandData> PipesList,
-    List<ReportStandData> ArmaturesList,
-    List<ReportStandData> TreeList,
-    List<ReportStandData> KmchList,
-    List<ReportStandData> DrainageParts,
-    List<ReportStandData> FramesList,
-    List<ReportStandData> SensorsHolders,
-    List<ReportStandData> ElectricalParts,
-    List<ReportStandData> OthersParts,
-    List<ReportStandData> Supplies
+    List<ReportRecordData> PipesList,
+    List<ReportRecordData> ArmaturesList,
+    List<ReportRecordData> TreeList,
+    List<ReportRecordData> KmchList,
+    List<ReportRecordData> DrainageParts,
+    List<ReportRecordData> FramesList,
+    List<ReportRecordData> SensorsHolders,
+    List<ReportRecordData> ElectricalParts,
+    List<ReportRecordData> OthersParts,
+    List<ReportRecordData> Supplies
 );
 
 public record SummaryReportLaborData(
-    ReportStandData frameProduction,
-    ReportStandData obvProduction,
-    ReportStandData collectorProduction,
-    ReportStandData qualityTests,
-    ReportStandData sandblasting,
-    ReportStandData paintingWorks,
-    ReportStandData electricalWorks,
-    ReportStandData commonStandCheck
+    ReportRecordData frameProduction,
+    ReportRecordData obvProduction,
+    ReportRecordData collectorProduction,
+    ReportRecordData qualityTests,
+    ReportRecordData sandblasting,
+    ReportRecordData paintingWorks,
+    ReportRecordData electricalWorks,
+    ReportRecordData commonStandCheck
  );
 
-public struct ReportStandData
+public struct ReportRecordData
 {
-    public int? ExportDays {  get; set; } 
-    public string? Name { get; set; }
-    public string? Unit { get; set; }
-    public float? Quantity { get; set; }
-    public float? CostPerUnit { get; set; }
-    public float? CommonCost { get; set; }
-    public bool ExportDaysValid { get; set; } 
-    public bool QuantityValid { get; set; }
-    public bool CostPerUnitValid { get; set; }
-    public bool CommonCostValid { get; set;  }
-    
+    public ValidatedField<int?> ExportDays {  get; set; } 
+    public ValidatedField<string?> Name { get; set; }
+    public ValidatedField<string?> Unit { get; set; }
+    public ValidatedField<float?> Quantity { get; set; }
+    public ValidatedField<float?> CostPerUnit { get; set; }
+    public ValidatedField<float?> CommonCost { get; set; }
+
+}
+
+public struct ValidatedField<T>
+{
+    public T Value { get; set; }
+    public bool IsValid { get; set; }
+
+    public ValidatedField(T value, bool isValid)
+    {
+        Value = value;
+        IsValid = isValid;
+    }
+
 }
