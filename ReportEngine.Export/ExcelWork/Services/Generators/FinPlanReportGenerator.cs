@@ -301,17 +301,9 @@ public class FinPlanReportGenerator : IReportGenerator
 
 
 
-
-
         PasteSeparatorRow(activeRow, ws);   
         activeRow++;
 
-
-
-
-
-  
-       
 
 
         var summaryPlannedCostRecord = new ReportRecordData
