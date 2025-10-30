@@ -89,7 +89,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
     #region Вспомогательные
 
-    private void PasteRecord(int row, ReportRecordData record, IXLWorksheet ws)
+    private IXLRange PasteRecord(int row, ReportRecordData record, IXLWorksheet ws)
     {
         var recordNameRange = ws.Range($"A{row}:E{row}").Merge();
         recordNameRange.Value = record.Name.Value;
@@ -103,6 +103,9 @@ public class FinPlanReportGenerator : IReportGenerator
         var unitPriceRange = ws.Range($"H{row}:I{row}").Merge();
         unitPriceRange.Value = record.Unit.Value;
         unitPriceRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+
+        return recordPriceRange;
     }
 
     private void PasteSeparatorRow(int row, IXLWorksheet ws)
@@ -168,9 +171,12 @@ public class FinPlanReportGenerator : IReportGenerator
 
         var activeRow = startRow;
 
-        
 
 
+
+        var sumCellList = new List<IXLRange>();
+
+            
         var generatedEquipmentsData = ExcelReportHelper.GeneratePartsData(project.Stands);
         var equipmentRecords = ExcelReportHelper.GenerateAllPartsCollection(generatedEquipmentsData);
         var equipmentTotalCostRecord = ExcelReportHelper.GenerateTotalRecord(equipmentRecords);
@@ -178,7 +184,9 @@ public class FinPlanReportGenerator : IReportGenerator
         equipmentTotalCostRecord.Name = new ValidatedField<string?>("Стоимость оборудования и материалов",true);
         equipmentTotalCostRecord.Unit = new ValidatedField<string?>("руб. без НДС", true);
 
-        PasteRecord(activeRow, equipmentTotalCostRecord, ws);
+        var equimpmentValueRange = PasteRecord(activeRow, equipmentTotalCostRecord, ws);
+        sumCellList.Add(equimpmentValueRange);
+
         activeRow++;
 
 
@@ -199,10 +207,10 @@ public class FinPlanReportGenerator : IReportGenerator
             CommonCost = new ValidatedField<float?>(containersTotalCost.CommonCost.Value, true)
         };
 
-        PasteRecord(activeRow, containersCostRecord, ws); 
+        var containersValueRange = PasteRecord(activeRow, containersCostRecord, ws);
+        sumCellList.Add(containersValueRange);
+
         activeRow++;
-
-
 
         
        
@@ -219,7 +227,8 @@ public class FinPlanReportGenerator : IReportGenerator
         laborTotalCostRecord.Name = new ValidatedField<string>("Трудозатраты", true);
         laborTotalCostRecord.Unit = new ValidatedField<string?>("чел. * мес.", true);
 
-        PasteRecord(activeRow, laborTotalCostRecord, ws);
+        var laborValueRange = PasteRecord(activeRow, laborTotalCostRecord, ws);
+        sumCellList.Add(laborValueRange);
         activeRow++;
 
 
@@ -234,11 +243,17 @@ public class FinPlanReportGenerator : IReportGenerator
             CommonCost = new ValidatedField<float?>(null, true)
         };
 
-        PasteRecord(activeRow, laborFundRecord, ws);
+        var laborFundValueRange = PasteRecord(activeRow, laborFundRecord, ws);
+        sumCellList.Add(laborFundValueRange);
         activeRow++;
+
+
 
         PasteSeparatorRow(activeRow, ws);
         activeRow++;
+
+
+
 
         var bussinessTripCostsRecord = new ReportRecordData
         {
@@ -250,7 +265,8 @@ public class FinPlanReportGenerator : IReportGenerator
             CommonCost = new ValidatedField<float?>(null, true)
         };
 
-        PasteRecord(activeRow, bussinessTripCostsRecord, ws);
+        var bussinessTripValueRange = PasteRecord(activeRow, bussinessTripCostsRecord, ws);
+        sumCellList.Add(bussinessTripValueRange);
         activeRow++;
 
         var customerDeliveryRecord = new ReportRecordData
@@ -263,7 +279,8 @@ public class FinPlanReportGenerator : IReportGenerator
             CommonCost = new ValidatedField<float?>(null, true)
         };
 
-        PasteRecord(activeRow, customerDeliveryRecord, ws);
+        var customerDeliveryValueRange = PasteRecord(activeRow, customerDeliveryRecord, ws);
+        sumCellList.Add(customerDeliveryValueRange);
         activeRow++;
 
 
@@ -278,8 +295,13 @@ public class FinPlanReportGenerator : IReportGenerator
             CommonCost = new ValidatedField<float?>(equipmentTotalCostRecord.CommonCost.Value * 0.01f, true)
         };
 
-        PasteRecord(activeRow, transportAndPrepareWork, ws);
+        var transportAndPrepareWorkValueRange = PasteRecord(activeRow, transportAndPrepareWork, ws);
+        sumCellList.Add(transportAndPrepareWorkValueRange);
         activeRow++;
+
+
+
+
 
         PasteSeparatorRow(activeRow, ws);   
         activeRow++;
@@ -288,6 +310,8 @@ public class FinPlanReportGenerator : IReportGenerator
 
 
 
+  
+       
 
 
         var summaryPlannedCostRecord = new ReportRecordData
@@ -301,6 +325,12 @@ public class FinPlanReportGenerator : IReportGenerator
         };
 
         PasteRecord(activeRow, summaryPlannedCostRecord, ws);
+
+
+        var cellsAdresses = sumCellList.Select(range => range.FirstCell().Address.ToString());
+        string formulaString = "=" + String.Join("+", cellsAdresses); 
+        ws.Range($"F{activeRow}:G{activeRow}").FirstCell().FormulaA1 = formulaString;
+
         activeRow++;
 
         
