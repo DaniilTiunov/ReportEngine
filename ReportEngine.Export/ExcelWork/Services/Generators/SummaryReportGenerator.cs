@@ -452,7 +452,7 @@ public class SummaryReportGenerator : IReportGenerator
     private SummaryReportLaborData GenerateLaborData(IEnumerable<Stand> stands)
     {
 
-        var frameSettings = CalculationSettingsManager.Load<FrameSettings, FrameSettingsData>();
+        var frameSettings =  CalculationSettingsManager.Load<FrameSettings, FrameSettingsData>();
         var electicalSettings = CalculationSettingsManager.Load<ElectricalSettings, ElectricalSettingsData>();
         var humanCostSettings = CalculationSettingsManager.Load<HumanCostSettings, HumanCostSettingsData>();
         var standSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
@@ -1249,7 +1249,7 @@ public class SummaryReportGenerator : IReportGenerator
 
 
 
-        var containers = await GenerateContainersDataAsync(project);
+        var containers = await GenerateContainersDataAsync(project).ConfigureAwait(false);
         var containerPrice = containers.Sum(container => container.CommonCost.Value);
 
         var containerPriceLabelRange = ws.Range($"C{activeRow}:J{activeRow}").Merge();
