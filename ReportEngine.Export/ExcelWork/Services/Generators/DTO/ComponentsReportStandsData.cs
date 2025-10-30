@@ -1,4 +1,9 @@
-﻿namespace ReportEngine.Export.ExcelWork.Services.Generators.DTO;
+﻿using SixLabors.ImageSharp;
+using System.Data.SqlTypes;
+using System.Linq;
+using System.Numerics;
+
+namespace ReportEngine.Export.ExcelWork.Services.Generators.DTO;
 
 public record ComponentsReportStandsData(
     List<(string name, string unit, string quantity)> PipesList,
@@ -39,7 +44,7 @@ public record SummaryReportLaborData(
 
 public struct ReportRecordData
 {
-    public ValidatedField<int?> ExportDays {  get; set; } 
+    public ValidatedField<int?> ExportDays { get; set; }
     public ValidatedField<string?> Name { get; set; }
     public ValidatedField<string?> Unit { get; set; }
     public ValidatedField<float?> Quantity { get; set; }
@@ -48,9 +53,9 @@ public struct ReportRecordData
 
 }
 
-public struct ValidatedField<T>
+public struct ValidatedField<T> 
 {
-    public T Value { get; set; }
+    public T Value { get; set; } 
     public bool IsValid { get; set; }
 
     public ValidatedField(T value, bool isValid)
@@ -59,4 +64,7 @@ public struct ValidatedField<T>
         IsValid = isValid;
     }
 
+
+    //public static ValidatedField<T> Sum(IEnumerable<ValidatedField<T>> fields)
+ 
 }

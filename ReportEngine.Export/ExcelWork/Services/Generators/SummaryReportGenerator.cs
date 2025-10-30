@@ -91,34 +91,7 @@ public class SummaryReportGenerator : IReportGenerator
 
     #region Вспомогательные
 
-    //создаем инфу о упаковке
-    public async Task<List<ReportRecordData>> GenerateContainersDataAsync(ProjectInfo project)
-    {
-        var containerBatches = await _containerRepository.GetAllByProjectIdAsync(project.Id);
 
-        var containers = containerBatches
-            .SelectMany(batch => batch.Containers)
-            .GroupBy(container => container.Name)
-            .Select(group => new ReportRecordData
-            {
-                ExportDays = new ValidatedField<int?>(null, true),
-                Name = new ValidatedField<string?>(group.FirstOrDefault().Name, group.FirstOrDefault().Name != null),
-                Unit = new ValidatedField<string?>(null, true),
-                Quantity = new ValidatedField<float?>(group.Count(), true),
-                CostPerUnit = new ValidatedField<float?>(group.FirstOrDefault().ContainerCost, group.FirstOrDefault().ContainerCost.HasValue),
-            })
-            .Select(record =>
-            {
-                record.CommonCost = new ValidatedField<float?>(record.Quantity.Value * record.CostPerUnit.Value,
-                                                              (record.Quantity.Value * record.CostPerUnit.Value) != null);
-                return record;
-            }).
-            ToList();
-
-
-        return containers;
-
-    }
 
     //валидация и вывод в таблицу
     private void PasteRecord(int row, ReportRecordData partRecord, IXLWorksheet ws)
@@ -498,7 +471,8 @@ public class SummaryReportGenerator : IReportGenerator
 
         activeRow = CreateUsualTotalRecord(activeRow, "Итого по комплектующим и трудозатратам:", allData, ws);
 
-        var containersData = await GenerateContainersDataAsync(project);
+        var containerBatches = await _containerRepository.GetAllByProjectIdAsync(project.Id);
+        var containersData = ExcelReportHelper.GenerateContainersData(containerBatches);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Упаковка", ws);
         activeRow = FillSubtableData(activeRow, containersData, ws);
@@ -623,7 +597,8 @@ public class SummaryReportGenerator : IReportGenerator
 
 
 
-        var containers = await GenerateContainersDataAsync(project).ConfigureAwait(false);
+        var containerBatches = await _containerRepository.GetAllByProjectIdAsync(project.Id);
+        var containers = ExcelReportHelper.GenerateContainersData(containerBatches);
         var containerPrice = containers.Sum(container => container.CommonCost.Value);
 
         var containerPriceLabelRange = ws.Range($"C{activeRow}:J{activeRow}").Merge();

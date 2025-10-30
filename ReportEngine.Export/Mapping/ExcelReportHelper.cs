@@ -561,6 +561,35 @@ public static class ExcelReportHelper
               commonCheckRecord);
     }
 
+
+    //создаем инфу о упаковке
+    public static List<ReportRecordData> GenerateContainersData(IEnumerable<ContainerBatch> containerBatches)
+    {
+
+        var containers = containerBatches
+            .SelectMany(batch => batch.Containers)
+            .GroupBy(container => container.Name)
+            .Select(group => new ReportRecordData
+            {
+                ExportDays = new ValidatedField<int?>(null, true),
+                Name = new ValidatedField<string?>(group.FirstOrDefault().Name, group.FirstOrDefault().Name != null),
+                Unit = new ValidatedField<string?>(null, true),
+                Quantity = new ValidatedField<float?>(group.Count(), true),
+                CostPerUnit = new ValidatedField<float?>(group.FirstOrDefault().ContainerCost, group.FirstOrDefault().ContainerCost.HasValue),
+            })
+            .Select(record =>
+            {
+                record.CommonCost = new ValidatedField<float?>(record.Quantity.Value * record.CostPerUnit.Value,
+                                                              (record.Quantity.Value * record.CostPerUnit.Value) != null);
+                return record;
+            }).
+            ToList();
+
+
+        return containers;
+
+    }
+
     //высчитываем итого по записям
     public static ReportRecordData GenerateTotalRecord(IEnumerable<ReportRecordData> records)
     {
@@ -576,8 +605,6 @@ public static class ExcelReportHelper
         var costField = records
             .Select(record => record.CostPerUnit);
 
-
-
         return new ReportRecordData
         {
             ExportDays = new ValidatedField<int?>(
@@ -588,11 +615,9 @@ public static class ExcelReportHelper
                 quantityField.Sum(field => field.Value),
                 quantityField.All(field => field.IsValid)),
 
-
             CostPerUnit = new ValidatedField<float?>(
                 costField.Sum(field => field.Value),
                 costField.All(field => field.IsValid)),
-
 
             CommonCost = new ValidatedField<float?>(
                  commonCostsFields.Sum(field => field.Value),
@@ -644,5 +669,10 @@ public static class ExcelReportHelper
 
         return allPartsList;
     }
+
+
+
+
+   
 
 }
