@@ -22,10 +22,11 @@ public class GenericEquipViewModel<T> : BaseViewModel
 
     private readonly INotificationService _notificationService;
 
-    public GenericEquipViewModel(IGenericBaseRepository<T, T> genericEquipRepository)
+    public GenericEquipViewModel(IGenericBaseRepository<T, T> genericEquipRepository, INotificationService notificationService)
     {
         InitializeCommands(); // Инициализируем команды
         _genericEquipRepository = genericEquipRepository; // Устанавливаем репозиторий
+        _notificationService = notificationService;
     }
 
     public Action<T> SelectionHandler { get; set; }
@@ -68,6 +69,7 @@ public class GenericEquipViewModel<T> : BaseViewModel
     public async void OnSaveChangesCommandExecuted(object e)
     {
         await SaveChangesAsync();
+        _notificationService.ShowInfo("Изменения сохранены");
     }
 
     public ICommand RemoveEquipCommand { get; set; }
@@ -75,11 +77,13 @@ public class GenericEquipViewModel<T> : BaseViewModel
     public async void OnRemoveEquipCommandExecuted(object e)
     {
         await RemoveSelectedBaseEquipAsync();
+        _notificationService.ShowInfo("Комплектующее удалено");
     }
 
     public async void OnAddNewEquipCommandExecuted(object e)
     {
         await AddBaseEquipAsync();
+        _notificationService.ShowInfo("Комплектующее добавлено");
     }
 
     #endregion

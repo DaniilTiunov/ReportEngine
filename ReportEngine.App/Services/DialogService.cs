@@ -73,7 +73,8 @@ public class DialogService : IDialogService
         try
         {
             IBaseEquip? selected = null;
-            var viewModel = _serviceProvider.GetRequiredService<AllSortamentsViewModel>();
+            using var scope = _serviceProvider.CreateScope();
+            var viewModel = scope.ServiceProvider.GetRequiredService<AllSortamentsViewModel>();
 
             viewModel.SelectionHandler = item => { selected = item; };
 

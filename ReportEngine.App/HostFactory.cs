@@ -130,10 +130,9 @@ public class HostFactory
     {
         services.AddSingleton<GenericEquipWindowFactory>();
         services.AddSingleton<NavigationService>();
-        services.AddSingleton<IServiceProvider>(provider => provider);
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<INotificationService, NotificationService>();
-        services.AddHostedService<EquipChangesListener>();
+        services.AddSingleton<EquipChangesListener>();
         services.AddScoped<ICalculationService, CalculationService>();
         services.AddScoped<IStandService, StandService>();
         services.AddScoped<IProjectService, ProjectService>();
@@ -169,6 +168,8 @@ public class HostFactory
         services.AddScoped<CalculationSettingsViewModel>();
         services.AddScoped<AuthWindowViewModel>();
         services.AddScoped<SubjectViewModel>();
+
+        services.AddScoped(typeof(GenericEquipViewModel<>));
     }
 
     private static void ConfigureViews(IServiceCollection services)

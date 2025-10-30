@@ -15,34 +15,39 @@ namespace ReportEngine.App.Services;
 /// </summary>
 public class GenericEquipWindowFactory
 {
-    private readonly IServiceProvider _serviceProvider;
+    private readonly IServiceScopeFactory _scopeFactory;
 
-    public GenericEquipWindowFactory(IServiceProvider serviceProvider)
+    public GenericEquipWindowFactory(IServiceScopeFactory scopeFactory)
     {
-        _serviceProvider = serviceProvider;
+        _scopeFactory = scopeFactory;
     }
 
     public Window CreateWindow<T>(bool isDialog) where T : class, IBaseEquip, new()
     {
-        // Получаем репозиторий из DI
-        var repository = _serviceProvider.GetRequiredService<IGenericBaseRepository<T, T>>();
-        // Создаем ViewModel
-        var viewModel = new GenericEquipViewModel<T>(repository);
-        // Создаем окно
-        var window = new GenericEquipView(isDialog);
-        // Устанавливаем DataContext окна на созданную ViewModel
-        // Это позволяет окну использовать ViewModel для привязки данных
-        window.DataContext = viewModel;
-        // Генерируем столбцы для DataGrid в окне на основе свойств типа TEquip
+        // Создаём scope, который будет жить пока окно открыто
+        var scope = _scopeFactory.CreateScope();
+
+        // Разрешаем viewmodel (и все её scoped зависимости) из этого scope
+        var repo = scope.ServiceProvider.GetRequiredService<IGenericBaseRepository<T, T>>();
+        var viewModel = scope.ServiceProvider.GetRequiredService<GenericEquipViewModel<T>>();
+
+        // Создаём окно и присваиваем DataContext
+        var window = new GenericEquipView(isDialog)
+        {
+            DataContext = viewModel
+        };
+
+        // Генерируем колонки (раньше фабрика делала это напрямую)
         GenerateDataGridColumns<T>(window);
-        // Выполняем команду для отображения всего оборудования
+
         viewModel.OnShowAllEquipCommandExecuted(null);
+
+        window.Closed += (s, e) => scope.Dispose();
 
         if (isDialog)
         {
             window.GenericEquipDataGrid.IsReadOnly = true;
         }
-        // Возвращаем созданное и настроенное окно
         return window;
     }
 
@@ -64,6 +69,9 @@ public class GenericEquipWindowFactory
                 Header = GenericEquipMapper.GetColumnName(property.Name),
                 Binding = new Binding(property.Name)
             };
+
+            if (property.Name == "Name")
+                column.Width = new DataGridLength(1, DataGridLengthUnitType.SizeToCells);
 
             if (property == properties[properties.Length - 2])
                 column.Width = new DataGridLength(1, DataGridLengthUnitType.Star);
