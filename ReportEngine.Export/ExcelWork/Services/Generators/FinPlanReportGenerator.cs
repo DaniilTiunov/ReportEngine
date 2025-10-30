@@ -41,21 +41,21 @@ public class FinPlanReportGenerator : IReportGenerator
 
 
             var activeRow = 1;
-
+            ;
             activeRow = CreateWorksheetTableHeader(ws, activeRow);
-
+            ;
             activeRow++;
-
+            ;
             activeRow = CreateProjectInformationTable(ws, project, activeRow);
-
+            ;
             activeRow++;
-
-            activeRow = await CreateSelfcostTable(ws, project, activeRow);
-
-            activeRow = +2;
-
+            ;
+            activeRow = await CreateSelfcostTable(ws, project, activeRow).ConfigureAwait(false);
+            ;
+            activeRow += 2;
+            ;
             CreateRentTable(ws, project, activeRow);
-
+            ;
 
             ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
@@ -106,15 +106,13 @@ public class FinPlanReportGenerator : IReportGenerator
 
         foreach (var record in tableRecords)
         {
-            var nameRange = ws.Range($"A{activeRow}:C{activeRow}");
-            nameRange.Merge();
+            var nameRange = ws.Range($"A{activeRow}:C{activeRow}").Merge();
             nameRange.Value = record.Key;
 
             nameRange.Style.Font.SetBold();
             nameRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
-            var valueRange = ws.Range($"D{activeRow}:I{activeRow}");
-            valueRange.Merge();
+            var valueRange = ws.Range($"D{activeRow}:I{activeRow}").Merge(); ;
             valueRange.Value = record.Value;
 
             valueRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);
@@ -165,5 +163,43 @@ public class FinPlanReportGenerator : IReportGenerator
 
     private void CreateRentTable(IXLWorksheet ws, ProjectInfo project, int startRow)
     {
+        var activeRow = startRow;
+
+        var tableRecords = new List<(string name, float price, string unit)>();
+
+        tableRecords.Add(("Стоимость продажи", 0.0f, "руб. без НДС"));
+        tableRecords.Add(("Маржинальный доход", 0.0f, "руб"));
+        tableRecords.Add(("Наценка", 0.0f, "%"));
+        tableRecords.Add(("Ожидаемая рентабельность", 0.0f, "%"));
+
+
+
+        var headerRange = ws.Range($"A{activeRow}:I{activeRow}").Merge();
+        headerRange.Value = "Стоимость продажи и рентабельность";
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        headerRange.Style.Font.SetBold();
+
+        activeRow++;
+
+        foreach (var record in tableRecords)
+        {
+            var titleRange = ws.Range($"A{activeRow}:E{activeRow}").Merge();
+            titleRange.Value = record.name;
+
+            var valueRange = ws.Range($"F{activeRow}:G{activeRow}").Merge();
+            valueRange.Value = record.price;
+
+            var unitRange = ws.Range($"H{activeRow}:I{activeRow}").Merge();
+            unitRange.Value = record.unit;
+
+            activeRow++;
+        }
+
+
+
     }
+
+
+
+
 }
