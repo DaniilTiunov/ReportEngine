@@ -684,6 +684,5 @@ public class SummaryReportGenerator : IReportGenerator
         return activeRow;
     }
 
-
     #endregion
 }
