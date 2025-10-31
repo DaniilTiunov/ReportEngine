@@ -32,7 +32,6 @@ public class SummaryReportGenerator : IReportGenerator
 
     public ReportType Type => ReportType.SummaryReport;
 
-
     public async Task GenerateAsync(int projectId)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
@@ -90,8 +89,6 @@ public class SummaryReportGenerator : IReportGenerator
 
 
     #region Вспомогательные
-
-
 
     //валидация и вывод в таблицу
     private void PasteRecord(int row, ReportRecordData partRecord, IXLWorksheet ws)

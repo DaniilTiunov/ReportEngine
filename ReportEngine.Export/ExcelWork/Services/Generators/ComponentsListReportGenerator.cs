@@ -34,18 +34,16 @@ public class ComponentListReportGenerator : IReportGenerator
             {
                 var ws = wb.Worksheets.Add($"{standNumber}");
 
-                CreateStandTableHeader(ws, stand, XLAlignmentHorizontalValues.Center);
+                CreateStandTableHeader(ws, stand);
                 FillStandTable(ws, stand);
 
-                ws.Columns().AdjustToContents();
-                ws.Rows().AdjustToContents();
                 standNumber++;
             }
 
             //заполняем сводную ведомость
             var lastSheet = wb.Worksheets.Add("Сводная заявка");
 
-            CreateCommonListTableHeader(lastSheet, project, XLAlignmentHorizontalValues.Center);
+            CreateCommonListTableHeader(lastSheet, project);
             FillCommonListTable(lastSheet, project);
 
             //применяем оформление ко всему документу
@@ -69,57 +67,46 @@ public class ComponentListReportGenerator : IReportGenerator
     #region Заголовки
 
     //Создает заголовок на листе (для стенда)
-    protected virtual void CreateStandTableHeader(IXLWorksheet ws, Stand stand, XLAlignmentHorizontalValues alignment)
+    private void CreateStandTableHeader(IXLWorksheet ws, Stand stand)
     {
         var headerRange = ws.Range("B1:D3");
 
         ws.Cell("B1").Value = $"Код-KKS: {stand.KKSCode}";
 
         var standNameRange = ws.Range("C1:D1").Merge();
-        standNameRange.Value = $"Наименование:\n{stand.Design}";
-        standNameRange.Style.Alignment.Horizontal = alignment;
-        standNameRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
+        standNameRange.Value = $"Наименование: {stand.Design}";
 
         var commonListStringRange = ws.Range("B2:D2").Merge();
         commonListStringRange.Value = "Сводная ведомость комплектующих";
-        commonListStringRange.Style.Alignment.Horizontal = alignment;
-
+        
         ws.Cell("B3").Value = "Наименование";
         ws.Cell("C3").Value = "Ед. изм";
         ws.Cell("D3").Value = "Кол.";
 
-        ws.Columns().AdjustToContents();
-
         headerRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
         headerRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Medium);
-        headerRange.Style.Alignment.Horizontal = alignment;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
         headerRange.Style.Font.SetBold();
     }
 
-
-    //создание заголовка для сводной ведомости
-    protected virtual void CreateCommonListTableHeader(IXLWorksheet ws, ProjectInfo project,
-        XLAlignmentHorizontalValues alignment)
+    //создание заголовка для сводной заявки
+    private void CreateCommonListTableHeader(IXLWorksheet ws, ProjectInfo project)
     {
         var headerRange = ws.Range("B1:D3");
 
         var customerCompanyRange = ws.Range("B1:D1").Merge();
         customerCompanyRange.Value = $"{project.Company}";
-        customerCompanyRange.Style.Alignment.Horizontal = alignment;
 
         var commonListStringRange = ws.Range("B2:D2").Merge();
         commonListStringRange.Value = "Сводная ведомость комплектующих";
-        commonListStringRange.Style.Alignment.Horizontal = alignment;
 
         ws.Cell("B3").Value = "Наименование";
         ws.Cell("C3").Value = "Ед.изм.";
         ws.Cell("D3").Value = "Кол.";
 
-        ws.Columns().AdjustToContents();
-
         headerRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
         headerRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Medium);
-        headerRange.Style.Alignment.Horizontal = alignment;
+        headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
         headerRange.Style.Font.SetBold();
     }
 
