@@ -5,20 +5,8 @@ using System.Numerics;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators.DTO;
 
-public record ComponentsReportStandsData(
-    List<(string name, string unit, string quantity)> PipesList,
-    List<(string name, string unit, string quantity)> ArmaturesList,
-    List<(string name, string unit, string quantity)> TreeList,
-    List<(string name, string unit, string quantity)> KmchList,
-    List<(string name, string unit, string quantity)> DrainageParts,
-    List<(string name, string unit, string quantity)> FramesList,
-    List<(string name, string unit, string quantity)> SensorsHolders,
-    List<(string name, string unit, string quantity)> ElectricalParts,
-    List<(string name, string unit, string quantity)> OthersParts,
-    List<(string name, string unit, string quantity)> Supplies
-);
 
-public record SummaryReportStandsData(
+public record PartsStandsData(
     List<ReportRecordData> PipesList,
     List<ReportRecordData> ArmaturesList,
     List<ReportRecordData> TreeList,
@@ -31,7 +19,7 @@ public record SummaryReportStandsData(
     List<ReportRecordData> Supplies
 );
 
-public record SummaryReportLaborData(
+public record LaborStandsData(
     ReportRecordData frameProduction,
     ReportRecordData obvProduction,
     ReportRecordData collectorProduction,

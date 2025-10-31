@@ -23,7 +23,7 @@ public static class ExcelReportHelper
     public static string CommonErrorString => "Ошибка получения/формирования данных.";
 
     //создаем инфу о комплектующих
-    public static SummaryReportStandsData GeneratePartsData(IEnumerable<Stand> stands)
+    public static PartsStandsData GeneratePartsData(IEnumerable<Stand> stands)
     {
         //Формирование списка труб
         var pipesList = stands
@@ -365,7 +365,7 @@ public static class ExcelReportHelper
             .ToList();
 
 
-        return new SummaryReportStandsData(
+        return new PartsStandsData(
             pipesList,
             armaturesList,
             treeList,
@@ -380,7 +380,7 @@ public static class ExcelReportHelper
     }
 
     //создаем инфу о трудозатратах
-    public static SummaryReportLaborData GenerateLaborData(IEnumerable<Stand> stands)
+    public static LaborStandsData GenerateLaborData(IEnumerable<Stand> stands)
     {
 
         var frameSettings = CalculationSettingsManager.Load<FrameSettings, FrameSettingsData>();
@@ -550,7 +550,7 @@ public static class ExcelReportHelper
         };
 
 
-        return new SummaryReportLaborData(
+        return new LaborStandsData(
               frameProductionRecord,
               obvProductionRecord,
               collectorProductionRecord,
@@ -631,7 +631,7 @@ public static class ExcelReportHelper
     }
 
     //превращает данные о комплектующих в список
-    public static List<ReportRecordData> GenerateAllPartsCollection(SummaryReportStandsData partsData)
+    public static List<ReportRecordData> GenerateAllPartsCollection(PartsStandsData partsData)
     {
         //складываем все поля record в общий список
         var allPartsList = new List<ReportRecordData>();
@@ -651,7 +651,7 @@ public static class ExcelReportHelper
         return allPartsList;
     }
     //превращает данные о трудозатратах в список
-    public static List<ReportRecordData> GenerateAllLaborsCollection(SummaryReportLaborData partsData)
+    public static List<ReportRecordData> GenerateAllLaborsCollection(LaborStandsData partsData)
     {
         //складываем все поля record в общий список
         var allPartsList = new List<ReportRecordData>();
