@@ -146,6 +146,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
 
     #region Заполнители
+    //создаем табличку с инфой о проекте
     private int CreateProjectInformationTable(IXLWorksheet ws, ProjectInfo project, int startRow)
     {
         var activeRow = startRow;
@@ -178,6 +179,7 @@ public class FinPlanReportGenerator : IReportGenerator
         return activeRow;
     }
 
+    //заполняет таблицу себестоимости
     private async Task<(int,IXLRange,IXLRange)> CreateSelfcostTable(IXLWorksheet ws, ProjectInfo project, int startRow)
     {
         var containerBatches = _containerRepository.GetAllByProjectIdAsync(project.Id);
@@ -398,7 +400,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
         }
     
-
+    //заполняет таблицу стоимости продаж для листа "Стоимость продажи"
     private int CreateSellcostRentTable(IXLWorksheet ws, ProjectInfo project, int startRow, IXLRange totalRange,IXLRange summaryRange)
     {
         var activeRow = startRow;
@@ -459,6 +461,10 @@ public class FinPlanReportGenerator : IReportGenerator
         expectedProfitRange.FirstCell().FormulaA1 = $"=IF({sellCostAddress}>=0.01,{marhinalIncomingAddress}/{sellCostAddress},0)";
         activeRow++;
 
+
+        
+
+
         var tableRange = ws.Range($"A{startRow}:I{activeRow - 1}");
         tableRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);
         tableRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Thin);
@@ -467,46 +473,75 @@ public class FinPlanReportGenerator : IReportGenerator
 
     }
 
+    //заполняет таблицу стоиомости продаж для листа "Наценка"
     private int CreateExtraChargeRentTable(IXLWorksheet ws, ProjectInfo project, int startRow, IXLRange totalRange, IXLRange summaryRange)
-    { 
+    {
         var activeRow = startRow;
 
-        var tableRecords = new List<ReportRecordData>
+        var totalCostAddress = totalRange.FirstCell().Address;
+        var summaryCostAddress = summaryRange.FirstCell().Address;
+
+        var sellCostRecord = new ReportRecordData()
         {
-            new ReportRecordData() {
-                Name = new ValidatedField<string?>("Стоимость продажи", true),
-                Unit = new ValidatedField<string?>("руб. без НДС", true),
-                CommonCost = new ValidatedField<float?>(0.0f, true) },
+            Name = new ValidatedField<string?>("Стоимость продажи", true),
+            Unit = new ValidatedField<string?>("руб. без НДС", true),
+            CommonCost = new ValidatedField<float?>(0.0f, true)
+        };
 
-             new ReportRecordData() {
-                Name = new ValidatedField<string?>("Маржинальный доход", true),
-                Unit = new ValidatedField<string?>("руб.", true),
-                CommonCost = new ValidatedField<float?>(0.0f, true) },
+        var sellCostRange = PasteRecord(activeRow, sellCostRecord, ws);
+        var sellCostAddress = sellCostRange.FirstCell().Address;
+        activeRow++;
 
-              new ReportRecordData() {
-                Name = new ValidatedField<string?>("Наценка", true),
-                Unit = new ValidatedField<string?>("%", true),
-                CommonCost = new ValidatedField<float?>(0.0f, true) },
 
-               new ReportRecordData() {
-                Name = new ValidatedField<string?>("Ожидаемая рентабельность", true),
-                Unit = new ValidatedField<string?>("%", true),
-                CommonCost = new ValidatedField<float?>(0.0f, true) }
+
+        var marginalIncomeRecord = new ReportRecordData()
+        {
+            Name = new ValidatedField<string?>("Маржинальный доход", true),
+            Unit = new ValidatedField<string?>("руб.", true),
+            CommonCost = new ValidatedField<float?>(0.0f, true)
         };
 
 
-        foreach (var record in tableRecords)
+        var marginalIncomeRange = PasteRecord(activeRow, marginalIncomeRecord, ws);
+        var marhinalIncomingAddress = marginalIncomeRange.FirstCell().Address;
+        activeRow++;
+
+
+
+        var extraChargeRecord = new ReportRecordData()
         {
-            PasteRecord(activeRow, record, ws);
-            activeRow++;
-        }
+            Name = new ValidatedField<string?>("Наценка", true),
+            Unit = new ValidatedField<string?>("%", true),
+            CommonCost = new ValidatedField<float?>(null, true)
+        };
+
+        var extraChargeRange = PasteRecord(activeRow, extraChargeRecord, ws);
+        var extraChargeAddress = extraChargeRange.FirstCell().Address;
+        activeRow++;
+
+
+
+        var expectedProfit = new ReportRecordData()
+        {
+            Name = new ValidatedField<string?>("Ожидаемая рентабельность", true),
+            Unit = new ValidatedField<string?>("%", true),
+            CommonCost = new ValidatedField<float?>(0.0f, true)
+        };
+
+        var expectedProfitRange = PasteRecord(activeRow, expectedProfit, ws);
+        activeRow++;
+
+        //вставляем формулы после всех записей
+        sellCostRange.FirstCell().FormulaA1 = $"={totalCostAddress} * (1 + {extraChargeAddress})";
+        marginalIncomeRange.FirstCell().FormulaA1 = $"={sellCostAddress}-{totalCostAddress}";
+        expectedProfitRange.FirstCell().FormulaA1 = $"=IF({sellCostAddress}>=0.01,{marhinalIncomingAddress}/{sellCostAddress},0)";
+
 
         var tableRange = ws.Range($"A{startRow}:I{activeRow - 1}");
         tableRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);
         tableRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Thin);
 
         return activeRow;
-
     }
 
     #endregion
