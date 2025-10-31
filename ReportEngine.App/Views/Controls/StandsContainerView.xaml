@@ -19,7 +19,6 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <!--  Partitions / Batches  -->
         <GroupBox
             Grid.Row="0"
             Grid.Column="0"
@@ -27,11 +26,11 @@
             Padding="5"
             Header="Упаковки проекта">
             <DockPanel LastChildFill="True">
-                <!--  Убраны кнопки сверху. Управление через контекстное меню на DataGrid  -->
                 <DataGrid
                     AutoGenerateColumns="False"
                     CanUserAddRows="True"
                     CanUserDeleteRows="True"
+                    EnableColumnVirtualization="False"
                     ItemsSource="{Binding CurrentProjectModel.ContainerBatchesInProject}"
                     SelectedItem="{Binding CurrentProjectModel.SelectedContainerBatch}">
                     <DataGrid.ContextMenu>
@@ -45,15 +44,15 @@
                     </DataGrid.ContextMenu>
                     <DataGrid.Columns>
                         <DataGridTextColumn
-                            Width="80"
+                            Width="Auto"
                             Binding="{Binding BatchOrder}"
                             Header="№" />
                         <DataGridTextColumn
-                            Width="120"
+                            Width="Auto"
                             Binding="{Binding ContainersCount}"
                             Header="Количество тары" />
                         <DataGridTextColumn
-                            Width="100"
+                            Width="Auto"
                             Binding="{Binding StandsCount}"
                             Header="Количество стендов" />
                     </DataGrid.Columns>
@@ -61,7 +60,6 @@
             </DockPanel>
         </GroupBox>
 
-        <!--  Containers in selected batch  -->
         <GroupBox
             Grid.Row="0"
             Grid.Column="1"
@@ -77,8 +75,6 @@
                 </TextBlock>
             </GroupBox.Header>
             <DockPanel LastChildFill="True">
-                <!--  Поля для ввода оставлены для быстрого создания, но можно добавлять строки прямо в DataGrid  -->
-
                 <DataGrid
                     CanUserAddRows="True"
                     CanUserDeleteRows="True"
@@ -94,19 +90,19 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Name}" Header="Тара" />
                         <DataGridTextColumn
-                            Width="120"
+                            Width="Auto"
                             Binding="{Binding StandsCount}"
                             Header="Количество стендов" />
                         <DataGridTextColumn
-                            Width="120"
+                            Width="Auto"
                             Binding="{Binding StandsWeight}"
                             Header="Масса стендов" />
                         <DataGridTextColumn
-                            Width="120"
+                            Width="Auto"
                             Binding="{Binding ContainerWeight}"
                             Header="Масса" />
                         <DataGridTextColumn
-                            Width="120"
+                            Width="Auto"
                             Binding="{Binding ContainerCost}"
                             Header="Стоимость" />
                         <DataGridTemplateColumn Header="Выбрать">
@@ -126,7 +122,6 @@
             </DockPanel>
         </GroupBox>
 
-        <!--  Stands in selected container and project stands to pick from  -->
         <GroupBox
             Grid.Row="0"
             Grid.Column="2"
@@ -173,9 +168,7 @@
                     Grid.Row="1"
                     Margin="0,6"
                     HorizontalAlignment="Center"
-                    Orientation="Horizontal">
-                    <!--  Кнопки убраны: добавление стенда делается через контекстное меню на списке стендов проекта  -->
-                </StackPanel>
+                    Orientation="Horizontal" />
 
                 <GroupBox
                     Grid.Row="2"
@@ -184,6 +177,7 @@
                     <DataGrid
                         AutoGenerateColumns="False"
                         CanUserAddRows="False"
+                        IsReadOnly="True"
                         ItemsSource="{Binding CurrentProjectModel.Stands}"
                         SelectedItem="{Binding CurrentProjectModel.SelectedStandInProject}">
                         <DataGrid.ContextMenu>

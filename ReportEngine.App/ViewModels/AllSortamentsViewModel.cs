@@ -12,6 +12,7 @@ using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Collections.Concurrent;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -48,6 +49,9 @@ public class AllSortamentsViewModel : BaseViewModel
 
     private IBaseEquip _selectedEquip;
 
+    // Словарь текущих задач загрузки по ключу группы — предотвращает параллельный доступ
+    private readonly ConcurrentDictionary<string, Task> _loadingTasks = new();
+
     public AllSortamentsViewModel(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
@@ -63,7 +67,6 @@ public class AllSortamentsViewModel : BaseViewModel
 
     public Action<IBaseEquip>? SelectionHandler { get; set; }
 
-    // TODO: Добавить кэширование
     public async Task LoadGroupAsync(string groupKey)
     {
         if (!_equipTypeMap.TryGetValue(groupKey, out var type))
@@ -72,6 +75,20 @@ public class AllSortamentsViewModel : BaseViewModel
         if (CurrentSortamentsModel.EquipGroups.ContainsKey(groupKey))
             return;
 
+        var loadingTask = _loadingTasks.GetOrAdd(groupKey, _ => LoadGroupInternalAsync(groupKey, type));
+
+        try
+        {
+            await loadingTask;
+        }
+        finally
+        {
+            _loadingTasks.TryRemove(groupKey, out _);
+        }
+    }
+
+    private async Task LoadGroupInternalAsync(string groupKey, Type type)
+    {
         var repoType = typeof(IGenericBaseRepository<,>).MakeGenericType(type, type);
         var repository = _serviceProvider.GetService(repoType);
         if (repository == null)
