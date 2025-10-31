@@ -44,6 +44,18 @@ public class ProjectService : IProjectService
         _subjectRepository = subjectRepository;
     }
 
+    public float GetSummWidthObvyzakaAsync(ProjectModel projectModel)
+    {
+        var totalWidth = 0.0f;
+
+        foreach (var stand in projectModel.Stands)
+        {
+            var obvyazkaWidth = stand.ObvyazkiInStand.Sum(obv => obv.WidthOnFrame);
+            totalWidth += obvyazkaWidth ?? 0.0f;
+        }
+
+        return totalWidth;
+    }
     public async Task GetOrAddCompnayAsync(string name)
     {
         var companies = await _companyRepository.GetAllAsync();

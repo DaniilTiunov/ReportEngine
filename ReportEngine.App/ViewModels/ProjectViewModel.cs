@@ -106,8 +106,10 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            var selectedFrame = _dialogService.ShowFrameDialog();
+            var totalWidth = _projectService.GetSummWidthObvyzakaAsync(CurrentProjectModel);
+            _notificationService.ShowInfo("Рекомендуемая рама: Рама с длинной" + totalWidth);
 
+            var selectedFrame = _dialogService.ShowFrameDialog();
             if (selectedFrame != null)
             {
                 await _standService.AddFrameToStandAsync(
