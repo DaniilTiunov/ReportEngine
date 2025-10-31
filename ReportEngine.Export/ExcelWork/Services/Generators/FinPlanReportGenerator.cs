@@ -14,8 +14,6 @@ namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
 public class FinPlanReportGenerator : IReportGenerator
 {
-
-
     private readonly IProjectInfoRepository _projectInfoRepository;
     private readonly IContainerRepository _containerRepository;
 
@@ -27,8 +25,6 @@ public class FinPlanReportGenerator : IReportGenerator
     }
 
     public ReportType Type => ReportType.FinPlanReport;
-
-
 
     public async Task GenerateAsync(int projectId)
     {
@@ -146,6 +142,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
 
     #region Заполнители
+
     //создаем табличку с инфой о проекте
     private int CreateProjectInformationTable(IXLWorksheet ws, ProjectInfo project, int startRow)
     {
