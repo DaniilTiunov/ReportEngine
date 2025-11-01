@@ -69,36 +69,36 @@ public class ComponentListReportGenerator : IReportGenerator
     #region Вспомогательные
 
     //валидация и вывод в таблицу
-    private void PasteRecord(int row, ReportRecordData partRecord, IXLWorksheet ws)
+    private void PasteRecord(int row, EquipmentRecord record, IXLWorksheet ws)
     {
 
-        if (partRecord.Name.Value != null)
+        if (record.Name.Value != null)
         {
-            ws.Cell($"B{row}").Value = partRecord.Name.Value.ToString();
+            ws.Cell($"B{row}").Value = record.Name.Value.ToString();
         }
-        if (!partRecord.Name.IsValid)
+        if (!record.Name.IsValid)
         {
             ws.Cell($"B{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
         }
 
 
 
-        if (partRecord.Unit.Value != null)
+        if (record.Unit.Value != null)
         {
-            ws.Cell($"C{row}").Value = partRecord.Unit.Value.ToString();
+            ws.Cell($"C{row}").Value = record.Unit.Value.ToString();
         }
-        if (!partRecord.Unit.IsValid)
+        if (!record.Unit.IsValid)
         {
             ws.Cell($"C{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
         }
 
 
 
-        if (partRecord.Quantity.Value.HasValue)
+        if (record.Quantity.Value.HasValue)
         {
-            ws.Cell($"D{row}").Value = partRecord.Quantity.Value.ToString();
+            ws.Cell($"D{row}").Value = record.Quantity.Value.ToString();
         }
-        if (!partRecord.Quantity.IsValid)
+        if (!record.Quantity.IsValid)
         {
             ws.Cell($"D{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
         }
@@ -248,7 +248,7 @@ public class ComponentListReportGenerator : IReportGenerator
     }
 
     //Заполняет подтаблицу и возвращает следующую строку
-    private int FillSubtableData(int startRow, List<ReportRecordData> items, IXLWorksheet ws)
+    private int FillSubtableData(int startRow, List<EquipmentRecord> items, IXLWorksheet ws)
     {
         var currentRow = startRow;
 

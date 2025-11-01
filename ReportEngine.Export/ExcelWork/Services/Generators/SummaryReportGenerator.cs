@@ -91,25 +91,25 @@ public class SummaryReportGenerator : IReportGenerator
     #region Вспомогательные
 
     //валидация и вывод в таблицу
-    private void PasteRecord(int row, ReportRecordData partRecord, IXLWorksheet ws)
+    private void PasteRecord(int row, EquipmentRecord record, IXLWorksheet ws)
     {
 
-        if (partRecord.ExportDays.Value.HasValue)
+        if (record.ExportDays.Value.HasValue)
         {
-            ws.Cell($"A{row}").Value = partRecord.ExportDays.Value.ToString();
+            ws.Cell($"A{row}").Value = record.ExportDays.Value.ToString();
         }
-        if (!partRecord.ExportDays.IsValid)
+        if (!record.ExportDays.IsValid)
         {
             ws.Cell($"A{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
         }
 
 
 
-        if (partRecord.Name.Value != null)
+        if (record.Name.Value != null)
         {
-            ws.Cell($"B{row}").Value = partRecord.Name.Value.ToString();
+            ws.Cell($"B{row}").Value = record.Name.Value.ToString();
         }
-        if (!partRecord.Name.IsValid)
+        if (!record.Name.IsValid)
         {
             ws.Cell($"B{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
         }
@@ -117,43 +117,43 @@ public class SummaryReportGenerator : IReportGenerator
 
 
 
-        if (partRecord.Unit.Value != null)
+        if (record.Unit.Value != null)
         {
-            ws.Cell($"C{row}").Value = partRecord.Unit.Value.ToString();
+            ws.Cell($"C{row}").Value = record.Unit.Value.ToString();
         }
-        if (!partRecord.Unit.IsValid)
+        if (!record.Unit.IsValid)
         {
             ws.Cell($"C{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
         }
 
 
 
-        if (partRecord.Quantity.Value.HasValue)
+        if (record.Quantity.Value.HasValue)
         {
-            ws.Cell($"D{row}").Value = partRecord.Quantity.Value.ToString();
+            ws.Cell($"D{row}").Value = record.Quantity.Value.ToString();
         }
-        if (!partRecord.Quantity.IsValid)
+        if (!record.Quantity.IsValid)
         {
             ws.Cell($"D{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
         }
 
 
-        if (partRecord.CostPerUnit.Value.HasValue)
+        if (record.CostPerUnit.Value.HasValue)
         {
-            ws.Cell($"E{row}").Value = partRecord.CostPerUnit.Value.ToString();
+            ws.Cell($"E{row}").Value = record.CostPerUnit.Value.ToString();
         }
-        if (!partRecord.CostPerUnit.IsValid)
+        if (!record.CostPerUnit.IsValid)
         {
             ws.Cell($"E{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
         }
 
 
 
-        if (partRecord.CommonCost.Value.HasValue)
+        if (record.CommonCost.Value.HasValue)
         {
-            ws.Cell($"F{row}").Value = partRecord.CommonCost.Value.ToString();
+            ws.Cell($"F{row}").Value = record.CommonCost.Value.ToString();
         }
-        if (!partRecord.CommonCost.IsValid)
+        if (!record.CommonCost.IsValid)
         {
             ws.Cell($"F{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
         }
@@ -303,7 +303,7 @@ public class SummaryReportGenerator : IReportGenerator
     #region Заполнители
 
     //Заполняет подтаблицу и возвращает следующую строку
-    private int FillSubtableData(int startRow, List<ReportRecordData> items, IXLWorksheet ws)
+    private int FillSubtableData(int startRow, List<EquipmentRecord> items, IXLWorksheet ws)
     {
         var currentRow = startRow;
 
@@ -346,7 +346,7 @@ public class SummaryReportGenerator : IReportGenerator
         activeRow = FillSubtableData(activeRow, generatedPartsData.KmchList, ws);
 
         //общий список, чтобы запихнуть в метод
-        var treeAndKmchList = new List<ReportRecordData>();
+        var treeAndKmchList = new List<EquipmentRecord>();
         treeAndKmchList.AddRange(generatedPartsData.TreeList);
         treeAndKmchList.AddRange(generatedPartsData.KmchList);
 
@@ -388,7 +388,7 @@ public class SummaryReportGenerator : IReportGenerator
         activeRow = CreateLaborTotalRecord(activeRow, allLaborsList, ws);
 
 
-        var allData = new List<ReportRecordData>();
+        var allData = new List<EquipmentRecord>();
 
         allData.AddRange(allPartsList);
         allData.AddRange(allLaborsList);
@@ -417,7 +417,7 @@ public class SummaryReportGenerator : IReportGenerator
         activeRow = FillSubtableData(activeRow, generatedPartsData.KmchList, ws);
 
         //общий список, чтобы запихнуть в метод
-        var treeAndKmchList = new List<ReportRecordData>();
+        var treeAndKmchList = new List<EquipmentRecord>();
         treeAndKmchList.AddRange(generatedPartsData.TreeList);
         treeAndKmchList.AddRange(generatedPartsData.KmchList);
 
@@ -461,7 +461,7 @@ public class SummaryReportGenerator : IReportGenerator
 
 
 
-        var allData = new List<ReportRecordData>();
+        var allData = new List<EquipmentRecord>();
 
         allData.AddRange(allPartsList);
         allData.AddRange(allLaborsList);
@@ -633,7 +633,7 @@ public class SummaryReportGenerator : IReportGenerator
     #region Итоговые
 
     //Создает простую итоговую запись
-    private int CreateUsualTotalRecord(int row, string title, List<ReportRecordData> recordToCombine, IXLWorksheet ws)
+    private int CreateUsualTotalRecord(int row, string title, List<EquipmentRecord> recordToCombine, IXLWorksheet ws)
     {
         var activeRow = row;
 
@@ -657,7 +657,7 @@ public class SummaryReportGenerator : IReportGenerator
     }
 
     //Создает итоговую запись для трудозатрат
-    private int CreateLaborTotalRecord(int row, List<ReportRecordData> laborsRecordsList, IXLWorksheet ws)
+    private int CreateLaborTotalRecord(int row, List<EquipmentRecord> laborsRecordsList, IXLWorksheet ws)
     {
         var activeRow = row;
 

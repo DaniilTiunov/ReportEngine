@@ -31,7 +31,7 @@ public class NameplatesReportGenerator : IReportGenerator
         {
             wb.Worksheets.ToList().ForEach(ws => ws.Delete());
 
-            var ws = wb.Worksheets.Add("Sheet1");
+            var ws = wb.Worksheets.Add("Лист1");
 
             var maxTablesQuantity = FillWorksheetTable(ws, project);
             CreateWorksheetTableHeader(ws, maxTablesQuantity);

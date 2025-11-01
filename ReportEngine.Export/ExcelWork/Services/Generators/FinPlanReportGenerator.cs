@@ -98,7 +98,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
     #region Вспомогательные
 
-    private IXLRange PasteRecord(int row, ReportRecordData record, IXLWorksheet ws)
+    private IXLRange PasteRecord(int row, EquipmentRecord record, IXLWorksheet ws)
     {
         var recordNameRange = ws.Range($"A{row}:E{row}").Merge();
         recordNameRange.Value = record.Name.Value;
@@ -206,7 +206,7 @@ public class FinPlanReportGenerator : IReportGenerator
         var containers = ExcelReportHelper.GenerateContainersData(await containerBatches);
         var containersTotalCost = ExcelReportHelper.GenerateTotalRecord(containers);
 
-        var containersCostRecord = new ReportRecordData
+        var containersCostRecord = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string>("Тара", true),
@@ -242,7 +242,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
 
 
-        var laborFundRecord = new ReportRecordData
+        var laborFundRecord = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Фонд оплаты труда", true),
@@ -264,7 +264,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
 
 
-        var bussinessTripCostsRecord = new ReportRecordData
+        var bussinessTripCostsRecord = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Командировочные расходы", true),
@@ -278,7 +278,7 @@ public class FinPlanReportGenerator : IReportGenerator
         sumCellList.Add(bussinessTripValueRange);
         activeRow++;
 
-        var customerDeliveryRecord = new ReportRecordData
+        var customerDeliveryRecord = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Доставка до заказчика", true),
@@ -294,7 +294,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
 
 
-        var transportAndPrepareWork = new ReportRecordData
+        var transportAndPrepareWork = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Транспортно-заготовительные работы (1% от стоимости оборудования)", true),
@@ -315,7 +315,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
 
 
-        var summaryPlannedCostRecord = new ReportRecordData
+        var summaryPlannedCostRecord = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Суммарная плановая себестоимость", true),
@@ -335,7 +335,7 @@ public class FinPlanReportGenerator : IReportGenerator
         activeRow++;
 
 
-        var unexpectedExpensesPercentRecord = new ReportRecordData
+        var unexpectedExpensesPercentRecord = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Непредвиденные затраты", true),
@@ -348,7 +348,7 @@ public class FinPlanReportGenerator : IReportGenerator
         var unexpectedExpensesPercentRange = PasteRecord(activeRow, unexpectedExpensesPercentRecord, ws);
         activeRow++;
 
-        var unexpectedExpensesRecord = new ReportRecordData
+        var unexpectedExpensesRecord = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Непредвиденные затраты", true),
@@ -369,7 +369,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
 
 
-        var totalRecord = new ReportRecordData
+        var totalRecord = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Итого:", true),
@@ -405,7 +405,7 @@ public class FinPlanReportGenerator : IReportGenerator
         var totalCostAddress = totalRange.FirstCell().Address;
         var summaryCostAddress = summaryRange.FirstCell().Address;
 
-        var sellCostRecord = new ReportRecordData()
+        var sellCostRecord = new EquipmentRecord()
         {
             Name = new ValidatedField<string?>("Стоимость продажи", true),
             Unit = new ValidatedField<string?>("руб. без НДС", true),
@@ -418,7 +418,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
 
 
-        var marginalIncomeRecord = new ReportRecordData()
+        var marginalIncomeRecord = new EquipmentRecord()
         {
             Name = new ValidatedField<string?>("Маржинальный доход", true),
             Unit = new ValidatedField<string?>("руб.", true),
@@ -433,7 +433,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
 
 
-        var extraChargeRecord = new ReportRecordData()
+        var extraChargeRecord = new EquipmentRecord()
         {
             Name = new ValidatedField<string?>("Наценка", true),
             Unit = new ValidatedField<string?>("%", true),
@@ -447,7 +447,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
 
 
-        var expectedProfit = new ReportRecordData() 
+        var expectedProfit = new EquipmentRecord() 
         {
             Name = new ValidatedField<string?>("Ожидаемая рентабельность", true),
             Unit = new ValidatedField<string?>("%", true),
@@ -478,7 +478,7 @@ public class FinPlanReportGenerator : IReportGenerator
         var totalCostAddress = totalRange.FirstCell().Address;
         var summaryCostAddress = summaryRange.FirstCell().Address;
 
-        var sellCostRecord = new ReportRecordData()
+        var sellCostRecord = new EquipmentRecord()
         {
             Name = new ValidatedField<string?>("Стоимость продажи", true),
             Unit = new ValidatedField<string?>("руб. без НДС", true),
@@ -491,7 +491,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
 
 
-        var marginalIncomeRecord = new ReportRecordData()
+        var marginalIncomeRecord = new EquipmentRecord()
         {
             Name = new ValidatedField<string?>("Маржинальный доход", true),
             Unit = new ValidatedField<string?>("руб.", true),
@@ -505,7 +505,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
 
 
-        var extraChargeRecord = new ReportRecordData()
+        var extraChargeRecord = new EquipmentRecord()
         {
             Name = new ValidatedField<string?>("Наценка", true),
             Unit = new ValidatedField<string?>("%", true),
@@ -518,7 +518,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
 
 
-        var expectedProfit = new ReportRecordData()
+        var expectedProfit = new EquipmentRecord()
         {
             Name = new ValidatedField<string?>("Ожидаемая рентабельность", true),
             Unit = new ValidatedField<string?>("%", true),

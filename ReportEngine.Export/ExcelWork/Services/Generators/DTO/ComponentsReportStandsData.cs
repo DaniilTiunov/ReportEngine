@@ -7,30 +7,30 @@ namespace ReportEngine.Export.ExcelWork.Services.Generators.DTO;
 
 
 public record PartsStandsData(
-    List<ReportRecordData> PipesList,
-    List<ReportRecordData> ArmaturesList,
-    List<ReportRecordData> TreeList,
-    List<ReportRecordData> KmchList,
-    List<ReportRecordData> DrainageParts,
-    List<ReportRecordData> FramesList,
-    List<ReportRecordData> SensorsHolders,
-    List<ReportRecordData> ElectricalParts,
-    List<ReportRecordData> OthersParts,
-    List<ReportRecordData> Supplies
+    List<EquipmentRecord> PipesList,
+    List<EquipmentRecord> ArmaturesList,
+    List<EquipmentRecord> TreeList,
+    List<EquipmentRecord> KmchList,
+    List<EquipmentRecord> DrainageParts,
+    List<EquipmentRecord> FramesList,
+    List<EquipmentRecord> SensorsHolders,
+    List<EquipmentRecord> ElectricalParts,
+    List<EquipmentRecord> OthersParts,
+    List<EquipmentRecord> Supplies
 );
 
 public record LaborStandsData(
-    ReportRecordData frameProduction,
-    ReportRecordData obvProduction,
-    ReportRecordData collectorProduction,
-    ReportRecordData qualityTests,
-    ReportRecordData sandblasting,
-    ReportRecordData paintingWorks,
-    ReportRecordData electricalWorks,
-    ReportRecordData commonStandCheck
+    EquipmentRecord frameProduction,
+    EquipmentRecord obvProduction,
+    EquipmentRecord collectorProduction,
+    EquipmentRecord qualityTests,
+    EquipmentRecord sandblasting,
+    EquipmentRecord paintingWorks,
+    EquipmentRecord electricalWorks,
+    EquipmentRecord commonStandCheck
  );
 
-public struct ReportRecordData
+public struct EquipmentRecord
 {
     public ValidatedField<int?> ExportDays { get; set; }
     public ValidatedField<string?> Name { get; set; }
@@ -40,6 +40,14 @@ public struct ReportRecordData
     public ValidatedField<float?> CommonCost { get; set; }
 
 }
+
+public struct StandInfoData
+{ 
+    public ValidatedField<string?> Name { get; set; }
+    public ValidatedField<string?> KKS { get; set; }
+    public ValidatedField<string?> SerialNumber { get; set; }
+ }
+
 
 public struct ValidatedField<T> 
 {

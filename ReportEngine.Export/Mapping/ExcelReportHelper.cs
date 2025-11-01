@@ -45,7 +45,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.FirstOrDefault().price,
                 exportDays = group.FirstOrDefault().exportDays
             })
-            .Select(group => new ReportRecordData
+            .Select(group => new EquipmentRecord
             {
                 ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
                 Name = new ValidatedField<string?>(group.name, group.name != null),
@@ -86,7 +86,7 @@ public static class ExcelReportHelper
                 exportDays = group.First().exportDays
 
             })
-            .Select(group => new ReportRecordData
+            .Select(group => new EquipmentRecord
             {
                 ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
                 Name = new ValidatedField<string?>(group.name, group.name != null),
@@ -125,7 +125,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.First().price,
                 exportDays = group.First().exportDays
             })
-           .Select(group => new ReportRecordData
+           .Select(group => new EquipmentRecord
            {
                ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
                Name = new ValidatedField<string?>(group.name, group.name != null),
@@ -163,7 +163,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.First().price,
                 exportDays = group.First().exportDays
             })
-           .Select(group => new ReportRecordData
+           .Select(group => new EquipmentRecord
            {
                ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
                Name = new ValidatedField<string?>(group.name, group.name != null),
@@ -195,7 +195,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.First().CostPerUnit,
                 exportDays = group.First().ExportDays
             })
-           .Select(group => new ReportRecordData
+           .Select(group => new EquipmentRecord
            {
                ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
                Name = new ValidatedField<string?>(group.name, group.name != null),
@@ -236,7 +236,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.First().costPerUnit,
                 exportDays = group.First().exportDays
             })
-           .Select(group => new ReportRecordData
+           .Select(group => new EquipmentRecord
            {
                ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
                Name = new ValidatedField<string?>(group.name, group.name != null),
@@ -269,7 +269,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.First().CostPerUnit,
                 exportDays = group.First().ExportDays
             })
-            .Select(group => new ReportRecordData
+            .Select(group => new EquipmentRecord
             {
                 ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
                 Name = new ValidatedField<string?>(group.name, group.name != null),
@@ -301,7 +301,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.First().CostPerUnit,
                 exportDays = group.First().ExportDays
             })
-           .Select(group => new ReportRecordData
+           .Select(group => new EquipmentRecord
            {
                ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
                Name = new ValidatedField<string?>(group.name, group.name != null),
@@ -333,7 +333,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.First().CostPerUnit,
                 exportDays = group.First().ExportDays
             })
-           .Select(group => new ReportRecordData
+           .Select(group => new EquipmentRecord
            {
                ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
                Name = new ValidatedField<string?>(group.name, group.name != null),
@@ -395,7 +395,7 @@ public static class ExcelReportHelper
             .Select(_ => frameSettings?.TimeForProductionFrame)
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
-        var frameProductionRecord = new ReportRecordData
+        var frameProductionRecord = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Изготовление рам", true),
@@ -415,7 +415,7 @@ public static class ExcelReportHelper
             .SelectMany(stand => stand.ObvyazkiInStand)
             .Select(obv => obv.HumanCost);
 
-        var obvProductionRecord = new ReportRecordData
+        var obvProductionRecord = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Изготовление обвязок", true),
@@ -435,7 +435,7 @@ public static class ExcelReportHelper
             .Select(_ => humanCostSettings?.TimeForCollectorBoil)
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
-        var collectorProductionRecord = new ReportRecordData
+        var collectorProductionRecord = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Изготовление коллектора", true),
@@ -456,7 +456,7 @@ public static class ExcelReportHelper
               .Select(_ => humanCostSettings?.TimeForCheckStand)
               .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
-        var qualityTestRecord = new ReportRecordData
+        var qualityTestRecord = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Испытание на прочность и герметичность", true),
@@ -477,7 +477,7 @@ public static class ExcelReportHelper
             .Select(_ => sandblastSettings.TimeSandBlastWork)
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
-        var sandblastingRecord = new ReportRecordData
+        var sandblastingRecord = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Пескоструйные работы", true),
@@ -498,7 +498,7 @@ public static class ExcelReportHelper
           .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
 
-        var paintingRecord = new ReportRecordData
+        var paintingRecord = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Покраска", true),
@@ -517,7 +517,7 @@ public static class ExcelReportHelper
             .Select(_ => electicalSettings?.TimeMontageCable + electicalSettings?.TimeMontageWire)
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
-        var electricRecord = new ReportRecordData
+        var electricRecord = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Электромонтаж", true),
@@ -537,7 +537,7 @@ public static class ExcelReportHelper
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
 
-        var commonCheckRecord = new ReportRecordData
+        var commonCheckRecord = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Общая проверка стенда", true),
@@ -563,13 +563,13 @@ public static class ExcelReportHelper
 
 
     //создаем инфу о упаковке
-    public static List<ReportRecordData> GenerateContainersData(IEnumerable<ContainerBatch> containerBatches)
+    public static List<EquipmentRecord> GenerateContainersData(IEnumerable<ContainerBatch> containerBatches)
     {
 
         var containers = containerBatches
             .SelectMany(batch => batch.Containers)
             .GroupBy(container => container.Name)
-            .Select(group => new ReportRecordData
+            .Select(group => new EquipmentRecord
             {
                 ExportDays = new ValidatedField<int?>(null, true),
                 Name = new ValidatedField<string?>(group.FirstOrDefault().Name, group.FirstOrDefault().Name != null),
@@ -591,7 +591,7 @@ public static class ExcelReportHelper
     }
 
     //высчитываем итого по записям
-    public static ReportRecordData GenerateTotalRecord(IEnumerable<ReportRecordData> records)
+    public static EquipmentRecord GenerateTotalRecord(IEnumerable<EquipmentRecord> records)
     {
         var commonCostsFields = records
             .Select(record => record.CommonCost);
@@ -605,7 +605,7 @@ public static class ExcelReportHelper
         var costField = records
             .Select(record => record.CostPerUnit);
 
-        return new ReportRecordData
+        return new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(
                 exportDaysField.Sum(field => field.Value),
@@ -631,16 +631,16 @@ public static class ExcelReportHelper
     }
 
     //превращает данные о комплектующих в список
-    public static List<ReportRecordData> GenerateAllPartsCollection(PartsStandsData partsData)
+    public static List<EquipmentRecord> GenerateAllPartsCollection(PartsStandsData partsData)
     {
         //складываем все поля record в общий список
-        var allPartsList = new List<ReportRecordData>();
+        var allPartsList = new List<EquipmentRecord>();
         var partsDataProperties = partsData.GetType().GetProperties();
 
         foreach (var property in partsDataProperties)
         {
             var propertyValue = property.GetValue(partsData);
-            var recordList = propertyValue as List<ReportRecordData>;
+            var recordList = propertyValue as List<EquipmentRecord>;
 
             if (recordList != null)
             {
@@ -651,17 +651,17 @@ public static class ExcelReportHelper
         return allPartsList;
     }
     //превращает данные о трудозатратах в список
-    public static List<ReportRecordData> GenerateAllLaborsCollection(LaborStandsData partsData)
+    public static List<EquipmentRecord> GenerateAllLaborsCollection(LaborStandsData partsData)
     {
         //складываем все поля record в общий список
-        var allPartsList = new List<ReportRecordData>();
+        var allPartsList = new List<EquipmentRecord>();
         var partsDataProperties = partsData.GetType().GetProperties();
 
         foreach (var property in partsDataProperties)
         {
             var propertyValue = property.GetValue(partsData);
 
-            if (propertyValue is ReportRecordData recordList)
+            if (propertyValue is EquipmentRecord recordList)
             {
                 allPartsList.Add(recordList);
             }
