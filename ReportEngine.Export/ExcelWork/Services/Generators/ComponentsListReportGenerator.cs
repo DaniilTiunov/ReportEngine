@@ -115,7 +115,7 @@ public class ComponentListReportGenerator : IReportGenerator
 
         var commonListStringRange = ws.Range("B2:D2").Merge();
         commonListStringRange.Value = "Сводная ведомость комплектующих";
-        
+
         ws.Cell("B3").Value = "Наименование";
         ws.Cell("C3").Value = "Ед. изм";
         ws.Cell("D3").Value = "Кол.";

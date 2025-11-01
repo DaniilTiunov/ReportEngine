@@ -10,9 +10,9 @@ using ReportEngine.Domain.Entities.Frame;
 using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
+using System.Collections.Concurrent;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Collections.Concurrent;
 
 namespace ReportEngine.App.ViewModels;
 

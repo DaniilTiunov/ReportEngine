@@ -1,5 +1,4 @@
 ﻿using ClosedXML.Excel;
-using QuestPDF.Infrastructure;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
@@ -7,14 +6,7 @@ using ReportEngine.Export.ExcelWork.Services.Generators.DTO;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Export.Mapping;
 using ReportEngine.Shared.Config.IniHeleprs;
-using ReportEngine.Shared.Config.IniHelpers;
-using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
-using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -472,16 +464,16 @@ public class SummaryReportGenerator : IReportGenerator
     //заполняет лист калькуляции
     private async Task FillCalculationTable(IXLWorksheet ws, ProjectInfo project)
     {
-        var activeRow = 7;       
+        var activeRow = 7;
 
         var standsRecords = project.Stands
             .GroupBy(stand => stand.Design)
             .Select(group =>
             {
-                var generatedPartsData = ExcelReportHelper.GeneratePartsData(new List<Stand>{ group.FirstOrDefault() });
-                var partsRecords = ExcelReportHelper.GenerateAllPartsCollection(generatedPartsData); 
+                var generatedPartsData = ExcelReportHelper.GeneratePartsData(new List<Stand> { group.FirstOrDefault() });
+                var partsRecords = ExcelReportHelper.GenerateAllPartsCollection(generatedPartsData);
 
-                var exportDays = partsRecords.Max(part => part.ExportDays.Value); 
+                var exportDays = partsRecords.Max(part => part.ExportDays.Value);
                 var name = group.FirstOrDefault().Design;
                 var kks = group.FirstOrDefault().KKSCode;
                 var unit = "шт.";
@@ -549,7 +541,7 @@ public class SummaryReportGenerator : IReportGenerator
         }
 
 
-        
+
 
         var standsPriceLabelRange = ws.Range($"C{activeRow}:J{activeRow}").Merge();
         standsPriceLabelRange.Value = $"Общее количество стендов {standNumber - 1} на сумму (без учета упаковки и транспортных расходов), без НДС, руб.";

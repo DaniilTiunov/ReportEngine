@@ -167,7 +167,7 @@ public class ProductionReportGenerator : IReportGenerator
             SerialNumber = new ValidatedField<string?>(stand.SerialNumber, true),
         });
 
-        
+
         foreach (var standRecord in standsRecords)
         {
             PasteStandRecord(activeRow, standRecord, ws);
@@ -282,7 +282,7 @@ public class ProductionReportGenerator : IReportGenerator
         //}
     }
     //валидация и вывод в таблицу
-    private void PasteStandRecord(int row, StandInfoData record, IXLWorksheet ws) 
+    private void PasteStandRecord(int row, StandInfoData record, IXLWorksheet ws)
     {
 
         ws.Cell($"A{row}").Value = record.Name.Value?.ToString();
