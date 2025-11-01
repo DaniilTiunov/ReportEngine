@@ -191,6 +191,7 @@ public class StandModel : BaseViewModel
     private int? _armatureExportDays;
     private int? _kMCHExportDays;
     private int? _treeSocketExportDays;
+    private int _number;
 
     public StandModel()
     {
@@ -279,6 +280,12 @@ public class StandModel : BaseViewModel
     {
         get => _serialNumber;
         set => Set(ref _serialNumber, value);
+    }
+
+    public int Number
+    {
+        get => _number;
+        set => Set(ref _number, value);
     }
 
     // Масса стенда
