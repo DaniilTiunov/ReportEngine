@@ -71,6 +71,7 @@ public class ProductionReportGenerator : IReportGenerator
 
         headerRange.Style.Font.SetBold();
         headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+        ws.Row(activeRow).Height = 30;
 
         activeRow++;
         return activeRow;
@@ -232,7 +233,6 @@ public class ProductionReportGenerator : IReportGenerator
 
         return activeRow;
     }
-
     //Заполняет подтаблицу и возвращает следующую строку
     private int FillSubtableData(int startRow, List<EquipmentRecord> items, IXLWorksheet ws)
     {
@@ -285,28 +285,24 @@ public class ProductionReportGenerator : IReportGenerator
     private void PasteStandRecord(int row, StandInfoData record, IXLWorksheet ws) 
     {
 
-        if (record.Name.Value != null)
-        {
-            ws.Cell($"A{row}").Value = record.Name.Value.ToString();
-        }
+        ws.Cell($"A{row}").Value = record.Name.Value?.ToString();
+        
         if (!record.Name.IsValid)
         {
             ws.Cell($"A{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
         }
 
-        if (record.KKS.Value != null)
-        {
-            ws.Range($"B{row}:C{row}").Merge().FirstCell().Value = record.KKS.Value.ToString();
-        }
+        
+        ws.Range($"B{row}:C{row}").Merge().FirstCell().Value = record.KKS.Value?.ToString();
+        
         if (!record.KKS.IsValid)
         {
             ws.Range($"B{row}:C{row}").Merge().FirstCell().Value += "\n" + ExcelReportHelper.CommonErrorString;
         }
 
-        if (record.SerialNumber.Value != null)
-        {
-            ws.Cell($"D{row}").Value = record.SerialNumber.Value.ToString();
-        }
+       
+        ws.Cell($"D{row}").Value = record.SerialNumber.Value?.ToString();
+       
         if (!record.SerialNumber.IsValid)
         {
             ws.Cell($"D{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;

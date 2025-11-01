@@ -99,20 +99,19 @@ public class FinPlanReportGenerator : IReportGenerator
     #region Вспомогательные
 
     private IXLRange PasteRecord(int row, EquipmentRecord record, IXLWorksheet ws)
-    {
+    {      
         var recordNameRange = ws.Range($"A{row}:E{row}").Merge();
         recordNameRange.Value = record.Name.Value;
-        recordNameRange.Style.Font.SetBold();
-        recordNameRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-
+        
         var recordPriceRange = ws.Range($"F{row}:G{row}").Merge();
         recordPriceRange.Value = record.CommonCost.Value.ToString();
-        recordPriceRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-
+        
         var unitPriceRange = ws.Range($"H{row}:I{row}").Merge();
         unitPriceRange.Value = record.Unit.Value;
-        unitPriceRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
+        recordNameRange.Style.Font.SetBold();
+        var recordRowRange = ws.Range($"A{row}:I{row}");
+        recordRowRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
         return recordPriceRange;
     }
