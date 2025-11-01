@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualBasic;
-using OpenXmlPowerTools;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
@@ -44,6 +43,16 @@ public class ProjectService : IProjectService
         _subjectRepository = subjectRepository;
     }
 
+    public int GetStandsInProjectCount(ProjectModel projectModel)
+    {
+        return projectModel.Stands.Count();
+    }
+
+    public async Task<int> GetProjectsCountAsync()
+    {
+        var projects = await _projectRepository.GetAllAsync();
+        return projects.Count();
+    }
     public float GetSummWidthObvyzakaAsync(ProjectModel projectModel)
     {
         var totalWidth = 0.0f;

@@ -107,7 +107,7 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             var totalWidth = _projectService.GetSummWidthObvyzakaAsync(CurrentProjectModel);
-            _notificationService.ShowInfo("Рекомендуемая рама: Рама с длинной" + totalWidth);
+            _notificationService.ShowInfo("Рекомендуемая рама: Рама с длинной " + totalWidth);
 
             var selectedFrame = _dialogService.ShowFrameDialog();
             if (selectedFrame != null)
@@ -339,12 +339,14 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    // TODO: Вынести в отдельный класс
     public void OnSelectObvCommandExecuted(object p)
     {
         ExceptionHelper.SafeExecute(() =>
         {
             SelectedObvyazka = _dialogService.ShowObvyazkaDialog();
+
+            if(SelectedObvyazka == null)
+                return;
 
             var stand = CurrentProjectModel.SelectedStand;
 
@@ -622,8 +624,17 @@ public class ProjectViewModel : BaseViewModel
 
     public void ResetProject()
     {
+        // Совместимый синхронный вызов, чтобы не дедлокалось в процессе загрузки
+        _ = ResetProjectAsync();
+    }
+
+    public async Task ResetProjectAsync()
+    {
         CurrentProjectModel = new ProjectModel();
         CurrentStandModel = new StandModel();
+
+        CurrentProjectModel.Number = await _projectService.GetProjectsCountAsync();
+
         InitializeTime();
         OnPropertyChanged(nameof(CurrentProjectModel));
         OnPropertyChanged(nameof(CurrentStandModel));
