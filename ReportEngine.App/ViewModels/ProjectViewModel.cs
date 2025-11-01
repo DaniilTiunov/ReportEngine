@@ -348,7 +348,7 @@ public class ProjectViewModel : BaseViewModel
         {
             SelectedObvyazka = _dialogService.ShowObvyazkaDialog();
 
-            if(SelectedObvyazka == null)
+            if (SelectedObvyazka == null)
                 return;
 
             var stand = CurrentProjectModel.SelectedStand;

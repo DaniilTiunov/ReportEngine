@@ -1,9 +1,4 @@
-﻿using SixLabors.ImageSharp;
-using System.Data.SqlTypes;
-using System.Linq;
-using System.Numerics;
-
-namespace ReportEngine.Export.ExcelWork.Services.Generators.DTO;
+﻿namespace ReportEngine.Export.ExcelWork.Services.Generators.DTO;
 
 
 public record PartsStandsData(
@@ -42,16 +37,16 @@ public struct EquipmentRecord
 }
 
 public struct StandInfoData
-{ 
+{
     public ValidatedField<string?> Name { get; set; }
     public ValidatedField<string?> KKS { get; set; }
     public ValidatedField<string?> SerialNumber { get; set; }
- }
+}
 
 
-public struct ValidatedField<T> 
+public struct ValidatedField<T>
 {
-    public T Value { get; set; } 
+    public T Value { get; set; }
     public bool IsValid { get; set; }
 
     public ValidatedField(T value, bool isValid)
@@ -62,5 +57,5 @@ public struct ValidatedField<T>
 
 
     //public static ValidatedField<T> Sum(IEnumerable<ValidatedField<T>> fields)
- 
+
 }
