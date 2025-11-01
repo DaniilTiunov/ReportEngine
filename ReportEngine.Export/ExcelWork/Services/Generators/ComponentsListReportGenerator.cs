@@ -71,11 +71,8 @@ public class ComponentListReportGenerator : IReportGenerator
     //валидация и вывод в таблицу
     private void PasteRecord(int row, EquipmentRecord record, IXLWorksheet ws)
     {
+        ws.Cell($"B{row}").Value = record.Name.Value?.ToString();
 
-        if (record.Name.Value != null)
-        {
-            ws.Cell($"B{row}").Value = record.Name.Value.ToString();
-        }
         if (!record.Name.IsValid)
         {
             ws.Cell($"B{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
@@ -83,10 +80,8 @@ public class ComponentListReportGenerator : IReportGenerator
 
 
 
-        if (record.Unit.Value != null)
-        {
-            ws.Cell($"C{row}").Value = record.Unit.Value.ToString();
-        }
+        ws.Cell($"C{row}").Value = record.Unit.Value?.ToString();
+
         if (!record.Unit.IsValid)
         {
             ws.Cell($"C{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
@@ -94,10 +89,8 @@ public class ComponentListReportGenerator : IReportGenerator
 
 
 
-        if (record.Quantity.Value.HasValue)
-        {
-            ws.Cell($"D{row}").Value = record.Quantity.Value.ToString();
-        }
+        ws.Cell($"D{row}").Value = record.Quantity.Value?.ToString();
+        
         if (!record.Quantity.IsValid)
         {
             ws.Cell($"D{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;

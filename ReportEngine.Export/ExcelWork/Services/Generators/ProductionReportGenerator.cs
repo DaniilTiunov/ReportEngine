@@ -54,6 +54,8 @@ public class ProductionReportGenerator : IReportGenerator
         }
     }
 
+
+
     #region Заголовки
 
     //создание общего заголовка
@@ -103,7 +105,7 @@ public class ProductionReportGenerator : IReportGenerator
 
         return activeRow;
     }
-
+    //создает шапку таблицы оборудования
     private int CreateEquipmentTableHeader(IXLWorksheet ws, ProjectInfo project, int row)
     {
         var activeRow = row;
@@ -259,36 +261,25 @@ public class ProductionReportGenerator : IReportGenerator
     private void PastePartRecord(int row, EquipmentRecord record, IXLWorksheet ws)
     {
 
-        if (record.Name.Value != null)
-        {
-            ws.Cell($"A{row}").Value = record.Name.Value.ToString();
-        }
-        if (!record.Name.IsValid)
-        {
-            ws.Cell($"A{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
-        }
+        ws.Cell($"A{row}").Value = record.Name.Value?.ToString();
+        ws.Cell($"B{row}").Value = record.Unit.Value?.ToString(); 
+        ws.Cell($"C{row}").Value = record.Quantity.Value?.ToString();
 
 
+        //if (!record.Name.IsValid)
+        //{
+        //    ws.Cell($"A{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
+        //}
 
-        if (record.Unit.Value != null)
-        {
-            ws.Cell($"B{row}").Value = record.Unit.Value.ToString();
-        }
-        if (!record.Unit.IsValid)
-        {
-            ws.Cell($"B{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
-        }
+        //if (!record.Unit.IsValid)
+        //{
+        //    ws.Cell($"B{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
+        //}
 
-
-
-        if (record.Quantity.Value.HasValue)
-        {
-            ws.Cell($"C{row}").Value = record.Quantity.Value.ToString();
-        }
-        if (!record.Quantity.IsValid)
-        {
-            ws.Cell($"C{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
-        }
+        //if (!record.Quantity.IsValid)
+        //{
+        //    ws.Cell($"C{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
+        //}
     }
     //валидация и вывод в таблицу
     private void PasteStandRecord(int row, StandInfoData record, IXLWorksheet ws) 
