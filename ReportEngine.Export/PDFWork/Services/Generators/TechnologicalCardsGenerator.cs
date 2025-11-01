@@ -12,7 +12,7 @@ namespace ReportEngine.Export.PDFWork.Services.Generators;
 
 public class TechnologicalCardsGenerator : IReportGenerator
 {
-    private static readonly string _savePath = SettingsManager.GetReportDirectory();
+    
 
     private readonly IProjectInfoRepository _projectInfoRepository;
 

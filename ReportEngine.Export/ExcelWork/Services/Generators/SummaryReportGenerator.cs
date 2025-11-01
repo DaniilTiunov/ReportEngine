@@ -86,10 +86,9 @@ public class SummaryReportGenerator : IReportGenerator
     private void PasteRecord(int row, EquipmentRecord record, IXLWorksheet ws)
     {
 
-        if (record.ExportDays.Value.HasValue)
-        {
-            ws.Cell($"A{row}").Value = record.ExportDays.Value.ToString();
-        }
+
+        ws.Cell($"A{row}").Value = record.ExportDays.Value?.ToString();
+ 
         if (!record.ExportDays.IsValid)
         {
             ws.Cell($"A{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
@@ -97,10 +96,8 @@ public class SummaryReportGenerator : IReportGenerator
 
 
 
-        if (record.Name.Value != null)
-        {
-            ws.Cell($"B{row}").Value = record.Name.Value.ToString();
-        }
+        ws.Cell($"B{row}").Value = record.Name.Value?.ToString();
+
         if (!record.Name.IsValid)
         {
             ws.Cell($"B{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
@@ -108,11 +105,8 @@ public class SummaryReportGenerator : IReportGenerator
 
 
 
-
-        if (record.Unit.Value != null)
-        {
-            ws.Cell($"C{row}").Value = record.Unit.Value.ToString();
-        }
+        ws.Cell($"C{row}").Value = record.Unit.Value?.ToString();
+        
         if (!record.Unit.IsValid)
         {
             ws.Cell($"C{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
@@ -120,20 +114,17 @@ public class SummaryReportGenerator : IReportGenerator
 
 
 
-        if (record.Quantity.Value.HasValue)
-        {
-            ws.Cell($"D{row}").Value = record.Quantity.Value.ToString();
-        }
+        ws.Cell($"D{row}").Value = record.Quantity.Value?.ToString();
+ 
         if (!record.Quantity.IsValid)
         {
             ws.Cell($"D{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
         }
 
 
-        if (record.CostPerUnit.Value.HasValue)
-        {
-            ws.Cell($"E{row}").Value = record.CostPerUnit.Value.ToString();
-        }
+
+        ws.Cell($"E{row}").Value = record.CostPerUnit.Value?.ToString();
+
         if (!record.CostPerUnit.IsValid)
         {
             ws.Cell($"E{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
@@ -141,10 +132,8 @@ public class SummaryReportGenerator : IReportGenerator
 
 
 
-        if (record.CommonCost.Value.HasValue)
-        {
-            ws.Cell($"F{row}").Value = record.CommonCost.Value.ToString();
-        }
+        ws.Cell($"F{row}").Value = record.CommonCost.Value?.ToString();
+
         if (!record.CommonCost.IsValid)
         {
             ws.Cell($"F{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;

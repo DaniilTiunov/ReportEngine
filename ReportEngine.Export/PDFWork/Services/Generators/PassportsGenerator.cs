@@ -22,7 +22,6 @@ public class PassportsGenerator : IReportGenerator
 
     public ReportType Type => ReportType.PassportsReport;
 
-
     public async Task GenerateAsync(int projectId)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
@@ -38,7 +37,7 @@ public class PassportsGenerator : IReportGenerator
 
         using (var myDoc = XceedDocx.Load(templatePath))
         {
-            XceedDocx resultDoc = null;
+            XceedDocx resultDoc = null;  
 
             foreach (var stand in project.Stands)
             {
@@ -62,6 +61,7 @@ public class PassportsGenerator : IReportGenerator
     }
 
 
+    //заменяем метки в документе
     private XceedDocx ReplaceTextInTemplate(XceedDocx templateDoc, Stand stand)
     {
         var replacements = TemplateMapper.GetPassportMapping(stand);
@@ -81,14 +81,15 @@ public class PassportsGenerator : IReportGenerator
         return templateDoc;
     }
 
-
+    //склеиваем два документа в один
     private XceedDocx MergeDocuments(XceedDocx targetDocument, XceedDocx documentToAdd)
     {
         using var ms = new MemoryStream();
-        targetDocument.SaveAs(ms); // сериализуем targetDocument в поток
+        targetDocument.SaveAs(ms); 
 
-        var resultingDoc = XceedDocx.Load(ms); // загружаем независимый экземпляр
+        var resultingDoc = XceedDocx.Load(ms);
         resultingDoc.InsertDocument(documentToAdd);
+
         return resultingDoc;
     }
 }
