@@ -20,4 +20,6 @@ public interface IProjectService
     Task GetOrAddCompnayAsync(string name);
     Task GetOrAddSubjectAsync(string objectName, string companyName);
     float GetSummWidthObvyzakaAsync(ProjectModel projectModel);
+    Task<int> GetProjectsCountAsync();
+    int GetStandsInProjectCount(ProjectModel projectModel);
 }
