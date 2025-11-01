@@ -373,3 +373,5 @@ Documentation.xml
 .idea/.idea.ReportEngine.App/.idea/material_theme_project_new.xml
 .idea/.idea.ReportEngine.App/.idea/copilot.data.migration.ask2agent.xml
 .idea/.idea.ReportEngine.App/.idea/copilot.data.migration.ask.xml
+*.pdf
+*.pdf
