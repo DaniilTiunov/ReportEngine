@@ -82,11 +82,11 @@
                                                 Header="Шильдики и таблички" />
                                             <MenuItem
                                                 Command="{Binding ProjectCommandProvider.CreateMarkReportCommand}"
-                                                Header="Марикровка" />
+                                                Header="Маркировка" />
                                             <Separator />
                                             <MenuItem
                                                 Command="{Binding ProjectCommandProvider.CreateMarkReportAsyncCommand}"
-                                                Header="Тест ассинхронной Маркировки" />
+                                                Header="Тест асинхронной маркировки" />
                                             <Separator />
                                             <MenuItem
                                                 Command="{Binding ProjectCommandProvider.CreateProductionReportCommand}"

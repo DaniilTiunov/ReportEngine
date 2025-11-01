@@ -1,45 +1,38 @@
-﻿namespace ReportEngine.Export.ExcelWork.Services.Generators.DTO;
+﻿using SixLabors.ImageSharp;
+using System.Data.SqlTypes;
+using System.Linq;
+using System.Numerics;
 
-public record ComponentsReportStandsData(
-    List<(string name, string unit, string quantity)> PipesList,
-    List<(string name, string unit, string quantity)> ArmaturesList,
-    List<(string name, string unit, string quantity)> TreeList,
-    List<(string name, string unit, string quantity)> KmchList,
-    List<(string name, string unit, string quantity)> DrainageParts,
-    List<(string name, string unit, string quantity)> FramesList,
-    List<(string name, string unit, string quantity)> SensorsHolders,
-    List<(string name, string unit, string quantity)> ElectricalParts,
-    List<(string name, string unit, string quantity)> OthersParts,
-    List<(string name, string unit, string quantity)> Supplies
+namespace ReportEngine.Export.ExcelWork.Services.Generators.DTO;
+
+
+public record PartsStandsData(
+    List<EquipmentRecord> PipesList,
+    List<EquipmentRecord> ArmaturesList,
+    List<EquipmentRecord> TreeList,
+    List<EquipmentRecord> KmchList,
+    List<EquipmentRecord> DrainageParts,
+    List<EquipmentRecord> FramesList,
+    List<EquipmentRecord> SensorsHolders,
+    List<EquipmentRecord> ElectricalParts,
+    List<EquipmentRecord> OthersParts,
+    List<EquipmentRecord> Supplies
 );
 
-public record SummaryReportStandsData(
-    List<ReportRecordData> PipesList,
-    List<ReportRecordData> ArmaturesList,
-    List<ReportRecordData> TreeList,
-    List<ReportRecordData> KmchList,
-    List<ReportRecordData> DrainageParts,
-    List<ReportRecordData> FramesList,
-    List<ReportRecordData> SensorsHolders,
-    List<ReportRecordData> ElectricalParts,
-    List<ReportRecordData> OthersParts,
-    List<ReportRecordData> Supplies
-);
-
-public record SummaryReportLaborData(
-    ReportRecordData frameProduction,
-    ReportRecordData obvProduction,
-    ReportRecordData collectorProduction,
-    ReportRecordData qualityTests,
-    ReportRecordData sandblasting,
-    ReportRecordData paintingWorks,
-    ReportRecordData electricalWorks,
-    ReportRecordData commonStandCheck
+public record LaborStandsData(
+    EquipmentRecord frameProduction,
+    EquipmentRecord obvProduction,
+    EquipmentRecord collectorProduction,
+    EquipmentRecord qualityTests,
+    EquipmentRecord sandblasting,
+    EquipmentRecord paintingWorks,
+    EquipmentRecord electricalWorks,
+    EquipmentRecord commonStandCheck
  );
 
-public struct ReportRecordData
+public struct EquipmentRecord
 {
-    public ValidatedField<int?> ExportDays {  get; set; } 
+    public ValidatedField<int?> ExportDays { get; set; }
     public ValidatedField<string?> Name { get; set; }
     public ValidatedField<string?> Unit { get; set; }
     public ValidatedField<float?> Quantity { get; set; }
@@ -48,9 +41,17 @@ public struct ReportRecordData
 
 }
 
-public struct ValidatedField<T>
+public struct StandInfoData
+{ 
+    public ValidatedField<string?> Name { get; set; }
+    public ValidatedField<string?> KKS { get; set; }
+    public ValidatedField<string?> SerialNumber { get; set; }
+ }
+
+
+public struct ValidatedField<T> 
 {
-    public T Value { get; set; }
+    public T Value { get; set; } 
     public bool IsValid { get; set; }
 
     public ValidatedField(T value, bool isValid)
@@ -59,4 +60,7 @@ public struct ValidatedField<T>
         IsValid = isValid;
     }
 
+
+    //public static ValidatedField<T> Sum(IEnumerable<ValidatedField<T>> fields)
+ 
 }
