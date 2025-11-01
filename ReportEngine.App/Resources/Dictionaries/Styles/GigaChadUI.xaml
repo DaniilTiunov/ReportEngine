@@ -713,38 +713,57 @@
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 Command="ScrollBar.LineUpCommand"
-                                Content="▲" />
+                                Focusable="False">
+                                <Path
+                                    Margin="3"
+                                    Data="M 0,10 L 5,0 L 10,10 Z"
+                                    Fill="{DynamicResource PrimaryForeground}"
+                                    Stretch="Uniform" />
+                            </RepeatButton>
                             <Track
                                 x:Name="PART_Track"
                                 Grid.Row="1"
                                 IsDirectionReversed="True"
                                 Orientation="Vertical">
                                 <Track.DecreaseRepeatButton>
-                                    <RepeatButton Command="ScrollBar.PageUpCommand" />
+                                    <RepeatButton
+                                        Background="Transparent"
+                                        BorderBrush="Transparent"
+                                        Command="ScrollBar.PageUpCommand"
+                                        Focusable="False" />
                                 </Track.DecreaseRepeatButton>
                                 <Track.Thumb>
-                                    <Thumb>
+                                    <Thumb Background="{DynamicResource AccentColor}" Focusable="False">
                                         <Thumb.Template>
                                             <ControlTemplate TargetType="Thumb">
                                                 <Border
                                                     Margin="2"
-                                                    Background="{DynamicResource AccentColor}"
+                                                    Background="{TemplateBinding Background}"
                                                     CornerRadius="3" />
                                             </ControlTemplate>
                                         </Thumb.Template>
                                     </Thumb>
                                 </Track.Thumb>
                                 <Track.IncreaseRepeatButton>
-                                    <RepeatButton Command="ScrollBar.PageDownCommand" />
+                                    <RepeatButton
+                                        Background="Transparent"
+                                        BorderBrush="Transparent"
+                                        Command="ScrollBar.PageDownCommand"
+                                        Focusable="False" />
                                 </Track.IncreaseRepeatButton>
                             </Track>
                             <RepeatButton
                                 Grid.Row="2"
-                                Height="14"
+                                Height="20"
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
-                                Command="ScrollBar.LineDownCommand">
-                                <Path Data="M 0,5 L 10,0 L 10,10 Z" Fill="{DynamicResource PrimaryForeground}" />
+                                Command="ScrollBar.LineDownCommand"
+                                Focusable="False">
+                                <Path
+                                    Margin="3"
+                                    Data="M 0,0 L 5,10 L 10,0 Z"
+                                    Fill="{DynamicResource PrimaryForeground}"
+                                    Stretch="Uniform" />
                             </RepeatButton>
                         </Grid>
                         <Grid x:Name="HorizontalTemplate" Visibility="Collapsed">
@@ -755,42 +774,62 @@
                             </Grid.ColumnDefinitions>
                             <RepeatButton
                                 Grid.Column="0"
-                                Width="14"
+                                Width="20"
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 Command="ScrollBar.LineLeftCommand"
-                                Content="◄" />
+                                Focusable="False">
+                                <Path
+                                    Margin="3"
+                                    Data="M 10,0 L 0,5 L 10,10 Z"
+                                    Fill="{DynamicResource PrimaryForeground}"
+                                    Stretch="Uniform" />
+                            </RepeatButton>
                             <Track
                                 x:Name="PART_HorizontalTrack"
                                 Grid.Column="1"
                                 IsDirectionReversed="False"
                                 Orientation="Horizontal">
                                 <Track.DecreaseRepeatButton>
-                                    <RepeatButton Command="ScrollBar.PageLeftCommand" />
+                                    <RepeatButton
+                                        Background="Transparent"
+                                        BorderBrush="Transparent"
+                                        Command="ScrollBar.PageLeftCommand"
+                                        Focusable="False" />
                                 </Track.DecreaseRepeatButton>
                                 <Track.Thumb>
-                                    <Thumb>
+                                    <Thumb Background="{DynamicResource AccentColor}" Focusable="False">
                                         <Thumb.Template>
-                                            <ControlTemplate x:Name="HorizontalThumb" TargetType="Thumb">
+                                            <ControlTemplate TargetType="Thumb">
                                                 <Border
                                                     Margin="2"
-                                                    Background="{DynamicResource AccentColor}"
+                                                    Background="{TemplateBinding Background}"
                                                     CornerRadius="3" />
                                             </ControlTemplate>
                                         </Thumb.Template>
                                     </Thumb>
                                 </Track.Thumb>
                                 <Track.IncreaseRepeatButton>
-                                    <RepeatButton Command="ScrollBar.PageRightCommand" />
+                                    <RepeatButton
+                                        Background="Transparent"
+                                        BorderBrush="Transparent"
+                                        Command="ScrollBar.PageRightCommand"
+                                        Focusable="False" />
                                 </Track.IncreaseRepeatButton>
                             </Track>
                             <RepeatButton
                                 Grid.Column="2"
-                                Width="14"
+                                Width="20"
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 Command="ScrollBar.LineRightCommand"
-                                Content="►" />
+                                Focusable="False">
+                                <Path
+                                    Margin="3"
+                                    Data="M 0,0 L 10,5 L 0,10 Z"
+                                    Fill="{DynamicResource PrimaryForeground}"
+                                    Stretch="Uniform" />
+                            </RepeatButton>
                         </Grid>
                     </Grid>
                     <ControlTemplate.Triggers>

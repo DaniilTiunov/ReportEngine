@@ -102,7 +102,7 @@ public class StandSettingsModel : BaseViewModel
 
     public async Task LoadStandsSettingsDataAsync()
     {
-        var iniData =  CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
+        var iniData = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
 
         if (iniData == null)
             return;
