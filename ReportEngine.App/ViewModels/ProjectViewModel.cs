@@ -54,6 +54,8 @@ public class ProjectViewModel : BaseViewModel
         _calculationService = calculationService;
         _containerService = containerService;
 
+        NewStand = new StandModel { Number = 1 };
+
         InitializeCommands();
         InitializeTime();
         InitializeGenericCommands();
@@ -65,6 +67,7 @@ public class ProjectViewModel : BaseViewModel
     public ObservableCollection<FormedAdditionalEquip> AllAvailableAdditionalEquips { get; set; } = new();
     public Obvyazka SelectedObvyazka { get; set; } = new();
     public StandModel CurrentStandModel { get; set; } = new();
+    public StandModel NewStand { get; set; } = new();
     public ProjectModel CurrentProjectModel { get; set; } = new();
     public ProjectCommandProvider ProjectCommandProvider { get; set; } = new();
     public MaterialLinesModel CurrentMaterials { get; set; } = new();
@@ -633,6 +636,8 @@ public class ProjectViewModel : BaseViewModel
         CurrentProjectModel = new ProjectModel();
         CurrentStandModel = new StandModel();
 
+        NewStand = new StandModel { Number = 1 };
+
         CurrentProjectModel.Number = await _projectService.GetProjectsCountAsync();
 
         InitializeTime();
@@ -793,22 +798,24 @@ public class ProjectViewModel : BaseViewModel
             return;
         }
 
+        var nextNumber = _projectService.GetStandsInProjectCount(CurrentProjectModel) + 1;
+
         var newStandModel = new StandModel
         {
-            KKSCode = CurrentStandModel.KKSCode,
-            Design = CurrentStandModel.Design,
-            BraceType = CurrentStandModel.BraceType,
-            Devices = CurrentStandModel.Devices,
-            Width = CurrentStandModel.Width,
-            SerialNumber = CurrentStandModel.SerialNumber,
-            Weight = CurrentStandModel.Weight,
-            StandSummCost = CurrentStandModel.StandSummCost,
-            NN = CurrentStandModel.NN,
-            MaterialLine = CurrentStandModel.MaterialLine,
-            Armature = CurrentStandModel.Armature,
-            TreeSocket = CurrentStandModel.TreeSocket,
-            KMCH = CurrentStandModel.KMCH,
-            FirstSensorType = CurrentStandModel.FirstSensorType,
+            KKSCode = NewStand.KKSCode,
+            Design = NewStand.Design,
+            BraceType = NewStand.BraceType,
+            Devices = NewStand.Devices,
+            Width = NewStand.Width,
+            SerialNumber = NewStand.SerialNumber,
+            Weight = NewStand.Weight,
+            StandSummCost = NewStand.StandSummCost,
+            Number = nextNumber,
+            MaterialLine = NewStand.MaterialLine,
+            Armature = NewStand.Armature,
+            TreeSocket = NewStand.TreeSocket,
+            KMCH = NewStand.KMCH,
+            FirstSensorType = NewStand.FirstSensorType,
             ProjectId = CurrentProjectModel.CurrentProjectId
         };
 
@@ -823,8 +830,10 @@ public class ProjectViewModel : BaseViewModel
 
         CurrentProjectModel.Stands.Add(newStandModel);
 
-        CurrentStandModel = new StandModel();
+        // Переставляем шаблон на следующий свободный номер
+        NewStand = new StandModel { Number = nextNumber + 1 };
 
+        OnPropertyChanged(nameof(NewStand));
         _notificationService.ShowInfo($"Стенд успешно добавлен! {addedStandEntity.Id}");
     }
 
@@ -851,9 +860,25 @@ public class ProjectViewModel : BaseViewModel
 
     private async Task DeleteStandFromProject()
     {
-        await _projectService.DeleteStandAsync(CurrentProjectModel.CurrentProjectId,
-            CurrentProjectModel.SelectedStand.Id);
-        CurrentProjectModel.Stands.Remove(CurrentProjectModel.SelectedStand);
+        var selected = CurrentProjectModel.SelectedStand;
+        if (selected == null)
+        {
+            _notificationService.ShowInfo("Стенд не выбран");
+            return;
+        }
+
+        await _projectService.DeleteStandAsync(CurrentProjectModel.CurrentProjectId, selected.Id);
+        CurrentProjectModel.Stands.Remove(selected);
+
+        for (int i = 0; i < CurrentProjectModel.Stands.Count; i++)
+        {
+            CurrentProjectModel.Stands[i].Number = i + 1;
+        }
+
+        var nextNumber = CurrentProjectModel.Stands.Any() ? CurrentProjectModel.Stands.Max(s => s.Number) + 1 : 1;
+        CurrentStandModel = new StandModel { Number = nextNumber };
+
+        _notificationService.ShowInfo("Стенд удалён и номера обновлены");
     }
 
     private async Task CreateNewProjectCardAsync()
@@ -862,6 +887,10 @@ public class ProjectViewModel : BaseViewModel
 
         CurrentProjectModel.Stands.Clear();
         CurrentStandModel = new StandModel();
+
+        // Сброс шаблона добавления стенда
+        NewStand = new StandModel { Number = 1 };
+        OnPropertyChanged(nameof(NewStand));
     }
 
     private void SelectEquipment<T>(Action<string> setProperty, Action<string> setMeasure, Action<string> setCost, Action<int> setExportDays)

@@ -65,7 +65,7 @@
                         Grid.Column="1"
                         Width="50"
                         Margin="0,5,150,5"
-                        Text="{Binding CurrentStandModel.Number, Mode=TwoWay}" />
+                        Text="{Binding NewStand.Number, Mode=TwoWay}" />
                     <TextBlock
                         Grid.Row="0"
                         Grid.Column="2"
@@ -76,7 +76,7 @@
                         Grid.Row="0"
                         Grid.Column="3"
                         Margin="0,5"
-                        Text="{Binding CurrentStandModel.KKSCode, Mode=TwoWay}" />
+                        Text="{Binding NewStand.KKSCode, Mode=TwoWay}" />
 
                     <!--  Обозначение стенда  -->
                     <TextBlock
@@ -90,7 +90,7 @@
                         Grid.Column="1"
                         Grid.ColumnSpan="3"
                         Margin="0,5"
-                        Text="{Binding CurrentStandModel.Design, Mode=TwoWay}" />
+                        Text="{Binding NewStand.Design, Mode=TwoWay}" />
 
                     <!--  Приборы и чекбокс  -->
                     <TextBlock
@@ -104,7 +104,7 @@
                         Grid.Column="1"
                         Width="50"
                         Margin="0,5,150,5"
-                        Text="{Binding CurrentStandModel.Devices, Mode=TwoWay}" />
+                        Text="{Binding NewStand.Devices, Mode=TwoWay}" />
 
                     <!--  Тип крепления датчика + кнопка  -->
                     <TextBlock
@@ -117,8 +117,8 @@
                         Grid.Row="3"
                         Grid.Column="1"
                         Margin="0,5"
-                        ItemsSource="{Binding CurrentStandModel.BraceSensor}"
-                        SelectedItem="{Binding CurrentStandModel.BraceType, Mode=TwoWay}" />
+                        ItemsSource="{Binding NewStand.BraceSensor}"
+                        SelectedItem="{Binding NewStand.BraceType, Mode=TwoWay}" />
 
                     <TextBlock
                         Grid.Row="4"
@@ -131,7 +131,7 @@
                         Grid.Column="3"
                         Width="100"
                         Margin="0,5,100,5"
-                        Text="{Binding CurrentStandModel.Width, Mode=TwoWay}" />
+                        Text="{Binding NewStand.Width, Mode=TwoWay}" />
 
                     <!--  Серийный номер  -->
                     <TextBlock
@@ -145,7 +145,7 @@
                         Grid.Column="1"
                         Grid.ColumnSpan="3"
                         Margin="0,5"
-                        Text="{Binding CurrentStandModel.SerialNumber, Mode=TwoWay}" />
+                        Text="{Binding NewStand.SerialNumber, Mode=TwoWay}" />
 
                     <!--  Масса  -->
                     <TextBlock
@@ -159,7 +159,7 @@
                         Grid.Column="1"
                         Width="100"
                         Margin="0,5,100,5"
-                        Text="{Binding CurrentStandModel.Weight, Mode=TwoWay}" />
+                        Text="{Binding NewStand.Weight, Mode=TwoWay}" />
 
                     <!--  Сумма стенда  -->
                     <TextBlock
@@ -173,7 +173,7 @@
                         Grid.Column="1"
                         Width="100"
                         Margin="0,5,100,5"
-                        Text="{Binding CurrentStandModel.StandSummCost, Mode=TwoWay}" />
+                        Text="{Binding NewStand.StandSummCost, Mode=TwoWay}" />
 
                     <!--  Комментарии  -->
                     <TextBlock
@@ -187,7 +187,7 @@
                         Grid.Column="1"
                         Grid.ColumnSpan="3"
                         Margin="0,5"
-                        Text="{Binding CurrentStandModel.Comments, Mode=TwoWay}" />
+                        Text="{Binding NewStand.Comments, Mode=TwoWay}" />
 
                     <!--  Примечание  -->
                     <TextBlock
@@ -203,7 +203,7 @@
                         Height="100"
                         Margin="0,5"
                         AcceptsReturn="True"
-                        Text="{Binding CurrentStandModel.DesignStand, Mode=TwoWay}"
+                        Text="{Binding NewStand.DesignStand, Mode=TwoWay}"
                         TextWrapping="Wrap" />
 
                     <!--  Кнопки управления  -->
@@ -480,8 +480,7 @@
                     </ListView.View>
                     <ListView.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}"
-                                      Header="Удалить" />
+                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}" Header="Удалить" />
                         </ContextMenu>
                     </ListView.ContextMenu>
                 </ListView>
