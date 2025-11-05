@@ -6,7 +6,10 @@ using ReportEngine.Export.Mapping;
 using ReportEngine.Export.Mapping.JsonObjects;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Unicode;
 using XceedDocx = Xceed.Words.NET.DocX;
 using XceedNet = Xceed.Document.NET;
 
@@ -40,10 +43,22 @@ public class TechnologicalCardsGenerator : IReportGenerator
         var templatePath = DirectoryHelper.GetReportsTemplatePath("TechnologicalCards_template", ".docx");
 
 
-        var dataObject = ExcelReportHelper.CreateProjectJson(project);
-        var jsonObject = JsonSerializer.Serialize(dataObject);
         
+        var dataObject = ExcelReportHelper.CreateProjectJson(project);
+        var options = new JsonSerializerOptions {
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            WriteIndented = true
+        };
+        string jsonObject = JsonSerializer.Serialize(dataObject, options);
 
+
+        var jsonSavePath = DirectoryHelper.GetJsonSavePath();
+        var jsonFileName = Path.Combine(jsonSavePath, "TechnologicalCards_temp.json");
+        File.WriteAllText(jsonFileName, jsonObject,Encoding.Unicode);
+
+
+
+        return;
         using (var myDoc = XceedDocx.Load(templatePath))
         {
             XceedDocx resultDoc = null;

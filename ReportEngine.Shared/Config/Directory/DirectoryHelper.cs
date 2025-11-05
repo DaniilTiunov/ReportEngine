@@ -55,4 +55,13 @@ public class DirectoryHelper
 
         return Path.Combine(dir, fileName);
     }
+
+
+    public static string GetJsonSavePath()
+    {
+        return Path.Combine(GetDirectory(), "PythonModule");
+    }
 }
+
+
+

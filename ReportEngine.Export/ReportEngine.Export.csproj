@@ -19,6 +19,12 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Content Include="PythonModule\ReportCreator.py">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\ReportEngine.Domain\ReportEngine.Domain.csproj" />
         <ProjectReference Include="..\ReportEngine.Shared\ReportEngine.Shared.csproj" />
     </ItemGroup>
