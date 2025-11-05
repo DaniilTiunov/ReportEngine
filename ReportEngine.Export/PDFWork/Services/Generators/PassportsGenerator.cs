@@ -28,7 +28,7 @@ public class PassportsGenerator : IReportGenerator
 
         var savePath = SettingsManager.GetReportDirectory();
 
-        var fileName = "Паспорта___" + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + ".docx";
+        var fileName = ExcelReportHelper.CreateReportName("Паспорта", ".docx");
 
         var fullSavePath = Path.Combine(savePath, fileName);
 

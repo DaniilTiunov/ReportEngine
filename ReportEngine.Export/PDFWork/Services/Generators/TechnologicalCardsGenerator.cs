@@ -3,8 +3,10 @@ using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Export.Mapping;
+using ReportEngine.Export.Mapping.JsonObjects;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
+using System.Text.Json;
 using XceedDocx = Xceed.Words.NET.DocX;
 using XceedNet = Xceed.Document.NET;
 
@@ -12,7 +14,7 @@ namespace ReportEngine.Export.PDFWork.Services.Generators;
 
 public class TechnologicalCardsGenerator : IReportGenerator
 {
-    
+
 
     private readonly IProjectInfoRepository _projectInfoRepository;
 
@@ -31,12 +33,16 @@ public class TechnologicalCardsGenerator : IReportGenerator
 
         var savePath = SettingsManager.GetReportDirectory();
 
-        var fileName = "Технологические карты___" + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + ".docx";
-
+        var fileName = ExcelReportHelper.CreateReportName("Технологические карты", ".docx");
+     
         var fullSavePath = Path.Combine(savePath, fileName);
 
         var templatePath = DirectoryHelper.GetReportsTemplatePath("TechnologicalCards_template", ".docx");
 
+
+        var dataObject = ExcelReportHelper.CreateProjectJson(project);
+        var jsonObject = JsonSerializer.Serialize(dataObject);
+        
 
         using (var myDoc = XceedDocx.Load(templatePath))
         {
