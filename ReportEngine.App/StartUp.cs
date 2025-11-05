@@ -30,8 +30,6 @@ public class StartUp
             mainWindow.Show();
 
             app.Run();
-
-            host.StopAsync().GetAwaiter().GetResult();
         }
         catch (Exception ex)
         {
