@@ -341,7 +341,7 @@
                             Command="{Binding MainWindowCommandProvider.DeleteSelectedProjectCommand}"
                             Header="Удалить проект"
                             Visibility="{Binding CurrentUser.SystemRole, Converter={StaticResource AdminVisibilityConverter}}" />
-                        <Separator/>
+                        <Separator />
                         <MenuItem Command="{Binding MainWindowCommandProvider.ShowAllProjectsCommand}" Header="Обновить список проектов" />
                     </ContextMenu>
                 </DataGrid.ContextMenu>
