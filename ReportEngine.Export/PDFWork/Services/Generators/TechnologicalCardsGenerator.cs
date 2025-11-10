@@ -54,7 +54,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
 
         var jsonSavePath = DirectoryHelper.GetJsonSavePath();
         var jsonFileName = Path.Combine(jsonSavePath, "TechnologicalCards_temp.json");
-        File.WriteAllText(jsonFileName, jsonObject,Encoding.UTF8);
+        File.WriteAllText(jsonFileName, jsonObject, Encoding.UTF8);
 
 
 

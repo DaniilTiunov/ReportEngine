@@ -64,13 +64,38 @@ def fillStandList(stand,doc,project):
         frameArray = [frame["Width"], frame["DocName"], frame["Quantity"],"","",""]
         framesData.append(frameArray)
 
+
+    columnsHeaderTitles = [["Наименование", "Единицы \n измерения", "Норм.","Факт.", ""]]
+
     
-    standFrameMaterialsHeaderTitle = [["Основные материалы стенда"]]
-    frameMaterialData = [["Наименование", "Единицы \n измерения", "Норм.","Факт.", ""]]
+    #заполняем таблицы
+    framePartsArray = []
+    framePartsArray = columnsHeaderTitles.copy()
 
     for frameMaterial in stand["FrameParts"]:
-        frameMaterialArray = [frameMaterial["Name"],frameMaterial["Unit"],frameMaterial["Quantity"],"",""]
-        frameMaterialData.append(frameMaterialArray)
+        tableRecord = [frameMaterial["Name"], frameMaterial["Unit"], frameMaterial["Quantity"],"",""]
+        framePartsArray.append(tableRecord)
+
+    mountPartsArray = []
+    mountPartsArray = columnsHeaderTitles.copy()
+
+    for mountPart in stand["MountParts"]:
+        tableRecord = [mountPart["Name"], mountPart["Unit"], mountPart["Quantity"],"",""]
+        mountPartsArray.append(tableRecord)
+
+    drainagePartsArray = []
+    drainagePartsArray = columnsHeaderTitles.copy()
+
+    for drainagePart in stand["DrainageParts"]:
+        tableRecord = [drainagePart["Name"], drainagePart["Unit"], drainagePart["Quantity"],"",""]
+        drainagePartsArray.append(tableRecord)
+
+    electricPartsArray = []
+    electricPartsArray = columnsHeaderTitles.copy()
+
+    for electricPart in stand["ElectricParts"]:
+        tableRecord = [electricPart["Name"], electricPart["Unit"], electricPart["Quantity"],"",""] 
+        electricPartsArray.append(tableRecord)
 
     #создаем объекты
     standTechCardHeader = Table(data = standTechCardTitle, colWidths = tableWidth)
@@ -88,11 +113,32 @@ def fillStandList(stand,doc,project):
     framesTable = Table(data = framesData, colWidths=[tableWidth*0.15,tableWidth*0.25,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15])
     framesTable.setStyle(commonTableStyle)
 
-    standFrameMaterialsHeader = Table(data = standFrameMaterialsHeaderTitle, colWidths = tableWidth)
-    standFrameMaterialsHeader.setStyle(commonTableStyle)
+    frameMaterialsHeader = Table(data = [["Основные материалы рамы стенда"]], colWidths = tableWidth)
+    frameMaterialsHeader.setStyle(commonTableStyle)
 
-    standFrameMaterialsData = Table(data = frameMaterialData, colWidths = [tableWidth*0.4,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15])
-    standFrameMaterialsData.setStyle(commonTableStyle)
+    frameMaterialsData = Table(data = framePartsArray, colWidths = [tableWidth*0.4,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15])
+    frameMaterialsData.setStyle(commonTableStyle)
+
+    mountPartsHeader = Table(data = [["Комплект монтажных частей в зависимости от обвязок"]], colWidths = tableWidth)
+    mountPartsHeader.setStyle(commonTableStyle)
+
+    mountPartsData = Table(data = mountPartsArray, colWidths = [tableWidth*0.4,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15])
+    mountPartsData.setStyle(commonTableStyle)
+
+    drainagePartsHeader = Table(data = [["Дренаж и/или продувка"]], colWidths = tableWidth)
+    drainagePartsHeader.setStyle(commonTableStyle)
+
+    drainagePartsData = Table(data = drainagePartsArray, colWidths = [tableWidth*0.4,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15])
+    drainagePartsData.setStyle(commonTableStyle)
+
+    electricPartsHeader = Table(data = [["Электрические компоненты"]], colWidths = tableWidth)
+    electricPartsHeader.setStyle(commonTableStyle)
+
+    electricPartsData = Table(data = electricPartsArray, colWidths = [tableWidth*0.4,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15])
+    electricPartsData.setStyle(commonTableStyle)
+
+    
+
 
     #собираем все объекты в массив и отдаем
     standTable = []   
@@ -101,8 +147,14 @@ def fillStandList(stand,doc,project):
     standTable.append(standInfoHeader)
     standTable.append(frameSizeHeader)
     standTable.append(framesTable)
-    standTable.append(standFrameMaterialsHeader)
-    standTable.append(standFrameMaterialsData)
+    standTable.append(frameMaterialsHeader)
+    standTable.append(frameMaterialsData)
+    standTable.append(mountPartsHeader)
+    standTable.append(mountPartsData)
+    standTable.append(drainagePartsHeader)
+    standTable.append(drainagePartsData)
+    standTable.append(electricPartsHeader)
+    standTable.append(electricPartsData)
 
     return standTable
 
@@ -126,14 +178,21 @@ def generate_empty_techcard():
     for stand in data["Stands"]:
         standTable = fillStandList(stand,doc,data)
         elements.extend(standTable)
-        elements.append(Spacer(1, 20))
+        elements.append(PageBreak())
 
     styles = getSampleStyleSheet()
 
-    cyrillic_style = ParagraphStyle(
-        'CyrillicStyle',
+    usual_text_style = ParagraphStyle(
+        'UsualCyrillicStyle',
         parent=styles['Normal'],
         fontName='Arial',
+        encoding='UTF-8'
+    )
+
+    bold_text_style = ParagraphStyle(
+        'BoldCyrillicStyle',
+        parent=styles['Normal'],
+        fontName='Arial', 
         encoding='UTF-8'
     )
 
