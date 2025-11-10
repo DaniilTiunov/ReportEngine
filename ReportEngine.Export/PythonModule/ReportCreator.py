@@ -174,7 +174,7 @@ def fillStandDataSheet(stand,doc,project):
 
 def fillConclusionDataSheet(stand,doc,project):
 
-    standTableWidth = 200
+    tableWidth = 500
 
     commonTableStyle = TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.white),
@@ -190,7 +190,7 @@ def fillConclusionDataSheet(stand,doc,project):
     styles = getSampleStyleSheet()
 
     cyrillic_style = ParagraphStyle(
-        'CyrillicStyle',
+        'Normal',
         parent=styles['Normal'],
         fontName='Arial',
         encoding='UTF-8'
@@ -204,16 +204,47 @@ def fillConclusionDataSheet(stand,doc,project):
     standTable.append(["Чертеж", "???"])
     standTable.append(["Зав.номер", str(stand["SerialNumber"])])    
         
-    standInfoTable = Table(data = standTable, colWidths = standTableWidth)
+    standInfoTable = Table(data = standTable, colWidths = [tableWidth*0.5,tableWidth*0.5])
     standInfoTable.setStyle(commonTableStyle)
 
-    sheetElements.append(standInfoTable)    
-    sheetElements.append(Paragraph("№ заказа на производство",style = cyrillic_style))   
+      
 
-    emptyCell = Table(data = [[""]],colWidths = 200)
+    emptyCell = Table(data = [[""]], colWidths = 200)
     emptyCell.setStyle(commonTableStyle)
-    sheetElements.append(emptyCell)
+    
 
+    doneTable = [["№ п/п", 
+                  "Наименование операции", 
+                  "№ извещения о несоотвествии",
+                  "Дата фактического выполнения операции",
+                  "Ф.И.О. исполнителя",
+                  "Подпись исполнителя", 
+                  "№ протокола (ЛКП, ПСИ и т.д.)"]]
+
+    doneTable.append(["1", "Сварочная","", "", "", "", ""])
+    doneTable.append(["2", "Сборочная","", "", "", "", ""])
+    doneTable.append(["3", "Подготовительно-окрасочная","", "", "", "", ""])
+    doneTable.append(["4", "Сборочная (электрическая часть)","", "", "", "", ""])
+    doneTable.append(["5", "Контрольная","", "", "", "", ""])
+    doneTable.append(["", "","", "", "", "", ""])
+    doneTableInfo = Table(data = doneTable, colWidths = [tableWidth*0.1,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15,tableWidth*0.1,tableWidth*0.1])
+    doneTableInfo.setStyle(commonTableStyle)
+
+    signatureTable = Table(data = [["",""]],colWidths = 200)
+    signatureTable.setStyle(commonTableStyle)
+
+    sheetElements.append(standInfoTable) 
+    sheetElements.append(Paragraph("№ заказа на производство",style = cyrillic_style))
+    sheetElements.append(Spacer(1,12))
+    sheetElements.append(emptyCell)
+    sheetElements.append(Spacer(1,12))
+    sheetElements.append(doneTableInfo)
+    sheetElements.append(Spacer(1,12))
+    sheetElements.append(Paragraph("Изделия признано годным и передано на склад",style = cyrillic_style))
+    sheetElements.append(Spacer(1,12))
+    sheetElements.append(Paragraph("ОТК (ФИО, подпись)          Склад (ФИО, подпись)",style = cyrillic_style))
+    sheetElements.append(signatureTable)
+    
     return sheetElements
 
 
