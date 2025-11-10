@@ -1,7 +1,7 @@
 ﻿from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import (SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, frames, tables,Image)
+from reportlab.platypus import (PageTemplate, SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, frames, tables,Image)
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 from reportlab.pdfgen import canvas
@@ -17,8 +17,6 @@ from pathlib import Path
 
 pdfmetrics.registerFont(TTFont('Arial','arial.ttf'))
 pdfmetrics.registerFont(UnicodeCIDFont('STSong-Light'))
-
-
 
 
 
@@ -41,6 +39,7 @@ def generateImage(base64_string):
     imageData = base64.b64decode(base64_string)
     imageBuffer = io.BytesIO(imageData)
     return Image(imageBuffer)
+
 
 
 def fillStandDataSheet(stand,doc,project):
@@ -170,8 +169,6 @@ def fillStandDataSheet(stand,doc,project):
         
     return sheetElements
 
-
-
 def fillConclusionDataSheet(stand,doc,project):
 
     tableWidth = 500
@@ -204,7 +201,7 @@ def fillConclusionDataSheet(stand,doc,project):
     standTable.append(["Чертеж", "???"])
     standTable.append(["Зав.номер", str(stand["SerialNumber"])])    
         
-    standInfoTable = Table(data = standTable, colWidths = [tableWidth*0.5,tableWidth*0.5])
+    standInfoTable = Table(data = standTable, colWidths = [tableWidth*0.25,tableWidth*0.25])
     standInfoTable.setStyle(commonTableStyle)
 
       
@@ -247,7 +244,6 @@ def fillConclusionDataSheet(stand,doc,project):
     
     return sheetElements
 
-
 def generate_empty_techcard():
 
     outputDir = "C:/Work/Тестовая папка для отчётов/"
@@ -275,7 +271,6 @@ def generate_empty_techcard():
     doc.build(elements)
 
     
-
 
 if __name__ == "__main__":
     generate_empty_techcard()
