@@ -1,12 +1,14 @@
 ﻿from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import (SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, frames, tables)
+from reportlab.platypus import (SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, frames, tables,Image)
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 from reportlab.pdfgen import canvas
 from reportlab.pdfbase.ttfonts import TTFont
 import json
+import base64
+import io
 import os
 from datetime import datetime
 from pathlib import Path
@@ -35,8 +37,13 @@ def openJsonFile():
 
     return jsonData
 
+def generateImage(base64_string):
+    imageData = base64.b64decode(base64_string)
+    imageBuffer = io.BytesIO(imageData)
+    return Image(imageBuffer)
 
-def fillStandList(stand,doc,project):
+
+def fillStandDataSheet(stand,doc,project):
 
     tableWidth = 500
 
@@ -137,26 +144,77 @@ def fillStandList(stand,doc,project):
     electricPartsData = Table(data = electricPartsArray, colWidths = [tableWidth*0.4,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15])
     electricPartsData.setStyle(commonTableStyle)
 
-    
-
 
     #собираем все объекты в массив и отдаем
-    standTable = []   
-    standTable.append(standTechCardHeader)
-    standTable.append(standNameHeader)
-    standTable.append(standInfoHeader)
-    standTable.append(frameSizeHeader)
-    standTable.append(framesTable)
-    standTable.append(frameMaterialsHeader)
-    standTable.append(frameMaterialsData)
-    standTable.append(mountPartsHeader)
-    standTable.append(mountPartsData)
-    standTable.append(drainagePartsHeader)
-    standTable.append(drainagePartsData)
-    standTable.append(electricPartsHeader)
-    standTable.append(electricPartsData)
+    sheetElements = []   
+    sheetElements.append(standTechCardHeader)
+    sheetElements.append(standNameHeader)
+    sheetElements.append(standInfoHeader)
+    sheetElements.append(frameSizeHeader)
+    sheetElements.append(framesTable)
+    sheetElements.append(frameMaterialsHeader)
+    sheetElements.append(frameMaterialsData)
+    sheetElements.append(mountPartsHeader)
+    sheetElements.append(mountPartsData)
+    sheetElements.append(drainagePartsHeader)
+    sheetElements.append(drainagePartsData)
+    sheetElements.append(electricPartsHeader)
+    sheetElements.append(electricPartsData)
 
-    return standTable
+    imageString = stand["ImageData"]
+    if imageString is not None: 
+        standBlueprint = generateImage(imageString)
+        standBlueprint.drawHeight = 200  # высота в пунктах
+        standBlueprint.drawWidth = 200   # ширина в пунктах
+        sheetElements.append(standBlueprint)
+        
+    return sheetElements
+
+
+
+def fillConclusionDataSheet(stand,doc,project):
+
+    standTableWidth = 200
+
+    commonTableStyle = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.white),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, -1), "Arial"),
+        ('FONTSIZE', (0, 0), (-1, 0), 12),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12), 
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ("VALIGN", (0, 0), (-1, -1), "MIDDLE")
+    ])
+
+    styles = getSampleStyleSheet()
+
+    cyrillic_style = ParagraphStyle(
+        'CyrillicStyle',
+        parent=styles['Normal'],
+        fontName='Arial',
+        encoding='UTF-8'
+    )
+
+    sheetElements = []
+
+    standTable = [["","Значение"]]
+    standTable.append(["Наименование", "Стенд датчиков КИПиА"])
+    standTable.append(["Обозначение по КД", str(stand["Designation"])])
+    standTable.append(["Чертеж", "???"])
+    standTable.append(["Зав.номер", str(stand["SerialNumber"])])    
+        
+    standInfoTable = Table(data = standTable, colWidths = standTableWidth)
+    standInfoTable.setStyle(commonTableStyle)
+
+    sheetElements.append(standInfoTable)    
+    sheetElements.append(Paragraph("№ заказа на производство",style = cyrillic_style))   
+
+    emptyCell = Table(data = [[""]],colWidths = 200)
+    emptyCell.setStyle(commonTableStyle)
+    sheetElements.append(emptyCell)
+
+    return sheetElements
 
 
 def generate_empty_techcard():
@@ -176,28 +234,13 @@ def generate_empty_techcard():
     elements = []
 
     for stand in data["Stands"]:
-        standTable = fillStandList(stand,doc,data)
-        elements.extend(standTable)
+        standSheet = fillStandDataSheet(stand,doc,data)
+        elements.extend(standSheet)       
+        elements.append(PageBreak())
+        conclusionSheet = fillConclusionDataSheet(stand,doc,data)
+        elements.extend(conclusionSheet)
         elements.append(PageBreak())
 
-    styles = getSampleStyleSheet()
-
-    usual_text_style = ParagraphStyle(
-        'UsualCyrillicStyle',
-        parent=styles['Normal'],
-        fontName='Arial',
-        encoding='UTF-8'
-    )
-
-    bold_text_style = ParagraphStyle(
-        'BoldCyrillicStyle',
-        parent=styles['Normal'],
-        fontName='Arial', 
-        encoding='UTF-8'
-    )
-
-    #print(elements)
-      
     doc.build(elements)
 
     
