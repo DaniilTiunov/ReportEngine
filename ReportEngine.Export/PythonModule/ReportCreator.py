@@ -308,9 +308,9 @@ def generate_empty_techcard():
     for stand in data["Stands"]:
         elements.append(NextPageTemplate('portrait'))
         standSheet = fillStandDataSheet(stand,doc,data)
-        elements.extend(standSheet)       
-        elements.append(PageBreak())
+        elements.extend(standSheet)  
         elements.append(NextPageTemplate('landscape'))
+        elements.append(PageBreak())
         conclusionSheet = fillConclusionDataSheet(stand,doc,data)
         elements.extend(conclusionSheet)
         elements.append(PageBreak())
