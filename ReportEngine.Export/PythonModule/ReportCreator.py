@@ -1,11 +1,12 @@
 ﻿from reportlab.lib import colors
-from reportlab.lib.pagesizes import A4
+from reportlab.lib.pagesizes import A4, landscape,portrait
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import (PageTemplate, SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, frames, tables,Image)
+from reportlab.platypus import (KeepInFrame, PageTemplate, SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak,Image, NextPageTemplate, Frame)
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 from reportlab.pdfgen import canvas
 from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.lib.units import cm,mm
 import json
 import base64
 import io
@@ -13,20 +14,35 @@ import os
 from datetime import datetime
 from pathlib import Path
 
-
+listWidth = 210 * cm
+listHeight = 297 * cm
 
 pdfmetrics.registerFont(TTFont('Arial','arial.ttf'))
 pdfmetrics.registerFont(UnicodeCIDFont('STSong-Light'))
 
 
+landscapeTemplate = PageTemplate(
+        id='landscape', 
+        pagesize=landscape(A4),
+        frames= Frame(
+            20*mm, 20*mm,  # левый и нижний отступ
+            A4[1] - 40*mm, A4[0] - 40*mm,  # меняем местами для альбомной
+            id='landscape_frame'
+    ))
+
+portraitTemplate = PageTemplate(
+        id = 'portrait', 
+        pagesize = portrait(A4),
+        frames = Frame(
+            20*mm, 20*mm,  # левый и нижний отступ
+            A4[0] - 40*mm, A4[1] - 40*mm,  # ширина и высота
+            id='portrait_frame'
+    ))
 
 def openJsonFile():
     
     script_dir = Path(__file__).parent
     file_path = os.path.join(script_dir, "TechnologicalCards_temp.json")
-    print(file_path)
-    print("File exist",os.path.exists(file_path))
-
     try:
         with open(file_path, 'r', encoding='utf-8-sig') as file:
             jsonData = json.load(file)           
@@ -35,7 +51,14 @@ def openJsonFile():
 
     return jsonData
 
-def generateImage(base64_string):
+
+def generateImageFromFile():
+    script_dir = Path(__file__).parent
+    file_path = os.path.join(script_dir, "Etalon.jpg")
+    return Image(file_path,width=100,height=50)
+    
+
+def generateImageFromStr(base64_string):
     imageData = base64.b64decode(base64_string)
     imageBuffer = io.BytesIO(imageData)
     return Image(imageBuffer)
@@ -162,12 +185,14 @@ def fillStandDataSheet(stand,doc,project):
 
     imageString = stand["ImageData"]
     if imageString is not None: 
-        standBlueprint = generateImage(imageString)
+        standBlueprint = generateImageFromStr(imageString)
         standBlueprint.drawHeight = 200  # высота в пунктах
         standBlueprint.drawWidth = 200   # ширина в пунктах
         sheetElements.append(standBlueprint)
         
     return sheetElements
+
+
 
 def fillConclusionDataSheet(stand,doc,project):
 
@@ -184,13 +209,24 @@ def fillConclusionDataSheet(stand,doc,project):
         ("VALIGN", (0, 0), (-1, -1), "MIDDLE")
     ])
 
+    invisibleTableStyle = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.white),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, -1), "Arial"),
+        ('FONTSIZE', (0, 0), (-1, 0), 12),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12), 
+        ('GRID', (0, 0), (-1, -1), 1, colors.white),
+        ("VALIGN", (0, 0), (-1, -1), "MIDDLE")
+    ])
+
     styles = getSampleStyleSheet()
 
     cyrillic_style = ParagraphStyle(
         'Normal',
-        parent=styles['Normal'],
-        fontName='Arial',
-        encoding='UTF-8'
+        parent = styles['Normal'],
+        fontName ='Arial',
+        encoding ='UTF-8'
     )
 
     sheetElements = []
@@ -199,16 +235,22 @@ def fillConclusionDataSheet(stand,doc,project):
     standTable.append(["Наименование", "Стенд датчиков КИПиА"])
     standTable.append(["Обозначение по КД", str(stand["Designation"])])
     standTable.append(["Чертеж", "???"])
-    standTable.append(["Зав.номер", str(stand["SerialNumber"])])    
-        
-    standInfoTable = Table(data = standTable, colWidths = [tableWidth*0.25,tableWidth*0.25])
+    standTable.append(["Зав.номер", str(stand["SerialNumber"])])     
+    standInfoTable = Table(data = standTable, colWidths = [tableWidth*0.2,tableWidth*0.5])
     standInfoTable.setStyle(commonTableStyle)
 
-      
+    logoImage = generateImageFromFile()
 
+    standInfoAlignmentTable = Table([[standInfoTable,logoImage]], colWidths = [tableWidth*0.8,tableWidth*0.2])
+    standInfoAlignmentTable.setStyle(invisibleTableStyle)
+
+
+    orderNumberLabel = Paragraph("№ заказа на производство", style = cyrillic_style)
     emptyCell = Table(data = [[""]], colWidths = 200)
     emptyCell.setStyle(commonTableStyle)
-    
+
+    orderNumberAlignmentTable = Table([[orderNumberLabel,emptyCell]], colWidths = [tableWidth*0.2,tableWidth*0.8])
+    orderNumberAlignmentTable.setStyle(invisibleTableStyle)
 
     doneTable = [["№ п/п", 
                   "Наименование операции", 
@@ -217,6 +259,7 @@ def fillConclusionDataSheet(stand,doc,project):
                   "Ф.И.О. исполнителя",
                   "Подпись исполнителя", 
                   "№ протокола (ЛКП, ПСИ и т.д.)"]]
+
 
     doneTable.append(["1", "Сварочная","", "", "", "", ""])
     doneTable.append(["2", "Сборочная","", "", "", "", ""])
@@ -230,16 +273,15 @@ def fillConclusionDataSheet(stand,doc,project):
     signatureTable = Table(data = [["",""]],colWidths = 200)
     signatureTable.setStyle(commonTableStyle)
 
-    sheetElements.append(standInfoTable) 
-    sheetElements.append(Paragraph("№ заказа на производство",style = cyrillic_style))
-    sheetElements.append(Spacer(1,12))
-    sheetElements.append(emptyCell)
-    sheetElements.append(Spacer(1,12))
+    sheetElements.append(standInfoAlignmentTable)
+    sheetElements.append(Spacer(1,10))
+    sheetElements.append(orderNumberAlignmentTable)
+    sheetElements.append(Spacer(1,10))
     sheetElements.append(doneTableInfo)
     sheetElements.append(Spacer(1,12))
-    sheetElements.append(Paragraph("Изделия признано годным и передано на склад",style = cyrillic_style))
+    sheetElements.append(Paragraph("Изделие признано годным и передано на склад", style = cyrillic_style))
     sheetElements.append(Spacer(1,12))
-    sheetElements.append(Paragraph("ОТК (ФИО, подпись)          Склад (ФИО, подпись)",style = cyrillic_style))
+    sheetElements.append(Paragraph("ОТК (ФИО, подпись)                      Склад (ФИО, подпись)", style = cyrillic_style))
     sheetElements.append(signatureTable)
     
     return sheetElements
@@ -257,13 +299,18 @@ def generate_empty_techcard():
 
     data = openJsonFile()
     doc = SimpleDocTemplate(output_pdf, pagesize=A4)
-    
+
     elements = []
 
+   #добавляем стили страницы
+    doc.addPageTemplates([landscapeTemplate,portraitTemplate])
+
     for stand in data["Stands"]:
+        elements.append(NextPageTemplate('portrait'))
         standSheet = fillStandDataSheet(stand,doc,data)
         elements.extend(standSheet)       
         elements.append(PageBreak())
+        elements.append(NextPageTemplate('landscape'))
         conclusionSheet = fillConclusionDataSheet(stand,doc,data)
         elements.extend(conclusionSheet)
         elements.append(PageBreak())
