@@ -14,8 +14,6 @@ import os
 from datetime import datetime
 from pathlib import Path
 
-listWidth = 210 * cm
-listHeight = 297 * cm
 
 pdfmetrics.registerFont(TTFont('Arial','arial.ttf'))
 pdfmetrics.registerFont(UnicodeCIDFont('STSong-Light'))
@@ -253,11 +251,11 @@ def fillConclusionDataSheet(stand,doc,project):
     orderNumberAlignmentTable.setStyle(invisibleTableStyle)
 
     doneTable = [["№ п/п", 
-                  "Наименование операции", 
-                  "№ извещения о несоотвествии",
-                  "Дата фактического выполнения операции",
+                  "Наименование\n операции", 
+                  "№ извещения о\n несоотвествии",
+                  "Дата фактического\n выполнения\n операции",
                   "Ф.И.О. исполнителя",
-                  "Подпись исполнителя", 
+                  "Подпись\n исполнителя", 
                   "№ протокола (ЛКП, ПСИ и т.д.)"]]
 
 
@@ -267,7 +265,7 @@ def fillConclusionDataSheet(stand,doc,project):
     doneTable.append(["4", "Сборочная (электрическая часть)","", "", "", "", ""])
     doneTable.append(["5", "Контрольная","", "", "", "", ""])
     doneTable.append(["", "","", "", "", "", ""])
-    doneTableInfo = Table(data = doneTable, colWidths = [tableWidth*0.1,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15,tableWidth*0.1,tableWidth*0.1])
+    doneTableInfo = Table(data = doneTable, colWidths = [A4[1]*0.1,A4[1]*0.15,A4[1]*0.15,A4[1]*0.15,A4[1]*0.15,A4[1]*0.1,A4[1]*0.1])
     doneTableInfo.setStyle(commonTableStyle)
 
     signatureTable = Table(data = [["",""]],colWidths = 200)
@@ -286,7 +284,8 @@ def fillConclusionDataSheet(stand,doc,project):
     
     return sheetElements
 
-def generate_empty_techcard():
+
+def generateTechcard():
 
     outputDir = "C:/Work/Тестовая папка для отчётов/"
 
@@ -302,22 +301,21 @@ def generate_empty_techcard():
 
     elements = []
 
-   #добавляем стили страницы
-    doc.addPageTemplates([landscapeTemplate,portraitTemplate])
+    #добавляем стили страницы
+    doc.addPageTemplates([portraitTemplate,landscapeTemplate])
 
-    for stand in data["Stands"]:
-        elements.append(NextPageTemplate('portrait'))
+    for stand in data["Stands"]:      
         standSheet = fillStandDataSheet(stand,doc,data)
         elements.extend(standSheet)  
         elements.append(NextPageTemplate('landscape'))
         elements.append(PageBreak())
         conclusionSheet = fillConclusionDataSheet(stand,doc,data)
         elements.extend(conclusionSheet)
+        elements.append(NextPageTemplate('portrait'))
         elements.append(PageBreak())
 
     doc.build(elements)
 
     
-
 if __name__ == "__main__":
-    generate_empty_techcard()
+    generateTechcard()
