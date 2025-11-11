@@ -16,6 +16,7 @@ from pathlib import Path
 
 
 pdfmetrics.registerFont(TTFont('Arial','arial.ttf'))
+pdfmetrics.registerFont(TTFont('Arial-Bold','arialbd.ttf'))
 pdfmetrics.registerFont(UnicodeCIDFont('STSong-Light'))
 
 
@@ -37,6 +38,10 @@ portraitTemplate = PageTemplate(
             id='portrait_frame'
     ))
 
+
+portaitA4Width = A4[0]
+portaitA4Height = A4[1]
+
 def openJsonFile():
     
     script_dir = Path(__file__).parent
@@ -50,10 +55,10 @@ def openJsonFile():
     return jsonData
 
 
-def generateImageFromFile():
+def generateLogo(width,height):
     script_dir = Path(__file__).parent
     file_path = os.path.join(script_dir, "Etalon.jpg")
-    return Image(file_path,width=100,height=50)
+    return Image(file_path,width,height)
     
 
 def generateImageFromStr(base64_string):
@@ -194,27 +199,39 @@ def fillStandDataSheet(stand,doc,project):
 
 def fillConclusionDataSheet(stand,doc,project):
 
-    tableWidth = 500
+    sheetWidth = A4[1]
+    sheetHeight = A4[0]
 
-    commonTableStyle = TableStyle([
+    commonTableStyleCmd = TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.white),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, -1), "Arial"),
-        ('FONTSIZE', (0, 0), (-1, 0), 12),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12), 
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black), 
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
         ("VALIGN", (0, 0), (-1, -1), "MIDDLE")
     ])
 
+
+    commonTableStyleCmd =[    
+        ('BACKGROUND', (0, 0), (-1, 0), colors.white),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+        ('FONTSIZE', (0, 0), (-1, -1), 8)]
+
+    leftAlignTableStyleCmd = [ ('ALIGN', (0, 0), (-1, -1), 'LEFT')]
+    centerAlignTableStyleCmd = [ ('ALIGN', (0, 0), (-1, -1), 'CENTER')]
+    usualFontTableStyleCmd = [('FONTNAME', (0, 0), (-1, -1), "Arial")]
+    boldFontTableStyleCmd = [('FONTNAME', (0, 0), (-1, -1), "Arial-Bold")]
+    visibleBordersTableStyleCmd = [('GRID', (0, 0), (-1, -1), 1, colors.black)]
+    invisibleBordersTableStyleCmd = [('GRID', (0, 0), (-1, -1), 1, colors.white)]
+
+
     invisibleTableStyle = TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.white),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
         ('FONTNAME', (0, 0), (-1, -1), "Arial"),
-        ('FONTSIZE', (0, 0), (-1, 0), 12),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12), 
+        ('FONTSIZE', (0, 0), (-1, 0), 8),
         ('GRID', (0, 0), (-1, -1), 1, colors.white),
+        #('GRID', (0, 0), (-1, -1), 1, colors.black),
         ("VALIGN", (0, 0), (-1, -1), "MIDDLE")
     ])
 
@@ -224,32 +241,61 @@ def fillConclusionDataSheet(stand,doc,project):
         'Normal',
         parent = styles['Normal'],
         fontName ='Arial',
-        encoding ='UTF-8'
+        encoding ='UTF-8',
+        fontSize = 8
     )
 
     sheetElements = []
 
+
+
+    #таблица с инфой о стенде и лого
     standTable = [["","Значение"]]
     standTable.append(["Наименование", "Стенд датчиков КИПиА"])
     standTable.append(["Обозначение по КД", str(stand["Designation"])])
     standTable.append(["Чертеж", "???"])
     standTable.append(["Зав.номер", str(stand["SerialNumber"])])     
-    standInfoTable = Table(data = standTable, colWidths = [tableWidth*0.2,tableWidth*0.5])
-    standInfoTable.setStyle(commonTableStyle)
+    standInfoTable = Table(data = standTable, colWidths = [sheetWidth*0.2,sheetWidth*0.3])
 
-    logoImage = generateImageFromFile()
+    standInfoTable.setStyle(TableStyle(cmds = 
+                                       commonTableStyleCmd +
+                                       centerAlignTableStyleCmd + 
+                                       visibleBordersTableStyleCmd +    
+                                       #жирный шрифт для шапки 
+                                       [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold"), 
+                                        ('FONTNAME', (0, 0), (0, -1), "Arial-Bold")] +      
+                                       #обычный шрифт для данных таблицы
+                                       [('FONTNAME', (1, 1), (-1, -1), "Arial")] ))
 
-    standInfoAlignmentTable = Table([[standInfoTable,logoImage]], colWidths = [tableWidth*0.8,tableWidth*0.2])
-    standInfoAlignmentTable.setStyle(invisibleTableStyle)
+
+    #магические размеры убрать!!!
+    logoImage = generateLogo(150,75)
 
 
+    standInfoAlignmentTable = Table(data = [[standInfoTable,logoImage]], 
+                                    colWidths = [sheetWidth*0.52,sheetWidth*0.2])
+
+    standInfoAlignmentTable.setStyle(TableStyle(cmds = 
+                                                commonTableStyleCmd +
+                                                centerAlignTableStyleCmd + 
+                                                invisibleBordersTableStyleCmd ))
+
+    #графа № заказа на производство
     orderNumberLabel = Paragraph("№ заказа на производство", style = cyrillic_style)
-    emptyCell = Table(data = [[""]], colWidths = 200)
-    emptyCell.setStyle(commonTableStyle)
+    emptyCell = Table(data = [[""]], colWidths = sheetWidth * 0.3)
+    emptyCell.setStyle(TableStyle(cmds =
+                                  commonTableStyleCmd +  
+                                  visibleBordersTableStyleCmd))
 
-    orderNumberAlignmentTable = Table([[orderNumberLabel,emptyCell]], colWidths = [tableWidth*0.2,tableWidth*0.8])
-    orderNumberAlignmentTable.setStyle(invisibleTableStyle)
+    orderNumberAlignmentTable = Table(data = [[orderNumberLabel, emptyCell]], 
+                                      colWidths = [sheetWidth*0.15,sheetWidth*0.75])
 
+    orderNumberAlignmentTable.setStyle(TableStyle(cmds = 
+                                                  commonTableStyleCmd +
+                                                  leftAlignTableStyleCmd + 
+                                                  visibleBordersTableStyleCmd))
+
+    #таблица исполнения этапов
     doneTable = [["№ п/п", 
                   "Наименование\n операции", 
                   "№ извещения о\n несоотвествии",
@@ -265,22 +311,61 @@ def fillConclusionDataSheet(stand,doc,project):
     doneTable.append(["4", "Сборочная (электрическая часть)","", "", "", "", ""])
     doneTable.append(["5", "Контрольная","", "", "", "", ""])
     doneTable.append(["", "","", "", "", "", ""])
-    doneTableInfo = Table(data = doneTable, colWidths = [A4[1]*0.1,A4[1]*0.15,A4[1]*0.15,A4[1]*0.15,A4[1]*0.15,A4[1]*0.1,A4[1]*0.1])
-    doneTableInfo.setStyle(commonTableStyle)
+    doneStagesTable = Table(data = doneTable,
+                          colWidths =[sheetWidth*0.05,sheetWidth*0.2, sheetWidth*0.1, sheetWidth*0.125,sheetWidth*0.125, sheetWidth*0.1, sheetWidth*0.15],
+                          rowHeights=[sheetHeight*0.08,sheetHeight*0.05,sheetHeight*0.05,sheetHeight*0.05,sheetHeight*0.05,sheetHeight*0.05,sheetHeight*0.05])
 
-    signatureTable = Table(data = [["",""]],colWidths = 200)
-    signatureTable.setStyle(commonTableStyle)
 
+
+    doneStagesTable.setStyle(TableStyle(cmds = 
+                                      commonTableStyleCmd +
+                                      centerAlignTableStyleCmd + 
+                                      visibleBordersTableStyleCmd +
+                                      #жирный шрифт для шапки      
+                                      [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] + 
+                                      #обычный шрифт для тела
+                                      [('FONTNAME', (0, 1), (-1, -1), "Arial")] ))
+
+
+    #графа подписей
+    productReadyLabel = Paragraph(text = "Изделие признано годным и \n передано на склад", 
+                                  style = cyrillic_style)
+
+    signatureLabels = Table(data = [["ОТК (ФИО, подпись)","Склад (ФИО, подпись)"]],
+                            colWidths = sheetWidth*0.2)
+
+    signatureLabels.setStyle(TableStyle(cmds = 
+                                        commonTableStyleCmd +
+                                        centerAlignTableStyleCmd + 
+                                        invisibleBordersTableStyleCmd +
+                                        usualFontTableStyleCmd))
+
+    signatureTable = Table(data = [["",""]],
+                           colWidths = sheetWidth*0.2)
+    signatureTable.setStyle(TableStyle(cmds = 
+                                        commonTableStyleCmd +
+                                        centerAlignTableStyleCmd + 
+                                        visibleBordersTableStyleCmd ))
+
+    allSignatureTable = [signatureLabels, signatureTable]
+
+    signatureAligmentTable = Table(data = [[productReadyLabel, allSignatureTable]], 
+                                   colWidths = [sheetWidth*0.25,sheetWidth*0.75])
+
+    signatureAligmentTable.setStyle(TableStyle(cmds = 
+                                               commonTableStyleCmd +
+                                               leftAlignTableStyleCmd + 
+                                               visibleBordersTableStyleCmd ))
+
+
+    #собираем все элементы листа
     sheetElements.append(standInfoAlignmentTable)
     sheetElements.append(Spacer(1,10))
     sheetElements.append(orderNumberAlignmentTable)
     sheetElements.append(Spacer(1,10))
-    sheetElements.append(doneTableInfo)
-    sheetElements.append(Spacer(1,12))
-    sheetElements.append(Paragraph("Изделие признано годным и передано на склад", style = cyrillic_style))
-    sheetElements.append(Spacer(1,12))
-    sheetElements.append(Paragraph("ОТК (ФИО, подпись)                      Склад (ФИО, подпись)", style = cyrillic_style))
-    sheetElements.append(signatureTable)
+    sheetElements.append(doneStagesTable)
+    sheetElements.append(Spacer(1,10))
+    sheetElements.append(signatureAligmentTable)
     
     return sheetElements
 
