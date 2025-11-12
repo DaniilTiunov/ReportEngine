@@ -39,8 +39,7 @@ portraitTemplate = PageTemplate(
     ))
 
 
-portaitA4Width = A4[0]
-portaitA4Height = A4[1]
+
 
 def openJsonFile():
     
@@ -249,7 +248,7 @@ def fillConclusionDataSheet(stand,doc,project):
 
 
     #магические размеры убрать!!!
-    logoImage = generateLogo(150,75)
+    logoImage = generateLogo(sheetWidth * 0.18,sheetHeight * 0.15)
 
 
     standInfoAlignmentTable = Table(data = [[standInfoTable,logoImage]], 
