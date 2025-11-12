@@ -202,15 +202,7 @@ def fillConclusionDataSheet(stand,doc,project):
     sheetWidth = A4[1]
     sheetHeight = A4[0]
 
-    commonTableStyleCmd = TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.white),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black), 
-        ('GRID', (0, 0), (-1, -1), 1, colors.black),
-        ("VALIGN", (0, 0), (-1, -1), "MIDDLE")
-    ])
-
-
-    commonTableStyleCmd =[    
+    commonTableStyleCmd = [    
         ('BACKGROUND', (0, 0), (-1, 0), colors.white),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
         ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
@@ -222,18 +214,6 @@ def fillConclusionDataSheet(stand,doc,project):
     boldFontTableStyleCmd = [('FONTNAME', (0, 0), (-1, -1), "Arial-Bold")]
     visibleBordersTableStyleCmd = [('GRID', (0, 0), (-1, -1), 1, colors.black)]
     invisibleBordersTableStyleCmd = [('GRID', (0, 0), (-1, -1), 1, colors.white)]
-
-
-    invisibleTableStyle = TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.white),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
-        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-        ('FONTNAME', (0, 0), (-1, -1), "Arial"),
-        ('FONTSIZE', (0, 0), (-1, 0), 8),
-        ('GRID', (0, 0), (-1, -1), 1, colors.white),
-        #('GRID', (0, 0), (-1, -1), 1, colors.black),
-        ("VALIGN", (0, 0), (-1, -1), "MIDDLE")
-    ])
 
     styles = getSampleStyleSheet()
 
@@ -293,7 +273,7 @@ def fillConclusionDataSheet(stand,doc,project):
     orderNumberAlignmentTable.setStyle(TableStyle(cmds = 
                                                   commonTableStyleCmd +
                                                   leftAlignTableStyleCmd + 
-                                                  visibleBordersTableStyleCmd))
+                                                  invisibleBordersTableStyleCmd))
 
     #таблица исполнения этапов
     doneTable = [["№ п/п", 
@@ -328,8 +308,9 @@ def fillConclusionDataSheet(stand,doc,project):
 
 
     #графа подписей
-    productReadyLabel = Paragraph(text = "Изделие признано годным и \n передано на склад", 
+    productReadyLabel = Paragraph(text = "Изделие признано годным и передано на склад", 
                                   style = cyrillic_style)
+   
 
     signatureLabels = Table(data = [["ОТК (ФИО, подпись)","Склад (ФИО, подпись)"]],
                             colWidths = sheetWidth*0.2)
@@ -355,7 +336,8 @@ def fillConclusionDataSheet(stand,doc,project):
     signatureAligmentTable.setStyle(TableStyle(cmds = 
                                                commonTableStyleCmd +
                                                leftAlignTableStyleCmd + 
-                                               visibleBordersTableStyleCmd ))
+                                               invisibleBordersTableStyleCmd +
+                                               [("VALIGN", (0, 0), (-1, -1), "BOTTOM")] ))
 
 
     #собираем все элементы листа
