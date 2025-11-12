@@ -91,20 +91,15 @@ def fillStandDataSheet(stand,doc,project):
     sheetWidth = A4[0]
     sheetHeight = A4[1]
 
+    styles = getSampleStyleSheet()
 
-    tableWidth = 500
-
-    commonTableStyle = TableStyle([
-
-        ('BACKGROUND', (0, 0), (-1, 0), colors.white),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, -1), "Arial"),
-        ('FONTSIZE', (0, 0), (-1, 0), 12),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12), 
-        ('GRID', (0, 0), (-1, -1), 1, colors.black),
-        ("VALIGN", (0, 0), (-1, -1), "MIDDLE")
-    ])
+    cyrillic_style = ParagraphStyle(
+        'Normal',
+        parent = styles['Normal'],
+        fontName ='Arial',
+        encoding ='UTF-8',
+        fontSize = 8
+    )
 
 
     #общие заголовки таблицы
@@ -167,7 +162,7 @@ def fillStandDataSheet(stand,doc,project):
                                     [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] ))
 
 
-    columnsHeaderTitles = [["Наименование", "Единицы \n измерения", "Норм.","Факт.", ""]]
+    columnsHeaderTitles = [["Наименование", "Единицы\n измерения", "Норм.","Факт.", ""]]
 
     
     #таблица материалов рам
@@ -178,84 +173,136 @@ def fillStandDataSheet(stand,doc,project):
                                                 boldFontTableStyleCmd + 
                                                 visibleAllBordersTableStyleCmd ))
 
-    framePartsArray = columnsHeaderTitles.copy()
+    framePartsRecords = columnsHeaderTitles.copy()
 
     for frameMaterial in stand["FrameParts"]:
         tableRecord = [frameMaterial["Name"], frameMaterial["Unit"], frameMaterial["Quantity"],"",""]
-        framePartsArray.append(tableRecord)
+        framePartsRecords.append(tableRecord)
 
-    framePartsTable  = Table(data = framePartsArray, colWidths = [sheetWidth*0.3, sheetWidth*0.075, sheetWidth*0.075,sheetWidth*0.075,sheetWidth*0.075])
+    framePartsTable = Table(data = framePartsRecords, colWidths = [sheetWidth*0.3, sheetWidth*0.075, sheetWidth*0.075,sheetWidth*0.075,sheetWidth*0.075])
     framePartsTable.setStyle(TableStyle(cmds =
-                                    commonTableStyleCmd +
-                                    centerAlignTableStyleCmd + 
-                                    usualFontTableStyleCmd + 
-                                    visibleAllBordersTableStyleCmd + 
-                                    #шапка жирным
-                                    [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] ))
+                                        commonTableStyleCmd +
+                                        centerAlignTableStyleCmd + 
+                                        usualFontTableStyleCmd + 
+                                        visibleAllBordersTableStyleCmd + 
+                                        #шапка жирным
+                                        [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] ))
 
 
-    mountPartsArray = []
-    mountPartsArray = columnsHeaderTitles.copy()
+    #таблица монтажных частей
+    mountPartsHeaderTable = Table(data = [["Комплект монтажных частей в зависимости от обвязок"]], colWidths = sheetWidth * 0.6)
+    mountPartsHeaderTable.setStyle(TableStyle(cmds =
+                                              commonTableStyleCmd +
+                                              centerAlignTableStyleCmd + 
+                                              boldFontTableStyleCmd + 
+                                              visibleAllBordersTableStyleCmd ))
+
+
+    mountPartsRecords = columnsHeaderTitles.copy()
 
     for mountPart in stand["MountParts"]:
         tableRecord = [mountPart["Name"], mountPart["Unit"], mountPart["Quantity"],"",""]
-        mountPartsArray.append(tableRecord)
+        mountPartsRecords.append(tableRecord)
+    
+    mountPartsTable = Table(data = mountPartsRecords, colWidths = [sheetWidth*0.3, sheetWidth*0.075, sheetWidth*0.075,sheetWidth*0.075,sheetWidth*0.075])
+    mountPartsTable.setStyle(TableStyle(cmds =
+                                        commonTableStyleCmd +
+                                        centerAlignTableStyleCmd + 
+                                        usualFontTableStyleCmd + 
+                                        visibleAllBordersTableStyleCmd + 
+                                        #шапка жирным
+                                        [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] ))
 
-    drainagePartsArray = []
-    drainagePartsArray = columnsHeaderTitles.copy()
+    #таблица дренажа
+    drainagePartsHeaderTable = Table(data = [["Дренаж и/или продувка"]], colWidths = sheetWidth * 0.4)
+    drainagePartsHeaderTable.setStyle(TableStyle(cmds =
+                                              commonTableStyleCmd +
+                                              centerAlignTableStyleCmd + 
+                                              boldFontTableStyleCmd + 
+                                              visibleAllBordersTableStyleCmd ))
 
-    for drainagePart in stand["DrainageParts"]:
-        tableRecord = [drainagePart["Name"], drainagePart["Unit"], drainagePart["Quantity"],"",""]
-        drainagePartsArray.append(tableRecord)
+    drainagePartsRecords = columnsHeaderTitles.copy()
+    drainagePartsRecords[0].pop()
 
-    electricPartsArray = []
-    electricPartsArray = columnsHeaderTitles.copy()
+    for mountPart in stand["MountParts"]:
+        tableRecord = [mountPart["Name"], mountPart["Unit"], mountPart["Quantity"],""]
+        drainagePartsRecords.append(tableRecord)
+    
+    drainagePartsTable = Table(data = drainagePartsRecords, colWidths = [sheetWidth*0.18, sheetWidth*0.086, sheetWidth*0.066,sheetWidth*0.066])
+    drainagePartsTable.setStyle(TableStyle(cmds =
+                                            commonTableStyleCmd +
+                                            centerAlignTableStyleCmd + 
+                                            usualFontTableStyleCmd + 
+                                            visibleAllBordersTableStyleCmd + 
+                                            #шапка жирным
+                                            [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] ))
 
-    for electricPart in stand["ElectricParts"]:
-        tableRecord = [electricPart["Name"], electricPart["Unit"], electricPart["Quantity"],"",""] 
-        electricPartsArray.append(tableRecord)
 
-    #создаем объекты
+    #таблица электрическх компонентов
+    electricPartsHeaderTable = Table(data = [["Электрические компоненты"]], colWidths = sheetWidth * 0.4)
+    electricPartsHeaderTable.setStyle(TableStyle(cmds =
+                                              commonTableStyleCmd +
+                                              centerAlignTableStyleCmd + 
+                                              boldFontTableStyleCmd + 
+                                              visibleAllBordersTableStyleCmd ))
 
-    mountPartsHeader = Table(data = [["Комплект монтажных частей в зависимости от обвязок"]], colWidths = tableWidth)
-    mountPartsHeader.setStyle(commonTableStyle)
+    electricPartsRecords = columnsHeaderTitles.copy()
+    electricPartsRecords[0].pop()
 
-    mountPartsData = Table(data = mountPartsArray, colWidths = [tableWidth*0.4,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15])
-    mountPartsData.setStyle(commonTableStyle)
+    for mountPart in stand["MountParts"]:
+        tableRecord = [mountPart["Name"], mountPart["Unit"], mountPart["Quantity"],""]
+        electricPartsRecords.append(tableRecord)
+    
+    electricPartsTable = Table(data = electricPartsRecords, colWidths = [sheetWidth*0.18, sheetWidth*0.086, sheetWidth*0.066,sheetWidth*0.066])
+    electricPartsTable.setStyle(TableStyle(cmds =
+                                            commonTableStyleCmd +
+                                            centerAlignTableStyleCmd + 
+                                            usualFontTableStyleCmd + 
+                                            visibleAllBordersTableStyleCmd + 
+                                            #шапка жирным
+                                            [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] ))
 
-    drainagePartsHeader = Table(data = [["Дренаж и/или продувка"]], colWidths = tableWidth)
-    drainagePartsHeader.setStyle(commonTableStyle)
 
-    drainagePartsData = Table(data = drainagePartsArray, colWidths = [tableWidth*0.4,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15])
-    drainagePartsData.setStyle(commonTableStyle)
+    #чертеж стенда
+    imageString = stand["ImageData"]
+    if imageString is not None: 
+        standBlueprint = generateImageFromStr(imageString, sheetWidth*0.4, 200)  
+    else:
+        standBlueprint = Paragraph(text = "Ха-ха, пiймав на пикчу",style = cyrillic_style)
 
-    electricPartsHeader = Table(data = [["Электрические компоненты"]], colWidths = tableWidth)
-    electricPartsHeader.setStyle(commonTableStyle)
+    leftPart = [standTechCardHeaderTable,
+                standNameHeaderTable, 
+                standInfoTable, 
+                standSizeTable, 
+                framesTable,
+                framePartsHeaderTable, 
+                framePartsTable, 
+                mountPartsHeaderTable, 
+                mountPartsTable]
 
-    electricPartsData = Table(data = electricPartsArray, colWidths = [tableWidth*0.4,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15])
-    electricPartsData.setStyle(commonTableStyle)
+    rightPart = [standBlueprint,
+                 drainagePartsHeaderTable,
+                 drainagePartsTable, 
+                 #electricPartsHeaderTable,  
+                 #electricPartsTable
+                 ]
+
+    sheetTable = Table(data = [[ leftPart, rightPart ]], colWidths = [sheetWidth * 0.6 , sheetWidth * 0.4])
+
+    sheetTable.setStyle(TableStyle(cmds = 
+                         commonTableStyleCmd +
+                         centerAlignTableStyleCmd + 
+                         boldFontTableStyleCmd))
+
+
 
 
     #собираем все объекты в массив и отдаем
     sheetElements = []   
-    sheetElements.append(standTechCardHeaderTable)
-    sheetElements.append(standNameHeaderTable)
-    sheetElements.append(standInfoTable)
-    sheetElements.append(standSizeTable)
-    sheetElements.append(framesTable)
-    sheetElements.append(framePartsHeaderTable)
-    sheetElements.append(framePartsTable)
-    sheetElements.append(mountPartsHeader)
-    sheetElements.append(mountPartsData)
-    sheetElements.append(drainagePartsHeader)
-    sheetElements.append(drainagePartsData)
-    sheetElements.append(electricPartsHeader)
-    sheetElements.append(electricPartsData)
+    sheetElements.append(sheetTable)
+    
 
-    imageString = stand["ImageData"]
-    if imageString is not None: 
-        standBlueprint = generateImageFromStr(imageString,200,200)  
-        sheetElements.append(standBlueprint)
+    
         
     return sheetElements
 
