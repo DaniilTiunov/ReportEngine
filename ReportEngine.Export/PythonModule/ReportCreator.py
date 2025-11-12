@@ -38,7 +38,26 @@ portraitTemplate = PageTemplate(
             id='portrait_frame'
     ))
 
+commonTableStyleCmd = [    
+        ('BACKGROUND', (0, 0), (-1, 0), colors.white),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+        ('FONTSIZE', (0, 0), (-1, -1), 8)]
 
+leftAlignTableStyleCmd = [ ('ALIGN', (0, 0), (-1, -1), 'LEFT')]
+centerAlignTableStyleCmd = [ ('ALIGN', (0, 0), (-1, -1), 'CENTER')]
+
+usualFontTableStyleCmd = [('FONTNAME', (0, 0), (-1, -1), "Arial")]
+boldFontTableStyleCmd = [('FONTNAME', (0, 0), (-1, -1), "Arial-Bold")]
+
+visibleAllBordersTableStyleCmd = [('GRID', (0, 0), (-1, -1), 1, colors.black)]
+invisibleAllBordersTableStyleCmd = []
+
+invisibleOuterBordersTableStyleCmd = []
+visibleOuterBordersTableStyleCmd = [('BOX', (0, 0), (-1, -1),1, colors.black)]
+
+invisibleInnerBordersTableStyleCmd = []
+visibleInnerBordersTableStyleCmd = [('INNERGRID', (0, 0), (-1, -1),1, colors.black)]
 
 
 def openJsonFile():
@@ -60,14 +79,18 @@ def generateLogo(width,height):
     return Image(file_path,width,height)
     
 
-def generateImageFromStr(base64_string):
+def generateImageFromStr(base64_string,width, height):
     imageData = base64.b64decode(base64_string)
     imageBuffer = io.BytesIO(imageData)
-    return Image(imageBuffer)
+    return Image(imageBuffer,width,height)
 
 
 
 def fillStandDataSheet(stand,doc,project):
+    
+    sheetWidth = A4[0]
+    sheetHeight = A4[1]
+
 
     tableWidth = 500
 
@@ -83,29 +106,93 @@ def fillStandDataSheet(stand,doc,project):
         ("VALIGN", (0, 0), (-1, -1), "MIDDLE")
     ])
 
-    galvanizeStr = "Оцинковка" if project["IsGalvanized"] else "Покраска"
-    standTechCardTitle = [["Технологическая карта" + "            " + str(galvanizeStr) + "           " + str(project["Description"])]]
 
-    standNameTitle = [[ "Стенд датчиков КИПиА " + str(stand["Designation"]) ]]
-    standInfoTitle = [[ str(stand["KKSCode"]), str(stand["SerialNumber"]) ]]
-    frameSizeTitle = [["Размер стенда, мм          " + str(stand["Width"])]]
-    framesData = [["Рама, мм", "Обозначение по КД", "Кол-во, шт", "","",""]]
+    #общие заголовки таблицы
+    galvanizeStr = "Оцинковка" if project["IsGalvanized"] else "Покраска"
+    standTechCardHeaderTable = Table(data = [[ "Технологическая карта", str(galvanizeStr), str(project["Description"]) ]],
+                                   colWidths= [sheetWidth*0.2])
+    standTechCardHeaderTable.setStyle(TableStyle(cmds =
+                                                commonTableStyleCmd +
+                                                centerAlignTableStyleCmd + 
+                                                usualFontTableStyleCmd + 
+                                                visibleOuterBordersTableStyleCmd +
+                                                invisibleInnerBordersTableStyleCmd +
+                                                #Технологическая карта жирным
+                                                [('FONTNAME', (0, 0), (0, 0), "Arial-Bold")] ))   
+
+    
+    
+
+    standNameData = [[ "Стенд датчиков КИПиА " + str(stand["Designation"]) ]]
+    standNameHeaderTable = Table(data = standNameData, colWidths = sheetWidth * 0.6)
+    standNameHeaderTable.setStyle(TableStyle(cmds =
+                                             commonTableStyleCmd +
+                                             centerAlignTableStyleCmd + 
+                                             boldFontTableStyleCmd + 
+                                             visibleAllBordersTableStyleCmd ))  
+    
+
+    standsInfoData = [[ str(stand["KKSCode"]) , str(stand["SerialNumber"]) ]]
+    standInfoTable = Table(data = standsInfoData, colWidths = sheetWidth*0.3)
+    standInfoTable.setStyle(TableStyle(cmds =
+                                       commonTableStyleCmd +
+                                       centerAlignTableStyleCmd + 
+                                       boldFontTableStyleCmd + 
+                                       visibleAllBordersTableStyleCmd ))
+
+    standSizeData = [[ "Размер стенда, мм ", str(stand["Width"]) ]]
+    standSizeTable = Table(data = standSizeData, colWidths = [sheetWidth*0.4, sheetWidth * 0.2])
+    standSizeTable.setStyle(TableStyle(cmds =
+                                       commonTableStyleCmd +
+                                       centerAlignTableStyleCmd + 
+                                       boldFontTableStyleCmd + 
+                                       visibleAllBordersTableStyleCmd  ))
+
+    
+    #таблица рам
+    framesTableHeaderData = [["Рама, мм", "Обозначение по КД", "Кол-во,\n шт", "","",""]]
+    framesTableData = framesTableHeaderData.copy()
 
     for frame in stand["Frames"]:
         frameArray = [frame["Width"], frame["DocName"], frame["Quantity"],"","",""]
-        framesData.append(frameArray)
+        framesTableData.append(frameArray)
+
+    framesTable = Table(data = framesTableData, colWidths = [sheetWidth*0.1, sheetWidth*0.2, sheetWidth*0.075,sheetWidth*0.075,sheetWidth*0.075,sheetWidth*0.075])
+    framesTable.setStyle(TableStyle(cmds =
+                                    commonTableStyleCmd +
+                                    centerAlignTableStyleCmd + 
+                                    usualFontTableStyleCmd + 
+                                    visibleAllBordersTableStyleCmd + 
+                                    #шапка жирным
+                                    [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] ))
 
 
     columnsHeaderTitles = [["Наименование", "Единицы \n измерения", "Норм.","Факт.", ""]]
 
     
-    #заполняем таблицы
-    framePartsArray = []
+    #таблица материалов рам
+    framePartsHeaderTable = Table(data = [["Основные материалы рамы стенда"]], colWidths = sheetWidth * 0.6)
+    framePartsHeaderTable.setStyle(TableStyle(cmds =
+                                                commonTableStyleCmd +
+                                                centerAlignTableStyleCmd + 
+                                                boldFontTableStyleCmd + 
+                                                visibleAllBordersTableStyleCmd ))
+
     framePartsArray = columnsHeaderTitles.copy()
 
     for frameMaterial in stand["FrameParts"]:
         tableRecord = [frameMaterial["Name"], frameMaterial["Unit"], frameMaterial["Quantity"],"",""]
         framePartsArray.append(tableRecord)
+
+    framePartsTable  = Table(data = framePartsArray, colWidths = [sheetWidth*0.3, sheetWidth*0.075, sheetWidth*0.075,sheetWidth*0.075,sheetWidth*0.075])
+    framePartsTable.setStyle(TableStyle(cmds =
+                                    commonTableStyleCmd +
+                                    centerAlignTableStyleCmd + 
+                                    usualFontTableStyleCmd + 
+                                    visibleAllBordersTableStyleCmd + 
+                                    #шапка жирным
+                                    [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] ))
+
 
     mountPartsArray = []
     mountPartsArray = columnsHeaderTitles.copy()
@@ -129,26 +216,6 @@ def fillStandDataSheet(stand,doc,project):
         electricPartsArray.append(tableRecord)
 
     #создаем объекты
-    standTechCardHeader = Table(data = standTechCardTitle, colWidths = tableWidth)
-    standTechCardHeader.setStyle(commonTableStyle)
-
-    standNameHeader = Table(data = standNameTitle, colWidths = tableWidth)
-    standNameHeader.setStyle(commonTableStyle)
-
-    standInfoHeader = Table(data = standInfoTitle, colWidths = [tableWidth * 0.5, tableWidth * 0.5])
-    standInfoHeader.setStyle(commonTableStyle)
-
-    frameSizeHeader = Table(data = frameSizeTitle, colWidths = tableWidth)
-    frameSizeHeader.setStyle(commonTableStyle)
-    
-    framesTable = Table(data = framesData, colWidths=[tableWidth*0.15,tableWidth*0.25,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15])
-    framesTable.setStyle(commonTableStyle)
-
-    frameMaterialsHeader = Table(data = [["Основные материалы рамы стенда"]], colWidths = tableWidth)
-    frameMaterialsHeader.setStyle(commonTableStyle)
-
-    frameMaterialsData = Table(data = framePartsArray, colWidths = [tableWidth*0.4,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15,tableWidth*0.15])
-    frameMaterialsData.setStyle(commonTableStyle)
 
     mountPartsHeader = Table(data = [["Комплект монтажных частей в зависимости от обвязок"]], colWidths = tableWidth)
     mountPartsHeader.setStyle(commonTableStyle)
@@ -171,13 +238,13 @@ def fillStandDataSheet(stand,doc,project):
 
     #собираем все объекты в массив и отдаем
     sheetElements = []   
-    sheetElements.append(standTechCardHeader)
-    sheetElements.append(standNameHeader)
-    sheetElements.append(standInfoHeader)
-    sheetElements.append(frameSizeHeader)
+    sheetElements.append(standTechCardHeaderTable)
+    sheetElements.append(standNameHeaderTable)
+    sheetElements.append(standInfoTable)
+    sheetElements.append(standSizeTable)
     sheetElements.append(framesTable)
-    sheetElements.append(frameMaterialsHeader)
-    sheetElements.append(frameMaterialsData)
+    sheetElements.append(framePartsHeaderTable)
+    sheetElements.append(framePartsTable)
     sheetElements.append(mountPartsHeader)
     sheetElements.append(mountPartsData)
     sheetElements.append(drainagePartsHeader)
@@ -187,9 +254,7 @@ def fillStandDataSheet(stand,doc,project):
 
     imageString = stand["ImageData"]
     if imageString is not None: 
-        standBlueprint = generateImageFromStr(imageString)
-        standBlueprint.drawHeight = 200  # высота в пунктах
-        standBlueprint.drawWidth = 200   # ширина в пунктах
+        standBlueprint = generateImageFromStr(imageString,200,200)  
         sheetElements.append(standBlueprint)
         
     return sheetElements
