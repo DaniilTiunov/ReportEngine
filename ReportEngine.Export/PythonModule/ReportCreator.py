@@ -91,9 +91,12 @@ def fillStandDataSheet(stand,doc,project):
     sheetWidth = A4[0]
     sheetHeight = A4[1]
 
+    leftPartWidth = 0.55 * sheetWidth
+    rightPartWidth = 0.35 * sheetWidth
+    
     styles = getSampleStyleSheet()
 
-    cyrillic_style = ParagraphStyle(
+    cyrillicStyle = ParagraphStyle(
         'Normal',
         parent = styles['Normal'],
         fontName ='Arial',
@@ -105,21 +108,26 @@ def fillStandDataSheet(stand,doc,project):
     #общие заголовки таблицы
     galvanizeStr = "Оцинковка" if project["IsGalvanized"] else "Покраска"
     standTechCardHeaderTable = Table(data = [[ "Технологическая карта", str(galvanizeStr), str(project["Description"]) ]],
-                                   colWidths= [sheetWidth*0.2])
+                                   colWidths= leftPartWidth/3)
     standTechCardHeaderTable.setStyle(TableStyle(cmds =
-                                                commonTableStyleCmd +
-                                                centerAlignTableStyleCmd + 
-                                                usualFontTableStyleCmd + 
-                                                visibleOuterBordersTableStyleCmd +
-                                                invisibleInnerBordersTableStyleCmd +
-                                                #Технологическая карта жирным
-                                                [('FONTNAME', (0, 0), (0, 0), "Arial-Bold")] ))   
+                                                 commonTableStyleCmd +
+                                                 centerAlignTableStyleCmd + 
+                                                 usualFontTableStyleCmd + 
+                                                 visibleOuterBordersTableStyleCmd +
+                                                 invisibleInnerBordersTableStyleCmd +
+                                                 #Технологическая карта жирным
+                                                 [('FONTNAME', (0, 0), (0, 0), "Arial-Bold")]
+                                                 #У крайних ячеек выравнивание по краям
+                                                 #[ ('ALIGN', (0, 0), (0, 0), 'LEFT')] +
+                                                 #[ ('ALIGN', (-1, -1), (-1, -1), 'RIGHT')]
+                                                 )) 
+    
 
     
     
 
     standNameData = [[ "Стенд датчиков КИПиА " + str(stand["Designation"]) ]]
-    standNameHeaderTable = Table(data = standNameData, colWidths = sheetWidth * 0.6)
+    standNameHeaderTable = Table(data = standNameData, colWidths = leftPartWidth)
     standNameHeaderTable.setStyle(TableStyle(cmds =
                                              commonTableStyleCmd +
                                              centerAlignTableStyleCmd + 
@@ -128,7 +136,7 @@ def fillStandDataSheet(stand,doc,project):
     
 
     standsInfoData = [[ str(stand["KKSCode"]) , str(stand["SerialNumber"]) ]]
-    standInfoTable = Table(data = standsInfoData, colWidths = sheetWidth*0.3)
+    standInfoTable = Table(data = standsInfoData, colWidths = leftPartWidth/2)
     standInfoTable.setStyle(TableStyle(cmds =
                                        commonTableStyleCmd +
                                        centerAlignTableStyleCmd + 
@@ -136,7 +144,7 @@ def fillStandDataSheet(stand,doc,project):
                                        visibleAllBordersTableStyleCmd ))
 
     standSizeData = [[ "Размер стенда, мм ", str(stand["Width"]) ]]
-    standSizeTable = Table(data = standSizeData, colWidths = [sheetWidth*0.4, sheetWidth * 0.2])
+    standSizeTable = Table(data = standSizeData, colWidths = [leftPartWidth*0.8, leftPartWidth * 0.2])
     standSizeTable.setStyle(TableStyle(cmds =
                                        commonTableStyleCmd +
                                        centerAlignTableStyleCmd + 
@@ -145,14 +153,14 @@ def fillStandDataSheet(stand,doc,project):
 
     
     #таблица рам
-    framesTableHeaderData = [["Рама, мм", "Обозначение по КД", "Кол-во,\n шт", "","",""]]
+    framesTableHeaderData = [["Рама, мм", "Обозначение по КД", "Кол-во,\n шт"]]
     framesTableData = framesTableHeaderData.copy()
 
     for frame in stand["Frames"]:
-        frameArray = [frame["Width"], frame["DocName"], frame["Quantity"],"","",""]
+        frameArray = [frame["Width"], frame["DocName"], frame["Quantity"]]
         framesTableData.append(frameArray)
 
-    framesTable = Table(data = framesTableData, colWidths = [sheetWidth*0.1, sheetWidth*0.2, sheetWidth*0.075,sheetWidth*0.075,sheetWidth*0.075,sheetWidth*0.075])
+    framesTable = Table(data = framesTableData, colWidths = [leftPartWidth*0.15, leftPartWidth*0.75, leftPartWidth*0.1])
     framesTable.setStyle(TableStyle(cmds =
                                     commonTableStyleCmd +
                                     centerAlignTableStyleCmd + 
@@ -162,11 +170,11 @@ def fillStandDataSheet(stand,doc,project):
                                     [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] ))
 
 
-    columnsHeaderTitles = [["Наименование", "Единицы\n измерения", "Норм.","Факт.", ""]]
+    columnsHeaderTitles = [["Наименование", "Единицы\n измерения", "Норм.","Факт."]]
 
     
     #таблица материалов рам
-    framePartsHeaderTable = Table(data = [["Основные материалы рамы стенда"]], colWidths = sheetWidth * 0.6)
+    framePartsHeaderTable = Table(data = [["Основные материалы рамы стенда"]], colWidths = leftPartWidth)
     framePartsHeaderTable.setStyle(TableStyle(cmds =
                                                 commonTableStyleCmd +
                                                 centerAlignTableStyleCmd + 
@@ -176,10 +184,10 @@ def fillStandDataSheet(stand,doc,project):
     framePartsRecords = columnsHeaderTitles.copy()
 
     for frameMaterial in stand["FrameParts"]:
-        tableRecord = [frameMaterial["Name"], frameMaterial["Unit"], frameMaterial["Quantity"],"",""]
+        tableRecord = [frameMaterial["Name"], frameMaterial["Unit"], frameMaterial["Quantity"],""]
         framePartsRecords.append(tableRecord)
 
-    framePartsTable = Table(data = framePartsRecords, colWidths = [sheetWidth*0.3, sheetWidth*0.075, sheetWidth*0.075,sheetWidth*0.075,sheetWidth*0.075])
+    framePartsTable = Table(data = framePartsRecords, colWidths = [leftPartWidth*0.65, leftPartWidth*0.15, leftPartWidth*0.1, leftPartWidth*0.1])
     framePartsTable.setStyle(TableStyle(cmds =
                                         commonTableStyleCmd +
                                         centerAlignTableStyleCmd + 
@@ -190,7 +198,7 @@ def fillStandDataSheet(stand,doc,project):
 
 
     #таблица монтажных частей
-    mountPartsHeaderTable = Table(data = [["Комплект монтажных частей в зависимости от обвязок"]], colWidths = sheetWidth * 0.6)
+    mountPartsHeaderTable = Table(data = [["Комплект монтажных частей в зависимости от обвязок"]], colWidths = leftPartWidth)
     mountPartsHeaderTable.setStyle(TableStyle(cmds =
                                               commonTableStyleCmd +
                                               centerAlignTableStyleCmd + 
@@ -201,10 +209,10 @@ def fillStandDataSheet(stand,doc,project):
     mountPartsRecords = columnsHeaderTitles.copy()
 
     for mountPart in stand["MountParts"]:
-        tableRecord = [mountPart["Name"], mountPart["Unit"], mountPart["Quantity"],"",""]
+        tableRecord = [mountPart["Name"], mountPart["Unit"], mountPart["Quantity"],""]
         mountPartsRecords.append(tableRecord)
     
-    mountPartsTable = Table(data = mountPartsRecords, colWidths = [sheetWidth*0.3, sheetWidth*0.075, sheetWidth*0.075,sheetWidth*0.075,sheetWidth*0.075])
+    mountPartsTable = Table(data = mountPartsRecords, colWidths = [leftPartWidth*0.65, leftPartWidth*0.15, leftPartWidth*0.1, leftPartWidth*0.1])
     mountPartsTable.setStyle(TableStyle(cmds =
                                         commonTableStyleCmd +
                                         centerAlignTableStyleCmd + 
@@ -214,7 +222,7 @@ def fillStandDataSheet(stand,doc,project):
                                         [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] ))
 
     #таблица дренажа
-    drainagePartsHeaderTable = Table(data = [["Дренаж и/или продувка"]], colWidths = sheetWidth * 0.4)
+    drainagePartsHeaderTable = Table(data = [["Дренаж и/или продувка"]], colWidths = rightPartWidth)
     drainagePartsHeaderTable.setStyle(TableStyle(cmds =
                                               commonTableStyleCmd +
                                               centerAlignTableStyleCmd + 
@@ -222,13 +230,12 @@ def fillStandDataSheet(stand,doc,project):
                                               visibleAllBordersTableStyleCmd ))
 
     drainagePartsRecords = columnsHeaderTitles.copy()
-    drainagePartsRecords[0].pop()
 
-    for mountPart in stand["MountParts"]:
-        tableRecord = [mountPart["Name"], mountPart["Unit"], mountPart["Quantity"],""]
+    for drainagePart in stand["MountParts"]:
+        tableRecord = [drainagePart["Name"], drainagePart["Unit"], drainagePart["Quantity"],""]
         drainagePartsRecords.append(tableRecord)
     
-    drainagePartsTable = Table(data = drainagePartsRecords, colWidths = [sheetWidth*0.18, sheetWidth*0.086, sheetWidth*0.066,sheetWidth*0.066])
+    drainagePartsTable = Table(data = drainagePartsRecords, colWidths = [rightPartWidth*0.65, rightPartWidth*0.15, rightPartWidth*0.1,rightPartWidth*0.1])
     drainagePartsTable.setStyle(TableStyle(cmds =
                                             commonTableStyleCmd +
                                             centerAlignTableStyleCmd + 
@@ -239,7 +246,7 @@ def fillStandDataSheet(stand,doc,project):
 
 
     #таблица электрическх компонентов
-    electricPartsHeaderTable = Table(data = [["Электрические компоненты"]], colWidths = sheetWidth * 0.4)
+    electricPartsHeaderTable = Table(data = [["Электрические компоненты"]], colWidths = rightPartWidth)
     electricPartsHeaderTable.setStyle(TableStyle(cmds =
                                               commonTableStyleCmd +
                                               centerAlignTableStyleCmd + 
@@ -247,13 +254,12 @@ def fillStandDataSheet(stand,doc,project):
                                               visibleAllBordersTableStyleCmd ))
 
     electricPartsRecords = columnsHeaderTitles.copy()
-    electricPartsRecords[0].pop()
 
-    for mountPart in stand["MountParts"]:
-        tableRecord = [mountPart["Name"], mountPart["Unit"], mountPart["Quantity"],""]
+    for electricPart in stand["MountParts"]:
+        tableRecord = [electricPart["Name"], electricPart["Unit"], electricPart["Quantity"],""]
         electricPartsRecords.append(tableRecord)
     
-    electricPartsTable = Table(data = electricPartsRecords, colWidths = [sheetWidth*0.18, sheetWidth*0.086, sheetWidth*0.066,sheetWidth*0.066])
+    electricPartsTable = Table(data = electricPartsRecords, colWidths = [rightPartWidth*0.65, rightPartWidth*0.15, rightPartWidth*0.1,rightPartWidth*0.1])
     electricPartsTable.setStyle(TableStyle(cmds =
                                             commonTableStyleCmd +
                                             centerAlignTableStyleCmd + 
@@ -262,13 +268,33 @@ def fillStandDataSheet(stand,doc,project):
                                             #шапка жирным
                                             [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] ))
 
-
     #чертеж стенда
+    blueprintLeftElements = [standTechCardHeaderTable,
+                standNameHeaderTable, 
+                standInfoTable, 
+                standSizeTable, 
+                framesTable,
+                framePartsHeaderTable, 
+                framePartsTable ]
+
+    sumHeight = 0.0
+    for element in blueprintLeftElements:
+        (_,elementHeight) = element.wrap(0,0)
+        sumHeight += elementHeight
+
+
     imageString = stand["ImageData"]
-    if imageString is not None: 
-        standBlueprint = generateImageFromStr(imageString, sheetWidth*0.4, 200)  
+    if imageString is not None:  
+        standBlueprint = generateImageFromStr(imageString, rightPartWidth, sumHeight)  
     else:
-        standBlueprint = Paragraph(text = "Ха-ха, пiймав на пикчу",style = cyrillic_style)
+        standBlueprint = Paragraph(text = "Ха-ха, пiймав на пикчу", style = cyrillicStyle)
+
+
+    blueprintTable = Table(data = [[standBlueprint]], colWidths = rightPartWidth, rowHeights = sumHeight)
+    blueprintTable.setStyle(TableStyle(cmds = commonTableStyleCmd +
+                                              centerAlignTableStyleCmd + 
+                                              usualFontTableStyleCmd + 
+                                              visibleAllBordersTableStyleCmd))
 
     leftPart = [standTechCardHeaderTable,
                 standNameHeaderTable, 
@@ -280,14 +306,14 @@ def fillStandDataSheet(stand,doc,project):
                 mountPartsHeaderTable, 
                 mountPartsTable]
 
-    rightPart = [standBlueprint,
+    rightPart = [blueprintTable,
                  drainagePartsHeaderTable,
                  drainagePartsTable, 
-                 #electricPartsHeaderTable,  
+                 electricPartsHeaderTable,  
                  #electricPartsTable
                  ]
 
-    sheetTable = Table(data = [[ leftPart, rightPart ]], colWidths = [sheetWidth * 0.6 , sheetWidth * 0.4])
+    sheetTable = Table(data = [[ leftPart, rightPart ]], colWidths = [leftPartWidth , rightPartWidth])
 
     sheetTable.setStyle(TableStyle(cmds = 
                          commonTableStyleCmd +
