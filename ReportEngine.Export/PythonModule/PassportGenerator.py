@@ -208,10 +208,12 @@ def fillBodyPage(stand,doc,project):
 
     titleStyle = ParagraphStyle(
         name = 'Title',
-        parent = styles['Title'],
+        parent = styles['Normal'],
         fontName ='Arial-Bold',
         encoding ='UTF-8',
-        fontSize = 8
+        fontSize = 8,
+        spaceAfter = 6,
+        alignment = TA_CENTER
     )
 
     noteStyle = ParagraphStyle(
@@ -221,18 +223,11 @@ def fillBodyPage(stand,doc,project):
         encoding ='UTF-8',
         fontSize = 6,
         firstLineIndent = 12
+        
     )
     
-    sublineStyle = ParagraphStyle(
-        name = 'subline',
-        parent = styles['Normal'],
-        fontName ='Arial',
-        encoding ='UTF-8',
-        fontSize = 6
-    )
 
     newLineMark = "<br/>"
-    afterTitleSpacer = Spacer(1,1)
 
     leftPartContent = [ Paragraph(text = "1. Основные сведения об изделии и и технические данные", 
                                   style = titleStyle) ]   
