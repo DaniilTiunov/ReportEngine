@@ -44,6 +44,16 @@ public class DirectoryHelper
         return Path.Combine(GetDirectory(), "ReportTemplates", templateName + fileFormat);
     }
 
+    public static string GetPythonExePath()
+    {
+        return Path.Combine(GetDirectory(), "PythonModule", "MainLauncher.exe");
+    }
+
+    public static string GetGeneratedJsonPath()
+    {
+        return Path.Combine(GetDirectory(), "PythonModule", "TechnologicalCards_temp.json");
+    }
+
     public static string GetReportsDirectory()
     {
         return Path.Combine(GetDirectory(), "Отчёты");

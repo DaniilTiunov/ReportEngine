@@ -51,9 +51,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
         };
         string jsonObject = JsonSerializer.Serialize(dataObject, options);
 
-
-        var jsonSavePath = DirectoryHelper.GetJsonSavePath();
-        var jsonFileName = Path.Combine(jsonSavePath, "TechnologicalCards_temp.json");
+        var jsonFileName = DirectoryHelper.GetGeneratedJsonPath();
         File.WriteAllText(jsonFileName, jsonObject, Encoding.UTF8);
 
 

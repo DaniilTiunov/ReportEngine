@@ -7,6 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="PythonModule\MainLauncher.exe" />
+    </ItemGroup>
+
+    <ItemGroup>
         <COMReference Include="Microsoft.Office.Interop.Excel">
             <WrapperTool>tlbimp</WrapperTool>
             <VersionMinor>9</VersionMinor>
@@ -23,6 +27,9 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <Content Include="PythonModule\Etalon.jpg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="PythonModule\MainLauncher.exe">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <Content Include="PythonModule\PassportGenerator.py">
@@ -51,6 +58,7 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
         <PackageReference Include="QuestPDF" Version="2025.12.0-alpha1" />
         <PackageReference Include="System.Drawing.Common" Version="9.0.10" />
+        <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
     </ItemGroup>
 
     <ItemGroup>

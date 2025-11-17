@@ -5,8 +5,10 @@ using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Export.Mapping;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
+using System.Diagnostics;
 using Xceed.Document.NET;
 using XceedDocx = Xceed.Words.NET.DocX;
+
 
 
 namespace ReportEngine.Export.PDFWork.Services.Generators;
@@ -33,6 +35,32 @@ public class PassportsGenerator : IReportGenerator
         var fullSavePath = Path.Combine(savePath, fileName);
 
         var templatePath = DirectoryHelper.GetReportsTemplatePath("Passport_template", ".docx");
+
+
+        var exeFilePath = DirectoryHelper.GetPythonExePath();
+        var jsonSavePath = DirectoryHelper.GetJsonSavePath();
+
+        ProcessStartInfo startInfo = new ProcessStartInfo();
+        startInfo.FileName = exeFilePath; // путь к .exe файлу
+        startInfo.Arguments = $"--script passport --jsonPath {jsonSavePath} --outputReportPath {savePath}";
+        startInfo.UseShellExecute = false;
+        startInfo.RedirectStandardOutput = true;
+        startInfo.RedirectStandardError = true;
+
+
+        using (Process process = Process.Start(startInfo))
+        {
+            using (StreamReader reader = process.StandardOutput)
+            {
+                string result = reader.ReadToEnd();
+                Console.WriteLine(result);
+            }
+
+            process.WaitForExit();
+        }
+
+
+        return;
 
 
         using (var myDoc = XceedDocx.Load(templatePath))

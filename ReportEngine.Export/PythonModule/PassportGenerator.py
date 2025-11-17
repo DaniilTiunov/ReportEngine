@@ -89,12 +89,10 @@ invisibleInnerBordersTableStyleCmd = []
 visibleInnerBordersTableStyleCmd = [('INNERGRID', (0, 0), (-1, -1), 1, colors.black)]
 
 
-def openJsonFile():
+def openJsonFile(filePath):
     
-    script_dir = Path(__file__).parent
-    file_path = os.path.join(script_dir, "TechnologicalCards_temp.json")
     try:
-        with open(file_path, 'r', encoding='utf-8-sig') as file:
+        with open(filePath, 'r', encoding='utf-8-sig') as file:
             jsonData = json.load(file)           
     except Exception as e:
             print(f"Error: {e}")
@@ -354,19 +352,17 @@ def fillBodyPage(stand,doc,project):
     return sheetElements
 
 
-def generatePassports():
-
-    outputDir = "C:/Work/Тестовая папка для отчётов/"
+def generateReport(jsonFilePath,outputDir):
 
     now = datetime.now()
     outputFileName = "Паспорт___"
     outputFileName += "{}-{}-{}___{}-{}-{}".format(now.day,now.month,now.year,now.hour,now.minute,now.second)
     outputFileName += ".pdf"
     
-    output_pdf = outputDir + outputFileName
+    outputPdf = outputDir + outputFileName
 
-    data = openJsonFile()
-    doc = SimpleDocTemplate(output_pdf, pagesize=A4)
+    data = openJsonFile(jsonFilePath)
+    doc = SimpleDocTemplate(outputPdf, pagesize=A4)
 
     #добавляем стили страницы
     doc.addPageTemplates([landscapeTemplate, portraitTemplate])
@@ -388,4 +384,4 @@ def generatePassports():
 
     
 if __name__ == "__main__":
-    generatePassports()
+    generateReport()
