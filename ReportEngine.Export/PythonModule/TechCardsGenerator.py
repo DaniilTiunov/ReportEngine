@@ -19,30 +19,50 @@ pdfmetrics.registerFont(TTFont('Arial','arial.ttf'))
 pdfmetrics.registerFont(TTFont('Arial-Bold','arialbd.ttf'))
 pdfmetrics.registerFont(UnicodeCIDFont('STSong-Light'))
 
+landscapeParams = {
+    "startPointX" : 20 * mm,
+    "startPointY": 20 * mm,
+    "frameWidth":A4[1] - 40*mm,
+    "frameHeight": A4[0] - 40*mm,
+    "frameId": 'landscapeFrame',
+    "visibleBoundaries": 0
+}
+
+
+portraitParams = {
+    "startPointX" : 20 * mm,
+    "startPointY": 20 * mm,
+    "frameWidth":A4[0] - 40*mm,
+    "frameHeight": A4[1] - 40*mm,
+    "frameId": 'portraitFrame',
+    "visibleBoundaries": 0
+}
 
 landscapeTemplate = PageTemplate(
         id='landscape', 
         pagesize=landscape(A4),
         frames= Frame(
-            20*mm, 20*mm,  # левый и нижний отступ
-            A4[1] - 40*mm, A4[0] - 40*mm,  # меняем местами для альбомной
-            id='landscape_frame'
+            x1 = landscapeParams['startPointX'], y1 =  landscapeParams['startPointY'], 
+            width = landscapeParams['frameWidth'], height = landscapeParams['frameHeight'],  
+            id = landscapeParams['frameId'],
+            showBoundary  = landscapeParams['visibleBoundaries']
     ))
 
 portraitTemplate = PageTemplate(
         id = 'portrait', 
         pagesize = portrait(A4),
-        frames = Frame(
-            20*mm, 20*mm,  # левый и нижний отступ
-            A4[0] - 40*mm, A4[1] - 40*mm,  # ширина и высота
-            id='portrait_frame'
+        frames= Frame(
+            x1 = portraitParams['startPointX'], y1 =  portraitParams['startPointY'], 
+            width = portraitParams['frameWidth'], height = portraitParams['frameHeight'],  
+            id = portraitParams['frameId'],
+            showBoundary  = portraitParams['visibleBoundaries']
     ))
 
 commonTableStyleCmd = [    
         ('BACKGROUND', (0, 0), (-1, 0), colors.white),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
         ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-        ('FONTSIZE', (0, 0), (-1, -1), 8)]
+        ('FONTSIZE', (0, 0), (-1, -1), 7)]
 
 leftAlignTableStyleCmd = [ ('ALIGN', (0, 0), (-1, -1), 'LEFT')]
 centerAlignTableStyleCmd = [ ('ALIGN', (0, 0), (-1, -1), 'CENTER')]
@@ -86,13 +106,13 @@ def generateImageFromStr(base64_string,width, height):
 
 
 
-def fillStandDataSheet(stand,doc,project):
+def fillStandPage(stand,doc,project):
     
     sheetWidth = A4[0]
     sheetHeight = A4[1]
 
-    leftPartWidth = 0.55 * sheetWidth
-    rightPartWidth = 0.35 * sheetWidth
+    leftPartWidth = 0.58 * sheetWidth
+    rightPartWidth = 0.38 * sheetWidth
     
     styles = getSampleStyleSheet()
 
@@ -101,7 +121,7 @@ def fillStandDataSheet(stand,doc,project):
         parent = styles['Normal'],
         fontName ='Arial',
         encoding ='UTF-8',
-        fontSize = 8
+        fontSize = 7
     )
 
 
@@ -264,9 +284,8 @@ def fillStandDataSheet(stand,doc,project):
                                             commonTableStyleCmd +
                                             centerAlignTableStyleCmd + 
                                             usualFontTableStyleCmd + 
-                                            visibleAllBordersTableStyleCmd + 
-                                            #шапка жирным
-                                            [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] ))
+                                            visibleAllBordersTableStyleCmd ))
+
 
     #чертеж стенда
     blueprintLeftElements = [standTechCardHeaderTable,
@@ -287,7 +306,7 @@ def fillStandDataSheet(stand,doc,project):
     if imageString is not None:  
         standBlueprint = generateImageFromStr(imageString, rightPartWidth, sumHeight)  
     else:
-        standBlueprint = Paragraph(text = "Ха-ха, пiймав на пикчу", style = cyrillicStyle)
+        standBlueprint = Paragraph(text = "Ха-ха, пiймав на пiкчу", style = cyrillicStyle)
 
 
     blueprintTable = Table(data = [[standBlueprint]], colWidths = rightPartWidth, rowHeights = sumHeight)
@@ -317,10 +336,10 @@ def fillStandDataSheet(stand,doc,project):
 
     sheetTable.setStyle(TableStyle(cmds = 
                          commonTableStyleCmd +
-                         centerAlignTableStyleCmd + 
-                         boldFontTableStyleCmd))
-
-
+                         centerAlignTableStyleCmd +
+                         boldFontTableStyleCmd + 
+                         #выравнивание по верху
+                         [('VALIGN', (0, 0), (-1, -1), "TOP")] ))
 
 
     #собираем все объекты в массив и отдаем
@@ -334,23 +353,10 @@ def fillStandDataSheet(stand,doc,project):
 
 
 
-def fillConclusionDataSheet(stand,doc,project):
+def fillConclusionPage(stand,doc,project):
 
     sheetWidth = A4[1]
     sheetHeight = A4[0]
-
-    commonTableStyleCmd = [    
-        ('BACKGROUND', (0, 0), (-1, 0), colors.white),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
-        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-        ('FONTSIZE', (0, 0), (-1, -1), 8)]
-
-    leftAlignTableStyleCmd = [ ('ALIGN', (0, 0), (-1, -1), 'LEFT')]
-    centerAlignTableStyleCmd = [ ('ALIGN', (0, 0), (-1, -1), 'CENTER')]
-    usualFontTableStyleCmd = [('FONTNAME', (0, 0), (-1, -1), "Arial")]
-    boldFontTableStyleCmd = [('FONTNAME', (0, 0), (-1, -1), "Arial-Bold")]
-    visibleBordersTableStyleCmd = [('GRID', (0, 0), (-1, -1), 1, colors.black)]
-    invisibleBordersTableStyleCmd = [('GRID', (0, 0), (-1, -1), 1, colors.white)]
 
     styles = getSampleStyleSheet()
 
@@ -359,7 +365,7 @@ def fillConclusionDataSheet(stand,doc,project):
         parent = styles['Normal'],
         fontName ='Arial',
         encoding ='UTF-8',
-        fontSize = 8
+        fontSize = 7
     )
 
     sheetElements = []
@@ -377,7 +383,7 @@ def fillConclusionDataSheet(stand,doc,project):
     standInfoTable.setStyle(TableStyle(cmds = 
                                        commonTableStyleCmd +
                                        centerAlignTableStyleCmd + 
-                                       visibleBordersTableStyleCmd +    
+                                       visibleAllBordersTableStyleCmd +    
                                        #жирный шрифт для шапки 
                                        [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold"), 
                                         ('FONTNAME', (0, 0), (0, -1), "Arial-Bold")] +      
@@ -395,14 +401,14 @@ def fillConclusionDataSheet(stand,doc,project):
     standInfoAlignmentTable.setStyle(TableStyle(cmds = 
                                                 commonTableStyleCmd +
                                                 centerAlignTableStyleCmd + 
-                                                invisibleBordersTableStyleCmd ))
+                                                invisibleAllBordersTableStyleCmd ))
 
     #графа № заказа на производство
     orderNumberLabel = Paragraph("№ заказа на производство", style = cyrillic_style)
     emptyCell = Table(data = [[""]], colWidths = sheetWidth * 0.3)
     emptyCell.setStyle(TableStyle(cmds =
                                   commonTableStyleCmd +  
-                                  visibleBordersTableStyleCmd))
+                                  visibleAllBordersTableStyleCmd))
 
     orderNumberAlignmentTable = Table(data = [[orderNumberLabel, emptyCell]], 
                                       colWidths = [sheetWidth*0.15,sheetWidth*0.75])
@@ -410,7 +416,7 @@ def fillConclusionDataSheet(stand,doc,project):
     orderNumberAlignmentTable.setStyle(TableStyle(cmds = 
                                                   commonTableStyleCmd +
                                                   leftAlignTableStyleCmd + 
-                                                  invisibleBordersTableStyleCmd))
+                                                  invisibleAllBordersTableStyleCmd))
 
     #таблица исполнения этапов
     doneTable = [["№ п/п", 
@@ -422,11 +428,11 @@ def fillConclusionDataSheet(stand,doc,project):
                   "№ протокола (ЛКП, ПСИ и т.д.)"]]
 
 
-    doneTable.append(["1", "Сварочная","", "", "", "", ""])
-    doneTable.append(["2", "Сборочная","", "", "", "", ""])
-    doneTable.append(["3", "Подготовительно-окрасочная","", "", "", "", ""])
-    doneTable.append(["4", "Сборочная (электрическая часть)","", "", "", "", ""])
-    doneTable.append(["5", "Контрольная","", "", "", "", ""])
+    doneTable.append(["1", "СВАРОЧНАЯ","", "", "", "", ""])
+    doneTable.append(["2", "СБОРОЧНАЯ (АРМАТУРА)","", "", "", "", ""])
+    doneTable.append(["3", "ПОДГОТОВИТЕЛЬНО-ОКРАСОЧНАЯ","", "", "", "", ""])
+    doneTable.append(["4", "СБОРОЧНАЯ (ЭЛЕКТРИЧЕСКАЯ ЧАСТЬ)","", "", "", "", ""])
+    doneTable.append(["5", "КОНТРОЛЬНАЯ","", "", "", "", ""])
     doneTable.append(["", "","", "", "", "", ""])
     doneStagesTable = Table(data = doneTable,
                           colWidths =[sheetWidth*0.05,sheetWidth*0.2, sheetWidth*0.1, sheetWidth*0.125,sheetWidth*0.125, sheetWidth*0.1, sheetWidth*0.15],
@@ -437,7 +443,7 @@ def fillConclusionDataSheet(stand,doc,project):
     doneStagesTable.setStyle(TableStyle(cmds = 
                                       commonTableStyleCmd +
                                       centerAlignTableStyleCmd + 
-                                      visibleBordersTableStyleCmd +
+                                      visibleAllBordersTableStyleCmd +
                                       #жирный шрифт для шапки      
                                       [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] + 
                                       #обычный шрифт для тела
@@ -445,7 +451,7 @@ def fillConclusionDataSheet(stand,doc,project):
 
 
     #графа подписей
-    productReadyLabel = Paragraph(text = "Изделие признано годным и передано на склад", 
+    productReadyLabel = Paragraph(text = "Изделие признано годным и" + "<br/> " + "передано на склад", 
                                   style = cyrillic_style)
    
 
@@ -455,7 +461,7 @@ def fillConclusionDataSheet(stand,doc,project):
     signatureLabels.setStyle(TableStyle(cmds = 
                                         commonTableStyleCmd +
                                         centerAlignTableStyleCmd + 
-                                        invisibleBordersTableStyleCmd +
+                                        invisibleAllBordersTableStyleCmd +
                                         usualFontTableStyleCmd))
 
     signatureTable = Table(data = [["",""]],
@@ -463,7 +469,7 @@ def fillConclusionDataSheet(stand,doc,project):
     signatureTable.setStyle(TableStyle(cmds = 
                                         commonTableStyleCmd +
                                         centerAlignTableStyleCmd + 
-                                        visibleBordersTableStyleCmd ))
+                                        visibleAllBordersTableStyleCmd ))
 
     allSignatureTable = [signatureLabels, signatureTable]
 
@@ -473,7 +479,7 @@ def fillConclusionDataSheet(stand,doc,project):
     signatureAligmentTable.setStyle(TableStyle(cmds = 
                                                commonTableStyleCmd +
                                                leftAlignTableStyleCmd + 
-                                               invisibleBordersTableStyleCmd +
+                                               invisibleAllBordersTableStyleCmd +
                                                [("VALIGN", (0, 0), (-1, -1), "BOTTOM")] ))
 
 
@@ -509,11 +515,11 @@ def generateTechcard():
     doc.addPageTemplates([portraitTemplate,landscapeTemplate])
 
     for stand in data["Stands"]:      
-        standSheet = fillStandDataSheet(stand,doc,data)
+        standSheet = fillStandPage(stand,doc,data)
         elements.extend(standSheet)  
         elements.append(NextPageTemplate('landscape'))
         elements.append(PageBreak())
-        conclusionSheet = fillConclusionDataSheet(stand,doc,data)
+        conclusionSheet = fillConclusionPage(stand,doc,data)
         elements.extend(conclusionSheet)
         elements.append(NextPageTemplate('portrait'))
         elements.append(PageBreak())

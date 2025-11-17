@@ -19,10 +19,16 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Content Include="PythonModule\EAC.jpg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
       <Content Include="PythonModule\Etalon.jpg">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
-      <Content Include="PythonModule\ReportCreator.py">
+      <Content Include="PythonModule\PassportGenerator.py">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="PythonModule\TechCardsGenerator.py">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
