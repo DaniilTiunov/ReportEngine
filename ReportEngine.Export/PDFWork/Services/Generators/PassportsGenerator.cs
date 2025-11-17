@@ -53,7 +53,7 @@ public class PassportsGenerator : IReportGenerator
             using (StreamReader reader = process.StandardOutput)
             {
                 string result = reader.ReadToEnd();
-                Console.WriteLine(result);
+                Console.WriteLine("Что-то выполнилось: " + result);
             }
 
             process.WaitForExit();
