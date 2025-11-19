@@ -69,7 +69,7 @@ public class DirectoryHelper
 
     public static string GetJsonSavePath()
     {
-        return Path.Combine(GetDirectory(), "PythonModule");
+        return Path.Combine(GetDirectory(), "PythonModule", "TechnologicalCards_temp.json");
     }
 }
 

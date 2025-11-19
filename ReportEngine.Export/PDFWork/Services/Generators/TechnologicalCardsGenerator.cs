@@ -59,6 +59,11 @@ public class TechnologicalCardsGenerator : IReportGenerator
         var exeFilePath = DirectoryHelper.GetPythonExePath();
         var jsonSavePath = DirectoryHelper.GetJsonSavePath();
 
+        Debug.WriteLine("Путь к exe: " + exeFilePath);
+        Debug.WriteLine("Путь к JSON: " + jsonSavePath);
+        Debug.WriteLine("Путь сохранения " + savePath);
+
+
         ProcessStartInfo startInfo = new ProcessStartInfo();
         startInfo.FileName = exeFilePath; // путь к .exe файлу
         startInfo.Arguments = $"--script techcard --jsonPath {jsonSavePath} --outputReportPath {savePath}";
@@ -72,7 +77,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
             using (StreamReader reader = process.StandardOutput)
             {
                 string result = reader.ReadToEnd();
-                Console.WriteLine("Что-то выполнилось: " + result);
+                Debug.WriteLine("Что-то выполнилось: " + result);
             }
 
             process.WaitForExit();
