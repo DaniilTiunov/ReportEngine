@@ -728,14 +728,20 @@ public static class ExcelReportHelper
 
         var electricalParts = parts.ElectricalParts.Select(record => RecordToJson(record));
 
-        var mountParts = new List<PartRecordJsonObject>();
+        
 
-        mountParts.AddRange(parts.PipesList.Select(record => RecordToJson(record)));
-        mountParts.AddRange(parts.ArmaturesList.Select(record => RecordToJson(record)));
-        mountParts.AddRange(parts.TreeList.Select(record => RecordToJson(record)));
-        mountParts.AddRange(parts.KmchList.Select(record => RecordToJson(record)));
-        mountParts.AddRange(parts.SensorsHolders.Select(record => RecordToJson(record)));
-        mountParts.AddRange(parts.OthersParts.Select(record => RecordToJson(record)));
+        var mountPartsRecords = new List<EquipmentRecord>();
+
+        mountPartsRecords.AddRange(parts.PipesList);
+        mountPartsRecords.AddRange(parts.ArmaturesList);
+        mountPartsRecords.AddRange(parts.TreeList);
+        mountPartsRecords.AddRange(parts.KmchList);
+        mountPartsRecords.AddRange(parts.SensorsHolders);
+        mountPartsRecords.AddRange(parts.OthersParts);
+
+
+        var mountParts = mountPartsRecords.Select(record => RecordToJson(record));
+
 
         return new StandJsonObject
         {

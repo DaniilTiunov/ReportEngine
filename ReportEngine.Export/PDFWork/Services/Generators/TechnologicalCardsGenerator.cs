@@ -6,6 +6,7 @@ using ReportEngine.Export.Mapping;
 using ReportEngine.Export.Mapping.JsonObjects;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
+using System.Diagnostics;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -51,10 +52,36 @@ public class TechnologicalCardsGenerator : IReportGenerator
         };
         string jsonObject = JsonSerializer.Serialize(dataObject, options);
 
+        var jsonFileName = DirectoryHelper.GetGeneratedJsonPath();
+        File.WriteAllText(jsonFileName, jsonObject, Encoding.UTF8);
 
+
+        var exeFilePath = DirectoryHelper.GetPythonExePath();
         var jsonSavePath = DirectoryHelper.GetJsonSavePath();
-        var jsonFileName = Path.Combine(jsonSavePath, "TechnologicalCards_temp.json");
-        File.WriteAllText(jsonFileName, jsonObject,Encoding.UTF8);
+
+        Debug.WriteLine("Путь к exe: " + exeFilePath);
+        Debug.WriteLine("Путь к JSON: " + jsonSavePath);
+        Debug.WriteLine("Путь сохранения " + savePath);
+
+
+        ProcessStartInfo startInfo = new ProcessStartInfo();
+        startInfo.FileName = exeFilePath; // путь к .exe файлу
+        startInfo.Arguments = $"--script techcard --jsonPath {jsonSavePath} --outputReportPath {savePath}";
+        startInfo.UseShellExecute = false;
+        startInfo.RedirectStandardOutput = true;
+        startInfo.RedirectStandardError = true;
+
+
+        using (Process process = Process.Start(startInfo))
+        {
+            using (StreamReader reader = process.StandardOutput)
+            {
+                string result = reader.ReadToEnd();
+                Debug.WriteLine("Что-то выполнилось: " + result);
+            }
+
+            process.WaitForExit();
+        }
 
 
 

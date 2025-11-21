@@ -19,7 +19,16 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="PythonModule\ReportCreator.py">
+      <Content Include="PythonModule\EAC.jpg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="PythonModule\Etalon.jpg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="PythonModule\PassportGenerator.py">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="PythonModule\TechCardsGenerator.py">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
@@ -42,6 +51,7 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
         <PackageReference Include="QuestPDF" Version="2025.12.0-alpha1" />
         <PackageReference Include="System.Drawing.Common" Version="9.0.10" />
+        <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
     </ItemGroup>
 
     <ItemGroup>
