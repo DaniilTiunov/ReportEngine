@@ -10,8 +10,11 @@ namespace ReportEngine.Export.Mapping.JsonObjects
 {
     public class ProjectJsonObject
     {
+        public string? SeniorEngineer {  get; set; } //ведущий инженер
+        public string? ResponsibleForAccept { get; set; } //ответственный за приемку
+        public string? SecondLevelSpecialist { get; set; } //специалист второго уровня
+        public string? OSiL { get; set; } //представитель ОСиЛ
         public int Id { get; set; }
-
         public int Number { get; set; } //№п/п
         public string? Description { get; set; } //Обозначение КД
         public DateOnly CreationDate { get; set; } //Дата запроса

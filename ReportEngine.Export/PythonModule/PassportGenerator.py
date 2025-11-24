@@ -8,7 +8,6 @@ import PdfHelper
 
 
 
-
 portraitParams = {
     "startPointX" : 20 * mm,
     "startPointY": 20 * mm,

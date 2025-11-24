@@ -20,7 +20,6 @@ public static class ExcelReportHelper
         return float.TryParse(str, out float parseResult) ? parseResult : null;
     }
 
-
     public static string CommonErrorString => "Ошибка получения/формирования данных.";
 
     //создаем инфу о комплектующих
@@ -676,8 +675,16 @@ public static class ExcelReportHelper
     //создание JSON объекта проекта
     public static ProjectJsonObject CreateProjectJson(ProjectInfo project)
     {
+
+        var standSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
+
         return new ProjectJsonObject
         {
+            SeniorEngineer = standSettings.SeniorEngineer,
+            ResponsibleForAccept = standSettings.ResponsibleForAccept, 
+            SecondLevelSpecialist = standSettings.SecondLevelSpecialist, 
+            OSiL = standSettings.OSiL,
+
             Number = project.Number,
             Id = project.Id,
             Description = project.Description,
@@ -698,7 +705,6 @@ public static class ExcelReportHelper
             HumanCost = project.HumanCost,
             Manager = project.Manager,
             Stands = project.Stands.Select(stand => CreateStandJson(stand)).ToList()
-
         };
     }
     // создание JSON объекта стенда
