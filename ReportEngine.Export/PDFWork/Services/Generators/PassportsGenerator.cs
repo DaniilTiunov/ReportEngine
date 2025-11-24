@@ -30,8 +30,6 @@ public class PassportsGenerator : IReportGenerator
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
-        var jsonSavePath = DirectoryHelper.GetJsonSavePath();
-
         var savePath = SettingsManager.GetReportDirectory();
         var fileName = ExcelReportHelper.CreateReportName("Паспорт", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
@@ -43,8 +41,8 @@ public class PassportsGenerator : IReportGenerator
             WriteIndented = true
         };
         string jsonObject = JsonSerializer.Serialize(dataObject, options);
-        var jsonFileName = DirectoryHelper.GetGeneratedJsonPath();
-        File.WriteAllText(jsonFileName, jsonObject, Encoding.UTF8);
+        var jsonSavePath = DirectoryHelper.GetJsonSavePath();
+        File.WriteAllText(jsonSavePath, jsonObject, Encoding.UTF8);
 
         ProcessStartInfo startInfo = new ProcessStartInfo();
         startInfo.FileName = exeFilePath;

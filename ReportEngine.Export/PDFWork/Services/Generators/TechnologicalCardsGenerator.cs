@@ -35,11 +35,11 @@ public class TechnologicalCardsGenerator : IReportGenerator
             WriteIndented = true
         };
         string jsonObject = JsonSerializer.Serialize(dataObject, options);
-        var jsonFileName = DirectoryHelper.GetGeneratedJsonPath();
-        File.WriteAllText(jsonFileName, jsonObject, Encoding.UTF8);
+        var jsonSavePath = DirectoryHelper.GetJsonSavePath();
+        File.WriteAllText(jsonSavePath, jsonObject, Encoding.UTF8);
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
-        var jsonSavePath = DirectoryHelper.GetJsonSavePath();
+      
 
         var savePath = SettingsManager.GetReportDirectory();
         var fileName = ExcelReportHelper.CreateReportName("Технологические карты", "pdf");

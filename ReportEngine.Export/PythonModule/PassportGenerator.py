@@ -238,19 +238,25 @@ def fillBodyPage(stand,doc,project):
 
     productionSupervisorRowTable = Table(data = [[ CreateSignatureTable("Начальник производственного участка", "Должность"),
                                                    CreateSignatureTable("                   ", "Подпись"),
-                                                   CreateSignatureTable("                   ", "Расшифровка подписи") ]] )
+                                                   CreateSignatureTable(str(project["SeniorEngineer"]), "Расшифровка подписи") ]] )
 
     productionSupervisorRowTable.setStyle(TableStyle(cmds = PdfHelper.centerAlignTableStyleCmd ))
 
-    productionControlRowTable = Table(data = [[ CreateSignatureTable("Представитель ОТК", "Должность"),
+    acceptanceSupervisorRowTable = Table(data = [[ CreateSignatureTable("Представитель ОТК", "Должность"),
                                                 CreateSignatureTable("                   ", "Подпись"),
-                                                CreateSignatureTable("                   ", "Расшифровка подписи") ]] )
+                                                CreateSignatureTable(str(project["ResponsibleForAccept"]), "Расшифровка подписи") ]] )
 
-    productionControlRowTable.setStyle(TableStyle(cmds = PdfHelper.centerAlignTableStyleCmd ))
+    acceptanceSupervisorRowTable.setStyle(TableStyle(cmds = PdfHelper.centerAlignTableStyleCmd ))
+
+    visualMeasuringSupervisorRowTable = Table(data = [[ CreateSignatureTable("Представитель ОТК", "Должность"),
+                                                CreateSignatureTable("                   ", "Подпись"),
+                                                CreateSignatureTable(str(project["SecondLevelSpecialist"]), "Расшифровка подписи") ]] )
+
+    visualMeasuringSupervisorRowTable.setStyle(TableStyle(cmds = PdfHelper.centerAlignTableStyleCmd ))
 
     packagingSupervisorRowTable = Table(data = [[ CreateSignatureTable("Представитель ОСиЛ", "Должность"),
                                                   CreateSignatureTable("                   ", "Подпись"),
-                                                  CreateSignatureTable("                   ", "Расшифровка подписи") ]] )
+                                                  CreateSignatureTable(str(project["OSiL"]), "Расшифровка подписи") ]] )
 
     packagingSupervisorRowTable.setStyle(TableStyle(cmds = PdfHelper.centerAlignTableStyleCmd ))
 
@@ -263,12 +269,12 @@ def fillBodyPage(stand,doc,project):
     rightPartContent.append(Paragraph(text = "5. Свидетельство об приемке", style = titleStyle ))
     rightPartContent.append(standInfoRowTable)
     rightPartContent.append(Paragraph(text = "соответствует требованиям ТУ 4200-012-45633145-2016 и признан годным к эксплуатации.", style = usualStyle ))
-    rightPartContent.append(productionControlRowTable)
+    rightPartContent.append(acceptanceSupervisorRowTable)
     
     rightPartContent.append(Paragraph(text = "6. Свидетельство о визуальном и измерительном контроле", style = titleStyle ))
     rightPartContent.append(standInfoRowTable)
     rightPartContent.append(Paragraph(text = "контроль проведен в соответствии с ЭП-С.121.30.00, АКТ N 25-001", style = usualStyle ))
-    rightPartContent.append(productionControlRowTable)
+    rightPartContent.append(visualMeasuringSupervisorRowTable)
 
     rightPartContent.append(Paragraph(text = "7. Свидетельство об упаковывании", style = titleStyle))
     rightPartContent.append(standInfoRowTable)
