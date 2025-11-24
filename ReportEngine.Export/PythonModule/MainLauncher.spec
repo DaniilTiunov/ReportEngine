@@ -3,9 +3,9 @@
 
 a = Analysis(
     ['MainLauncher.py'],
+    datas = [( '*.jpg', '.')],
     pathex=[],
     binaries=[],
-    datas=[],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

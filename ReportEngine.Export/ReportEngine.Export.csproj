@@ -7,6 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="PythonModule\MainLauncher.exe" />
+    </ItemGroup>
+
+    <ItemGroup>
         <COMReference Include="Microsoft.Office.Interop.Excel">
             <WrapperTool>tlbimp</WrapperTool>
             <VersionMinor>9</VersionMinor>
@@ -23,6 +27,9 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <Content Include="PythonModule\Etalon.jpg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="PythonModule\MainLauncher.exe">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <Content Include="PythonModule\PassportGenerator.py">
