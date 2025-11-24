@@ -44,6 +44,7 @@ public class PassportsGenerator : IReportGenerator
         startInfo.UseShellExecute = false;
         startInfo.RedirectStandardOutput = true;
         startInfo.RedirectStandardError = true;
+        startInfo.CreateNoWindow = true;
 
 
         using (Process process = Process.Start(startInfo))
