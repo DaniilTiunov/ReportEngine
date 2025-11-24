@@ -1,27 +1,10 @@
-﻿from tkinter import BOTTOM, CENTER
-from reportlab.lib import colors
-from reportlab.lib.pagesizes import A4, landscape,portrait
+﻿from reportlab.lib.pagesizes import A4, landscape,portrait
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import (KeepInFrame, PageTemplate, SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak,Image, NextPageTemplate, Frame)
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.cidfonts import UnicodeCIDFont
-from reportlab.pdfgen import canvas
-from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.lib.units import cm,mm
-import json
-import base64
-import io
-import os
-from datetime import datetime
-from pathlib import Path
+from reportlab.platypus import ( PageTemplate, SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, NextPageTemplate, Frame)
+from reportlab.lib.units import mm
+from reportlab.lib import colors
 from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT, TA_JUSTIFY
-
-
-pdfmetrics.registerFont(TTFont('Arial','arial.ttf'))
-pdfmetrics.registerFont(TTFont('Arial-Bold','arialbd.ttf'))
-pdfmetrics.registerFont(UnicodeCIDFont('STSong-Light'))
-
-
+import PdfHelper
 
 
 
@@ -66,59 +49,15 @@ portraitTemplate = PageTemplate(
     ))
 
 
-
-commonTableStyleCmd = [    
-        ('BACKGROUND', (0, 0), (-1, 0), colors.white),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
-        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-        ('FONTSIZE', (0, 0), (-1, -1), 7)]
-
-leftAlignTableStyleCmd = [ ('ALIGN', (0, 0), (-1, -1), 'LEFT')]
-centerAlignTableStyleCmd = [ ('ALIGN', (0, 0), (-1, -1), 'CENTER')]
-
-usualFontTableStyleCmd = [('FONTNAME', (0, 0), (-1, -1), "Arial")]
-boldFontTableStyleCmd = [('FONTNAME', (0, 0), (-1, -1), "Arial-Bold")]
-
-visibleAllBordersTableStyleCmd = [('GRID', (0, 0), (-1, -1), 1, colors.black)]
-invisibleAllBordersTableStyleCmd = []
-
-invisibleOuterBordersTableStyleCmd = []
-visibleOuterBordersTableStyleCmd = [('BOX', (0, 0), (-1, -1), 1, colors.black)]
-
-invisibleInnerBordersTableStyleCmd = []
-visibleInnerBordersTableStyleCmd = [('INNERGRID', (0, 0), (-1, -1), 1, colors.black)]
-
-
-def openJsonFile(filePath):
-    
-    try:
-        with open(filePath, 'r', encoding='utf-8-sig') as file:
-            jsonData = json.load(file)           
-    except Exception as e:
-            print(f"Error: {e}")
-
-    return jsonData
-
-
-def generateImageFromFile(fileName, width, height):
-    scriptDir = Path(__file__).parent
-    filePath = os.path.join(scriptDir, fileName)
-    return Image(filePath, width, height)
-    
-
-def generateImageFromStr(base64string, width, height):
-    imageData = base64.b64decode(base64string)
-    imageBuffer = io.BytesIO(imageData)
-    return Image(imageBuffer, width, height)
-
 def CreateSignatureTable(aboveLabel,underLabel):
     
     createdTable = Table(data = [[aboveLabel], [underLabel]])
-    createdTable.setStyle(TableStyle(cmds = commonTableStyleCmd + 
-                                       visibleInnerBordersTableStyleCmd + 
-                                       invisibleOuterBordersTableStyleCmd + 
-                                       usualFontTableStyleCmd +
-                                       centerAlignTableStyleCmd +
+    createdTable.setStyle(TableStyle(cmds = 
+                                       PdfHelper.commonTableStyleCmd + 
+                                       PdfHelper.visibleInnerBordersTableStyleCmd + 
+                                       PdfHelper.invisibleOuterBordersTableStyleCmd + 
+                                       PdfHelper.usualFontTableStyleCmd +
+                                       PdfHelper.centerAlignTableStyleCmd +
                                        [("VALIGN", (0, 0), (0, 0), "BOTTOM")] +
                                        [("VALIGN", (-1, -1), (-1, -1), "TOP")] +
                                        [("BOTTOMPADDING", (0, 0), (0, 0), 0)] +
@@ -127,6 +66,7 @@ def CreateSignatureTable(aboveLabel,underLabel):
                                        [("FONTSIZE", (-1, -1), (-1, -1), 5 )] ))
 
     return createdTable
+
 
 
 def fillTitlePage(stand,doc,project):
@@ -155,14 +95,14 @@ def fillTitlePage(stand,doc,project):
     )
 
 
-    eacImage = generateImageFromFile("EAC.jpg", 50, 50)
-    logoImage = generateImageFromFile("Etalon.jpg", 210, 140)
+    eacImage =  PdfHelper.generateImageFromFile("EAC.jpg", 50, 50)
+    logoImage =  PdfHelper.generateImageFromFile("Etalon.jpg", 210, 140)
     mainTitle = Paragraph(text = "Стенд датчиков КИПиА" + "<br/>" +  stand["KKSCode"] + "<br/>" +"ПАСПОРТ", 
                           style = titleStyle)
     rightPartTable = Table(data = [[eacImage],[logoImage],[mainTitle]], colWidths = ( frameWidth * 0.97 ) / 2, rowHeights = [frameHeight * 0.1, frameHeight * 0.15, frameHeight * 0.72] )
     rightPartTable.setStyle(TableStyle(cmds = 
-                                       commonTableStyleCmd + 
-                                       invisibleAllBordersTableStyleCmd + 
+                                        PdfHelper.commonTableStyleCmd + 
+                                        PdfHelper.invisibleAllBordersTableStyleCmd + 
                                        #выравниваем лого EAC
                                        [ ('ALIGN', (0, 0), (0, 0), 'LEFT')] + 
                                        [("VALIGN", (0, 0), (0, 0), "TOP")] + 
@@ -175,8 +115,9 @@ def fillTitlePage(stand,doc,project):
                                        ))
 
     pageTable = Table(data = [["", rightPartTable]], colWidths = ( frameWidth * 0.97 ) / 2, rowHeights = frameHeight * 0.97 )
-    pageTable.setStyle(TableStyle(cmds = commonTableStyleCmd +
-                                 invisibleOuterBordersTableStyleCmd +
+    pageTable.setStyle(TableStyle(cmds = 
+                                  PdfHelper.commonTableStyleCmd +
+                                  PdfHelper.invisibleOuterBordersTableStyleCmd +
                                  #внутренние границы - пунктиром
                                  [('INNERGRID', (0, 0), (-1, -1), 1, colors.black, None, (2, 2) )] ))
     
@@ -287,32 +228,32 @@ def fillBodyPage(stand,doc,project):
     standInfoRowTable = Table(data = [[ CreateSignatureTable("Стенд датчиков", "Наименование изделия"),
                                         CreateSignatureTable(stand["KKSCode"], "Обозначение"),
                                         CreateSignatureTable(stand["SerialNumber"], "Заводской номер") ]] )
-    standInfoRowTable.setStyle(TableStyle(cmds = centerAlignTableStyleCmd))
+    standInfoRowTable.setStyle(TableStyle(cmds = PdfHelper.centerAlignTableStyleCmd))
 
     productionInfoRowTable = Table(data = [[ Paragraph(text = "изготовлен", style = usualStyle),
                                              CreateSignatureTable("10.2077", "Месяц, год"),
                                              Paragraph(text = "согласно", style = usualStyle),
                                              CreateSignatureTable("какой-то опросный лист", "№ опросного листа, № спецификации, РД") ]] )
-    productionInfoRowTable.setStyle(TableStyle(cmds = centerAlignTableStyleCmd +
+    productionInfoRowTable.setStyle(TableStyle(cmds = PdfHelper.centerAlignTableStyleCmd +
                                           [('VALIGN', (0, 0), (-1, -1), "TOP" )] ))
 
     productionSupervisorRowTable = Table(data = [[ CreateSignatureTable("Начальник производственного участка", "Должность"),
                                                    CreateSignatureTable("                   ", "Подпись"),
                                                    CreateSignatureTable("                   ", "Расшифровка подписи") ]] )
 
-    productionSupervisorRowTable.setStyle(TableStyle(cmds = centerAlignTableStyleCmd ))
+    productionSupervisorRowTable.setStyle(TableStyle(cmds = PdfHelper.centerAlignTableStyleCmd ))
 
     productionControlRowTable = Table(data = [[ CreateSignatureTable("Представитель ОТК", "Должность"),
                                                 CreateSignatureTable("                   ", "Подпись"),
                                                 CreateSignatureTable("                   ", "Расшифровка подписи") ]] )
 
-    productionControlRowTable.setStyle(TableStyle(cmds = centerAlignTableStyleCmd ))
+    productionControlRowTable.setStyle(TableStyle(cmds = PdfHelper.centerAlignTableStyleCmd ))
 
     packagingSupervisorRowTable = Table(data = [[ CreateSignatureTable("Представитель ОСиЛ", "Должность"),
                                                   CreateSignatureTable("                   ", "Подпись"),
                                                   CreateSignatureTable("                   ", "Расшифровка подписи") ]] )
 
-    packagingSupervisorRowTable.setStyle(TableStyle(cmds = centerAlignTableStyleCmd ))
+    packagingSupervisorRowTable.setStyle(TableStyle(cmds = PdfHelper.centerAlignTableStyleCmd ))
 
 
     rightPartContent = [Paragraph(text = "4. Свидетельство об изготовлении", style = titleStyle) ]
@@ -338,9 +279,10 @@ def fillBodyPage(stand,doc,project):
 
 
     pageTable = Table(data = [[leftPartContent, rightPartContent]], colWidths = ( frameWidth * 0.97 ) / 2, rowHeights = frameHeight * 0.97 )
-    pageTable.setStyle(TableStyle(cmds = commonTableStyleCmd +
-                                 invisibleOuterBordersTableStyleCmd +
-                                 centerAlignTableStyleCmd +
+    pageTable.setStyle(TableStyle(cmds = 
+                                 PdfHelper.commonTableStyleCmd +
+                                 PdfHelper.invisibleOuterBordersTableStyleCmd +
+                                 PdfHelper.centerAlignTableStyleCmd +
                                  #внутренние границы - пунктиром
                                  [('INNERGRID', (0, 0), (-1, -1), 1, colors.black, None, (2, 2) )] + 
                                  [('VALIGN', (0, 0), (-1, -1), "TOP" )]   ))
@@ -352,20 +294,14 @@ def fillBodyPage(stand,doc,project):
     return sheetElements
 
 
-def generateReport(jsonFilePath,outputDir):
+def generateReport(jsonFilePath,outputFilePath):
 
-    now = datetime.now()
-    outputFileName = "Паспорт___"
-    outputFileName += "{}-{}-{}___{}-{}-{}".format(now.day,now.month,now.year,now.hour,now.minute,now.second)
-    outputFileName += ".pdf"
-    
-    outputPdf = outputDir + outputFileName
+    PdfHelper.registerFonts()
 
-    data = openJsonFile(jsonFilePath)
-    doc = SimpleDocTemplate(outputPdf, pagesize=A4)
-
-    #добавляем стили страницы
+    doc = SimpleDocTemplate(outputFilePath, pagesize=A4)
     doc.addPageTemplates([landscapeTemplate, portraitTemplate])
+
+    data = PdfHelper.openJsonFile(jsonFilePath)
 
     elements = []
     elements.append(NextPageTemplate('landscape'))

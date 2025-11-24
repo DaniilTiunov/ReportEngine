@@ -26,32 +26,27 @@ public class PassportsGenerator : IReportGenerator
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
 
-        var savePath = SettingsManager.GetReportDirectory() + "\\\\"; ;
-
-        var fileName = ExcelReportHelper.CreateReportName("Паспорта", ".docx");
-
-        var fullSavePath = Path.Combine(savePath, fileName);
-
-        var templatePath = DirectoryHelper.GetReportsTemplatePath("Passport_template", ".docx");
-
-
         var exeFilePath = DirectoryHelper.GetPythonExePath();
         var jsonSavePath = DirectoryHelper.GetJsonSavePath();
 
+        var savePath = SettingsManager.GetReportDirectory();
+        var fileName = ExcelReportHelper.CreateReportName("Паспорт", "pdf");
+        var fullSavePath = Path.Combine(savePath, fileName);
+
         ProcessStartInfo startInfo = new ProcessStartInfo();
-        startInfo.FileName = exeFilePath; // путь к .exe файлу
-        startInfo.Arguments = $"--script passport --jsonPath \"{jsonSavePath}\" --outputReportPath \"{savePath}\"";
+        startInfo.FileName = exeFilePath;
+        startInfo.Arguments = $"--script passport --jsonPath \"{jsonSavePath}\" --outputFilePath \"{fullSavePath}\"";
         startInfo.UseShellExecute = false;
         startInfo.RedirectStandardOutput = true;
         startInfo.RedirectStandardError = true;
-        startInfo.CreateNoWindow = true;
-
+        startInfo.CreateNoWindow = false;
 
         using (Process process = Process.Start(startInfo))
         {
             using (StreamReader reader = process.StandardOutput)
             {
                 string result = reader.ReadToEnd();
+                Debug.Print("Результат выполнения скрипта:" + result);
             }
 
             process.WaitForExit();

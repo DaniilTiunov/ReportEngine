@@ -15,8 +15,6 @@ namespace ReportEngine.Export.PDFWork.Services.Generators;
 
 public class TechnologicalCardsGenerator : IReportGenerator
 {
-
-
     private readonly IProjectInfoRepository _projectInfoRepository;
 
     public TechnologicalCardsGenerator(IProjectInfoRepository projectInfoRepository)
@@ -32,16 +30,6 @@ public class TechnologicalCardsGenerator : IReportGenerator
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
 
-        var savePath = SettingsManager.GetReportDirectory() + "\\\\";
-
-        var fileName = ExcelReportHelper.CreateReportName("Технологические карты", ".docx");
-
-        var fullSavePath = Path.Combine(savePath, fileName);
-
-        var templatePath = DirectoryHelper.GetReportsTemplatePath("TechnologicalCards_template", ".docx");
-
-
-
         var dataObject = ExcelReportHelper.CreateProjectJson(project);
         var options = new JsonSerializerOptions
         {
@@ -52,18 +40,21 @@ public class TechnologicalCardsGenerator : IReportGenerator
         var jsonFileName = DirectoryHelper.GetGeneratedJsonPath();
         File.WriteAllText(jsonFileName, jsonObject, Encoding.UTF8);
 
-
         var exeFilePath = DirectoryHelper.GetPythonExePath();
         var jsonSavePath = DirectoryHelper.GetJsonSavePath();
 
+        var savePath = SettingsManager.GetReportDirectory();
+        var fileName = ExcelReportHelper.CreateReportName("Технологические карты", "pdf");
+        var fullSavePath = Path.Combine(savePath, fileName);
+
 
         ProcessStartInfo startInfo = new ProcessStartInfo();
-        startInfo.FileName = exeFilePath; // путь к .exe файлу
-        startInfo.Arguments = $"--script techcard --jsonPath \"{jsonSavePath}\" --outputReportPath \"{savePath}\"";
+        startInfo.FileName = exeFilePath;
+        startInfo.Arguments = $"--script techcard --jsonPath \"{jsonSavePath}\" --outputFilePath \"{fullSavePath}\"";
         startInfo.UseShellExecute = false;
         startInfo.RedirectStandardOutput = true;
         startInfo.RedirectStandardError = true;
-        startInfo.CreateNoWindow = true;
+        startInfo.CreateNoWindow = false;
 
 
         using (Process process = Process.Start(startInfo))
@@ -71,6 +62,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
             using (StreamReader reader = process.StandardOutput)
             {
                 string result = reader.ReadToEnd();
+                Debug.Print("Результат выполнения скрипта:" + result);
             }
 
             process.WaitForExit();

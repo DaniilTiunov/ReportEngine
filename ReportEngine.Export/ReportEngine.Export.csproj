@@ -23,13 +23,16 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Content Include="PythonModule\MainLauncher.exe">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="PythonModule\PdfHelper.py">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
       <Content Include="PythonModule\EAC.jpg">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <Content Include="PythonModule\Etalon.jpg">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-      <Content Include="PythonModule\MainLauncher.exe">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <Content Include="PythonModule\PassportGenerator.py">
