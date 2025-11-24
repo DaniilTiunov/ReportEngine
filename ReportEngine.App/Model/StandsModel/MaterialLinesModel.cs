@@ -5,10 +5,10 @@ namespace ReportEngine.App.Model.StandsModel;
 
 public class MaterialLinesModel : BaseViewModel
 {
-    private string _selectedAramuteres = "Жаропрочные";
-    private string _selectedKMCHType = "Жаропрочные";
-    private string _selectedMaterialLine = "Жаропрочные";
-    private string _selectedSocketTypes = "Жаропрочные";
+    private string _selectedAramuteres = "Углеродистые";
+    private string _selectedKMCHType = "Углеродистые";
+    private string _selectedMaterialLine = "Углеродистые";
+    private string _selectedSocketTypes = "Углеродистые";
 
     public ObservableCollection<string> MaterialLineTypes { get; } =
         new() { "Жаропрочные", "Нержавеющие", "Углеродистые" };
