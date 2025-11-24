@@ -8,14 +8,6 @@ import PdfHelper
 
 
 
-landscapeParams = {
-    "startPointX" : 10 * mm,
-    "startPointY": 10 * mm,
-    "frameWidth":A4[1] - 20*mm,
-    "frameHeight": A4[0] - 20*mm,
-    "frameId": 'landscapeFrame',
-    "visibleBoundaries": 0
-}
 
 portraitParams = {
     "startPointX" : 20 * mm,
@@ -26,6 +18,14 @@ portraitParams = {
     "visibleBoundaries": 0
 }
 
+landscapeParams = {
+    "startPointX" : 10 * mm,
+    "startPointY": 10 * mm,
+    "frameWidth":A4[1] - 20*mm,
+    "frameHeight": A4[0] - 20*mm,
+    "frameId": 'landscapeFrame',
+    "visibleBoundaries": 0
+}
 
 
 landscapeTemplate = PageTemplate(
@@ -266,7 +266,7 @@ def fillBodyPage(stand,doc,project):
     rightPartContent.append(Paragraph(text = "соответствует требованиям ТУ 4200-012-45633145-2016 и признан годным к эксплуатации.", style = usualStyle ))
     rightPartContent.append(productionControlRowTable)
     
-    rightPartContent.append(Paragraph(text = "6. Свидетельство о визуальном и измерительнном контроле", style = titleStyle ))
+    rightPartContent.append(Paragraph(text = "6. Свидетельство о визуальном и измерительном контроле", style = titleStyle ))
     rightPartContent.append(standInfoRowTable)
     rightPartContent.append(Paragraph(text = "контроль проведен в соответствии с ЭП-С.121.30.00, АКТ N 25-001", style = usualStyle ))
     rightPartContent.append(productionControlRowTable)

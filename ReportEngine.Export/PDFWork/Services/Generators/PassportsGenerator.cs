@@ -5,6 +5,9 @@ using ReportEngine.Export.Mapping;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
 using System.Diagnostics;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 
 
 
@@ -33,13 +36,23 @@ public class PassportsGenerator : IReportGenerator
         var fileName = ExcelReportHelper.CreateReportName("Паспорт", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
 
+        var dataObject = ExcelReportHelper.CreateProjectJson(project);
+        var options = new JsonSerializerOptions
+        {
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            WriteIndented = true
+        };
+        string jsonObject = JsonSerializer.Serialize(dataObject, options);
+        var jsonFileName = DirectoryHelper.GetGeneratedJsonPath();
+        File.WriteAllText(jsonFileName, jsonObject, Encoding.UTF8);
+
         ProcessStartInfo startInfo = new ProcessStartInfo();
         startInfo.FileName = exeFilePath;
         startInfo.Arguments = $"--script passport --jsonPath \"{jsonSavePath}\" --outputFilePath \"{fullSavePath}\"";
         startInfo.UseShellExecute = false;
         startInfo.RedirectStandardOutput = true;
         startInfo.RedirectStandardError = true;
-        startInfo.CreateNoWindow = false;
+        startInfo.CreateNoWindow = true;
 
         using (Process process = Process.Start(startInfo))
         {

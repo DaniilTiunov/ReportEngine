@@ -3,7 +3,6 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import (PageTemplate, SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, NextPageTemplate, Frame)
 from reportlab.lib.units import mm
 from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT, TA_JUSTIFY
-
 import PdfHelper
 
 
@@ -48,7 +47,7 @@ portraitTemplate = PageTemplate(
 
 
 
-def fillStandPage(stand,doc,project):
+def fillStandPage(stand, doc, project):
     
     sheetWidth = A4[0]
     sheetHeight = A4[1]

@@ -22,9 +22,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
         _projectInfoRepository = projectInfoRepository;
     }
 
-
     public ReportType Type => ReportType.TechnologicalCards;
-
 
     public async Task GenerateAsync(int projectId)
     {
@@ -47,15 +45,13 @@ public class TechnologicalCardsGenerator : IReportGenerator
         var fileName = ExcelReportHelper.CreateReportName("Технологические карты", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
 
-
         ProcessStartInfo startInfo = new ProcessStartInfo();
         startInfo.FileName = exeFilePath;
         startInfo.Arguments = $"--script techcard --jsonPath \"{jsonSavePath}\" --outputFilePath \"{fullSavePath}\"";
         startInfo.UseShellExecute = false;
         startInfo.RedirectStandardOutput = true;
         startInfo.RedirectStandardError = true;
-        startInfo.CreateNoWindow = false;
-
+        startInfo.CreateNoWindow = true;
 
         using (Process process = Process.Start(startInfo))
         {

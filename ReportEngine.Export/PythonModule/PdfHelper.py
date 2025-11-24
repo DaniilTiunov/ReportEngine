@@ -67,3 +67,4 @@ def registerFonts():
     pdfmetrics.registerFont(TTFont('Arial','arial.ttf'))
     pdfmetrics.registerFont(TTFont('Arial-Bold','arialbd.ttf'))
     pdfmetrics.registerFont(UnicodeCIDFont('STSong-Light'))
+
