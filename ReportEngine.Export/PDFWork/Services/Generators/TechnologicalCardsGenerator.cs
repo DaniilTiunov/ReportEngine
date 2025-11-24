@@ -35,7 +35,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
 
-        var savePath = SettingsManager.GetReportDirectory();
+        var savePath = SettingsManager.GetReportDirectory() + "\\\\";
 
         var fileName = ExcelReportHelper.CreateReportName("Технологические карты", ".docx");
      
@@ -51,7 +51,6 @@ public class TechnologicalCardsGenerator : IReportGenerator
             WriteIndented = true
         };
         string jsonObject = JsonSerializer.Serialize(dataObject, options);
-
         var jsonFileName = DirectoryHelper.GetGeneratedJsonPath();
         File.WriteAllText(jsonFileName, jsonObject, Encoding.UTF8);
 
@@ -59,17 +58,14 @@ public class TechnologicalCardsGenerator : IReportGenerator
         var exeFilePath = DirectoryHelper.GetPythonExePath();
         var jsonSavePath = DirectoryHelper.GetJsonSavePath();
 
-        Debug.WriteLine("Путь к exe: " + exeFilePath);
-        Debug.WriteLine("Путь к JSON: " + jsonSavePath);
-        Debug.WriteLine("Путь сохранения " + savePath);
-
 
         ProcessStartInfo startInfo = new ProcessStartInfo();
         startInfo.FileName = exeFilePath; // путь к .exe файлу
-        startInfo.Arguments = $"--script techcard --jsonPath {jsonSavePath} --outputReportPath {savePath}";
+        startInfo.Arguments = $"--script techcard --jsonPath \"{jsonSavePath}\" --outputReportPath \"{savePath}\"";
         startInfo.UseShellExecute = false;
         startInfo.RedirectStandardOutput = true;
         startInfo.RedirectStandardError = true;
+
 
 
         using (Process process = Process.Start(startInfo))
@@ -77,7 +73,6 @@ public class TechnologicalCardsGenerator : IReportGenerator
             using (StreamReader reader = process.StandardOutput)
             {
                 string result = reader.ReadToEnd();
-                Debug.WriteLine("Что-то выполнилось: " + result);
             }
 
             process.WaitForExit();

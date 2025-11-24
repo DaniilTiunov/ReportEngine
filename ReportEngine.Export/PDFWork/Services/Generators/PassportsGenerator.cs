@@ -28,7 +28,7 @@ public class PassportsGenerator : IReportGenerator
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
 
-        var savePath = SettingsManager.GetReportDirectory();
+        var savePath = SettingsManager.GetReportDirectory() + "\\\\"; ;
 
         var fileName = ExcelReportHelper.CreateReportName("Паспорта", ".docx");
 
@@ -42,7 +42,7 @@ public class PassportsGenerator : IReportGenerator
 
         ProcessStartInfo startInfo = new ProcessStartInfo();
         startInfo.FileName = exeFilePath; // путь к .exe файлу
-        startInfo.Arguments = $"--script passport --jsonPath {jsonSavePath} --outputReportPath {savePath}";
+        startInfo.Arguments = $"--script passport --jsonPath \"{jsonSavePath}\" --outputReportPath \"{savePath}\"";
         startInfo.UseShellExecute = false;
         startInfo.RedirectStandardOutput = true;
         startInfo.RedirectStandardError = true;
@@ -53,7 +53,6 @@ public class PassportsGenerator : IReportGenerator
             using (StreamReader reader = process.StandardOutput)
             {
                 string result = reader.ReadToEnd();
-                Console.WriteLine("Что-то выполнилось: " + result);
             }
 
             process.WaitForExit();
