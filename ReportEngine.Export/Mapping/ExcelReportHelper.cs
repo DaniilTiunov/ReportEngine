@@ -714,12 +714,16 @@ public static class ExcelReportHelper
             .Select(frame => new
             {
                 Width = frame.Frame.Width,
-                DocName = frame.Frame.Designe
+                DocName = frame.Frame.Designe,
+                Height = frame.Frame.Height,
+                Depth = frame.Frame.Depth
             })
             .GroupBy(frame => frame.DocName)
             .Select(group => new FrameRecordJsonObject
             {
                 Width = group.FirstOrDefault().Width,
+                Height = group.FirstOrDefault().Height,
+                Depth = group.FirstOrDefault().Depth,
                 DocName = group.FirstOrDefault().DocName,
                 Quantity = group.Count()
             });

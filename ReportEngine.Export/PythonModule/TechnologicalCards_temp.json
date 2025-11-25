@@ -47,11 +47,15 @@
       "Frames": [
         {
           "Width": 600,
+          "Height": 1400,
+          "Depth": 480,
           "DocName": "ЭП-П.050.0000.000.01",
           "Quantity": 1
         },
         {
           "Width": 110,
+          "Height": 110,
+          "Depth": 110,
           "DocName": "Тестовая рама 2",
           "Quantity": 1
         }

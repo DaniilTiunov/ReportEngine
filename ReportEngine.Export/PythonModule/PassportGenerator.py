@@ -160,11 +160,9 @@ def fillBodyPage(stand,doc,project):
         fontName ='Arial-Bold',
         encoding ='UTF-8',
         fontSize = 6,
-        firstLineIndent = 12
-        
+        firstLineIndent = 12        
     )
-    
-
+  
     newLineMark = "<br/>"
 
     leftPartContent = [ Paragraph(text = "1. Основные сведения об изделии и и технические данные", 
@@ -186,10 +184,13 @@ def fillBodyPage(stand,doc,project):
     leftPartContent.append(Paragraph(text = "1.6 Качество продукции обеспечено сертифицированной системой менеджмента качества, " + 
                                             "соответствующей требованиям ГОСТ ISO 9001-2011 (ISO 9001:2008).",
                                      style = usualStyle))    
+
+    dimensions = (str(stand["Frames"][0]["Width"]), str(stand["Frames"][0]["Height"]), str(stand["Frames"][0]["Depth"])) if len(stand["Frames"])>0 else ("____","____","____")
+
     leftPartContent.append(Paragraph(text = "1.7 Основные параметры изделия: " + newLineMark + 
-                                            "- импульсные линии в пределах стенда - Труба 14х2, Сталь 20 ГОСТ 8734-75 в соответствии с опросным листом;" + newLineMark +   
-                                            "- кран шаровый ШКМ.Ш1-010.080.01 (d14x2);" + newLineMark +
-                                            "- габаритные размеры стенда (ШхВхГ), мм - 800х1400х480.",
+                                            f"- импульсные линии в пределах стенда - {stand["MaterialLine"]} в соответствии с опросным листом;" + newLineMark +   
+                                            f"- {stand["Armature"]};" + newLineMark +
+                                            f"- габаритные размеры стенда (ШхВхГ), мм - {dimensions[0]}х{dimensions[1]}х{dimensions[2]}.",
                                      style = usualStyle))
     leftPartContent.append(Spacer(1,5))
 
@@ -230,9 +231,9 @@ def fillBodyPage(stand,doc,project):
     standInfoRowTable.setStyle(TableStyle(cmds = PdfHelper.centerAlignTableStyleCmd))
 
     productionInfoRowTable = Table(data = [[ Paragraph(text = "изготовлен", style = usualStyle),
-                                             CreateSignatureTable("10.2077", "Месяц, год"),
+                                             CreateSignatureTable("         ", "Месяц, год"),
                                              Paragraph(text = "согласно", style = usualStyle),
-                                             CreateSignatureTable("какой-то опросный лист", "№ опросного листа, № спецификации, РД") ]] )
+                                             CreateSignatureTable("             ", "№ опросного листа, № спецификации, РД") ]] )
     productionInfoRowTable.setStyle(TableStyle(cmds = PdfHelper.centerAlignTableStyleCmd +
                                           [('VALIGN', (0, 0), (-1, -1), "TOP" )] ))
 

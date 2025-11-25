@@ -392,7 +392,7 @@ def fillConclusionPage(stand,doc,project):
 
 
     #графа подписей
-    productReadyLabel = Paragraph(text = "Изделие признано годным и" + "<br/> " + "передано на склад", 
+    productReadyLabel = Paragraph(text = "Изделие признано годным и передано на склад", 
                                   style = cyrillic_style)
    
 
@@ -419,8 +419,8 @@ def fillConclusionPage(stand,doc,project):
 
     signatureAligmentTable.setStyle(TableStyle(cmds = 
                                                 PdfHelper.commonTableStyleCmd +
-                                                PdfHelper.leftAlignTableStyleCmd + 
-                                                PdfHelper.invisibleAllBordersTableStyleCmd +
+                                                PdfHelper.centerAlignTableStyleCmd + 
+                                                PdfHelper.visibleAllBordersTableStyleCmd +
                                                [("VALIGN", (0, 0), (-1, -1), "BOTTOM")] ))
 
 
