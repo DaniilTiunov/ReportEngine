@@ -32,7 +32,7 @@ visibleOuterBordersTableStyleCmd = [('BOX', (0, 0), (-1, -1), 1, colors.black)]
 invisibleInnerBordersTableStyleCmd = []
 visibleInnerBordersTableStyleCmd = [('INNERGRID', (0, 0), (-1, -1), 1, colors.black)]
 
-
+newLineMark = "<br/>"
 
 
 #функции

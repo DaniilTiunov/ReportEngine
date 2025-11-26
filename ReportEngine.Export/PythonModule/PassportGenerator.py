@@ -162,8 +162,6 @@ def fillBodyPage(stand,doc,project):
         fontSize = 6,
         firstLineIndent = 12        
     )
-  
-    newLineMark = "<br/>"
 
     leftPartContent = [ Paragraph(text = "1. Основные сведения об изделии и и технические данные", 
                                   style = titleStyle) ]   
@@ -187,18 +185,18 @@ def fillBodyPage(stand,doc,project):
 
     dimensions = (str(stand["Frames"][0]["Width"]), str(stand["Frames"][0]["Height"]), str(stand["Frames"][0]["Depth"])) if len(stand["Frames"])>0 else ("____","____","____")
 
-    leftPartContent.append(Paragraph(text = "1.7 Основные параметры изделия: " + newLineMark + 
-                                            f"- импульсные линии в пределах стенда - {stand["MaterialLine"]} в соответствии с опросным листом;" + newLineMark +   
-                                            f"- {stand["Armature"]};" + newLineMark +
+    leftPartContent.append(Paragraph(text = "1.7 Основные параметры изделия: " + PdfHelper.newLineMark + 
+                                            f"- импульсные линии в пределах стенда - {stand["MaterialLine"]} в соответствии с опросным листом;" + PdfHelper.newLineMark +   
+                                            f"- {stand["Armature"]};" + PdfHelper.newLineMark +
                                             f"- габаритные размеры стенда (ШхВхГ), мм - {dimensions[0]}х{dimensions[1]}х{dimensions[2]}.",
                                      style = usualStyle))
     leftPartContent.append(Spacer(1,5))
 
     leftPartContent.append(Paragraph(text = "2. Комлектность", 
                                     style = titleStyle))
-    leftPartContent.append(Paragraph(text = "2.1 В комплект поставки входят:" + newLineMark +
-                                            "- стенд датчиков в сборе 1 шт.;" + newLineMark +
-                                            "- паспорт изделия 1 шт.;" + newLineMark +
+    leftPartContent.append(Paragraph(text = "2.1 В комплект поставки входят:" + PdfHelper.newLineMark +
+                                            "- стенд датчиков в сборе 1 шт.;" + PdfHelper.newLineMark +
+                                            "- паспорт изделия 1 шт.;" + PdfHelper.newLineMark +
                                             "- сертификаты качества на запорную арматуру и материалы импульсных линий - 1 компл. (на партию в один адрес).",
                                      style = usualStyle))
     leftPartContent.append(Paragraph(text = "Примечание - датчики, манометры, вентильные блоки в комплект поставки стенда не входят.", 

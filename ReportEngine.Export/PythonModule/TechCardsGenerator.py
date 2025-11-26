@@ -4,6 +4,7 @@ from reportlab.platypus import (PageTemplate, SimpleDocTemplate, Paragraph, Spac
 from reportlab.lib.units import mm
 from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT, TA_JUSTIFY
 import PdfHelper
+from reportlab.lib import colors
 
 
 landscapeParams = {
@@ -301,7 +302,7 @@ def fillConclusionPage(stand,doc,project):
 
     styles = getSampleStyleSheet()
 
-    cyrillic_style = ParagraphStyle(
+    cyrillicStyle = ParagraphStyle(
         'Normal',
         parent = styles['Normal'],
         fontName ='Arial',
@@ -311,13 +312,13 @@ def fillConclusionPage(stand,doc,project):
 
     sheetElements = []
 
-
+   
 
     #таблица с инфой о стенде и лого
     standTable = [["","Значение"]]
     standTable.append(["Наименование", "Стенд датчиков КИПиА"])
     standTable.append(["Обозначение по КД", str(stand["Designation"])])
-    standTable.append(["Чертеж", "???"])
+    standTable.append(["Чертеж", ""])
     standTable.append(["Зав.номер", str(stand["SerialNumber"])])     
     standInfoTable = Table(data = standTable, colWidths = [sheetWidth*0.2,sheetWidth*0.3])
 
@@ -345,19 +346,15 @@ def fillConclusionPage(stand,doc,project):
                                                  PdfHelper.invisibleAllBordersTableStyleCmd ))
 
     #графа № заказа на производство
-    orderNumberLabel = Paragraph("№ заказа на производство", style = cyrillic_style)
-    emptyCell = Table(data = [[""]], colWidths = sheetWidth * 0.3)
-    emptyCell.setStyle(TableStyle(cmds =
-                                   PdfHelper.commonTableStyleCmd +  
-                                   PdfHelper.visibleAllBordersTableStyleCmd))
-
-    orderNumberAlignmentTable = Table(data = [[orderNumberLabel, emptyCell]], 
-                                      colWidths = [sheetWidth*0.15,sheetWidth*0.75])
+    orderNumberAlignmentTable = Table(data = [["№ заказа на производство",""]], 
+                                      colWidths = [sheetWidth*0.12,sheetWidth*0.21],
+                                      hAlign = 'LEFT')
 
     orderNumberAlignmentTable.setStyle(TableStyle(cmds = 
                                                    PdfHelper.commonTableStyleCmd +
                                                    PdfHelper.leftAlignTableStyleCmd + 
-                                                   PdfHelper.invisibleAllBordersTableStyleCmd))
+                                                   PdfHelper.usualFontTableStyleCmd + 
+                                                   [('GRID', (-1, 0), (-1, 0), 1, colors.black)] ))
 
     #таблица исполнения этапов
     doneTable = [["№ п/п", 
@@ -391,37 +388,32 @@ def fillConclusionPage(stand,doc,project):
                                       [('FONTNAME', (0, 1), (-1, -1), "Arial")] ))
 
 
-    #графа подписей
-    productReadyLabel = Paragraph(text = "Изделие признано годным и передано на склад", 
-                                  style = cyrillic_style)
-   
 
-    signatureLabels = Table(data = [["ОТК (ФИО, подпись)","Склад (ФИО, подпись)"]],
-                            colWidths = sheetWidth*0.2)
 
-    signatureLabels.setStyle(TableStyle(cmds = 
-                                         PdfHelper.commonTableStyleCmd +
-                                         PdfHelper.centerAlignTableStyleCmd + 
-                                         PdfHelper.invisibleAllBordersTableStyleCmd +
-                                         PdfHelper.usualFontTableStyleCmd))
 
-    signatureTable = Table(data = [["",""]],
-                           colWidths = sheetWidth*0.2)
-    signatureTable.setStyle(TableStyle(cmds = 
-                                         PdfHelper.commonTableStyleCmd +
-                                         PdfHelper.centerAlignTableStyleCmd + 
-                                         PdfHelper.visibleAllBordersTableStyleCmd ))
 
-    allSignatureTable = [signatureLabels, signatureTable]
+    #подписи
+    productReadyLabel = "Изделие признано годным" + "\n" + "и передано на склад"
+    controlSignatureLabel = "ОТК (ФИО, подпись)"
+    storeSignatureLabel = "Склад (ФИО, подпись)"
 
-    signatureAligmentTable = Table(data = [[productReadyLabel, allSignatureTable]], 
-                                   colWidths = [sheetWidth*0.25,sheetWidth*0.75])
+
+    signatureAligmentTable = Table(data = [["",controlSignatureLabel, storeSignatureLabel],
+                                           [productReadyLabel, "", ""]],
+                                           colWidths = [sheetWidth * 0.15, sheetWidth * 0.15, sheetWidth * 0.15],
+                                           hAlign ='LEFT')
 
     signatureAligmentTable.setStyle(TableStyle(cmds = 
                                                 PdfHelper.commonTableStyleCmd +
-                                                PdfHelper.centerAlignTableStyleCmd + 
-                                                PdfHelper.visibleAllBordersTableStyleCmd +
-                                               [("VALIGN", (0, 0), (-1, -1), "BOTTOM")] ))
+                                                PdfHelper.invisibleAllBordersTableStyleCmd +
+                                                PdfHelper.boldFontTableStyleCmd +
+                                                PdfHelper.centerAlignTableStyleCmd +
+                                                #label к подписям
+                                               [("VALIGN", (0, 0), (-1, 0), "BOTTOM")] + 
+                                               #label годности изделия
+                                               [("VALIGN", (0, -1), (0, -1), "MIDDLE")] + 
+                                               #видимые боксы для подписей
+                                               [('GRID', (1, -1), (-1, -1), 1, colors.black)]))
 
 
     #собираем все элементы листа
@@ -430,7 +422,7 @@ def fillConclusionPage(stand,doc,project):
     sheetElements.append(orderNumberAlignmentTable)
     sheetElements.append(Spacer(1,10))
     sheetElements.append(doneStagesTable)
-    sheetElements.append(Spacer(1,10))
+    sheetElements.append(Spacer(1,30))
     sheetElements.append(signatureAligmentTable)
     
     return sheetElements
