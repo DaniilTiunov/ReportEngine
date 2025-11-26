@@ -19,6 +19,7 @@ commonTableStyleCmd = [
 
 leftAlignTableStyleCmd = [ ('ALIGN', (0, 0), (-1, -1), 'LEFT')]
 centerAlignTableStyleCmd = [ ('ALIGN', (0, 0), (-1, -1), 'CENTER')]
+firstColumnLeftTableStyleCmd = [('ALIGN', (0, 1), (0, -1), 'LEFT')]
 
 usualFontTableStyleCmd = [('FONTNAME', (0, 0), (-1, -1), "Arial")]
 boldFontTableStyleCmd = [('FONTNAME', (0, 0), (-1, -1), "Arial-Bold")]
@@ -32,8 +33,9 @@ visibleOuterBordersTableStyleCmd = [('BOX', (0, 0), (-1, -1), 1, colors.black)]
 invisibleInnerBordersTableStyleCmd = []
 visibleInnerBordersTableStyleCmd = [('INNERGRID', (0, 0), (-1, -1), 1, colors.black)]
 
-newLineMark = "<br/>"
 
+
+newLineMark = "<br/>"
 
 #функции
 def openJsonFile(filePath):

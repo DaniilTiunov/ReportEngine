@@ -63,7 +63,7 @@ def fillStandPage(stand, doc, project):
         parent = styles['Normal'],
         fontName ='Arial',
         encoding ='UTF-8',
-        fontSize = 7
+        fontSize = 6
     )
 
 
@@ -132,7 +132,7 @@ def fillStandPage(stand, doc, project):
                                     [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] ))
 
 
-    columnsHeaderTitles = [["Наименование", "Единицы\n измерения", "Норм.","Факт."]]
+    columnsHeaderTitles = [["Наименование", "Ед. изм.", "Норм.","Факт."]]
 
     
     #таблица материалов рам
@@ -165,7 +165,8 @@ def fillStandPage(stand, doc, project):
                                               PdfHelper.commonTableStyleCmd +
                                               PdfHelper.centerAlignTableStyleCmd + 
                                               PdfHelper.boldFontTableStyleCmd + 
-                                              PdfHelper.visibleAllBordersTableStyleCmd ))
+                                              PdfHelper.visibleAllBordersTableStyleCmd +
+                                              PdfHelper.firstColumnLeftTableStyleCmd ))
 
 
     mountPartsRecords = columnsHeaderTitles.copy()
@@ -174,7 +175,8 @@ def fillStandPage(stand, doc, project):
         tableRecord = [mountPart["Name"], mountPart["Unit"], mountPart["Quantity"],""]
         mountPartsRecords.append(tableRecord)
     
-    mountPartsTable = Table(data = mountPartsRecords, colWidths = [leftPartWidth*0.65, leftPartWidth*0.15, leftPartWidth*0.1, leftPartWidth*0.1])
+    #, colWidths = [leftPartWidth*0.65, leftPartWidth*0.15, leftPartWidth*0.1, leftPartWidth*0.1]
+    mountPartsTable = Table(data = mountPartsRecords)
     mountPartsTable.setStyle(TableStyle(cmds =
                                         PdfHelper.commonTableStyleCmd +
                                         PdfHelper.centerAlignTableStyleCmd + 
@@ -189,11 +191,12 @@ def fillStandPage(stand, doc, project):
                                              PdfHelper.commonTableStyleCmd +
                                              PdfHelper.centerAlignTableStyleCmd + 
                                              PdfHelper.boldFontTableStyleCmd + 
-                                             PdfHelper.visibleAllBordersTableStyleCmd ))
+                                             PdfHelper.visibleAllBordersTableStyleCmd +
+                                             PdfHelper.firstColumnLeftTableStyleCmd ))
 
     drainagePartsRecords = columnsHeaderTitles.copy()
 
-    for drainagePart in stand["MountParts"]:
+    for drainagePart in stand["DrainageParts"]:
         tableRecord = [drainagePart["Name"], drainagePart["Unit"], drainagePart["Quantity"],""]
         drainagePartsRecords.append(tableRecord)
     
@@ -213,11 +216,12 @@ def fillStandPage(stand, doc, project):
                                               PdfHelper.commonTableStyleCmd +
                                               PdfHelper.centerAlignTableStyleCmd + 
                                               PdfHelper.boldFontTableStyleCmd + 
-                                              PdfHelper.visibleAllBordersTableStyleCmd ))
+                                              PdfHelper.visibleAllBordersTableStyleCmd +
+                                              PdfHelper.firstColumnLeftTableStyleCmd ))
 
     electricPartsRecords = columnsHeaderTitles.copy()
 
-    for electricPart in stand["MountParts"]:
+    for electricPart in stand["ElectricParts"]:
         tableRecord = [electricPart["Name"], electricPart["Unit"], electricPart["Quantity"],""]
         electricPartsRecords.append(tableRecord)
     
@@ -226,7 +230,8 @@ def fillStandPage(stand, doc, project):
                                             PdfHelper.commonTableStyleCmd +
                                             PdfHelper.centerAlignTableStyleCmd + 
                                             PdfHelper.usualFontTableStyleCmd + 
-                                            PdfHelper.visibleAllBordersTableStyleCmd ))
+                                            PdfHelper.visibleAllBordersTableStyleCmd+
+                                            PdfHelper.firstColumnLeftTableStyleCmd))
 
 
     #чертеж стенда
