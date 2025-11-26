@@ -51,14 +51,14 @@ public class SummaryReportGenerator : IReportGenerator
             var summarySheet = wb.Worksheets.Add("Сводная заявка");
 
             CreateCommonListTableHeader(summarySheet, project);
-            FillCommonListTable(summarySheet, project);
+            await FillCommonListTable(summarySheet, project);
 
 
             //заполняем калькуляцию
             var calculationSheet = wb.Worksheets.Add("Калькуляция");
 
             CreateCalcullationTableHeader(calculationSheet, project);
-            FillCalculationTable(calculationSheet, project);
+            await FillCalculationTable(calculationSheet, project);
 
 
             //применяем оформление ко всему документу
@@ -383,6 +383,8 @@ public class SummaryReportGenerator : IReportGenerator
     {
         var activeRow = 4;
 
+        var containerBatches = _containerRepository.GetAllByProjectIdAsync(project.Id);
+
         var generatedPartsData = ExcelReportHelper.GeneratePartsData(project.Stands);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
@@ -448,9 +450,7 @@ public class SummaryReportGenerator : IReportGenerator
         allData.AddRange(allLaborsList);
 
         activeRow = CreateUsualTotalRecord(activeRow, "Итого по комплектующим и трудозатратам:", allData, ws);
-
-        var containerBatches = await _containerRepository.GetAllByProjectIdAsync(project.Id);
-        var containersData = ExcelReportHelper.GenerateContainersData(containerBatches);
+        var containersData = ExcelReportHelper.GenerateContainersData(await containerBatches);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Упаковка", ws);
         activeRow = FillSubtableData(activeRow, containersData, ws);
@@ -465,6 +465,8 @@ public class SummaryReportGenerator : IReportGenerator
     private async Task FillCalculationTable(IXLWorksheet ws, ProjectInfo project)
     {
         var activeRow = 7;
+
+        var containerBatches = _containerRepository.GetAllByProjectIdAsync(project.Id);
 
         var standsRecords = project.Stands
             .GroupBy(stand => stand.Design)
@@ -575,8 +577,8 @@ public class SummaryReportGenerator : IReportGenerator
 
 
 
-        var containerBatches = await _containerRepository.GetAllByProjectIdAsync(project.Id);
-        var containers = ExcelReportHelper.GenerateContainersData(containerBatches);
+        
+        var containers = ExcelReportHelper.GenerateContainersData(await containerBatches);
         var containerPrice = containers.Sum(container => container.CommonCost.Value);
 
         var containerPriceLabelRange = ws.Range($"C{activeRow}:J{activeRow}").Merge();
