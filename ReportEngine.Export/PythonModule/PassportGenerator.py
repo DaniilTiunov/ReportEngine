@@ -18,10 +18,10 @@ portraitParams = {
 }
 
 landscapeParams = {
-    "startPointX" : 10 * mm,
-    "startPointY": 10 * mm,
-    "frameWidth":A4[1] - 20*mm,
-    "frameHeight": A4[0] - 20*mm,
+    "startPointX" : 5 * mm,
+    "startPointY": 5 * mm,
+    "frameWidth":A4[1] - 10*mm,
+    "frameHeight": A4[0] - 10*mm,
     "frameId": 'landscapeFrame',
     "visibleBoundaries": 0
 }
@@ -70,8 +70,8 @@ def CreateSignatureTable(aboveLabel,underLabel):
 
 def fillTitlePage(stand,doc,project):
     
-    frameWidth = landscapeParams['frameWidth']
-    frameHeight = landscapeParams['frameHeight']
+    frameWidth = landscapeParams['frameWidth'] * 0.99
+    frameHeight = landscapeParams['frameHeight'] * 0.97
  
     styles = getSampleStyleSheet()
 
@@ -93,32 +93,34 @@ def fillTitlePage(stand,doc,project):
         leading=20
     )
 
-
-    eacImage =  PdfHelper.generateImageFromFile("EAC.jpg", 50, 50)
-    logoImage =  PdfHelper.generateImageFromFile("Etalon.jpg", 210, 140)
+    eacImage =  PdfHelper.generateImageFromFile("EAC.jpg", frameWidth*0.06, frameWidth*0.06)
+    logoImage = PdfHelper.generateImageFromFile("Etalon.jpg", frameWidth*0.28, frameHeight*0.25)
     mainTitle = Paragraph(text = "Стенд датчиков КИПиА" + "<br/>" +  stand["KKSCode"] + "<br/>" +"ПАСПОРТ", 
                           style = titleStyle)
-    rightPartTable = Table(data = [[eacImage],[logoImage],[mainTitle]], colWidths = ( frameWidth * 0.97 ) / 2, rowHeights = [frameHeight * 0.1, frameHeight * 0.15, frameHeight * 0.72] )
-    rightPartTable.setStyle(TableStyle(cmds = 
-                                        PdfHelper.commonTableStyleCmd + 
-                                        PdfHelper.invisibleAllBordersTableStyleCmd + 
-                                       #выравниваем лого EAC
-                                       [ ('ALIGN', (0, 0), (0, 0), 'LEFT')] + 
-                                       [("VALIGN", (0, 0), (0, 0), "TOP")] + 
-                                       #выравниваем лого Etalon
-                                       [ ('ALIGN', (0, 1), (0, 1), 'CENTER')] + 
-                                       [("VALIGN", (0, 1), (0, 1), "MIDDLE")] + 
-                                       #выравниваем заголовок
-                                       [ ('ALIGN', (0, -1), (0, -1), 'CENTER')] + 
-                                       [("VALIGN", (0, -1), (0, -1), "MIDDLE")]
-                                       ))
 
-    pageTable = Table(data = [["", rightPartTable]], colWidths = ( frameWidth * 0.97 ) / 2, rowHeights = frameHeight * 0.97 )
+    pageTable = Table(data = [ ["", eacImage ],
+                               ["", logoImage],
+                               ["", mainTitle] ], 
+                      colWidths = frameWidth/ 2,  
+                      rowHeights = [frameHeight * 0.1, frameHeight * 0.15, frameHeight * 0.75]  )
+
     pageTable.setStyle(TableStyle(cmds = 
                                   PdfHelper.commonTableStyleCmd +
-                                  PdfHelper.invisibleOuterBordersTableStyleCmd +
-                                 #внутренние границы - пунктиром
-                                 [('INNERGRID', (0, 0), (-1, -1), 1, colors.black, None, (2, 2) )] ))
+                                  PdfHelper.invisibleOuterBordersTableStyleCmd + 
+                                  #границы между левой и правой колонкой - пунктиром
+                                  [('LINEBEFORE', (-1, 0), (-1, -1), 1, colors.black, None, (2, 2) )] + 
+                                  #левую часть объединяем
+                                  [('SPAN', (0, 0), (0, -1) )] +
+                                  #выравниваем лого EAC
+                                  [('LEFTPADDING', (-1, 0), (-1, 0), 20)] + 
+                                  [('ALIGN', (-1, 0), (-1, 0), 'LEFT')] + 
+                                  [("VALIGN", (-1, 0), (-1, 0), "CENTER")] + 
+                                  #выравниваем лого Etalon
+                                  [('ALIGN', (-1, 1), (-1, 1), 'CENTER')] + 
+                                  [("VALIGN", (-1, 1), (-1, 1), "MIDDLE")] +
+                                  #выравниваем заголовок
+                                  [('ALIGN', (-1, -1), (-1, -1), 'CENTER')] + 
+                                  [("VALIGN", (-1, -1), (-1, -1), "MIDDLE")] ))
     
     #собираем все объекты в массив и отдаем
     sheetElements = []
@@ -129,8 +131,8 @@ def fillTitlePage(stand,doc,project):
 
 def fillBodyPage(stand,doc,project):
 
-    frameWidth = landscapeParams['frameWidth']
-    frameHeight = landscapeParams['frameHeight']
+    frameWidth = landscapeParams['frameWidth'] * 0.99
+    frameHeight = landscapeParams['frameHeight'] * 0.97
  
     styles = getSampleStyleSheet()
 
@@ -282,13 +284,13 @@ def fillBodyPage(stand,doc,project):
 
 
 
-    pageTable = Table(data = [[leftPartContent, rightPartContent]], colWidths = ( frameWidth * 0.97 ) / 2, rowHeights = frameHeight * 0.97 )
+    pageTable = Table(data = [[leftPartContent, rightPartContent]], colWidths = frameWidth / 2, rowHeights = frameHeight)
     pageTable.setStyle(TableStyle(cmds = 
                                  PdfHelper.commonTableStyleCmd +
-                                 PdfHelper.invisibleOuterBordersTableStyleCmd +
+                                 PdfHelper.invisibleOuterBordersTableStyleCmd +           
                                  PdfHelper.centerAlignTableStyleCmd +
-                                 #внутренние границы - пунктиром
-                                 [('INNERGRID', (0, 0), (-1, -1), 1, colors.black, None, (2, 2) )] + 
+                                 #границы между левой и правой колонкой - пунктиром
+                                 [('LINEBEFORE', (-1, 0), (-1, -1), 1, colors.black, None, (2, 2) )] + 
                                  [('VALIGN', (0, 0), (-1, -1), "TOP" )]   ))
     
     #собираем все объекты в массив и отдаем
