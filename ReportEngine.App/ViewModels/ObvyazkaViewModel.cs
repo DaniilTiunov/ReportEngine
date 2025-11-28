@@ -59,6 +59,7 @@ public class ObvyazkaViewModel
                 LineLength = CurrentObvyazka.SelectedObvyazka.LineLength,
                 ZraCount = CurrentObvyazka.SelectedObvyazka.ZraCount,
                 TreeSocket = CurrentObvyazka.SelectedObvyazka.TreeSocket,
+                KMCHCount = CurrentObvyazka.SelectedObvyazka.KMCHCount,
                 Sensor = CurrentObvyazka.SelectedObvyazka.Sensor,
                 SensorType = CurrentObvyazka.SelectedObvyazka.SensorType,
                 Clamp = CurrentObvyazka.SelectedObvyazka.Clamp,

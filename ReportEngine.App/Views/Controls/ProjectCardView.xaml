@@ -24,137 +24,151 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="0.35*" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="0.35*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <!--  Номер п/п  -->
         <TextBlock
+            Grid.Row="0"
             Grid.Column="0"
-            Grid.ColumnSpan="2"
-            Margin="0,0,122,0"
+            Margin="4"
+            VerticalAlignment="Center"
             Text="№ п/п:" />
         <TextBox
             Grid.Row="0"
             Grid.Column="1"
-            Grid.ColumnSpan="2"
-            Margin="0,8,194,7"
+            Margin="4"
             Text="{Binding CurrentProjectModel.Number, Mode=TwoWay}" />
 
         <!--  Обозначение КД  -->
         <TextBlock
+            Grid.Row="0"
             Grid.Column="2"
-            Margin="56,11,4,0"
-            VerticalAlignment="Top"
+            Margin="4"
+            VerticalAlignment="Center"
             Text="Обозначение КД:" />
         <TextBox
             Grid.Row="0"
             Grid.Column="3"
-            Margin="0,10,0,5"
+            Margin="4"
             Text="{Binding CurrentProjectModel.Description}" />
 
         <!--  Дата запроса  -->
         <TextBlock
             Grid.Row="1"
             Grid.Column="0"
+            Margin="4"
+            VerticalAlignment="Center"
             Text="Дата запроса:" />
         <DatePicker
             Grid.Row="1"
             Grid.Column="1"
-            Grid.ColumnSpan="2"
-            Width="200"
-            Margin="0,5,640,5"
+            Margin="4"
             SelectedDate="{Binding CurrentProjectModel.CreationDate, Mode=TwoWay}" />
 
         <!--  Заказчик  -->
-
         <TextBlock
             Grid.Row="2"
             Grid.Column="0"
+            Margin="4"
             VerticalAlignment="Center"
             Text="Заказчик:" />
-        <TextBox
+        <Grid
             Grid.Row="2"
             Grid.Column="1"
-            Margin="0,9,8,6"
-            VerticalAlignment="Center"
-            Text="{Binding CurrentProjectModel.Company}" />
-        <Button
-            Grid.Row="2"
-            Grid.Column="2"
-            Width="28"
-            Height="28"
-            Margin="2,0,149,0"
-            VerticalAlignment="Center"
-            Command="{Binding ProjectCommandProvider.ShowCompanyDialogCommand}"
-            Content="..." />
+            Margin="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox
+                Grid.Column="0"
+                Margin="4,0,0,0"
+                VerticalAlignment="Center"
+                Text="{Binding CurrentProjectModel.Company}" />
+            <Button
+                Grid.Column="1"
+                Width="28"
+                Height="28"
+                Margin="4,0,0,0"
+                VerticalAlignment="Center"
+                Command="{Binding ProjectCommandProvider.ShowCompanyDialogCommand}"
+                Content="..." />
+        </Grid>
 
         <!--  Объект  -->
-
         <TextBlock
             Grid.Row="3"
             Grid.Column="0"
+            Margin="4"
             VerticalAlignment="Center"
             Text="Объект:" />
-        <TextBox
+        <Grid
             Grid.Row="3"
             Grid.Column="1"
-            Margin="0,7,8,8"
-            VerticalAlignment="Center"
-            Text="{Binding CurrentProjectModel.Object}" />
-        <Button
-            Grid.Row="3"
-            Grid.Column="2"
-            Width="28"
-            Height="28"
-            Margin="2,2,149,0"
-            VerticalAlignment="Top"
-            Command="{Binding ProjectCommandProvider.ShowSubjectDialogCommand}"
-            Content="..." />
+            Margin="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox
+                Grid.Column="0"
+                Margin="4,0,0,0"
+                VerticalAlignment="Center"
+                Text="{Binding CurrentProjectModel.Object}" />
+            <Button
+                Grid.Column="1"
+                Width="28"
+                Height="28"
+                Margin="4,0,0,0"
+                VerticalAlignment="Center"
+                Command="{Binding ProjectCommandProvider.ShowSubjectDialogCommand}"
+                Content="..." />
+        </Grid>
 
         <!--  Количество стендов  -->
         <TextBlock
             Grid.Row="4"
             Grid.Column="0"
-            Margin="0,7,8,8"
+            Margin="4"
+            VerticalAlignment="Center"
             Text="Кол-во стендов:" />
         <TextBox
             Grid.Row="4"
             Grid.Column="1"
-            Margin="0,7,194,8"
+            Margin="4"
             Text="{Binding CurrentProjectModel.StandCount}" />
 
         <!--  Стоимость  -->
         <TextBlock
             Grid.Row="4"
             Grid.Column="2"
-            Margin="104,7,4,0"
+            Margin="4"
+            VerticalAlignment="Center"
             Text="Стоимость:" />
         <TextBox
             Grid.Row="4"
             Grid.Column="3"
-            Margin="0,9,0,6"
+            Margin="4"
             Text="{Binding CurrentProjectModel.Cost}" />
 
         <!--  Статус  -->
         <TextBlock
             Grid.Row="5"
-            Grid.RowSpan="2"
             Grid.Column="0"
-            Margin="0,11,0,41"
+            Margin="4"
+            VerticalAlignment="Center"
             Text="Статус:" />
         <ComboBox
-            x:Name="StatusComboBox"
             Grid.Row="5"
             Grid.Column="1"
-            Grid.ColumnSpan="2"
-            MinWidth="200"
-            Margin="0,8,640,7"
+            Margin="4"
             ItemsSource="{Binding CurrentProjectModel.Statuses}"
             SelectedItem="{Binding CurrentProjectModel.Status, Mode=TwoWay}" />
 
@@ -162,113 +176,117 @@
         <TextBlock
             Grid.Row="6"
             Grid.Column="0"
-            Margin="0,11,0,0"
+            Margin="4"
+            VerticalAlignment="Center"
             Text="Старт проекта:" />
         <DatePicker
             Grid.Row="6"
             Grid.Column="1"
-            Grid.ColumnSpan="2"
-            Margin="0,11,640,4"
+            Margin="4"
             SelectedDate="{Binding CurrentProjectModel.StartDate, Mode=TwoWay}" />
 
         <!--  Выход из производства  -->
         <TextBlock
             Grid.Row="6"
             Grid.Column="2"
-            Margin="14,11,4,0"
+            Margin="4"
+            VerticalAlignment="Center"
             Text="Выход из производства:" />
         <DatePicker
             Grid.Row="6"
             Grid.Column="3"
-            Margin="0,5,450,10"
+            Margin="4"
             SelectedDate="{Binding CurrentProjectModel.OutOfProduction, Mode=TwoWay}" />
 
         <!--  Дата окончания договора  -->
         <TextBlock
             Grid.Row="7"
-            Grid.RowSpan="2"
             Grid.Column="2"
-            Margin="1,10,8,36"
+            Margin="4"
+            VerticalAlignment="Center"
             Text="Дата окончания договора:" />
         <DatePicker
             Grid.Row="7"
             Grid.Column="3"
-            Margin="0,5,450,0"
+            Margin="4"
             SelectedDate="{Binding CurrentProjectModel.EndDate, Mode=TwoWay}" />
 
         <!--  Заказ покупателя  -->
         <TextBlock
             Grid.Row="8"
-            Grid.RowSpan="2"
             Grid.Column="0"
-            Margin="0,8,0,35"
+            Margin="4"
+            VerticalAlignment="Center"
             Text="Заказ покупателя:" />
         <TextBox
             Grid.Row="8"
             Grid.Column="1"
-            Margin="2,9,8,6"
+            Margin="4"
             Text="{Binding CurrentProjectModel.OrderCustomer}" />
 
         <!--  Заявка на производство  -->
         <TextBlock
             Grid.Row="9"
             Grid.Column="0"
-            Margin="0,7,0,0"
+            Margin="4"
+            VerticalAlignment="Center"
             Text="Заявка на производство:" />
         <TextBox
             Grid.Row="9"
             Grid.Column="1"
-            Margin="3,9,8,6"
+            Margin="4"
             Text="{Binding CurrentProjectModel.RequestProduction}" />
 
         <!--  Трудозатраты  -->
         <TextBlock
             Grid.Row="10"
-            Grid.RowSpan="2"
             Grid.Column="0"
-            Margin="0,7,0,35"
+            Margin="4"
+            VerticalAlignment="Center"
             Text="Трудозатраты:" />
         <TextBox
             Grid.Row="10"
             Grid.Column="1"
-            Margin="3,8,8,7"
+            Margin="4"
             Text="{Binding CurrentProjectModel.HumanCost}" />
 
         <!--  Руководитель  -->
         <TextBlock
             Grid.Row="11"
             Grid.Column="0"
-            Margin="0,6,0,0"
+            Margin="4"
+            VerticalAlignment="Center"
             Text="Руководитель:" />
         <TextBox
             Grid.Row="11"
             Grid.Column="1"
-            Margin="3,9,8,6"
+            Margin="4"
             Text="{Binding CurrentProjectModel.Manager}" />
 
         <!--  Маркировка+  -->
         <TextBlock
             Grid.Row="12"
             Grid.Column="0"
-            Margin="0,6,0,0"
+            Margin="4"
+            VerticalAlignment="Center"
             Text="Маркировка+:" />
         <TextBox
             Grid.Row="12"
             Grid.Column="1"
-            Margin="3,9,8,6"
+            Margin="4"
             Text="{Binding CurrentProjectModel.MarkPlus}" />
 
         <!--  Маркировка-  -->
         <TextBlock
             Grid.Row="12"
             Grid.Column="2"
-            Margin="77,11,7,0"
-            VerticalAlignment="Top"
+            Margin="4"
+            VerticalAlignment="Center"
             Text="Маркировка-:" />
         <TextBox
             Grid.Row="12"
             Grid.Column="3"
-            Margin="0,11,200,4"
+            Margin="4"
             Text="{Binding CurrentProjectModel.MarkMinus}" />
 
         <!--  Оцинкование стендов  -->
@@ -276,8 +294,7 @@
             Grid.Row="13"
             Grid.Column="0"
             Grid.ColumnSpan="2"
-            Margin="0,8,121,0"
-            VerticalAlignment="Top"
+            Margin="4"
             Content="Оцинкование стендов"
             FontSize="16"
             IsChecked="{Binding CurrentProjectModel.IsGalvanized}" />
@@ -285,18 +302,19 @@
         <!--  Кнопки  -->
         <StackPanel
             Grid.Row="13"
-            Grid.Column="3"
-            Margin="50,50,0,100"
+            Grid.ColumnSpan="4"
+            Margin="4"
             HorizontalAlignment="Right"
             Orientation="Horizontal">
             <Button
-                MinWidth="170"
-                MinHeight="30"
+                Width="140"
+                Height="32"
                 Margin="0,0,10,0"
                 Command="{Binding ProjectCommandProvider.CreateNewCardCommand}"
                 Content="Добавить новый" />
             <Button
-                MinWidth="170"
+                Width="190"
+                Height="32"
                 Command="{Binding ProjectCommandProvider.SaveChangesCommand}"
                 Content="Сохранить изменения" />
         </StackPanel>

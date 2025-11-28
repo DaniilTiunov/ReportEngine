@@ -1,6 +1,8 @@
 ﻿using ReportEngine.App.ViewModels;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace ReportEngine.App.Views.Windows;
 
@@ -66,5 +68,25 @@ public partial class ObvyazkiView : Window
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
         Close();
+    }
+
+    private void ListBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+    {
+        var scrollViewer = FindParent<ScrollViewer>(sender as DependencyObject);
+        if (scrollViewer != null)
+        {
+            scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta);
+            e.Handled = true;
+        }
+    }
+    private static T FindParent<T>(DependencyObject child) where T : DependencyObject
+    {
+        while (child != null)
+        {
+            if (child is T parent)
+                return parent;
+            child = VisualTreeHelper.GetParent(child);
+        }
+        return null;
     }
 }

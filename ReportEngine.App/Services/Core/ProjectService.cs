@@ -296,6 +296,7 @@ public class ProjectService : IProjectService
         obv.OtherLineCount = selectedObvyazka.OtherLineCount;
         obv.Weight = selectedObvyazka.Weight;
         obv.TreeSocketCount = selectedObvyazka.TreeSocket;
+        obv.KMCHCount = selectedObvyazka.KMCHCount;
         obv.HumanCost = selectedObvyazka.HumanCost;
         obv.ImageName = selectedObvyazka.ImageName;
 

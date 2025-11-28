@@ -195,7 +195,7 @@ public class StandModel : BaseViewModel
 
     public StandModel()
     {
-        InitializeDefaultPurposes();
+
     }
 
     // Коллекция обвязок для отображения
@@ -703,8 +703,8 @@ public class StandModel : BaseViewModel
             Purposes = new ObservableCollection<DrainagePurpose>
             {
                 new() { Purpose = "Основная труба" },
-                new() { Purpose = "Патрубок" },
-                new() { Purpose = "Заглушка основной трубы" },
+                new() { Purpose = "Патрубок", Quantity = (float)0.2},
+                new() { Purpose = "Заглушка основной трубы", Quantity = 2 },
                 new() { Purpose = "Кронштейн дренажа" },
                 new() { Purpose = "Клапан" }
             }
@@ -734,10 +734,10 @@ public class StandModel : BaseViewModel
             {
                 new() { Purpose = "Клеммная коробка" },
                 new() { Purpose = "Кабельные вводы" },
-                new() { Purpose = "Сигнальный кабель", Material = DefaultStandSettings.SignalCable },
-                new() { Purpose = "Металлорукав" },
+                new() { Purpose = "Сигнальный кабель", Material = DefaultStandSettings.SignalCable, Quantity = 2 },
+                new() { Purpose = "Металлорукав" , Quantity = 2},
                 new() { Purpose = "Кабель 6мм", Material = DefaultStandSettings.CabelSixMM },
-                new() { Purpose = "Кабель 4мм", Material = DefaultStandSettings.CabelFourMM },
+                new() { Purpose = "Кабель 4мм", Material = DefaultStandSettings.CabelFourMM, Quantity = 2 },
                 new() { Purpose = "Кронштейн коробки" }
             }
         };

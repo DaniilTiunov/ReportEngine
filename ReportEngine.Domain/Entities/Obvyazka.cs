@@ -13,6 +13,7 @@ public class Obvyazka
     public float LineLength { get; set; } // Длина линии
     public float ZraCount { get; set; } //Количество ЗРА
     public float TreeSocket { get; set; } //Тройники
+    public float KMCHCount { get; set; } //Количество КМЧ
     public int Sensor { get; set; } //Датчики
     public string SensorType { get; set; } //Тип датчиков
     public float Clamp { get; set; } //Хомуты
