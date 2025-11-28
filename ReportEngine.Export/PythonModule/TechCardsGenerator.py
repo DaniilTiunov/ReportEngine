@@ -317,10 +317,28 @@ def fillStandPage(stand, doc, project):
                          #выравнивание по верху
                          [('VALIGN', (0, 0), (-1, -1), "TOP")] ))
 
+    impulseLinesHeaderData = [["№\nимп.линии", "Наименование импульсной линии\n и код KKS", "Таблица соединений","","","","Примечание"],
+                          ["","","Цепь","Маркировка","Коробка","Клеммы",""]]
+
+    impulseLinesTableHeader = Table(data = impulseLinesHeaderData, colWidths = [sheetWidth * 0.075,sheetWidth * 0.275,sheetWidth * 0.1,sheetWidth * 0.15,sheetWidth * 0.15,sheetWidth * 0.1,sheetWidth * 0.15])
+    impulseLinesTableHeader.setStyle(TableStyle(cmds = 
+                                                PdfHelper.commonTableStyleCmd +
+                                                PdfHelper.centerAlignTableStyleCmd +
+                                                PdfHelper.boldFontTableStyleCmd + 
+                                                PdfHelper.visibleAllBordersTableStyleCmd +
+                                                #объединяем нужные ячейки
+                                                [('SPAN', (0, 0), (0, -1) )] + 
+                                                [('SPAN', (1, 0), (1, -1) )] + 
+                                                [('SPAN', (-1, 0), (-1, -1) )] + 
+                                                [('SPAN', (2, 0), (5, 0) )]  ))
+
+
+
 
     #собираем все объекты в массив и отдаем
     sheetElements = []   
     sheetElements.append(sheetTable)
+    sheetElements.append(impulseLinesTableHeader)
     
 
     
