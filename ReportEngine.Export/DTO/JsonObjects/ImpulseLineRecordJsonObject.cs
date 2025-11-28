@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 
 namespace ReportEngine.Export.DTO.JsonObjects
 {
-
-
-
     public class WireRecord {
         public string? Circuit {  get; set; }
         public string? Mark { get; set; }

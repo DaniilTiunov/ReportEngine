@@ -320,19 +320,7 @@ def fillStandPage(stand, doc, project):
     impulseLinesHeaderData = [["№\nимп.линии", "Наименование импульсной линии\n и код KKS", "Таблица соединений","","","","Примечание"],
                           ["","","Цепь","Маркировка","Коробка","Клеммы",""]]
 
-    impulseLinesTableHeader = Table(data = impulseLinesHeaderData, colWidths = [sheetWidth * 0.075,sheetWidth * 0.275,sheetWidth * 0.1,sheetWidth * 0.15,sheetWidth * 0.15,sheetWidth * 0.1,sheetWidth * 0.15])
-    impulseLinesTableHeader.setStyle(TableStyle(cmds = 
-                                                PdfHelper.commonTableStyleCmd +
-                                                PdfHelper.centerAlignTableStyleCmd +
-                                                PdfHelper.boldFontTableStyleCmd + 
-                                                PdfHelper.visibleAllBordersTableStyleCmd +
-                                                #объединяем нужные ячейки
-                                                [('SPAN', (0, 0), (0, -1) )] + 
-                                                [('SPAN', (1, 0), (1, -1) )] + 
-                                                [('SPAN', (-1, 0), (-1, -1) )] + 
-                                                [('SPAN', (2, 0), (5, 0) )]  ))
-
-    impulseLineRecords = []
+    impulseLineTableData = impulseLinesHeaderData.copy()
     impulseLineNumber = 1
 
     for impulseLine in stand["ImpulseLines"]:
@@ -342,20 +330,28 @@ def fillStandPage(stand, doc, project):
             wires.append( [wire["Circuit"],wire["Mark"],wire["ElectricBox"],wire["Terminal"]] )
 
         descAndKKS = f"{impulseLine["Name"]} \n {impulseLine["CodeKKS"]}"
-        impulseLineRecords.append([str(impulseLineNumber), descAndKKS, wires,""])
+        impulseLineTableData.append([str(impulseLineNumber), descAndKKS, wires,""])
         impulseLineNumber+1
 
-    impulseLineTable = Table(data = impulseLineRecords)
+    impulseLineTable = Table(data = impulseLineTableData, colWidths = [sheetWidth * 0.075,sheetWidth * 0.275,sheetWidth * 0.1,sheetWidth * 0.15,sheetWidth * 0.15,sheetWidth * 0.1,sheetWidth * 0.15])
     impulseLineTable.setStyle(TableStyle(cmds=
                                          PdfHelper.commonTableStyleCmd + 
+                                         PdfHelper.centerAlignTableStyleCmd +
                                          PdfHelper.visibleAllBordersTableStyleCmd + 
-                                         PdfHelper.usualFontTableStyleCmd))
+                                         PdfHelper.usualFontTableStyleCmd +
+                                         PdfHelper.boldFontTableStyleCmd + 
+                                         #объединяем нужные ячейки
+                                         [('SPAN', (0, 0), (0, -1) )] + 
+                                         [('SPAN', (1, 0), (1, -1) )] + 
+                                         [('SPAN', (-1, 0), (-1, -1) )] + 
+                                         [('SPAN', (2, 0), (5, 0) )]  ))
+
+
     
 
     #собираем все объекты в массив и отдаем
     sheetElements = []   
     sheetElements.append(sheetTable)
-    sheetElements.append(impulseLinesTableHeader)
     sheetElements.append(impulseLineTable)
          
     return sheetElements
