@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ReportEngine.Export.Mapping.JsonObjects
+namespace ReportEngine.Export.DTO
 {
     public class ProjectJsonObject
     {

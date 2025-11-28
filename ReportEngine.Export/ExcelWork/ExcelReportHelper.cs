@@ -1,11 +1,10 @@
 ﻿using ReportEngine.Domain.Entities;
-using ReportEngine.Export.ExcelWork.Services.Generators.DTO;
-using ReportEngine.Export.Mapping.JsonObjects;
+using ReportEngine.Export.DTO;
 using ReportEngine.Shared.Config.IniHelpers;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
 
-namespace ReportEngine.Export.Mapping;
+namespace ReportEngine.Export.ExcelWork;
 
 public static class ExcelReportHelper
 {

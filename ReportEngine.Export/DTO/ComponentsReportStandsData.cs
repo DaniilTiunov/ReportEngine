@@ -1,4 +1,4 @@
-﻿namespace ReportEngine.Export.ExcelWork.Services.Generators.DTO;
+﻿namespace ReportEngine.Export.DTO;
 
 
 public record PartsStandsData(

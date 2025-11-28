@@ -1,4 +1,4 @@
-﻿namespace ReportEngine.Export.Mapping.JsonObjects
+﻿namespace ReportEngine.Export.DTO
 {
     public class PartRecordJsonObject
     {
