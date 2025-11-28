@@ -1,39 +1,27 @@
-﻿from reportlab.lib import colors
-from reportlab.lib.pagesizes import A4, landscape,portrait
+﻿from reportlab.lib.pagesizes import A4, landscape,portrait
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import (KeepInFrame, PageTemplate, SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak,Image, NextPageTemplate, Frame)
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.cidfonts import UnicodeCIDFont
-from reportlab.pdfgen import canvas
-from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.lib.units import cm,mm
-import json
-import base64
-import io
-import os
-from datetime import datetime
-from pathlib import Path
+from reportlab.platypus import (PageTemplate, SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, NextPageTemplate, Frame)
+from reportlab.lib.units import mm
+from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT, TA_JUSTIFY
+import PdfHelper
+from reportlab.lib import colors
 
-
-pdfmetrics.registerFont(TTFont('Arial','arial.ttf'))
-pdfmetrics.registerFont(TTFont('Arial-Bold','arialbd.ttf'))
-pdfmetrics.registerFont(UnicodeCIDFont('STSong-Light'))
 
 landscapeParams = {
-    "startPointX" : 20 * mm,
-    "startPointY": 20 * mm,
-    "frameWidth":A4[1] - 40*mm,
-    "frameHeight": A4[0] - 40*mm,
+    "startPointX" : 15 * mm,
+    "startPointY": 15 * mm,
+    "frameWidth":A4[1] - 30*mm,
+    "frameHeight": A4[0] - 30*mm,
     "frameId": 'landscapeFrame',
     "visibleBoundaries": 0
 }
 
 
 portraitParams = {
-    "startPointX" : 20 * mm,
-    "startPointY": 20 * mm,
-    "frameWidth":A4[0] - 40*mm,
-    "frameHeight": A4[1] - 40*mm,
+    "startPointX" : 5 * mm,
+    "startPointY": 5 * mm,
+    "frameWidth":A4[0] - 10*mm,
+    "frameHeight": A4[1] - 10*mm,
     "frameId": 'portraitFrame',
     "visibleBoundaries": 0
 }
@@ -58,59 +46,16 @@ portraitTemplate = PageTemplate(
             showBoundary  = portraitParams['visibleBoundaries']
     ))
 
-commonTableStyleCmd = [    
-        ('BACKGROUND', (0, 0), (-1, 0), colors.white),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
-        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-        ('FONTSIZE', (0, 0), (-1, -1), 7)]
-
-leftAlignTableStyleCmd = [ ('ALIGN', (0, 0), (-1, -1), 'LEFT')]
-centerAlignTableStyleCmd = [ ('ALIGN', (0, 0), (-1, -1), 'CENTER')]
-
-usualFontTableStyleCmd = [('FONTNAME', (0, 0), (-1, -1), "Arial")]
-boldFontTableStyleCmd = [('FONTNAME', (0, 0), (-1, -1), "Arial-Bold")]
-
-visibleAllBordersTableStyleCmd = [('GRID', (0, 0), (-1, -1), 1, colors.black)]
-invisibleAllBordersTableStyleCmd = []
-
-invisibleOuterBordersTableStyleCmd = []
-visibleOuterBordersTableStyleCmd = [('BOX', (0, 0), (-1, -1),1, colors.black)]
-
-invisibleInnerBordersTableStyleCmd = []
-visibleInnerBordersTableStyleCmd = [('INNERGRID', (0, 0), (-1, -1),1, colors.black)]
 
 
-def openJsonFile(filePath):
+def fillStandPage(stand, doc, project):
     
-    try:
-        with open(filePath, 'r', encoding='utf-8-sig') as file:
-            jsonData = json.load(file)           
-    except Exception as e:
-            print(f"Error: {e}")
+    #вписываем в рамку
+    sheetWidth = portraitParams['frameWidth'] * 0.99
+    sheetHeight = portraitParams['frameHeight'] * 0.99
 
-    return jsonData
-
-
-def generateLogo(width,height):
-    script_dir = Path(__file__).parent
-    file_path = os.path.join(script_dir, "Etalon.jpg")
-    return Image(file_path,width,height)
-    
-
-def generateImageFromStr(base64_string,width, height):
-    imageData = base64.b64decode(base64_string)
-    imageBuffer = io.BytesIO(imageData)
-    return Image(imageBuffer,width,height)
-
-
-
-def fillStandPage(stand,doc,project):
-    
-    sheetWidth = A4[0]
-    sheetHeight = A4[1]
-
-    leftPartWidth = 0.58 * sheetWidth
-    rightPartWidth = 0.38 * sheetWidth
+    leftPartWidth = 0.55 * sheetWidth
+    rightPartWidth = 0.45 * sheetWidth
     
     styles = getSampleStyleSheet()
 
@@ -119,7 +64,7 @@ def fillStandPage(stand,doc,project):
         parent = styles['Normal'],
         fontName ='Arial',
         encoding ='UTF-8',
-        fontSize = 7
+        fontSize = 6
     )
 
 
@@ -128,16 +73,13 @@ def fillStandPage(stand,doc,project):
     standTechCardHeaderTable = Table(data = [[ "Технологическая карта", str(galvanizeStr), str(project["Description"]) ]],
                                    colWidths= leftPartWidth/3)
     standTechCardHeaderTable.setStyle(TableStyle(cmds =
-                                                 commonTableStyleCmd +
-                                                 centerAlignTableStyleCmd + 
-                                                 usualFontTableStyleCmd + 
-                                                 visibleOuterBordersTableStyleCmd +
-                                                 invisibleInnerBordersTableStyleCmd +
+                                                 PdfHelper.commonTableStyleCmd +
+                                                 PdfHelper.centerAlignTableStyleCmd + 
+                                                 PdfHelper.usualFontTableStyleCmd + 
+                                                 PdfHelper.visibleOuterBordersTableStyleCmd +
+                                                 PdfHelper.invisibleInnerBordersTableStyleCmd +
                                                  #Технологическая карта жирным
                                                  [('FONTNAME', (0, 0), (0, 0), "Arial-Bold")]
-                                                 #У крайних ячеек выравнивание по краям
-                                                 #[ ('ALIGN', (0, 0), (0, 0), 'LEFT')] +
-                                                 #[ ('ALIGN', (-1, -1), (-1, -1), 'RIGHT')]
                                                  )) 
     
 
@@ -147,27 +89,27 @@ def fillStandPage(stand,doc,project):
     standNameData = [[ "Стенд датчиков КИПиА " + str(stand["Designation"]) ]]
     standNameHeaderTable = Table(data = standNameData, colWidths = leftPartWidth)
     standNameHeaderTable.setStyle(TableStyle(cmds =
-                                             commonTableStyleCmd +
-                                             centerAlignTableStyleCmd + 
-                                             boldFontTableStyleCmd + 
-                                             visibleAllBordersTableStyleCmd ))  
+                                             PdfHelper.commonTableStyleCmd +
+                                             PdfHelper.centerAlignTableStyleCmd + 
+                                             PdfHelper.boldFontTableStyleCmd + 
+                                             PdfHelper.visibleAllBordersTableStyleCmd ))  
     
 
     standsInfoData = [[ str(stand["KKSCode"]) , str(stand["SerialNumber"]) ]]
     standInfoTable = Table(data = standsInfoData, colWidths = leftPartWidth/2)
     standInfoTable.setStyle(TableStyle(cmds =
-                                       commonTableStyleCmd +
-                                       centerAlignTableStyleCmd + 
-                                       boldFontTableStyleCmd + 
-                                       visibleAllBordersTableStyleCmd ))
+                                       PdfHelper.commonTableStyleCmd +
+                                       PdfHelper.centerAlignTableStyleCmd + 
+                                       PdfHelper.boldFontTableStyleCmd + 
+                                       PdfHelper.visibleAllBordersTableStyleCmd ))
 
     standSizeData = [[ "Размер стенда, мм ", str(stand["Width"]) ]]
     standSizeTable = Table(data = standSizeData, colWidths = [leftPartWidth*0.8, leftPartWidth * 0.2])
     standSizeTable.setStyle(TableStyle(cmds =
-                                       commonTableStyleCmd +
-                                       centerAlignTableStyleCmd + 
-                                       boldFontTableStyleCmd + 
-                                       visibleAllBordersTableStyleCmd  ))
+                                       PdfHelper.commonTableStyleCmd +
+                                       PdfHelper.centerAlignTableStyleCmd + 
+                                       PdfHelper.boldFontTableStyleCmd + 
+                                       PdfHelper.visibleAllBordersTableStyleCmd  ))
 
     
     #таблица рам
@@ -180,24 +122,24 @@ def fillStandPage(stand,doc,project):
 
     framesTable = Table(data = framesTableData, colWidths = [leftPartWidth*0.15, leftPartWidth*0.75, leftPartWidth*0.1])
     framesTable.setStyle(TableStyle(cmds =
-                                    commonTableStyleCmd +
-                                    centerAlignTableStyleCmd + 
-                                    usualFontTableStyleCmd + 
-                                    visibleAllBordersTableStyleCmd + 
+                                    PdfHelper.commonTableStyleCmd +
+                                    PdfHelper.centerAlignTableStyleCmd + 
+                                    PdfHelper.usualFontTableStyleCmd + 
+                                    PdfHelper.visibleAllBordersTableStyleCmd + 
                                     #шапка жирным
                                     [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] ))
 
 
-    columnsHeaderTitles = [["Наименование", "Единицы\n измерения", "Норм.","Факт."]]
+    columnsHeaderTitles = [["Наименование", "Ед. изм.", "Норм.","Факт."]]
 
     
     #таблица материалов рам
     framePartsHeaderTable = Table(data = [["Основные материалы рамы стенда"]], colWidths = leftPartWidth)
     framePartsHeaderTable.setStyle(TableStyle(cmds =
-                                                commonTableStyleCmd +
-                                                centerAlignTableStyleCmd + 
-                                                boldFontTableStyleCmd + 
-                                                visibleAllBordersTableStyleCmd ))
+                                                PdfHelper.commonTableStyleCmd +
+                                                PdfHelper.centerAlignTableStyleCmd + 
+                                                PdfHelper.boldFontTableStyleCmd + 
+                                                PdfHelper.visibleAllBordersTableStyleCmd ))
 
     framePartsRecords = columnsHeaderTitles.copy()
 
@@ -205,84 +147,93 @@ def fillStandPage(stand,doc,project):
         tableRecord = [frameMaterial["Name"], frameMaterial["Unit"], frameMaterial["Quantity"],""]
         framePartsRecords.append(tableRecord)
 
-    framePartsTable = Table(data = framePartsRecords, colWidths = [leftPartWidth*0.65, leftPartWidth*0.15, leftPartWidth*0.1, leftPartWidth*0.1])
+    framePartsTable = Table(data = framePartsRecords, colWidths = [leftPartWidth*0.68, leftPartWidth*0.12, leftPartWidth*0.1, leftPartWidth*0.1])
     framePartsTable.setStyle(TableStyle(cmds =
-                                        commonTableStyleCmd +
-                                        centerAlignTableStyleCmd + 
-                                        usualFontTableStyleCmd + 
-                                        visibleAllBordersTableStyleCmd + 
+                                        PdfHelper.commonTableStyleCmd +
+                                        PdfHelper.centerAlignTableStyleCmd + 
+                                        PdfHelper.usualFontTableStyleCmd + 
+                                        PdfHelper.visibleAllBordersTableStyleCmd + 
                                         #шапка жирным
-                                        [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] ))
+                                        [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] +
+                                        PdfHelper.firstColumnLeftTableStyleCmd ))
 
 
     #таблица монтажных частей
+
+    #подсчет кол-ва строк в левой части листа для выравнивания
+    leftPartElementsCount = 0
+
     mountPartsHeaderTable = Table(data = [["Комплект монтажных частей в зависимости от обвязок"]], colWidths = leftPartWidth)
     mountPartsHeaderTable.setStyle(TableStyle(cmds =
-                                              commonTableStyleCmd +
-                                              centerAlignTableStyleCmd + 
-                                              boldFontTableStyleCmd + 
-                                              visibleAllBordersTableStyleCmd ))
+                                              PdfHelper.commonTableStyleCmd +
+                                              PdfHelper.centerAlignTableStyleCmd + 
+                                              PdfHelper.boldFontTableStyleCmd + 
+                                              PdfHelper.visibleAllBordersTableStyleCmd +
+                                              PdfHelper.firstColumnLeftTableStyleCmd ))
+    leftPartElementsCount+=1
+
 
 
     mountPartsRecords = columnsHeaderTitles.copy()
+    leftPartElementsCount+=1
 
     for mountPart in stand["MountParts"]:
         tableRecord = [mountPart["Name"], mountPart["Unit"], mountPart["Quantity"],""]
         mountPartsRecords.append(tableRecord)
+        leftPartElementsCount+=1
     
-    mountPartsTable = Table(data = mountPartsRecords, colWidths = [leftPartWidth*0.65, leftPartWidth*0.15, leftPartWidth*0.1, leftPartWidth*0.1])
-    mountPartsTable.setStyle(TableStyle(cmds =
-                                        commonTableStyleCmd +
-                                        centerAlignTableStyleCmd + 
-                                        usualFontTableStyleCmd + 
-                                        visibleAllBordersTableStyleCmd + 
-                                        #шапка жирным
-                                        [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] ))
+    
+
 
     #таблица дренажа
+
+    rightPartElementsCount=0
+
     drainagePartsHeaderTable = Table(data = [["Дренаж и/или продувка"]], colWidths = rightPartWidth)
     drainagePartsHeaderTable.setStyle(TableStyle(cmds =
-                                              commonTableStyleCmd +
-                                              centerAlignTableStyleCmd + 
-                                              boldFontTableStyleCmd + 
-                                              visibleAllBordersTableStyleCmd ))
+                                             PdfHelper.commonTableStyleCmd +
+                                             PdfHelper.centerAlignTableStyleCmd + 
+                                             PdfHelper.boldFontTableStyleCmd + 
+                                             PdfHelper.visibleAllBordersTableStyleCmd ))
+    rightPartElementsCount+=1
 
     drainagePartsRecords = columnsHeaderTitles.copy()
+    rightPartElementsCount+=1
 
-    for drainagePart in stand["MountParts"]:
+    for drainagePart in stand["DrainageParts"]:
         tableRecord = [drainagePart["Name"], drainagePart["Unit"], drainagePart["Quantity"],""]
         drainagePartsRecords.append(tableRecord)
+        rightPartElementsCount+=1
     
-    drainagePartsTable = Table(data = drainagePartsRecords, colWidths = [rightPartWidth*0.65, rightPartWidth*0.15, rightPartWidth*0.1,rightPartWidth*0.1])
+    drainagePartsTable = Table(data = drainagePartsRecords, colWidths = [rightPartWidth*0.68, rightPartWidth*0.12, rightPartWidth*0.1,rightPartWidth*0.1])
     drainagePartsTable.setStyle(TableStyle(cmds =
-                                            commonTableStyleCmd +
-                                            centerAlignTableStyleCmd + 
-                                            usualFontTableStyleCmd + 
-                                            visibleAllBordersTableStyleCmd + 
+                                            PdfHelper.commonTableStyleCmd +
+                                            PdfHelper.centerAlignTableStyleCmd + 
+                                            PdfHelper.usualFontTableStyleCmd + 
+                                            PdfHelper.visibleAllBordersTableStyleCmd + 
                                             #шапка жирным
-                                            [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] ))
+                                            [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] +
+                                            PdfHelper.firstColumnLeftTableStyleCmd ))
 
 
     #таблица электрическх компонентов
     electricPartsHeaderTable = Table(data = [["Электрические компоненты"]], colWidths = rightPartWidth)
     electricPartsHeaderTable.setStyle(TableStyle(cmds =
-                                              commonTableStyleCmd +
-                                              centerAlignTableStyleCmd + 
-                                              boldFontTableStyleCmd + 
-                                              visibleAllBordersTableStyleCmd ))
+                                              PdfHelper.commonTableStyleCmd +
+                                              PdfHelper.centerAlignTableStyleCmd + 
+                                              PdfHelper.boldFontTableStyleCmd + 
+                                              PdfHelper.visibleAllBordersTableStyleCmd ))
+    rightPartElementsCount+=1
 
     electricPartsRecords = columnsHeaderTitles.copy()
+    rightPartElementsCount+=1
 
-    for electricPart in stand["MountParts"]:
+    for electricPart in stand["ElectricParts"]:
         tableRecord = [electricPart["Name"], electricPart["Unit"], electricPart["Quantity"],""]
         electricPartsRecords.append(tableRecord)
+        rightPartElementsCount+=1
     
-    electricPartsTable = Table(data = electricPartsRecords, colWidths = [rightPartWidth*0.65, rightPartWidth*0.15, rightPartWidth*0.1,rightPartWidth*0.1])
-    electricPartsTable.setStyle(TableStyle(cmds =
-                                            commonTableStyleCmd +
-                                            centerAlignTableStyleCmd + 
-                                            usualFontTableStyleCmd + 
-                                            visibleAllBordersTableStyleCmd ))
+    
 
 
     #чертеж стенда
@@ -302,18 +253,46 @@ def fillStandPage(stand,doc,project):
 
     imageString = stand["ImageData"]
     if imageString is not None:  
-        standBlueprint = generateImageFromStr(imageString, rightPartWidth, sumHeight)  
+        standBlueprint = PdfHelper.generateImageFromStr(imageString, rightPartWidth, sumHeight)  
     else:
         standBlueprint = Paragraph(text = "Ха-ха, пiймав на пiкчу", style = cyrillicStyle)
 
 
     blueprintTable = Table(data = [[standBlueprint]], colWidths = rightPartWidth, rowHeights = sumHeight)
-    blueprintTable.setStyle(TableStyle(cmds = commonTableStyleCmd +
-                                              centerAlignTableStyleCmd + 
-                                              usualFontTableStyleCmd + 
-                                              visibleAllBordersTableStyleCmd))
+    blueprintTable.setStyle(TableStyle(cmds = PdfHelper.commonTableStyleCmd +
+                                              PdfHelper.centerAlignTableStyleCmd + 
+                                              PdfHelper.usualFontTableStyleCmd + 
+                                              PdfHelper.visibleAllBordersTableStyleCmd))
 
-    leftPart = [standTechCardHeaderTable,
+    #выравнивание таблиц по кол-вам строк
+    rowsOffset = leftPartElementsCount - rightPartElementsCount
+    targetObject = mountPartsRecords if rowsOffset < 0 else electricPartsRecords
+
+    for _ in range(abs(rowsOffset)):
+        targetObject.append(["","","",""])
+
+
+    mountPartsTable = Table(data = mountPartsRecords, colWidths = [leftPartWidth*0.68, leftPartWidth*0.12, leftPartWidth*0.1, leftPartWidth*0.1])
+    mountPartsTable.setStyle(TableStyle(cmds =
+                                        PdfHelper.commonTableStyleCmd +
+                                        PdfHelper.centerAlignTableStyleCmd + 
+                                        PdfHelper.usualFontTableStyleCmd + 
+                                        PdfHelper.visibleAllBordersTableStyleCmd + 
+                                        #шапка жирным
+                                        [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] +
+                                        PdfHelper.firstColumnLeftTableStyleCmd))
+
+    electricPartsTable = Table(data = electricPartsRecords, colWidths = [rightPartWidth*0.68, rightPartWidth*0.12, rightPartWidth*0.1,rightPartWidth*0.1])
+    electricPartsTable.setStyle(TableStyle(cmds =
+                                            PdfHelper.commonTableStyleCmd +
+                                            PdfHelper.centerAlignTableStyleCmd + 
+                                            PdfHelper.usualFontTableStyleCmd + 
+                                            PdfHelper.visibleAllBordersTableStyleCmd+
+                                            #шапка жирным
+                                            [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] +
+                                            PdfHelper.firstColumnLeftTableStyleCmd))
+
+    leftPart = [ standTechCardHeaderTable,
                 standNameHeaderTable, 
                 standInfoTable, 
                 standSizeTable, 
@@ -321,44 +300,73 @@ def fillStandPage(stand,doc,project):
                 framePartsHeaderTable, 
                 framePartsTable, 
                 mountPartsHeaderTable, 
-                mountPartsTable]
+                mountPartsTable ]
 
-    rightPart = [blueprintTable,
+    rightPart = [ blueprintTable,
                  drainagePartsHeaderTable,
                  drainagePartsTable, 
                  electricPartsHeaderTable,  
-                 #electricPartsTable
-                 ]
+                 electricPartsTable ]
 
     sheetTable = Table(data = [[ leftPart, rightPart ]], colWidths = [leftPartWidth , rightPartWidth])
 
     sheetTable.setStyle(TableStyle(cmds = 
-                         commonTableStyleCmd +
-                         centerAlignTableStyleCmd +
-                         boldFontTableStyleCmd + 
+                         PdfHelper.commonTableStyleCmd +
+                         PdfHelper.centerAlignTableStyleCmd +
+                         PdfHelper.boldFontTableStyleCmd + 
                          #выравнивание по верху
                          [('VALIGN', (0, 0), (-1, -1), "TOP")] ))
 
+    impulseLinesHeaderData = [["№\nимп.линии", "Наименование импульсной линии\n и код KKS", "Таблица соединений","","","","Примечание"],
+                          ["","","Цепь","Маркировка","Коробка","Клеммы",""]]
+
+    impulseLineTableData = impulseLinesHeaderData.copy()
+    impulseLineNumber = 1
+
+    for impulseLine in stand["ImpulseLines"]:
+
+        wires = []
+        for wire in impulseLine["Wires"]:
+            wires.append( [wire["Circuit"],wire["Mark"],wire["ElectricBox"],wire["Terminal"]] )
+
+        descAndKKS = f"{impulseLine["Name"]} \n {impulseLine["CodeKKS"]}"
+        impulseLineTableData.append([str(impulseLineNumber), descAndKKS, wires,""])
+        impulseLineNumber+1
+
+    impulseLineTable = Table(data = impulseLineTableData, colWidths = [sheetWidth * 0.075,sheetWidth * 0.275,sheetWidth * 0.1,sheetWidth * 0.15,sheetWidth * 0.15,sheetWidth * 0.1,sheetWidth * 0.15])
+    impulseLineTable.setStyle(TableStyle(cmds=
+                                         PdfHelper.commonTableStyleCmd + 
+                                         PdfHelper.centerAlignTableStyleCmd +
+                                         PdfHelper.visibleAllBordersTableStyleCmd + 
+                                         PdfHelper.usualFontTableStyleCmd +
+                                         PdfHelper.boldFontTableStyleCmd + 
+                                         #объединяем нужные ячейки
+                                         [('SPAN', (0, 0), (0, -1) )] + 
+                                         [('SPAN', (1, 0), (1, -1) )] + 
+                                         [('SPAN', (-1, 0), (-1, -1) )] + 
+                                         [('SPAN', (2, 0), (5, 0) )]  ))
+
+
+    
 
     #собираем все объекты в массив и отдаем
     sheetElements = []   
     sheetElements.append(sheetTable)
-    
-
-    
-        
+    sheetElements.append(impulseLineTable)
+         
     return sheetElements
 
 
 
 def fillConclusionPage(stand,doc,project):
 
-    sheetWidth = A4[1]
-    sheetHeight = A4[0]
+    #вписываем в рамку
+    sheetWidth = landscapeParams['frameWidth'] * 0.99
+    sheetHeight = landscapeParams['frameHeight'] * 0.99
 
     styles = getSampleStyleSheet()
 
-    cyrillic_style = ParagraphStyle(
+    cyrillicStyle = ParagraphStyle(
         'Normal',
         parent = styles['Normal'],
         fontName ='Arial',
@@ -366,22 +374,20 @@ def fillConclusionPage(stand,doc,project):
         fontSize = 7
     )
 
-    sheetElements = []
-
 
 
     #таблица с инфой о стенде и лого
     standTable = [["","Значение"]]
     standTable.append(["Наименование", "Стенд датчиков КИПиА"])
     standTable.append(["Обозначение по КД", str(stand["Designation"])])
-    standTable.append(["Чертеж", "???"])
+    standTable.append(["Чертеж", ""])
     standTable.append(["Зав.номер", str(stand["SerialNumber"])])     
     standInfoTable = Table(data = standTable, colWidths = [sheetWidth*0.2,sheetWidth*0.3])
 
     standInfoTable.setStyle(TableStyle(cmds = 
-                                       commonTableStyleCmd +
-                                       centerAlignTableStyleCmd + 
-                                       visibleAllBordersTableStyleCmd +    
+                                       PdfHelper.commonTableStyleCmd +
+                                       PdfHelper.centerAlignTableStyleCmd + 
+                                       PdfHelper.visibleAllBordersTableStyleCmd +    
                                        #жирный шрифт для шапки 
                                        [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold"), 
                                         ('FONTNAME', (0, 0), (0, -1), "Arial-Bold")] +      
@@ -389,32 +395,28 @@ def fillConclusionPage(stand,doc,project):
                                        [('FONTNAME', (1, 1), (-1, -1), "Arial")] ))
 
 
-    #магические размеры убрать!!!
-    logoImage = generateLogo(sheetWidth * 0.18,sheetHeight * 0.15)
+
+    logoImage =  PdfHelper.generateImageFromFile("Etalon.jpg",sheetWidth * 0.18,sheetHeight * 0.15)
 
 
     standInfoAlignmentTable = Table(data = [[standInfoTable,logoImage]], 
                                     colWidths = [sheetWidth*0.52,sheetWidth*0.2])
 
     standInfoAlignmentTable.setStyle(TableStyle(cmds = 
-                                                commonTableStyleCmd +
-                                                centerAlignTableStyleCmd + 
-                                                invisibleAllBordersTableStyleCmd ))
+                                                 PdfHelper.commonTableStyleCmd +
+                                                 PdfHelper.centerAlignTableStyleCmd + 
+                                                 PdfHelper.invisibleAllBordersTableStyleCmd ))
 
     #графа № заказа на производство
-    orderNumberLabel = Paragraph("№ заказа на производство", style = cyrillic_style)
-    emptyCell = Table(data = [[""]], colWidths = sheetWidth * 0.3)
-    emptyCell.setStyle(TableStyle(cmds =
-                                  commonTableStyleCmd +  
-                                  visibleAllBordersTableStyleCmd))
-
-    orderNumberAlignmentTable = Table(data = [[orderNumberLabel, emptyCell]], 
-                                      colWidths = [sheetWidth*0.15,sheetWidth*0.75])
+    orderNumberAlignmentTable = Table(data = [["№ заказа на производство",""]], 
+                                      colWidths = [sheetWidth*0.15,sheetWidth*0.25],
+                                      hAlign = 'LEFT')
 
     orderNumberAlignmentTable.setStyle(TableStyle(cmds = 
-                                                  commonTableStyleCmd +
-                                                  leftAlignTableStyleCmd + 
-                                                  invisibleAllBordersTableStyleCmd))
+                                                   PdfHelper.commonTableStyleCmd +
+                                                   PdfHelper.leftAlignTableStyleCmd + 
+                                                   PdfHelper.usualFontTableStyleCmd + 
+                                                   [('GRID', (-1, 0), (-1, 0), 1, colors.black)] ))
 
     #таблица исполнения этапов
     doneTable = [["№ п/п", 
@@ -439,76 +441,61 @@ def fillConclusionPage(stand,doc,project):
 
 
     doneStagesTable.setStyle(TableStyle(cmds = 
-                                      commonTableStyleCmd +
-                                      centerAlignTableStyleCmd + 
-                                      visibleAllBordersTableStyleCmd +
+                                       PdfHelper.commonTableStyleCmd +
+                                       PdfHelper.centerAlignTableStyleCmd + 
+                                       PdfHelper.visibleAllBordersTableStyleCmd +
                                       #жирный шрифт для шапки      
                                       [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] + 
                                       #обычный шрифт для тела
                                       [('FONTNAME', (0, 1), (-1, -1), "Arial")] ))
 
 
-    #графа подписей
-    productReadyLabel = Paragraph(text = "Изделие признано годным и" + "<br/> " + "передано на склад", 
-                                  style = cyrillic_style)
-   
 
-    signatureLabels = Table(data = [["ОТК (ФИО, подпись)","Склад (ФИО, подпись)"]],
-                            colWidths = sheetWidth*0.2)
+    #подписи
+    productReadyLabel = "Изделие признано годным" + "\n" + "и передано на склад"
+    controlSignatureLabel = "ОТК (ФИО, подпись)"
+    storeSignatureLabel = "Склад (ФИО, подпись)"
 
-    signatureLabels.setStyle(TableStyle(cmds = 
-                                        commonTableStyleCmd +
-                                        centerAlignTableStyleCmd + 
-                                        invisibleAllBordersTableStyleCmd +
-                                        usualFontTableStyleCmd))
 
-    signatureTable = Table(data = [["",""]],
-                           colWidths = sheetWidth*0.2)
-    signatureTable.setStyle(TableStyle(cmds = 
-                                        commonTableStyleCmd +
-                                        centerAlignTableStyleCmd + 
-                                        visibleAllBordersTableStyleCmd ))
-
-    allSignatureTable = [signatureLabels, signatureTable]
-
-    signatureAligmentTable = Table(data = [[productReadyLabel, allSignatureTable]], 
-                                   colWidths = [sheetWidth*0.25,sheetWidth*0.75])
+    signatureAligmentTable = Table(data = [["",controlSignatureLabel, storeSignatureLabel],
+                                           [productReadyLabel, "", ""]],
+                                           colWidths = [sheetWidth * 0.15, sheetWidth * 0.15, sheetWidth * 0.15],
+                                           hAlign ='LEFT' )
 
     signatureAligmentTable.setStyle(TableStyle(cmds = 
-                                               commonTableStyleCmd +
-                                               leftAlignTableStyleCmd + 
-                                               invisibleAllBordersTableStyleCmd +
-                                               [("VALIGN", (0, 0), (-1, -1), "BOTTOM")] ))
-
-
+                                                PdfHelper.commonTableStyleCmd +
+                                                PdfHelper.invisibleAllBordersTableStyleCmd +
+                                                PdfHelper.boldFontTableStyleCmd +
+                                                PdfHelper.centerAlignTableStyleCmd +
+                                                #label к подписям
+                                               [("VALIGN", (0, 0), (-1, 0), "BOTTOM")] + 
+                                               #label годности изделия
+                                               [("VALIGN", (0, -1), (0, -1), "MIDDLE")] + 
+                                               #видимые боксы для подписей
+                                               [('GRID', (1, -1), (-1, -1), 1, colors.black)]))
     #собираем все элементы листа
+    sheetElements = []
+
     sheetElements.append(standInfoAlignmentTable)
-    sheetElements.append(Spacer(1,10))
+    sheetElements.append(Spacer(1,20))
     sheetElements.append(orderNumberAlignmentTable)
-    sheetElements.append(Spacer(1,10))
+    sheetElements.append(Spacer(1,20))
     sheetElements.append(doneStagesTable)
-    sheetElements.append(Spacer(1,10))
+    sheetElements.append(Spacer(1,100))
     sheetElements.append(signatureAligmentTable)
     
     return sheetElements
 
 
-def generateReport(jsonFilePath,outputDir):
+def generateReport(jsonFilePath,outputFilePath):
 
-    now = datetime.now()
-    outputFileName = "Технологические карты___"
-    outputFileName += "{}-{}-{}___{}-{}-{}".format(now.day,now.month,now.year,now.hour,now.minute,now.second)
-    outputFileName += ".pdf"
-    
-    outputPdf = outputDir + outputFileName
+    PdfHelper.registerFonts()
 
-    data = openJsonFile(jsonFilePath)
-    doc = SimpleDocTemplate(outputPdf, pagesize=A4)
+    data = PdfHelper.openJsonFile(jsonFilePath)
+    doc = SimpleDocTemplate(outputFilePath, pagesize=A4)
+    doc.addPageTemplates([portraitTemplate,landscapeTemplate])
 
     elements = []
-
-    #добавляем стили страницы
-    doc.addPageTemplates([portraitTemplate,landscapeTemplate])
 
     for stand in data["Stands"]:      
         standSheet = fillStandPage(stand,doc,data)

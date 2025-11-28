@@ -1,38 +1,12 @@
-﻿from tkinter import BOTTOM, CENTER
-from reportlab.lib import colors
-from reportlab.lib.pagesizes import A4, landscape,portrait
+﻿from reportlab.lib.pagesizes import A4, landscape,portrait
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import (KeepInFrame, PageTemplate, SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak,Image, NextPageTemplate, Frame)
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.cidfonts import UnicodeCIDFont
-from reportlab.pdfgen import canvas
-from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.lib.units import cm,mm
-import json
-import base64
-import io
-import os
-from datetime import datetime
-from pathlib import Path
+from reportlab.platypus import ( PageTemplate, SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, NextPageTemplate, Frame)
+from reportlab.lib.units import mm
+from reportlab.lib import colors
 from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT, TA_JUSTIFY
+import PdfHelper
 
 
-pdfmetrics.registerFont(TTFont('Arial','arial.ttf'))
-pdfmetrics.registerFont(TTFont('Arial-Bold','arialbd.ttf'))
-pdfmetrics.registerFont(UnicodeCIDFont('STSong-Light'))
-
-
-
-
-
-landscapeParams = {
-    "startPointX" : 10 * mm,
-    "startPointY": 10 * mm,
-    "frameWidth":A4[1] - 20*mm,
-    "frameHeight": A4[0] - 20*mm,
-    "frameId": 'landscapeFrame',
-    "visibleBoundaries": 0
-}
 
 portraitParams = {
     "startPointX" : 20 * mm,
@@ -43,6 +17,14 @@ portraitParams = {
     "visibleBoundaries": 0
 }
 
+landscapeParams = {
+    "startPointX" : 5 * mm,
+    "startPointY": 5 * mm,
+    "frameWidth":A4[1] - 10*mm,
+    "frameHeight": A4[0] - 10*mm,
+    "frameId": 'landscapeFrame',
+    "visibleBoundaries": 0
+}
 
 
 landscapeTemplate = PageTemplate(
@@ -66,59 +48,15 @@ portraitTemplate = PageTemplate(
     ))
 
 
-
-commonTableStyleCmd = [    
-        ('BACKGROUND', (0, 0), (-1, 0), colors.white),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
-        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-        ('FONTSIZE', (0, 0), (-1, -1), 7)]
-
-leftAlignTableStyleCmd = [ ('ALIGN', (0, 0), (-1, -1), 'LEFT')]
-centerAlignTableStyleCmd = [ ('ALIGN', (0, 0), (-1, -1), 'CENTER')]
-
-usualFontTableStyleCmd = [('FONTNAME', (0, 0), (-1, -1), "Arial")]
-boldFontTableStyleCmd = [('FONTNAME', (0, 0), (-1, -1), "Arial-Bold")]
-
-visibleAllBordersTableStyleCmd = [('GRID', (0, 0), (-1, -1), 1, colors.black)]
-invisibleAllBordersTableStyleCmd = []
-
-invisibleOuterBordersTableStyleCmd = []
-visibleOuterBordersTableStyleCmd = [('BOX', (0, 0), (-1, -1), 1, colors.black)]
-
-invisibleInnerBordersTableStyleCmd = []
-visibleInnerBordersTableStyleCmd = [('INNERGRID', (0, 0), (-1, -1), 1, colors.black)]
-
-
-def openJsonFile(filePath):
-    
-    try:
-        with open(filePath, 'r', encoding='utf-8-sig') as file:
-            jsonData = json.load(file)           
-    except Exception as e:
-            print(f"Error: {e}")
-
-    return jsonData
-
-
-def generateImageFromFile(fileName, width, height):
-    scriptDir = Path(__file__).parent
-    filePath = os.path.join(scriptDir, fileName)
-    return Image(filePath, width, height)
-    
-
-def generateImageFromStr(base64string, width, height):
-    imageData = base64.b64decode(base64string)
-    imageBuffer = io.BytesIO(imageData)
-    return Image(imageBuffer, width, height)
-
 def CreateSignatureTable(aboveLabel,underLabel):
     
     createdTable = Table(data = [[aboveLabel], [underLabel]])
-    createdTable.setStyle(TableStyle(cmds = commonTableStyleCmd + 
-                                       visibleInnerBordersTableStyleCmd + 
-                                       invisibleOuterBordersTableStyleCmd + 
-                                       usualFontTableStyleCmd +
-                                       centerAlignTableStyleCmd +
+    createdTable.setStyle(TableStyle(cmds = 
+                                       PdfHelper.commonTableStyleCmd + 
+                                       PdfHelper.visibleInnerBordersTableStyleCmd + 
+                                       PdfHelper.invisibleOuterBordersTableStyleCmd + 
+                                       PdfHelper.usualFontTableStyleCmd +
+                                       PdfHelper.centerAlignTableStyleCmd +
                                        [("VALIGN", (0, 0), (0, 0), "BOTTOM")] +
                                        [("VALIGN", (-1, -1), (-1, -1), "TOP")] +
                                        [("BOTTOMPADDING", (0, 0), (0, 0), 0)] +
@@ -129,10 +67,11 @@ def CreateSignatureTable(aboveLabel,underLabel):
     return createdTable
 
 
+
 def fillTitlePage(stand,doc,project):
     
-    frameWidth = landscapeParams['frameWidth']
-    frameHeight = landscapeParams['frameHeight']
+    frameWidth = landscapeParams['frameWidth'] * 0.99
+    frameHeight = landscapeParams['frameHeight'] * 0.97
  
     styles = getSampleStyleSheet()
 
@@ -154,31 +93,34 @@ def fillTitlePage(stand,doc,project):
         leading=20
     )
 
-
-    eacImage = generateImageFromFile("EAC.jpg", 50, 50)
-    logoImage = generateImageFromFile("Etalon.jpg", 210, 140)
+    eacImage =  PdfHelper.generateImageFromFile("EAC.jpg", frameWidth*0.06, frameWidth*0.06)
+    logoImage = PdfHelper.generateImageFromFile("Etalon.jpg", frameWidth*0.28, frameHeight*0.25)
     mainTitle = Paragraph(text = "Стенд датчиков КИПиА" + "<br/>" +  stand["KKSCode"] + "<br/>" +"ПАСПОРТ", 
                           style = titleStyle)
-    rightPartTable = Table(data = [[eacImage],[logoImage],[mainTitle]], colWidths = ( frameWidth * 0.97 ) / 2, rowHeights = [frameHeight * 0.1, frameHeight * 0.15, frameHeight * 0.72] )
-    rightPartTable.setStyle(TableStyle(cmds = 
-                                       commonTableStyleCmd + 
-                                       invisibleAllBordersTableStyleCmd + 
-                                       #выравниваем лого EAC
-                                       [ ('ALIGN', (0, 0), (0, 0), 'LEFT')] + 
-                                       [("VALIGN", (0, 0), (0, 0), "TOP")] + 
-                                       #выравниваем лого Etalon
-                                       [ ('ALIGN', (0, 1), (0, 1), 'CENTER')] + 
-                                       [("VALIGN", (0, 1), (0, 1), "MIDDLE")] + 
-                                       #выравниваем заголовок
-                                       [ ('ALIGN', (0, -1), (0, -1), 'CENTER')] + 
-                                       [("VALIGN", (0, -1), (0, -1), "MIDDLE")]
-                                       ))
 
-    pageTable = Table(data = [["", rightPartTable]], colWidths = ( frameWidth * 0.97 ) / 2, rowHeights = frameHeight * 0.97 )
-    pageTable.setStyle(TableStyle(cmds = commonTableStyleCmd +
-                                 invisibleOuterBordersTableStyleCmd +
-                                 #внутренние границы - пунктиром
-                                 [('INNERGRID', (0, 0), (-1, -1), 1, colors.black, None, (2, 2) )] ))
+    pageTable = Table(data = [ ["", eacImage ],
+                               ["", logoImage],
+                               ["", mainTitle] ], 
+                      colWidths = frameWidth/ 2,  
+                      rowHeights = [frameHeight * 0.1, frameHeight * 0.15, frameHeight * 0.75]  )
+
+    pageTable.setStyle(TableStyle(cmds = 
+                                  PdfHelper.commonTableStyleCmd +
+                                  PdfHelper.invisibleOuterBordersTableStyleCmd + 
+                                  #границы между левой и правой колонкой - пунктиром
+                                  [('LINEBEFORE', (-1, 0), (-1, -1), 1, colors.black, None, (2, 2) )] + 
+                                  #левую часть объединяем
+                                  [('SPAN', (0, 0), (0, -1) )] +
+                                  #выравниваем лого EAC
+                                  [('LEFTPADDING', (-1, 0), (-1, 0), 20)] + 
+                                  [('ALIGN', (-1, 0), (-1, 0), 'LEFT')] + 
+                                  [("VALIGN", (-1, 0), (-1, 0), "CENTER")] + 
+                                  #выравниваем лого Etalon
+                                  [('ALIGN', (-1, 1), (-1, 1), 'CENTER')] + 
+                                  [("VALIGN", (-1, 1), (-1, 1), "MIDDLE")] +
+                                  #выравниваем заголовок
+                                  [('ALIGN', (-1, -1), (-1, -1), 'CENTER')] + 
+                                  [("VALIGN", (-1, -1), (-1, -1), "MIDDLE")] ))
     
     #собираем все объекты в массив и отдаем
     sheetElements = []
@@ -189,8 +131,8 @@ def fillTitlePage(stand,doc,project):
 
 def fillBodyPage(stand,doc,project):
 
-    frameWidth = landscapeParams['frameWidth']
-    frameHeight = landscapeParams['frameHeight']
+    frameWidth = landscapeParams['frameWidth'] * 0.99
+    frameHeight = landscapeParams['frameHeight'] * 0.97
  
     styles = getSampleStyleSheet()
 
@@ -220,12 +162,8 @@ def fillBodyPage(stand,doc,project):
         fontName ='Arial-Bold',
         encoding ='UTF-8',
         fontSize = 6,
-        firstLineIndent = 12
-        
+        firstLineIndent = 12        
     )
-    
-
-    newLineMark = "<br/>"
 
     leftPartContent = [ Paragraph(text = "1. Основные сведения об изделии и и технические данные", 
                                   style = titleStyle) ]   
@@ -246,18 +184,21 @@ def fillBodyPage(stand,doc,project):
     leftPartContent.append(Paragraph(text = "1.6 Качество продукции обеспечено сертифицированной системой менеджмента качества, " + 
                                             "соответствующей требованиям ГОСТ ISO 9001-2011 (ISO 9001:2008).",
                                      style = usualStyle))    
-    leftPartContent.append(Paragraph(text = "1.7 Основные параметры изделия: " + newLineMark + 
-                                            "- импульсные линии в пределах стенда - Труба 14х2, Сталь 20 ГОСТ 8734-75 в соответствии с опросным листом;" + newLineMark +   
-                                            "- кран шаровый ШКМ.Ш1-010.080.01 (d14x2);" + newLineMark +
-                                            "- габаритные размеры стенда (ШхВхГ), мм - 800х1400х480.",
+
+    dimensions = (str(stand["Frames"][0]["Width"]), str(stand["Frames"][0]["Height"]), str(stand["Frames"][0]["Depth"])) if len(stand["Frames"])>0 else ("____","____","____")
+
+    leftPartContent.append(Paragraph(text = "1.7 Основные параметры изделия: " + PdfHelper.newLineMark + 
+                                            f"- импульсные линии в пределах стенда - {stand["MaterialLine"]} в соответствии с опросным листом;" + PdfHelper.newLineMark +   
+                                            f"- {stand["Armature"]};" + PdfHelper.newLineMark +
+                                            f"- габаритные размеры стенда (ШхВхГ), мм - {dimensions[0]}х{dimensions[1]}х{dimensions[2]}.",
                                      style = usualStyle))
     leftPartContent.append(Spacer(1,5))
 
     leftPartContent.append(Paragraph(text = "2. Комлектность", 
                                     style = titleStyle))
-    leftPartContent.append(Paragraph(text = "2.1 В комплект поставки входят:" + newLineMark +
-                                            "- стенд датчиков в сборе 1 шт.;" + newLineMark +
-                                            "- паспорт изделия 1 шт.;" + newLineMark +
+    leftPartContent.append(Paragraph(text = "2.1 В комплект поставки входят:" + PdfHelper.newLineMark +
+                                            "- стенд датчиков в сборе 1 шт.;" + PdfHelper.newLineMark +
+                                            "- паспорт изделия 1 шт.;" + PdfHelper.newLineMark +
                                             "- сертификаты качества на запорную арматуру и материалы импульсных линий - 1 компл. (на партию в один адрес).",
                                      style = usualStyle))
     leftPartContent.append(Paragraph(text = "Примечание - датчики, манометры, вентильные блоки в комплект поставки стенда не входят.", 
@@ -287,32 +228,38 @@ def fillBodyPage(stand,doc,project):
     standInfoRowTable = Table(data = [[ CreateSignatureTable("Стенд датчиков", "Наименование изделия"),
                                         CreateSignatureTable(stand["KKSCode"], "Обозначение"),
                                         CreateSignatureTable(stand["SerialNumber"], "Заводской номер") ]] )
-    standInfoRowTable.setStyle(TableStyle(cmds = centerAlignTableStyleCmd))
+    standInfoRowTable.setStyle(TableStyle(cmds = PdfHelper.centerAlignTableStyleCmd))
 
     productionInfoRowTable = Table(data = [[ Paragraph(text = "изготовлен", style = usualStyle),
-                                             CreateSignatureTable("10.2077", "Месяц, год"),
+                                             CreateSignatureTable("         ", "Месяц, год"),
                                              Paragraph(text = "согласно", style = usualStyle),
-                                             CreateSignatureTable("какой-то опросный лист", "№ опросного листа, № спецификации, РД") ]] )
-    productionInfoRowTable.setStyle(TableStyle(cmds = centerAlignTableStyleCmd +
+                                             CreateSignatureTable("             ", "№ опросного листа, № спецификации, РД") ]] )
+    productionInfoRowTable.setStyle(TableStyle(cmds = PdfHelper.centerAlignTableStyleCmd +
                                           [('VALIGN', (0, 0), (-1, -1), "TOP" )] ))
 
     productionSupervisorRowTable = Table(data = [[ CreateSignatureTable("Начальник производственного участка", "Должность"),
                                                    CreateSignatureTable("                   ", "Подпись"),
-                                                   CreateSignatureTable("                   ", "Расшифровка подписи") ]] )
+                                                   CreateSignatureTable(str(project["SeniorEngineer"]), "Расшифровка подписи") ]] )
 
-    productionSupervisorRowTable.setStyle(TableStyle(cmds = centerAlignTableStyleCmd ))
+    productionSupervisorRowTable.setStyle(TableStyle(cmds = PdfHelper.centerAlignTableStyleCmd ))
 
-    productionControlRowTable = Table(data = [[ CreateSignatureTable("Представитель ОТК", "Должность"),
+    acceptanceSupervisorRowTable = Table(data = [[ CreateSignatureTable("Представитель ОТК", "Должность"),
                                                 CreateSignatureTable("                   ", "Подпись"),
-                                                CreateSignatureTable("                   ", "Расшифровка подписи") ]] )
+                                                CreateSignatureTable(str(project["ResponsibleForAccept"]), "Расшифровка подписи") ]] )
 
-    productionControlRowTable.setStyle(TableStyle(cmds = centerAlignTableStyleCmd ))
+    acceptanceSupervisorRowTable.setStyle(TableStyle(cmds = PdfHelper.centerAlignTableStyleCmd ))
+
+    visualMeasuringSupervisorRowTable = Table(data = [[ CreateSignatureTable("Представитель ОТК", "Должность"),
+                                                CreateSignatureTable("                   ", "Подпись"),
+                                                CreateSignatureTable(str(project["SecondLevelSpecialist"]), "Расшифровка подписи") ]] )
+
+    visualMeasuringSupervisorRowTable.setStyle(TableStyle(cmds = PdfHelper.centerAlignTableStyleCmd ))
 
     packagingSupervisorRowTable = Table(data = [[ CreateSignatureTable("Представитель ОСиЛ", "Должность"),
                                                   CreateSignatureTable("                   ", "Подпись"),
-                                                  CreateSignatureTable("                   ", "Расшифровка подписи") ]] )
+                                                  CreateSignatureTable(str(project["OSiL"]), "Расшифровка подписи") ]] )
 
-    packagingSupervisorRowTable.setStyle(TableStyle(cmds = centerAlignTableStyleCmd ))
+    packagingSupervisorRowTable.setStyle(TableStyle(cmds = PdfHelper.centerAlignTableStyleCmd ))
 
 
     rightPartContent = [Paragraph(text = "4. Свидетельство об изготовлении", style = titleStyle) ]
@@ -323,12 +270,12 @@ def fillBodyPage(stand,doc,project):
     rightPartContent.append(Paragraph(text = "5. Свидетельство об приемке", style = titleStyle ))
     rightPartContent.append(standInfoRowTable)
     rightPartContent.append(Paragraph(text = "соответствует требованиям ТУ 4200-012-45633145-2016 и признан годным к эксплуатации.", style = usualStyle ))
-    rightPartContent.append(productionControlRowTable)
+    rightPartContent.append(acceptanceSupervisorRowTable)
     
-    rightPartContent.append(Paragraph(text = "6. Свидетельство о визуальном и измерительнном контроле", style = titleStyle ))
+    rightPartContent.append(Paragraph(text = "6. Свидетельство о визуальном и измерительном контроле", style = titleStyle ))
     rightPartContent.append(standInfoRowTable)
     rightPartContent.append(Paragraph(text = "контроль проведен в соответствии с ЭП-С.121.30.00, АКТ N 25-001", style = usualStyle ))
-    rightPartContent.append(productionControlRowTable)
+    rightPartContent.append(visualMeasuringSupervisorRowTable)
 
     rightPartContent.append(Paragraph(text = "7. Свидетельство об упаковывании", style = titleStyle))
     rightPartContent.append(standInfoRowTable)
@@ -337,12 +284,13 @@ def fillBodyPage(stand,doc,project):
 
 
 
-    pageTable = Table(data = [[leftPartContent, rightPartContent]], colWidths = ( frameWidth * 0.97 ) / 2, rowHeights = frameHeight * 0.97 )
-    pageTable.setStyle(TableStyle(cmds = commonTableStyleCmd +
-                                 invisibleOuterBordersTableStyleCmd +
-                                 centerAlignTableStyleCmd +
-                                 #внутренние границы - пунктиром
-                                 [('INNERGRID', (0, 0), (-1, -1), 1, colors.black, None, (2, 2) )] + 
+    pageTable = Table(data = [[leftPartContent, rightPartContent]], colWidths = frameWidth / 2, rowHeights = frameHeight)
+    pageTable.setStyle(TableStyle(cmds = 
+                                 PdfHelper.commonTableStyleCmd +
+                                 PdfHelper.invisibleOuterBordersTableStyleCmd +           
+                                 PdfHelper.centerAlignTableStyleCmd +
+                                 #границы между левой и правой колонкой - пунктиром
+                                 [('LINEBEFORE', (-1, 0), (-1, -1), 1, colors.black, None, (2, 2) )] + 
                                  [('VALIGN', (0, 0), (-1, -1), "TOP" )]   ))
     
     #собираем все объекты в массив и отдаем
@@ -352,20 +300,14 @@ def fillBodyPage(stand,doc,project):
     return sheetElements
 
 
-def generateReport(jsonFilePath,outputDir):
+def generateReport(jsonFilePath,outputFilePath):
 
-    now = datetime.now()
-    outputFileName = "Паспорт___"
-    outputFileName += "{}-{}-{}___{}-{}-{}".format(now.day,now.month,now.year,now.hour,now.minute,now.second)
-    outputFileName += ".pdf"
-    
-    outputPdf = outputDir + outputFileName
+    PdfHelper.registerFonts()
 
-    data = openJsonFile(jsonFilePath)
-    doc = SimpleDocTemplate(outputPdf, pagesize=A4)
-
-    #добавляем стили страницы
+    doc = SimpleDocTemplate(outputFilePath, pagesize=A4)
     doc.addPageTemplates([landscapeTemplate, portraitTemplate])
+
+    data = PdfHelper.openJsonFile(jsonFilePath)
 
     elements = []
     elements.append(NextPageTemplate('landscape'))

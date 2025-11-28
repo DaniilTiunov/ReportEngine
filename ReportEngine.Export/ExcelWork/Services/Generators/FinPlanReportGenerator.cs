@@ -1,10 +1,9 @@
 ﻿using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
-using ReportEngine.Export.ExcelWork.Services.Generators.DTO;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Export.Mapping;
 using ReportEngine.Shared.Config.IniHeleprs;
 
 

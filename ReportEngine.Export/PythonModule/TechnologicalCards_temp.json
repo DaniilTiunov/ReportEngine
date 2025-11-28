@@ -1,4 +1,8 @@
 ﻿{
+  "SeniorEngineer": "С.А. Кокшаров",
+  "ResponsibleForAccept": "Д.А. Ефремов",
+  "SecondLevelSpecialist": "Д.А. Ефремов",
+  "OSiL": "М.Е. Радченко",
   "Id": 76,
   "Number": 2,
   "Description": "ЭП.378221",
@@ -43,11 +47,15 @@
       "Frames": [
         {
           "Width": 600,
+          "Height": 1400,
+          "Depth": 480,
           "DocName": "ЭП-П.050.0000.000.01",
           "Quantity": 1
         },
         {
           "Width": 110,
+          "Height": 110,
+          "Depth": 110,
           "DocName": "Тестовая рама 2",
           "Quantity": 1
         }
@@ -214,7 +222,8 @@
           "Unit": "шт",
           "Quantity": 0
         }
-      ]
+      ],
+      "ImpulseLines": []
     },
     {
       "Number": 0,
@@ -241,7 +250,8 @@
       "FrameParts": [],
       "MountParts": [],
       "DrainageParts": [],
-      "ElectricParts": []
+      "ElectricParts": [],
+      "ImpulseLines": []
     },
     {
       "Number": 0,
@@ -284,7 +294,8 @@
         }
       ],
       "DrainageParts": [],
-      "ElectricParts": []
+      "ElectricParts": [],
+      "ImpulseLines": []
     }
   ]
 }

@@ -1,13 +1,14 @@
-﻿using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Repositories.Interfaces;
+﻿using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Export.ExcelWork;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Export.Mapping;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
 using System.Diagnostics;
-using Xceed.Document.NET;
-using XceedDocx = Xceed.Words.NET.DocX;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+
 
 
 
@@ -28,95 +29,38 @@ public class PassportsGenerator : IReportGenerator
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
 
-        var savePath = SettingsManager.GetReportDirectory() + "\\\\"; ;
-
-        var fileName = ExcelReportHelper.CreateReportName("Паспорта", ".docx");
-
+        var exeFilePath = DirectoryHelper.GetPythonExePath();
+        var savePath = SettingsManager.GetReportDirectory();
+        var fileName = ExcelReportHelper.CreateReportName("Паспорт", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
 
-        var templatePath = DirectoryHelper.GetReportsTemplatePath("Passport_template", ".docx");
-
-
-        var exeFilePath = DirectoryHelper.GetPythonExePath();
+        var dataObject = JsonCreator.CreateProjectJson(project);
+        var options = new JsonSerializerOptions
+        {
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            WriteIndented = true
+        };
+        string jsonObject = JsonSerializer.Serialize(dataObject, options);
         var jsonSavePath = DirectoryHelper.GetJsonSavePath();
+        File.WriteAllText(jsonSavePath, jsonObject, Encoding.UTF8);
 
         ProcessStartInfo startInfo = new ProcessStartInfo();
-        startInfo.FileName = exeFilePath; // путь к .exe файлу
-        startInfo.Arguments = $"--script passport --jsonPath \"{jsonSavePath}\" --outputReportPath \"{savePath}\"";
+        startInfo.FileName = exeFilePath;
+        startInfo.Arguments = $"--script passport --jsonPath \"{jsonSavePath}\" --outputFilePath \"{fullSavePath}\"";
         startInfo.UseShellExecute = false;
         startInfo.RedirectStandardOutput = true;
         startInfo.RedirectStandardError = true;
-
+        startInfo.CreateNoWindow = true;
 
         using (Process process = Process.Start(startInfo))
         {
             using (StreamReader reader = process.StandardOutput)
             {
                 string result = reader.ReadToEnd();
+                Debug.Print("Результат выполнения скрипта:" + result);
             }
 
             process.WaitForExit();
-        }
-
-
-        return;
-
-
-        using (var myDoc = XceedDocx.Load(templatePath))
-        {
-            XceedDocx resultDoc = null;  
-
-            foreach (var stand in project.Stands)
-            {
-                var replacedTemplatedDoc = (XceedDocx)myDoc.Copy();
-                ReplaceTextInTemplate(replacedTemplatedDoc, stand);
-                resultDoc = resultDoc == null ? replacedTemplatedDoc : MergeDocuments(resultDoc, replacedTemplatedDoc);
-            }
-
-
-            //resultDoc может быть null — в таком случае сохраним пустую копию шаблона
-            if (resultDoc == null)
-            {
-                using var emptyCopy = (XceedDocx)myDoc.Copy();
-                emptyCopy.SaveAs(fullSavePath);
-            }
-            else
-            {
-                resultDoc.SaveAs(fullSavePath);
-            }
-        }
-    }
-
-
-    //заменяем метки в документе
-    private XceedDocx ReplaceTextInTemplate(XceedDocx templateDoc, Stand stand)
-    {
-        var replacements = TemplateMapper.GetPassportMapping(stand);
-
-        foreach (var replacement in replacements)
-        {
-            var options = new StringReplaceTextOptions
-            {
-                SearchValue = replacement.Key ?? string.Empty,
-                NewValue = replacement.Value ?? string.Empty,
-                EscapeRegEx = false
-            };
-
-            templateDoc.ReplaceText(options);
-        }
-
-        return templateDoc;
-    }
-
-    //склеиваем два документа в один
-    private XceedDocx MergeDocuments(XceedDocx targetDocument, XceedDocx documentToAdd)
-    {
-        using var ms = new MemoryStream();
-        targetDocument.SaveAs(ms); 
-
-        var resultingDoc = XceedDocx.Load(ms);
-        resultingDoc.InsertDocument(documentToAdd);
-
-        return resultingDoc;
+        }   
     }
 }
