@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ReportEngine.Export.DTO
+namespace ReportEngine.Export.DTO.JsonObjects
 {
 
 
@@ -27,7 +27,6 @@ namespace ReportEngine.Export.DTO
 
     public class ImpulseLineRecordJsonObject
     {
-        public int? Number { get; set; }
         public string? Name { get; set; }
         public string? CodeKKS { get; set; }
         public List<WireRecord> Wires { get; set; } = new List<WireRecord>();

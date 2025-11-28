@@ -6,6 +6,7 @@ using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
 using System.Diagnostics;
 
+
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
 public class NameplatesReportGenerator : IReportGenerator
@@ -114,7 +115,7 @@ public class NameplatesReportGenerator : IReportGenerator
 
             //формируем текста табличек
             var standTablesStrings = stand.ObvyazkiInStand
-                .SelectMany(obv => CreateSensorsListFromObvyazka(obv))
+                .SelectMany(obv => ExcelReportHelper.CreateSensorsListFromObvyazka(obv))
                 .Select(record =>
                 {
                     var nameplateText = $"{record.SensorDescription}\n";
@@ -150,40 +151,4 @@ public class NameplatesReportGenerator : IReportGenerator
         return maxTables;
     }
 
-
-    private List<RecordData> CreateSensorsListFromObvyazka(ObvyazkaInStand obv)
-    {
-        var resultRecords = new List<RecordData>();
-
-        if (obv.FirstSensorKKS != null)
-            resultRecords.Add(new RecordData(
-                obv.FirstSensorKKS,
-                obv.FirstSensorDescription ?? ""));
-
-        if (obv.SecondSensorKKS != null)
-            resultRecords.Add(new RecordData(
-                obv.SecondSensorKKS,
-                obv.SecondSensorDescription ?? ""));
-
-        if (obv.ThirdSensorKKS != null)
-            resultRecords.Add(new RecordData(
-                obv.ThirdSensorKKS,
-                obv.ThirdSensorDescription ?? ""));
-
-        return resultRecords;
-    }
-
-
-    //структура для одной записи таблицы
-    public struct RecordData
-    {
-        public string SensorKKS;
-        public string SensorDescription;
-
-        public RecordData(string sensorKKS, string sensorDescription)
-        {
-            SensorKKS = sensorKKS;
-            SensorDescription = sensorDescription;
-        }
-    }
 }

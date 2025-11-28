@@ -34,7 +34,7 @@ public class PassportsGenerator : IReportGenerator
         var fileName = ExcelReportHelper.CreateReportName("Паспорт", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
 
-        var dataObject = ExcelReportHelper.CreateProjectJson(project);
+        var dataObject = JsonCreator.CreateProjectJson(project);
         var options = new JsonSerializerOptions
         {
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,

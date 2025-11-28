@@ -332,17 +332,32 @@ def fillStandPage(stand, doc, project):
                                                 [('SPAN', (-1, 0), (-1, -1) )] + 
                                                 [('SPAN', (2, 0), (5, 0) )]  ))
 
+    impulseLineRecords = []
+    impulseLineNumber = 1
 
+    for impulseLine in stand["ImpulseLines"]:
 
+        wires = []
+        for wire in impulseLine["Wires"]:
+            wires.append( [wire["Circuit"],wire["Mark"],wire["ElectricBox"],wire["Terminal"]] )
+
+        descAndKKS = f"{impulseLine["Name"]} \n {impulseLine["CodeKKS"]}"
+        impulseLineRecords.append([str(impulseLineNumber), descAndKKS, wires,""])
+        impulseLineNumber+1
+
+    impulseLineTable = Table(data = impulseLineRecords)
+    impulseLineTable.setStyle(TableStyle(cmds=
+                                         PdfHelper.commonTableStyleCmd + 
+                                         PdfHelper.visibleAllBordersTableStyleCmd + 
+                                         PdfHelper.usualFontTableStyleCmd))
+    
 
     #собираем все объекты в массив и отдаем
     sheetElements = []   
     sheetElements.append(sheetTable)
     sheetElements.append(impulseLinesTableHeader)
-    
-
-    
-        
+    sheetElements.append(impulseLineTable)
+         
     return sheetElements
 
 
@@ -362,7 +377,6 @@ def fillConclusionPage(stand,doc,project):
         encoding ='UTF-8',
         fontSize = 7
     )
-
 
 
 

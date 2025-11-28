@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace ReportEngine.Export.DTO
+namespace ReportEngine.Export.DTO.JsonObjects
 {
     public class StandJsonObject
     {
@@ -43,7 +43,7 @@ namespace ReportEngine.Export.DTO
 
         public List<PartRecordJsonObject> ElectricParts { get; set; } = new List<PartRecordJsonObject>(); //электрические компоненты
 
-        public List<string> ImpulseLines { get; set; } = new List<string>(); //импульсные линии в пределах стенда
+        public List<ImpulseLineRecordJsonObject> ImpulseLines { get; set; } = new List<ImpulseLineRecordJsonObject>(); //импульсные линии в пределах стенда
     }
 
 

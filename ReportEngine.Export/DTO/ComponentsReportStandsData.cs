@@ -1,6 +1,18 @@
 ﻿namespace ReportEngine.Export.DTO;
 
 
+public struct SensorRecordData
+{
+    public string SensorKKS;
+    public string SensorDescription;
+
+    public SensorRecordData(string sensorKKS, string sensorDescription)
+    {
+        SensorKKS = sensorKKS;
+        SensorDescription = sensorDescription;
+    }
+}
+
 public record PartsStandsData(
     List<EquipmentRecord> PipesList,
     List<EquipmentRecord> ArmaturesList,

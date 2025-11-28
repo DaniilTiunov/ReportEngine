@@ -28,7 +28,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
 
-        var dataObject = ExcelReportHelper.CreateProjectJson(project);
+        var dataObject = JsonCreator.CreateProjectJson(project);
         var options = new JsonSerializerOptions
         {
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,

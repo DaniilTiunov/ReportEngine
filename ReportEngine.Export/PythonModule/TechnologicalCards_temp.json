@@ -222,7 +222,8 @@
           "Unit": "шт",
           "Quantity": 0
         }
-      ]
+      ],
+      "ImpulseLines": []
     },
     {
       "Number": 0,
@@ -249,7 +250,8 @@
       "FrameParts": [],
       "MountParts": [],
       "DrainageParts": [],
-      "ElectricParts": []
+      "ElectricParts": [],
+      "ImpulseLines": []
     },
     {
       "Number": 0,
@@ -292,7 +294,8 @@
         }
       ],
       "DrainageParts": [],
-      "ElectricParts": []
+      "ElectricParts": [],
+      "ImpulseLines": []
     }
   ]
 }
