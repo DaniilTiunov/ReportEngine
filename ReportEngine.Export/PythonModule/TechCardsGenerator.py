@@ -330,8 +330,23 @@ def fillStandPage(stand, doc, project):
             wires.append( [wire["Circuit"],wire["Mark"],wire["ElectricBox"],wire["Terminal"]] )
 
         descAndKKS = f"{impulseLine["Name"]} \n {impulseLine["CodeKKS"]}"
-        impulseLineTableData.append([str(impulseLineNumber), descAndKKS, wires,""])
+
+        rowArray = [str(impulseLineNumber),descAndKKS]
+        rowArray.extend(wires[0],"")
+        impulseLineTableData.append(rowArray)
+
+        rowArray = ["",""]
+        rowArray.extend(wires[1],"")
+        impulseLineTableData.append(rowArray)
+
+        rowArray = ["",""]
+        rowArray.extend(wires[2],"")
+        impulseLineTableData.append(rowArray)
+
         impulseLineNumber+1
+
+
+
 
     impulseLineTable = Table(data = impulseLineTableData, colWidths = [sheetWidth * 0.075,sheetWidth * 0.275,sheetWidth * 0.1,sheetWidth * 0.15,sheetWidth * 0.15,sheetWidth * 0.1,sheetWidth * 0.15])
     impulseLineTable.setStyle(TableStyle(cmds=
@@ -339,14 +354,17 @@ def fillStandPage(stand, doc, project):
                                          PdfHelper.centerAlignTableStyleCmd +
                                          PdfHelper.visibleAllBordersTableStyleCmd + 
                                          PdfHelper.usualFontTableStyleCmd +
-                                         PdfHelper.boldFontTableStyleCmd + 
-                                         #объединяем нужные ячейки
-                                         [('SPAN', (0, 0), (0, -1) )] + 
-                                         [('SPAN', (1, 0), (1, -1) )] + 
-                                         [('SPAN', (-1, 0), (-1, -1) )] + 
-                                         [('SPAN', (2, 0), (5, 0) )]  ))
+                                         #шапка
+                                         [('FONTNAME', (0, 0), (-1, 1), "Arial-Bold")] +
+                                         [('SPAN', (0, 0), (0,1) )] + 
+                                         [('SPAN', (1, 0), (1, 1) )] + 
+                                         [('SPAN', (-1, 0), (-1, 1) )] + 
+                                         [('SPAN', (2, 0), (5, 0) )]
+                                         #остальные ячейки
 
+                                         ))
 
+    
     
 
     #собираем все объекты в массив и отдаем
