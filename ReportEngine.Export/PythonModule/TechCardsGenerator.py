@@ -323,6 +323,7 @@ def fillStandPage(stand, doc, project):
     impulseLineTableData = impulseLinesHeaderData.copy()
     impulseLineNumber = 1
 
+
     for impulseLine in stand["ImpulseLines"]:
 
         wires = []
@@ -332,37 +333,52 @@ def fillStandPage(stand, doc, project):
         descAndKKS = f"{impulseLine["Name"]} \n {impulseLine["CodeKKS"]}"
 
         rowArray = [str(impulseLineNumber),descAndKKS]
-        rowArray.extend(wires[0],"")
+        rowArray.extend(wires[0])
+        rowArray.extend("")
         impulseLineTableData.append(rowArray)
 
         rowArray = ["",""]
-        rowArray.extend(wires[1],"")
+        rowArray.extend(wires[1])
+        rowArray.extend("")
         impulseLineTableData.append(rowArray)
 
         rowArray = ["",""]
-        rowArray.extend(wires[2],"")
+        rowArray.extend(wires[2])
+        rowArray.extend("")
         impulseLineTableData.append(rowArray)
 
-        impulseLineNumber+1
+        impulseLineNumber+=1
 
 
 
 
     impulseLineTable = Table(data = impulseLineTableData, colWidths = [sheetWidth * 0.075,sheetWidth * 0.275,sheetWidth * 0.1,sheetWidth * 0.15,sheetWidth * 0.15,sheetWidth * 0.1,sheetWidth * 0.15])
-    impulseLineTable.setStyle(TableStyle(cmds=
-                                         PdfHelper.commonTableStyleCmd + 
-                                         PdfHelper.centerAlignTableStyleCmd +
+    impulseLineTableStyleCmds = PdfHelper.commonTableStyleCmd.copy()
+    impulseLineTableStyleCmds.extend(PdfHelper.centerAlignTableStyleCmd +
                                          PdfHelper.visibleAllBordersTableStyleCmd + 
-                                         PdfHelper.usualFontTableStyleCmd +
-                                         #шапка
-                                         [('FONTNAME', (0, 0), (-1, 1), "Arial-Bold")] +
-                                         [('SPAN', (0, 0), (0,1) )] + 
-                                         [('SPAN', (1, 0), (1, 1) )] + 
-                                         [('SPAN', (-1, 0), (-1, 1) )] + 
-                                         [('SPAN', (2, 0), (5, 0) )]
-                                         #остальные ячейки
+                                         PdfHelper.usualFontTableStyleCmd)
+    impulseLineTableStyleCmds.extend(#шапка
+                                     [('FONTNAME', (0, 0), (-1, 1), "Arial-Bold")] +
+                                     [('SPAN', (0, 0), (0,1) )] + 
+                                     [('SPAN', (1, 0), (1, 1) )] + 
+                                     [('SPAN', (-1, 0), (-1, 1) )] + 
+                                     [('SPAN', (2, 0), (5, 0) )] )
 
-                                         ))
+    recordsStartRow = 2
+    impulseLineRecordOffset = 2
+
+    currentRecordFirstRow = recordsStartRow
+
+    for impulseLineRecord in range(impulseLineNumber):
+        #формируем каждую запись
+        impulseLineTableStyleCmds.extend(
+                                     [('SPAN', (0, currentRecordFirstRow), (0,currentRecordFirstRow + impulseLineRecordOffset) )] + 
+                                     [('SPAN', (1, currentRecordFirstRow), (1, currentRecordFirstRow + impulseLineRecordOffset) )] + 
+                                     [('SPAN', (-1, currentRecordFirstRow), (-1, currentRecordFirstRow + impulseLineRecordOffset) )] 
+                                     )
+        currentRecordFirstRow+=impulseLineRecordOffset + 1
+                                         
+    impulseLineTable.setStyle(TableStyle(cmds= impulseLineTableStyleCmds ))
 
     
     
