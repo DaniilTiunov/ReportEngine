@@ -1,8 +1,8 @@
-﻿using ReportEngine.App.ViewModels;
-using System.Windows;
+﻿using ReportEngine.App.AppHelpers;
+using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.ViewModels;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Media;
+using System.Windows.Input;
 
 namespace ReportEngine.App.Views.Controls;
 
@@ -11,26 +11,30 @@ namespace ReportEngine.App.Views.Controls;
 /// </summary>
 public partial class StandObvView : UserControl
 {
+    private readonly ProjectViewModel _projectViewModel;
     public StandObvView(ProjectViewModel projectViewModel)
     {
         InitializeComponent();
         DataContext = projectViewModel;
 
+        _projectViewModel = projectViewModel;
+
         Loaded += async (_, __) => await InitializeDataAsync(projectViewModel);
     }
 
-    private async Task InitializeDataAsync(ProjectViewModel viewModel)
+    private async Task InitializeDataAsync(ProjectViewModel projectViewModel)
     {
-        await viewModel.LoadStandsDataAsync();
-        await viewModel.LoadObvyazkiAsync();
-        await viewModel.LoadAllAvaileDataAsync();
-        await viewModel.LoadPurposesInStandsAsync();
+        await projectViewModel.LoadStandsDataAsync();
+        await projectViewModel.LoadObvyazkiAsync();
+        await projectViewModel.LoadAllAvaileDataAsync();
+        await projectViewModel.LoadPurposesInStandsAsync();
     }
 
-    private void ComboBox_DropDownOpened(object sender, EventArgs e)
+    private void FillStandFieldsFromObvyazkaCommand_DoubleClick(object sender, MouseButtonEventArgs e)
     {
-        if (sender is ComboBox comboBox && comboBox.Template.FindName("PART_Popup", comboBox) is Popup popup)
-            if (popup.Child is Border border)
-                border.Background = (Brush)Application.Current.Resources["SecondaryColor"];
+        ExceptionHelper.SafeExecute(() =>
+        {
+            _projectViewModel.OnFillStandFieldsFromObvyazkaCommandExecuted(sender);
+        });
     }
 }

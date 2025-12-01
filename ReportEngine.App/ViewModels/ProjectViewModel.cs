@@ -278,8 +278,6 @@ public class ProjectViewModel : BaseViewModel
     public async void OnSaveObvCommandExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(AddObvToStandAsync);
-
-        CurrentProjectModel.SelectedStand = null;
     }
 
     public async void OnRemoveObvCommandExecuted(object e)
@@ -360,7 +358,7 @@ public class ProjectViewModel : BaseViewModel
             stand.MaterialLineCount = SelectedObvyazka.LineLength;
             stand.ArmatureCount = SelectedObvyazka.ZraCount;
             stand.TreeSocketMaterialCount = SelectedObvyazka.TreeSocket;
-            stand.KMCHCount = SelectedObvyazka.Clamp;
+            stand.KMCHCount = SelectedObvyazka.KMCHCount;
 
             stand.SelectedObvyazkaInStand = null;
             stand.SelectedObvyazkaInStand = tmp;
@@ -572,8 +570,8 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            _standService.FillStandFieldsFromObvyazka(CurrentProjectModel.SelectedStand,
-                CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand);
+            await _standService.FillStandFieldsFromObvyazka(CurrentProjectModel.SelectedStand,
+                                        CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand);
         });
     }
 
