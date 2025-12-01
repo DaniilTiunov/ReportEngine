@@ -142,8 +142,8 @@ namespace ReportEngine.Export.ExcelWork
         {
             var wiresInfo = new List<WireRecord>()
             { 
-                new WireRecord("+",$"{record.SensorKKS}+","Коробка КС-1.6","1"),
-                new WireRecord("-",$"{record.SensorKKS}-","Коробка КС-1.6","2"),
+                new WireRecord("+",$"{record.SensorMarkPlus}","Коробка КС-1.6","1"),
+                new WireRecord("-",$"{record.SensorMarkMinus}","Коробка КС-1.6","2"),
                 new WireRecord("Экран","","Коробка КС-1.6","3")
             };
 

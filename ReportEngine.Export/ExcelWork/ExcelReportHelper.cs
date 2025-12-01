@@ -27,20 +27,26 @@ public static class ExcelReportHelper
     {
         var resultRecords = new List<SensorRecordData>();
 
-        if (obv.FirstSensorKKS != null)
+        if (obv.FirstSensorType != null)
             resultRecords.Add(new SensorRecordData(
-                obv.FirstSensorKKS,
-                obv.FirstSensorDescription ?? ""));
+                obv.FirstSensorKKS ?? "",
+                obv.FirstSensorDescription ?? "",
+                obv.FirstSensorMarkPlus ?? "",
+                obv.FirstSensorMarkMinus ?? ""));
 
-        if (obv.SecondSensorKKS != null)
+        if (obv.SecondSensorType != null)
             resultRecords.Add(new SensorRecordData(
-                obv.SecondSensorKKS,
-                obv.SecondSensorDescription ?? ""));
+                obv.SecondSensorKKS ?? "",
+                obv.SecondSensorDescription ?? "",
+                obv.SecondSensorMarkPlus ?? "",
+                obv.SecondSensorMarkMinus ?? ""));
 
-        if (obv.ThirdSensorKKS != null)
+        if (obv.ThirdSensorType != null)
             resultRecords.Add(new SensorRecordData(
-                obv.ThirdSensorKKS,
-                obv.ThirdSensorDescription ?? ""));
+                obv.ThirdSensorKKS ?? "",
+                obv.ThirdSensorDescription ?? "",
+                obv.ThirdSensorMarkPlus ?? "",
+                obv.ThirdSensorMarkMinus ?? ""));
 
         return resultRecords;
     }
