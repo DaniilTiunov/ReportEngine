@@ -5,11 +5,15 @@ public struct SensorRecordData
 {
     public string SensorKKS;
     public string SensorDescription;
+    public string SensorMarkPlus;
+    public string SensorMarkMinus;
 
-    public SensorRecordData(string sensorKKS, string sensorDescription)
+    public SensorRecordData(string sensorKKS, string sensorDescription,string sensorMarkPlus,string sensorMarkMinus)
     {
         SensorKKS = sensorKKS;
         SensorDescription = sensorDescription;
+        SensorMarkPlus = sensorMarkPlus;
+        SensorMarkMinus = sensorMarkMinus;
     }
 }
 

@@ -1,4 +1,5 @@
 ﻿using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
@@ -54,13 +55,33 @@ public class PassportsGenerator : IReportGenerator
 
         using (Process process = Process.Start(startInfo))
         {
+            string scriptOutput = "";
+
             using (StreamReader reader = process.StandardOutput)
             {
-                string result = reader.ReadToEnd();
-                Debug.Print("Результат выполнения скрипта:" + result);
+                scriptOutput = reader.ReadToEnd();
             }
 
             process.WaitForExit();
+
+            var result = JsonSerializer.Deserialize<PythonScriptResult>(scriptOutput);
+
+            string outputMessage = "";
+            if (!result.Success)
+            {
+                outputMessage = "Возникло исключение в Python скрипте\n";
+                outputMessage += "--------------------------------\n";
+                outputMessage += $"Тип ошибки: {result.Error.Type}\n";
+                outputMessage += $"Сообщение: {result.Error.Message}\n";
+                outputMessage += $"Трассировка: {result.Error.Traceback}\n";
+                throw new Exception(outputMessage);
+            }
+            else
+            {
+                outputMessage = "Python скрипт выполнен успешно";
+            }
+
+            Debug.WriteLine(outputMessage);
         }   
     }
 }

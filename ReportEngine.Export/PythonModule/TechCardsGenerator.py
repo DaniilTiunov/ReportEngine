@@ -81,10 +81,6 @@ def fillStandPage(stand, doc, project):
                                                  #Технологическая карта жирным
                                                  [('FONTNAME', (0, 0), (0, 0), "Arial-Bold")]
                                                  )) 
-    
-
-    
-    
 
     standNameData = [[ "Стенд датчиков КИПиА " + str(stand["Designation"]) ]]
     standNameHeaderTable = Table(data = standNameData, colWidths = leftPartWidth)
@@ -427,8 +423,6 @@ def fillConclusionPage(stand,doc,project):
                                         ('FONTNAME', (0, 0), (0, -1), "Arial-Bold")] +      
                                        #обычный шрифт для данных таблицы
                                        [('FONTNAME', (1, 1), (-1, -1), "Arial")] ))
-
-
 
     logoImage =  PdfHelper.generateImageFromFile("Etalon.jpg",sheetWidth * 0.18,sheetHeight * 0.15)
 
