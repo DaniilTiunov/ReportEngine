@@ -728,16 +728,19 @@ public class StandModel : BaseViewModel
 
     public void InitializeElectricalComponent()
     {
+        float? usualConnectionBoxQuantity = 1.0f;
+        float? usualCablesQuantity = 2.0f;
+
         NewElectricalComponent = new FormedElectricalComponent
         {
             Purposes = new ObservableCollection<ElectricalPurpose>
             {
-                new() { Purpose = "Клеммная коробка" },
-                new() { Purpose = "Кабельные вводы" },
-                new() { Purpose = "Сигнальный кабель", Material = DefaultStandSettings.SignalCable, Quantity = 2 },
-                new() { Purpose = "Металлорукав" , Quantity = 2},
-                new() { Purpose = "Кабель 6мм", Material = DefaultStandSettings.CabelSixMM },
-                new() { Purpose = "Кабель 4мм", Material = DefaultStandSettings.CabelFourMM, Quantity = 2 },
+                new() { Purpose = "Клеммная коробка" ,Quantity = usualConnectionBoxQuantity},
+                new() { Purpose = "Кабельные вводы" , Quantity = 1488},
+                new() { Purpose = "Сигнальный кабель", Material = DefaultStandSettings.SignalCable, Quantity = usualCablesQuantity },
+                new() { Purpose = "Металлорукав" , Quantity = usualCablesQuantity},
+                new() { Purpose = "Кабель 6мм", Material = DefaultStandSettings.CabelSixMM,Quantity = (float?) DefaultStandSettings.SensorCountOnFrame },
+                new() { Purpose = "Кабель 4мм", Material = DefaultStandSettings.CabelFourMM, Quantity = usualCablesQuantity },
                 new() { Purpose = "Кронштейн коробки" }
             }
         };
