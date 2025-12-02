@@ -470,7 +470,7 @@
                                 <ColumnDefinition Width="230" />
                             </Grid.ColumnDefinitions>
 
-                            <Grid Grid.Column="0">
+                            <Grid Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,195,0">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
