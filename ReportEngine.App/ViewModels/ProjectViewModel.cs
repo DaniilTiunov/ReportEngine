@@ -110,7 +110,7 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             var totalWidth = _projectService.GetSummWidthObvyzakaAsync(CurrentProjectModel);
-            _notificationService.ShowInfo("Рекомендуемая рама: Рама с длинной " + totalWidth);
+            _notificationService.ShowInfo("Рекомендуемая рама: Рама с длиной " + totalWidth);
 
             var selectedFrame = _dialogService.ShowFrameDialog();
             if (selectedFrame != null)
@@ -119,11 +119,30 @@ public class ProjectViewModel : BaseViewModel
                     CurrentProjectModel.SelectedStand.Id,
                     selectedFrame.Id
                 );
-
+           
                 CurrentProjectModel.SelectedStand.FramesInStand.Add(selectedFrame);
+                UpdateChannelsQuantity();
             }
         });
     }
+
+    //обновляем кол-во швеллера
+    private void UpdateChannelsQuantity()
+    {
+        var additionalEquips = CurrentStandModel.NewAdditionalEquip.Purposes;
+        var channelRecord = additionalEquips
+            .FirstOrDefault(equip => equip.Purpose == "Швеллер");
+
+        var framesWidthSum = CurrentStandModel.FramesInStand.Sum(frame => frame.Width);
+
+        if (channelRecord != null)
+        {
+            //швеллер в метрах
+            channelRecord.Quantity = framesWidthSum / 1000.0f;
+            CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
+        }
+    }
+
 
     // TODO: Сделать тут рефакторинг команд
     public void OnSelectMaterialFromDialogCommandExecuted(object e)
@@ -184,7 +203,7 @@ public class ProjectViewModel : BaseViewModel
 
     public void OnSelectTreeSocketFromDialogCommandExecuted(object e)
     {
-        switch (CurrentMaterials.SelectedSocketTypes)
+        switch (CurrentMaterials.SelectedSocketTypes) 
         {
             case "Жаропрочные":
                 SelectEquipment<HeaterSocket>(
@@ -290,6 +309,8 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await _projectService.DeleteFrameFromStandAsync(CurrentProjectModel);
+
+            UpdateChannelsQuantity();
 
             _notificationService.ShowInfo("Рама удалена из стенда");
         });

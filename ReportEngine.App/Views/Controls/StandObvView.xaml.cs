@@ -1,5 +1,7 @@
 ﻿using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -41,6 +43,7 @@ public partial class StandObvView : UserControl
     {
         ExceptionHelper.SafeExecute(() =>
         {
+
             var electicComponents = _projectViewModel.CurrentStandModel.NewElectricalComponent.Purposes;
             var cableInputsRecord = electicComponents
                 .FirstOrDefault(purpose => purpose.Purpose == "Кабельные вводы");
@@ -49,13 +52,14 @@ public partial class StandObvView : UserControl
             if (cableInputsRecord != null)
             {
                 //TODO:забыть как страшный сон, временное решение
-                var cableInputsQuantity = (0.5 * Math.Pow(sensorsQuantity, 3) - 1.5 * Math.Pow(sensorsQuantity, 2) + 3 * sensorsQuantity);
+                var cableInputsQuantity = 0.5 * Math.Pow(sensorsQuantity, 3) - 1.5 * Math.Pow(sensorsQuantity, 2) + 3 * sensorsQuantity;
                 cableInputsRecord.Quantity = (float?) cableInputsQuantity;
-   
             }
 
             CollectionRefreshHelper.SafeRefreshCollection(_projectViewModel.CurrentStandModel.NewElectricalComponent.Purposes);
 
         });
     }
+
+
 }
