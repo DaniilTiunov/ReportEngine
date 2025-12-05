@@ -36,4 +36,26 @@ public partial class StandObvView : UserControl
             _projectViewModel.OnFillStandFieldsFromObvyazkaCommandExecuted(sender);
         });
     }
+
+    private void TypeSensor_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        ExceptionHelper.SafeExecute(() =>
+        {
+            var electicComponents = _projectViewModel.CurrentStandModel.NewElectricalComponent.Purposes;
+            var cableInputsRecord = electicComponents
+                .FirstOrDefault(purpose => purpose.Purpose == "Кабельные вводы");
+
+            var sensorsQuantity = _projectViewModel.CurrentStandModel.CountSensorsQuantity();
+            if (cableInputsRecord != null)
+            {
+                //TODO:забыть как страшный сон, временное решение
+                var cableInputsQuantity = (0.5 * Math.Pow(sensorsQuantity, 3) - 1.5 * Math.Pow(sensorsQuantity, 2) + 3 * sensorsQuantity);
+                cableInputsRecord.Quantity = (float?) cableInputsQuantity;
+   
+            }
+
+            CollectionRefreshHelper.SafeRefreshCollection(_projectViewModel.CurrentStandModel.NewElectricalComponent.Purposes);
+
+        });
+    }
 }

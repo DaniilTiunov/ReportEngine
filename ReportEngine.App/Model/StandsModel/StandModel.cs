@@ -2,6 +2,7 @@
 using ReportEngine.App.Model.FormedEquipsModels;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Export.DTO;
 using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Model.StandsModel;
@@ -736,14 +737,31 @@ public class StandModel : BaseViewModel
             Purposes = new ObservableCollection<ElectricalPurpose>
             {
                 new() { Purpose = "Клеммная коробка" ,Quantity = usualConnectionBoxQuantity},
-                new() { Purpose = "Кабельные вводы" , Quantity = 1488},
+                new() { Purpose = "Кабельные вводы" , Quantity = 1},
                 new() { Purpose = "Сигнальный кабель", Material = DefaultStandSettings.SignalCable, Quantity = usualCablesQuantity },
                 new() { Purpose = "Металлорукав" , Quantity = usualCablesQuantity},
-                new() { Purpose = "Кабель 6мм", Material = DefaultStandSettings.CabelSixMM,Quantity = (float?) DefaultStandSettings.SensorCountOnFrame },
+                new() { Purpose = "Кабель 6мм", Material = DefaultStandSettings.CabelSixMM, Quantity = (float?) DefaultStandSettings.SensorCountOnFrame },
                 new() { Purpose = "Кабель 4мм", Material = DefaultStandSettings.CabelFourMM, Quantity = usualCablesQuantity },
                 new() { Purpose = "Кронштейн коробки" }
             }
         };
+    }
+
+    
+    public int CountSensorsQuantity()
+    {
+        int sensorsQuantity = 0;
+
+        if (FirstSensorType != null)
+            sensorsQuantity++;
+
+        if (SecondSensorType != null)
+            sensorsQuantity++;
+
+        if (ThirdSensorType != null)
+            sensorsQuantity++;
+
+        return sensorsQuantity;
     }
 
     public async Task InitializeDefaultPurposes()
