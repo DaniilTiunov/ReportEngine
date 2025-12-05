@@ -82,6 +82,6 @@ public class PassportsGenerator : IReportGenerator
             }
 
             Debug.WriteLine(outputMessage);
-        }   
+        }
     }
 }

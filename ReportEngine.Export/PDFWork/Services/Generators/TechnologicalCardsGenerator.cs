@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Primitives;
-using ReportEngine.Domain.Repositories.Interfaces;
+﻿using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork;
 using ReportEngine.Export.ExcelWork.Enums;
@@ -41,7 +40,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
         File.WriteAllText(jsonSavePath, jsonObject, Encoding.UTF8);
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
-      
+
 
         var savePath = SettingsManager.GetReportDirectory();
         var fileName = ExcelReportHelper.CreateReportName("Технологические карты", "pdf");
@@ -65,9 +64,9 @@ public class TechnologicalCardsGenerator : IReportGenerator
             }
 
             process.WaitForExit();
-            
-            var result = JsonSerializer.Deserialize<PythonScriptResult>(scriptOutput);            
-         
+
+            var result = JsonSerializer.Deserialize<PythonScriptResult>(scriptOutput);
+
             string outputMessage = "";
             if (!result.Success)
             {

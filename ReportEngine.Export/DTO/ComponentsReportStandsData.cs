@@ -8,7 +8,7 @@ public struct SensorRecordData
     public string SensorMarkPlus;
     public string SensorMarkMinus;
 
-    public SensorRecordData(string sensorKKS, string sensorDescription,string sensorMarkPlus,string sensorMarkMinus)
+    public SensorRecordData(string sensorKKS, string sensorDescription, string sensorMarkPlus, string sensorMarkMinus)
     {
         SensorKKS = sensorKKS;
         SensorDescription = sensorDescription;

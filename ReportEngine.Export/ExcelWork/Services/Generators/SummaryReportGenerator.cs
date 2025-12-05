@@ -87,7 +87,7 @@ public class SummaryReportGenerator : IReportGenerator
 
 
         ws.Cell($"A{row}").Value = record.ExportDays.Value?.ToString();
- 
+
         if (!record.ExportDays.IsValid)
         {
             ws.Cell($"A{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
@@ -105,7 +105,7 @@ public class SummaryReportGenerator : IReportGenerator
 
 
         ws.Cell($"C{row}").Value = record.Unit.Value?.ToString();
-        
+
         if (!record.Unit.IsValid)
         {
             ws.Cell($"C{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
@@ -114,7 +114,7 @@ public class SummaryReportGenerator : IReportGenerator
 
 
         ws.Cell($"D{row}").Value = record.Quantity.Value?.ToString();
- 
+
         if (!record.Quantity.IsValid)
         {
             ws.Cell($"D{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
@@ -576,7 +576,7 @@ public class SummaryReportGenerator : IReportGenerator
 
 
 
-        
+
         var containers = ExcelReportHelper.GenerateContainersData(await containerBatches);
         var containerPrice = containers.Sum(container => container.CommonCost.Value);
 

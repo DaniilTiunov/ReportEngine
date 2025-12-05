@@ -89,7 +89,7 @@ public class ComponentListReportGenerator : IReportGenerator
 
 
         ws.Cell($"D{row}").Value = record.Quantity.Value?.ToString();
-        
+
         if (!record.Quantity.IsValid)
         {
             ws.Cell($"D{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;

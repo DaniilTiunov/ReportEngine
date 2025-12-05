@@ -261,7 +261,7 @@ public class ProductionReportGenerator : IReportGenerator
     {
 
         ws.Cell($"A{row}").Value = record.Name.Value?.ToString();
-        ws.Cell($"B{row}").Value = record.Unit.Value?.ToString(); 
+        ws.Cell($"B{row}").Value = record.Unit.Value?.ToString();
         ws.Cell($"C{row}").Value = record.Quantity.Value?.ToString();
 
 
@@ -285,23 +285,23 @@ public class ProductionReportGenerator : IReportGenerator
     {
 
         ws.Cell($"A{row}").Value = record.Name.Value?.ToString();
-        
+
         if (!record.Name.IsValid)
         {
             ws.Cell($"A{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
         }
 
-        
+
         ws.Range($"B{row}:C{row}").Merge().FirstCell().Value = record.KKS.Value?.ToString();
-        
+
         if (!record.KKS.IsValid)
         {
             ws.Range($"B{row}:C{row}").Merge().FirstCell().Value += "\n" + ExcelReportHelper.CommonErrorString;
         }
 
-       
+
         ws.Cell($"D{row}").Value = record.SerialNumber.Value?.ToString();
-       
+
         if (!record.SerialNumber.IsValid)
         {
             ws.Cell($"D{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
