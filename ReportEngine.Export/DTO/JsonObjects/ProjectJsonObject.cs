@@ -1,16 +1,10 @@
-﻿using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ReportEngine.Domain.Enums;
 
 namespace ReportEngine.Export.DTO.JsonObjects
 {
     public class ProjectJsonObject
     {
-        public string? SeniorEngineer {  get; set; } //ведущий инженер
+        public string? SeniorEngineer { get; set; } //ведущий инженер
         public string? ResponsibleForAccept { get; set; } //ответственный за приемку
         public string? SecondLevelSpecialist { get; set; } //специалист второго уровня
         public string? OSiL { get; set; } //представитель ОСиЛ
