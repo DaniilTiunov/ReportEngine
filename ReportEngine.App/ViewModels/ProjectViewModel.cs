@@ -126,22 +126,7 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    //обновляем кол-во швеллера
-    private void UpdateChannelsQuantity()
-    {
-        var additionalEquips = CurrentStandModel.NewAdditionalEquip.Purposes;
-        var channelRecord = additionalEquips
-            .FirstOrDefault(equip => equip.Purpose == "Швеллер");
-
-        var framesWidthSum = CurrentStandModel.FramesInStand.Sum(frame => frame.Width);
-
-        if (channelRecord != null)
-        {
-            //швеллер в метрах
-            channelRecord.Quantity = framesWidthSum / 1000.0f;
-            CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
-        }
-    }
+    
 
 
     // TODO: Сделать тут рефакторинг команд
@@ -301,17 +286,6 @@ public class ProjectViewModel : BaseViewModel
         UpdateNewObvNN();
     }
 
-    public void UpdateNewObvNN()
-    {
-        var standObvs = CurrentProjectModel?.SelectedStand?.ObvyazkiInStand;
-
-        if (standObvs != null)
-        {
-            var maxNN = standObvs.Max(obv => obv.NN) ?? 0;
-            CurrentProjectModel.SelectedStand.NN = maxNN + 1;
-        }
-    }
-
     public async void OnRemoveObvCommandExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(DeleteObvFromStandAsync);
@@ -364,6 +338,7 @@ public class ProjectViewModel : BaseViewModel
             var standId = CurrentProjectModel.SelectedStand.Id;
 
             var newObvyazka = ObvyzkaModelWrapper.CloneForStand(sourceObv, standId);
+            newObvyazka.NN = MaxObvNN + 1;
 
             await _standService.AddObvyazkaToStandAsync(standId, newObvyazka);
 
@@ -1141,6 +1116,39 @@ public class ProjectViewModel : BaseViewModel
         {
             var reportDir = SettingsManager.GetReportDirectory();
             Process.Start("explorer.exe", reportDir);
+        }
+    }
+
+    #endregion
+
+    #region Вспомогательные методы обновления
+
+    //обновляем поле NN в обвязке
+    public void UpdateNewObvNN()
+    {
+        CurrentProjectModel.SelectedStand.NN = MaxObvNN + 1;
+    }
+
+    //возвращает максимальный NN обвязок в стенде
+    public int MaxObvNN
+    {
+        get => CurrentProjectModel?.SelectedStand?.ObvyazkiInStand.Max(obv => obv.NN) ?? 0;
+    }
+
+    //обновляем кол-во швеллера
+    private void UpdateChannelsQuantity()
+    {
+        var additionalEquips = CurrentStandModel.NewAdditionalEquip.Purposes;
+        var channelRecord = additionalEquips
+            .FirstOrDefault(equip => equip.Purpose == "Швеллер");
+
+        var framesWidthSum = CurrentStandModel.FramesInStand.Sum(frame => frame.Width);
+
+        if (channelRecord != null)
+        {
+            //швеллер в метрах
+            channelRecord.Quantity = framesWidthSum / 1000.0f;
+            CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
         }
     }
 

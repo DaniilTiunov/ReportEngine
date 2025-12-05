@@ -260,6 +260,7 @@ public class StandService : IStandService
         if (stand == null || obv == null)
             return;
 
+        stand.NN = obv.NN ?? 0;
         stand.ObvyazkaName = obv.ObvyazkaName;
         stand.MaterialLine = obv.MaterialLine;
         stand.MaterialLineCount = obv.MaterialLineCount;
