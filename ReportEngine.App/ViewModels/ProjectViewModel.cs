@@ -297,11 +297,26 @@ public class ProjectViewModel : BaseViewModel
     public async void OnSaveObvCommandExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(AddObvToStandAsync);
+
+        UpdateNewObvNN();
+    }
+
+    public void UpdateNewObvNN()
+    {
+        var standObvs = CurrentProjectModel?.SelectedStand?.ObvyazkiInStand;
+
+        if (standObvs != null)
+        {
+            var maxNN = standObvs.Max(obv => obv.NN) ?? 0;
+            CurrentProjectModel.SelectedStand.NN = maxNN + 1;
+        }
     }
 
     public async void OnRemoveObvCommandExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(DeleteObvFromStandAsync);
+
+        UpdateNewObvNN();
     }
 
     public async void OnRemoveFrameFromStandCommandExecuted(object e)
@@ -356,6 +371,8 @@ public class ProjectViewModel : BaseViewModel
             OnPropertyChanged(nameof(CurrentProjectModel.ObvyazkiInProject));
 
             await LoadObvyazkiAsync();
+
+            UpdateNewObvNN();
 
             _notificationService.ShowInfo("Обвязка скопирована в стенд");
         });

@@ -21,6 +21,7 @@ public partial class StandObvView : UserControl
         _projectViewModel = projectViewModel;
 
         Loaded += async (_, __) => await InitializeDataAsync(projectViewModel);
+        
     }
 
     private async Task InitializeDataAsync(ProjectViewModel projectViewModel)
@@ -29,6 +30,7 @@ public partial class StandObvView : UserControl
         await projectViewModel.LoadObvyazkiAsync();
         await projectViewModel.LoadAllAvaileDataAsync();
         await projectViewModel.LoadPurposesInStandsAsync();
+        projectViewModel.UpdateNewObvNN();
     }
 
     private void FillStandFieldsFromObvyazkaCommand_DoubleClick(object sender, MouseButtonEventArgs e)
