@@ -49,7 +49,6 @@ public class ObvyazkaInStand
     public int? OtherLineCount { get; set; } //Колво др. линий
     public float? Weight { get; set; } //Масса
     public float? HumanCost { get; set; } //Трудозатраты чел/час
-
     public string? ImageName { get; set; } //Название картинки
 
     // Датчики (до 3-х)
@@ -70,4 +69,7 @@ public class ObvyazkaInStand
     public string? ThirdSensorMarkPlus { get; set; }
     public string? ThirdSensorMarkMinus { get; set; }
     public string? ThirdSensorDescription { get; set; }
+
+    public List<ObvyazkaAdditionalEquipPurpose> AdditionalComponents { get; set; }
 }
+ 

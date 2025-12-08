@@ -696,6 +696,11 @@ public class StandModel : BaseViewModel
 
     public StandSettingsModel DefaultStandSettings { get; set; } = new();
 
+    public void InitializeObvAdditionalPurposes()
+    {
+
+    }
+
     public void InitializeDrainagePurposes()
     {
         NewDrainage = new FormedDrainage
@@ -770,5 +775,6 @@ public class StandModel : BaseViewModel
         InitializeElectricalComponent();
         InitializeAdditionalEquip();
         InitializeDrainagePurposes();
+        InitializeObvAdditionalPurposes();
     }
 }
