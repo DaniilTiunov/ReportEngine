@@ -2,7 +2,6 @@
 using ReportEngine.App.Model.FormedEquipsModels;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
-using ReportEngine.Export.DTO;
 using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Model.StandsModel;
@@ -747,7 +746,7 @@ public class StandModel : BaseViewModel
         };
     }
 
-    
+
     public int CountSensorsQuantity()
     {
         int sensorsQuantity = 0;

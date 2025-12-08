@@ -50,8 +50,8 @@ public partial class StandObvView : UserControl
             {
                 //TODO:забыть как страшный сон, временное решение
                 var cableInputsQuantity = (0.5 * Math.Pow(sensorsQuantity, 3) - 1.5 * Math.Pow(sensorsQuantity, 2) + 3 * sensorsQuantity);
-                cableInputsRecord.Quantity = (float?) cableInputsQuantity;
-   
+                cableInputsRecord.Quantity = cableInputsQuantity.AsFloat();
+
             }
 
             CollectionRefreshHelper.SafeRefreshCollection(_projectViewModel.CurrentStandModel.NewElectricalComponent.Purposes);
