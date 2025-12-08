@@ -110,7 +110,7 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             var totalWidth = _projectService.GetSummWidthObvyzakaAsync(CurrentProjectModel);
-            _notificationService.ShowInfo("Рекомендуемая рама: Рама с длинной " + totalWidth);
+            _notificationService.ShowInfo("Рекомендуемая рама: Рама с длиной " + totalWidth);
 
             var selectedFrame = _dialogService.ShowFrameDialog();
             if (selectedFrame != null)
@@ -119,11 +119,15 @@ public class ProjectViewModel : BaseViewModel
                     CurrentProjectModel.SelectedStand.Id,
                     selectedFrame.Id
                 );
-
+           
                 CurrentProjectModel.SelectedStand.FramesInStand.Add(selectedFrame);
+                UpdateChannelsQuantity();
             }
         });
     }
+
+    
+
 
     // TODO: Сделать тут рефакторинг команд
     public void OnSelectMaterialFromDialogCommandExecuted(object e)
@@ -184,7 +188,7 @@ public class ProjectViewModel : BaseViewModel
 
     public void OnSelectTreeSocketFromDialogCommandExecuted(object e)
     {
-        switch (CurrentMaterials.SelectedSocketTypes)
+        switch (CurrentMaterials.SelectedSocketTypes) 
         {
             case "Жаропрочные":
                 SelectEquipment<HeaterSocket>(
@@ -278,11 +282,15 @@ public class ProjectViewModel : BaseViewModel
     public async void OnSaveObvCommandExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(AddObvToStandAsync);
+
+        UpdateNewObvNN();
     }
 
     public async void OnRemoveObvCommandExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(DeleteObvFromStandAsync);
+
+        UpdateNewObvNN();
     }
 
     public async void OnRemoveFrameFromStandCommandExecuted(object e)
@@ -290,6 +298,8 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await _projectService.DeleteFrameFromStandAsync(CurrentProjectModel);
+
+            UpdateChannelsQuantity();
 
             _notificationService.ShowInfo("Рама удалена из стенда");
         });
@@ -328,6 +338,7 @@ public class ProjectViewModel : BaseViewModel
             var standId = CurrentProjectModel.SelectedStand.Id;
 
             var newObvyazka = ObvyzkaModelWrapper.CloneForStand(sourceObv, standId);
+            newObvyazka.NN = MaxObvNN + 1;
 
             await _standService.AddObvyazkaToStandAsync(standId, newObvyazka);
 
@@ -335,6 +346,8 @@ public class ProjectViewModel : BaseViewModel
             OnPropertyChanged(nameof(CurrentProjectModel.ObvyazkiInProject));
 
             await LoadObvyazkiAsync();
+
+            UpdateNewObvNN();
 
             _notificationService.ShowInfo("Обвязка скопирована в стенд");
         });
@@ -1103,6 +1116,39 @@ public class ProjectViewModel : BaseViewModel
         {
             var reportDir = SettingsManager.GetReportDirectory();
             Process.Start("explorer.exe", reportDir);
+        }
+    }
+
+    #endregion
+
+    #region Вспомогательные методы обновления
+
+    //обновляем поле NN в обвязке
+    public void UpdateNewObvNN()
+    {
+        CurrentProjectModel.SelectedStand.NN = MaxObvNN + 1;
+    }
+
+    //возвращает максимальный NN обвязок в стенде
+    public int MaxObvNN
+    {
+        get => CurrentProjectModel?.SelectedStand?.ObvyazkiInStand.Max(obv => obv.NN) ?? 0;
+    }
+
+    //обновляем кол-во швеллера
+    private void UpdateChannelsQuantity()
+    {
+        var additionalEquips = CurrentStandModel.NewAdditionalEquip.Purposes;
+        var channelRecord = additionalEquips
+            .FirstOrDefault(equip => equip.Purpose == "Швеллер");
+
+        var framesWidthSum = CurrentStandModel.FramesInStand.Sum(frame => frame.Width);
+
+        if (channelRecord != null)
+        {
+            //швеллер в метрах
+            channelRecord.Quantity = framesWidthSum / 1000.0f;
+            CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
         }
     }
 

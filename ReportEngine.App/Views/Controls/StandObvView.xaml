@@ -1053,7 +1053,7 @@
                         <GroupBox.Header>
                             <TextBlock>
                                 <Run FontSize="16" Text="Дополнительные комплектующие по стенду — " />
-                                <Run FontWeight="Bold" Text="{Binding CurrentProjectModel..Design, TargetNullValue='(нет данных)'}" />
+                                <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
                             </TextBlock>
                         </GroupBox.Header>
                         <StackPanel>
@@ -1217,7 +1217,8 @@
                                 AutoGenerateColumns="False"
                                 ColumnWidth="*"
                                 ItemsSource="{Binding CurrentProjectModel.SelectedStand.FramesInStand}"
-                                SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedFrame}">
+                                SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedFrame}"
+                                >
                                 <DataGrid.ContextMenu>
                                     <ContextMenu>
                                         <MenuItem Command="{Binding ProjectCommandProvider.RemoveFrameStandCommand}" Header="Удалить выбранную раму из стенда" />
