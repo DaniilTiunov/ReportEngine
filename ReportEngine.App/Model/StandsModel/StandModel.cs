@@ -51,6 +51,9 @@ public class StandModel : BaseViewModel
     // Количество приборов
     private int _devices;
 
+    //коллекция доп комплектующих обвязки
+    private ObservableCollection<ObvyazkaAdditionalEquipPurpose> _obvyazkaAdditionalComponents = new();
+
     // Коллекция дренажей, находящихся в стенде
     private ObservableCollection<FormedDrainage> _drainagesInStand = new();
 
@@ -597,6 +600,12 @@ public class StandModel : BaseViewModel
         set => Set(ref _obvyazkiInStand, value);
     }
 
+    public ObservableCollection<ObvyazkaAdditionalEquipPurpose> ObvyazkaAdditionalComponents 
+    { 
+        get => _obvyazkaAdditionalComponents;
+        set => Set(ref _obvyazkaAdditionalComponents, value); 
+    }
+
     // Выбранный дренаж
     public FormedDrainage SelectedDrainage
     {
@@ -698,7 +707,14 @@ public class StandModel : BaseViewModel
 
     public void InitializeObvAdditionalPurposes()
     {
-
+        ObvyazkaAdditionalComponents = new ObservableCollection<ObvyazkaAdditionalEquipPurpose>
+        {
+             new() { Purpose = "1ый" },
+             new() { Purpose = "2ой"},
+             new() { Purpose = "3ий"},
+             new() { Purpose = "4ый" },
+             new() { Purpose = "5ый" }
+        };
     }
 
     public void InitializeDrainagePurposes()

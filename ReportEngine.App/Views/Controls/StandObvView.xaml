@@ -742,7 +742,7 @@
                                 Margin="5"
                                 AutoGenerateColumns="False"
                                 CanUserAddRows="True"
-                                ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand.AdditionalComponents}">
+                                ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkaAdditionalComponents}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Назначение" />
                                         <DataGridTextColumn

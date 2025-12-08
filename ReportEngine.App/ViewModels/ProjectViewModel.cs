@@ -321,6 +321,8 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(AddCustomDrainageToStandAsync);
     }
 
+    
+
     public async void OnAddDrainageToStandExecuted(object p)
     {
         await ExceptionHelper.SafeExecuteAsync(AddDrainageToStandAsync);
