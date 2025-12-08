@@ -748,7 +748,7 @@
                                         <DataGridTextColumn
                                         Width="*"
                                         Binding="{Binding Material, Mode=TwoWay}"
-                                        Header="Доп.комплекующее" />
+                                        Header="Доп.комплектующее" />
                                         <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay}" Header="Кол-во(шт/м)" />
                                         <DataGridTextColumn Binding="{Binding Measure, Mode=TwoWay}" Header="Ед. изм." />
                                         <DataGridTemplateColumn Header="Выбрать">
@@ -765,10 +765,6 @@
                                         </DataGridTemplateColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
-                                <Button
-                                Margin="5"
-                                Command="{Binding ProjectCommandProvider.AddCustomElectricalComponentToStandCommand}"
-                                Content="Добавить компоненты" />
                             </StackPanel>
                         </GroupBox>
 
@@ -1114,7 +1110,7 @@
                                     <DataGridTextColumn
                                         Width="*"
                                         Binding="{Binding Material, Mode=TwoWay}"
-                                        Header="Доп.комплекующее" />
+                                        Header="Доп.комплектующее" />
                                     <DataGridTextColumn
                                         Width="105"
                                         Binding="{Binding Quantity, Mode=TwoWay}"
@@ -1169,7 +1165,7 @@
                                     <DataGridTextColumn
                                         Width="*"
                                         Binding="{Binding Material, Mode=TwoWay}"
-                                        Header="Доп.комплекующее" />
+                                        Header="Доп.комплектующее" />
                                     <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay}" Header="Кол-во(шт/м)" />
                                     <DataGridTextColumn Binding="{Binding Measure, Mode=TwoWay}" Header="Ед. изм." />
                                     <DataGridTemplateColumn Header="Выбрать">

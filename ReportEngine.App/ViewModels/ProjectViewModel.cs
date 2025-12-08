@@ -649,6 +649,8 @@ public class ProjectViewModel : BaseViewModel
             _containerService.RemoveStandFromContainerAsync(CurrentProjectModel));
     }
 
+
+
     public void ResetProject()
     {
         // Совместимый синхронный вызов, чтобы не дедлокалось в процессе загрузки
