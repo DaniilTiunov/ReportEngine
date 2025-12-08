@@ -470,7 +470,10 @@
                                 <ColumnDefinition Width="230" />
                             </Grid.ColumnDefinitions>
 
-                            <Grid Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,195,0">
+                            <Grid
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                Margin="0,0,195,0">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
@@ -773,7 +776,7 @@
                                 ItemsSource="{Binding CurrentProjectModel.SelectedStand.SensorType}"
                                 SelectedIndex="1"
                                 SelectedItem="{Binding CurrentProjectModel.SelectedStand.FirstSensorType, Mode=TwoWay}"
-                                SelectionChanged="TypeSensor_SelectionChanged"/>
+                                SelectionChanged="TypeSensor_SelectionChanged" />
 
                             <TextBlock
                                 Grid.Row="1"
@@ -829,7 +832,7 @@
                                 materialDesign:HintAssist.Hint="Выбор типа датчика"
                                 ItemsSource="{Binding CurrentProjectModel.SelectedStand.SensorType}"
                                 SelectedItem="{Binding CurrentProjectModel.SelectedStand.SecondSensorType}"
-                                SelectionChanged="TypeSensor_SelectionChanged"/>
+                                SelectionChanged="TypeSensor_SelectionChanged" />
 
                             <TextBlock
                                 Grid.Row="6"
@@ -884,7 +887,8 @@
                                 Margin="0,0,500,5"
                                 materialDesign:HintAssist.Hint="Выбор типа датчика"
                                 ItemsSource="{Binding CurrentProjectModel.SelectedStand.SensorType}"
-                                SelectedItem="{Binding CurrentProjectModel.SelectedStand.ThirdSensorType}" />
+                                SelectedItem="{Binding CurrentProjectModel.SelectedStand.ThirdSensorType}"
+                                SelectionChanged="TypeSensor_SelectionChanged" />
 
                             <TextBlock
                                 Grid.Row="11"
@@ -1299,6 +1303,7 @@
                         Padding="5"
                         Header="Обвязки стенда">
                         <ListView
+                            MinHeight="250"
                             ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}"
                             MouseDoubleClick="FillStandFieldsFromObvyazkaCommand_DoubleClick"
                             SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand}">
