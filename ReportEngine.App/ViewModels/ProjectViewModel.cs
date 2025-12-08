@@ -17,6 +17,7 @@ using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -281,6 +282,16 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnSaveObvCommandExecuted(object e)
     {
+        var isAlreadyExist = CurrentProjectModel?.SelectedStand?.ObvyazkiInStand
+                            .Select(obv => obv.NN)
+                            .Contains(CurrentProjectModel.SelectedStand.NN);
+
+        if (isAlreadyExist ?? false)
+        {
+            _notificationService.ShowError("Указанный NN обвязки уже существует. Обвязка не добавлена");
+            return;
+        }
+
         await ExceptionHelper.SafeExecuteAsync(AddObvToStandAsync);
 
         UpdateNewObvNN();
@@ -1136,7 +1147,7 @@ public class ProjectViewModel : BaseViewModel
     }
 
     //обновляем кол-во швеллера
-    private void UpdateChannelsQuantity()
+    public void UpdateChannelsQuantity()
     {
         var additionalEquips = CurrentStandModel.NewAdditionalEquip.Purposes;
         var channelRecord = additionalEquips
