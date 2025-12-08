@@ -70,6 +70,6 @@ public class ObvyazkaInStand
     public string? ThirdSensorMarkMinus { get; set; }
     public string? ThirdSensorDescription { get; set; }
 
-    public List<ObvyazkaAdditionalEquipPurpose> AdditionalComponents { get; set; }
+    public List<ObvyazkaAdditionalEquipPurpose>? AdditionalComponents { get; set; }
 }
  

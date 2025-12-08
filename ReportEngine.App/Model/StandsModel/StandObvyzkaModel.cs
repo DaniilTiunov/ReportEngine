@@ -27,8 +27,8 @@ public class StandObvyazkaModel : BaseViewModel
     public string? ThirdSensorKKS { get; set; }
     public string? ThirdSensorMarkPlus { get; set; }
     public string? ThirdSensorMarkMinus { get; set; }
-    public ObservableCollection<ObvyazkaAdditionalEquipPurpose> AdditionalComponents { get; set; }
- 
+    public ObservableCollection<ObvyazkaAdditionalEquipPurpose>? AdditionalComponents { get; set; }
+
     public static StandObvyazkaModel Create(
         int obvyazkaId,
         string obvyazkaName,
@@ -46,7 +46,8 @@ public class StandObvyazkaModel : BaseViewModel
         string? thirdSensorType = null,
         string? thirdSensorKKS = null,
         string? thirdSensorMarkPlus = null,
-        string? thirdSensorMarkMinus = null
+        string? thirdSensorMarkMinus = null,
+        ObservableCollection<ObvyazkaAdditionalEquipPurpose>? additionalComponents = null
     )
     {
         return new StandObvyazkaModel
@@ -67,7 +68,9 @@ public class StandObvyazkaModel : BaseViewModel
             ThirdSensorType = thirdSensorType,
             ThirdSensorKKS = thirdSensorKKS,
             ThirdSensorMarkPlus = thirdSensorMarkPlus,
-            ThirdSensorMarkMinus = thirdSensorMarkMinus
+            ThirdSensorMarkMinus = thirdSensorMarkMinus,
+            AdditionalComponents = additionalComponents
+
         };
     }
 }

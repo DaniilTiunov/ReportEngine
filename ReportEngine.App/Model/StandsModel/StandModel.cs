@@ -709,11 +709,8 @@ public class StandModel : BaseViewModel
     {
         ObvyazkaAdditionalComponents = new ObservableCollection<ObvyazkaAdditionalEquipPurpose>
         {
-             new() { Purpose = "1ый" },
-             new() { Purpose = "2ой"},
-             new() { Purpose = "3ий"},
-             new() { Purpose = "4ый" },
-             new() { Purpose = "5ый" }
+             new() { Purpose = "Доп.компонент" },
+
         };
     }
 

@@ -249,7 +249,8 @@ public class StandService : IStandService
             ThirdSensorKKS = standModel.ThirdSensorKKS,
             ThirdSensorMarkPlus = standModel.ThirdSensorMarkPlus,
             ThirdSensorMarkMinus = standModel.ThirdSensorMarkMinus,
-            ThirdSensorDescription = standModel.ThirdSensorDescription
+            ThirdSensorDescription = standModel.ThirdSensorDescription,
+            AdditionalComponents = standModel.ObvyazkaAdditionalComponents.ToList()
         };
 
         return Task.FromResult(entity);
