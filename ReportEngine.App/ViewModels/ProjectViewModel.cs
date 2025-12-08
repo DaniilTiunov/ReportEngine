@@ -120,15 +120,6 @@ public class ProjectViewModel : BaseViewModel
                     selectedFrame.Id
                 );
 
-                var additionalEquips = CurrentStandModel.NewAdditionalEquip.Purposes;
-                var channel = additionalEquips.FirstOrDefault(purpose => purpose.Purpose == "Швеллер");
-
-                if (channel != null)
-                {
-                    channel.Quantity = selectedFrame.Width / 1000;
-                    CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
-                }
-
                 CurrentProjectModel.SelectedStand.FramesInStand.Add(selectedFrame);
             }
         });
