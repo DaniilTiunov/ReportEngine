@@ -39,7 +39,7 @@ public class HostFactory
     public static IHost BuildHost(string connString)
     {
         return Host.CreateDefaultBuilder()
-            .UseSerilog()
+            .UseSerilog(Log.Logger, dispose: true)
             .ConfigureServices((hostContext, services) =>
             {
                 // Регистрация контекста БД
@@ -60,11 +60,10 @@ public class HostFactory
                 services.AddSingleton<App>();
             })
             .ConfigureLogging(logging =>
-            {
-                logging.ClearProviders()
-                    .AddSerilog()
-                    .SetMinimumLevel(LogLevel.Information);
-            })
+             {
+                 logging.ClearProviders();
+                 logging.SetMinimumLevel(LogLevel.Information);
+             })
             .Build();
     }
 
@@ -131,9 +130,9 @@ public class HostFactory
     {
         services.AddSingleton<GenericEquipWindowFactory>();
         services.AddSingleton<NavigationService>();
-        services.AddSingleton<IServiceProvider>(provider => provider);
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<INotificationService, NotificationService>();
+        services.AddSingleton<EquipChangesListener>();
         services.AddScoped<ICalculationService, CalculationService>();
         services.AddScoped<IStandService, StandService>();
         services.AddScoped<IProjectService, ProjectService>();
@@ -169,6 +168,8 @@ public class HostFactory
         services.AddScoped<CalculationSettingsViewModel>();
         services.AddScoped<AuthWindowViewModel>();
         services.AddScoped<SubjectViewModel>();
+
+        services.AddScoped(typeof(GenericEquipViewModel<>));
     }
 
     private static void ConfigureViews(IServiceCollection services)

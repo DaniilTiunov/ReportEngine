@@ -17,7 +17,7 @@ namespace ReportEngine.Domain.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.9")
+                .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -32,6 +32,9 @@ namespace ReportEngine.Domain.Migrations
 
                     b.Property<float?>("CostPerUnit")
                         .HasColumnType("real");
+
+                    b.Property<int?>("ExportDays")
+                        .HasColumnType("integer");
 
                     b.Property<int>("FormedAdditionalEquipId")
                         .HasColumnType("integer");
@@ -328,6 +331,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<int?>("ContainerBatchId")
                         .HasColumnType("integer");
 
+                    b.Property<float?>("ContainerCost")
+                        .HasColumnType("real");
+
                     b.Property<float?>("ContainerWeight")
                         .HasColumnType("real");
 
@@ -408,6 +414,9 @@ namespace ReportEngine.Domain.Migrations
 
                     b.Property<float?>("CostPerUnit")
                         .HasColumnType("real");
+
+                    b.Property<int?>("ExportDays")
+                        .HasColumnType("integer");
 
                     b.Property<int>("FormedDrainageId")
                         .HasColumnType("integer");
@@ -751,6 +760,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float?>("CostPerUnit")
                         .HasColumnType("real");
 
+                    b.Property<int?>("ExportDays")
+                        .HasColumnType("integer");
+
                     b.Property<int>("FormedElectricalComponentId")
                         .HasColumnType("integer");
 
@@ -963,6 +975,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<int>("Count")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("ExportDays")
+                        .HasColumnType("integer");
+
                     b.Property<int>("FormedFrameId")
                         .HasColumnType("integer");
 
@@ -996,6 +1011,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("ImageName")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<float>("KMCHCount")
+                        .HasColumnType("real");
 
                     b.Property<float>("LineLength")
                         .HasColumnType("real");
@@ -1047,6 +1065,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float?>("ArmatureCount")
                         .HasColumnType("real");
 
+                    b.Property<int?>("ArmatureExportDays")
+                        .HasColumnType("integer");
+
                     b.Property<string>("ArmatureMeasure")
                         .HasColumnType("text");
 
@@ -1083,6 +1104,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float?>("KMCHCount")
                         .HasColumnType("real");
 
+                    b.Property<int?>("KMCHExportDays")
+                        .HasColumnType("integer");
+
                     b.Property<string>("KMCHMeasure")
                         .HasColumnType("text");
 
@@ -1097,6 +1121,9 @@ namespace ReportEngine.Domain.Migrations
 
                     b.Property<float?>("MaterialLineCount")
                         .HasColumnType("real");
+
+                    b.Property<int?>("MaterialLineExportDays")
+                        .HasColumnType("integer");
 
                     b.Property<string>("MaterialLineMeasure")
                         .HasColumnType("text");
@@ -1157,6 +1184,9 @@ namespace ReportEngine.Domain.Migrations
 
                     b.Property<float?>("TreeSocketCount")
                         .HasColumnType("real");
+
+                    b.Property<int?>("TreeSocketExportDays")
+                        .HasColumnType("integer");
 
                     b.Property<string>("TreeSocketMaterialCostPerUnit")
                         .HasColumnType("text");

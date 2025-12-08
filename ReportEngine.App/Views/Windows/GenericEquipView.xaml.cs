@@ -10,15 +10,23 @@ namespace ReportEngine.App.Views.Windows;
 /// </summary>
 public partial class GenericEquipView : Window
 {
-    public GenericEquipView()
+    private readonly bool _isDialog;
+
+    public GenericEquipView(bool IsDialog = false)
     {
         InitializeComponent();
+        _isDialog = IsDialog;
     }
+
 
     private void SelectEquip_DoubleClick(object sender, MouseButtonEventArgs e)
     {
+        if (!_isDialog)
+            return;
+
         ExceptionHelper.SafeExecute(() =>
         {
+
             var type = DataContext.GetType();
 
             if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(GenericEquipViewModel<>))

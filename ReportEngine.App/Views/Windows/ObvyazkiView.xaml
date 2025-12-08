@@ -118,6 +118,7 @@
                         BorderThickness="0"
                         ItemsSource="{Binding CurrentObvyazka.Obvyazki, Mode=TwoWay}"
                         MouseDoubleClick="ObvyazkaListBox_MouseDoubleClick"
+                        PreviewMouseWheel="ListBox_PreviewMouseWheel"
                         SelectedItem="{Binding CurrentObvyazka.SelectedObvyazka, Mode=TwoWay}">
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -188,6 +189,7 @@
 
                                 <Grid>
                                     <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
@@ -305,9 +307,18 @@
                                     <TextBlock
                                         Grid.Row="12"
                                         Margin="0,0,5,5"
-                                        Text="Имя изображения:" />
+                                        Text="Кол-во КМЧ:" />
                                     <TextBox
                                         Grid.Row="12"
+                                        Margin="125,0,5,5"
+                                        Text="{Binding CurrentObvyazka.SelectedObvyazka.KMCHCount}" />
+
+                                    <TextBlock
+                                        Grid.Row="13"
+                                        Margin="0,0,5,5"
+                                        Text="Имя изображения:" />
+                                    <TextBox
+                                        Grid.Row="13"
                                         Margin="125,0,5,5"
                                         Text="{Binding CurrentObvyazka.SelectedObvyazka.ImageName}" />
 

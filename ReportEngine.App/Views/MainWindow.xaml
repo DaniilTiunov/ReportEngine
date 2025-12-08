@@ -184,7 +184,7 @@
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllSortamentsCommand}" Header="Весь сортамент" />
             </MenuItem>
             <MenuItem Header="Формирование комплектующих">
-                <MenuItem Command="{Binding MainWindowCommandProvider.OpenFormedFramesCommand}" Header="Создание и редактировние рам" />
+                <MenuItem Command="{Binding MainWindowCommandProvider.OpenFormedFramesCommand}" Header="Создание и редактирование рам" />
                 <Separator />
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllObvyazkiCommand}" Header="Обвязки" />
                 <Separator />
@@ -336,14 +336,13 @@
                 <DataGrid.ContextMenu>
                     <ContextMenu>
                         <MenuItem Command="{Binding MainWindowCommandProvider.EditProjectCommand}" Header="Редактировать проект" />
-                        <MenuItem Command="{Binding MainWindowCommandProvider.ShowAllProjectsCommand}" Header="Обновить список проектов" />
-                        <Separator />
                         <MenuItem Command="{Binding MainWindowCommandProvider.RecalculateProjectCommand}" Header="Переформировать" />
-                        <Separator />
                         <MenuItem
                             Command="{Binding MainWindowCommandProvider.DeleteSelectedProjectCommand}"
                             Header="Удалить проект"
                             Visibility="{Binding CurrentUser.SystemRole, Converter={StaticResource AdminVisibilityConverter}}" />
+                        <Separator />
+                        <MenuItem Command="{Binding MainWindowCommandProvider.ShowAllProjectsCommand}" Header="Обновить список проектов" />
                     </ContextMenu>
                 </DataGrid.ContextMenu>
             </DataGrid>

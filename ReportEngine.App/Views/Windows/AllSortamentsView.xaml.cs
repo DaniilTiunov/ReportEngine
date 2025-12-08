@@ -9,11 +9,13 @@ public partial class AllSortamentsView : Window
 {
     private readonly AllSortamentsViewModel _viewModel;
 
-    public AllSortamentsView(AllSortamentsViewModel viewModel)
+    private readonly bool _isDialog;
+    public AllSortamentsView(AllSortamentsViewModel viewModel, bool isDialog = false)
     {
         InitializeComponent();
         DataContext = viewModel;
         _viewModel = viewModel;
+        _isDialog = isDialog;
     }
 
     private async void SubTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -43,7 +45,7 @@ public partial class AllSortamentsView : Window
 
     private void SelectEquip_DoubleClick(object sender, MouseButtonEventArgs e)
     {
-        if (_viewModel.SelectedEquip != null)
+        if (_viewModel.SelectedEquip != null && _isDialog)
         {
             _viewModel.SelectionHandler?.Invoke(_viewModel.SelectedEquip);
             Close();

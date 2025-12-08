@@ -94,6 +94,7 @@ public class StandModel : BaseViewModel
     private float? _kmchCount;
     private string? _kmchMeasure;
 
+
     // Материал линии
     private string _materialLine;
     private string _materialLineCostPerUnit;
@@ -186,10 +187,15 @@ public class StandModel : BaseViewModel
 
     // Ширина стенда
     private float _width;
+    private int? _materialLineExportDays;
+    private int? _armatureExportDays;
+    private int? _kMCHExportDays;
+    private int? _treeSocketExportDays;
+    private int _number;
 
     public StandModel()
     {
-        InitializeDefaultPurposes();
+
     }
 
     // Коллекция обвязок для отображения
@@ -276,6 +282,12 @@ public class StandModel : BaseViewModel
         set => Set(ref _serialNumber, value);
     }
 
+    public int Number
+    {
+        get => _number;
+        set => Set(ref _number, value);
+    }
+
     // Масса стенда
     public float Weight
     {
@@ -323,6 +335,12 @@ public class StandModel : BaseViewModel
         set => Set(ref _materialLineMeasure, value);
     }
 
+    public int? MaterialLineExportDays
+    {
+        get => _materialLineExportDays;
+        set => Set(ref _materialLineExportDays, value);
+    }
+
     public string? MaterialLineCostPerUnit
     {
         get => _materialLineCostPerUnit;
@@ -335,16 +353,33 @@ public class StandModel : BaseViewModel
         set => Set(ref _armatureCostPerUnit, value);
     }
 
+    public int? ArmatureExportDays
+    {
+        get => _armatureExportDays;
+        set => Set(ref _armatureExportDays, value);
+    }
+
     public string? KMCHCostPerUnit
     {
         get => _kmchCostPerUnit;
         set => Set(ref _kmchCostPerUnit, value);
+    }
+    public int? KMCHExportDays
+    {
+        get => _kMCHExportDays;
+        set => Set(ref _kMCHExportDays, value);
     }
 
     public string? TreeSocketMaterialCostPerUnit
     {
         get => _treeSocketMaterialCostPerUnit;
         set => Set(ref _treeSocketMaterialCostPerUnit, value);
+    }
+
+    public int? TreeSocketExportDays
+    {
+        get => _treeSocketExportDays;
+        set => Set(ref _treeSocketExportDays, value);
     }
 
     // Арматура
@@ -668,8 +703,8 @@ public class StandModel : BaseViewModel
             Purposes = new ObservableCollection<DrainagePurpose>
             {
                 new() { Purpose = "Основная труба" },
-                new() { Purpose = "Патрубок" },
-                new() { Purpose = "Заглушка основной трубы" },
+                new() { Purpose = "Патрубок", Quantity = (float)0.2},
+                new() { Purpose = "Заглушка основной трубы", Quantity = 2 },
                 new() { Purpose = "Кронштейн дренажа" },
                 new() { Purpose = "Клапан" }
             }
@@ -693,19 +728,39 @@ public class StandModel : BaseViewModel
 
     public void InitializeElectricalComponent()
     {
+        float? usualConnectionBoxQuantity = 1.0f;
+        float? usualCablesQuantity = 2.0f;
+
         NewElectricalComponent = new FormedElectricalComponent
         {
             Purposes = new ObservableCollection<ElectricalPurpose>
             {
-                new() { Purpose = "Клеммная коробка" },
-                new() { Purpose = "Кабельные вводы" },
-                new() { Purpose = "Сигнальный кабель", Material = DefaultStandSettings.SignalCable },
-                new() { Purpose = "Металлорукав" },
-                new() { Purpose = "Кабель 6мм", Material = DefaultStandSettings.CabelSixMM },
-                new() { Purpose = "Кабель 4мм", Material = DefaultStandSettings.CabelFourMM },
+                new() { Purpose = "Клеммная коробка" ,Quantity = usualConnectionBoxQuantity},
+                new() { Purpose = "Кабельные вводы" , Quantity = 1},
+                new() { Purpose = "Сигнальный кабель", Material = DefaultStandSettings.SignalCable, Quantity = usualCablesQuantity },
+                new() { Purpose = "Металлорукав" , Quantity = usualCablesQuantity},
+                new() { Purpose = "Кабель 6мм", Material = DefaultStandSettings.CabelSixMM, Quantity = (float?) DefaultStandSettings.SensorCountOnFrame },
+                new() { Purpose = "Кабель 4мм", Material = DefaultStandSettings.CabelFourMM, Quantity = usualCablesQuantity },
                 new() { Purpose = "Кронштейн коробки" }
             }
         };
+    }
+
+
+    public int CountSensorsQuantity()
+    {
+        int sensorsQuantity = 0;
+
+        if (FirstSensorType != null)
+            sensorsQuantity++;
+
+        if (SecondSensorType != null)
+            sensorsQuantity++;
+
+        if (ThirdSensorType != null)
+            sensorsQuantity++;
+
+        return sensorsQuantity;
     }
 
     public async Task InitializeDefaultPurposes()

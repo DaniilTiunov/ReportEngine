@@ -65,6 +65,7 @@ public class FormedAdditionalEquipsRepository : IFormedAdditionalEquipsRepositor
         existing.Quantity = purpose.Quantity;
         existing.CostPerUnit = purpose.CostPerUnit;
         existing.Measure = purpose.Measure;
+        existing.ExportDays = purpose.ExportDays;
 
         _context.AdditionalEquipPurposes.Update(existing);
         await _context.SaveChangesAsync();

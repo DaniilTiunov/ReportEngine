@@ -43,6 +43,28 @@ public class ProjectService : IProjectService
         _subjectRepository = subjectRepository;
     }
 
+    public int GetStandsInProjectCount(ProjectModel projectModel)
+    {
+        return projectModel.Stands.Count();
+    }
+
+    public async Task<int> GetProjectsCountAsync()
+    {
+        var projects = await _projectRepository.GetAllAsync();
+        return projects.Count();
+    }
+    public float GetSummWidthObvyzakaAsync(ProjectModel projectModel)
+    {
+        var totalWidth = 0.0f;
+
+        foreach (var stand in projectModel.Stands)
+        {
+            var obvyazkaWidth = stand.ObvyazkiInStand.Sum(obv => obv.WidthOnFrame);
+            totalWidth += obvyazkaWidth ?? 0.0f;
+        }
+
+        return totalWidth;
+    }
     public async Task GetOrAddCompnayAsync(string name)
     {
         var companies = await _companyRepository.GetAllAsync();
@@ -235,15 +257,19 @@ public class ProjectService : IProjectService
         obv.MaterialLine = stand.MaterialLine;
         obv.MaterialLineCount = stand.MaterialLineCount;
         obv.MaterialLineMeasure = stand.MaterialLineMeasure;
+        obv.MaterialLineExportDays = stand.MaterialLineExportDays;
         obv.Armature = stand.Armature;
         obv.ArmatureCount = stand.ArmatureCount;
         obv.ArmatureMeasure = stand.ArmatureMeasure;
+        obv.ArmatureExportDays = stand.ArmatureExportDays;
         obv.TreeSocket = stand.TreeSocket;
         obv.TreeSocketMaterialCount = stand.TreeSocketMaterialCount;
         obv.TreeSocketMaterialMeasure = stand.TreeSocketMaterialMeasure;
+        obv.TreeSocketExportDays = stand.TreeSocketExportDays;
         obv.KMCH = stand.KMCH;
         obv.KMCHCount = stand.KMCHCount;
         obv.KMCHMeasure = stand.KMCHMeasure;
+        obv.KMCHExportDays = stand.KMCHExportDays;
         obv.NN = stand.NN;
         obv.FirstSensorType = stand.FirstSensorType;
         obv.FirstSensorKKS = stand.FirstSensorKKS;
@@ -270,6 +296,7 @@ public class ProjectService : IProjectService
         obv.OtherLineCount = selectedObvyazka.OtherLineCount;
         obv.Weight = selectedObvyazka.Weight;
         obv.TreeSocketCount = selectedObvyazka.TreeSocket;
+        obv.KMCHCount = selectedObvyazka.KMCHCount;
         obv.HumanCost = selectedObvyazka.HumanCost;
         obv.ImageName = selectedObvyazka.ImageName;
 
@@ -376,6 +403,7 @@ public class ProjectService : IProjectService
                 Quantity = purpose.Quantity,
                 Measure = purpose.Measure,
                 CostPerUnit = purpose.CostPerUnit,
+                ExportDays = purpose.ExportDays,
                 FormedDrainageId = newComponent.Id
             };
 
@@ -405,6 +433,7 @@ public class ProjectService : IProjectService
                 Quantity = purpose.Quantity,
                 Measure = purpose.Measure,
                 CostPerUnit = purpose.CostPerUnit,
+                ExportDays = purpose.ExportDays,
                 FormedAdditionalEquipId = newComponent.Id
             };
 
@@ -434,6 +463,7 @@ public class ProjectService : IProjectService
                 Quantity = purpose.Quantity,
                 Measure = purpose.Measure,
                 CostPerUnit = purpose.CostPerUnit,
+                ExportDays = purpose.ExportDays,
                 FormedElectricalComponentId = newComponent.Id
             };
 

@@ -1,5 +1,5 @@
 ; Inno Setup Script for Смета КИП
-#define MyAppName "Смета КИП"
+#define MyAppName "Стенды КИП"
 #define MyAppVersion "Эталон-Прибор"
 #define MyAppPublisher "ETALON"
 #define MyAppURL "https://www.example.com/"

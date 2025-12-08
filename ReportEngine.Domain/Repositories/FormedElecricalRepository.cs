@@ -72,6 +72,7 @@ public class FormedElectricalRepository : IFormedElectricalRepository
         existing.Quantity = purpose.Quantity;
         existing.CostPerUnit = purpose.CostPerUnit;
         existing.Measure = purpose.Measure;
+        existing.ExportDays = purpose.ExportDays;
 
         _context.ElectricalPurposes.Update(existing);
         await _context.SaveChangesAsync();
@@ -98,6 +99,7 @@ public class FormedElectricalRepository : IFormedElectricalRepository
                 Quantity = original.Quantity,
                 CostPerUnit = original.CostPerUnit,
                 Measure = original.Measure,
+                ExportDays = original.ExportDays,
                 FormedElectricalComponentId = componentId
             };
             await _context.ElectricalPurposes.AddAsync(newPurpose);

@@ -11,7 +11,7 @@ public class ElectricalPurpose : IPurposeEntity
     public float? Quantity { get; set; }
     public float? CostPerUnit { get; set; }
     public string? Measure { get; set; }
-
+    public int? ExportDays { get; set; }
     public int FormedElectricalComponentId { get; set; }
 
     [ForeignKey(nameof(FormedElectricalComponentId))]

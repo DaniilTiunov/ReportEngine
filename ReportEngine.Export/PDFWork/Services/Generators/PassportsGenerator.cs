@@ -1,12 +1,16 @@
-﻿using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Repositories.Interfaces;
+﻿using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Export.DTO;
+using ReportEngine.Export.ExcelWork;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Export.Mapping;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
-using Xceed.Document.NET;
-using XceedDocx = Xceed.Words.NET.DocX;
+using System.Diagnostics;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+
+
 
 
 namespace ReportEngine.Export.PDFWork.Services.Generators;
@@ -22,73 +26,62 @@ public class PassportsGenerator : IReportGenerator
 
     public ReportType Type => ReportType.PassportsReport;
 
-
     public async Task GenerateAsync(int projectId)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
 
+        var exeFilePath = DirectoryHelper.GetPythonExePath();
         var savePath = SettingsManager.GetReportDirectory();
-
-        var fileName = "Паспорта___" + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + ".docx";
-
+        var fileName = ExcelReportHelper.CreateReportName("Паспорт", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
 
-        var templatePath = DirectoryHelper.GetReportsTemplatePath("Passport_template", ".docx");
-
-
-        using (var myDoc = XceedDocx.Load(templatePath))
+        var dataObject = JsonCreator.CreateProjectJson(project);
+        var options = new JsonSerializerOptions
         {
-            XceedDocx resultDoc = null;
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            WriteIndented = true
+        };
+        string jsonObject = JsonSerializer.Serialize(dataObject, options);
+        var jsonSavePath = DirectoryHelper.GetJsonSavePath();
+        File.WriteAllText(jsonSavePath, jsonObject, Encoding.UTF8);
 
-            foreach (var stand in project.Stands)
+        ProcessStartInfo startInfo = new ProcessStartInfo();
+        startInfo.FileName = exeFilePath;
+        startInfo.Arguments = $"--script passport --jsonPath \"{jsonSavePath}\" --outputFilePath \"{fullSavePath}\"";
+        startInfo.UseShellExecute = false;
+        startInfo.RedirectStandardOutput = true;
+        startInfo.RedirectStandardError = true;
+        startInfo.CreateNoWindow = true;
+
+        using (Process process = Process.Start(startInfo))
+        {
+            string scriptOutput = "";
+
+            using (StreamReader reader = process.StandardOutput)
             {
-                var replacedTemplatedDoc = (XceedDocx)myDoc.Copy();
-                ReplaceTextInTemplate(replacedTemplatedDoc, stand);
-                resultDoc = resultDoc == null ? replacedTemplatedDoc : MergeDocuments(resultDoc, replacedTemplatedDoc);
+                scriptOutput = reader.ReadToEnd();
             }
 
+            process.WaitForExit();
 
-            //resultDoc может быть null — в таком случае сохраним пустую копию шаблона
-            if (resultDoc == null)
+            var result = JsonSerializer.Deserialize<PythonScriptResult>(scriptOutput);
+
+            string outputMessage = "";
+            if (!result.Success)
             {
-                using var emptyCopy = (XceedDocx)myDoc.Copy();
-                emptyCopy.SaveAs(fullSavePath);
+                outputMessage = "Возникло исключение в Python скрипте\n";
+                outputMessage += "--------------------------------\n";
+                outputMessage += $"Тип ошибки: {result.Error.Type}\n";
+                outputMessage += $"Сообщение: {result.Error.Message}\n";
+                outputMessage += $"Трассировка: {result.Error.Traceback}\n";
+                throw new Exception(outputMessage);
             }
             else
             {
-                resultDoc.SaveAs(fullSavePath);
+                outputMessage = "Python скрипт выполнен успешно";
             }
+
+            Debug.WriteLine(outputMessage);
         }
-    }
-
-
-    private XceedDocx ReplaceTextInTemplate(XceedDocx templateDoc, Stand stand)
-    {
-        var replacements = TemplateMapper.GetPassportMapping(stand);
-
-        foreach (var replacement in replacements)
-        {
-            var options = new StringReplaceTextOptions
-            {
-                SearchValue = replacement.Key ?? string.Empty,
-                NewValue = replacement.Value ?? string.Empty,
-                EscapeRegEx = false
-            };
-
-            templateDoc.ReplaceText(options);
-        }
-
-        return templateDoc;
-    }
-
-
-    private XceedDocx MergeDocuments(XceedDocx targetDocument, XceedDocx documentToAdd)
-    {
-        using var ms = new MemoryStream();
-        targetDocument.SaveAs(ms); // сериализуем targetDocument в поток
-
-        var resultingDoc = XceedDocx.Load(ms); // загружаем независимый экземпляр
-        resultingDoc.InsertDocument(documentToAdd);
-        return resultingDoc;
     }
 }

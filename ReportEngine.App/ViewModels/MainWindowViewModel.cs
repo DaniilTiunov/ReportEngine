@@ -26,6 +26,7 @@ public class MainWindowViewModel : BaseViewModel
     private readonly INotificationService _notificationService;
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IServiceProvider _serviceProvider;
+    private readonly IProjectService _projectService;
 
     #region Конструктор
 
@@ -34,13 +35,15 @@ public class MainWindowViewModel : BaseViewModel
         NavigationService navigation,
         IProjectInfoRepository projectRepository,
         ICalculationService calculationService,
-        INotificationService notificationService)
+        INotificationService notificationService,
+        IProjectService projectService)
     {
         _notificationService = notificationService;
         _calculationService = calculationService;
         _serviceProvider = serviceProvider;
         _projectRepository = projectRepository;
         _navigation = navigation;
+        _projectService = projectService;
 
         InitializeMainWindowCommands();
         InitializeGenericEquipCommands();
@@ -117,13 +120,13 @@ public class MainWindowViewModel : BaseViewModel
     public void OpenOthersWindowCommandExecuted<T>(object e)
         where T : Window
     {
-        ExceptionHelper.SafeExecute(() => _navigation.ShowWindow<T>());
+        ExceptionHelper.SafeExecute(_navigation.ShowWindow<T>);
     }
 
     public void OpenAuthWindowCommandExecuted<T>(object e)
         where T : Window
     {
-        ExceptionHelper.SafeExecute(() => { _navigation.ShowWindow<AuthWindow>(); });
+        ExceptionHelper.SafeExecute(_navigation.ShowWindow<AuthWindow>);
     }
 
     public void OpenAnotherControlsCommandExecuted<T>(object e)
@@ -135,6 +138,7 @@ public class MainWindowViewModel : BaseViewModel
             if (typeof(T) == typeof(TreeProjectView))
             {
                 var projectViewModel = _serviceProvider.GetRequiredService<ProjectViewModel>();
+
                 projectViewModel.ResetProject();
             }
 

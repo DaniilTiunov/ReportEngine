@@ -54,6 +54,8 @@ public class ProjectViewModel : BaseViewModel
         _calculationService = calculationService;
         _containerService = containerService;
 
+        NewStand = new StandModel { Number = 1 };
+
         InitializeCommands();
         InitializeTime();
         InitializeGenericCommands();
@@ -65,6 +67,7 @@ public class ProjectViewModel : BaseViewModel
     public ObservableCollection<FormedAdditionalEquip> AllAvailableAdditionalEquips { get; set; } = new();
     public Obvyazka SelectedObvyazka { get; set; } = new();
     public StandModel CurrentStandModel { get; set; } = new();
+    public StandModel NewStand { get; set; } = new();
     public ProjectModel CurrentProjectModel { get; set; } = new();
     public ProjectCommandProvider ProjectCommandProvider { get; set; } = new();
     public MaterialLinesModel CurrentMaterials { get; set; } = new();
@@ -106,19 +109,25 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            var selectedFrame = _dialogService.ShowFrameDialog();
+            var totalWidth = _projectService.GetSummWidthObvyzakaAsync(CurrentProjectModel);
+            _notificationService.ShowInfo("Рекомендуемая рама: Рама с длиной " + totalWidth);
 
+            var selectedFrame = _dialogService.ShowFrameDialog();
             if (selectedFrame != null)
             {
                 await _standService.AddFrameToStandAsync(
                     CurrentProjectModel.SelectedStand.Id,
                     selectedFrame.Id
                 );
-
+           
                 CurrentProjectModel.SelectedStand.FramesInStand.Add(selectedFrame);
+                UpdateChannelsQuantity();
             }
         });
     }
+
+    
+
 
     // TODO: Сделать тут рефакторинг команд
     public void OnSelectMaterialFromDialogCommandExecuted(object e)
@@ -129,19 +138,22 @@ public class ProjectViewModel : BaseViewModel
                 SelectEquipment<HeaterPipe>(
                     name => CurrentProjectModel.SelectedStand.MaterialLine = name,
                     measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost);
+                    cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
+                    exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays);
                 break;
             case "Нержавеющие":
                 SelectEquipment<StainlessPipe>(
                     name => CurrentProjectModel.SelectedStand.MaterialLine = name,
                     measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost);
+                    cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
+                    exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays);
                 break;
             case "Углеродистые":
                 SelectEquipment<CarbonPipe>(
                     name => CurrentProjectModel.SelectedStand.MaterialLine = name,
                     measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost);
+                    cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
+                    exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays);
                 break;
         }
     }
@@ -154,44 +166,50 @@ public class ProjectViewModel : BaseViewModel
                 SelectEquipment<HeaterArmature>(
                     name => CurrentProjectModel.SelectedStand.Armature = name,
                     measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost);
+                    cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
+                    exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays);
                 break;
             case "Нержавеющие":
                 SelectEquipment<StainlessArmature>(
                     name => CurrentProjectModel.SelectedStand.Armature = name,
                     measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost);
+                    cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
+                    exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays);
                 break;
             case "Углеродистые":
                 SelectEquipment<CarbonArmature>(
                     name => CurrentProjectModel.SelectedStand.Armature = name,
                     measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost);
+                    cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
+                    exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays);
                 break;
         }
     }
 
     public void OnSelectTreeSocketFromDialogCommandExecuted(object e)
     {
-        switch (CurrentMaterials.SelectedSocketTypes)
+        switch (CurrentMaterials.SelectedSocketTypes) 
         {
             case "Жаропрочные":
                 SelectEquipment<HeaterSocket>(
                     name => CurrentProjectModel.SelectedStand.TreeSocket = name,
                     measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost);
+                    cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
+                    exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays);
                 break;
             case "Нержавеющие":
                 SelectEquipment<StainlessSocket>(
                     name => CurrentProjectModel.SelectedStand.TreeSocket = name,
                     measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost);
+                    cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
+                    exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays);
                 break;
             case "Углеродистые":
                 SelectEquipment<CarbonSocket>(
                     name => CurrentProjectModel.SelectedStand.TreeSocket = name,
                     measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost);
+                    cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
+                    exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays);
                 break;
         }
     }
@@ -204,19 +222,22 @@ public class ProjectViewModel : BaseViewModel
                 SelectEquipment<HeaterSocket>(
                     name => CurrentProjectModel.SelectedStand.KMCH = name,
                     measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost);
+                    cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
+                    exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays);
                 break;
             case "Нержавеющие":
                 SelectEquipment<StainlessSocket>(
                     name => CurrentProjectModel.SelectedStand.KMCH = name,
                     measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost);
+                    cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
+                    exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays);
                 break;
             case "Углеродистые":
                 SelectEquipment<CarbonSocket>(
                     name => CurrentProjectModel.SelectedStand.KMCH = name,
                     measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost);
+                    cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
+                    exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays);
                 break;
         }
     }
@@ -262,12 +283,14 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(AddObvToStandAsync);
 
-        CurrentProjectModel.SelectedStand = null;
+        UpdateNewObvNN();
     }
 
     public async void OnRemoveObvCommandExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(DeleteObvFromStandAsync);
+
+        UpdateNewObvNN();
     }
 
     public async void OnRemoveFrameFromStandCommandExecuted(object e)
@@ -275,6 +298,8 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await _projectService.DeleteFrameFromStandAsync(CurrentProjectModel);
+
+            UpdateChannelsQuantity();
 
             _notificationService.ShowInfo("Рама удалена из стенда");
         });
@@ -313,6 +338,7 @@ public class ProjectViewModel : BaseViewModel
             var standId = CurrentProjectModel.SelectedStand.Id;
 
             var newObvyazka = ObvyzkaModelWrapper.CloneForStand(sourceObv, standId);
+            newObvyazka.NN = MaxObvNN + 1;
 
             await _standService.AddObvyazkaToStandAsync(standId, newObvyazka);
 
@@ -321,16 +347,20 @@ public class ProjectViewModel : BaseViewModel
 
             await LoadObvyazkiAsync();
 
+            UpdateNewObvNN();
+
             _notificationService.ShowInfo("Обвязка скопирована в стенд");
         });
     }
 
-    // TODO: Вынести в отдельный класс
     public void OnSelectObvCommandExecuted(object p)
     {
         ExceptionHelper.SafeExecute(() =>
         {
             SelectedObvyazka = _dialogService.ShowObvyazkaDialog();
+
+            if (SelectedObvyazka == null)
+                return;
 
             var stand = CurrentProjectModel.SelectedStand;
 
@@ -341,7 +371,7 @@ public class ProjectViewModel : BaseViewModel
             stand.MaterialLineCount = SelectedObvyazka.LineLength;
             stand.ArmatureCount = SelectedObvyazka.ZraCount;
             stand.TreeSocketMaterialCount = SelectedObvyazka.TreeSocket;
-            stand.KMCHCount = SelectedObvyazka.Clamp;
+            stand.KMCHCount = SelectedObvyazka.KMCHCount;
 
             stand.SelectedObvyazkaInStand = null;
             stand.SelectedObvyazkaInStand = tmp;
@@ -553,8 +583,8 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            _standService.FillStandFieldsFromObvyazka(CurrentProjectModel.SelectedStand,
-                CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand);
+            await _standService.FillStandFieldsFromObvyazka(CurrentProjectModel.SelectedStand,
+                                        CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand);
         });
     }
 
@@ -608,8 +638,19 @@ public class ProjectViewModel : BaseViewModel
 
     public void ResetProject()
     {
+        // Совместимый синхронный вызов, чтобы не дедлокалось в процессе загрузки
+        _ = ResetProjectAsync();
+    }
+
+    public async Task ResetProjectAsync()
+    {
         CurrentProjectModel = new ProjectModel();
         CurrentStandModel = new StandModel();
+
+        NewStand = new StandModel { Number = 1 };
+
+        CurrentProjectModel.Number = await _projectService.GetProjectsCountAsync();
+
         InitializeTime();
         OnPropertyChanged(nameof(CurrentProjectModel));
         OnPropertyChanged(nameof(CurrentStandModel));
@@ -768,22 +809,24 @@ public class ProjectViewModel : BaseViewModel
             return;
         }
 
+        var nextNumber = _projectService.GetStandsInProjectCount(CurrentProjectModel) + 1;
+
         var newStandModel = new StandModel
         {
-            KKSCode = CurrentStandModel.KKSCode,
-            Design = CurrentStandModel.Design,
-            BraceType = CurrentStandModel.BraceType,
-            Devices = CurrentStandModel.Devices,
-            Width = CurrentStandModel.Width,
-            SerialNumber = CurrentStandModel.SerialNumber,
-            Weight = CurrentStandModel.Weight,
-            StandSummCost = CurrentStandModel.StandSummCost,
-            NN = CurrentStandModel.NN,
-            MaterialLine = CurrentStandModel.MaterialLine,
-            Armature = CurrentStandModel.Armature,
-            TreeSocket = CurrentStandModel.TreeSocket,
-            KMCH = CurrentStandModel.KMCH,
-            FirstSensorType = CurrentStandModel.FirstSensorType,
+            KKSCode = NewStand.KKSCode,
+            Design = NewStand.Design,
+            BraceType = NewStand.BraceType,
+            Devices = NewStand.Devices,
+            Width = NewStand.Width,
+            SerialNumber = NewStand.SerialNumber,
+            Weight = NewStand.Weight,
+            StandSummCost = NewStand.StandSummCost,
+            Number = nextNumber,
+            MaterialLine = NewStand.MaterialLine,
+            Armature = NewStand.Armature,
+            TreeSocket = NewStand.TreeSocket,
+            KMCH = NewStand.KMCH,
+            FirstSensorType = NewStand.FirstSensorType,
             ProjectId = CurrentProjectModel.CurrentProjectId
         };
 
@@ -798,8 +841,10 @@ public class ProjectViewModel : BaseViewModel
 
         CurrentProjectModel.Stands.Add(newStandModel);
 
-        CurrentStandModel = new StandModel();
+        // Переставляем шаблон на следующий свободный номер
+        NewStand = new StandModel { Number = nextNumber + 1 };
 
+        OnPropertyChanged(nameof(NewStand));
         _notificationService.ShowInfo($"Стенд успешно добавлен! {addedStandEntity.Id}");
     }
 
@@ -826,9 +871,25 @@ public class ProjectViewModel : BaseViewModel
 
     private async Task DeleteStandFromProject()
     {
-        await _projectService.DeleteStandAsync(CurrentProjectModel.CurrentProjectId,
-            CurrentProjectModel.SelectedStand.Id);
-        CurrentProjectModel.Stands.Remove(CurrentProjectModel.SelectedStand);
+        var selected = CurrentProjectModel.SelectedStand;
+        if (selected == null)
+        {
+            _notificationService.ShowInfo("Стенд не выбран");
+            return;
+        }
+
+        await _projectService.DeleteStandAsync(CurrentProjectModel.CurrentProjectId, selected.Id);
+        CurrentProjectModel.Stands.Remove(selected);
+
+        for (int i = 0; i < CurrentProjectModel.Stands.Count; i++)
+        {
+            CurrentProjectModel.Stands[i].Number = i + 1;
+        }
+
+        var nextNumber = CurrentProjectModel.Stands.Any() ? CurrentProjectModel.Stands.Max(s => s.Number) + 1 : 1;
+        CurrentStandModel = new StandModel { Number = nextNumber };
+
+        _notificationService.ShowInfo("Стенд удалён и номера обновлены");
     }
 
     private async Task CreateNewProjectCardAsync()
@@ -837,9 +898,13 @@ public class ProjectViewModel : BaseViewModel
 
         CurrentProjectModel.Stands.Clear();
         CurrentStandModel = new StandModel();
+
+        // Сброс шаблона добавления стенда
+        NewStand = new StandModel { Number = 1 };
+        OnPropertyChanged(nameof(NewStand));
     }
 
-    private void SelectEquipment<T>(Action<string> setProperty, Action<string> setMeasure, Action<string> setCost)
+    private void SelectEquipment<T>(Action<string> setProperty, Action<string> setMeasure, Action<string> setCost, Action<int> setExportDays)
         where T : class, IBaseEquip, new()
     {
         ExceptionHelper.SafeExecute(() =>
@@ -850,6 +915,7 @@ public class ProjectViewModel : BaseViewModel
                 setProperty(equipment.Name);
                 setMeasure(equipment.Measure);
                 setCost(equipment.Cost.ToString());
+                setExportDays(equipment.ExportDays);
             }
         });
     }
@@ -955,6 +1021,7 @@ public class ProjectViewModel : BaseViewModel
                     dp.Material = selected.Name;
                     dp.CostPerUnit = selected.Cost;
                     dp.Measure = selected.Measure;
+                    dp.ExportDays = selected.ExportDays;
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewDrainage.Purposes);
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand
                         .AllDrainagePurposesInStand);
@@ -966,6 +1033,7 @@ public class ProjectViewModel : BaseViewModel
                     ap.Material = selected.Name;
                     ap.CostPerUnit = selected.Cost;
                     ap.Measure = selected.Measure;
+                    ap.ExportDays = selected.ExportDays;
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand
                         .AllAdditionalEquipPurposesInStand);
@@ -977,6 +1045,7 @@ public class ProjectViewModel : BaseViewModel
                     ep.Material = selected.Name;
                     ep.CostPerUnit = selected.Cost;
                     ep.Measure = selected.Measure;
+                    ep.ExportDays = selected.ExportDays;
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewElectricalComponent.Purposes);
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand
                         .AllElectricalPurposesInStand);
@@ -986,6 +1055,7 @@ public class ProjectViewModel : BaseViewModel
 
                 case ContainerStand cs:
                     cs.Name = selected.Name;
+                    cs.ContainerCost = selected.Cost;
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.ContainerStandsInSelectedBatch);
                     return;
             }
@@ -1046,6 +1116,39 @@ public class ProjectViewModel : BaseViewModel
         {
             var reportDir = SettingsManager.GetReportDirectory();
             Process.Start("explorer.exe", reportDir);
+        }
+    }
+
+    #endregion
+
+    #region Вспомогательные методы обновления
+
+    //обновляем поле NN в обвязке
+    public void UpdateNewObvNN()
+    {
+        CurrentProjectModel.SelectedStand.NN = MaxObvNN + 1;
+    }
+
+    //возвращает максимальный NN обвязок в стенде
+    public int MaxObvNN
+    {
+        get => CurrentProjectModel?.SelectedStand?.ObvyazkiInStand.Max(obv => obv.NN) ?? 0;
+    }
+
+    //обновляем кол-во швеллера
+    private void UpdateChannelsQuantity()
+    {
+        var additionalEquips = CurrentStandModel.NewAdditionalEquip.Purposes;
+        var channelRecord = additionalEquips
+            .FirstOrDefault(equip => equip.Purpose == "Швеллер");
+
+        var framesWidthSum = CurrentStandModel.FramesInStand.Sum(frame => frame.Width);
+
+        if (channelRecord != null)
+        {
+            //швеллер в метрах
+            channelRecord.Quantity = framesWidthSum / 1000.0f;
+            CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
         }
     }
 
