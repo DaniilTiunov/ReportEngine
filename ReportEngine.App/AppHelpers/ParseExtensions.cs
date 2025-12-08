@@ -4,13 +4,6 @@ namespace ReportEngine.App.AppHelpers
 {
     public static class ParseExtensions
     {
-        public static int AsInt(this string value, int defaultValue = 0)
-        {
-            return int.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var result)
-                ? result
-                : defaultValue;
-        }
-
         public static float AsFloat(this string value, float defaultValue = 0f)
         {
             return float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var result)

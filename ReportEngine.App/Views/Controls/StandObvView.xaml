@@ -1302,6 +1302,7 @@
                         Padding="5"
                         Header="Обвязки стенда">
                         <ListView
+                            MinHeight="250"
                             ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}"
                             MouseDoubleClick="FillStandFieldsFromObvyazkaCommand_DoubleClick"
                             SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand}">
