@@ -63,5 +63,4 @@ public partial class StandObvView : UserControl
         });
     }
 
-
 }

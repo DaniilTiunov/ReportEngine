@@ -1,4 +1,5 @@
-﻿using ReportEngine.App.Model.StandsModel;
+﻿using ReportEngine.App.AppHelpers;
+using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
@@ -296,6 +297,14 @@ public class StandService : IStandService
         stand.ThirdSensorMarkPlus = obv.ThirdSensorMarkPlus;
         stand.ThirdSensorMarkMinus = obv.ThirdSensorMarkMinus;
         stand.ThirdSensorDescription = obv.ThirdSensorDescription;
+
+        if (obv.AdditionalComponents != null)
+        {
+            stand.ObvyazkaAdditionalComponents = new ObservableCollection<ObvyazkaAdditionalEquipPurpose>(obv.AdditionalComponents);
+            CollectionRefreshHelper.SafeRefreshCollection(stand.ObvyazkaAdditionalComponents);
+        }
+
+        ;   
 
         await Task.CompletedTask;
     }
