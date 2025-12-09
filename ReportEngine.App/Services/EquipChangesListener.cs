@@ -1,56 +1,75 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using ReportEngine.App.Display;
 using ReportEngine.Domain.Database.Context;
-using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Domain.Entities.BaseEntities.Interface;
+using ReportEngine.Domain.Entities.Pipes;
+using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Shared.Config.Logger;
+using Serilog;
 
 namespace ReportEngine.App.Services
 {
     public class EquipChangesListener : BackgroundService
     {
-        private static readonly string _jsFilePath = DirectoryHelper.GetConfigPath();
-        private readonly string _connectionString = JsonHandler.GetConnectionString(_jsFilePath);
-
-        private readonly ILogger<EquipChangesListener> _logger;
+        private readonly Dictionary<Type, IBaseEquip> _cache = new();
+        private List<Type> _equipTypes = new();
+        private readonly ILogger _logger;
         private readonly IServiceProvider _serviceProvider;
 
-        public EquipChangesListener(IServiceProvider serviceProvider, ILogger<EquipChangesListener> logger)
+        public EquipChangesListener(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
-            _logger = logger;
+            _logger = LoggerConfig.InitializeLogger();
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("Подписка на изменения стартовала");
+            _logger.Information("EquipChangesListener запущен");
 
-            MessageBoxHelper.ShowInfo("Служба прослушивания изменений оборудования запущена.");
+            _equipTypes = GetEquipType();
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                try
-                {
-                    using var scope = _serviceProvider.CreateScope();
-                    var dbContext = scope.ServiceProvider.GetRequiredService<ReAppContext>();
+                await LoadEquipDataAsync<HeaterPipe>();
 
-                    // TODO: ваша логика прослушивания изменений с использованием dbContext
-
-                }
-                catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
-                {
-                    // ожидаем завершения
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Ошибка в EquipChangesListener");
-                }
-
-                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
             }
+        }
 
-            _logger.LogInformation("Подписка на изменения остановлена");
+        private List<Type> GetEquipType()
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<ReAppContext>();
+
+            return context.Model
+                    .GetEntityTypes()
+                    .Select(e => e.ClrType)
+                    .Where(t =>
+                        typeof(IBaseEquip).IsAssignableFrom(t) &&
+                        t.IsClass &&
+                        !t.IsAbstract)
+                    .ToList();
+        }
+
+        private async Task LoadEquipDataAsync<TEntity>()
+            where TEntity : class, IBaseEquip
+        {
+            try
+            {
+                using var scope = _serviceProvider.CreateScope();
+                var repository = scope.ServiceProvider.GetRequiredService<IGenericBaseRepository<TEntity, TEntity>>();
+
+
+                var items = await repository.GetAllAsync();
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+        }
+        private void LogError(Exception ex)
+        {
+            _logger.Error(ex, "Ошибка в EquipChangesListener");
         }
     }
 }

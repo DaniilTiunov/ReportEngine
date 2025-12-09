@@ -90,8 +90,8 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="40" />
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <TabControl x:Name="MainTabControl" Grid.Row="0">
@@ -164,9 +164,26 @@
                     </TabItem>
                 </TabControl>
 
+                <TextBox
+                    x:Name="SearchTextBox"
+                    Grid.Row="1"
+                    Width="436"
+                    Margin="72,9,0,10"
+                    HorizontalAlignment="Left"
+                    FontFamily="Bahnschrift"
+                    FontSize="16"
+                    TextChanged="SearchTextBox_TextChanged" />
+
+                <TextBlock
+                    Grid.Row="1"
+                    Margin="10,9,1042,10"
+                    FontFamily="Bahnschrift"
+                    FontSize="16"
+                    Text="Поиск:" />
+
                 <DataGrid
                     x:Name="EquipDataGrid"
-                    Grid.Row="1"
+                    Grid.Row="2"
                     Margin="5"
                     AutoGenerateColumns="False"
                     FontFamily="Bahnschrift"
