@@ -11,11 +11,13 @@ public class ObvyazkaInStand
 
     public int StandId { get; set; }
 
-    [ForeignKey("StandId")] public virtual Stand Stand { get; set; }
+    [ForeignKey("StandId")] 
+    public virtual Stand Stand { get; set; }
 
     public int ObvyazkaId { get; set; }
 
-    [ForeignKey("ObvyazkaId")] public virtual Obvyazka Obvyazka { get; set; }
+    [ForeignKey("ObvyazkaId")] 
+    public virtual Obvyazka Obvyazka { get; set; }
 
     public string? ObvyazkaName { get; set; }
     public string? MaterialLine { get; set; }
@@ -70,6 +72,6 @@ public class ObvyazkaInStand
     public string? ThirdSensorMarkMinus { get; set; }
     public string? ThirdSensorDescription { get; set; }
 
-    public List<ObvyazkaAdditionalEquipPurpose>? AdditionalComponents { get; set; }
+    public virtual List<ObvyazkaAdditionalEquipPurpose>? AdditionalComponents { get; set; }
 }
  
