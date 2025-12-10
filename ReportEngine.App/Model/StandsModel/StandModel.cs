@@ -600,10 +600,10 @@ public class StandModel : BaseViewModel
         set => Set(ref _obvyazkiInStand, value);
     }
 
-    public ObservableCollection<ObvyazkaAdditionalEquipPurpose> ObvyazkaAdditionalComponents 
-    { 
+    public ObservableCollection<ObvyazkaAdditionalEquipPurpose> ObvyazkaAdditionalComponents
+    {
         get => _obvyazkaAdditionalComponents;
-        set => Set(ref _obvyazkaAdditionalComponents, value); 
+        set => Set(ref _obvyazkaAdditionalComponents, value);
     }
 
     // Выбранный дренаж
@@ -768,18 +768,25 @@ public class StandModel : BaseViewModel
 
     public int CountSensorsQuantity()
     {
-        int sensorsQuantity = 0;
+        int standSensorQuantity = ObvyazkiInStand
+            .Sum(obv =>
+            {
+                int sensorsQuantity = 0;
 
-        if (FirstSensorType != null)
-            sensorsQuantity++;
+                if (obv.FirstSensorType != null)
+                    sensorsQuantity++;
 
-        if (SecondSensorType != null)
-            sensorsQuantity++;
+                if (obv.SecondSensorType != null)
+                    sensorsQuantity++;
 
-        if (ThirdSensorType != null)
-            sensorsQuantity++;
+                if (obv.ThirdSensorType != null)
+                    sensorsQuantity++;
 
-        return sensorsQuantity;
+                return sensorsQuantity;
+            });
+            
+
+        return standSensorQuantity;
     }
 
     public async Task InitializeDefaultPurposes()

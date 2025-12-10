@@ -42,26 +42,7 @@ public partial class StandObvView : UserControl
         });
     }
 
-    private void TypeSensor_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        ExceptionHelper.SafeExecute(() =>
-        {
-
-            var electicComponents = _projectViewModel.CurrentStandModel.NewElectricalComponent.Purposes;
-            var cableInputsRecord = electicComponents
-                .FirstOrDefault(purpose => purpose.Purpose == "Кабельные вводы");
-
-            var sensorsQuantity = _projectViewModel.CurrentStandModel.CountSensorsQuantity();
-            if (cableInputsRecord != null)
-            {            
-                var cableInputsQuantity = 2 * sensorsQuantity;
-                cableInputsRecord.Quantity = cableInputsQuantity;
-            }
-
-            CollectionRefreshHelper.SafeRefreshCollection(_projectViewModel.CurrentStandModel.NewElectricalComponent.Purposes);
-
-        });
-    }
+   
     private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
     {
         var scrollViewer = sender as ScrollViewer;
