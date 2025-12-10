@@ -1,4 +1,6 @@
 ﻿using ReportEngine.App.ViewModels;
+using ReportEngine.Domain.Entities;
+using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Model.StandsModel;
 
@@ -10,6 +12,7 @@ public class StandObvyazkaModel : BaseViewModel
     public string TreeSocket { get; set; }
     public string KMCH { get; set; }
     public string? Armature { get; set; }
+
     public string? FirstSensorType { get; set; }
     public string? FirstSensorKKS { get; set; }
     public string? FirstSensorMarkPlus { get; set; }
@@ -24,6 +27,7 @@ public class StandObvyazkaModel : BaseViewModel
     public string? ThirdSensorKKS { get; set; }
     public string? ThirdSensorMarkPlus { get; set; }
     public string? ThirdSensorMarkMinus { get; set; }
+    public ObservableCollection<ObvyazkaAdditionalEquipPurpose>? AdditionalComponents { get; set; }
 
     public static StandObvyazkaModel Create(
         int obvyazkaId,
@@ -42,7 +46,8 @@ public class StandObvyazkaModel : BaseViewModel
         string? thirdSensorType = null,
         string? thirdSensorKKS = null,
         string? thirdSensorMarkPlus = null,
-        string? thirdSensorMarkMinus = null
+        string? thirdSensorMarkMinus = null,
+        ObservableCollection<ObvyazkaAdditionalEquipPurpose>? additionalComponents = null
     )
     {
         return new StandObvyazkaModel
@@ -63,7 +68,9 @@ public class StandObvyazkaModel : BaseViewModel
             ThirdSensorType = thirdSensorType,
             ThirdSensorKKS = thirdSensorKKS,
             ThirdSensorMarkPlus = thirdSensorMarkPlus,
-            ThirdSensorMarkMinus = thirdSensorMarkMinus
+            ThirdSensorMarkMinus = thirdSensorMarkMinus,
+            AdditionalComponents = additionalComponents
+
         };
     }
 }

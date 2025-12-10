@@ -51,6 +51,9 @@ public class StandModel : BaseViewModel
     // Количество приборов
     private int _devices;
 
+    //коллекция доп комплектующих обвязки
+    private ObservableCollection<ObvyazkaAdditionalEquipPurpose> _obvyazkaAdditionalComponents = new();
+
     // Коллекция дренажей, находящихся в стенде
     private ObservableCollection<FormedDrainage> _drainagesInStand = new();
 
@@ -597,6 +600,12 @@ public class StandModel : BaseViewModel
         set => Set(ref _obvyazkiInStand, value);
     }
 
+    public ObservableCollection<ObvyazkaAdditionalEquipPurpose> ObvyazkaAdditionalComponents 
+    { 
+        get => _obvyazkaAdditionalComponents;
+        set => Set(ref _obvyazkaAdditionalComponents, value); 
+    }
+
     // Выбранный дренаж
     public FormedDrainage SelectedDrainage
     {
@@ -696,6 +705,14 @@ public class StandModel : BaseViewModel
 
     public StandSettingsModel DefaultStandSettings { get; set; } = new();
 
+    public void InitializeObvAdditionalPurposes()
+    {
+        ObvyazkaAdditionalComponents = new ObservableCollection<ObvyazkaAdditionalEquipPurpose>
+        {
+             new() { Purpose = "Доп.компонент" },
+        };
+    }
+
     public void InitializeDrainagePurposes()
     {
         NewDrainage = new FormedDrainage
@@ -743,9 +760,11 @@ public class StandModel : BaseViewModel
                 new() { Purpose = "Кабель 4мм", Material = DefaultStandSettings.CabelFourMM, Quantity = usualCablesQuantity },
                 new() { Purpose = "Кронштейн коробки" }
             }
-        };
-    }
 
+
+        };
+
+    }
 
     public int CountSensorsQuantity()
     {
@@ -770,5 +789,6 @@ public class StandModel : BaseViewModel
         InitializeElectricalComponent();
         InitializeAdditionalEquip();
         InitializeDrainagePurposes();
+        InitializeObvAdditionalPurposes();
     }
 }
