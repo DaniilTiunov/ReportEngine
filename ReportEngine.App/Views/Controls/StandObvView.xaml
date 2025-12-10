@@ -17,13 +17,14 @@
     </UserControl.Resources>
 
 
-    <ScrollViewer>
-        <Grid Margin="10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="950" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <!--  Основная форма (слева)  -->
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="950" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <!--  Основная форма (слева)  -->
+
+        <ScrollViewer Grid.Column="0" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
             <Grid Grid.Column="0" Margin="0,0,10,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -1191,6 +1192,9 @@
                     </GroupBox>
                 </Expander>
             </Grid>
+        </ScrollViewer>
+
+        <ScrollViewer Grid.Column="1" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
 
             <Border
                 Grid.Column="1"
@@ -1261,8 +1265,7 @@
                                 AutoGenerateColumns="False"
                                 ColumnWidth="*"
                                 ItemsSource="{Binding CurrentProjectModel.SelectedStand.FramesInStand}"
-                                SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedFrame}"
-                                >
+                                SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedFrame}">
                                 <DataGrid.ContextMenu>
                                     <ContextMenu>
                                         <MenuItem Command="{Binding ProjectCommandProvider.RemoveFrameStandCommand}" Header="Удалить выбранную раму из стенда" />
@@ -1322,6 +1325,10 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn
                                     Width="*"
+                                    Binding="{Binding NN}"
+                                    Header="NN" />
+                                <DataGridTextColumn
+                                    Width="*"
                                     Binding="{Binding ObvyazkaName}"
                                     Header="Тип" />
                                 <DataGridTextColumn
@@ -1355,6 +1362,10 @@
                                 <GridView>
                                     <GridViewColumn
                                         Width="100"
+                                        DisplayMemberBinding="{Binding NN}"
+                                        Header="NN" />
+                                    <GridViewColumn
+                                        Width="100"
                                         DisplayMemberBinding="{Binding ObvyazkaName}"
                                         Header="Тип" />
                                     <GridViewColumn
@@ -1373,10 +1384,6 @@
                                         Width="100"
                                         DisplayMemberBinding="{Binding KMCH}"
                                         Header="КМЧ" />
-                                    <GridViewColumn
-                                        Width="100"
-                                        DisplayMemberBinding="{Binding FirstSensorType}"
-                                        Header="Датчик 1" />
                                     <GridViewColumn
                                         Width="100"
                                         DisplayMemberBinding="{Binding WidthOnFrame}"
@@ -1482,6 +1489,6 @@
                     </GroupBox>
                 </Grid>
             </Border>
-        </Grid>
-    </ScrollViewer>
+        </ScrollViewer>
+    </Grid>
 </UserControl>

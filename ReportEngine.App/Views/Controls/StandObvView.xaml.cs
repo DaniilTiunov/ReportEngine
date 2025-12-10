@@ -62,5 +62,14 @@ public partial class StandObvView : UserControl
 
         });
     }
+    private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+    {
+        var scrollViewer = sender as ScrollViewer;
+        if (scrollViewer == null) return;
+
+        // Принудительно прокручиваем ScrollViewer
+        scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta);
+        e.Handled = true;
+    }
 
 }

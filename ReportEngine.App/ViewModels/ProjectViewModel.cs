@@ -1146,6 +1146,7 @@ public class ProjectViewModel : BaseViewModel
 
         if (selectedStand != null)
             selectedStand.NN = MaxObvNN + 1;
+        //CurrentProjectModel.SelectedStand.NN = MaxObvNN + 1;
     }
 
     //возвращает максимальный NN обвязок в стенде

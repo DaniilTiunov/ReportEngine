@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ReportEngine.Domain.Database.Context;
@@ -11,9 +12,11 @@ using ReportEngine.Domain.Database.Context;
 namespace ReportEngine.Domain.Migrations
 {
     [DbContext(typeof(ReAppContext))]
-    partial class ReAppContextModelSnapshot : ModelSnapshot
+    [Migration("20251208053244_BackgroundService")]
+    partial class BackgroundService
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1068,42 +1071,6 @@ namespace ReportEngine.Domain.Migrations
                     b.ToTable("Obvyazki");
                 });
 
-            modelBuilder.Entity("ReportEngine.Domain.Entities.ObvyazkaAdditionalEquipPurpose", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<float?>("CostPerUnit")
-                        .HasColumnType("real");
-
-                    b.Property<int?>("ExportDays")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Material")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Measure")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("ObvyazkaInStandId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Purpose")
-                        .HasColumnType("text");
-
-                    b.Property<float?>("Quantity")
-                        .HasColumnType("real");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ObvyazkaInStandId");
-
-                    b.ToTable("ObvyazkaAdditionalEquipPurpose");
-                });
-
             modelBuilder.Entity("ReportEngine.Domain.Entities.ObvyazkaInStand", b =>
                 {
                     b.Property<int>("Id")
@@ -1848,13 +1815,6 @@ namespace ReportEngine.Domain.Migrations
                     b.Navigation("FormedFrame");
                 });
 
-            modelBuilder.Entity("ReportEngine.Domain.Entities.ObvyazkaAdditionalEquipPurpose", b =>
-                {
-                    b.HasOne("ReportEngine.Domain.Entities.ObvyazkaInStand", null)
-                        .WithMany("AdditionalComponents")
-                        .HasForeignKey("ObvyazkaInStandId");
-                });
-
             modelBuilder.Entity("ReportEngine.Domain.Entities.ObvyazkaInStand", b =>
                 {
                     b.HasOne("ReportEngine.Domain.Entities.Obvyazka", "Obvyazka")
@@ -2001,11 +1961,6 @@ namespace ReportEngine.Domain.Migrations
                     b.Navigation("Components");
 
                     b.Navigation("StandFrames");
-                });
-
-            modelBuilder.Entity("ReportEngine.Domain.Entities.ObvyazkaInStand", b =>
-                {
-                    b.Navigation("AdditionalComponents");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.ProjectInfo", b =>
