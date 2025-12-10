@@ -132,12 +132,12 @@ public class HostFactory
         services.AddSingleton<NavigationService>();
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<INotificationService, NotificationService>();
-        services.AddSingleton<EquipChangesListener>();
         services.AddScoped<ICalculationService, CalculationService>();
         services.AddScoped<IStandService, StandService>();
         services.AddScoped<IProjectService, ProjectService>();
         services.AddScoped<IProjectDataLoaderService, ProjectDataLoaderSerive>();
         services.AddScoped<ContainerService>();
+        services.AddHostedService<EquipChangesListener>();
     }
 
     private static void ConfigureReportsServices(IServiceCollection services)

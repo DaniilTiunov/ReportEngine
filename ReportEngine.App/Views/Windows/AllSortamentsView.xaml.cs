@@ -1,12 +1,17 @@
 ﻿using ReportEngine.App.ViewModels;
+using ReportEngine.App.ViewModels.Contacts;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace ReportEngine.App.Views.Windows;
 
 public partial class AllSortamentsView : Window
 {
+    private ICollectionView _equipView;
+
     private readonly AllSortamentsViewModel _viewModel;
 
     private readonly bool _isDialog;
@@ -16,6 +21,27 @@ public partial class AllSortamentsView : Window
         DataContext = viewModel;
         _viewModel = viewModel;
         _isDialog = isDialog;
+    }
+    private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (_equipView == null)
+            return;
+
+        var query = SearchTextBox.Text.Trim().ToLower();
+
+        if (string.IsNullOrEmpty(query))
+            _equipView.Filter = null;
+        else
+            _equipView.Filter = obj =>
+            {
+                // Пример фильтрации по свойству Name
+                var prop = obj?.GetType().GetProperty("Name");
+                var value = prop?.GetValue(obj) as string;
+                EquipDataGrid.ItemsSource = _equipView;
+                return !string.IsNullOrEmpty(value) && value.ToLower().Contains(query);
+            };
+
+        _equipView.Refresh();
     }
 
     private async void SubTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -33,6 +59,7 @@ public partial class AllSortamentsView : Window
 
         if (_viewModel.CurrentSortamentsModel.EquipGroups.TryGetValue(groupKey, out var collection))
             EquipDataGrid.ItemsSource = collection;
+            _equipView = CollectionViewSource.GetDefaultView(collection);
     }
 
     // TODO: Исправить этот костыль

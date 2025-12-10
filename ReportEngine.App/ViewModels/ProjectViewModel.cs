@@ -1137,7 +1137,7 @@ public class ProjectViewModel : BaseViewModel
     //обновляем поле NN в обвязке
     public void UpdateNewObvNN()
     {
-        CurrentProjectModel.SelectedStand.NN = MaxObvNN + 1;
+        //CurrentProjectModel.SelectedStand.NN = MaxObvNN + 1;
     }
 
     //возвращает максимальный NN обвязок в стенде
