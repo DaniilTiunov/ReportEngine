@@ -310,6 +310,8 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(DeleteObvFromStandAsync);
 
         UpdateNewObvNN();
+        UpdateCableInputsQuantity();
+        UpdateClampsQuantity();
     }
 
     public async void OnRemoveFrameFromStandCommandExecuted(object e)
@@ -393,8 +395,6 @@ public class ProjectViewModel : BaseViewModel
 
             stand.SelectedObvyazkaInStand = null;
             stand.SelectedObvyazkaInStand = tmp;
-
-            UpdateClampsQuantity();
         });
     }
 
@@ -1158,7 +1158,9 @@ public class ProjectViewModel : BaseViewModel
 
     //обновляем поле NN в обвязке
     public void UpdateNewObvNN()
+
     {
+
         var selectedStand = CurrentProjectModel.SelectedStand;
 
         if (selectedStand != null)
@@ -1169,7 +1171,7 @@ public class ProjectViewModel : BaseViewModel
     //возвращает максимальный NN обвязок в стенде
     public int MaxObvNN
     {
-        get => CurrentProjectModel?.SelectedStand?.ObvyazkiInStand.Max(obv => obv.NN) ?? 0;
+        get => CurrentProjectModel?.SelectedStand?.ObvyazkiInStand.Max(obv => obv.NN) ?? 1;
     }
 
     //обновляем кол-во швеллера
@@ -1193,15 +1195,33 @@ public class ProjectViewModel : BaseViewModel
 
     public void UpdateClampsQuantity()
     {
-        var electricalEquips = CurrentStandModel.NewElectricalComponent.Purposes;
-        var clampsRecord = electricalEquips.FirstOrDefault(equip => equip.Purpose == "Хомуты");
-
+        var additionalEquips = CurrentStandModel.NewAdditionalEquip.Purposes;
+        var clampsRecord = additionalEquips.FirstOrDefault(equip => equip.Purpose == "Хомуты");
+        ;
         if (clampsRecord == null) return;
 
         var clampSum = CurrentStandModel.ObvyazkiInStand.Sum(obv => obv.Clamp);
         clampsRecord.Quantity = clampSum ?? 0.0f;
     }
 
+
+    //обновляем кол-во кабельных вводов
+    public void UpdateCableInputsQuantity()
+    {
+        const int inputsPerSensor = 2;
+
+        var electricComponents = CurrentStandModel.NewElectricalComponent.Purposes;
+        var cableInputsRecord = electricComponents.FirstOrDefault(purpose => purpose.Purpose == "Кабельные вводы");
+
+        var sensorsQuantity = CurrentStandModel.CountSensorsQuantity();
+
+        if (cableInputsRecord != null)
+        {
+            cableInputsRecord.Quantity = inputsPerSensor * sensorsQuantity;
+        }
+
+        CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewElectricalComponent.Purposes);
+    }
 
     #endregion
 }

@@ -825,7 +825,7 @@
                                 ItemsSource="{Binding CurrentProjectModel.SelectedStand.SensorType}"
                                 SelectedIndex="1"
                                 SelectedItem="{Binding CurrentProjectModel.SelectedStand.FirstSensorType, Mode=TwoWay}"
-                                SelectionChanged="TypeSensor_SelectionChanged" />
+                                />
 
                             <TextBlock
                                 Grid.Row="1"
@@ -881,7 +881,7 @@
                                 materialDesign:HintAssist.Hint="Выбор типа датчика"
                                 ItemsSource="{Binding CurrentProjectModel.SelectedStand.SensorType}"
                                 SelectedItem="{Binding CurrentProjectModel.SelectedStand.SecondSensorType}"
-                                SelectionChanged="TypeSensor_SelectionChanged" />
+                                 />
 
                             <TextBlock
                                 Grid.Row="6"
@@ -937,7 +937,7 @@
                                 materialDesign:HintAssist.Hint="Выбор типа датчика"
                                 ItemsSource="{Binding CurrentProjectModel.SelectedStand.SensorType}"
                                 SelectedItem="{Binding CurrentProjectModel.SelectedStand.ThirdSensorType}"
-                                SelectionChanged="TypeSensor_SelectionChanged" />
+                                 />
 
                             <TextBlock
                                 Grid.Row="11"

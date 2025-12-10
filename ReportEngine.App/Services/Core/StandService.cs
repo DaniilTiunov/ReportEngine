@@ -316,13 +316,6 @@ public class StandService : IStandService
         stand.ThirdSensorDescription = obv.ThirdSensorDescription;
 
 
-        var zhopa = _context.Set<ObvyazkaInStand>()
-            .Where(obv => obv.NN == 31)
-            .First();
-
-        var sraka = _context.Set<ObvyazkaAdditionalEquipPurpose>()
-            .Where(equip => equip.Id == 21);
-
 
         if (obv.AdditionalComponents != null)
         {
