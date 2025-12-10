@@ -356,7 +356,7 @@ public class ProjectService : IProjectService
             TreeSocket = sourceStand.TreeSocket,
             Weight = sourceStand.Weight,
             Width = sourceStand.Width,
-            DesigneStand = sourceStand.DesigneStand,
+            DesignStand = sourceStand.DesignStand,
             ObvyazkiInStand = new ObservableCollection<ObvyazkaInStand>(
                 sourceStand.ObvyazkiInStand.Select(obv =>
                         ObvyzkaModelWrapper.CloneForStand(obv, 0) // 0 или newStand.Id, если уже есть

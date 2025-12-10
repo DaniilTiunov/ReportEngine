@@ -46,7 +46,7 @@ public class StandModel : BaseViewModel
     private string _design;
 
     // Описание стенда
-    private string _designeStand;
+    private string _designStand;
 
     // Количество приборов
     private int _devices;
@@ -545,10 +545,10 @@ public class StandModel : BaseViewModel
     }
 
     // Описание стенда
-    public string? DesigneStand
+    public string? DesignStand
     {
-        get => _designeStand;
-        set => Set(ref _designeStand, value);
+        get => _designStand;
+        set => Set(ref _designStand, value);
     } //Описание
 
     // Бинарные данные изображения чертежа стенда

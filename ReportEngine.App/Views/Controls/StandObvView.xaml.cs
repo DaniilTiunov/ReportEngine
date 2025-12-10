@@ -32,8 +32,11 @@ public partial class StandObvView : UserControl
         await projectViewModel.LoadObvyazkiAsync();
         await projectViewModel.LoadAllAvaileDataAsync();
         await projectViewModel.LoadPurposesInStandsAsync();
+
         projectViewModel.UpdateNewObvNN();
         projectViewModel.UpdateChannelsQuantity();
+        projectViewModel.UpdateCableInputsQuantity();
+        projectViewModel.UpdateClampsQuantity();
     }
 
     private void FillStandFieldsFromObvyazkaCommand_DoubleClick(object sender, MouseButtonEventArgs e)
@@ -74,5 +77,11 @@ public partial class StandObvView : UserControl
         }
 
         _allowEdit = false;
+    }
+
+    private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        //перепривязываемся на новый стенд
+        _projectViewModel.InitializeAutoRecount();
     }
 }

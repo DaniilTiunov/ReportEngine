@@ -17,7 +17,6 @@ using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Windows;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -60,6 +59,8 @@ public class ProjectViewModel : BaseViewModel
         InitializeCommands();
         InitializeTime();
         InitializeGenericCommands();
+        //InitializeAutoRecount();
+
     }
 
     public ObservableCollection<FormedFrame> AllAvailableFrames { get; set; } = new();
@@ -126,7 +127,6 @@ public class ProjectViewModel : BaseViewModel
                 );
 
                 CurrentProjectModel.SelectedStand.FramesInStand.Add(selectedFrame);
-                UpdateChannelsQuantity();
             }
         });
     }
@@ -301,17 +301,12 @@ public class ProjectViewModel : BaseViewModel
         {
             await AddObvToStandAsync();
             await LoadObvyazkiAsync(); // Перезагрузить данные из БД
-            UpdateNewObvNN();
         });
     }
 
     public async void OnRemoveObvCommandExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(DeleteObvFromStandAsync);
-
-        UpdateNewObvNN();
-        UpdateCableInputsQuantity();
-        UpdateClampsQuantity();
     }
 
     public async void OnRemoveFrameFromStandCommandExecuted(object e)
@@ -319,8 +314,6 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await _projectService.DeleteFrameFromStandAsync(CurrentProjectModel);
-
-            UpdateChannelsQuantity();
 
             _notificationService.ShowInfo("Рама удалена из стенда");
         });
@@ -368,13 +361,14 @@ public class ProjectViewModel : BaseViewModel
 
             await LoadObvyazkiAsync();
 
-            UpdateNewObvNN();
-
             _notificationService.ShowInfo("Обвязка скопирована в стенд");
         });
     }
     public void OnSelectObvCommandExecuted(object p)
     {
+
+        var selectedStand = CurrentProjectModel.SelectedStand;
+        ;
         ExceptionHelper.SafeExecute(() =>
         {
             SelectedObvyazka = _dialogService.ShowObvyazkaDialog();
@@ -692,6 +686,44 @@ public class ProjectViewModel : BaseViewModel
     public void InitializeGenericCommands()
     {
         ProjectCommandsInitializer.InitializeGenericCommands(this);
+    }
+
+    public void InitializeAutoRecount()
+    {
+        Debug.WriteLine("Метод инициализации");
+
+        if (CurrentProjectModel.SelectedStand == null)
+        {
+            Debug.WriteLine("Выход по null");
+            return;
+        }
+
+        CurrentProjectModel.SelectedStand.ObvyazkiInStand.CollectionChanged += (sender, e) =>
+        {
+             Debug.WriteLine("Обвязки поменялись");
+
+             UpdateNewObvNN();
+             UpdateCableInputsQuantity();
+             UpdateClampsQuantity();
+             UpdateTablesQuantity();
+        };
+
+        CurrentProjectModel.SelectedStand.FramesInStand.CollectionChanged += (sender, e) =>
+        {
+            Debug.WriteLine("Рамы поменялись");
+
+            UpdateChannelsQuantity();
+        };
+
+
+        CurrentProjectModel.Stands.CollectionChanged += (sender, e) =>
+        {
+            Debug.WriteLine("Стенды поменялись");
+
+            UpdateNameplatesQuantity();
+        };
+
+        Debug.WriteLine("Подписались на новую модель");
     }
 
     #endregion
@@ -1147,6 +1179,13 @@ public class ProjectViewModel : BaseViewModel
 
     #region Вспомогательные методы обновления
 
+
+
+
+
+
+
+
     public async Task UpdateUI()
     {
         await LoadStandsDataAsync();
@@ -1156,22 +1195,22 @@ public class ProjectViewModel : BaseViewModel
         await LoadProjectInfoAsync(CurrentProjectModel.CurrentProjectId);
     }
 
-    //обновляем поле NN в обвязке
-    public void UpdateNewObvNN()
 
-    {
-
-        var selectedStand = CurrentProjectModel.SelectedStand;
-
-        if (selectedStand != null)
-            selectedStand.NN = MaxObvNN + 1;
-        //CurrentProjectModel.SelectedStand.NN = MaxObvNN + 1;
-    }
 
     //возвращает максимальный NN обвязок в стенде
     public int MaxObvNN
     {
         get => CurrentProjectModel?.SelectedStand?.ObvyazkiInStand.Max(obv => obv.NN) ?? 1;
+    }
+
+
+    //обновляем поле NN в обвязке
+    public void UpdateNewObvNN()
+    {
+        var selectedStand = CurrentProjectModel.SelectedStand;
+
+        if (selectedStand != null)
+            selectedStand.NN = MaxObvNN + 1;
     }
 
     //обновляем кол-во швеллера
@@ -1187,12 +1226,11 @@ public class ProjectViewModel : BaseViewModel
         {
             //швеллер в метрах
             channelRecord.Quantity = framesWidthSum / 1000.0f;
-            CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
+            //CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
         }
     }
 
     //обновляем кол-во хомутов
-
     public void UpdateClampsQuantity()
     {
         var additionalEquips = CurrentStandModel.NewAdditionalEquip.Purposes;
@@ -1220,8 +1258,40 @@ public class ProjectViewModel : BaseViewModel
             cableInputsRecord.Quantity = inputsPerSensor * sensorsQuantity;
         }
 
-        CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewElectricalComponent.Purposes);
+        //CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewElectricalComponent.Purposes);
     }
+
+    public void UpdateTablesQuantity()
+    {
+        var sensorsQuantity = CurrentStandModel.CountSensorsQuantity();
+
+        var additionalComponents = CurrentStandModel.NewAdditionalEquip.Purposes;
+        var tableRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == "Табличка");
+
+        if (tableRecord != null)
+        {
+            tableRecord.Quantity = sensorsQuantity;
+        }
+        //CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewElectricalComponent.Purposes);
+    }
+
+    public void UpdateNameplatesQuantity()
+    {
+        var standsQuantity = CurrentProjectModel.Stands.Count;
+
+
+        var additionalComponents = CurrentStandModel.NewAdditionalEquip.Purposes;
+        var nameplatesRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == "Шильдик");
+
+        if (nameplatesRecord != null)
+        {
+            nameplatesRecord.Quantity = standsQuantity;
+        }
+        //CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewElectricalComponent.Purposes);
+    }
+
+
+
 
     #endregion
 }
