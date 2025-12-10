@@ -760,9 +760,11 @@ public class StandModel : BaseViewModel
                 new() { Purpose = "Кабель 4мм", Material = DefaultStandSettings.CabelFourMM, Quantity = usualCablesQuantity },
                 new() { Purpose = "Кронштейн коробки" }
             }
-        };
-    }
 
+
+        };
+
+    }
 
     public int CountSensorsQuantity()
     {

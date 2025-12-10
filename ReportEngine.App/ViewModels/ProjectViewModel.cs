@@ -17,7 +17,6 @@ using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -120,14 +119,14 @@ public class ProjectViewModel : BaseViewModel
                     CurrentProjectModel.SelectedStand.Id,
                     selectedFrame.Id
                 );
-           
+
                 CurrentProjectModel.SelectedStand.FramesInStand.Add(selectedFrame);
                 UpdateChannelsQuantity();
             }
         });
     }
 
-    
+
 
 
     // TODO: Сделать тут рефакторинг команд
@@ -189,7 +188,7 @@ public class ProjectViewModel : BaseViewModel
 
     public void OnSelectTreeSocketFromDialogCommandExecuted(object e)
     {
-        switch (CurrentMaterials.SelectedSocketTypes) 
+        switch (CurrentMaterials.SelectedSocketTypes)
         {
             case "Жаропрочные":
                 SelectEquipment<HeaterSocket>(
@@ -321,7 +320,7 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(AddCustomDrainageToStandAsync);
     }
 
-    
+
 
     public async void OnAddDrainageToStandExecuted(object p)
     {
@@ -388,6 +387,8 @@ public class ProjectViewModel : BaseViewModel
 
             stand.SelectedObvyazkaInStand = null;
             stand.SelectedObvyazkaInStand = tmp;
+
+            UpdateClampsQuantity();
         });
     }
 
@@ -1169,6 +1170,20 @@ public class ProjectViewModel : BaseViewModel
             CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
         }
     }
+
+    //обновляем кол-во хомутов
+
+    public void UpdateClampsQuantity()
+    {
+        var electricalEquips = CurrentStandModel.NewElectricalComponent.Purposes;
+        var clampsRecord = electricalEquips.FirstOrDefault(equip => equip.Purpose == "Хомуты");
+
+        if (clampsRecord == null) return;
+
+        var clampSum = CurrentStandModel.ObvyazkiInStand.Sum(obv => obv.Clamp);
+        clampsRecord.Quantity = clampSum ?? 0.0f;
+    }
+
 
     #endregion
 }
