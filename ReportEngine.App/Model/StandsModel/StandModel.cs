@@ -730,11 +730,13 @@ public class StandModel : BaseViewModel
 
     public void InitializeAdditionalEquip()
     {
+        float nameplatesPerStand = 1.0f;
+        
         NewAdditionalEquip = new FormedAdditionalEquip
         {
             Purposes = new ObservableCollection<AdditionalEquipPurpose>
             {
-                new() { Purpose = "Шильдик", Material = DefaultStandSettings.NamePlate },
+                new() { Purpose = "Шильдик", Material = DefaultStandSettings.NamePlate,Quantity = nameplatesPerStand},
                 new() { Purpose = "Швеллер", Material = DefaultStandSettings.SteelChannel },
                 new() { Purpose = "Хомуты" },
                 new() { Purpose = "Табличка", Material = DefaultStandSettings.NameTable },

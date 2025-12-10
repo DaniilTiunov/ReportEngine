@@ -59,8 +59,6 @@ public class ProjectViewModel : BaseViewModel
         InitializeCommands();
         InitializeTime();
         InitializeGenericCommands();
-        //InitializeAutoRecount();
-
     }
 
     public ObservableCollection<FormedFrame> AllAvailableFrames { get; set; } = new();
@@ -366,9 +364,8 @@ public class ProjectViewModel : BaseViewModel
     }
     public void OnSelectObvCommandExecuted(object p)
     {
-
         var selectedStand = CurrentProjectModel.SelectedStand;
-        ;
+        
         ExceptionHelper.SafeExecute(() =>
         {
             SelectedObvyazka = _dialogService.ShowObvyazkaDialog();
@@ -688,9 +685,13 @@ public class ProjectViewModel : BaseViewModel
         ProjectCommandsInitializer.InitializeGenericCommands(this);
     }
 
-    public void InitializeAutoRecount()
+    public void SubscribeData()
     {
-        Debug.WriteLine("Метод инициализации");
+        Debug.WriteLine("Обработчик начат...");
+
+
+        Debug.WriteLine("Обработчик окончен");
+        return;
 
         if (CurrentProjectModel.SelectedStand == null)
         {
@@ -715,15 +716,7 @@ public class ProjectViewModel : BaseViewModel
             UpdateChannelsQuantity();
         };
 
-
-        CurrentProjectModel.Stands.CollectionChanged += (sender, e) =>
-        {
-            Debug.WriteLine("Стенды поменялись");
-
-            UpdateNameplatesQuantity();
-        };
-
-        Debug.WriteLine("Подписались на новую модель");
+        Debug.WriteLine("Метод переподписки выполнен");
     }
 
     #endregion
@@ -1179,13 +1172,6 @@ public class ProjectViewModel : BaseViewModel
 
     #region Вспомогательные методы обновления
 
-
-
-
-
-
-
-
     public async Task UpdateUI()
     {
         await LoadStandsDataAsync();
@@ -1275,20 +1261,7 @@ public class ProjectViewModel : BaseViewModel
         //CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewElectricalComponent.Purposes);
     }
 
-    public void UpdateNameplatesQuantity()
-    {
-        var standsQuantity = CurrentProjectModel.Stands.Count;
 
-
-        var additionalComponents = CurrentStandModel.NewAdditionalEquip.Purposes;
-        var nameplatesRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == "Шильдик");
-
-        if (nameplatesRecord != null)
-        {
-            nameplatesRecord.Quantity = standsQuantity;
-        }
-        //CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewElectricalComponent.Purposes);
-    }
 
 
 
