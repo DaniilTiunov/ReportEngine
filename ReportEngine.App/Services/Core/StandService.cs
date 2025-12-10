@@ -1,10 +1,10 @@
-﻿using ReportEngine.App.AppHelpers;
+﻿using System.Collections.ObjectModel;
+using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
-using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Services.Core;
 
@@ -333,7 +333,7 @@ public class StandService : IStandService
                 }));
             CollectionRefreshHelper.SafeRefreshCollection(stand.ObvyazkaAdditionalComponents);
         }
-        
+
         ;
 
         await Task.CompletedTask;

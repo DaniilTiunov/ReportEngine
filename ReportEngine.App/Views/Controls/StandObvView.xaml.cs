@@ -1,9 +1,7 @@
-﻿using ReportEngine.App.AppHelpers;
-using ReportEngine.App.ViewModels;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Input;
+using ReportEngine.App.AppHelpers;
+using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Views.Controls;
 
@@ -23,7 +21,7 @@ public partial class StandObvView : UserControl
         _projectViewModel = projectViewModel;
 
         Loaded += async (_, __) => await InitializeDataAsync(projectViewModel);
-        
+
     }
 
     private async Task InitializeDataAsync(ProjectViewModel projectViewModel)
@@ -44,7 +42,7 @@ public partial class StandObvView : UserControl
         });
     }
 
-   
+
     private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
     {
         var scrollViewer = sender as ScrollViewer;
