@@ -307,10 +307,12 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnSaveObvCommandExecuted(object e)
     {
+        if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka, CurrentProjectModel?.SelectedStand))
+            return;
+
         var isAlreadyExist = CurrentProjectModel?.SelectedStand?.ObvyazkiInStand
                             .Select(obv => obv.NN)
                             .Contains(CurrentProjectModel.SelectedStand.NN);
-
 
         if (isAlreadyExist ?? false)
         {
@@ -400,7 +402,7 @@ public class ProjectViewModel : BaseViewModel
         {
             SelectedObvyazka = _dialogService.ShowObvyazkaDialog();
 
-            if (SelectedObvyazka == null)
+            if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka))
                 return;
 
             var stand = CurrentProjectModel.SelectedStand;
@@ -786,10 +788,13 @@ public class ProjectViewModel : BaseViewModel
 
     private async Task AddObvToStandAsync()
     {
-        if (Guard.ExitIfNull("Стенд не выбран!", _notificationService, CurrentProjectModel.SelectedStand))
+        if (Guard.ExitIfNull("Не выбран тип обвязки или стенд!", _notificationService, SelectedObvyazka, CurrentProjectModel.SelectedStand))
             return;
 
         var entity = await _standService.CreateObvyazkaAsync(CurrentProjectModel.SelectedStand, SelectedObvyazka);
+
+        if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, entity))
+            return;
 
         await _standService.AddObvyazkaToStandAsync(CurrentProjectModel.SelectedStand.Id, entity);
 

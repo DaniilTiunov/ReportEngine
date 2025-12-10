@@ -197,10 +197,15 @@ public class StandService : IStandService
     public Task<ObvyazkaInStand> CreateObvyazkaAsync(StandModel standModel, Obvyazka selectedObvyazka)
     {
         if (standModel == null)
+        {
             _notificationService.ShowError("Стенд не выбран!");
+            return Task.FromResult<ObvyazkaInStand>(null);
+        }
 
-        if (selectedObvyazka == null)
-            _notificationService.ShowError("Обвязка не выбрана!");
+        if (selectedObvyazka == null || selectedObvyazka.Id <= 0)
+        {
+            return Task.FromResult<ObvyazkaInStand>(null);
+        }
 
         var entity = new ObvyazkaInStand
         {
