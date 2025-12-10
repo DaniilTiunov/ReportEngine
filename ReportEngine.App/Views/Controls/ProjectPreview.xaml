@@ -16,6 +16,13 @@
         <converters:ByteArrayImageConverter x:Key="ByteArrayImageConverter" />
     </UserControl.Resources>
 
+    <UserControl.InputBindings>
+        <KeyBinding
+            Key="F5"
+            Command="{Binding ProjectCommandProvider.UpdateUICommand}"
+            CommandParameter="{x:Null}" />
+    </UserControl.InputBindings>
+
     <ScrollViewer>
         <Grid Margin="10">
             <Grid.RowDefinitions>

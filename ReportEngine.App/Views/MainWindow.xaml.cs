@@ -1,13 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Diagnostics;
+using System.IO;
+using System.Windows;
+using System.Windows.Input;
+using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.CalculationSettings;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Shared.Config.Directory;
-using System.Diagnostics;
-using System.IO;
-using System.Windows;
-using System.Windows.Input;
 using AboutProgram = ReportEngine.App.Views.Windows.AboutProgram;
 
 namespace ReportEngine.App;

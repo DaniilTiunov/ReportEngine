@@ -1,6 +1,6 @@
-﻿using ReportEngine.App.ViewModels;
+﻿using System.Collections.ObjectModel;
+using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
-using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Model;
 

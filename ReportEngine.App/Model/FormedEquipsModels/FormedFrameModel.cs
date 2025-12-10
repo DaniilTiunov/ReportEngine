@@ -1,10 +1,10 @@
-﻿using ReportEngine.App.ModelWrappers;
+﻿using System.Collections.ObjectModel;
+using ReportEngine.App.ModelWrappers;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.Frame;
-using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Model.FormedEquipsModels;
 

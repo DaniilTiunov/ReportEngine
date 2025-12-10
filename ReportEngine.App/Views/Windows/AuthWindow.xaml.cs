@@ -1,7 +1,7 @@
-﻿using ReportEngine.App.Services.Core;
-using ReportEngine.App.ViewModels.Contacts;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
+using ReportEngine.App.Services.Core;
+using ReportEngine.App.ViewModels.Contacts;
 
 namespace ReportEngine.App.Views.Windows;
 
