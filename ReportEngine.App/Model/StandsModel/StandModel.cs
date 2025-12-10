@@ -220,7 +220,7 @@ public class StandModel : BaseViewModel
 
     // Доступные типы датчиков
     public IEnumerable<string> SensorType { get; } = new List<string>
-        { "Датчик перепада давления", "Манометр", "Датчик абсолютного давления", "Манометр электрокомпактный" };
+        { "", "Датчик перепада давления", "Манометр", "Датчик абсолютного давления", "Манометр электрокомпактный" };
 
     // Идентификатор стенда
     public int Id
@@ -760,8 +760,6 @@ public class StandModel : BaseViewModel
                 new() { Purpose = "Кабель 4мм", Material = DefaultStandSettings.CabelFourMM, Quantity = usualCablesQuantity },
                 new() { Purpose = "Кронштейн коробки" }
             }
-
-
         };
 
     }

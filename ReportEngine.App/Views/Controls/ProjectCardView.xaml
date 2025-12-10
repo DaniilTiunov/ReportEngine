@@ -293,7 +293,7 @@
         <CheckBox
             Grid.Row="13"
             Grid.Column="0"
-            Grid.ColumnSpan="2"
+            Width="200"
             Margin="4"
             Content="Оцинкование стендов"
             FontSize="16"
