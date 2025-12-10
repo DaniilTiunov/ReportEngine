@@ -12,6 +12,8 @@ namespace ReportEngine.App.Views.Controls;
 /// </summary>
 public partial class StandObvView : UserControl
 {
+    private bool _allowEdit;
+
     private readonly ProjectViewModel _projectViewModel;
     public StandObvView(ProjectViewModel projectViewModel)
     {
@@ -53,4 +55,24 @@ public partial class StandObvView : UserControl
         e.Handled = true;
     }
 
+    private void DataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+    {
+        if (!_allowEdit)
+            e.Cancel = true;
+    }
+
+    private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is not DataGrid grid)
+            return;
+
+        _allowEdit = true;
+
+        if (grid.CurrentCell != null)
+        {
+            grid.BeginEdit();
+        }
+
+        _allowEdit = false;
+    }
 }

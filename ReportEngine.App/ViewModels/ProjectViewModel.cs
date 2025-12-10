@@ -17,6 +17,7 @@ using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Windows;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -77,6 +78,10 @@ public class ProjectViewModel : BaseViewModel
         return true;
     }
 
+    public async void OnUpdateUICommandExecuted(object e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(UpdateUI);
+    }
     public void OnOpenAllSortamentsDialogExecuted(object e)
     {
         var selected = _dialogService.ShowAllSortamentsDialog();
@@ -285,17 +290,19 @@ public class ProjectViewModel : BaseViewModel
                             .Select(obv => obv.NN)
                             .Contains(CurrentProjectModel.SelectedStand.NN);
 
+
         if (isAlreadyExist ?? false)
         {
             _notificationService.ShowError("Указанный NN обвязки уже существует. Обвязка не добавлена");
             return;
         }
 
-        await ExceptionHelper.SafeExecuteAsync(AddObvToStandAsync);
-
-        UpdateNewObvNN();
-        UpdateCableInputsQuantity();
-        UpdateClampsQuantity();
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await AddObvToStandAsync();
+            await LoadObvyazkiAsync(); // Перезагрузить данные из БД
+            UpdateNewObvNN();
+        });
     }
 
     public async void OnRemoveObvCommandExecuted(object e)
@@ -323,8 +330,6 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(AddCustomDrainageToStandAsync);
     }
-
-
 
     public async void OnAddDrainageToStandExecuted(object p)
     {
@@ -368,7 +373,6 @@ public class ProjectViewModel : BaseViewModel
             _notificationService.ShowInfo("Обвязка скопирована в стенд");
         });
     }
-
     public void OnSelectObvCommandExecuted(object p)
     {
         ExceptionHelper.SafeExecute(() =>
@@ -557,7 +561,6 @@ public class ProjectViewModel : BaseViewModel
                 "Доп. комплектующие сохранены");
         });
     }
-
     public async void OnDeleteDrainageComponentFromStandCommandExecuted(object obj)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -568,7 +571,6 @@ public class ProjectViewModel : BaseViewModel
                 "Дренажное комплектующее удалено");
         });
     }
-
     public async void OnUpdateDrainageComponentInStandCommandExecuted(object obj)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -770,7 +772,8 @@ public class ProjectViewModel : BaseViewModel
 
         await _standService.AddObvyazkaToStandAsync(CurrentProjectModel.SelectedStand.Id, entity);
 
-        CurrentProjectModel.SelectedStand.ObvyazkiInStand.Add(entity);
+        CurrentProjectModel.ObvyazkiInProject.Add(entity);
+
     }
 
     private async Task DeleteObvFromStandAsync()
@@ -855,13 +858,16 @@ public class ProjectViewModel : BaseViewModel
         newStandModel.Id = addedStandEntity.Id;
         newStandModel.ProjectId = addedStandEntity.ProjectInfoId;
 
-        newStandModel.InitializeDefaultPurposes();
+        await newStandModel.InitializeDefaultPurposes();
 
         CurrentProjectModel.Stands.Add(newStandModel);
+
+        CurrentStandModel = newStandModel;
 
         // Переставляем шаблон на следующий свободный номер
         NewStand = new StandModel { Number = nextNumber + 1 };
 
+        OnPropertyChanged(nameof(CurrentStandModel));
         OnPropertyChanged(nameof(NewStand));
         _notificationService.ShowInfo($"Стенд успешно добавлен! {addedStandEntity.Id}");
     }
@@ -1140,6 +1146,15 @@ public class ProjectViewModel : BaseViewModel
     #endregion
 
     #region Вспомогательные методы обновления
+
+    public async Task UpdateUI()
+    {
+        await LoadStandsDataAsync();
+        await LoadObvyazkiAsync();
+        await LoadPurposesInStandsAsync();
+        await LoadAllAvaileDataAsync();
+        await LoadProjectInfoAsync(CurrentProjectModel.CurrentProjectId);
+    }
 
     //обновляем поле NN в обвязке
     public void UpdateNewObvNN()
