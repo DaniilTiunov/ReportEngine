@@ -13,6 +13,7 @@
 
     <UserControl.Resources>
         <converters:ObvyazkaImagePathConverter x:Key="ObvyazkaImagePathConverter" />
+        <converters:DrainagesVisibilityConverter x:Key="DrainagesVisibilityConverter" />
     </UserControl.Resources>
 
     <!-- <UserControl.InputBindings>
