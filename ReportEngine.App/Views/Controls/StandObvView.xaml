@@ -993,7 +993,7 @@
                                     Height="30"
                                     Margin="0,0,10,0"
                                     Command="{Binding ProjectCommandProvider.SaveObvCommand}"
-                                    Content="Добавить новую" />
+                                    Content="Добавить новую"/>
                                 <Button
                                     Width="150"
                                     Height="30"
@@ -1232,9 +1232,7 @@
                             x:Name="StandsList"
                             Margin="5,0,5,5"
                             ItemsSource="{Binding CurrentProjectModel.Stands}"
-                            SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}" 
-                            SelectionChanged="ListView_SelectionChanged"
-                            >
+                            SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}">
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn

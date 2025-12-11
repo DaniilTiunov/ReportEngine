@@ -28,7 +28,6 @@ public partial class StandObvView : UserControl
         _projectViewModel = projectViewModel;
 
         Loaded += async (_, __) => await InitializeDataAsync(projectViewModel);
-
     }
 
     private async Task InitializeDataAsync(ProjectViewModel projectViewModel)
@@ -38,10 +37,9 @@ public partial class StandObvView : UserControl
         await projectViewModel.LoadAllAvaileDataAsync();
         await projectViewModel.LoadPurposesInStandsAsync();
 
-        projectViewModel.UpdateNewObvNN();
-        projectViewModel.UpdateChannelsQuantity();
-        projectViewModel.UpdateCableInputsQuantity();
-        projectViewModel.UpdateClampsQuantity();
+        projectViewModel.OnObvyazkiInStandChanged();
+        projectViewModel.OnFramesInStandChanged();
+
     }
 
     private void FillStandFieldsFromObvyazkaCommand_DoubleClick(object sender, MouseButtonEventArgs e)
@@ -84,36 +82,5 @@ public partial class StandObvView : UserControl
         _allowEdit = false;
     }
 
-    private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        //отписываемся от старого
-        if (_currentSelectedStand != null && _currentEventHandler != null)
-        {
-            Debug.WriteLine("Отписываемся от старого стенда...");
-            _currentSelectedStand.PropertyChanged -= _currentEventHandler;
-            _currentEventHandler = null;
-            Debug.WriteLine("Отписались от старого стенда");
-        }
 
-        //забираем новый выделенный элемент
-        _currentSelectedStand = StandsList.SelectedItem as StandModel;
-
-        ;
-        //создаем новый обработчик
-        if (_currentSelectedStand == null) 
-        {
-            Debug.WriteLine("Стенд не выбран, выход из обработчика");
-            return;
-        }
-        ;
-        Debug.WriteLine("Подписываемся  на новый стенд....");
-        _currentEventHandler = (sender, e) =>
-        {
-            _projectViewModel.SubscribeData();
-        };
-        ;
-        _currentSelectedStand.PropertyChanged += _currentEventHandler;
-        Debug.WriteLine("Подписаны на новый стенд");
-
-    }
 }

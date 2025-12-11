@@ -16,7 +16,10 @@ using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Windows;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -68,7 +71,7 @@ public class ProjectViewModel : BaseViewModel
     public Obvyazka SelectedObvyazka { get; set; } = new();
     public StandModel CurrentStandModel { get; set; } = new();
     public StandModel NewStand { get; set; } = new();
-    public ProjectModel CurrentProjectModel { get; set; } = new();
+    public ProjectModel CurrentProjectModel{ get; set; } = new();
     public ProjectCommandProvider ProjectCommandProvider { get; set; } = new();
     public MaterialLinesModel CurrentMaterials { get; set; } = new();
 
@@ -125,6 +128,7 @@ public class ProjectViewModel : BaseViewModel
                 );
 
                 CurrentProjectModel.SelectedStand.FramesInStand.Add(selectedFrame);
+                OnFramesInStandChanged();
             }
         });
     }
@@ -299,6 +303,9 @@ public class ProjectViewModel : BaseViewModel
         {
             await AddObvToStandAsync();
             await LoadObvyazkiAsync(); // Перезагрузить данные из БД
+
+            OnObvyazkiInStandChanged();
+
         });
     }
 
@@ -312,6 +319,8 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await _projectService.DeleteFrameFromStandAsync(CurrentProjectModel);
+
+            OnFramesInStandChanged();
 
             _notificationService.ShowInfo("Рама удалена из стенда");
         });
@@ -358,6 +367,8 @@ public class ProjectViewModel : BaseViewModel
             OnPropertyChanged(nameof(CurrentProjectModel.ObvyazkiInProject));
 
             await LoadObvyazkiAsync();
+
+            OnObvyazkiInStandChanged();
 
             _notificationService.ShowInfo("Обвязка скопирована в стенд");
         });
@@ -602,6 +613,10 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await _projectService.UpdateObvInStandAsync(CurrentProjectModel, SelectedObvyazka);
+
+            OnObvyazkiInStandChanged();
+            OnPropertyChanged(nameof(CurrentProjectModel.SelectedStand.NewAdditionalEquip.Purposes));
+            OnPropertyChanged(nameof(CurrentProjectModel.SelectedStand.NewElectricalComponent.Purposes));
         });
     }
 
@@ -685,39 +700,6 @@ public class ProjectViewModel : BaseViewModel
         ProjectCommandsInitializer.InitializeGenericCommands(this);
     }
 
-    public void SubscribeData()
-    {
-        Debug.WriteLine("Обработчик начат...");
-
-
-        Debug.WriteLine("Обработчик окончен");
-        return;
-
-        if (CurrentProjectModel.SelectedStand == null)
-        {
-            Debug.WriteLine("Выход по null");
-            return;
-        }
-
-        CurrentProjectModel.SelectedStand.ObvyazkiInStand.CollectionChanged += (sender, e) =>
-        {
-             Debug.WriteLine("Обвязки поменялись");
-
-             UpdateNewObvNN();
-             UpdateCableInputsQuantity();
-             UpdateClampsQuantity();
-             UpdateTablesQuantity();
-        };
-
-        CurrentProjectModel.SelectedStand.FramesInStand.CollectionChanged += (sender, e) =>
-        {
-            Debug.WriteLine("Рамы поменялись");
-
-            UpdateChannelsQuantity();
-        };
-
-        Debug.WriteLine("Метод переподписки выполнен");
-    }
 
     #endregion
 
@@ -831,9 +813,12 @@ public class ProjectViewModel : BaseViewModel
 
         stand.SelectedObvyazkaInStand = null;
 
-        _notificationService.ShowInfo("Обвязка удалена из стенда");
-    }
+        OnObvyazkiInStandChanged();
 
+        _notificationService.ShowInfo("Обвязка удалена из стенда");
+        
+    }
+    
     private async Task SaveProjectChangesAsync()
     {
         if (CurrentProjectModel.CurrentProjectId == 0)
@@ -1182,6 +1167,29 @@ public class ProjectViewModel : BaseViewModel
     }
 
 
+    public void OnObvyazkiInStandChanged()
+    {
+        Debug.WriteLine("Обвязки поменялись");
+
+        UpdateNewObvNN();
+        UpdateCableInputsQuantity();
+        UpdateTablesQuantity();
+        UpdateClampsQuantity();
+
+        CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewElectricalComponent.Purposes);
+        CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
+    }
+
+    public void OnFramesInStandChanged()
+    {
+        Debug.WriteLine("Рамы поменялись");
+
+        UpdateChannelsQuantity();
+
+        CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
+    }
+
+
 
     //возвращает максимальный NN обвязок в стенде
     public int MaxObvNN
@@ -1212,7 +1220,7 @@ public class ProjectViewModel : BaseViewModel
         {
             //швеллер в метрах
             channelRecord.Quantity = framesWidthSum / 1000.0f;
-            //CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
+            
         }
     }
 
@@ -1221,7 +1229,7 @@ public class ProjectViewModel : BaseViewModel
     {
         var additionalEquips = CurrentStandModel.NewAdditionalEquip.Purposes;
         var clampsRecord = additionalEquips.FirstOrDefault(equip => equip.Purpose == "Хомуты");
-        ;
+        
         if (clampsRecord == null) return;
 
         var clampSum = CurrentStandModel.ObvyazkiInStand.Sum(obv => obv.Clamp);
@@ -1244,7 +1252,7 @@ public class ProjectViewModel : BaseViewModel
             cableInputsRecord.Quantity = inputsPerSensor * sensorsQuantity;
         }
 
-        //CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewElectricalComponent.Purposes);
+       
     }
 
     public void UpdateTablesQuantity()
@@ -1258,11 +1266,9 @@ public class ProjectViewModel : BaseViewModel
         {
             tableRecord.Quantity = sensorsQuantity;
         }
-        //CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewElectricalComponent.Purposes);
+        
     }
-
-
-
+    
 
 
 

@@ -773,13 +773,13 @@ public class StandModel : BaseViewModel
             {
                 int sensorsQuantity = 0;
 
-                if (obv.FirstSensorType != null)
+                if (!string.IsNullOrEmpty(obv.FirstSensorType))
                     sensorsQuantity++;
 
-                if (obv.SecondSensorType != null)
+                if (!string.IsNullOrEmpty(obv.SecondSensorType))
                     sensorsQuantity++;
 
-                if (obv.ThirdSensorType != null)
+                if (!string.IsNullOrEmpty(obv.ThirdSensorType))
                     sensorsQuantity++;
 
                 return sensorsQuantity;
