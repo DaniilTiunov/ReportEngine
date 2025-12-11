@@ -17,6 +17,11 @@ using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Windows;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -68,7 +73,7 @@ public class ProjectViewModel : BaseViewModel
     public Obvyazka SelectedObvyazka { get; set; } = new();
     public StandModel CurrentStandModel { get; set; } = new();
     public StandModel NewStand { get; set; } = new();
-    public ProjectModel CurrentProjectModel { get; set; } = new();
+    public ProjectModel CurrentProjectModel{ get; set; } = new();
     public ProjectCommandProvider ProjectCommandProvider { get; set; } = new();
     public MaterialLinesModel CurrentMaterials { get; set; } = new();
 
@@ -119,21 +124,22 @@ public class ProjectViewModel : BaseViewModel
             _notificationService.ShowInfo("Рекомендуемая рама: Рама с длиной " + totalWidth);
 
             var selectedFrame = _dialogService.ShowFrameDialog();
-
-            if (Guard.ExitIfNull("Рама или стенд не выбраны!",
+             
+             if (Guard.ExitIfNull("Рама или стенд не выбраны!",
                             _notificationService,
                             selectedFrame,
-                            CurrentProjectModel.SelectedStand))
-                return;
-
-
-            await _standService.AddFrameToStandAsync(CurrentProjectModel.SelectedStand.Id, selectedFrame.Id);
-
-            CurrentProjectModel.SelectedStand.FramesInStand.Add(selectedFrame);
-            UpdateChannelsQuantity();
-
+                            CurrentProjectModel.SelectedStand)) return; 
+                
+                
+                
+              await _standService.AddFrameToStandAsync(CurrentProjectModel.SelectedStand.Id, selectedFrame.Id);
+              CurrentProjectModel.SelectedStand.FramesInStand.Add(selectedFrame);
+                 
+              OnFramesInStandChanged();
+            
         });
     }
+            
 
     // TODO: Сделать тут рефакторинг команд
     public void OnSelectMaterialFromDialogCommandExecuted(object e)
@@ -324,17 +330,15 @@ public class ProjectViewModel : BaseViewModel
         {
             await AddObvToStandAsync();
             await LoadObvyazkiAsync(); // Перезагрузить данные из БД
-            UpdateNewObvNN();
+
+            OnObvyazkiInStandChanged();
+
         });
     }
 
     public async void OnRemoveObvCommandExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(DeleteObvFromStandAsync);
-
-        UpdateNewObvNN();
-        UpdateCableInputsQuantity();
-        UpdateClampsQuantity();
     }
 
     public async void OnRemoveFrameFromStandCommandExecuted(object e)
@@ -343,7 +347,7 @@ public class ProjectViewModel : BaseViewModel
         {
             await _projectService.DeleteFrameFromStandAsync(CurrentProjectModel);
 
-            UpdateChannelsQuantity();
+            OnFramesInStandChanged();
 
             _notificationService.ShowInfo("Рама удалена из стенда");
         });
@@ -391,13 +395,15 @@ public class ProjectViewModel : BaseViewModel
 
             await LoadObvyazkiAsync();
 
-            UpdateNewObvNN();
+            OnObvyazkiInStandChanged();
 
             _notificationService.ShowInfo("Обвязка скопирована в стенд");
         });
     }
     public void OnSelectObvCommandExecuted(object p)
     {
+        var selectedStand = CurrentProjectModel.SelectedStand;
+        
         ExceptionHelper.SafeExecute(() =>
         {
             SelectedObvyazka = _dialogService.ShowObvyazkaDialog();
@@ -635,6 +641,10 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await _projectService.UpdateObvInStandAsync(CurrentProjectModel, SelectedObvyazka);
+
+            OnObvyazkiInStandChanged();
+            OnPropertyChanged(nameof(CurrentProjectModel.SelectedStand.NewAdditionalEquip.Purposes));
+            OnPropertyChanged(nameof(CurrentProjectModel.SelectedStand.NewElectricalComponent.Purposes));
         });
     }
 
@@ -717,6 +727,7 @@ public class ProjectViewModel : BaseViewModel
     {
         ProjectCommandsInitializer.InitializeGenericCommands(this);
     }
+
 
     #endregion
 
@@ -821,9 +832,12 @@ public class ProjectViewModel : BaseViewModel
 
         stand.SelectedObvyazkaInStand = null;
 
-        _notificationService.ShowInfo("Обвязка удалена из стенда");
-    }
+        OnObvyazkiInStandChanged();
 
+        _notificationService.ShowInfo("Обвязка удалена из стенда");
+        
+    }
+    
     private async Task SaveProjectChangesAsync()
     {
         if (CurrentProjectModel.CurrentProjectId == 0)
@@ -1169,6 +1183,38 @@ public class ProjectViewModel : BaseViewModel
         await LoadProjectInfoAsync(CurrentProjectModel.CurrentProjectId);
     }
 
+
+    public void OnObvyazkiInStandChanged()
+    {
+        Debug.WriteLine("Обвязки поменялись");
+
+        UpdateNewObvNN();
+        UpdateCableInputsQuantity();
+        UpdateTablesQuantity();
+        UpdateClampsQuantity();
+
+        CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewElectricalComponent.Purposes);
+        CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
+    }
+
+    public void OnFramesInStandChanged()
+    {
+        Debug.WriteLine("Рамы поменялись");
+
+        UpdateChannelsQuantity();
+
+        CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
+    }
+
+
+
+    //возвращает максимальный NN обвязок в стенде
+    public int MaxObvNN
+    {
+        get => CurrentProjectModel?.SelectedStand?.ObvyazkiInStand.Max(obv => obv.NN) ?? 1;
+    }
+
+
     //обновляем поле NN в обвязке
     public void UpdateNewObvNN()
     {
@@ -1176,13 +1222,6 @@ public class ProjectViewModel : BaseViewModel
 
         if (selectedStand != null)
             selectedStand.NN = MaxObvNN + 1;
-        //CurrentProjectModel.SelectedStand.NN = MaxObvNN + 1;
-    }
-
-    //возвращает максимальный NN обвязок в стенде
-    public int MaxObvNN
-    {
-        get => CurrentProjectModel?.SelectedStand?.ObvyazkiInStand.Max(obv => obv.NN) ?? 1;
     }
 
     //обновляем кол-во швеллера
@@ -1198,17 +1237,16 @@ public class ProjectViewModel : BaseViewModel
         {
             //швеллер в метрах
             channelRecord.Quantity = framesWidthSum / 1000.0f;
-            CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
+            
         }
     }
 
     //обновляем кол-во хомутов
-
     public void UpdateClampsQuantity()
     {
         var additionalEquips = CurrentStandModel.NewAdditionalEquip.Purposes;
         var clampsRecord = additionalEquips.FirstOrDefault(equip => equip.Purpose == "Хомуты");
-
+        
         if (clampsRecord == null) return;
 
         var clampSum = CurrentStandModel.ObvyazkiInStand.Sum(obv => obv.Clamp);
@@ -1231,8 +1269,25 @@ public class ProjectViewModel : BaseViewModel
             cableInputsRecord.Quantity = inputsPerSensor * sensorsQuantity;
         }
 
-        CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewElectricalComponent.Purposes);
+       
     }
+
+    public void UpdateTablesQuantity()
+    {
+        var sensorsQuantity = CurrentStandModel.CountSensorsQuantity();
+
+        var additionalComponents = CurrentStandModel.NewAdditionalEquip.Purposes;
+        var tableRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == "Табличка");
+
+        if (tableRecord != null)
+        {
+            tableRecord.Quantity = sensorsQuantity;
+        }
+        
+    }
+    
+
+
 
     #endregion
 }
