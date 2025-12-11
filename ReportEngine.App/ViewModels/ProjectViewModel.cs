@@ -751,7 +751,7 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            await _projectDataLoaderService.LoadAllAvailDataToViewModel(this);
+            await _projectDataLoaderService.LoadAllAvailDataToViewModelAsync(this);
         });
     }
 
@@ -767,6 +767,7 @@ public class ProjectViewModel : BaseViewModel
             CurrentStandModel = loadedModel.SelectedStand ?? new StandModel();
             CurrentStandModel.InitializeDefaultPurposes();
 
+                       
             await LoadObvyazkiAsync();
             await LoadStandsDataAsync();
 
@@ -1156,10 +1157,6 @@ public class ProjectViewModel : BaseViewModel
         }
     }
 
-    #endregion
-
-    #region Вспомогательные методы обновления
-
     public async Task UpdateUI()
     {
         await LoadStandsDataAsync();
@@ -1167,8 +1164,9 @@ public class ProjectViewModel : BaseViewModel
         await LoadPurposesInStandsAsync();
         await LoadAllAvaileDataAsync();
         await LoadProjectInfoAsync(CurrentProjectModel.CurrentProjectId);
-    }
 
+        CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.Stands);
+    }
     //обновляем поле NN в обвязке
     public void UpdateNewObvNN()
     {

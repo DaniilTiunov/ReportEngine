@@ -22,6 +22,12 @@
             GlassFrameThickness="0" />
     </WindowChrome.WindowChrome>
 
+    <Window.InputBindings>
+        <KeyBinding
+            Key="F5"
+            Command="{Binding MainWindowCommandProvider.ShowAllProjectsCommand}"
+            CommandParameter="{x:Null}" />
+    </Window.InputBindings>
 
     <Window.Resources>
         <ResourceDictionary>
@@ -139,6 +145,8 @@
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllSubjectsCommand}" Header="Объекты" />
             </MenuItem>
             <MenuItem Header="Комплектующие">
+                <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllObvyazkiCommand}" Header="Обвязки" />
+                <Separator />
                 <MenuItem Header="Сортамент труб">
                     <MenuItem Command="{Binding GenericEquipCommandProvider.OpenHeaterPipeCommand}" Header="Жаропрочная сталь" />
                     <MenuItem Command="{Binding GenericEquipCommandProvider.OpenStainlessPipeCommand}" Header="Нержавеющая сталь" />
@@ -185,8 +193,6 @@
             </MenuItem>
             <MenuItem Header="Формирование комплектующих">
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenFormedFramesCommand}" Header="Создание и редактирование рам" />
-                <Separator />
-                <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllObvyazkiCommand}" Header="Обвязки" />
                 <Separator />
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllDrainagesCommand}" Header="Дренажи" />
             </MenuItem>
