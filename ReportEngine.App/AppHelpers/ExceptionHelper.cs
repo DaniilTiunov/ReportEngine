@@ -1,6 +1,6 @@
-﻿using ReportEngine.App.Display;
+﻿using System.Diagnostics;
+using ReportEngine.App.Display;
 using ReportEngine.Shared.Config.DebugConsol;
-using System.Diagnostics;
 
 namespace ReportEngine.App.AppHelpers;
 
@@ -19,6 +19,19 @@ public static class ExceptionHelper
             MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}");
         }
     }
+    public static void SafeExecute(Action action, string message)
+    {
+        try
+        {
+            action();
+        }
+        catch (Exception ex)
+        {
+            DebugConsole.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
+            Debug.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
+            MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}\n{message}");
+        }
+    }
 
     public static async Task SafeExecuteAsync(Func<Task> action)
     {
@@ -31,6 +44,19 @@ public static class ExceptionHelper
             DebugConsole.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
             Debug.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
             MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}");
+        }
+    }
+    public static async Task SafeExecuteAsync(Func<Task> action, string message)
+    {
+        try
+        {
+            await action();
+        }
+        catch (Exception ex)
+        {
+            DebugConsole.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
+            Debug.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
+            MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}\n{message}");
         }
     }
 }

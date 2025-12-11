@@ -1,10 +1,9 @@
-﻿using ReportEngine.App.ViewModels;
-using ReportEngine.App.ViewModels.Contacts;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Views.Windows;
 
@@ -59,7 +58,7 @@ public partial class AllSortamentsView : Window
 
         if (_viewModel.CurrentSortamentsModel.EquipGroups.TryGetValue(groupKey, out var collection))
             EquipDataGrid.ItemsSource = collection;
-            _equipView = CollectionViewSource.GetDefaultView(collection);
+        _equipView = CollectionViewSource.GetDefaultView(collection);
     }
 
     // TODO: Исправить этот костыль

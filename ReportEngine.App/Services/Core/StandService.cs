@@ -1,10 +1,10 @@
-﻿using ReportEngine.App.AppHelpers;
+﻿using System.Collections.ObjectModel;
+using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
-using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Services.Core;
 
@@ -197,10 +197,15 @@ public class StandService : IStandService
     public Task<ObvyazkaInStand> CreateObvyazkaAsync(StandModel standModel, Obvyazka selectedObvyazka)
     {
         if (standModel == null)
+        {
             _notificationService.ShowError("Стенд не выбран!");
+            return Task.FromResult<ObvyazkaInStand>(null);
+        }
 
-        if (selectedObvyazka == null)
-            _notificationService.ShowError("Обвязка не выбрана!");
+        if (selectedObvyazka == null || selectedObvyazka.Id <= 0)
+        {
+            return Task.FromResult<ObvyazkaInStand>(null);
+        }
 
         var entity = new ObvyazkaInStand
         {
@@ -333,7 +338,7 @@ public class StandService : IStandService
                 }));
             CollectionRefreshHelper.SafeRefreshCollection(stand.ObvyazkaAdditionalComponents);
         }
-        
+
         ;
 
         await Task.CompletedTask;

@@ -1,4 +1,6 @@
-﻿using ReportEngine.App.AppHelpers;
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
+using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Commands.Providers;
 using ReportEngine.App.Model;
@@ -87,7 +89,9 @@ public class ProjectViewModel : BaseViewModel
     public void OnOpenAllSortamentsDialogExecuted(object e)
     {
         var selected = _dialogService.ShowAllSortamentsDialog();
-        if (selected == null) return;
+
+        if (selected == null)
+            return;
 
         ApplySelectedEquipToPurpose(e, selected);
     }
@@ -120,25 +124,31 @@ public class ProjectViewModel : BaseViewModel
             _notificationService.ShowInfo("Рекомендуемая рама: Рама с длиной " + totalWidth);
 
             var selectedFrame = _dialogService.ShowFrameDialog();
-            if (selectedFrame != null)
-            {
-                await _standService.AddFrameToStandAsync(
-                    CurrentProjectModel.SelectedStand.Id,
-                    selectedFrame.Id
-                );
-
-                CurrentProjectModel.SelectedStand.FramesInStand.Add(selectedFrame);
-                OnFramesInStandChanged();
-            }
+             
+             if (Guard.ExitIfNull("Рама или стенд не выбраны!",
+                            _notificationService,
+                            selectedFrame,
+                            CurrentProjectModel.SelectedStand)) return; 
+                
+                
+                
+              await _standService.AddFrameToStandAsync(CurrentProjectModel.SelectedStand.Id, selectedFrame.Id);
+              CurrentProjectModel.SelectedStand.FramesInStand.Add(selectedFrame);
+                 
+              OnFramesInStandChanged();
+            
         });
     }
-
-
-
+            
 
     // TODO: Сделать тут рефакторинг команд
     public void OnSelectMaterialFromDialogCommandExecuted(object e)
     {
+        if (Guard.ExitIfNull("Стенд не выбран!",
+                        _notificationService,
+                        CurrentProjectModel.SelectedStand))
+            return;
+
         switch (CurrentMaterials.SelectedMaterialLine)
         {
             case "Жаропрочные":
@@ -167,6 +177,11 @@ public class ProjectViewModel : BaseViewModel
 
     public void OnSelectArmatureFromDialogCommandExecuted(object e)
     {
+        if (Guard.ExitIfNull("Стенд не выбран!",
+                _notificationService,
+                CurrentProjectModel.SelectedStand))
+            return;
+
         switch (CurrentMaterials.SelectedAramuteres)
         {
             case "Жаропрочные":
@@ -195,6 +210,11 @@ public class ProjectViewModel : BaseViewModel
 
     public void OnSelectTreeSocketFromDialogCommandExecuted(object e)
     {
+        if (Guard.ExitIfNull("Стенд не выбран!",
+                        _notificationService,
+                        CurrentProjectModel.SelectedStand))
+            return;
+
         switch (CurrentMaterials.SelectedSocketTypes)
         {
             case "Жаропрочные":
@@ -223,6 +243,11 @@ public class ProjectViewModel : BaseViewModel
 
     public void OnSelectKMCHFromDialogCommandExecuted(object e)
     {
+        if (Guard.ExitIfNull("Стенд не выбран!",
+                        _notificationService,
+                        CurrentProjectModel.SelectedStand))
+            return;
+
         switch (CurrentMaterials.SelectedKMCHType)
         {
             case "Жаропрочные":
@@ -288,10 +313,12 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnSaveObvCommandExecuted(object e)
     {
+        if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka, CurrentProjectModel?.SelectedStand))
+            return;
+
         var isAlreadyExist = CurrentProjectModel?.SelectedStand?.ObvyazkiInStand
                             .Select(obv => obv.NN)
                             .Contains(CurrentProjectModel.SelectedStand.NN);
-
 
         if (isAlreadyExist ?? false)
         {
@@ -381,7 +408,7 @@ public class ProjectViewModel : BaseViewModel
         {
             SelectedObvyazka = _dialogService.ShowObvyazkaDialog();
 
-            if (SelectedObvyazka == null)
+            if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka))
                 return;
 
             var stand = CurrentProjectModel.SelectedStand;
@@ -547,15 +574,16 @@ public class ProjectViewModel : BaseViewModel
             if (selectedPurpose.Id == 0)
             {
                 var selectedComponent = CurrentProjectModel.SelectedStand.AdditionalEquipsInStand.FirstOrDefault();
-                if (selectedComponent != null)
-                {
-                    selectedPurpose.FormedAdditionalEquipId = selectedComponent.Id;
-                }
-                else
-                {
-                    _notificationService.ShowError("Нет дополнительного компонента для назначения.");
+
+                if (Guard.ExitIfNull("Стенд или доп. комплектующее не выбраны!",
+                    _notificationService,
+                    CurrentProjectModel.SelectedStand,
+                    selectedComponent))
                     return;
-                }
+
+                selectedPurpose.FormedAdditionalEquipId = selectedComponent.Id;
+
+                _notificationService.ShowError("Нет дополнительного компонента для назначения.");
             }
 
             await UpdatePurposeAsync(CurrentProjectModel.SelectedStand.SelectedAdditionalEquip,
@@ -704,7 +732,6 @@ public class ProjectViewModel : BaseViewModel
     #endregion
 
     #region Методы загрузки данных на view
-
     public async Task LoadStandsDataAsync()
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -772,10 +799,13 @@ public class ProjectViewModel : BaseViewModel
 
     private async Task AddObvToStandAsync()
     {
-        if (CurrentProjectModel.SelectedStand == null)
+        if (Guard.ExitIfNull("Не выбран тип обвязки или стенд!", _notificationService, SelectedObvyazka, CurrentProjectModel.SelectedStand))
             return;
 
         var entity = await _standService.CreateObvyazkaAsync(CurrentProjectModel.SelectedStand, SelectedObvyazka);
+
+        if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, entity))
+            return;
 
         await _standService.AddObvyazkaToStandAsync(CurrentProjectModel.SelectedStand.Id, entity);
 
@@ -788,24 +818,13 @@ public class ProjectViewModel : BaseViewModel
         var stand = CurrentProjectModel?.SelectedStand;
         var selectedObv = stand?.SelectedObvyazkaInStand;
 
-        if (stand == null || selectedObv == null)
-        {
-            _notificationService.ShowInfo("Обвязка или стенд не выбран");
+        if (Guard.ExitIfNull("Стенд или обвязка не выбраны", _notificationService, stand, selectedObv))
             return;
-        }
 
         var standId = stand.Id;
         var obvId = selectedObv.Id;
 
-        try
-        {
-            await _projectService.DeleteObvFromStandAsync(standId, obvId);
-        }
-        catch (Exception ex)
-        {
-            _notificationService.ShowError($"Не удалось удалить обвязку: {ex.Message}");
-            return;
-        }
+        await _projectService.DeleteObvFromStandAsync(standId, obvId);
 
         var toRemove = stand.ObvyazkiInStand?.FirstOrDefault(o => o.Id == obvId);
         if (toRemove != null)
@@ -891,11 +910,9 @@ public class ProjectViewModel : BaseViewModel
         }
 
         var stand = CurrentProjectModel.SelectedStand;
-        if (stand == null)
-        {
-            _notificationService.ShowInfo("Стенд не выбран");
+
+        if (Guard.ExitIfNull("Стенд не выбран!", _notificationService, stand))
             return;
-        }
 
         var standEntity = StandDataConverter.ConvertToStandEntity(stand);
         await _projectRepository.UpdateStandAsync(standEntity);

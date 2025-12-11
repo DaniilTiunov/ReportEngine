@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Input;
+using ReportEngine.App.AppHelpers;
+using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Views.Controls;
 
