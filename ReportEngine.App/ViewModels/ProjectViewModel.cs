@@ -1178,6 +1178,7 @@ public class ProjectViewModel : BaseViewModel
         await LoadPurposesInStandsAsync();
         await LoadAllAvaileDataAsync();
         await LoadProjectInfoAsync(CurrentProjectModel.CurrentProjectId);
+    }
 
 
     public void OnObvyazkiInStandChanged()
