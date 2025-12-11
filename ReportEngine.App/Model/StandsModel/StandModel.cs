@@ -736,11 +736,12 @@ public class StandModel : BaseViewModel
         {
             Purposes = new ObservableCollection<AdditionalEquipPurpose>
             {
-                new() { Purpose = "Шильдик", Material = DefaultStandSettings.NamePlate,Quantity = nameplatesPerStand},
+                new() { Purpose = "Шильдик", Material = DefaultStandSettings.NamePlate,Quantity = nameplatesPerStand, Measure = "шт"},
                 new() { Purpose = "Швеллер", Material = DefaultStandSettings.SteelChannel },
                 new() { Purpose = "Хомуты" },
-                new() { Purpose = "Табличка", Material = DefaultStandSettings.NameTable },
-                new() { Purpose = "Кронштейны перепадников" }
+                new() { Purpose = "Табличка", Material = DefaultStandSettings.NameTable, Measure = "шт"},
+                new() { Purpose = "Кронштейн" },
+
             }
         };
     }
@@ -788,6 +789,62 @@ public class StandModel : BaseViewModel
 
         return standSensorQuantity;
     }
+
+
+    public int CountDifSensorsQuantity()
+    {
+        var isDifSensor = (string? typeOfSensor) => 
+        {
+            return !string.IsNullOrEmpty(typeOfSensor) ? typeOfSensor == "Датчик перепада давления": false;
+        };
+  
+        int difSensorQuantity = ObvyazkiInStand
+            .Sum(obv => 
+            {
+                int sensorsQuantity = 0;
+
+                if (isDifSensor(obv.FirstSensorType))
+                    sensorsQuantity++;
+
+                if (isDifSensor(obv.SecondSensorType))
+                    sensorsQuantity++;
+
+                if (isDifSensor(obv.ThirdSensorType))
+                    sensorsQuantity++;
+
+                return sensorsQuantity;
+            });
+
+        return difSensorQuantity;
+    }
+
+    public int CountAbsoluteSensorsQuantity()
+    {
+        var isAbsoluteSensor = (string? typeOfSensor) =>
+        {
+            return !string.IsNullOrEmpty(typeOfSensor) ? typeOfSensor == "Датчик абсолютного давления" : false;
+        };
+
+        int absoluteSensorQuantity = ObvyazkiInStand
+            .Sum(obv =>
+            {
+                int sensorsQuantity = 0;
+
+                if (isAbsoluteSensor(obv.FirstSensorType))
+                    sensorsQuantity++;
+
+                if (isAbsoluteSensor(obv.SecondSensorType))
+                    sensorsQuantity++;
+
+                if (isAbsoluteSensor(obv.ThirdSensorType))
+                    sensorsQuantity++;
+
+                return sensorsQuantity;
+            });
+
+        return absoluteSensorQuantity;
+    }
+
 
     public async Task InitializeDefaultPurposes()
     {
