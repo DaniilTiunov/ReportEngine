@@ -1,4 +1,9 @@
-﻿using System.Windows.Controls;
+﻿using ReportEngine.App.AppHelpers;
+using ReportEngine.App.Model.StandsModel;
+using ReportEngine.App.ViewModels;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Windows.Controls;
 using System.Windows.Input;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
@@ -12,7 +17,11 @@ public partial class StandObvView : UserControl
 {
     private bool _allowEdit;
 
+    private StandModel? _currentSelectedStand;
+    private PropertyChangedEventHandler? _currentEventHandler;
+
     private readonly ProjectViewModel _projectViewModel;
+
     public StandObvView(ProjectViewModel projectViewModel)
     {
         InitializeComponent();
@@ -21,7 +30,6 @@ public partial class StandObvView : UserControl
         _projectViewModel = projectViewModel;
 
         Loaded += async (_, __) => await InitializeDataAsync(projectViewModel);
-
     }
 
     private async Task InitializeDataAsync(ProjectViewModel projectViewModel)
@@ -30,8 +38,10 @@ public partial class StandObvView : UserControl
         await projectViewModel.LoadObvyazkiAsync();
         await projectViewModel.LoadAllAvaileDataAsync();
         await projectViewModel.LoadPurposesInStandsAsync();
-        projectViewModel.UpdateNewObvNN();
-        projectViewModel.UpdateChannelsQuantity();
+
+        projectViewModel.OnObvyazkiInStandChanged();
+        projectViewModel.OnFramesInStandChanged();
+
     }
 
     private void FillStandFieldsFromObvyazkaCommand_DoubleClick(object sender, MouseButtonEventArgs e)
@@ -73,4 +83,6 @@ public partial class StandObvView : UserControl
 
         _allowEdit = false;
     }
+
+
 }

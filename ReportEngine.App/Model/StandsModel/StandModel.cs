@@ -46,7 +46,7 @@ public class StandModel : BaseViewModel
     private string _design;
 
     // Описание стенда
-    private string _designeStand;
+    private string _designStand;
 
     // Количество приборов
     private int _devices;
@@ -545,10 +545,10 @@ public class StandModel : BaseViewModel
     }
 
     // Описание стенда
-    public string? DesigneStand
+    public string? DesignStand
     {
-        get => _designeStand;
-        set => Set(ref _designeStand, value);
+        get => _designStand;
+        set => Set(ref _designStand, value);
     } //Описание
 
     // Бинарные данные изображения чертежа стенда
@@ -730,11 +730,13 @@ public class StandModel : BaseViewModel
 
     public void InitializeAdditionalEquip()
     {
+        float nameplatesPerStand = 1.0f;
+        
         NewAdditionalEquip = new FormedAdditionalEquip
         {
             Purposes = new ObservableCollection<AdditionalEquipPurpose>
             {
-                new() { Purpose = "Шильдик", Material = DefaultStandSettings.NamePlate },
+                new() { Purpose = "Шильдик", Material = DefaultStandSettings.NamePlate,Quantity = nameplatesPerStand},
                 new() { Purpose = "Швеллер", Material = DefaultStandSettings.SteelChannel },
                 new() { Purpose = "Хомуты" },
                 new() { Purpose = "Табличка", Material = DefaultStandSettings.NameTable },
@@ -771,13 +773,13 @@ public class StandModel : BaseViewModel
             {
                 int sensorsQuantity = 0;
 
-                if (obv.FirstSensorType != null)
+                if (!string.IsNullOrEmpty(obv.FirstSensorType))
                     sensorsQuantity++;
 
-                if (obv.SecondSensorType != null)
+                if (!string.IsNullOrEmpty(obv.SecondSensorType))
                     sensorsQuantity++;
 
-                if (obv.ThirdSensorType != null)
+                if (!string.IsNullOrEmpty(obv.ThirdSensorType))
                     sensorsQuantity++;
 
                 return sensorsQuantity;
