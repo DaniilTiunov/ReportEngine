@@ -1,9 +1,14 @@
 ﻿using ReportEngine.App.AppHelpers;
+using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ViewModels;
-using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Input;
+using ReportEngine.App.AppHelpers;
+using ReportEngine.App.ViewModels;
+using System.Windows;
+using ReportEngine.App.Display;
 
 namespace ReportEngine.App.Views.Controls;
 
@@ -12,7 +17,10 @@ namespace ReportEngine.App.Views.Controls;
 /// </summary>
 public partial class StandObvView : UserControl
 {
+    private bool _allowEdit;
+
     private readonly ProjectViewModel _projectViewModel;
+
     public StandObvView(ProjectViewModel projectViewModel)
     {
         InitializeComponent();
@@ -21,7 +29,8 @@ public partial class StandObvView : UserControl
         _projectViewModel = projectViewModel;
 
         Loaded += async (_, __) => await InitializeDataAsync(projectViewModel);
-        
+
+        PreviewKeyDown += StandObvView_PreviewKeyDown;
     }
 
     private async Task InitializeDataAsync(ProjectViewModel projectViewModel)
@@ -30,7 +39,19 @@ public partial class StandObvView : UserControl
         await projectViewModel.LoadObvyazkiAsync();
         await projectViewModel.LoadAllAvaileDataAsync();
         await projectViewModel.LoadPurposesInStandsAsync();
-        projectViewModel.UpdateNewObvNN();
+
+        projectViewModel.OnObvyazkiInStandChanged();
+        projectViewModel.OnFramesInStandChanged();
+    }
+
+    private async void StandObvView_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.F5)
+        {
+            e.Handled = true;
+
+            await InitializeDataAsync(_projectViewModel);
+        }
     }
 
     private void FillStandFieldsFromObvyazkaCommand_DoubleClick(object sender, MouseButtonEventArgs e)
@@ -41,27 +62,34 @@ public partial class StandObvView : UserControl
         });
     }
 
-    private void TypeSensor_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
     {
-        ExceptionHelper.SafeExecute(() =>
-        {
+        var scrollViewer = sender as ScrollViewer;
+        if (scrollViewer == null) return;
 
-            var electicComponents = _projectViewModel.CurrentStandModel.NewElectricalComponent.Purposes;
-            var cableInputsRecord = electicComponents
-                .FirstOrDefault(purpose => purpose.Purpose == "Кабельные вводы");
-
-            var sensorsQuantity = _projectViewModel.CurrentStandModel.CountSensorsQuantity();
-            if (cableInputsRecord != null)
-            {
-                //TODO:забыть как страшный сон, временное решение
-                var cableInputsQuantity = 0.5 * Math.Pow(sensorsQuantity, 3) - 1.5 * Math.Pow(sensorsQuantity, 2) + 3 * sensorsQuantity;
-                cableInputsRecord.Quantity = (float?) cableInputsQuantity;
-            }
-
-            CollectionRefreshHelper.SafeRefreshCollection(_projectViewModel.CurrentStandModel.NewElectricalComponent.Purposes);
-
-        });
+        // Принудительно прокручиваем ScrollViewer
+        scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta);
+        e.Handled = true;
     }
 
+    private void DataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+    {
+        if (!_allowEdit)
+            e.Cancel = true;
+    }
 
+    private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is not DataGrid grid)
+            return;
+
+        _allowEdit = true;
+
+        if (grid.CurrentCell != null)
+        {
+            grid.BeginEdit();
+        }
+
+        _allowEdit = false;
+    }
 }

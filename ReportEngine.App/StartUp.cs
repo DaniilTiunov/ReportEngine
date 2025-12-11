@@ -21,13 +21,12 @@ public class StartUp
 
             var app = host.Services.GetRequiredService<App>();
 
-            //var listener = host.Services.GetRequiredService<EquipChangesListener>();
-            //listener.StartAsync();
-
             var mainWindow = host.Services.GetRequiredService<MainWindow>();
             app.MainWindow = mainWindow;
 
             mainWindow.Show();
+
+            host.StartAsync();
 
             app.Run();
         }

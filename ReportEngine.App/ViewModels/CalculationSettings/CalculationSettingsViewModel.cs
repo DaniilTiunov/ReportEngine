@@ -1,7 +1,7 @@
-﻿using ReportEngine.App.Commands;
+﻿using System.Windows.Input;
+using ReportEngine.App.Commands;
 using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Services.Interfaces;
-using System.Windows.Input;
 
 namespace ReportEngine.App.ViewModels.CalculationSettings;
 

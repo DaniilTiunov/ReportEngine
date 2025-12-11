@@ -1,6 +1,6 @@
-﻿using ReportEngine.App.ViewModels.FormedEquips;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
+using ReportEngine.App.ViewModels.FormedEquips;
 
 namespace ReportEngine.App.Views.Windows;
 

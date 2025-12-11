@@ -16,7 +16,14 @@
         <converters:ByteArrayImageConverter x:Key="ByteArrayImageConverter" />
     </UserControl.Resources>
 
-    <ScrollViewer>
+    <UserControl.InputBindings>
+        <KeyBinding
+            Key="F5"
+            Command="{Binding ProjectCommandProvider.UpdateUICommand}"
+            CommandParameter="{x:Null}" />
+    </UserControl.InputBindings>
+
+    <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
         <Grid Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" MinHeight="250" />
@@ -338,9 +345,11 @@
                     </TextBlock>
                 </GroupBox.Header>
                 <DataGrid
+                    BeginningEdit="DataGrid_BeginningEdit"
                     CanUserAddRows="True"
                     FontSize="15"
                     ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}"
+                    MouseDoubleClick="DataGrid_MouseDoubleClick"
                     SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedElectricalComponent}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
@@ -390,9 +399,11 @@
                     </TextBlock>
                 </GroupBox.Header>
                 <DataGrid
+                    BeginningEdit="DataGrid_BeginningEdit"
                     CanUserAddRows="True"
                     FontSize="15"
                     ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand}"
+                    MouseDoubleClick="DataGrid_MouseDoubleClick"
                     SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedAdditionalEquip}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
@@ -442,9 +453,11 @@
                     </TextBlock>
                 </GroupBox.Header>
                 <DataGrid
+                    BeginningEdit="DataGrid_BeginningEdit"
                     CanUserAddRows="True"
                     FontSize="15"
                     ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand}"
+                    MouseDoubleClick="DataGrid_MouseDoubleClick"
                     SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedDrainagePurpose}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />

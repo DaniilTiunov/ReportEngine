@@ -11,11 +11,13 @@ public class ObvyazkaInStand
 
     public int StandId { get; set; }
 
-    [ForeignKey("StandId")] public virtual Stand Stand { get; set; }
+    [ForeignKey("StandId")]
+    public virtual Stand Stand { get; set; }
 
     public int ObvyazkaId { get; set; }
 
-    [ForeignKey("ObvyazkaId")] public virtual Obvyazka Obvyazka { get; set; }
+    [ForeignKey("ObvyazkaId")]
+    public virtual Obvyazka Obvyazka { get; set; }
 
     public string? ObvyazkaName { get; set; }
     public string? MaterialLine { get; set; }
@@ -39,20 +41,18 @@ public class ObvyazkaInStand
     public string? ArmatureCostPerUnit { get; set; }
     public int? ArmatureExportDays { get; set; }
     public int? NN { get; set; }
-    public float? LineLength { get; set; } // Длина линии
-    public float? ZraCount { get; set; } //Количество ЗРА
-    public float? TreeSocketCount { get; set; } //Кол-во тройников
-    public int? Sensor { get; set; } //Датчики
-    public string? SensorType { get; set; } //Тип датчиков
-    public float? Clamp { get; set; } //Хомуты
-    public float? WidthOnFrame { get; set; } //Длина на раме
-    public int? OtherLineCount { get; set; } //Колво др. линий
-    public float? Weight { get; set; } //Масса
-    public float? HumanCost { get; set; } //Трудозатраты чел/час
+    public float? LineLength { get; set; }
+    public float? ZraCount { get; set; }
+    public float? TreeSocketCount { get; set; }
+    public int? Sensor { get; set; }
+    public string? SensorType { get; set; }
+    public float? Clamp { get; set; }
+    public float? WidthOnFrame { get; set; }
+    public int? OtherLineCount { get; set; }
+    public float? Weight { get; set; }
+    public float? HumanCost { get; set; }
+    public string? ImageName { get; set; }
 
-    public string? ImageName { get; set; } //Название картинки
-
-    // Датчики (до 3-х)
     public string? FirstSensorType { get; set; }
     public string? FirstSensorKKS { get; set; }
     public string? FirstSensorMarkPlus { get; set; }
@@ -70,4 +70,6 @@ public class ObvyazkaInStand
     public string? ThirdSensorMarkPlus { get; set; }
     public string? ThirdSensorMarkMinus { get; set; }
     public string? ThirdSensorDescription { get; set; }
+
+    public virtual ICollection<ObvyazkaAdditionalEquipPurpose>? AdditionalComponents { get; set; }
 }

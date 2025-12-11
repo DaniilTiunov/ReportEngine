@@ -24,11 +24,9 @@ public class ObvyazkaRepository : IObvyazkaRepository
     {
         if (obvyazka == null) return;
 
-        if (obvyazka != null)
-        {
-            _context.Set<Obvyazka>().Remove(obvyazka);
-            await _context.SaveChangesAsync();
-        }
+        _context.Set<Obvyazka>().Remove(obvyazka);
+        await _context.SaveChangesAsync();
+
     }
 
     public async Task<IEnumerable<Obvyazka>> GetAllAsync()

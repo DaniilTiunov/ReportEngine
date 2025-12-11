@@ -22,6 +22,26 @@ namespace ReportEngine.Domain.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("ReportEngine.Domain.Background.TablesChanges", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("TableName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TablesChanges");
+                });
+
             modelBuilder.Entity("ReportEngine.Domain.Entities.AdditionalEquipPurpose", b =>
                 {
                     b.Property<int>("Id")
@@ -1048,6 +1068,42 @@ namespace ReportEngine.Domain.Migrations
                     b.ToTable("Obvyazki");
                 });
 
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ObvyazkaAdditionalEquipPurpose", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float?>("CostPerUnit")
+                        .HasColumnType("real");
+
+                    b.Property<int?>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Material")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Measure")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("ObvyazkaInStandId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Purpose")
+                        .HasColumnType("text");
+
+                    b.Property<float?>("Quantity")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ObvyazkaInStandId");
+
+                    b.ToTable("ObvyazkaAdditionalEquipPurpose");
+                });
+
             modelBuilder.Entity("ReportEngine.Domain.Entities.ObvyazkaInStand", b =>
                 {
                     b.Property<int>("Id")
@@ -1792,6 +1848,16 @@ namespace ReportEngine.Domain.Migrations
                     b.Navigation("FormedFrame");
                 });
 
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ObvyazkaAdditionalEquipPurpose", b =>
+                {
+                    b.HasOne("ReportEngine.Domain.Entities.ObvyazkaInStand", "ObvyazkaInStand")
+                        .WithMany("AdditionalComponents")
+                        .HasForeignKey("ObvyazkaInStandId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("ObvyazkaInStand");
+                });
+
             modelBuilder.Entity("ReportEngine.Domain.Entities.ObvyazkaInStand", b =>
                 {
                     b.HasOne("ReportEngine.Domain.Entities.Obvyazka", "Obvyazka")
@@ -1938,6 +2004,11 @@ namespace ReportEngine.Domain.Migrations
                     b.Navigation("Components");
 
                     b.Navigation("StandFrames");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ObvyazkaInStand", b =>
+                {
+                    b.Navigation("AdditionalComponents");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.ProjectInfo", b =>

@@ -1,8 +1,10 @@
-﻿using ReportEngine.App.Model.StandsModel;
+﻿using System.Collections.ObjectModel;
+using ReportEngine.App.AppHelpers;
+using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
-using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Services.Core;
 
@@ -15,6 +17,7 @@ public class StandService : IStandService
     private readonly IFrameRepository _formedFrameRepository;
     private readonly INotificationService _notificationService;
     private readonly IProjectInfoRepository _projectRepository;
+    private readonly ReAppContext _context;
 
     public StandService(IProjectInfoRepository projectRepository,
         IFrameRepository frameRepository,
@@ -22,7 +25,8 @@ public class StandService : IStandService
         INotificationService notificationService,
         IFormedAdditionalEquipsRepository formedAdditionalEquipsRepository,
         IFormedElectricalRepository formedElectricalRepository,
-        IContainerRepository containerRepository)
+        IContainerRepository containerRepository,
+        ReAppContext context)
     {
         _projectRepository = projectRepository;
         _formedFrameRepository = frameRepository;
@@ -31,6 +35,7 @@ public class StandService : IStandService
         _formedAdditionalEquipsRepository = formedAdditionalEquipsRepository;
         _formedElectricalRepository = formedElectricalRepository;
         _containerRepository = containerRepository;
+        _context = context;
     }
 
     public async Task<IEnumerable<FormedFrame>> LoadAllAvailableFrameAsync()
@@ -192,10 +197,15 @@ public class StandService : IStandService
     public Task<ObvyazkaInStand> CreateObvyazkaAsync(StandModel standModel, Obvyazka selectedObvyazka)
     {
         if (standModel == null)
+        {
             _notificationService.ShowError("Стенд не выбран!");
+            return Task.FromResult<ObvyazkaInStand>(null);
+        }
 
-        if (selectedObvyazka == null)
-            _notificationService.ShowError("Обвязка не выбрана!");
+        if (selectedObvyazka == null || selectedObvyazka.Id <= 0)
+        {
+            return Task.FromResult<ObvyazkaInStand>(null);
+        }
 
         var entity = new ObvyazkaInStand
         {
@@ -249,7 +259,21 @@ public class StandService : IStandService
             ThirdSensorKKS = standModel.ThirdSensorKKS,
             ThirdSensorMarkPlus = standModel.ThirdSensorMarkPlus,
             ThirdSensorMarkMinus = standModel.ThirdSensorMarkMinus,
-            ThirdSensorDescription = standModel.ThirdSensorDescription
+            ThirdSensorDescription = standModel.ThirdSensorDescription,
+            AdditionalComponents = standModel.ObvyazkaAdditionalComponents
+                                    .Select(component => new ObvyazkaAdditionalEquipPurpose
+                                    {
+                                        Purpose = component.Purpose,
+                                        Material = component.Material,
+                                        Quantity = component.Quantity,
+                                        CostPerUnit = component.CostPerUnit,
+                                        Measure = component.Measure,
+                                        ExportDays = component.ExportDays,
+                                        Id = component.Id
+
+
+                                    })
+                                    .ToList()
         };
 
         return Task.FromResult(entity);
@@ -295,6 +319,27 @@ public class StandService : IStandService
         stand.ThirdSensorMarkPlus = obv.ThirdSensorMarkPlus;
         stand.ThirdSensorMarkMinus = obv.ThirdSensorMarkMinus;
         stand.ThirdSensorDescription = obv.ThirdSensorDescription;
+
+
+
+        if (obv.AdditionalComponents != null)
+        {
+            stand.ObvyazkaAdditionalComponents = new ObservableCollection<ObvyazkaAdditionalEquipPurpose>(
+                obv.AdditionalComponents
+                .Select(component => new ObvyazkaAdditionalEquipPurpose
+                {
+                    Purpose = component.Purpose,
+                    Material = component.Material,
+                    Quantity = component.Quantity,
+                    CostPerUnit = component.CostPerUnit,
+                    Measure = component.Measure,
+                    ExportDays = component.ExportDays,
+                    Id = component.Id
+                }));
+            CollectionRefreshHelper.SafeRefreshCollection(stand.ObvyazkaAdditionalComponents);
+        }
+
+        ;
 
         await Task.CompletedTask;
     }

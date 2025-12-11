@@ -1,6 +1,6 @@
-using ReportEngine.Shared.Config.Directory;
 using System.Globalization;
 using System.Windows.Data;
+using ReportEngine.Shared.Config.Directory;
 
 namespace ReportEngine.App.Display;
 

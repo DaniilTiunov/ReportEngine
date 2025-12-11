@@ -41,7 +41,7 @@ Name: "dotnet"; Description: "Установить .NET 8.0?"; GroupDescription:
 Source: "T:\00 ОКП АСУ\01 Группа разработки ПО\Тиунов\Приложение Стенды КИП\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 ; .NET Runtime для первой установки
-Source: "C:\Work\Установщики\dotnet-sdk-8.0.317-win-x64.exe"; DestDir: "{tmp}"; Flags: ignoreversion
+Source: "C:\Work\Установщики\dotnet-sdk-8.0.319-win-x64.exe"; DestDir: "{tmp}"; Flags: ignoreversion
 
 [Registry]
 Root: HKA; Subkey: "Software\Classes\{#MyAppAssocExt}\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppAssocKey}"; ValueData: ""; Flags: uninsdeletevalue
@@ -55,7 +55,7 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilen
 
 [Run]
 ; Устанавливаем .NET Runtime, если выбрана галочка "dotnet"
-Filename: "{tmp}\dotnet-sdk-8.0.317-win-x64.exe"; Parameters: "/quiet /norestart"; StatusMsg: "Установка .NET Desktop Runtime 8.0..."; Tasks: dotnet
+Filename: "{tmp}\dotnet-sdk-8.0.319-win-x64.exe"; Parameters: "/quiet /norestart"; StatusMsg: "Установка .NET Desktop Runtime 8.0..."; Tasks: dotnet
 
 ; Запуск основного приложения после установки
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent

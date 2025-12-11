@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic;
+﻿using System.Collections.ObjectModel;
+using Microsoft.VisualBasic;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
@@ -8,7 +9,6 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Enums;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
-using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Services.Core;
 
@@ -131,21 +131,67 @@ public class ProjectService : IProjectService
             var existingKKS = projectModel.Stands.Select(s => s.KKSCode).ToHashSet();
             var existingDesign = projectModel.Stands.Select(s => s.Design).ToHashSet();
 
-            // Создаем временный объект для итеративного копирования
-            var currentStand = selectedStand;
-
+            // Копируем всегда с исходного стенда, а не с предыдущей копии
             for (var i = 1; i <= count; i++)
             {
-                var newStand = await CopyStandFromSourceStandAsync(currentStand, projectModel.CurrentProjectId);
+                var newStand = await CopyStandFromSourceStandAsync(selectedStand, projectModel.CurrentProjectId, i);
 
                 projectModel.Stands.Add(newStand);
-
-                currentStand = newStand;
             }
 
             await _standService.LoadStandsDataAsync(projectModel.Stands);
             _notificationService.ShowInfo($"Создано копий: {count}");
         });
+    }
+
+    private async Task<StandModel> CopyStandFromSourceStandAsync(StandModel sourceStand, int projectId, int copyIndex)
+    {
+        if (Guard.ExitIfNull("Отсутствует серийный номер!", _notificationService, sourceStand.SerialNumber, sourceStand))
+            return null;
+
+        var newStand = new StandModel
+        {
+            Design = sourceStand.Design,
+            KKSCode = sourceStand.KKSCode,
+            ProjectId = projectId,
+            Armature = sourceStand.Armature,
+            BraceType = sourceStand.BraceType,
+            Devices = sourceStand.Devices,
+            KMCH = sourceStand.KMCH,
+            MaterialLine = sourceStand.MaterialLine,
+            NN = sourceStand.NN + copyIndex,
+            Number = sourceStand.Number + copyIndex,
+            ObvyazkaName = sourceStand.ObvyazkaName,
+            SerialNumber = StandUniqNameHelper.SetUniqNameForStand(sourceStand, copyIndex),
+            TreeSocket = sourceStand.TreeSocket,
+            Weight = sourceStand.Weight,
+            Width = sourceStand.Width,
+            DesignStand = sourceStand.DesignStand,
+            ObvyazkiInStand = new ObservableCollection<ObvyazkaInStand>(
+                sourceStand.ObvyazkiInStand.Select(obv =>
+                        ObvyzkaModelWrapper.CloneForStand(obv, 0) // 0 или newStand.Id, если уже есть
+                ))
+        };
+
+        var newStandEntity = StandDataConverter.ConvertToStandEntity(newStand);
+        var addedStandEntity = await _projectRepository.AddStandAsync(projectId, newStandEntity);
+
+        newStand.Id = addedStandEntity.Id;
+        newStand.ProjectId = addedStandEntity.ProjectInfoId;
+
+        if (sourceStand.FramesInStand != null && sourceStand.DrainagesInStand.Any())
+            await CopyFramesToNewStandAsync(newStand, sourceStand.FramesInStand);
+
+        if (sourceStand.DrainagesInStand != null && sourceStand.DrainagesInStand.Any())
+            await CopyDrainagesToNewStandAsync(newStand.Id, sourceStand.DrainagesInStand.First());
+
+        if (sourceStand.AdditionalEquipsInStand != null && sourceStand.AdditionalEquipsInStand.Any())
+            await CopyAdditionalEquipsToNewStandAsync(newStand.Id, sourceStand.AdditionalEquipsInStand.First());
+
+        if (sourceStand.ElectricalComponentsInStand != null && sourceStand.ElectricalComponentsInStand.Any())
+            await CopyElectricalComponentsToNewStandAsync(newStand.Id, sourceStand.ElectricalComponentsInStand.First());
+
+        return newStand;
     }
 
     public async Task UpdateProjectAsync(ProjectModel projectModel)
@@ -238,6 +284,7 @@ public class ProjectService : IProjectService
             }
 
         model.SelectedStand = model.Stands.FirstOrDefault();
+
         return model;
     }
 
@@ -248,9 +295,13 @@ public class ProjectService : IProjectService
 
     public async Task UpdateObvInStandAsync(ProjectModel projectModel, Obvyazka selectedObvyazka)
     {
+        if (Guard.ExitIfNull("Сначала создайте проект!", _notificationService, projectModel))
+            return;
+
         var stand = projectModel.SelectedStand;
-        var obv = stand.SelectedObvyazkaInStand;
-        if (stand == null || obv == null)
+        var obv = stand?.SelectedObvyazkaInStand;
+
+        if (Guard.ExitIfNull("Сначала создайте стенд или выберите обвязку!", _notificationService, stand, obv))
             return;
 
         obv.ObvyazkaName = stand.ObvyazkaName;
@@ -338,45 +389,6 @@ public class ProjectService : IProjectService
         foreach (var obvyazkiInStand in obvyazkiInStands) projectModel.ObvyazkiInProject.Add(obvyazkiInStand);
     }
 
-    private async Task<StandModel> CopyStandFromSourceStandAsync(StandModel sourceStand, int projectId)
-    {
-        var newStand = new StandModel
-        {
-            Design = sourceStand.Design,
-            KKSCode = sourceStand.KKSCode,
-            ProjectId = projectId,
-            Armature = sourceStand.Armature,
-            BraceType = sourceStand.BraceType,
-            Devices = sourceStand.Devices,
-            KMCH = sourceStand.KMCH,
-            MaterialLine = sourceStand.MaterialLine,
-            NN = sourceStand.NN + 1,
-            ObvyazkaName = sourceStand.ObvyazkaName,
-            SerialNumber = StandUniqNameHelper.SetUniqNameForStand(sourceStand),
-            TreeSocket = sourceStand.TreeSocket,
-            Weight = sourceStand.Weight,
-            Width = sourceStand.Width,
-            DesigneStand = sourceStand.DesigneStand,
-            ObvyazkiInStand = new ObservableCollection<ObvyazkaInStand>(
-                sourceStand.ObvyazkiInStand.Select(obv =>
-                        ObvyzkaModelWrapper.CloneForStand(obv, 0) // 0 или newStand.Id, если уже есть
-                ))
-        };
-
-        var newStandEntity = StandDataConverter.ConvertToStandEntity(newStand);
-        var addedStandEntity = await _projectRepository.AddStandAsync(projectId, newStandEntity);
-
-        newStand.Id = addedStandEntity.Id;
-        newStand.ProjectId = addedStandEntity.ProjectInfoId;
-
-        await CopyFramesToNewStandAsync(newStand, sourceStand.FramesInStand);
-        await CopyDrainagesToNewStandAsync(newStand.Id, sourceStand.DrainagesInStand.First());
-        await CopyAdditionalEquipsToNewStandAsync(newStand.Id, sourceStand.AdditionalEquipsInStand.First());
-        await CopyElectricalComponentsToNewStandAsync(newStand.Id, sourceStand.ElectricalComponentsInStand.First());
-
-        return newStand;
-    }
-
     private async Task CopyFramesToNewStandAsync(StandModel newStand, ObservableCollection<FormedFrame> frames)
     {
         foreach (var frame in frames)
@@ -438,9 +450,9 @@ public class ProjectService : IProjectService
             };
 
             newComponent.Purposes.Add(newPurpose);
-
-            await _projectRepository.AddAdditionalEquipToStandAsync(newStandId, newComponent.Id);
         }
+
+        await _projectRepository.AddAdditionalEquipToStandAsync(newStandId, newComponent.Id);
     }
 
     private async Task CopyElectricalComponentsToNewStandAsync(int newStandId, FormedElectricalComponent source)

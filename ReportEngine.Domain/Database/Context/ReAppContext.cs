@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ReportEngine.Domain.Background;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.Braces;
@@ -74,4 +75,6 @@ public class ReAppContext : DbContext
     public DbSet<Stand> Stands { get; set; }
     public DbSet<ContainerStand> ContainersStand { get; set; } // Ящики с стендами
     public DbSet<ContainerBatch> ContainersBatch { get; set; } // Ящики с стендами
+
+    public DbSet<TablesChanges> TablesChanges { get; set; }
 }

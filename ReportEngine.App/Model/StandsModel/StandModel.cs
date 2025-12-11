@@ -1,8 +1,8 @@
-﻿using ReportEngine.App.Model.CalculationModels;
+﻿using System.Collections.ObjectModel;
+using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Model.FormedEquipsModels;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
-using System.Collections.ObjectModel;
 
 namespace ReportEngine.App.Model.StandsModel;
 
@@ -46,10 +46,13 @@ public class StandModel : BaseViewModel
     private string _design;
 
     // Описание стенда
-    private string _designeStand;
+    private string _designStand;
 
     // Количество приборов
     private int _devices;
+
+    //коллекция доп комплектующих обвязки
+    private ObservableCollection<ObvyazkaAdditionalEquipPurpose> _obvyazkaAdditionalComponents = new();
 
     // Коллекция дренажей, находящихся в стенде
     private ObservableCollection<FormedDrainage> _drainagesInStand = new();
@@ -217,7 +220,7 @@ public class StandModel : BaseViewModel
 
     // Доступные типы датчиков
     public IEnumerable<string> SensorType { get; } = new List<string>
-        { "Датчик перепада давления", "Манометр", "Датчик абсолютного давления", "Манометр электрокомпактный" };
+        { "", "Датчик перепада давления", "Манометр", "Датчик абсолютного давления", "Манометр электрокомпактный" };
 
     // Идентификатор стенда
     public int Id
@@ -542,10 +545,10 @@ public class StandModel : BaseViewModel
     }
 
     // Описание стенда
-    public string? DesigneStand
+    public string? DesignStand
     {
-        get => _designeStand;
-        set => Set(ref _designeStand, value);
+        get => _designStand;
+        set => Set(ref _designStand, value);
     } //Описание
 
     // Бинарные данные изображения чертежа стенда
@@ -595,6 +598,12 @@ public class StandModel : BaseViewModel
     {
         get => _obvyazkiInStand;
         set => Set(ref _obvyazkiInStand, value);
+    }
+
+    public ObservableCollection<ObvyazkaAdditionalEquipPurpose> ObvyazkaAdditionalComponents
+    {
+        get => _obvyazkaAdditionalComponents;
+        set => Set(ref _obvyazkaAdditionalComponents, value);
     }
 
     // Выбранный дренаж
@@ -696,6 +705,14 @@ public class StandModel : BaseViewModel
 
     public StandSettingsModel DefaultStandSettings { get; set; } = new();
 
+    public void InitializeObvAdditionalPurposes()
+    {
+        ObvyazkaAdditionalComponents = new ObservableCollection<ObvyazkaAdditionalEquipPurpose>
+        {
+             new() { Purpose = "Доп.компонент" },
+        };
+    }
+
     public void InitializeDrainagePurposes()
     {
         NewDrainage = new FormedDrainage
@@ -713,11 +730,13 @@ public class StandModel : BaseViewModel
 
     public void InitializeAdditionalEquip()
     {
+        float nameplatesPerStand = 1.0f;
+        
         NewAdditionalEquip = new FormedAdditionalEquip
         {
             Purposes = new ObservableCollection<AdditionalEquipPurpose>
             {
-                new() { Purpose = "Шильдик", Material = DefaultStandSettings.NamePlate },
+                new() { Purpose = "Шильдик", Material = DefaultStandSettings.NamePlate,Quantity = nameplatesPerStand},
                 new() { Purpose = "Швеллер", Material = DefaultStandSettings.SteelChannel },
                 new() { Purpose = "Хомуты" },
                 new() { Purpose = "Табличка", Material = DefaultStandSettings.NameTable },
@@ -744,23 +763,30 @@ public class StandModel : BaseViewModel
                 new() { Purpose = "Кронштейн коробки" }
             }
         };
-    }
 
+    }
 
     public int CountSensorsQuantity()
     {
-        int sensorsQuantity = 0;
+        int standSensorQuantity = ObvyazkiInStand
+            .Sum(obv =>
+            {
+                int sensorsQuantity = 0;
 
-        if (FirstSensorType != null)
-            sensorsQuantity++;
+                if (!string.IsNullOrEmpty(obv.FirstSensorType))
+                    sensorsQuantity++;
 
-        if (SecondSensorType != null)
-            sensorsQuantity++;
+                if (!string.IsNullOrEmpty(obv.SecondSensorType))
+                    sensorsQuantity++;
 
-        if (ThirdSensorType != null)
-            sensorsQuantity++;
+                if (!string.IsNullOrEmpty(obv.ThirdSensorType))
+                    sensorsQuantity++;
 
-        return sensorsQuantity;
+                return sensorsQuantity;
+            });
+
+
+        return standSensorQuantity;
     }
 
     public async Task InitializeDefaultPurposes()
@@ -770,5 +796,6 @@ public class StandModel : BaseViewModel
         InitializeElectricalComponent();
         InitializeAdditionalEquip();
         InitializeDrainagePurposes();
+        InitializeObvAdditionalPurposes();
     }
 }

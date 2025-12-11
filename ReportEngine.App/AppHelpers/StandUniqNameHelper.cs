@@ -1,14 +1,20 @@
-﻿using ReportEngine.App.Model.StandsModel;
+﻿using Microsoft.WindowsAPICodePack.Shell.Interop;
+using ReportEngine.App.Display;
+using ReportEngine.App.Model.StandsModel;
 
 namespace ReportEngine.App.AppHelpers;
 
 public static class StandUniqNameHelper
 {
-    public static string SetUniqNameForStand(StandModel standModel)
+    public static string SetUniqNameForStand(StandModel standModel, int offset = 1)
     {
         var standSerialNumber = standModel.SerialNumber; // например "25-02.222"
 
+        if(standSerialNumber == null)
+            throw new Exception("Отсутствует серийный номер!");
+
         var parts = standSerialNumber.Split('.');
+
         if (parts.Length != 2)
             throw new Exception("Некорректный формат серийного номера");
 
@@ -17,8 +23,8 @@ public static class StandUniqNameHelper
         if (!int.TryParse(parts[1], out var currentNumber))
             throw new Exception("Некорректный числовой суффикс");
 
-        // Увеличиваем номер
-        var nextNumber = currentNumber + 1;
+        // Увеличиваем номер на offset
+        var nextNumber = currentNumber + offset;
 
         return $"{baseName}.{nextNumber:D3}";
     }

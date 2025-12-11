@@ -1,6 +1,6 @@
-﻿using ReportEngine.App.ViewModels;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Threading;
+using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.AppHelpers;
 
