@@ -1336,7 +1336,7 @@ public class ProjectViewModel : BaseViewModel
     //обновляем кол-во кронштейнов для перепадчиков
     private void UpdateDifSensorsBrackets()
     {
-        const int bracketsPerDifSensor = 2;
+        const int bracketsPerDifSensor = 1;
         const string difSensorBracketRecordName = "Кронштейн перепадчика";
 
         var difSensorsQuantity = CurrentStandModel.CountDifSensorsQuantity();
