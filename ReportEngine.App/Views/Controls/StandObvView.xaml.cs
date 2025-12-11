@@ -5,7 +5,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Input;
-
+using System.Windows;
+using ReportEngine.App.Display;
 
 namespace ReportEngine.App.Views.Controls;
 
@@ -15,9 +16,6 @@ namespace ReportEngine.App.Views.Controls;
 public partial class StandObvView : UserControl
 {
     private bool _allowEdit;
-
-    private StandModel? _currentSelectedStand;
-    private PropertyChangedEventHandler? _currentEventHandler;
 
     private readonly ProjectViewModel _projectViewModel;
 
@@ -29,6 +27,8 @@ public partial class StandObvView : UserControl
         _projectViewModel = projectViewModel;
 
         Loaded += async (_, __) => await InitializeDataAsync(projectViewModel);
+
+        PreviewKeyDown += StandObvView_PreviewKeyDown;
     }
 
     private async Task InitializeDataAsync(ProjectViewModel projectViewModel)
@@ -42,6 +42,16 @@ public partial class StandObvView : UserControl
         projectViewModel.OnFramesInStandChanged();
     }
 
+    private async void StandObvView_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.F5)
+        {
+            e.Handled = true;
+
+            await InitializeDataAsync(_projectViewModel);
+        }
+    }
+
     private void FillStandFieldsFromObvyazkaCommand_DoubleClick(object sender, MouseButtonEventArgs e)
     {
         ExceptionHelper.SafeExecute(() =>
@@ -49,7 +59,6 @@ public partial class StandObvView : UserControl
             _projectViewModel.OnFillStandFieldsFromObvyazkaCommandExecuted(sender);
         });
     }
-
 
     private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
     {
