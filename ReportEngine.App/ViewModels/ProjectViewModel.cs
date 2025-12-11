@@ -17,6 +17,7 @@ using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Xml.Serialization;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -1281,52 +1282,84 @@ public class ProjectViewModel : BaseViewModel
     //обновляем кол-во кронштейнов
     public void UpdateBracketsQuantity()
     {
-        const int bracketsPerDifSensor = 2;
-        const int bracketsPerAbsoluteSensor = 2;
+        UpdateDifSensorsBrackets();
+        UpdateAbsSensorsBrackets();
+    }
+    
 
-        const string difSensorBracketRecordName = "Кронштейн перепадчика";
+    //обновляем кол-во кронштейнов для абсолютников
+    private void UpdateAbsSensorsBrackets()
+    {
+        const int bracketsPerAbsoluteSensor = 2;
         const string absoluteSensorBracketRecordName = "Кронштейн абсолютника";
 
-        var difSensorsQuantity = CurrentStandModel.CountDifSensorsQuantity();
-        var absoluteSensorsQuantity = CurrentStandModel.CountAbsoluteSensorsQuantity();
+
+        var absSensorsQuantity = CurrentStandModel.CountAbsoluteSensorsQuantity();
 
         var additionalComponents = CurrentStandModel.NewAdditionalEquip.Purposes;
 
-        var absoluteSensorsBracketsRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == absoluteSensorBracketRecordName);
+        var absSensorsBracketsRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == absoluteSensorBracketRecordName);
 
+        if (absSensorsBracketsRecord == null && absSensorsQuantity>0)
+        {
+            absSensorsBracketsRecord = new AdditionalEquipPurpose();
+            absSensorsBracketsRecord.Purpose = absoluteSensorBracketRecordName;
+            absSensorsBracketsRecord.Quantity = bracketsPerAbsoluteSensor * absSensorsQuantity;
+            additionalComponents.Add(absSensorsBracketsRecord);
+        }
+
+        if (absSensorsBracketsRecord != null)
+        {
+            absSensorsBracketsRecord.Quantity = bracketsPerAbsoluteSensor * absSensorsQuantity;
+        }
+
+        var standBraceType = CurrentProjectModel?.SelectedStand?.BraceType;
+
+        if (absSensorsBracketsRecord != null && !string.IsNullOrEmpty(standBraceType))
+        {
+            switch (standBraceType)
+            {
+                case "На кронштейне":
+                    absSensorsBracketsRecord.Material = "Какой-то кронштейн абсолютника";
+                    break;
+                case "Швеллер":
+                    absSensorsBracketsRecord.Material = "Какой-то кронштейн универсальный";
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    }
+
+
+    //обновляем кол-во кронштейнов для перепадчиков
+    private void UpdateDifSensorsBrackets()
+    {
+        const int bracketsPerDifSensor = 2;
+        const string difSensorBracketRecordName = "Кронштейн перепадчика";
+
+        var difSensorsQuantity = CurrentStandModel.CountDifSensorsQuantity();
+
+        var additionalComponents = CurrentStandModel.NewAdditionalEquip.Purposes;
         var difSensorsBracketRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == difSensorBracketRecordName);
+        
 
-        if (difSensorsBracketRecord == null)
+        if (difSensorsBracketRecord == null && difSensorsQuantity > 0)
         {
             difSensorsBracketRecord = new AdditionalEquipPurpose();
             difSensorsBracketRecord.Purpose = difSensorBracketRecordName;
-            if (difSensorsQuantity > 0)
-            {
-                additionalComponents.Add(difSensorsBracketRecord);
-            }      
+            difSensorsBracketRecord.Material = "Какой-то кронштейн перепадчика 12345";
+            difSensorsBracketRecord.Quantity = bracketsPerDifSensor * difSensorsQuantity;
+            additionalComponents.Add(difSensorsBracketRecord);
+
         }
-
-
-        difSensorsBracketRecord.Quantity = bracketsPerDifSensor * difSensorsQuantity;
-
-
-
-        var standBraceType = CurrentProjectModel.SelectedStand.BraceType;
-
-
-        if (absoluteSensorsBracketsRecord == null)
+ 
+        if (difSensorsBracketRecord != null)
         {
-            absoluteSensorsBracketsRecord = new AdditionalEquipPurpose();
-            absoluteSensorsBracketsRecord.Purpose = absoluteSensorBracketRecordName;
-            if (absoluteSensorsQuantity > 0)
-            {
-               additionalComponents.Add(absoluteSensorsBracketsRecord);
-            }
-            
+            difSensorsBracketRecord.Quantity = bracketsPerDifSensor * difSensorsQuantity;
         }
-
-        absoluteSensorsBracketsRecord.Quantity = bracketsPerAbsoluteSensor * absoluteSensorsQuantity;
-
+           
     }
 
 
