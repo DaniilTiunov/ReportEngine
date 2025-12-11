@@ -131,16 +131,12 @@ public class ProjectService : IProjectService
             var existingKKS = projectModel.Stands.Select(s => s.KKSCode).ToHashSet();
             var existingDesign = projectModel.Stands.Select(s => s.Design).ToHashSet();
 
-            // Создаем временный объект для итеративного копирования
-            var currentStand = selectedStand;
-
+            // Копируем всегда с исходного стенда, а не с предыдущей копии
             for (var i = 1; i <= count; i++)
             {
-                var newStand = await CopyStandFromSourceStandAsync(currentStand, projectModel.CurrentProjectId);
+                var newStand = await CopyStandFromSourceStandAsync(selectedStand, projectModel.CurrentProjectId, i);
 
                 projectModel.Stands.Add(newStand);
-
-                currentStand = newStand;
             }
 
             await _standService.LoadStandsDataAsync(projectModel.Stands);
@@ -148,8 +144,11 @@ public class ProjectService : IProjectService
         });
     }
 
-    private async Task<StandModel> CopyStandFromSourceStandAsync(StandModel sourceStand, int projectId)
+    private async Task<StandModel> CopyStandFromSourceStandAsync(StandModel sourceStand, int projectId, int copyIndex)
     {
+        if (Guard.ExitIfNull("Отсутствует серийный номер!", _notificationService, sourceStand.SerialNumber, sourceStand))
+            return null;
+
         var newStand = new StandModel
         {
             Design = sourceStand.Design,
@@ -160,10 +159,10 @@ public class ProjectService : IProjectService
             Devices = sourceStand.Devices,
             KMCH = sourceStand.KMCH,
             MaterialLine = sourceStand.MaterialLine,
-            NN = sourceStand.NN + 1,
-            Number = sourceStand.Number + 1,
+            NN = sourceStand.NN + copyIndex,
+            Number = sourceStand.Number + copyIndex,
             ObvyazkaName = sourceStand.ObvyazkaName,
-            SerialNumber = StandUniqNameHelper.SetUniqNameForStand(sourceStand),
+            SerialNumber = StandUniqNameHelper.SetUniqNameForStand(sourceStand, copyIndex),
             TreeSocket = sourceStand.TreeSocket,
             Weight = sourceStand.Weight,
             Width = sourceStand.Width,
@@ -180,7 +179,7 @@ public class ProjectService : IProjectService
         newStand.Id = addedStandEntity.Id;
         newStand.ProjectId = addedStandEntity.ProjectInfoId;
 
-        if(sourceStand.FramesInStand != null && sourceStand.DrainagesInStand.Any())
+        if (sourceStand.FramesInStand != null && sourceStand.DrainagesInStand.Any())
             await CopyFramesToNewStandAsync(newStand, sourceStand.FramesInStand);
 
         if (sourceStand.DrainagesInStand != null && sourceStand.DrainagesInStand.Any())
@@ -296,14 +295,13 @@ public class ProjectService : IProjectService
 
     public async Task UpdateObvInStandAsync(ProjectModel projectModel, Obvyazka selectedObvyazka)
     {
-        if (projectModel == null)
+        if (Guard.ExitIfNull("Сначала создайте проект!", _notificationService, projectModel))
             return;
 
         var stand = projectModel.SelectedStand;
+        var obv = stand?.SelectedObvyazkaInStand;
 
-        var obv = stand.SelectedObvyazkaInStand;
-
-        if (stand == null || obv == null || projectModel == null)
+        if (Guard.ExitIfNull("Сначала создайте стенд или выберите обвязку!", _notificationService, stand, obv))
             return;
 
         obv.ObvyazkaName = stand.ObvyazkaName;
@@ -452,9 +450,9 @@ public class ProjectService : IProjectService
             };
 
             newComponent.Purposes.Add(newPurpose);
-
-            await _projectRepository.AddAdditionalEquipToStandAsync(newStandId, newComponent.Id);
         }
+
+        await _projectRepository.AddAdditionalEquipToStandAsync(newStandId, newComponent.Id);
     }
 
     private async Task CopyElectricalComponentsToNewStandAsync(int newStandId, FormedElectricalComponent source)
