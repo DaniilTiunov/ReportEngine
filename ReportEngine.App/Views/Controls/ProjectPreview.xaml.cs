@@ -9,21 +9,48 @@ namespace ReportEngine.App.Views.Controls;
 
 public partial class ProjectPreview : UserControl
 {
-    public ProjectPreview(ProjectViewModel viewModel)
+    private bool _allowEdit;
+
+    private readonly ProjectViewModel _projectViewModel;
+    public ProjectPreview(ProjectViewModel projectViewModel)
     {
         InitializeComponent();
-        DataContext = viewModel;
+        DataContext = projectViewModel;
+        _projectViewModel = projectViewModel;
 
         CommandBindings.Add(new CommandBinding(ApplicationCommands.Paste, OnPasteExecuted, OnPasteCanExecute));
 
-        InitializeData(viewModel);
+        Loaded += async (_, __) => await InitializeDataAsync(projectViewModel);
+
+        PreviewKeyDown += StandObvView_PreviewKeyDown;
     }
 
-    private async void InitializeData(ProjectViewModel viewModel)
+    private async Task InitializeDataAsync(ProjectViewModel projectViewModel)
     {
-        await viewModel.LoadObvyazkiAsync();
-        await viewModel.LoadStandsDataAsync();
-        await viewModel.LoadPurposesInStandsAsync();
+        await projectViewModel.LoadObvyazkiAsync();
+        await projectViewModel.LoadStandsDataAsync();
+        await projectViewModel.LoadPurposesInStandsAsync();
+        await projectViewModel.LoadAllAvaileDataAsync();
+    }
+
+    private async void StandObvView_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.F5)
+        {
+            e.Handled = true;
+
+            await InitializeDataAsync(_projectViewModel);
+        }
+    }
+
+    private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+    {
+        var scrollViewer = sender as ScrollViewer;
+        if (scrollViewer == null) return;
+
+        // Принудительно прокручиваем ScrollViewer
+        scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta);
+        e.Handled = true;
     }
 
     private void Image_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -37,8 +64,8 @@ public partial class ProjectPreview : UserControl
 
     private void OnPasteCanExecute(object sender, CanExecuteRoutedEventArgs e)
     {
-        if (DataContext is ProjectViewModel viewModel &&
-            viewModel.CurrentProjectModel?.SelectedStand != null &&
+        if (DataContext is ProjectViewModel projectViewModel &&
+            projectViewModel.CurrentProjectModel?.SelectedStand != null &&
             Clipboard.ContainsImage())
         {
             e.CanExecute = true;
@@ -50,8 +77,8 @@ public partial class ProjectPreview : UserControl
 
     private async void OnPasteExecuted(object sender, ExecutedRoutedEventArgs e)
     {
-        if (DataContext is not ProjectViewModel viewModel) return;
-        var stand = viewModel.CurrentProjectModel?.SelectedStand;
+        if (DataContext is not ProjectViewModel projectViewModel) return;
+        var stand = projectViewModel.CurrentProjectModel?.SelectedStand;
         if (stand == null) return;
         if (!Clipboard.ContainsImage()) return;
 
@@ -72,12 +99,33 @@ public partial class ProjectPreview : UserControl
             stand.ImageData = bytes;
             stand.ImageType = "image/png";
 
-            await viewModel.UpdateStandBlueprintAsync(bytes, "image/png");
+            await projectViewModel.UpdateStandBlueprintAsync(bytes, "image/png");
         }
         catch (Exception ex)
         {
             MessageBox.Show($"Не удалось вставить изображение: {ex.Message}", "Ошибка", MessageBoxButton.OK,
                 MessageBoxImage.Error);
         }
+    }
+
+    private void DataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+    {
+        if (!_allowEdit)
+            e.Cancel = true;
+    }
+
+    private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is not DataGrid grid)
+            return;
+
+        _allowEdit = true;
+
+        if (grid.CurrentCell != null)
+        {
+            grid.BeginEdit();
+        }
+
+        _allowEdit = false;
     }
 }

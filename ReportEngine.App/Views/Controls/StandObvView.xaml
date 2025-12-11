@@ -13,14 +13,15 @@
 
     <UserControl.Resources>
         <converters:ObvyazkaImagePathConverter x:Key="ObvyazkaImagePathConverter" />
+        <converters:DrainagesVisibilityConverter x:Key="DrainagesVisibilityConverter" />
     </UserControl.Resources>
 
-    <UserControl.InputBindings>
+    <!-- <UserControl.InputBindings>
         <KeyBinding
             Key="F5"
             Command="{Binding ProjectCommandProvider.UpdateUICommand}"
             CommandParameter="{x:Null}" />
-    </UserControl.InputBindings>
+    </UserControl.InputBindings>-->
 
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
@@ -990,7 +991,7 @@
                                     Height="30"
                                     Margin="0,0,10,0"
                                     Command="{Binding ProjectCommandProvider.SaveObvCommand}"
-                                    Content="Добавить новую"/>
+                                    Content="Добавить новую" />
                                 <Button
                                     Width="150"
                                     Height="30"
@@ -1273,7 +1274,7 @@
                                 MinHeight="200"
                                 AutoGenerateColumns="False"
                                 ColumnWidth="*"
-                                IsReadOnly ="True"
+                                IsReadOnly="True"
                                 ItemsSource="{Binding CurrentProjectModel.SelectedStand.FramesInStand}"
                                 SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedFrame}">
                                 <DataGrid.ContextMenu>
@@ -1418,8 +1419,13 @@
                     <GroupBox
                         Grid.Row="6"
                         Grid.Column="0"
-                        Margin="10"
-                        Header="Комплектующие стенда">
+                        Margin="10">
+                        <GroupBox.Header>
+                            <TextBlock>
+                                <Run FontSize="16" Text="Комплектующие стенда — " />
+                                <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
+                            </TextBlock>
+                        </GroupBox.Header>
                         <StackPanel>
                             <GroupBox Margin="5">
                                 <GroupBox.Header>
@@ -1428,8 +1434,11 @@
                                         <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
                                     </TextBlock>
                                 </GroupBox.Header>
-
-                                <DataGrid ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand}" SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
+                                <DataGrid
+                                    BeginningEdit="DataGrid_BeginningEdit"
+                                    ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand}"
+                                    MouseDoubleClick="DataGrid_MouseDoubleClick"
+                                    SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedDrainagePurpose}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
                                         <DataGridTextColumn
@@ -1441,6 +1450,13 @@
                                             Binding="{Binding Quantity}"
                                             Header="Кол-во" />
                                     </DataGrid.Columns>
+                                    <DataGrid.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Command="{Binding ProjectCommandProvider.UpdateDrainageComponentInStandCommand}" Header="Сохранить изменения" />
+                                            <Separator />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteDrainageComponentFromStandCommand}" Header="Удалить" />
+                                        </ContextMenu>
+                                    </DataGrid.ContextMenu>
                                 </DataGrid>
                             </GroupBox>
 
@@ -1452,7 +1468,11 @@
                                     </TextBlock>
                                 </GroupBox.Header>
 
-                                <DataGrid ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand}" SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
+                                <DataGrid
+                                    BeginningEdit="DataGrid_BeginningEdit"
+                                    ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand}"
+                                    MouseDoubleClick="DataGrid_MouseDoubleClick"
+                                    SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedAdditionalEquip}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
                                         <DataGridTextColumn
@@ -1464,6 +1484,13 @@
                                             Binding="{Binding Quantity}"
                                             Header="Кол-во" />
                                     </DataGrid.Columns>
+                                    <DataGrid.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Command="{Binding ProjectCommandProvider.UpdateAdditionalComponentInStandCommand}" Header="Сохранить изменения" />
+                                            <Separator />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteAdditionalComponentFromStandCommand}" Header="Удалить" />
+                                        </ContextMenu>
+                                    </DataGrid.ContextMenu>
                                 </DataGrid>
                             </GroupBox>
 
@@ -1476,10 +1503,11 @@
                                 </GroupBox.Header>
 
                                 <DataGrid
-                                    AutoGenerateColumns="False"
-                                    CanUserAddRows="False"
+                                    BeginningEdit="DataGrid_BeginningEdit"
+                                    CanUserAddRows="True"
                                     ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}"
-                                    SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
+                                    MouseDoubleClick="DataGrid_MouseDoubleClick"
+                                    SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedElectricalComponent}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
                                         <DataGridTextColumn
@@ -1491,6 +1519,13 @@
                                             Binding="{Binding Quantity}"
                                             Header="Кол-во" />
                                     </DataGrid.Columns>
+                                    <DataGrid.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Command="{Binding ProjectCommandProvider.UpdateElectricalComponentInStandCommand}" Header="Сохранить изменения" />
+                                            <Separator />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteElectricalComponentFromStandCommand}" Header="Удалить" />
+                                        </ContextMenu>
+                                    </DataGrid.ContextMenu>
                                 </DataGrid>
                             </GroupBox>
                         </StackPanel>
