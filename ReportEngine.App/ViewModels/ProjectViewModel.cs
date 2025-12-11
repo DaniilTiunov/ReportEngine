@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
@@ -762,7 +762,7 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            await _projectDataLoaderService.LoadAllAvailDataToViewModel(this);
+            await _projectDataLoaderService.LoadAllAvailDataToViewModelAsync(this);
         });
     }
 
@@ -778,6 +778,7 @@ public class ProjectViewModel : BaseViewModel
             CurrentStandModel = loadedModel.SelectedStand ?? new StandModel();
             CurrentStandModel.InitializeDefaultPurposes();
 
+                       
             await LoadObvyazkiAsync();
             await LoadStandsDataAsync();
 
@@ -1170,10 +1171,6 @@ public class ProjectViewModel : BaseViewModel
         }
     }
 
-    #endregion
-
-    #region Вспомогательные методы обновления
-
     public async Task UpdateUI()
     {
         await LoadStandsDataAsync();
@@ -1181,7 +1178,6 @@ public class ProjectViewModel : BaseViewModel
         await LoadPurposesInStandsAsync();
         await LoadAllAvaileDataAsync();
         await LoadProjectInfoAsync(CurrentProjectModel.CurrentProjectId);
-    }
 
 
     public void OnObvyazkiInStandChanged()
