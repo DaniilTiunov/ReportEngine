@@ -41,7 +41,6 @@ public partial class StandObvView : UserControl
 
         projectViewModel.OnObvyazkiInStandChanged();
         projectViewModel.OnFramesInStandChanged();
-
     }
 
     private void FillStandFieldsFromObvyazkaCommand_DoubleClick(object sender, MouseButtonEventArgs e)
@@ -84,5 +83,12 @@ public partial class StandObvView : UserControl
         _allowEdit = false;
     }
 
+    private void StandsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        Debug.WriteLine("Стенд изменился");
 
+
+        _projectViewModel.OnObvyazkiInStandChanged();
+        _projectViewModel.OnFramesInStandChanged();
+    }
 }
