@@ -34,6 +34,9 @@ public class StandSettings : IIniSettings<StandSettingsData>
             NameTable = standData["StandsSettings"]["nameTable"],
             FrameGalvanizing = standData["StandsSettings"]["frameGalvanizing"],
             Bracket = standData["StandsSettings"]["bracket"],
+            BracketForDif = standData["StandsSettings"]["bracketForDif"],
+            BracketForAbs = standData["StandsSettings"]["bracketForAbs"],
+            BracketUniversal = standData["StandsSettings"]["bracketUniversal"],
             CabelSixMM = standData["StandsSettings"]["cabelSixMM"],
             CabelFourMM = standData["StandsSettings"]["cabelFourMM"],
             SignalCable = standData["StandsSettings"]["signalCable"],
@@ -60,6 +63,9 @@ public class StandSettings : IIniSettings<StandSettingsData>
         standData["StandsSettings"]["nameTable"] = settingsData.NameTable;
         standData["StandsSettings"]["frameGalvanizing"] = settingsData.FrameGalvanizing;
         standData["StandsSettings"]["bracket"] = settingsData.Bracket;
+        standData["StandsSettings"]["bracketForDif"] = settingsData.BracketForDif;
+        standData["StandsSettings"]["bracketForAbs"] = settingsData.BracketForAbs;
+        standData["StandsSettings"]["bracketUniversal"] = settingsData.BracketUniversal;
         standData["StandsSettings"]["cabelSixMM"] = settingsData.CabelSixMM;
         standData["StandsSettings"]["cabelFourMM"] = settingsData.CabelFourMM;
         standData["StandsSettings"]["signalCable"] = settingsData.SignalCable;
