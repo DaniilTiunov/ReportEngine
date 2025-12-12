@@ -117,7 +117,11 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <DataGrid ItemsSource="{Binding FormedDrainagesModel.AllFormedDrainage}">
+                            <DataGrid
+                                BeginningEdit="DataGrid_BeginningEdit"
+                                ItemsSource="{Binding FormedDrainagesModel.AllFormedDrainage}"
+                                MouseDoubleClick="DataGrid_MouseDoubleClick"
+                                SelectedItem="{Binding FormedDrainagesModel.SelectedFormedDrainage, Mode=TwoWay}">
                                 <DataGrid.RowStyle>
                                     <Style TargetType="DataGridRow">
                                         <Setter Property="Visibility" Value="{Binding Name, Converter={StaticResource DrainagesVisibilityConverter}}" />
@@ -135,8 +139,10 @@
                                     <DataGrid
                                         Margin="5"
                                         AutoGenerateColumns="False"
+                                        BeginningEdit="DataGrid_BeginningEdit"
                                         CanUserAddRows="False"
                                         ItemsSource="{Binding FormedDrainagesModel.Purposes}"
+                                        MouseDoubleClick="DataGrid_MouseDoubleClick"
                                         SelectedItem="{Binding FormedDrainagesModel.SelectedPurpose, Mode=TwoWay}">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Назначение" />
@@ -244,8 +250,10 @@
                                 <DataGrid
                                     Height="294"
                                     AutoGenerateColumns="False"
+                                    BeginningEdit="DataGrid_BeginningEdit"
                                     CanUserAddRows="False"
                                     ItemsSource="{Binding FormedDrainagesModel.DrainageDetails}"
+                                    MouseDoubleClick="DataGrid_MouseDoubleClick"
                                     SelectedItem="{Binding FormedDrainagesModel.SelectedDrainageDetail, Mode=TwoWay}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />

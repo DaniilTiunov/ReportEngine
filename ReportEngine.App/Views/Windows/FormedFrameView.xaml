@@ -118,8 +118,10 @@
                                 Grid.Column="0"
                                 Margin="5"
                                 AutoGenerateColumns="False"
+                                BeginningEdit="DataGrid_BeginningEdit"
                                 CanUserAddRows="False"
                                 ItemsSource="{Binding FormedFrameModel.AllFrames}"
+                                MouseDoubleClick="DataGrid_MouseDoubleClick"
                                 SelectedItem="{Binding FormedFrameModel.SelectedFrame}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
@@ -138,18 +140,17 @@
                                 <DataGrid
                                     Margin="5"
                                     AutoGenerateColumns="False"
+                                    BeginningEdit="DataGrid_BeginningEdit"
                                     CanUserAddRows="False"
                                     IsReadOnly="False"
                                     ItemsSource="{Binding FormedFrameModel.DisplayedComponents}"
+                                    MouseDoubleClick="DataGrid_MouseDoubleClick"
                                     SelectedItem="{Binding FormedFrameModel.SelectedComponentInFrame}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding Component.Name}" Header="Наименование" />
                                         <DataGridTextColumn Binding="{Binding Count}" Header="Кол-во" />
-                                        <DataGridTextColumn
-                                            Binding="{Binding Length, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                            Header="Длина (м)" />
-                                        <DataGridTextColumn Binding="{Binding CostComponent, StringFormat={}{0:N2}}"
-                                                            Header="Цена за ед." />
+                                        <DataGridTextColumn Binding="{Binding Length, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Длина (м)" />
+                                        <DataGridTextColumn Binding="{Binding CostComponent, StringFormat={}{0:N2}}" Header="Цена за ед." />
                                         <DataGridTextColumn Binding="{Binding Measure}" Header="Ед. изм." />
                                         <DataGridTemplateColumn Header="Действия">
                                             <DataGridTemplateColumn.CellTemplate>
@@ -428,8 +429,10 @@
                                 <DataGrid
                                     Margin="5"
                                     AutoGenerateColumns="False"
+                                    BeginningEdit="DataGrid_BeginningEdit"
                                     CanUserAddRows="False"
                                     ItemsSource="{Binding FormedFrameModel.FrameDetails}"
+                                    MouseDoubleClick="DataGrid_MouseDoubleClick"
                                     SelectedItem="{Binding FormedFrameModel.SelectedComponentForAdd}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
@@ -443,8 +446,7 @@
                                         VerticalAlignment="Center"
                                         Foreground="{DynamicResource PrimaryForeground}"
                                         Text="Длина (м):" />
-                                    <TextBox Width="60"
-                                             Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBox Width="60" Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
                                 <Button
                                     Margin="5"
@@ -458,8 +460,10 @@
                                 <DataGrid
                                     Margin="5"
                                     AutoGenerateColumns="False"
+                                    BeginningEdit="DataGrid_BeginningEdit"
                                     CanUserAddRows="False"
                                     ItemsSource="{Binding FormedFrameModel.PillarEqiups}"
+                                    MouseDoubleClick="DataGrid_MouseDoubleClick"
                                     SelectedItem="{Binding FormedFrameModel.SelectedComponentForAdd}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
@@ -472,8 +476,7 @@
                                         Margin="0,0,5,0"
                                         VerticalAlignment="Center"
                                         Text="Длина (м):" />
-                                    <TextBox Width="60"
-                                             Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBox Width="60" Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
                                 <Button
                                     Margin="5"
@@ -487,8 +490,10 @@
                                 <DataGrid
                                     Margin="5"
                                     AutoGenerateColumns="False"
+                                    BeginningEdit="DataGrid_BeginningEdit"
                                     CanUserAddRows="False"
                                     ItemsSource="{Binding FormedFrameModel.FrameRolls}"
+                                    MouseDoubleClick="DataGrid_MouseDoubleClick"
                                     SelectedItem="{Binding FormedFrameModel.SelectedComponentForAdd}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
@@ -501,8 +506,7 @@
                                         Margin="0,0,5,0"
                                         VerticalAlignment="Center"
                                         Text="Длина (м):" />
-                                    <TextBox Width="60"
-                                             Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBox Width="60" Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
                                 <Button
                                     Margin="5"
