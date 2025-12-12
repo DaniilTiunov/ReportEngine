@@ -15,9 +15,12 @@ using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
+using ReportEngine.Shared.Config.IniHelpers;
+using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
+using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Xml.Serialization;
+
 
 namespace ReportEngine.App.ViewModels;
 
@@ -1291,8 +1294,11 @@ public class ProjectViewModel : BaseViewModel
     //обновляем кол-во кронштейнов для абсолютников
     private void UpdateAbsSensorsBrackets()
     {
+        var standsSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
+   
         const int bracketsPerAbsoluteSensor = 2;
         const string absoluteSensorBracketRecordName = "Кронштейн абсолютника";
+        const string measureUnit = "шт";
 
 
         var absSensorsQuantity = CurrentStandModel.CountAbsoluteSensorsQuantity();
@@ -1305,6 +1311,7 @@ public class ProjectViewModel : BaseViewModel
         {
             absSensorsBracketsRecord = new AdditionalEquipPurpose();
             absSensorsBracketsRecord.Purpose = absoluteSensorBracketRecordName;
+            absSensorsBracketsRecord.Measure = measureUnit;
             absSensorsBracketsRecord.Quantity = bracketsPerAbsoluteSensor * absSensorsQuantity;
             additionalComponents.Add(absSensorsBracketsRecord);
         }
@@ -1318,13 +1325,15 @@ public class ProjectViewModel : BaseViewModel
 
         if (absSensorsBracketsRecord != null && !string.IsNullOrEmpty(standBraceType))
         {
+            
+
             switch (standBraceType)
             {
                 case "На кронштейне":
-                    absSensorsBracketsRecord.Material = "Какой-то кронштейн абсолютника";
+                    absSensorsBracketsRecord.Material = standsSettings.BracketForAbs;
                     break;
                 case "Швеллер":
-                    absSensorsBracketsRecord.Material = "Какой-то кронштейн универсальный";
+                    absSensorsBracketsRecord.Material = standsSettings.BracketUniversal;
                     break;
                 default:
                     break;
@@ -1335,32 +1344,33 @@ public class ProjectViewModel : BaseViewModel
 
 
     //обновляем кол-во кронштейнов для перепадчиков
-    private void UpdateDifSensorsBrackets()
+    private async void UpdateDifSensorsBrackets()
     {
+        var standsSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
+
         const int bracketsPerDifSensor = 1;
         const string difSensorBracketRecordName = "Кронштейн перепадчика";
+        const string measureUnit = "шт";
 
         var difSensorsQuantity = CurrentStandModel.CountDifSensorsQuantity();
 
         var additionalComponents = CurrentStandModel.NewAdditionalEquip.Purposes;
         var difSensorsBracketRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == difSensorBracketRecordName);
-        
 
         if (difSensorsBracketRecord == null && difSensorsQuantity > 0)
         {
             difSensorsBracketRecord = new AdditionalEquipPurpose();
             difSensorsBracketRecord.Purpose = difSensorBracketRecordName;
-            difSensorsBracketRecord.Material = "Какой-то кронштейн перепадчика 12345";
+            difSensorsBracketRecord.Material = standsSettings.BracketForDif;
+            difSensorsBracketRecord.Measure = measureUnit;
             difSensorsBracketRecord.Quantity = bracketsPerDifSensor * difSensorsQuantity;
             additionalComponents.Add(difSensorsBracketRecord);
-
         }
  
         if (difSensorsBracketRecord != null)
         {
             difSensorsBracketRecord.Quantity = bracketsPerDifSensor * difSensorsQuantity;
-        }
-           
+        }         
     }
 
 
