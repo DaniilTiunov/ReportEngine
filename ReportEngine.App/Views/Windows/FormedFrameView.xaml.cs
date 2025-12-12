@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using ReportEngine.App.ViewModels.FormedEquips;
 
@@ -10,6 +11,7 @@ namespace ReportEngine.App.Views.Windows;
 public partial class FormedFrameView : Window
 {
     private readonly FormedFrameViewModel _viewModel;
+    private bool _allowEdit;
 
     public FormedFrameView(FormedFrameViewModel viewModel)
     {
@@ -75,5 +77,26 @@ public partial class FormedFrameView : Window
         Top = area.Top;
         Width = area.Width;
         Height = area.Height;
+    }
+
+    private void DataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+    {
+        if (!_allowEdit)
+            e.Cancel = true;
+    }
+
+    private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is not DataGrid grid)
+            return;
+
+        _allowEdit = true;
+
+        if (grid.CurrentCell != null)
+        {
+            grid.BeginEdit();
+        }
+
+        _allowEdit = false;
     }
 }
