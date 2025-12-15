@@ -88,55 +88,46 @@ public class SummaryReportGenerator : IReportGenerator
 
         ws.Cell($"A{row}").Value = record.ExportDays.Value?.ToString();
 
-        if (!record.ExportDays.IsValid)
-        {
-            ws.Cell($"A{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
-        }
-
-
-
         ws.Cell($"B{row}").Value = record.Name.Value?.ToString();
-
-        if (!record.Name.IsValid)
-        {
-            ws.Cell($"B{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
-        }
-
-
 
         ws.Cell($"C{row}").Value = record.Unit.Value?.ToString();
 
-        if (!record.Unit.IsValid)
-        {
-            ws.Cell($"C{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
-        }
-
-
-
         ws.Cell($"D{row}").Value = record.Quantity.Value?.ToString();
 
-        if (!record.Quantity.IsValid)
-        {
-            ws.Cell($"D{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
-        }
-
-
-
         ws.Cell($"E{row}").Value = record.CostPerUnit.Value?.ToString();
-
-        if (!record.CostPerUnit.IsValid)
-        {
-            ws.Cell($"E{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
-        }
-
 
 
         ws.Cell($"F{row}").Value = record.CommonCost.Value?.ToString();
 
-        if (!record.CommonCost.IsValid)
-        {
-            ws.Cell($"F{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
-        }
+        //if (!record.ExportDays.IsValid)
+        //{
+        //    ws.Cell($"A{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
+        //}
+
+        //if (!record.Name.IsValid)
+        //{
+        //    ws.Cell($"B{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
+        //}
+
+        //if (!record.Unit.IsValid)
+        //{
+        //    ws.Cell($"C{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
+        //}
+
+        //if (!record.Quantity.IsValid)
+        //{
+        //    ws.Cell($"D{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
+        //}
+
+        //if (!record.CostPerUnit.IsValid)
+        //{
+        //    ws.Cell($"E{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
+        //}
+
+        //if (!record.CommonCost.IsValid)
+        //{
+        //    ws.Cell($"F{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
+        //}
 
     }
 

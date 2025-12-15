@@ -74,7 +74,7 @@ public class ContainerReportGenerator : IReportGenerator
 
     private async Task FillWorksheetTable(IXLWorksheet ws, ProjectInfo project)
     {
-        const string dbErrorString = "Ошибка загрузки данных из БД";
+        
         //создаем объекты всех контейнеров
         var containerBatches = await _containerRepository.GetAllByProjectIdAsync(project.Id);
 
@@ -109,10 +109,10 @@ public class ContainerReportGenerator : IReportGenerator
                 var placeInContainerString = $"{containerNumber}.{placeInContainerNumber}";
 
                 ws.Cell($"B{standActiveRow}").Value = placeInContainerString;
-                ws.Cell($"C{standActiveRow}").Value = stand.Design ?? dbErrorString;
-                ws.Cell($"D{standActiveRow}").Value = stand.SerialNumber ?? dbErrorString;
-                ws.Cell($"E{standActiveRow}").Value = stand.KKSCode ?? dbErrorString;
-                ws.Cell($"F{standActiveRow}").Value = "1"; //пока костыль
+                ws.Cell($"C{standActiveRow}").Value = stand.Design ?? "";
+                ws.Cell($"D{standActiveRow}").Value = stand.SerialNumber ?? "";
+                ws.Cell($"E{standActiveRow}").Value = stand.KKSCode ?? "";
+                ws.Cell($"F{standActiveRow}").Value = "1"; //TODO: пока костыль
                 ws.Cell($"G{standActiveRow}").Value = stand.StandFrames.FirstOrDefault()?.Frame.Width;
 
                 standActiveRow++;

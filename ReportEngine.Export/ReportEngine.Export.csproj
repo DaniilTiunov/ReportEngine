@@ -98,8 +98,4 @@
         </None>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="PythonModule\dist\" />
-    </ItemGroup>
-
 </Project>
