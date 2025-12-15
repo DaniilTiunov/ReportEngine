@@ -251,7 +251,7 @@ def fillStandPage(stand, doc, project):
     if imageString is not None:  
         standBlueprint = PdfHelper.generateImageFromStr(imageString, rightPartWidth, sumHeight)  
     else:
-        standBlueprint = Paragraph(text = "Ха-ха, пiймав на пiкчу", style = cyrillicStyle)
+        standBlueprint = Paragraph(text = "Изображение отсутствует", style = cyrillicStyle)
 
 
     blueprintTable = Table(data = [[standBlueprint]], colWidths = rightPartWidth, rowHeights = sumHeight)

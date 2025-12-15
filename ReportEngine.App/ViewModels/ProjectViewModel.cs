@@ -1289,13 +1289,13 @@ public class ProjectViewModel : BaseViewModel
         UpdateDifSensorsBrackets();
         UpdateAbsSensorsBrackets();
     }
-    
+
 
     //обновляем кол-во кронштейнов для абсолютников
     private void UpdateAbsSensorsBrackets()
     {
         var standsSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
-   
+
         const int bracketsPerAbsoluteSensor = 2;
         const string absoluteSensorBracketRecordName = "Кронштейн абсолютника";
         const string measureUnit = "шт";
@@ -1307,7 +1307,7 @@ public class ProjectViewModel : BaseViewModel
 
         var absSensorsBracketsRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == absoluteSensorBracketRecordName);
 
-        if (absSensorsBracketsRecord == null && absSensorsQuantity>0)
+        if (absSensorsBracketsRecord == null && absSensorsQuantity > 0)
         {
             absSensorsBracketsRecord = new AdditionalEquipPurpose();
             absSensorsBracketsRecord.Purpose = absoluteSensorBracketRecordName;
@@ -1325,8 +1325,6 @@ public class ProjectViewModel : BaseViewModel
 
         if (absSensorsBracketsRecord != null && !string.IsNullOrEmpty(standBraceType))
         {
-            
-
             switch (standBraceType)
             {
                 case "На кронштейне":
@@ -1366,11 +1364,11 @@ public class ProjectViewModel : BaseViewModel
             difSensorsBracketRecord.Quantity = bracketsPerDifSensor * difSensorsQuantity;
             additionalComponents.Add(difSensorsBracketRecord);
         }
- 
+
         if (difSensorsBracketRecord != null)
         {
             difSensorsBracketRecord.Quantity = bracketsPerDifSensor * difSensorsQuantity;
-        }         
+        }
     }
 
 
