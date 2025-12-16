@@ -1335,38 +1335,44 @@
                         </Grid>
                     </GroupBox>
 
-                    <GroupBox
-                        Grid.Row="2"
-                        MinHeight="250"
-                        Margin="5"
-                        Padding="5"
-                        Header="Все обвязки проекта">
-                        <DataGrid
-                            AutoGenerateColumns="False"
-                            IsReadOnly="True"
-                            ItemsSource="{Binding CurrentProjectModel.ObvyazkiInProject}"
-                            SelectedItem="{Binding CurrentProjectModel.SelectedObvyazkaToCopy}">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn
-                                    Width="*"
-                                    Binding="{Binding ObvyazkaName}"
-                                    Header="Тип" />
-                                <DataGridTextColumn
-                                    Width="*"
-                                    Binding="{Binding MaterialLine}"
-                                    Header="Материал" />
-                                <DataGridTextColumn
-                                    Width="*"
-                                    Binding="{Binding Armature}"
-                                    Header="Арматура" />
-                            </DataGrid.Columns>
-                            <DataGrid.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}" Header="Скопировать в выбранный стенд" />
-                                </ContextMenu>
-                            </DataGrid.ContextMenu>
-                        </DataGrid>
-                    </GroupBox>
+                    <Expander Grid.Row="2" Header="Все обвязки в проекте">
+                        <GroupBox
+                            Grid.Row="2"
+                            MinHeight="250"
+                            Margin="5"
+                            Padding="5">
+                            <DataGrid
+                                AutoGenerateColumns="False"
+                                IsReadOnly="True"
+                                ItemsSource="{Binding CurrentProjectModel.ObvyazkiInProject}"
+                                SelectedItem="{Binding CurrentProjectModel.SelectedObvyazkaToCopy}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        Binding="{Binding NN}"
+                                        Header="NN" />
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        Binding="{Binding ObvyazkaName}"
+                                        Header="Тип" />
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        Binding="{Binding MaterialLine}"
+                                        Header="Материал" />
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        Binding="{Binding Armature}"
+                                        Header="Арматура" />
+                                </DataGrid.Columns>
+                                <DataGrid.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}" Header="Скопировать в выбранный стенд" />
+                                    </ContextMenu>
+                                </DataGrid.ContextMenu>
+                            </DataGrid>
+                        </GroupBox>
+                    </Expander>
+
 
                     <GroupBox
                         Grid.Row="3"

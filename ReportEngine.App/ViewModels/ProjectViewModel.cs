@@ -294,9 +294,13 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
+            if(Guard.ExitIfNull("Стенды для копирования не выбраны!", _notificationService, CurrentProjectModel.SelectedStand))
+                return;
+
+            if (Guard.ExitIfNull("Нет серийного номера стенда!", _notificationService, CurrentProjectModel.SelectedStand.SerialNumber))
+                return;
+
             await _projectService.CopyStandsAsync(CurrentProjectModel);
-
-
             await LoadPurposesInStandsAsync();
             await LoadObvyazkiAsync();
         });
