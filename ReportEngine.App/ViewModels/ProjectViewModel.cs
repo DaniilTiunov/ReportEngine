@@ -20,6 +20,7 @@ using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Windows.Documents;
 
 
 namespace ReportEngine.App.ViewModels;
@@ -810,7 +811,7 @@ public class ProjectViewModel : BaseViewModel
 
         await _standService.AddObvyazkaToStandAsync(CurrentProjectModel.SelectedStand.Id, entity);
 
-        if (!CurrentProjectModel.ObvyazkiInProject.Contains(entity))
+        if (CurrentProjectModel.ObvyazkiInProject.All(obv => !AreObvEqual(obv,entity)))
         {
             CurrentProjectModel.ObvyazkiInProject.Add(entity);
         }
@@ -1292,7 +1293,6 @@ public class ProjectViewModel : BaseViewModel
         UpdateAbsSensorsBrackets();
     }
 
-
     //обновляем кол-во кронштейнов для абсолютников
     private void UpdateAbsSensorsBrackets()
     {
@@ -1342,7 +1342,6 @@ public class ProjectViewModel : BaseViewModel
 
     }
 
-
     //обновляем кол-во кронштейнов для перепадчиков
     private async void UpdateDifSensorsBrackets()
     {
@@ -1372,6 +1371,27 @@ public class ProjectViewModel : BaseViewModel
             difSensorsBracketRecord.Quantity = bracketsPerDifSensor * difSensorsQuantity;
         }
     }
+
+    //сравнение двух обвязок
+    public static bool AreObvEqual(ObvyazkaInStand obv1, ObvyazkaInStand obv2)
+    {
+        var properties = typeof(ObvyazkaInStand)
+            .GetProperties()
+            .Where(p => p.Name != "Id" && p.Name != "StandId" && p.Name != "Stand" && p.Name != "ObvyazkaId" && p.Name != "Obvyazka" && p.Name != "NN" && p.CanRead);
+
+        foreach (var property in properties)
+        {
+            var val1 = property.GetValue(obv1);
+            var val2 = property.GetValue(obv2);
+
+            if (!Equals(val1,val2))
+                return false;
+        }
+
+        return true;
+    }
+
+
 
 
     #endregion
