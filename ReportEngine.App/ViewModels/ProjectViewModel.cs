@@ -20,9 +20,7 @@ using ReportEngine.Shared.Config.IniHeleprs;
 using ReportEngine.Shared.Config.IniHelpers;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Windows.Documents;
+
 
 
 namespace ReportEngine.App.ViewModels;
@@ -806,6 +804,8 @@ public class ProjectViewModel : BaseViewModel
     }
 
     #endregion Методы загрузки данных на view
+
+
 
     #region Методы для CRUD с проектами и стендами
 
