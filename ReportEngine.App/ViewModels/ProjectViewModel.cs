@@ -821,7 +821,7 @@ public class ProjectViewModel : BaseViewModel
 
         await _standService.AddObvyazkaToStandAsync(CurrentProjectModel.SelectedStand.Id, entity);
 
-        if (CurrentProjectModel.ObvyazkiInProject.All(obv => !AreObvEqual(obv,entity)))
+        if (CurrentProjectModel.ObvyazkiInProject.All(obv => !AreObvEqual(obv, entity)))
         {
             CurrentProjectModel.ObvyazkiInProject.Add(entity);
         }
@@ -1291,67 +1291,11 @@ public class ProjectViewModel : BaseViewModel
     //обновляем кол-во кронштейнов
     public void UpdateBracketsQuantity()
     {
-        UpdateDifSensorsBrackets();
-        UpdateAbsSensorsBrackets();
-    }
-
-    //обновляем кол-во кронштейнов для абсолютников
-    private void UpdateAbsSensorsBrackets()
-    {
-        var standsSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
-
-        const int bracketsPerAbsoluteSensor = 2;
-        const string absoluteSensorBracketRecordName = "Кронштейн абсолютника";
-        const string measureUnit = "шт";
-
-        var absSensorsQuantity = CurrentStandModel.CountAbsoluteSensorsQuantity();
-
-        var additionalComponents = CurrentStandModel.NewAdditionalEquip.Purposes;
-
-        var absSensorsBracketsRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == absoluteSensorBracketRecordName);
-
-        if (absSensorsBracketsRecord == null && absSensorsQuantity > 0)
-        {
-            absSensorsBracketsRecord = new AdditionalEquipPurpose();
-            absSensorsBracketsRecord.Purpose = absoluteSensorBracketRecordName;
-            absSensorsBracketsRecord.Measure = measureUnit;
-            absSensorsBracketsRecord.Quantity = bracketsPerAbsoluteSensor * absSensorsQuantity;
-            additionalComponents.Add(absSensorsBracketsRecord);
-        }
-
-        if (absSensorsBracketsRecord != null)
-        {
-            absSensorsBracketsRecord.Quantity = bracketsPerAbsoluteSensor * absSensorsQuantity;
-        }
-
-        var standBraceType = CurrentProjectModel?.SelectedStand?.BraceType;
-
-        if (absSensorsBracketsRecord != null && !string.IsNullOrEmpty(standBraceType))
-        {
-            switch (standBraceType)
-            {
-                case "На кронштейне":
-                    absSensorsBracketsRecord.Material = standsSettings.BracketForAbs;
-                    break;
-
-                case "Швеллер":
-                    absSensorsBracketsRecord.Material = standsSettings.BracketUniversal;
-                    break;
-
-                default:
-                    break;
-            }
-        }
-    }
-
-    //обновляем кол-во кронштейнов для перепадчиков
-    private async void UpdateDifSensorsBrackets()
-    {
         var standsSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
 
         const int bracketsPerDifSensor = 1;
         const string difSensorBracketRecordName = "Кронштейн перепадчика";
-        const string measureUnit = "шт";
+        const string difSensorMeasureUnit = "шт";
 
         var difSensorsQuantity = CurrentStandModel.CountDifSensorsQuantity();
 
@@ -1363,7 +1307,7 @@ public class ProjectViewModel : BaseViewModel
             difSensorsBracketRecord = new AdditionalEquipPurpose();
             difSensorsBracketRecord.Purpose = difSensorBracketRecordName;
             difSensorsBracketRecord.Material = standsSettings.BracketForDif;
-            difSensorsBracketRecord.Measure = measureUnit;
+            difSensorsBracketRecord.Measure = difSensorMeasureUnit;
             difSensorsBracketRecord.Quantity = bracketsPerDifSensor * difSensorsQuantity;
             additionalComponents.Add(difSensorsBracketRecord);
         }
@@ -1372,7 +1316,77 @@ public class ProjectViewModel : BaseViewModel
         {
             difSensorsBracketRecord.Quantity = bracketsPerDifSensor * difSensorsQuantity;
         }
+
+
+
+        const int bracketsPerAbsoluteSensor = 2;
+        const string absoluteSensorBracketRecordName = "Кронштейн абсолютника";
+        const string absSensorMeasureUnit = "шт";
+
+        var standBraceType = CurrentProjectModel?.SelectedStand?.BraceType;
+
+        if( !string.IsNullOrEmpty(standBraceType) && standBraceType == "На кронштейне")
+        {
+            var absSensorsQuantity = CurrentStandModel.CountAbsoluteSensorsQuantity();
+
+            var absSensorsBracketsRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == absoluteSensorBracketRecordName);
+
+            if (absSensorsBracketsRecord == null && absSensorsQuantity > 0)
+            {
+                absSensorsBracketsRecord = new AdditionalEquipPurpose();
+                absSensorsBracketsRecord.Purpose = absoluteSensorBracketRecordName;
+                absSensorsBracketsRecord.Measure = absSensorMeasureUnit;
+                additionalComponents.Add(absSensorsBracketsRecord);
+            }
+
+            if (absSensorsBracketsRecord != null)
+            {
+                absSensorsBracketsRecord.Quantity = bracketsPerAbsoluteSensor * absSensorsQuantity;
+                absSensorsBracketsRecord.Material = standsSettings.BracketForAbs;
+            }
+        }
+
+
+        const int universalBracketQuantity = 2;
+        const string universalBracketRecordName = "Кронштейн";
+        const string universalBracketMeasureUnit = "шт";
+
+        if (!string.IsNullOrEmpty(standBraceType) && standBraceType == "Швеллер")
+        {
+            var universalBracketRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == universalBracketRecordName);
+
+            if (universalBracketRecord == null)
+            {
+                universalBracketRecord = new AdditionalEquipPurpose();
+                universalBracketRecord.Purpose = universalBracketRecordName;
+                universalBracketRecord.Measure = universalBracketMeasureUnit;
+                additionalComponents.Add(universalBracketRecord);
+            }
+
+            if (universalBracketRecord != null)
+            {
+                universalBracketRecord.Quantity = universalBracketQuantity;
+                universalBracketRecord.Material = standsSettings.BracketUniversal;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
+
+
+
 
     //сравнение двух обвязок
     public static bool AreObvEqual(ObvyazkaInStand obv1, ObvyazkaInStand obv2)
@@ -1386,13 +1400,12 @@ public class ProjectViewModel : BaseViewModel
             var val1 = property.GetValue(obv1);
             var val2 = property.GetValue(obv2);
 
-            if (!Equals(val1,val2))
+            if (!Equals(val1, val2))
                 return false;
         }
 
         return true;
     }
-
 
 
 
