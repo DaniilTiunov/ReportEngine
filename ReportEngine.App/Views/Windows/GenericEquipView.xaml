@@ -102,6 +102,7 @@
                     x:Name="GenericEquipDataGrid"
                     Grid.Row="2"
                     AutoGenerateColumns="False"
+                    BeginningEdit="DataGrid_BeginningEdit"
                     CanUserAddRows="True"
                     CanUserDeleteRows="True"
                     CanUserSortColumns="True"

@@ -33,6 +33,20 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<DateTime>("ChangedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("EquipId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("NewName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("OldName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("Processed")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("TableName")
                         .IsRequired()
                         .HasColumnType("text");

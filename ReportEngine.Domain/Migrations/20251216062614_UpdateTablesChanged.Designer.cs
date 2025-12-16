@@ -12,18 +12,52 @@ using ReportEngine.Domain.Database.Context;
 namespace ReportEngine.Domain.Migrations
 {
     [DbContext(typeof(ReAppContext))]
-    [Migration("20251022051704_UpdateSubjects")]
-    partial class UpdateSubjects
+    [Migration("20251216062614_UpdateTablesChanged")]
+    partial class UpdateTablesChanged
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.9")
+                .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("ReportEngine.Domain.Background.TablesChanges", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("EquipId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("NewName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("OldName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("Processed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("TableName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TablesChanges");
+                });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.AdditionalEquipPurpose", b =>
                 {
@@ -35,6 +69,9 @@ namespace ReportEngine.Domain.Migrations
 
                     b.Property<float?>("CostPerUnit")
                         .HasColumnType("real");
+
+                    b.Property<int?>("ExportDays")
+                        .HasColumnType("integer");
 
                     b.Property<int>("FormedAdditionalEquipId")
                         .HasColumnType("integer");
@@ -331,6 +368,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<int?>("ContainerBatchId")
                         .HasColumnType("integer");
 
+                    b.Property<float?>("ContainerCost")
+                        .HasColumnType("real");
+
                     b.Property<float?>("ContainerWeight")
                         .HasColumnType("real");
 
@@ -411,6 +451,9 @@ namespace ReportEngine.Domain.Migrations
 
                     b.Property<float?>("CostPerUnit")
                         .HasColumnType("real");
+
+                    b.Property<int?>("ExportDays")
+                        .HasColumnType("integer");
 
                     b.Property<int>("FormedDrainageId")
                         .HasColumnType("integer");
@@ -754,6 +797,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float?>("CostPerUnit")
                         .HasColumnType("real");
 
+                    b.Property<int?>("ExportDays")
+                        .HasColumnType("integer");
+
                     b.Property<int>("FormedElectricalComponentId")
                         .HasColumnType("integer");
 
@@ -966,6 +1012,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<int>("Count")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("ExportDays")
+                        .HasColumnType("integer");
+
                     b.Property<int>("FormedFrameId")
                         .HasColumnType("integer");
 
@@ -1000,6 +1049,9 @@ namespace ReportEngine.Domain.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<float>("KMCHCount")
+                        .HasColumnType("real");
+
                     b.Property<float>("LineLength")
                         .HasColumnType("real");
 
@@ -1033,6 +1085,42 @@ namespace ReportEngine.Domain.Migrations
                     b.ToTable("Obvyazki");
                 });
 
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ObvyazkaAdditionalEquipPurpose", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float?>("CostPerUnit")
+                        .HasColumnType("real");
+
+                    b.Property<int?>("ExportDays")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Material")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Measure")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("ObvyazkaInStandId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Purpose")
+                        .HasColumnType("text");
+
+                    b.Property<float?>("Quantity")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ObvyazkaInStandId");
+
+                    b.ToTable("ObvyazkaAdditionalEquipPurpose");
+                });
+
             modelBuilder.Entity("ReportEngine.Domain.Entities.ObvyazkaInStand", b =>
                 {
                     b.Property<int>("Id")
@@ -1049,6 +1137,9 @@ namespace ReportEngine.Domain.Migrations
 
                     b.Property<float?>("ArmatureCount")
                         .HasColumnType("real");
+
+                    b.Property<int?>("ArmatureExportDays")
+                        .HasColumnType("integer");
 
                     b.Property<string>("ArmatureMeasure")
                         .HasColumnType("text");
@@ -1086,6 +1177,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float?>("KMCHCount")
                         .HasColumnType("real");
 
+                    b.Property<int?>("KMCHExportDays")
+                        .HasColumnType("integer");
+
                     b.Property<string>("KMCHMeasure")
                         .HasColumnType("text");
 
@@ -1100,6 +1194,9 @@ namespace ReportEngine.Domain.Migrations
 
                     b.Property<float?>("MaterialLineCount")
                         .HasColumnType("real");
+
+                    b.Property<int?>("MaterialLineExportDays")
+                        .HasColumnType("integer");
 
                     b.Property<string>("MaterialLineMeasure")
                         .HasColumnType("text");
@@ -1160,6 +1257,9 @@ namespace ReportEngine.Domain.Migrations
 
                     b.Property<float?>("TreeSocketCount")
                         .HasColumnType("real");
+
+                    b.Property<int?>("TreeSocketExportDays")
+                        .HasColumnType("integer");
 
                     b.Property<string>("TreeSocketMaterialCostPerUnit")
                         .HasColumnType("text");
@@ -1765,6 +1865,16 @@ namespace ReportEngine.Domain.Migrations
                     b.Navigation("FormedFrame");
                 });
 
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ObvyazkaAdditionalEquipPurpose", b =>
+                {
+                    b.HasOne("ReportEngine.Domain.Entities.ObvyazkaInStand", "ObvyazkaInStand")
+                        .WithMany("AdditionalComponents")
+                        .HasForeignKey("ObvyazkaInStandId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("ObvyazkaInStand");
+                });
+
             modelBuilder.Entity("ReportEngine.Domain.Entities.ObvyazkaInStand", b =>
                 {
                     b.HasOne("ReportEngine.Domain.Entities.Obvyazka", "Obvyazka")
@@ -1911,6 +2021,11 @@ namespace ReportEngine.Domain.Migrations
                     b.Navigation("Components");
 
                     b.Navigation("StandFrames");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.ObvyazkaInStand", b =>
+                {
+                    b.Navigation("AdditionalComponents");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.ProjectInfo", b =>
