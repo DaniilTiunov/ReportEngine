@@ -1,8 +1,8 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+    xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign2.Defaults.xaml" />
@@ -10,7 +10,6 @@
 
     <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#373A6B" />
     <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="Green" />
-
 
     <!--  Стили для Window  -->
     <Style TargetType="Window">
@@ -394,7 +393,6 @@
         </Setter>
     </Style>
 
-
     <Style x:Key="GeneratedTabItem" TargetType="TabItem">
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
@@ -453,7 +451,6 @@
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
     </Style>
-
 
     <!--  Стили для ContextMenu  -->
     <Style TargetType="ContextMenu">

@@ -63,8 +63,6 @@ public class ComponentListReportGenerator : IReportGenerator
         }
     }
 
-
-
     #region Вспомогательные
 
     //валидация и вывод в таблицу
@@ -72,33 +70,27 @@ public class ComponentListReportGenerator : IReportGenerator
     {
         ws.Cell($"B{row}").Value = record.Name.Value?.ToString();
 
-        if (!record.Name.IsValid)
-        {
-            ws.Cell($"B{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
-        }
-
-
+        //if (!record.Name.IsValid)
+        //{
+        //    ws.Cell($"B{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
+        //}
 
         ws.Cell($"C{row}").Value = record.Unit.Value?.ToString();
 
-        if (!record.Unit.IsValid)
-        {
-            ws.Cell($"C{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
-        }
-
-
+        //if (!record.Unit.IsValid)
+        //{
+        //    ws.Cell($"C{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
+        //}
 
         ws.Cell($"D{row}").Value = record.Quantity.Value?.ToString();
 
-        if (!record.Quantity.IsValid)
-        {
-            ws.Cell($"D{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
-        }
+        //if (!record.Quantity.IsValid)
+        //{
+        //    ws.Cell($"D{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
+        //}
     }
 
-    #endregion
-
-
+    #endregion Вспомогательные
 
     #region Заголовки
 
@@ -161,9 +153,7 @@ public class ComponentListReportGenerator : IReportGenerator
         return activeRow;
     }
 
-    #endregion
-
-
+    #endregion Заголовки
 
     #region Заполнители
 
@@ -258,5 +248,5 @@ public class ComponentListReportGenerator : IReportGenerator
         return currentRow;
     }
 
-    #endregion
+    #endregion Заполнители
 }

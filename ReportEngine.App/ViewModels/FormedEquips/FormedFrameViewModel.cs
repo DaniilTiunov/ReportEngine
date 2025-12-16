@@ -48,7 +48,6 @@ public class FormedFrameViewModel : BaseViewModel
             var rolls = await _frameRollRepository.GetAllAsync();
             var eqiups = await _pillarEqiupRepository.GetAllAsync();
 
-
             FormedFrameModel.AllFrames.Clear();
             foreach (var f in frames) FormedFrameModel.AllFrames.Add(f);
 
@@ -110,7 +109,7 @@ public class FormedFrameViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(RemoveDetailsFromFrameAsync);
     }
 
-    #endregion
+    #endregion Команды
 
     #region Методы
 
@@ -146,7 +145,6 @@ public class FormedFrameViewModel : BaseViewModel
             await _formedFrameRepository.DeleteAsync(selectedFrame);
             FormedFrameModel.AllFrames.Remove(selectedFrame);
 
-
             _notificationService.ShowInfo($"{selectedFrame.Name} успешно удалена!");
         }
     }
@@ -156,7 +154,6 @@ public class FormedFrameViewModel : BaseViewModel
         var frame = FormedFrameModel.SelectedFrame;
         var component = FormedFrameModel.SelectedComponentForAdd;
         var length = float.Parse(FormedFrameModel.ComponentLength);
-
 
         if (frame == null || component == null) return;
 
@@ -196,5 +193,5 @@ public class FormedFrameViewModel : BaseViewModel
         FormedFrameModel.UpdateDisplayedComponents();
     }
 
-    #endregion
+    #endregion Методы
 }

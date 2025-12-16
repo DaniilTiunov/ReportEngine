@@ -247,7 +247,6 @@
                     Text="{Binding CurrentUser.SystemRole, Converter={StaticResource TranslateUserRole}}" />
             </StatusBarItem>
 
-
             <StatusBarItem HorizontalAlignment="Stretch">
                 <Separator Visibility="Hidden" />
             </StatusBarItem>

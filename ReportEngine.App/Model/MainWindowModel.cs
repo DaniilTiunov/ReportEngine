@@ -12,7 +12,7 @@ public class MainWindowModel : BaseViewModel
     private ObservableCollection<ProjectInfo> _allProjects = new();
     private ProjectInfo _selectedProject;
 
-    #endregion
+    #endregion Приватные поля
 
     #region Публичные поля для привязки
 
@@ -36,5 +36,5 @@ public class MainWindowModel : BaseViewModel
         set => Set(ref _allProjects, value);
     }
 
-    #endregion
+    #endregion Публичные поля для привязки
 }

@@ -14,7 +14,7 @@ public class HumanCostSettingsData : IIniData
     public double TimeForCollectorBoil { get; set; } // Время варки коллектора
     public double TimeForAllChecks { get; set; } // Время проведения всех испытаний
     public double TimeForPrepareAllEquipment { get; set; } // Время подготовки всего оборудования
-    public double TimeForDrillOneBus { get; set; } // Время на сверления одной шины 
+    public double TimeForDrillOneBus { get; set; } // Время на сверления одной шины
     public double TimeForMontageOneInput { get; set; } // Время монтажа одного ввода
     public double TimeForOthersOperations { get; set; } // Время на другие операции
 }

@@ -37,7 +37,4 @@
 
         public List<ImpulseLineRecordJsonObject> ImpulseLines { get; set; } = new List<ImpulseLineRecordJsonObject>(); //импульсные линии в пределах стенда
     }
-
-
 }
-

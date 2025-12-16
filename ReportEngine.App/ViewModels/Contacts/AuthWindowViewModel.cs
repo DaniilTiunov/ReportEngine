@@ -21,7 +21,6 @@ public class AuthWindowViewModel : BaseViewModel
     private UserModel _currentUser = new();
     private string _inputMegaSecretPassword;
 
-
     public AuthWindowViewModel(
         IBaseRepository<User> userRepository,
         INotificationService notificationService,

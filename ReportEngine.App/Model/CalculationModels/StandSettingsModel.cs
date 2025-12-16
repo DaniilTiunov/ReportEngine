@@ -9,6 +9,9 @@ namespace ReportEngine.App.Model.CalculationModels;
 public class StandSettingsModel : BaseViewModel
 {
     private string? _bracket;
+    private string? _bracketForDif;
+    private string? _bracketForAbs;
+    private string? _bracketUniversal;
     private string? _cabelFourMM;
     private string? _cabelSixMM;
     private string? _frameGalvanizing;
@@ -52,6 +55,24 @@ public class StandSettingsModel : BaseViewModel
         set => Set(ref _bracket, value);
     } // Кронштейн
 
+    public string? BracketForDif
+    {
+        get => _bracketForDif;
+        set => Set(ref _bracketForDif, value);
+    } // Кронштейн для перепадника
+
+    public string? BracketForAbs
+    {
+        get => _bracketForAbs;
+        set => Set(ref _bracketForAbs, value);
+    } // Кронштейн для абсолютника
+
+    public string? BracketUniversal
+    {
+        get => _bracketUniversal;
+        set => Set(ref _bracketUniversal, value);
+    } // Кронштейн универсальный
+
     public string? CabelSixMM
     {
         get => _cabelSixMM;
@@ -80,7 +101,7 @@ public class StandSettingsModel : BaseViewModel
     {
         get => _responsibleForAccept;
         set => Set(ref _responsibleForAccept, value);
-    } // Отвественный за приёмку
+    } // Ответственный за приёмку
 
     public string? SecondLevelSpecialist
     {

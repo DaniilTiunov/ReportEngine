@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using ReportEngine.App.ViewModels.FormedEquips;
 
@@ -9,6 +10,8 @@ namespace ReportEngine.App.Views.Windows;
 /// </summary>
 public partial class FormedDrainagesView : Window
 {
+    private bool _allowEdit;
+
     public FormedDrainagesView(FormedDrainagesViewModel formedDrainagesViewModel)
     {
         InitializeComponent();
@@ -76,5 +79,26 @@ public partial class FormedDrainagesView : Window
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
         Close();
+    }
+
+    private void DataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+    {
+        if (!_allowEdit)
+            e.Cancel = true;
+    }
+
+    private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is not DataGrid grid)
+            return;
+
+        _allowEdit = true;
+
+        if (grid.CurrentCell != null)
+        {
+            grid.BeginEdit();
+        }
+
+        _allowEdit = false;
     }
 }

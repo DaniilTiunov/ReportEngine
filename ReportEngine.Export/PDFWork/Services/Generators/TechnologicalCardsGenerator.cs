@@ -10,8 +10,6 @@ using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
 
-
-
 namespace ReportEngine.Export.PDFWork.Services.Generators;
 
 public class TechnologicalCardsGenerator : IReportGenerator
@@ -40,7 +38,6 @@ public class TechnologicalCardsGenerator : IReportGenerator
         File.WriteAllText(jsonSavePath, jsonObject, Encoding.UTF8);
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
-
 
         var savePath = SettingsManager.GetReportDirectory();
         var fileName = ExcelReportHelper.CreateReportName("Технологические карты", "pdf");
@@ -83,8 +80,6 @@ public class TechnologicalCardsGenerator : IReportGenerator
             }
 
             Debug.WriteLine(outputMessage);
-
         }
-
     }
 }

@@ -26,7 +26,6 @@ public class ObvyazkaRepository : IObvyazkaRepository
 
         _context.Set<Obvyazka>().Remove(obvyazka);
         await _context.SaveChangesAsync();
-
     }
 
     public async Task<IEnumerable<Obvyazka>> GetAllAsync()
@@ -44,7 +43,6 @@ public class ObvyazkaRepository : IObvyazkaRepository
         if (existingEntity != null) _context.Entry(existingEntity).CurrentValues.SetValues(obvyazka);
         await _context.SaveChangesAsync();
     }
-
 
     public Task<int> DeleteByIdAsync(int id)
     {

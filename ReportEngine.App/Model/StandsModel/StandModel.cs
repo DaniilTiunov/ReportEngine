@@ -32,6 +32,7 @@ public class StandModel : BaseViewModel
 
     // Арматура стенда (текст)
     private string _armature;
+
     private string? _armatureCostPerUnit;
     private float? _armatureCount;
     private string? _armatureMeasure;
@@ -62,6 +63,7 @@ public class StandModel : BaseViewModel
 
     // KKS код первого датчика (внутреннее поле)
     private string _firsSensorKksCode;
+
     private string? _firstSensorDescription;
 
     // Маркировка + для первого датчика
@@ -93,13 +95,14 @@ public class StandModel : BaseViewModel
 
     // КМЧ
     private string _kmch;
+
     private string? _kmchCostPerUnit;
     private float? _kmchCount;
     private string? _kmchMeasure;
 
-
     // Материал линии
     private string _materialLine;
+
     private string _materialLineCostPerUnit;
     private float? _materialLineCount;
     private string? _materialLineMeasure;
@@ -127,6 +130,7 @@ public class StandModel : BaseViewModel
 
     // Идентификатор проекта, которому принадлежит стенд
     private int _projectId;
+
     private string? _secondSensorDescription;
 
     // Второй датчик: KKS
@@ -146,6 +150,7 @@ public class StandModel : BaseViewModel
 
     // Выбранный дренаж
     private FormedDrainage _selectedDrainage;
+
     private DrainagePurpose _selectedDrainagePurpose;
 
     // Выбранный электрический компонент
@@ -165,6 +170,7 @@ public class StandModel : BaseViewModel
 
     // Суммарная стоимость стенда
     private decimal _standSummCost;
+
     private string? _thirdSensorDescription;
 
     // Третий датчик: KKS
@@ -181,6 +187,7 @@ public class StandModel : BaseViewModel
 
     // Тройник/разветвитель
     private string _treeScoket;
+
     private string? _treeSocketMaterialCostPerUnit;
     private float? _treeSocketMaterialCount;
     private string? _treeSocketMaterialMeasure;
@@ -190,6 +197,7 @@ public class StandModel : BaseViewModel
 
     // Ширина стенда
     private float _width;
+
     private int? _materialLineExportDays;
     private int? _armatureExportDays;
     private int? _kMCHExportDays;
@@ -198,7 +206,6 @@ public class StandModel : BaseViewModel
 
     public StandModel()
     {
-
     }
 
     // Коллекция обвязок для отображения
@@ -367,6 +374,7 @@ public class StandModel : BaseViewModel
         get => _kmchCostPerUnit;
         set => Set(ref _kmchCostPerUnit, value);
     }
+
     public int? KMCHExportDays
     {
         get => _kMCHExportDays;
@@ -731,16 +739,16 @@ public class StandModel : BaseViewModel
     public void InitializeAdditionalEquip()
     {
         float nameplatesPerStand = 1.0f;
-        
+
         NewAdditionalEquip = new FormedAdditionalEquip
         {
             Purposes = new ObservableCollection<AdditionalEquipPurpose>
             {
-                new() { Purpose = "Шильдик", Material = DefaultStandSettings.NamePlate,Quantity = nameplatesPerStand},
+                new() { Purpose = "Шильдик", Material = DefaultStandSettings.NamePlate,Quantity = nameplatesPerStand, Measure = "шт"},
                 new() { Purpose = "Швеллер", Material = DefaultStandSettings.SteelChannel },
                 new() { Purpose = "Хомуты" },
-                new() { Purpose = "Табличка", Material = DefaultStandSettings.NameTable },
-                new() { Purpose = "Кронштейны перепадников" }
+                new() { Purpose = "Табличка", Material = DefaultStandSettings.NameTable, Measure = "шт"},
+                new() { Purpose = "Кронштейн" },
             }
         };
     }
@@ -763,7 +771,6 @@ public class StandModel : BaseViewModel
                 new() { Purpose = "Кронштейн коробки" }
             }
         };
-
     }
 
     public int CountSensorsQuantity()
@@ -785,8 +792,61 @@ public class StandModel : BaseViewModel
                 return sensorsQuantity;
             });
 
-
         return standSensorQuantity;
+    }
+
+    public int CountDifSensorsQuantity()
+    {
+        var isDifSensor = (string? typeOfSensor) =>
+        {
+            return !string.IsNullOrEmpty(typeOfSensor) ? typeOfSensor == "Датчик перепада давления" : false;
+        };
+
+        int difSensorQuantity = ObvyazkiInStand
+            .Sum(obv =>
+            {
+                int sensorsQuantity = 0;
+
+                if (isDifSensor(obv.FirstSensorType))
+                    sensorsQuantity++;
+
+                if (isDifSensor(obv.SecondSensorType))
+                    sensorsQuantity++;
+
+                if (isDifSensor(obv.ThirdSensorType))
+                    sensorsQuantity++;
+
+                return sensorsQuantity;
+            });
+
+        return difSensorQuantity;
+    }
+
+    public int CountAbsoluteSensorsQuantity()
+    {
+        var isAbsoluteSensor = (string? typeOfSensor) =>
+        {
+            return !string.IsNullOrEmpty(typeOfSensor) ? typeOfSensor == "Датчик абсолютного давления" : false;
+        };
+
+        int absoluteSensorQuantity = ObvyazkiInStand
+            .Sum(obv =>
+            {
+                int sensorsQuantity = 0;
+
+                if (isAbsoluteSensor(obv.FirstSensorType))
+                    sensorsQuantity++;
+
+                if (isAbsoluteSensor(obv.SecondSensorType))
+                    sensorsQuantity++;
+
+                if (isAbsoluteSensor(obv.ThirdSensorType))
+                    sensorsQuantity++;
+
+                return sensorsQuantity;
+            });
+
+        return absoluteSensorQuantity;
     }
 
     public async Task InitializeDefaultPurposes()

@@ -1,14 +1,8 @@
-﻿using ReportEngine.App.AppHelpers;
-using ReportEngine.App.Model.StandsModel;
-using ReportEngine.App.ViewModels;
-using System.ComponentModel;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Input;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
-using System.Windows;
-using ReportEngine.App.Display;
 
 namespace ReportEngine.App.Views.Controls;
 
@@ -91,5 +85,13 @@ public partial class StandObvView : UserControl
         }
 
         _allowEdit = false;
+    }
+
+    private void StandsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        Debug.WriteLine("Стенд изменился");
+
+        _projectViewModel.OnObvyazkiInStandChanged();
+        _projectViewModel.OnFramesInStandChanged();
     }
 }

@@ -9,6 +9,9 @@ public class StandSettingsData : IIniData
     public string? NameTable { get; set; } // Табличка
     public string? FrameGalvanizing { get; set; } // Оцинкование рамы
     public string? Bracket { get; set; } // Кронштейн
+    public string? BracketForDif { get; set; } // Кронштейн для перепадника
+    public string? BracketForAbs { get; set; } // Кронштейн для абсолютника
+    public string? BracketUniversal { get; set; } // Кронштейн универсальный
     public string? CabelSixMM { get; set; } // Кабель 6 мм
     public string? CabelFourMM { get; set; } // Кабель 4 мм
     public string? SignalCable { get; set; } // Кабель сигнальный

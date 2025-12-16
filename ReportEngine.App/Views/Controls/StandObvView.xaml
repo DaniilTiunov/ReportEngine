@@ -993,7 +993,7 @@
                                     Command="{Binding ProjectCommandProvider.SaveObvCommand}"
                                     Content="Добавить новую" />
                                 <Button
-                                    Width="150"
+                                    Width="178"
                                     Height="30"
                                     Command="{Binding ProjectCommandProvider.UpdateObvInStandCommand}"
                                     Content="Сохранить изменения" />
@@ -1061,27 +1061,39 @@
                                 <StackPanel>
                                     <DataGrid
                                         AutoGenerateColumns="False"
+                                        BeginningEdit="DataGrid_BeginningEdit"
                                         ItemsSource="{Binding AllAvailableDrainages}"
+                                        MouseDoubleClick="DataGrid_MouseDoubleClick"
                                         SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
+                                        <DataGrid.RowStyle>
+                                            <Style TargetType="DataGridRow">
+                                                <Setter Property="Visibility" Value="{Binding Name, Converter={StaticResource DrainagesVisibilityConverter}}" />
+                                            </Style>
+                                        </DataGrid.RowStyle>
+
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Binding="{Binding Name}" Header="Название" />
                                         </DataGrid.Columns>
+
                                         <DataGrid.RowDetailsTemplate>
                                             <DataTemplate>
                                                 <DataGrid
                                                     AutoGenerateColumns="False"
+                                                    BeginningEdit="DataGrid_BeginningEdit"
                                                     HeadersVisibility="Column"
-                                                    ItemsSource="{Binding Purposes}">
+                                                    ItemsSource="{Binding Purposes}"
+                                                    MouseDoubleClick="DataGrid_MouseDoubleClick">
                                                     <DataGrid.Columns>
                                                         <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
                                                         <DataGridTextColumn Binding="{Binding Material}" Header="Материал" />
                                                         <DataGridTextColumn Binding="{Binding Quantity}" Header="Кол-во" />
-                                                        <DataGridTextColumn Binding="{Binding Measure}" Header="Кол-во" />
+                                                        <DataGridTextColumn Binding="{Binding Measure}" Header="Ед. изм." />
                                                     </DataGrid.Columns>
                                                 </DataGrid>
                                             </DataTemplate>
                                         </DataGrid.RowDetailsTemplate>
                                     </DataGrid>
+
                                     <Button
                                         Margin="5"
                                         Command="{Binding ProjectCommandProvider.AddDrainageToStandCommand}"
@@ -1230,7 +1242,8 @@
                             x:Name="StandsList"
                             Margin="5,0,5,5"
                             ItemsSource="{Binding CurrentProjectModel.Stands}"
-                            SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}">
+                            SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}"
+                            SelectionChanged="StandsList_SelectionChanged">
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn
@@ -1322,42 +1335,44 @@
                         </Grid>
                     </GroupBox>
 
-                    <GroupBox
-                        Grid.Row="2"
-                        MinHeight="250"
-                        Margin="5"
-                        Padding="5"
-                        Header="Все обвязки проекта">
-                        <DataGrid
-                            AutoGenerateColumns="False"
-                            IsReadOnly="True"
-                            ItemsSource="{Binding CurrentProjectModel.ObvyazkiInProject}"
-                            SelectedItem="{Binding CurrentProjectModel.SelectedObvyazkaToCopy}">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn
-                                    Width="*"
-                                    Binding="{Binding NN}"
-                                    Header="NN" />
-                                <DataGridTextColumn
-                                    Width="*"
-                                    Binding="{Binding ObvyazkaName}"
-                                    Header="Тип" />
-                                <DataGridTextColumn
-                                    Width="*"
-                                    Binding="{Binding MaterialLine}"
-                                    Header="Материал" />
-                                <DataGridTextColumn
-                                    Width="*"
-                                    Binding="{Binding Armature}"
-                                    Header="Арматура" />
-                            </DataGrid.Columns>
-                            <DataGrid.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}" Header="Скопировать в выбранный стенд" />
-                                </ContextMenu>
-                            </DataGrid.ContextMenu>
-                        </DataGrid>
-                    </GroupBox>
+                    <Expander Grid.Row="2" Header="Все обвязки в проекте">
+                        <GroupBox
+                            Grid.Row="2"
+                            MinHeight="250"
+                            Margin="5"
+                            Padding="5">
+                            <DataGrid
+                                AutoGenerateColumns="False"
+                                IsReadOnly="True"
+                                ItemsSource="{Binding CurrentProjectModel.ObvyazkiInProject}"
+                                SelectedItem="{Binding CurrentProjectModel.SelectedObvyazkaToCopy}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        Binding="{Binding NN}"
+                                        Header="NN" />
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        Binding="{Binding ObvyazkaName}"
+                                        Header="Тип" />
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        Binding="{Binding MaterialLine}"
+                                        Header="Материал" />
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        Binding="{Binding Armature}"
+                                        Header="Арматура" />
+                                </DataGrid.Columns>
+                                <DataGrid.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}" Header="Скопировать в выбранный стенд" />
+                                    </ContextMenu>
+                                </DataGrid.ContextMenu>
+                            </DataGrid>
+                        </GroupBox>
+                    </Expander>
+
 
                     <GroupBox
                         Grid.Row="3"
@@ -1408,7 +1423,6 @@
                             <ListView.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem Command="{Binding ProjectCommandProvider.FillStandFieldsFromObvyazkaCommand}" Header="Редактировать обвязку" />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}" Header="Скопировать в выбранный стенд" />
                                     <Separator />
                                     <MenuItem Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}" Header="Удалить обвязку из стенда" />
                                 </ContextMenu>

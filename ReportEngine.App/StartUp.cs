@@ -26,7 +26,7 @@ public class StartUp
 
             mainWindow.Show();
 
-            host.StartAsync();
+            //host.StartAsync();
 
             app.Run();
         }

@@ -22,6 +22,7 @@ public class ProjectService : IProjectService
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IStandService _standService;
     private readonly IBaseRepository<Subject> _subjectRepository;
+    private readonly IFrameRepository _frameRepository;
 
     public ProjectService(
         IProjectInfoRepository projectRepository,
@@ -31,7 +32,8 @@ public class ProjectService : IProjectService
         IFormedAdditionalEquipsRepository additionalEquipsRepository,
         IFormedDrainagesRepository drainagesRepository,
         IBaseRepository<Company> companyRepository,
-        IBaseRepository<Subject> subjectRepository)
+        IBaseRepository<Subject> subjectRepository,
+        IFrameRepository frameRepository)
     {
         _drainagesRepository = drainagesRepository;
         _additionalEquipsRepository = additionalEquipsRepository;
@@ -41,6 +43,7 @@ public class ProjectService : IProjectService
         _notificationService = notificationService;
         _companyRepository = companyRepository;
         _subjectRepository = subjectRepository;
+        _frameRepository = frameRepository;
     }
 
     public int GetStandsInProjectCount(ProjectModel projectModel)
@@ -53,6 +56,7 @@ public class ProjectService : IProjectService
         var projects = await _projectRepository.GetAllAsync();
         return projects.Count();
     }
+
     public float GetSummWidthObvyzakaAsync(ProjectModel projectModel)
     {
         var totalWidth = 0.0f;
@@ -65,6 +69,7 @@ public class ProjectService : IProjectService
 
         return totalWidth;
     }
+
     public async Task GetOrAddCompnayAsync(string name)
     {
         var companies = await _companyRepository.GetAllAsync();
@@ -179,7 +184,7 @@ public class ProjectService : IProjectService
         newStand.Id = addedStandEntity.Id;
         newStand.ProjectId = addedStandEntity.ProjectInfoId;
 
-        if (sourceStand.FramesInStand != null && sourceStand.DrainagesInStand.Any())
+        if (sourceStand.FramesInStand != null && sourceStand.FramesInStand.Any())
             await CopyFramesToNewStandAsync(newStand, sourceStand.FramesInStand);
 
         if (sourceStand.DrainagesInStand != null && sourceStand.DrainagesInStand.Any())
@@ -392,7 +397,11 @@ public class ProjectService : IProjectService
     private async Task CopyFramesToNewStandAsync(StandModel newStand, ObservableCollection<FormedFrame> frames)
     {
         foreach (var frame in frames)
+        {
             await _projectRepository.AddFrameToStandAsync(newStand.Id, frame.Id);
+            if (!newStand.FramesInStand.Contains(frame))
+                newStand.FramesInStand.Add(frame);
+        }
     }
 
     private async Task CopyDrainagesToNewStandAsync(int newStandId, FormedDrainage source)

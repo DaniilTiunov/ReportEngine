@@ -17,7 +17,6 @@
                 <ColumnDefinition Width="*" MinWidth="250" />
             </Grid.ColumnDefinitions>
 
-
             <GridSplitter
                 Grid.Column="1"
                 Width="6"
@@ -106,7 +105,6 @@
                             </StackPanel>
                         </TabItem>
                     </TabControl>
-
                 </GroupBox>
                 <!--  Дополнительные комплектующие по стенду  -->
                 <GroupBox>

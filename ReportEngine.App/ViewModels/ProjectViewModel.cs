@@ -17,11 +17,9 @@ using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Windows;
+using ReportEngine.Shared.Config.IniHelpers;
+using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
+using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -73,7 +71,7 @@ public class ProjectViewModel : BaseViewModel
     public Obvyazka SelectedObvyazka { get; set; } = new();
     public StandModel CurrentStandModel { get; set; } = new();
     public StandModel NewStand { get; set; } = new();
-    public ProjectModel CurrentProjectModel{ get; set; } = new();
+    public ProjectModel CurrentProjectModel { get; set; } = new();
     public ProjectCommandProvider ProjectCommandProvider { get; set; } = new();
     public MaterialLinesModel CurrentMaterials { get; set; } = new();
 
@@ -86,6 +84,7 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(UpdateUI);
     }
+
     public void OnOpenAllSortamentsDialogExecuted(object e)
     {
         var selected = _dialogService.ShowAllSortamentsDialog();
@@ -124,22 +123,18 @@ public class ProjectViewModel : BaseViewModel
             _notificationService.ShowInfo("Рекомендуемая рама: Рама с длиной " + totalWidth);
 
             var selectedFrame = _dialogService.ShowFrameDialog();
-             
-             if (Guard.ExitIfNull("Рама или стенд не выбраны!",
-                            _notificationService,
-                            selectedFrame,
-                            CurrentProjectModel.SelectedStand)) return; 
-                
-                
-                
-              await _standService.AddFrameToStandAsync(CurrentProjectModel.SelectedStand.Id, selectedFrame.Id);
-              CurrentProjectModel.SelectedStand.FramesInStand.Add(selectedFrame);
-                 
-              OnFramesInStandChanged();
-            
+
+            if (Guard.ExitIfNull("Рама или стенд не выбраны!",
+                           _notificationService,
+                           selectedFrame,
+                           CurrentProjectModel.SelectedStand)) return;
+
+            await _standService.AddFrameToStandAsync(CurrentProjectModel.SelectedStand.Id, selectedFrame.Id);
+            CurrentProjectModel.SelectedStand.FramesInStand.Add(selectedFrame);
+
+            OnFramesInStandChanged();
         });
     }
-            
 
     // TODO: Сделать тут рефакторинг команд
     public void OnSelectMaterialFromDialogCommandExecuted(object e)
@@ -158,6 +153,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays);
                 break;
+
             case "Нержавеющие":
                 SelectEquipment<StainlessPipe>(
                     name => CurrentProjectModel.SelectedStand.MaterialLine = name,
@@ -165,6 +161,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays);
                 break;
+
             case "Углеродистые":
                 SelectEquipment<CarbonPipe>(
                     name => CurrentProjectModel.SelectedStand.MaterialLine = name,
@@ -191,6 +188,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays);
                 break;
+
             case "Нержавеющие":
                 SelectEquipment<StainlessArmature>(
                     name => CurrentProjectModel.SelectedStand.Armature = name,
@@ -198,6 +196,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays);
                 break;
+
             case "Углеродистые":
                 SelectEquipment<CarbonArmature>(
                     name => CurrentProjectModel.SelectedStand.Armature = name,
@@ -224,6 +223,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays);
                 break;
+
             case "Нержавеющие":
                 SelectEquipment<StainlessSocket>(
                     name => CurrentProjectModel.SelectedStand.TreeSocket = name,
@@ -231,6 +231,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays);
                 break;
+
             case "Углеродистые":
                 SelectEquipment<CarbonSocket>(
                     name => CurrentProjectModel.SelectedStand.TreeSocket = name,
@@ -257,6 +258,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays);
                 break;
+
             case "Нержавеющие":
                 SelectEquipment<StainlessSocket>(
                     name => CurrentProjectModel.SelectedStand.KMCH = name,
@@ -264,6 +266,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays);
                 break;
+
             case "Углеродистые":
                 SelectEquipment<CarbonSocket>(
                     name => CurrentProjectModel.SelectedStand.KMCH = name,
@@ -294,9 +297,13 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
+            if (Guard.ExitIfNull("Стенды для копирования не выбраны!", _notificationService, CurrentProjectModel.SelectedStand))
+                return;
+
+            if (Guard.ExitIfNull("Нет серийного номера стенда!", _notificationService, CurrentProjectModel.SelectedStand.SerialNumber))
+                return;
+
             await _projectService.CopyStandsAsync(CurrentProjectModel);
-
-
             await LoadPurposesInStandsAsync();
             await LoadObvyazkiAsync();
         });
@@ -333,7 +340,6 @@ public class ProjectViewModel : BaseViewModel
             await LoadObvyazkiAsync(); // Перезагрузить данные из БД
 
             OnObvyazkiInStandChanged();
-
         });
     }
 
@@ -401,10 +407,11 @@ public class ProjectViewModel : BaseViewModel
             _notificationService.ShowInfo("Обвязка скопирована в стенд");
         });
     }
+
     public void OnSelectObvCommandExecuted(object p)
     {
         var selectedStand = CurrentProjectModel.SelectedStand;
-        
+
         ExceptionHelper.SafeExecute(() =>
         {
             SelectedObvyazka = _dialogService.ShowObvyazkaDialog();
@@ -592,6 +599,7 @@ public class ProjectViewModel : BaseViewModel
                 "Доп. комплектующие сохранены");
         });
     }
+
     public async void OnDeleteDrainageComponentFromStandCommandExecuted(object obj)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -602,6 +610,7 @@ public class ProjectViewModel : BaseViewModel
                 "Дренажное комплектующее удалено");
         });
     }
+
     public async void OnUpdateDrainageComponentInStandCommandExecuted(object obj)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -689,8 +698,6 @@ public class ProjectViewModel : BaseViewModel
             _containerService.RemoveStandFromContainerAsync(CurrentProjectModel));
     }
 
-
-
     public void ResetProject()
     {
         // Совместимый синхронный вызов, чтобы не дедлокалось в процессе загрузки
@@ -729,10 +736,10 @@ public class ProjectViewModel : BaseViewModel
         ProjectCommandsInitializer.InitializeGenericCommands(this);
     }
 
-
-    #endregion
+    #endregion Инициализация
 
     #region Методы загрузки данных на view
+
     public async Task LoadStandsDataAsync()
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -779,7 +786,6 @@ public class ProjectViewModel : BaseViewModel
             CurrentStandModel = loadedModel.SelectedStand ?? new StandModel();
             CurrentStandModel.InitializeDefaultPurposes();
 
-                       
             await LoadObvyazkiAsync();
             await LoadStandsDataAsync();
 
@@ -795,7 +801,7 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    #endregion
+    #endregion Методы загрузки данных на view
 
     #region Методы для CRUD с проектами и стендами
 
@@ -811,8 +817,10 @@ public class ProjectViewModel : BaseViewModel
 
         await _standService.AddObvyazkaToStandAsync(CurrentProjectModel.SelectedStand.Id, entity);
 
-        CurrentProjectModel.ObvyazkiInProject.Add(entity);
-
+        if (!CurrentProjectModel.ObvyazkiInProject.Contains(entity))
+        {
+            CurrentProjectModel.ObvyazkiInProject.Add(entity);
+        }
     }
 
     private async Task DeleteObvFromStandAsync()
@@ -837,9 +845,8 @@ public class ProjectViewModel : BaseViewModel
         OnObvyazkiInStandChanged();
 
         _notificationService.ShowInfo("Обвязка удалена из стенда");
-        
     }
-    
+
     private async Task SaveProjectChangesAsync()
     {
         if (CurrentProjectModel.CurrentProjectId == 0)
@@ -1148,7 +1155,7 @@ public class ProjectViewModel : BaseViewModel
         _notificationService.ShowInfo(successMessage);
     }
 
-    #endregion
+    #endregion Методы для CRUD с проектами и стендами
 
     #region Методы расчёта и создания отчётности
 
@@ -1181,7 +1188,6 @@ public class ProjectViewModel : BaseViewModel
         await LoadProjectInfoAsync(CurrentProjectModel.CurrentProjectId);
     }
 
-
     public void OnObvyazkiInStandChanged()
     {
         Debug.WriteLine("Обвязки поменялись");
@@ -1190,6 +1196,7 @@ public class ProjectViewModel : BaseViewModel
         UpdateCableInputsQuantity();
         UpdateTablesQuantity();
         UpdateClampsQuantity();
+        UpdateBracketsQuantity();
 
         CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewElectricalComponent.Purposes);
         CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
@@ -1204,14 +1211,11 @@ public class ProjectViewModel : BaseViewModel
         CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
     }
 
-
-
     //возвращает максимальный NN обвязок в стенде
     public int MaxObvNN
     {
-        get => CurrentProjectModel?.SelectedStand?.ObvyazkiInStand.Max(obv => obv.NN) ?? 1;
+        get => CurrentProjectModel?.SelectedStand?.ObvyazkiInStand.Max(obv => obv.NN) ?? 0;
     }
-
 
     //обновляем поле NN в обвязке
     public void UpdateNewObvNN()
@@ -1235,7 +1239,6 @@ public class ProjectViewModel : BaseViewModel
         {
             //швеллер в метрах
             channelRecord.Quantity = framesWidthSum / 1000.0f;
-            
         }
     }
 
@@ -1244,13 +1247,12 @@ public class ProjectViewModel : BaseViewModel
     {
         var additionalEquips = CurrentStandModel.NewAdditionalEquip.Purposes;
         var clampsRecord = additionalEquips.FirstOrDefault(equip => equip.Purpose == "Хомуты");
-        
+
         if (clampsRecord == null) return;
 
         var clampSum = CurrentStandModel.ObvyazkiInStand.Sum(obv => obv.Clamp);
         clampsRecord.Quantity = clampSum ?? 0.0f;
     }
-
 
     //обновляем кол-во кабельных вводов
     public void UpdateCableInputsQuantity()
@@ -1266,10 +1268,9 @@ public class ProjectViewModel : BaseViewModel
         {
             cableInputsRecord.Quantity = inputsPerSensor * sensorsQuantity;
         }
-
-       
     }
 
+    //обновляем кол-во табличек
     public void UpdateTablesQuantity()
     {
         var sensorsQuantity = CurrentStandModel.CountSensorsQuantity();
@@ -1281,11 +1282,93 @@ public class ProjectViewModel : BaseViewModel
         {
             tableRecord.Quantity = sensorsQuantity;
         }
-        
     }
-    
 
+    //обновляем кол-во кронштейнов
+    public void UpdateBracketsQuantity()
+    {
+        UpdateDifSensorsBrackets();
+        UpdateAbsSensorsBrackets();
+    }
 
+    //обновляем кол-во кронштейнов для абсолютников
+    private void UpdateAbsSensorsBrackets()
+    {
+        var standsSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
 
-    #endregion
+        const int bracketsPerAbsoluteSensor = 2;
+        const string absoluteSensorBracketRecordName = "Кронштейн абсолютника";
+        const string measureUnit = "шт";
+
+        var absSensorsQuantity = CurrentStandModel.CountAbsoluteSensorsQuantity();
+
+        var additionalComponents = CurrentStandModel.NewAdditionalEquip.Purposes;
+
+        var absSensorsBracketsRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == absoluteSensorBracketRecordName);
+
+        if (absSensorsBracketsRecord == null && absSensorsQuantity > 0)
+        {
+            absSensorsBracketsRecord = new AdditionalEquipPurpose();
+            absSensorsBracketsRecord.Purpose = absoluteSensorBracketRecordName;
+            absSensorsBracketsRecord.Measure = measureUnit;
+            absSensorsBracketsRecord.Quantity = bracketsPerAbsoluteSensor * absSensorsQuantity;
+            additionalComponents.Add(absSensorsBracketsRecord);
+        }
+
+        if (absSensorsBracketsRecord != null)
+        {
+            absSensorsBracketsRecord.Quantity = bracketsPerAbsoluteSensor * absSensorsQuantity;
+        }
+
+        var standBraceType = CurrentProjectModel?.SelectedStand?.BraceType;
+
+        if (absSensorsBracketsRecord != null && !string.IsNullOrEmpty(standBraceType))
+        {
+            switch (standBraceType)
+            {
+                case "На кронштейне":
+                    absSensorsBracketsRecord.Material = standsSettings.BracketForAbs;
+                    break;
+
+                case "Швеллер":
+                    absSensorsBracketsRecord.Material = standsSettings.BracketUniversal;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
+
+    //обновляем кол-во кронштейнов для перепадчиков
+    private async void UpdateDifSensorsBrackets()
+    {
+        var standsSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
+
+        const int bracketsPerDifSensor = 1;
+        const string difSensorBracketRecordName = "Кронштейн перепадчика";
+        const string measureUnit = "шт";
+
+        var difSensorsQuantity = CurrentStandModel.CountDifSensorsQuantity();
+
+        var additionalComponents = CurrentStandModel.NewAdditionalEquip.Purposes;
+        var difSensorsBracketRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == difSensorBracketRecordName);
+
+        if (difSensorsBracketRecord == null && difSensorsQuantity > 0)
+        {
+            difSensorsBracketRecord = new AdditionalEquipPurpose();
+            difSensorsBracketRecord.Purpose = difSensorBracketRecordName;
+            difSensorsBracketRecord.Material = standsSettings.BracketForDif;
+            difSensorsBracketRecord.Measure = measureUnit;
+            difSensorsBracketRecord.Quantity = bracketsPerDifSensor * difSensorsQuantity;
+            additionalComponents.Add(difSensorsBracketRecord);
+        }
+
+        if (difSensorsBracketRecord != null)
+        {
+            difSensorsBracketRecord.Quantity = bracketsPerDifSensor * difSensorsQuantity;
+        }
+    }
+
+    #endregion Методы расчёта и создания отчётности
 }

@@ -1,6 +1,5 @@
 ﻿namespace ReportEngine.Export.DTO;
 
-
 public struct SensorRecordData
 {
     public string SensorKKS;
@@ -49,7 +48,6 @@ public struct EquipmentRecord
     public ValidatedField<float?> Quantity { get; set; }
     public ValidatedField<float?> CostPerUnit { get; set; }
     public ValidatedField<float?> CommonCost { get; set; }
-
 }
 
 public struct StandInfoData
@@ -58,7 +56,6 @@ public struct StandInfoData
     public ValidatedField<string?> KKS { get; set; }
     public ValidatedField<string?> SerialNumber { get; set; }
 }
-
 
 public struct ValidatedField<T>
 {
@@ -71,7 +68,5 @@ public struct ValidatedField<T>
         IsValid = isValid;
     }
 
-
     //public static ValidatedField<T> Sum(IEnumerable<ValidatedField<T>> fields)
-
 }
