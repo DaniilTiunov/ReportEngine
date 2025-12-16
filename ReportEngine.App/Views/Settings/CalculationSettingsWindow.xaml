@@ -125,8 +125,9 @@
                             <TextBlock
                                 Grid.Row="0"
                                 Grid.Column="0"
+                                Grid.ColumnSpan="4"
                                 Margin="15,5,5,5"
-                                Text="Швеллер: " Grid.ColumnSpan="4" />
+                                Text="Швеллер: " />
                             <TextBox
                                 Grid.Row="0"
                                 Grid.Column="4"
@@ -141,8 +142,9 @@
                             <TextBlock
                                 Grid.Row="1"
                                 Grid.Column="0"
+                                Grid.ColumnSpan="4"
                                 Margin="15,5,5,5"
-                                Text="Шильдик: " Grid.ColumnSpan="4" />
+                                Text="Шильдик: " />
                             <TextBox
                                 Grid.Row="1"
                                 Grid.Column="4"
@@ -157,8 +159,9 @@
                             <TextBlock
                                 Grid.Row="2"
                                 Grid.Column="0"
+                                Grid.ColumnSpan="4"
                                 Margin="15,5,5,5"
-                                Text="Табличка: " Grid.ColumnSpan="4" />
+                                Text="Табличка: " />
                             <TextBox
                                 Grid.Row="2"
                                 Grid.Column="4"
@@ -173,8 +176,9 @@
                             <TextBlock
                                 Grid.Row="3"
                                 Grid.Column="0"
+                                Grid.ColumnSpan="4"
                                 Margin="15,5,5,5"
-                                Text="Оцинковка рам: " Grid.ColumnSpan="4" />
+                                Text="Оцинковка рам: " />
                             <TextBox
                                 Grid.Row="3"
                                 Grid.Column="4"
@@ -189,8 +193,9 @@
                             <TextBlock
                                 Grid.Row="4"
                                 Grid.Column="0"
+                                Grid.ColumnSpan="4"
                                 Margin="15,5,5,5"
-                                Text="Кронштейн: " Grid.ColumnSpan="4" />
+                                Text="Кронштейн: " />
                             <TextBox
                                 Grid.Row="4"
                                 Grid.Column="4"
@@ -205,8 +210,9 @@
                             <TextBlock
                                 Grid.Row="5"
                                 Grid.Column="0"
+                                Grid.ColumnSpan="4"
                                 Margin="15,5,5,5"
-                                Text="Кронштейн переп.: " Grid.ColumnSpan="4" />
+                                Text="Кронштейн переп.: " />
                             <TextBox
                                 Grid.Row="5"
                                 Grid.Column="4"
@@ -221,8 +227,9 @@
                             <TextBlock
                                 Grid.Row="6"
                                 Grid.Column="0"
+                                Grid.ColumnSpan="4"
                                 Margin="15,5,5,5"
-                                Text="Кронштейн абсол.: " Grid.ColumnSpan="4" />
+                                Text="Кронштейн абсол.: " />
                             <TextBox
                                 Grid.Row="6"
                                 Grid.Column="4"
@@ -237,8 +244,9 @@
                             <TextBlock
                                 Grid.Row="7"
                                 Grid.Column="0"
+                                Grid.ColumnSpan="4"
                                 Margin="15,5,5,5"
-                                Text="Кронштейн унив.: " Grid.ColumnSpan="4" />
+                                Text="Кронштейн унив.: " />
                             <TextBox
                                 Grid.Row="7"
                                 Grid.Column="4"
@@ -253,8 +261,9 @@
                             <TextBlock
                                 Grid.Row="8"
                                 Grid.Column="0"
+                                Grid.ColumnSpan="4"
                                 Margin="15,5,5,5"
-                                Text="Кабель 6мм: " Grid.ColumnSpan="4" />
+                                Text="Кабель 6мм: " />
                             <TextBox
                                 Grid.Row="8"
                                 Grid.Column="4"
@@ -280,8 +289,9 @@
                             <TextBlock
                                 Grid.Row="9"
                                 Grid.Column="0"
+                                Grid.ColumnSpan="4"
                                 Margin="15,5,5,5"
-                                Text="Кабель 4мм: " Grid.ColumnSpan="4" />
+                                Text="Кабель 4мм: " />
                             <TextBox
                                 Grid.Row="9"
                                 Grid.Column="4"
@@ -296,8 +306,9 @@
                             <TextBlock
                                 Grid.Row="10"
                                 Grid.Column="0"
+                                Grid.ColumnSpan="4"
                                 Margin="15,5,5,5"
-                                Text="Сигн. кабель: " Grid.ColumnSpan="4" />
+                                Text="Сигн. кабель: " />
                             <TextBox
                                 Grid.Row="10"
                                 Grid.Column="4"
@@ -312,8 +323,9 @@
                             <TextBlock
                                 Grid.Row="11"
                                 Grid.Column="0"
+                                Grid.ColumnSpan="4"
                                 Margin="15,5,5,5"
-                                Text="Ведущий инженер: " Grid.ColumnSpan="4" />
+                                Text="Ведущий инженер: " />
                             <TextBox
                                 Grid.Row="11"
                                 Grid.Column="4"
@@ -323,8 +335,9 @@
                             <TextBlock
                                 Grid.Row="12"
                                 Grid.Column="0"
+                                Grid.ColumnSpan="4"
                                 Margin="15,5,5,5"
-                                Text="Ответственный за &#x0a;приёмку: " Grid.ColumnSpan="4" />
+                                Text="Ответственный за &#x0a;приёмку: " />
                             <TextBox
                                 Grid.Row="12"
                                 Grid.Column="4"
@@ -334,8 +347,9 @@
                             <TextBlock
                                 Grid.Row="13"
                                 Grid.Column="0"
+                                Grid.ColumnSpan="4"
                                 Margin="15,5,5,5"
-                                Text="Специалист &#x0a;II-уровня: " Grid.ColumnSpan="4" />
+                                Text="Специалист &#x0a;II-уровня: " />
                             <TextBox
                                 Grid.Row="13"
                                 Grid.Column="4"
@@ -345,8 +359,9 @@
                             <TextBlock
                                 Grid.Row="14"
                                 Grid.Column="0"
+                                Grid.ColumnSpan="4"
                                 Margin="15,5,5,5"
-                                Text="Представитель &#x0a;Осил: " Grid.ColumnSpan="4" />
+                                Text="Представитель &#x0a;Осил: " />
                             <TextBox
                                 Grid.Row="14"
                                 Grid.Column="4"
@@ -548,46 +563,53 @@
                             <TextBlock
                                 Grid.Row="0"
                                 Grid.Column="0"
+                                Grid.ColumnSpan="3"
                                 Margin="5,15,111,10"
-                                Text="Изготовление&#x0a;рам: " Grid.ColumnSpan="3" />
+                                Text="Изготовление&#x0a;рам: " />
                             <TextBox
                                 Grid.Row="0"
                                 Grid.Column="2"
+                                Grid.ColumnSpan="3"
                                 Margin="0,20,141,20"
-                                Text="{Binding FrameSettings.FrameProduction, Mode=TwoWay}" Grid.ColumnSpan="3" />
+                                Text="{Binding FrameSettings.FrameProduction, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="1"
                                 Grid.Column="0"
+                                Grid.ColumnSpan="3"
                                 Margin="5,15,111,10"
-                                Text="Покраска: " Grid.ColumnSpan="3" />
+                                Text="Покраска: " />
                             <TextBox
                                 Grid.Row="1"
                                 Grid.Column="2"
+                                Grid.ColumnSpan="3"
                                 Margin="0,20,141,20"
-                                Text="{Binding FrameSettings.Painting, Mode=TwoWay}" Grid.ColumnSpan="3" />
+                                Text="{Binding FrameSettings.Painting, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="0"
                                 Grid.Column="4"
-                                Margin="5,15,140,10" Grid.ColumnSpan="2"
-                                ><Run Text="Время п" /><Run Language="ru-ru" Text="роизводства" /><Run Text=" 1" /><Run Language="ru-ru" Text=" рамы" /><Run Text=":&#xA;рамы: " /></TextBlock>
+                                Grid.ColumnSpan="2"
+                                Margin="5,15,140,10"><Run Text="Время п" /><Run Language="ru-ru" Text="роизводства" /><Run Text=" 1" /><Run Language="ru-ru" Text=" рамы" /><Run Text=":&#xA;рамы: " /></TextBlock>
                             <TextBox
                                 Grid.Row="0"
                                 Grid.Column="5"
+                                Grid.ColumnSpan="2"
                                 Margin="0,20,140,20"
-                                Text="{Binding FrameSettings.TimeForProductionFrame, Mode=TwoWay}" Grid.ColumnSpan="2" />
+                                Text="{Binding FrameSettings.TimeForProductionFrame, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="1"
                                 Grid.Column="4"
+                                Grid.ColumnSpan="2"
                                 Margin="5,15,140,10"
-                                Text="Время покраски&#x0a;рамы: " Grid.ColumnSpan="2" />
+                                Text="Время покраски&#x0a;рамы: " />
                             <TextBox
                                 Grid.Row="1"
                                 Grid.Column="5"
+                                Grid.ColumnSpan="2"
                                 Margin="0,20,140,20"
-                                Text="{Binding FrameSettings.TimeForPaintFrame, Mode=TwoWay}" Grid.ColumnSpan="2" />
+                                Text="{Binding FrameSettings.TimeForPaintFrame, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="0"
@@ -597,8 +619,9 @@
                             <TextBox
                                 Grid.Row="0"
                                 Grid.Column="6"
+                                Grid.ColumnSpan="2"
                                 Margin="140,20,0,20"
-                                Text="{Binding FrameSettings.TimeForPrepareFrame, Mode=TwoWay}" Grid.ColumnSpan="2" />
+                                Text="{Binding FrameSettings.TimeForPrepareFrame, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="1"
@@ -608,15 +631,16 @@
                             <TextBox
                                 Grid.Row="1"
                                 Grid.Column="6"
+                                Grid.ColumnSpan="2"
                                 Margin="140,20,0,20"
-                                Text="{Binding FrameSettings.TimeForPaintObv, Mode=TwoWay}" Grid.ColumnSpan="2" />
+                                Text="{Binding FrameSettings.TimeForPaintObv, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="2"
                                 Grid.Column="2"
+                                Grid.ColumnSpan="3"
                                 Margin="5,5,141,6"
-                                FontWeight="Bold"
-                                Grid.ColumnSpan="3" ><Run Text="Разб" /><Run Language="ru-ru" Text="о" /><Run Text="рные рамы " /></TextBlock>
+                                FontWeight="Bold"><Run Text="Разб" /><Run Language="ru-ru" Text="о" /><Run Text="рные рамы " /></TextBlock>
 
                             <TextBlock
                                 Grid.Row="3"
@@ -711,9 +735,10 @@
                             <TextBlock
                                 Grid.Row="6"
                                 Grid.Column="2"
+                                Grid.ColumnSpan="3"
                                 Margin="5,5,141,6"
                                 FontWeight="Bold"
-                                Text="Стойки " Grid.ColumnSpan="3" />
+                                Text="Стойки " />
 
                             <TextBlock
                                 Grid.Row="7"
@@ -744,9 +769,10 @@
                             <TextBlock
                                 Grid.Row="9"
                                 Grid.Column="2"
+                                Grid.ColumnSpan="3"
                                 Margin="5,5,141,6"
                                 FontWeight="Bold"
-                                Text="Шкафы " Grid.ColumnSpan="3" />
+                                Text="Шкафы " />
 
                             <TextBlock
                                 Grid.Row="10"

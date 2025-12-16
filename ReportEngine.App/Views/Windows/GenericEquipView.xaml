@@ -5,12 +5,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Исходное оборудование"
-    Background="{DynamicResource PrimaryColor}"
-    Foreground="{DynamicResource PrimaryForeground}"
     Width="1100"
     Height="450"
-    WindowStyle="None"
+    Background="{DynamicResource PrimaryColor}"
     FontFamily="Bahnschrift"
+    Foreground="{DynamicResource PrimaryForeground}"
+    WindowStyle="None"
     mc:Ignorable="d">
 
     <WindowChrome.WindowChrome>
