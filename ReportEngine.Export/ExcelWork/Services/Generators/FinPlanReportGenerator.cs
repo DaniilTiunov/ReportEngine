@@ -207,7 +207,7 @@ public class FinPlanReportGenerator : IReportGenerator
         var containersCostRecord = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
-            Name = new ValidatedField<string>("Тара", true),
+            Name = new ValidatedField<string?>("Тара", true),
             Unit = new ValidatedField<string?>("руб. без НДС", true),
             Quantity = new ValidatedField<float?>(null, true),
             CostPerUnit = new ValidatedField<float?>(null, true),
@@ -231,7 +231,7 @@ public class FinPlanReportGenerator : IReportGenerator
         var laborRecords = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);
         var laborTotalCostRecord = ExcelReportHelper.GenerateTotalRecord(laborRecords);
 
-        laborTotalCostRecord.Name = new ValidatedField<string>("Трудозатраты", true);
+        laborTotalCostRecord.Name = new ValidatedField<string?>("Трудозатраты", true);
         laborTotalCostRecord.Unit = new ValidatedField<string?>("чел. * мес.", true);
 
         var laborValueRange = PasteRecord(activeRow, laborTotalCostRecord, ws);

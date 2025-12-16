@@ -111,27 +111,27 @@ public class MarksReportGenerator : IReportGenerator
     {
         var resultRecords = new List<RecordData>();
 
-        if (obvyazka.FirstSensorKKS != null)
+        if (obvyazka.FirstSensorType != null)
             resultRecords.Add(new RecordData(
                 stand.SerialNumber ?? "",
                 stand.KKSCode ?? "",
-                obvyazka.FirstSensorKKS,
+                obvyazka.FirstSensorKKS ?? "",
                 obvyazka.FirstSensorMarkPlus ?? "",
                 obvyazka.FirstSensorMarkMinus ?? ""));
 
-        if (obvyazka.SecondSensorKKS != null)
+        if (obvyazka.SecondSensorType != null)
             resultRecords.Add(new RecordData(
                 stand.SerialNumber ?? "",
                 stand.KKSCode ?? "",
-                obvyazka.SecondSensorKKS,
+                obvyazka.SecondSensorKKS ?? "",
                 obvyazka.SecondSensorMarkPlus ?? "",
                 obvyazka.SecondSensorMarkMinus ?? ""));
 
-        if (obvyazka.ThirdSensorKKS != null)
+        if (obvyazka.ThirdSensorType != null)
             resultRecords.Add(new RecordData(
                 stand.SerialNumber ?? "",
                 stand.KKSCode ?? "",
-                obvyazka.ThirdSensorKKS,
+                obvyazka.ThirdSensorKKS ?? "",
                 obvyazka.ThirdSensorMarkPlus ?? "",
                 obvyazka.ThirdSensorMarkMinus ?? ""));
 
