@@ -810,8 +810,10 @@ public class ProjectViewModel : BaseViewModel
 
         await _standService.AddObvyazkaToStandAsync(CurrentProjectModel.SelectedStand.Id, entity);
 
-        CurrentProjectModel.ObvyazkiInProject.Add(entity);
-
+        if (!CurrentProjectModel.ObvyazkiInProject.Contains(entity))
+        {
+            CurrentProjectModel.ObvyazkiInProject.Add(entity);
+        }
     }
 
     private async Task DeleteObvFromStandAsync()
