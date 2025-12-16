@@ -7,7 +7,10 @@ public interface IGenericBaseRepository<T, TEntity>
     where TEntity : class
 {
     Task AddAsync(TEntity entity);
+
     Task DeleteAsync(TEntity entity);
+
     Task<IEnumerable<TEntity>> GetAllAsync();
+
     Task UpdateAsync(TEntity entity);
 }

@@ -33,7 +33,6 @@ public class ContainerReportGenerator : IReportGenerator
             CreateWorksheetTableHeader(ws);
             await FillWorksheetTable(ws, project);
 
-
             ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
 
@@ -41,7 +40,6 @@ public class ContainerReportGenerator : IReportGenerator
             ws.Columns().AdjustToContents();
 
             var savePath = SettingsManager.GetReportDirectory();
-
 
             var fileName = ExcelReportHelper.CreateReportName("Тара", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
@@ -65,7 +63,6 @@ public class ContainerReportGenerator : IReportGenerator
         headerRange.Cell(1, 8).Value = "Масса, кг";
         headerRange.Cell(1, 9).Value = "Упаковка";
 
-
         headerRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
         headerRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Medium);
 
@@ -74,10 +71,8 @@ public class ContainerReportGenerator : IReportGenerator
 
     private async Task FillWorksheetTable(IXLWorksheet ws, ProjectInfo project)
     {
-        
         //создаем объекты всех контейнеров
         var containerBatches = await _containerRepository.GetAllByProjectIdAsync(project.Id);
-
 
         var containers = containerBatches
             .SelectMany(batch => batch.Containers)
@@ -88,7 +83,6 @@ public class ContainerReportGenerator : IReportGenerator
                 containerContent = container.Stands
             });
 
-
         // выводим в таблицу
 
         var containerStartRow = 2;
@@ -96,11 +90,9 @@ public class ContainerReportGenerator : IReportGenerator
 
         var containerNumber = 1;
 
-
         foreach (var container in containers)
         {
             var placeInContainerNumber = 1;
-
 
             //сначала выводим все стенды
 
@@ -123,7 +115,6 @@ public class ContainerReportGenerator : IReportGenerator
             //заполняем инфу о таре
             var containerEndRow = standActiveRow - 1;
 
-
             var containerNumberRange = ws.Range($"A{containerStartRow}:A{containerEndRow}").Merge();
             containerNumberRange.Value = containerNumber;
 
@@ -135,7 +126,6 @@ public class ContainerReportGenerator : IReportGenerator
 
             var containerPackRange = ws.Range($"I{containerStartRow}:I{containerEndRow}").Merge();
             containerPackRange.Value = container.containerInstance.Name;
-
 
             containerNumber++;
 

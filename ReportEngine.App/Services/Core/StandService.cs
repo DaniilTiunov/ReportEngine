@@ -270,8 +270,6 @@ public class StandService : IStandService
                                         Measure = component.Measure,
                                         ExportDays = component.ExportDays,
                                         Id = component.Id
-
-
                                     })
                                     .ToList()
         };
@@ -319,8 +317,6 @@ public class StandService : IStandService
         stand.ThirdSensorMarkPlus = obv.ThirdSensorMarkPlus;
         stand.ThirdSensorMarkMinus = obv.ThirdSensorMarkMinus;
         stand.ThirdSensorDescription = obv.ThirdSensorDescription;
-
-
 
         if (obv.AdditionalComponents != null)
         {

@@ -98,7 +98,7 @@ public class ObvyazkaViewModel
         _notificationService.ShowInfo("Выбранная обвязка удалена");
     }
 
-    #endregion
+    #endregion Команды
 
     #region Методы
 
@@ -123,5 +123,5 @@ public class ObvyazkaViewModel
         await _obvyazkaRepository.DeleteAsync(obvyazka);
     }
 
-    #endregion
+    #endregion Методы
 }

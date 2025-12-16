@@ -63,8 +63,6 @@ public class ComponentListReportGenerator : IReportGenerator
         }
     }
 
-
-
     #region Вспомогательные
 
     //валидация и вывод в таблицу
@@ -92,9 +90,7 @@ public class ComponentListReportGenerator : IReportGenerator
         //}
     }
 
-    #endregion
-
-
+    #endregion Вспомогательные
 
     #region Заголовки
 
@@ -157,9 +153,7 @@ public class ComponentListReportGenerator : IReportGenerator
         return activeRow;
     }
 
-    #endregion
-
-
+    #endregion Заголовки
 
     #region Заполнители
 
@@ -254,5 +248,5 @@ public class ComponentListReportGenerator : IReportGenerator
         return currentRow;
     }
 
-    #endregion
+    #endregion Заполнители
 }

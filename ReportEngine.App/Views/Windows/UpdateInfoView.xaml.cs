@@ -74,6 +74,7 @@ namespace ReportEngine.App.Views.Windows
                 Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
             }
         }
+
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             Close();

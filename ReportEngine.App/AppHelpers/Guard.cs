@@ -6,8 +6,7 @@ namespace ReportEngine.App.AppHelpers
     {
         public static bool ExitIfNull(string message, INotificationService notify, params object?[] values)
         {
-
-            foreach(var value in values)
+            foreach (var value in values)
             {
                 if (value is null)
                 {
@@ -15,7 +14,7 @@ namespace ReportEngine.App.AppHelpers
                     return true;
                 }
             }
-            
+
             return false;
         }
     }

@@ -69,7 +69,7 @@ public class StandSettingsModel : BaseViewModel
 
     public string? BracketUniversal
     {
-        get => _bracketUniversal; 
+        get => _bracketUniversal;
         set => Set(ref _bracketUniversal, value);
     } // Кронштейн универсальный
 

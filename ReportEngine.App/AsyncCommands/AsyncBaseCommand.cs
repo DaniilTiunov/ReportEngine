@@ -5,6 +5,7 @@ namespace ReportEngine.App.AsyncCommands;
 public abstract class AsyncBaseCommand : IAsyncCommand
 {
     public abstract bool CanExecute(object parameter);
+
     public abstract Task ExecuteAsync(object parameter);
 
     public async void Execute(object parameter)

@@ -9,8 +9,12 @@ public interface IDialogService
         where T : class, IBaseEquip, new();
 
     Obvyazka? ShowObvyazkaDialog();
+
     IBaseEquip? ShowAllSortamentsDialog();
+
     string ShowCompanyDialog();
+
     string ShowSubjectDialog();
+
     FormedFrame ShowFrameDialog();
 }

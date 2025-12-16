@@ -39,5 +39,5 @@ public class UserModel : BaseViewModel
         set => Set(ref _selectedUser, value);
     }
 
-    #endregion
+    #endregion Приватные свойства для хранения данных
 }

@@ -16,6 +16,7 @@ public partial class SubjectsView : Window
     private ICollectionView _subjectsView;
 
     private readonly bool _isDialog;
+
     public SubjectsView(SubjectViewModel viewModel, bool isDialog = false)
     {
         InitializeComponent();

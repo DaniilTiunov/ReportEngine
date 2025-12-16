@@ -6,22 +6,18 @@ using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
 
-
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
 public class NameplatesReportGenerator : IReportGenerator
 {
     private readonly IProjectInfoRepository _projectInfoRepository;
 
-
     public NameplatesReportGenerator(IProjectInfoRepository projectInfoRepository)
     {
         _projectInfoRepository = projectInfoRepository;
     }
 
-
     public ReportType Type => ReportType.NameplatesReport;
-
 
     public async Task GenerateAsync(int projectId)
     {
@@ -36,7 +32,6 @@ public class NameplatesReportGenerator : IReportGenerator
             var maxTablesQuantity = FillWorksheetTable(ws, project);
             CreateWorksheetTableHeader(ws, maxTablesQuantity);
 
-
             ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
 
@@ -46,14 +41,12 @@ public class NameplatesReportGenerator : IReportGenerator
             var savePath = SettingsManager.GetReportDirectory();
             var fileName = ExcelReportHelper.CreateReportName("Ведомость_шильдиков_табличек", "xlsx");
 
-
             var fullSavePath = Path.Combine(savePath, fileName);
 
             Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
             wb.SaveAs(fullSavePath);
         }
     }
-
 
     private void CreateWorksheetTableHeader(IXLWorksheet ws, int maxTablesQuantity)
     {
@@ -62,9 +55,7 @@ public class NameplatesReportGenerator : IReportGenerator
         var startColumn = 1;
         var endColumn = startColumn;
 
-
         ws.Cell(headerRow, startColumn).Value = "№";
-
 
         //рассчитываем шапку для шильдиков
         startColumn = 2;
@@ -75,7 +66,6 @@ public class NameplatesReportGenerator : IReportGenerator
         nameplatesHeaderContent += "ЭП-С.000.0000.001";
         nameplatesHeaderCell.Value = nameplatesHeaderContent;
 
-
         //рассчитываем шапку для табличек
         startColumn = 3;
 
@@ -85,7 +75,6 @@ public class NameplatesReportGenerator : IReportGenerator
         var endCell = ws.Cell(headerRow, endColumn);
 
         var tablesHeaderArea = ws.Range(startCell, endCell).Merge();
-
 
         var tablesHeaderContent = "Табличка (26х80)\n";
         tablesHeaderContent += "ЭП-С.000.0000.003";
@@ -105,13 +94,11 @@ public class NameplatesReportGenerator : IReportGenerator
         {
             ws.Cell("A" + activeRow).Value = standNumber;
 
-
             //формируем текст шильдика
             var standNameplateText = "Стенд датчиков КИПиА\n";
             standNameplateText += $"{stand.KKSCode}\n";
             standNameplateText += $"{stand.SerialNumber}\n";
             standNameplateText += $"Дата: {DateTime.Now.ToString("MM.yyyy")}";
-
 
             //формируем текста табличек
             var standTablesStrings = stand.ObvyazkiInStand
@@ -124,12 +111,10 @@ public class NameplatesReportGenerator : IReportGenerator
                     return nameplateText;
                 });
 
-
             var activeColumn = 2;
 
             ws.Cell(activeRow, activeColumn).Value = standNameplateText;
             activeColumn++;
-
 
             //растягиваем все найденные шильдики вдоль строки после табличек
             foreach (var tableText in standTablesStrings)
@@ -139,16 +124,13 @@ public class NameplatesReportGenerator : IReportGenerator
                 activeColumn++;
             }
 
-
             maxTables = Math.Max(maxTables, standTablesStrings.Count());
 
             standNumber++;
             activeRow++;
         }
 
-
         //отдаем максимум найденных табличек для построения шапки
         return maxTables;
     }
-
 }

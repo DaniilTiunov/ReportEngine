@@ -14,6 +14,7 @@ public partial class AllSortamentsView : Window
     private readonly AllSortamentsViewModel _viewModel;
 
     private readonly bool _isDialog;
+
     public AllSortamentsView(AllSortamentsViewModel viewModel, bool isDialog = false)
     {
         InitializeComponent();
@@ -21,6 +22,7 @@ public partial class AllSortamentsView : Window
         _viewModel = viewModel;
         _isDialog = isDialog;
     }
+
     private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
         if (_equipView == null)

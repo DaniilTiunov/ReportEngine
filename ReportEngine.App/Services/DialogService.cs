@@ -28,14 +28,12 @@ public class DialogService : IDialogService
             var factory = _serviceProvider.GetRequiredService<GenericEquipWindowFactory>();
             var window = factory.CreateWindow<T>(true);
 
-
             if (window.DataContext is GenericEquipViewModel<T> viewModel)
                 viewModel.SelectionHandler = item =>
                 {
                     selectedItem = item;
                     window.Close();
                 };
-
 
             window.ShowDialog();
             return selectedItem;

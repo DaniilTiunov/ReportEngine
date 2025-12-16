@@ -5,8 +5,6 @@ using ReportEngine.Shared.Config.IniHelpers;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
 
-
-
 namespace ReportEngine.Export.ExcelWork
 {
     public static class JsonCreator
@@ -14,7 +12,6 @@ namespace ReportEngine.Export.ExcelWork
         //создание JSON объекта проекта
         public static ProjectJsonObject CreateProjectJson(ProjectInfo project)
         {
-
             var standSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
 
             return new ProjectJsonObject
@@ -68,8 +65,6 @@ namespace ReportEngine.Export.ExcelWork
                     Quantity = group.Count()
                 });
 
-
-
             var parts = ExcelReportHelper.GeneratePartsData(new List<Stand> { stand });
 
             var framesParts = parts.FramesList.Select(record => RecordToJson(record));
@@ -77,8 +72,6 @@ namespace ReportEngine.Export.ExcelWork
             var drainageParts = parts.DrainageParts.Select(record => RecordToJson(record));
 
             var electricalParts = parts.ElectricalParts.Select(record => RecordToJson(record));
-
-
 
             var mountPartsRecords = new List<EquipmentRecord>();
 

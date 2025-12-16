@@ -18,7 +18,6 @@ public class ReportService : IReportService
         if (generator == null)
             throw new InvalidOperationException($"Генератор {generatorType} не зарегистрирован");
 
-
         await Task.Run(async () => await generator.GenerateAsync(projectId));
     }
 }

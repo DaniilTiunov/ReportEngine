@@ -24,7 +24,7 @@ public class UsersViewModel : BaseViewModel
         LoadAllUsersAsync();
     }
 
-    #endregion
+    #endregion Конструктор
 
     public UserModel CurrentUser { get; set; } = new();
 
@@ -38,7 +38,7 @@ public class UsersViewModel : BaseViewModel
         SaveUserCommand = new RelayCommand(OnSaveUserCommandExecuted, CanAllCommandsExecute);
     }
 
-    #endregion
+    #endregion Методы
 
     #region Комманды
 
@@ -74,7 +74,7 @@ public class UsersViewModel : BaseViewModel
         await SaveUsersChangesAsync();
     }
 
-    #endregion
+    #endregion Комманды
 
     #region Методы
 
@@ -122,5 +122,5 @@ public class UsersViewModel : BaseViewModel
         });
     }
 
-    #endregion
+    #endregion Методы
 }
