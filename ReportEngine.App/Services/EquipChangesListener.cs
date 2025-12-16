@@ -59,7 +59,6 @@ namespace ReportEngine.App.Services
                 using var scope = _serviceProvider.CreateScope();
                 var repository = scope.ServiceProvider.GetRequiredService<IGenericBaseRepository<TEntity, TEntity>>();
 
-
                 var items = await repository.GetAllAsync();
             }
             catch (Exception ex)
@@ -67,6 +66,7 @@ namespace ReportEngine.App.Services
                 LogError(ex);
             }
         }
+
         private void LogError(Exception ex)
         {
             _logger.Error(ex, "Ошибка в EquipChangesListener");

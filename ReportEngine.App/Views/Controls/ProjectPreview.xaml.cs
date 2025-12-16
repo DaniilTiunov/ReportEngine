@@ -12,6 +12,7 @@ public partial class ProjectPreview : UserControl
     private bool _allowEdit;
 
     private readonly ProjectViewModel _projectViewModel;
+
     public ProjectPreview(ProjectViewModel projectViewModel)
     {
         InitializeComponent();

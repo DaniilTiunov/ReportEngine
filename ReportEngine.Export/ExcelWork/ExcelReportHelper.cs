@@ -4,12 +4,10 @@ using ReportEngine.Shared.Config.IniHelpers;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
 
-
 namespace ReportEngine.Export.ExcelWork;
 
 public static class ExcelReportHelper
 {
-
     public static string CreateReportName(string prefix, string fileExtension)
     {
         return prefix + "___" + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + "." + fileExtension;
@@ -50,7 +48,6 @@ public static class ExcelReportHelper
 
         return resultRecords;
     }
-
 
     //создаем инфу о комплектующих
     public static PartsStandsData GeneratePartsData(IEnumerable<Stand> stands)
@@ -93,8 +90,6 @@ public static class ExcelReportHelper
             })
             .ToList();
 
-
-
         //Формирование списка арматуры
         var armaturesList = stands
             .SelectMany(stand => stand.ObvyazkiInStand)
@@ -114,7 +109,6 @@ public static class ExcelReportHelper
                 quantity = group.Sum(arm => arm.quantity),
                 costPerUnit = group.First().price,
                 exportDays = group.First().exportDays
-
             })
             .Select(group => new EquipmentRecord
             {
@@ -133,7 +127,6 @@ public static class ExcelReportHelper
                 return record;
             })
             .ToList();
-
 
         //Формирование списка тройников и КМЧ
         var treeList = stands
@@ -173,7 +166,6 @@ public static class ExcelReportHelper
             })
             .ToList();
 
-
         var kmchList = stands
             .SelectMany(stand => stand.ObvyazkiInStand)
             .Select(obv => new
@@ -211,7 +203,6 @@ public static class ExcelReportHelper
             })
             .ToList();
 
-
         //формирование дренажа
         var drainageParts = stands
             .SelectMany(stand => stand.StandDrainages)
@@ -243,7 +234,6 @@ public static class ExcelReportHelper
             })
             .ToList();
 
-
         //Формирование списка рамных комплектующих
         var framesList = stands
             .SelectMany(stand => stand.StandFrames)
@@ -255,7 +245,6 @@ public static class ExcelReportHelper
                 quantity = comp.Count,
                 costPerUnit = comp.CostComponent,
                 exportDays = comp.ExportDays
-
             })
             .GroupBy(frameComp => frameComp.name)
             .Select(group => new
@@ -283,7 +272,6 @@ public static class ExcelReportHelper
                 return record;
             })
             .ToList();
-
 
         //формирование списка кронштейнов
         var sensorsHolders = stands
@@ -317,7 +305,6 @@ public static class ExcelReportHelper
             })
             .ToList();
 
-
         //формирование списка электрических комплектующих
         var electricalParts = stands
             .SelectMany(stand => stand.StandElectricalComponent)
@@ -348,7 +335,6 @@ public static class ExcelReportHelper
                 return record;
             })
             .ToList();
-
 
         //формирование списка дополнительного оборудования
         var additionalParts = stands
@@ -381,19 +367,14 @@ public static class ExcelReportHelper
             })
             .Except(sensorsHolders);
 
-
-
         var othersParts = additionalParts
             .Where(part => part.Name.Value != null)
             .Where(part => part.Name.Value.Contains("Шильдик") || part.Name.Value.Contains("Табличка")) //тоже сомнительно
             .ToList();
 
-
-
         var supplies = additionalParts
             .Except(othersParts)
             .ToList();
-
 
         return new PartsStandsData(
             pipesList,
@@ -412,13 +393,11 @@ public static class ExcelReportHelper
     //создаем инфу о трудозатратах
     public static LaborStandsData GenerateLaborData(IEnumerable<Stand> stands)
     {
-
         var frameSettings = CalculationSettingsManager.Load<FrameSettings, FrameSettingsData>();
         var electicalSettings = CalculationSettingsManager.Load<ElectricalSettings, ElectricalSettingsData>();
         var humanCostSettings = CalculationSettingsManager.Load<HumanCostSettings, HumanCostSettingsData>();
         var standSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
         var sandblastSettings = CalculationSettingsManager.Load<SandBlastSettings, SandBlastSettingsData>();
-
 
         //трудозатраты на изготовление
         var frameProductionHumanCostSum = stands
@@ -435,10 +414,7 @@ public static class ExcelReportHelper
             CommonCost = new ValidatedField<float?>(
                 (float?)(frameProductionHumanCostSum * frameSettings?.FrameProduction),
                 (frameProductionHumanCostSum * frameSettings?.FrameProduction) != null)
-
         };
-
-
 
         //трудозатраты на обвязки
         var allObvHumanCosts = stands
@@ -458,8 +434,6 @@ public static class ExcelReportHelper
             obvProductionRecord.Quantity.Value * obvProductionRecord.CostPerUnit.Value,
             (obvProductionRecord.Quantity.Value * obvProductionRecord.CostPerUnit.Value) != null && obvProductionRecord.Quantity.IsValid);
 
-
-
         //трудозатраты на коллектор
         var collectorProductionHumanCostSum = stands
             .Select(_ => humanCostSettings?.TimeForCollectorBoil)
@@ -476,10 +450,6 @@ public static class ExcelReportHelper
                 (float?)(collectorProductionHumanCostSum * humanCostSettings?.CollectorProduction),
                 (collectorProductionHumanCostSum * humanCostSettings?.CollectorProduction) != null)
         };
-
-
-
-
 
         //трудозатраты на испытания
         var testsHumanCostSum = stands
@@ -498,10 +468,6 @@ public static class ExcelReportHelper
                 (testsHumanCostSum * humanCostSettings?.Tests) != null)
         };
 
-
-
-
-
         //трудозатраты на пескоструйные работы
         var sandBlastingHumanCostSum = stands
             .Select(_ => sandblastSettings.TimeSandBlastWork)
@@ -517,16 +483,12 @@ public static class ExcelReportHelper
             CommonCost = new ValidatedField<float?>(
                 (float?)(sandBlastingHumanCostSum * sandblastSettings?.SandBlastWork),
                 (sandBlastingHumanCostSum * sandblastSettings?.SandBlastWork) != null)
-
         };
-
-
 
         //трудозатраты на покраску
         var paintingHumanCostSum = stands
           .Select(_ => (frameSettings?.TimeForPaintFrame + frameSettings?.TimeForPaintObv))
           .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
-
 
         var paintingRecord = new EquipmentRecord
         {
@@ -539,8 +501,6 @@ public static class ExcelReportHelper
                 (float?)(paintingHumanCostSum * frameSettings?.Painting),
                 (paintingHumanCostSum * frameSettings?.Painting) != null)
         };
-
-
 
         //трудозатраты на электромонтаж
         var electricHumanCost = stands
@@ -559,13 +519,10 @@ public static class ExcelReportHelper
                 (electricHumanCost * electicalSettings?.ElectricalMontage) != null)
         };
 
-
-
         //трудозатраты на общую проверку стенда
         var commonHumanCost = stands
             .Select(_ => humanCostSettings?.TimeForCheckStand)
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
-
 
         var commonCheckRecord = new EquipmentRecord
         {
@@ -579,7 +536,6 @@ public static class ExcelReportHelper
                 (commonHumanCost * humanCostSettings?.CommonCheckStand) != null)
         };
 
-
         return new LaborStandsData(
               frameProductionRecord,
               obvProductionRecord,
@@ -591,11 +547,9 @@ public static class ExcelReportHelper
               commonCheckRecord);
     }
 
-
     //создаем инфу о упаковке
     public static List<EquipmentRecord> GenerateContainersData(IEnumerable<ContainerBatch> containerBatches)
     {
-
         var containers = containerBatches
             .SelectMany(batch => batch.Containers)
             .GroupBy(container => container.Name)
@@ -615,9 +569,7 @@ public static class ExcelReportHelper
             }).
             ToList();
 
-
         return containers;
-
     }
 
     //высчитываем итого по записям
@@ -656,8 +608,6 @@ public static class ExcelReportHelper
             Name = new ValidatedField<string?>(null, true),
             Unit = new ValidatedField<string?>(null, true)
         };
-
-
     }
 
     //превращает данные о комплектующих в список
@@ -680,6 +630,7 @@ public static class ExcelReportHelper
 
         return allPartsList;
     }
+
     //превращает данные о трудозатратах в список
     public static List<EquipmentRecord> GenerateAllLaborsCollection(LaborStandsData partsData)
     {
@@ -699,5 +650,4 @@ public static class ExcelReportHelper
 
         return allPartsList;
     }
-
 }

@@ -19,6 +19,7 @@ public static class ExceptionHelper
             MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}");
         }
     }
+
     public static void SafeExecute(Action action, string message)
     {
         try
@@ -46,6 +47,7 @@ public static class ExceptionHelper
             MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}");
         }
     }
+
     public static async Task SafeExecuteAsync(Func<Task> action, string message)
     {
         try

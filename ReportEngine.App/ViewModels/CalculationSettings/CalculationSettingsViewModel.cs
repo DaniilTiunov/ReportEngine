@@ -9,7 +9,6 @@ public class CalculationSettingsViewModel : BaseViewModel
 {
     private readonly INotificationService _notificationService;
 
-
     public CalculationSettingsViewModel(INotificationService notificationService)
     {
         InitializeCommands();

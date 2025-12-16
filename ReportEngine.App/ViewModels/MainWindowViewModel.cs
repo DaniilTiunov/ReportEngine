@@ -49,7 +49,7 @@ public class MainWindowViewModel : BaseViewModel
         InitializeGenericEquipCommands();
     }
 
-    #endregion
+    #endregion Конструктор
 
     public MainWindowModel MainWindowModel { get; set; } = new();
     public GenericEquipCommandProvider GenericEquipCommandProvider { get; set; } = new();
@@ -57,7 +57,6 @@ public class MainWindowViewModel : BaseViewModel
 
     public User? CurrentUser => SessionService.CurrentUser;
     public string? CurrentUserLogin => SessionService.CurrentUser?.UserLogin;
-
 
     #region Дженерик команды
 
@@ -67,7 +66,7 @@ public class MainWindowViewModel : BaseViewModel
         ExceptionHelper.SafeExecute(() => _navigation.ShowGenericWindow<T, T>());
     }
 
-    #endregion
+    #endregion Дженерик команды
 
     #region Методы
 
@@ -81,7 +80,7 @@ public class MainWindowViewModel : BaseViewModel
         MainWindowCommandsInitializer.InitializeGenericCommands(this);
     }
 
-    #endregion
+    #endregion Методы
 
     #region Комманды главного окна
 
@@ -214,5 +213,5 @@ public class MainWindowViewModel : BaseViewModel
         _notificationService.ShowInfo("Переформирование завершено");
     }
 
-    #endregion
+    #endregion Комманды главного окна
 }

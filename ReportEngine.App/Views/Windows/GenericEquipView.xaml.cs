@@ -18,7 +18,6 @@ public partial class GenericEquipView : Window
         _isDialog = IsDialog;
     }
 
-
     private void SelectEquip_DoubleClick(object sender, MouseButtonEventArgs e)
     {
         if (!_isDialog)
@@ -26,7 +25,6 @@ public partial class GenericEquipView : Window
 
         ExceptionHelper.SafeExecute(() =>
         {
-
             var type = DataContext.GetType();
 
             if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(GenericEquipViewModel<>))

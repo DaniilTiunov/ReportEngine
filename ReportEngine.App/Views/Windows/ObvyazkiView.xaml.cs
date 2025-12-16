@@ -79,6 +79,7 @@ public partial class ObvyazkiView : Window
             e.Handled = true;
         }
     }
+
     private static T FindParent<T>(DependencyObject child) where T : DependencyObject
     {
         while (child != null)

@@ -6,6 +6,7 @@
         public string? Mark { get; set; }
         public string? ElectricBox { get; set; }
         public string? Terminal { get; set; }
+
         public WireRecord(string circuit, string mark, string electricBox, string terminal)
         {
             Circuit = circuit;
@@ -14,8 +15,6 @@
             Terminal = terminal;
         }
     }
-
-
 
     public class ImpulseLineRecordJsonObject
     {

@@ -94,7 +94,6 @@ public class FormedDrainagesRepository : IFormedDrainagesRepository
         await _context.SaveChangesAsync();
     }
 
-
     public async Task DeletePurposeAsync(int purposeId)
     {
         var entity = await _context.DrainagePurposes.FindAsync(purposeId);

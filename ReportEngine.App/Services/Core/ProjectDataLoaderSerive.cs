@@ -23,8 +23,7 @@ public class ProjectDataLoaderSerive : IProjectDataLoaderService
         var projectInfo = await _projectInfoRepository.GetStandsByIdAsync(projectId);
         var standsEntities = projectInfo.Stands;
 
-
-        foreach(var standEntity in standsEntities)
+        foreach (var standEntity in standsEntities)
         {
             var standModel = StandDataConverter.ConvertToStandModel(standEntity);
 

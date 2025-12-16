@@ -56,6 +56,7 @@ public class ProjectService : IProjectService
         var projects = await _projectRepository.GetAllAsync();
         return projects.Count();
     }
+
     public float GetSummWidthObvyzakaAsync(ProjectModel projectModel)
     {
         var totalWidth = 0.0f;
@@ -68,6 +69,7 @@ public class ProjectService : IProjectService
 
         return totalWidth;
     }
+
     public async Task GetOrAddCompnayAsync(string name)
     {
         var companies = await _companyRepository.GetAllAsync();

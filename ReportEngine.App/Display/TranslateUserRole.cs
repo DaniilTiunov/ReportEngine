@@ -12,10 +12,13 @@ public class TranslateUserRole : IValueConverter
         {
             case SystemRole.Admin:
                 return "Администратор";
+
             case SystemRole.User:
                 return "Пользователь";
+
             case SystemRole.Manager:
                 return "Менеджер";
+
             default:
                 return "Ошибка";
         }

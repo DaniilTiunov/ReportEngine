@@ -37,7 +37,7 @@ public class ProjectModel : BaseViewModel
         };
     }
 
-    #endregion
+    #endregion Методы
 
     #region Приватные поля
 
@@ -76,14 +76,12 @@ public class ProjectModel : BaseViewModel
     private ObservableCollection<ContainerStand> _containerStandsInSelectedBatch = new();
     private ObservableCollection<Stand> _standsInSelectedContainer = new();
 
-
     //
     private float? _humanCost; //Трудозатраты
 
     private string _manager;
 
     private StandModel? _stand;
-
 
     private ObservableCollection<ContainerStand> _containerStandsInProject = new();
     private ObservableCollection<ContainerBatch> _containerBathInProject = new();
@@ -94,7 +92,7 @@ public class ProjectModel : BaseViewModel
     private ContainerStand? _selectedContainerStand;
     private ContainerBatch? _selectedContainerBatch;
 
-    #endregion
+    #endregion Приватные поля
 
     #region Публичные свойства
 
@@ -110,8 +108,7 @@ public class ProjectModel : BaseViewModel
     {
         get => _stand;
         set => Set(ref _stand, value);
-    } //Выбранный стенд; 
-
+    } //Выбранный стенд;
 
     public int Number
     {
@@ -329,5 +326,5 @@ public class ProjectModel : BaseViewModel
         set => Set(ref _selectedObvyazkaToCopy, value);
     }
 
-    #endregion
+    #endregion Публичные свойства
 }

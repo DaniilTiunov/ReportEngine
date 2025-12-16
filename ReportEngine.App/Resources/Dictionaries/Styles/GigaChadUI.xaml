@@ -11,7 +11,6 @@
     <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#373A6B" />
     <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="Green" />
 
-
     <!--  Стили для Window  -->
     <Style TargetType="Window">
         <Setter Property="FontFamily" Value="Bahnschrift" />
@@ -394,7 +393,6 @@
         </Setter>
     </Style>
 
-
     <Style x:Key="GeneratedTabItem" TargetType="TabItem">
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
@@ -453,7 +451,6 @@
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
     </Style>
-
 
     <!--  Стили для ContextMenu  -->
     <Style TargetType="ContextMenu">
