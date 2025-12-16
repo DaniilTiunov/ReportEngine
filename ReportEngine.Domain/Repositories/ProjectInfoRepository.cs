@@ -173,8 +173,11 @@ public class ProjectInfoRepository : IProjectInfoRepository
         var stand = await _context.Stands.FirstOrDefaultAsync(s => s.Id == standId);
         var frame = await _context.FormedFrames.FirstOrDefaultAsync(f => f.Id == frameId);
 
-        if (stand == null) throw new ArgumentException($"Стенд с ID: {standId} не найден.");
-        if (frame == null) throw new ArgumentException($"Рама с ID: {frameId} не найдена.");
+        if (stand == null)
+            throw new ArgumentException($"Стенд с ID: {standId} не найден.");
+
+        if (frame == null)
+            throw new ArgumentException($"Рама с ID: {frameId} не найдена.");
 
         var standFrame = new StandFrame
         {
@@ -185,7 +188,10 @@ public class ProjectInfoRepository : IProjectInfoRepository
         };
 
         await _context.StandFrames.AddAsync(standFrame);
-        await _context.SaveChangesAsync();
+        var result = await _context.SaveChangesAsync();
+
+        if (result == 0)
+            throw new Exception("StandFrame не был добавлен в базу данных.");
     }
 
     public async Task<IEnumerable<StandFrame>> GetAllFramesInStandAsync(int standId)
