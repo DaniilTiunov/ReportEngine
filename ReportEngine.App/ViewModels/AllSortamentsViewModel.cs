@@ -126,7 +126,6 @@ public class AllSortamentsViewModel : BaseViewModel
             if (property.Name == "Name")
                 column.Width = new DataGridLength(1, DataGridLengthUnitType.SizeToCells);
 
-
             if (property == properties[properties.Length - 1])
                 column.Width = new DataGridLength(1, DataGridLengthUnitType.Star);
 

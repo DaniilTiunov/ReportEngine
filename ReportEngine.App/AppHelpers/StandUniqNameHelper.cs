@@ -10,7 +10,7 @@ public static class StandUniqNameHelper
     {
         var standSerialNumber = standModel.SerialNumber; // например "25-02.222"
 
-        if(string.IsNullOrEmpty(standSerialNumber))
+        if (string.IsNullOrEmpty(standSerialNumber))
             throw new Exception("Отсутствует серийный номер!");
 
         var parts = standSerialNumber.Split('.');

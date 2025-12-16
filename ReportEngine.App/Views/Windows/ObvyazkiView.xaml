@@ -149,7 +149,6 @@
                     </ListBox>
                 </ScrollViewer>
 
-
                 <!--  Информация о выбранной обвязке (справа)  -->
                 <StackPanel
                     Grid.Column="1"
@@ -321,7 +320,6 @@
                                         Grid.Row="13"
                                         Margin="125,0,5,5"
                                         Text="{Binding CurrentObvyazka.SelectedObvyazka.ImageName}" />
-
                                 </Grid>
                             </StackPanel>
                             <StackPanel

@@ -157,5 +157,5 @@ public class FormedDrainagesViewModel : BaseViewModel
             await _formedDrainagesRepository.UpdateAsync(FormedDrainagesModel.SelectedFormedDrainage);
     }
 
-    #endregion
+    #endregion Методы
 }

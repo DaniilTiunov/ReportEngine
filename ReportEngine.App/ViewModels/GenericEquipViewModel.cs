@@ -86,7 +86,7 @@ public class GenericEquipViewModel<T> : BaseViewModel
         _notificationService.ShowInfo("Комплектующее добавлено");
     }
 
-    #endregion
+    #endregion Команды для работы с оборудованием
 
     #region Методы для работы с оборудованием
 
@@ -157,5 +157,5 @@ public class GenericEquipViewModel<T> : BaseViewModel
         });
     }
 
-    #endregion
+    #endregion Методы для работы с оборудованием
 }

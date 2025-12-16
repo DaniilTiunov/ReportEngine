@@ -8,9 +8,7 @@ public class FrameRepositoryTest
     {
         // Arrange
 
-
         // Act
-
 
         // Assert
     }

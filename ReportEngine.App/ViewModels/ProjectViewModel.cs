@@ -1,3 +1,5 @@
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Commands.Providers;
@@ -86,6 +88,7 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(UpdateUI);
     }
+
     public void OnOpenAllSortamentsDialogExecuted(object e)
     {
         var selected = _dialogService.ShowAllSortamentsDialog();
@@ -130,16 +133,12 @@ public class ProjectViewModel : BaseViewModel
                            selectedFrame,
                            CurrentProjectModel.SelectedStand)) return;
 
-
-
             await _standService.AddFrameToStandAsync(CurrentProjectModel.SelectedStand.Id, selectedFrame.Id);
             CurrentProjectModel.SelectedStand.FramesInStand.Add(selectedFrame);
 
             OnFramesInStandChanged();
-
         });
     }
-
 
     // TODO: Сделать тут рефакторинг команд
     public void OnSelectMaterialFromDialogCommandExecuted(object e)
@@ -158,6 +157,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays);
                 break;
+
             case "Нержавеющие":
                 SelectEquipment<StainlessPipe>(
                     name => CurrentProjectModel.SelectedStand.MaterialLine = name,
@@ -165,6 +165,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays);
                 break;
+
             case "Углеродистые":
                 SelectEquipment<CarbonPipe>(
                     name => CurrentProjectModel.SelectedStand.MaterialLine = name,
@@ -191,6 +192,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays);
                 break;
+
             case "Нержавеющие":
                 SelectEquipment<StainlessArmature>(
                     name => CurrentProjectModel.SelectedStand.Armature = name,
@@ -198,6 +200,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays);
                 break;
+
             case "Углеродистые":
                 SelectEquipment<CarbonArmature>(
                     name => CurrentProjectModel.SelectedStand.Armature = name,
@@ -224,6 +227,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays);
                 break;
+
             case "Нержавеющие":
                 SelectEquipment<StainlessSocket>(
                     name => CurrentProjectModel.SelectedStand.TreeSocket = name,
@@ -231,6 +235,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays);
                 break;
+
             case "Углеродистые":
                 SelectEquipment<CarbonSocket>(
                     name => CurrentProjectModel.SelectedStand.TreeSocket = name,
@@ -257,6 +262,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays);
                 break;
+
             case "Нержавеющие":
                 SelectEquipment<StainlessSocket>(
                     name => CurrentProjectModel.SelectedStand.KMCH = name,
@@ -264,6 +270,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays);
                 break;
+
             case "Углеродистые":
                 SelectEquipment<CarbonSocket>(
                     name => CurrentProjectModel.SelectedStand.KMCH = name,
@@ -294,7 +301,7 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            if(Guard.ExitIfNull("Стенды для копирования не выбраны!", _notificationService, CurrentProjectModel.SelectedStand))
+            if (Guard.ExitIfNull("Стенды для копирования не выбраны!", _notificationService, CurrentProjectModel.SelectedStand))
                 return;
 
             if (Guard.ExitIfNull("Нет серийного номера стенда!", _notificationService, CurrentProjectModel.SelectedStand.SerialNumber))
@@ -337,7 +344,6 @@ public class ProjectViewModel : BaseViewModel
             await LoadObvyazkiAsync(); // Перезагрузить данные из БД
 
             OnObvyazkiInStandChanged();
-
         });
     }
 
@@ -405,6 +411,7 @@ public class ProjectViewModel : BaseViewModel
             _notificationService.ShowInfo("Обвязка скопирована в стенд");
         });
     }
+
     public void OnSelectObvCommandExecuted(object p)
     {
         var selectedStand = CurrentProjectModel.SelectedStand;
@@ -596,6 +603,7 @@ public class ProjectViewModel : BaseViewModel
                 "Доп. комплектующие сохранены");
         });
     }
+
     public async void OnDeleteDrainageComponentFromStandCommandExecuted(object obj)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -606,6 +614,7 @@ public class ProjectViewModel : BaseViewModel
                 "Дренажное комплектующее удалено");
         });
     }
+
     public async void OnUpdateDrainageComponentInStandCommandExecuted(object obj)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -693,8 +702,6 @@ public class ProjectViewModel : BaseViewModel
             _containerService.RemoveStandFromContainerAsync(CurrentProjectModel));
     }
 
-
-
     public void ResetProject()
     {
         // Совместимый синхронный вызов, чтобы не дедлокалось в процессе загрузки
@@ -733,10 +740,10 @@ public class ProjectViewModel : BaseViewModel
         ProjectCommandsInitializer.InitializeGenericCommands(this);
     }
 
-
-    #endregion
+    #endregion Инициализация
 
     #region Методы загрузки данных на view
+
     public async Task LoadStandsDataAsync()
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -783,7 +790,6 @@ public class ProjectViewModel : BaseViewModel
             CurrentStandModel = loadedModel.SelectedStand ?? new StandModel();
             CurrentStandModel.InitializeDefaultPurposes();
 
-
             await LoadObvyazkiAsync();
             await LoadStandsDataAsync();
 
@@ -799,7 +805,7 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    #endregion
+    #endregion Методы загрузки данных на view
 
     #region Методы для CRUD с проектами и стендами
 
@@ -843,7 +849,6 @@ public class ProjectViewModel : BaseViewModel
         OnObvyazkiInStandChanged();
 
         _notificationService.ShowInfo("Обвязка удалена из стенда");
-
     }
 
     private async Task SaveProjectChangesAsync()
@@ -1154,7 +1159,7 @@ public class ProjectViewModel : BaseViewModel
         _notificationService.ShowInfo(successMessage);
     }
 
-    #endregion
+    #endregion Методы для CRUD с проектами и стендами
 
     #region Методы расчёта и создания отчётности
 
@@ -1187,7 +1192,6 @@ public class ProjectViewModel : BaseViewModel
         await LoadProjectInfoAsync(CurrentProjectModel.CurrentProjectId);
     }
 
-
     public void OnObvyazkiInStandChanged()
     {
         Debug.WriteLine("Обвязки поменялись");
@@ -1217,7 +1221,6 @@ public class ProjectViewModel : BaseViewModel
         get => CurrentProjectModel?.SelectedStand?.ObvyazkiInStand.Max(obv => obv.NN) ?? 0;
     }
 
-
     //обновляем поле NN в обвязке
     public void UpdateNewObvNN()
     {
@@ -1240,7 +1243,6 @@ public class ProjectViewModel : BaseViewModel
         {
             //швеллер в метрах
             channelRecord.Quantity = framesWidthSum / 1000.0f;
-
         }
     }
 
@@ -1256,7 +1258,6 @@ public class ProjectViewModel : BaseViewModel
         clampsRecord.Quantity = clampSum ?? 0.0f;
     }
 
-
     //обновляем кол-во кабельных вводов
     public void UpdateCableInputsQuantity()
     {
@@ -1271,8 +1272,6 @@ public class ProjectViewModel : BaseViewModel
         {
             cableInputsRecord.Quantity = inputsPerSensor * sensorsQuantity;
         }
-
-
     }
 
     //обновляем кол-во табличек
@@ -1287,7 +1286,6 @@ public class ProjectViewModel : BaseViewModel
         {
             tableRecord.Quantity = sensorsQuantity;
         }
-
     }
 
     //обновляем кол-во кронштейнов
@@ -1305,7 +1303,6 @@ public class ProjectViewModel : BaseViewModel
         const int bracketsPerAbsoluteSensor = 2;
         const string absoluteSensorBracketRecordName = "Кронштейн абсолютника";
         const string measureUnit = "шт";
-
 
         var absSensorsQuantity = CurrentStandModel.CountAbsoluteSensorsQuantity();
 
@@ -1336,14 +1333,15 @@ public class ProjectViewModel : BaseViewModel
                 case "На кронштейне":
                     absSensorsBracketsRecord.Material = standsSettings.BracketForAbs;
                     break;
+
                 case "Швеллер":
                     absSensorsBracketsRecord.Material = standsSettings.BracketUniversal;
                     break;
+
                 default:
                     break;
             }
         }
-
     }
 
     //обновляем кол-во кронштейнов для перепадчиков

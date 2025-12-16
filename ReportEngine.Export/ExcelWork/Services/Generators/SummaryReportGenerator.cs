@@ -20,7 +20,6 @@ public class SummaryReportGenerator : IReportGenerator
         _containerRepository = containerRepository;
     }
 
-
     public ReportType Type => ReportType.SummaryReport;
 
     public async Task GenerateAsync(int projectId)
@@ -45,20 +44,17 @@ public class SummaryReportGenerator : IReportGenerator
                 standNumber++;
             }
 
-
             //заполняем сводную ведомость
             var summarySheet = wb.Worksheets.Add("Сводная заявка");
 
             CreateCommonListTableHeader(summarySheet, project);
             await FillCommonListTable(summarySheet, project);
 
-
             //заполняем калькуляцию
             var calculationSheet = wb.Worksheets.Add("Калькуляция");
 
             CreateCalcullationTableHeader(calculationSheet, project);
             await FillCalculationTable(calculationSheet, project);
-
 
             //применяем оформление ко всему документу
             foreach (var ws in wb.Worksheets)
@@ -78,14 +74,11 @@ public class SummaryReportGenerator : IReportGenerator
         }
     }
 
-
     #region Вспомогательные
 
     //валидация и вывод в таблицу
     private void PasteRecord(int row, EquipmentRecord record, IXLWorksheet ws)
     {
-
-
         ws.Cell($"A{row}").Value = record.ExportDays.Value?.ToString();
 
         ws.Cell($"B{row}").Value = record.Name.Value?.ToString();
@@ -95,7 +88,6 @@ public class SummaryReportGenerator : IReportGenerator
         ws.Cell($"D{row}").Value = record.Quantity.Value?.ToString();
 
         ws.Cell($"E{row}").Value = record.CostPerUnit.Value?.ToString();
-
 
         ws.Cell($"F{row}").Value = record.CommonCost.Value?.ToString();
 
@@ -128,11 +120,9 @@ public class SummaryReportGenerator : IReportGenerator
         //{
         //    ws.Cell($"F{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
         //}
-
     }
 
-    #endregion
-
+    #endregion Вспомогательные
 
     #region Заголовки
 
@@ -155,7 +145,6 @@ public class SummaryReportGenerator : IReportGenerator
     {
         var headerRange = ws.Range("A1:F3");
 
-
         var exportDaysRange = ws.Range("A2:A3").Merge();
         exportDaysRange.Value = "Срок поставки комплектующих, дней";
 
@@ -165,13 +154,11 @@ public class SummaryReportGenerator : IReportGenerator
         var summaryComponentsList = ws.Range("B2:F2").Merge();
         summaryComponentsList.Value = "Сводная ведомость комплектующих";
 
-
         ws.Cell("B3").Value = "Наименование";
         ws.Cell("C3").Value = "Ед.изм.";
         ws.Cell("D3").Value = "Кол.";
         ws.Cell("E3").Value = "Цена за шт., руб";
         ws.Cell("F3").Value = "Цена, руб";
-
 
         headerRange.Style.Font.SetBold();
         headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
@@ -213,7 +200,6 @@ public class SummaryReportGenerator : IReportGenerator
     {
         var headerRange = ws.Range("A1:K6");
 
-
         var customerCompanyRange = ws.Range("C1:K2").Merge();
         customerCompanyRange.Value = $"{project.Company}";
 
@@ -253,7 +239,6 @@ public class SummaryReportGenerator : IReportGenerator
         var priceRange = ws.Range("K5:K6").Merge();
         priceRange.Value = "Стоимость, руб";
 
-
         headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
         headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
 
@@ -264,12 +249,9 @@ public class SummaryReportGenerator : IReportGenerator
         customerCompanyRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Medium);
 
         headerRange.Style.Font.SetBold();
-
     }
 
-    #endregion
-
-
+    #endregion Заголовки
 
     #region Заполнители
 
@@ -350,7 +332,6 @@ public class SummaryReportGenerator : IReportGenerator
         var allPartsList = ExcelReportHelper.GenerateAllPartsCollection(generatedPartsData);
         activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории:", allPartsList, ws);
 
-
         var generatedLaborData = ExcelReportHelper.GenerateLaborData(standList);
         var allLaborsList = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);
 
@@ -358,14 +339,12 @@ public class SummaryReportGenerator : IReportGenerator
         activeRow = FillSubtableData(activeRow, allLaborsList, ws);
         activeRow = CreateLaborTotalRecord(activeRow, allLaborsList, ws);
 
-
         var allData = new List<EquipmentRecord>();
 
         allData.AddRange(allPartsList);
         allData.AddRange(allLaborsList);
 
         activeRow = CreateUsualTotalRecord(activeRow, "Итого по стенду:", allData, ws);
-
     }
 
     //заполняет сводную ведомость
@@ -423,16 +402,12 @@ public class SummaryReportGenerator : IReportGenerator
         var allPartsList = ExcelReportHelper.GenerateAllPartsCollection(generatedPartsData);
         activeRow = CreateUsualTotalRecord(activeRow, "Итого по комплектующим", allPartsList, ws);
 
-
-
         var generatedLaborData = ExcelReportHelper.GenerateLaborData(project.Stands);
         var allLaborsList = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Трудозатраты", ws);
         activeRow = FillSubtableData(activeRow, allLaborsList, ws);
         activeRow = CreateLaborTotalRecord(activeRow, allLaborsList, ws);
-
-
 
         var allData = new List<EquipmentRecord>();
 
@@ -448,7 +423,6 @@ public class SummaryReportGenerator : IReportGenerator
 
         allData.AddRange(containersData);
         activeRow = CreateUsualTotalRecord(activeRow, "Итого по проекту:", allData, ws);
-
     }
 
     //заполняет лист калькуляции
@@ -490,8 +464,6 @@ public class SummaryReportGenerator : IReportGenerator
                 };
             });
 
-
-
         var standNumber = 1;
 
         foreach (var stand in standsRecords)
@@ -526,14 +498,9 @@ public class SummaryReportGenerator : IReportGenerator
             ws.Cell($"K{activeRow}").Value = stand.commonCost;
             ws.Cell($"K{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
 
-
-
             standNumber++;
             activeRow++;
         }
-
-
-
 
         var standsPriceLabelRange = ws.Range($"C{activeRow}:J{activeRow}").Merge();
         standsPriceLabelRange.Value = $"Общее количество стендов {standNumber - 1} на сумму (без учета упаковки и транспортных расходов), без НДС, руб.";
@@ -549,8 +516,6 @@ public class SummaryReportGenerator : IReportGenerator
 
         activeRow++;
 
-
-
         var transportPrice = 0.0f;
 
         var transportPriceLabelRange = ws.Range($"C{activeRow}:J{activeRow}").Merge();
@@ -564,9 +529,6 @@ public class SummaryReportGenerator : IReportGenerator
         transportPriceValueCell.Style.Font.SetBold();
 
         activeRow++;
-
-
-
 
         var containers = ExcelReportHelper.GenerateContainersData(await containerBatches);
         var containerPrice = containers.Sum(container => container.CommonCost.Value);
@@ -583,8 +545,6 @@ public class SummaryReportGenerator : IReportGenerator
 
         activeRow++;
 
-
-
         var totalPrice = (float)standsPrice + transportPrice + containerPrice;
 
         var totalLabelRange = ws.Range($"C{activeRow}:J{activeRow}").Merge();
@@ -596,12 +556,9 @@ public class SummaryReportGenerator : IReportGenerator
         totalValueCell.Value = totalPrice;
         totalValueCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
         totalValueCell.Style.Font.SetBold();
-
     }
 
-    #endregion
-
-
+    #endregion Заполнители
 
     #region Итоговые
 
@@ -618,12 +575,10 @@ public class SummaryReportGenerator : IReportGenerator
 
         PasteRecord(activeRow, totalRecord, ws);
 
-
         ws.Cell($"B{activeRow}").Style.Font.SetBold();
         ws.Cell($"B{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Left);
         ws.Cell($"F{activeRow}").Style.Font.SetBold();
         ws.Cell($"F{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
-
 
         activeRow++;
         return activeRow;
@@ -641,7 +596,6 @@ public class SummaryReportGenerator : IReportGenerator
 
         PasteRecord(activeRow, totalRecord, ws);
 
-
         ws.Cell($"B{activeRow}").Style.Font.SetBold();
         ws.Cell($"B{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Left);
         ws.Cell($"D{activeRow}").Style.Font.SetBold();
@@ -649,10 +603,9 @@ public class SummaryReportGenerator : IReportGenerator
         ws.Cell($"F{activeRow}").Style.Font.SetBold();
         ws.Cell($"F{activeRow}").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
 
-
         activeRow++;
         return activeRow;
     }
 
-    #endregion
+    #endregion Итоговые
 }

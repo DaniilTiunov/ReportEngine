@@ -6,5 +6,4 @@
         public string? Unit { get; set; }
         public float? Quantity { get; set; }
     }
-
 }

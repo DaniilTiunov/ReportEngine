@@ -23,7 +23,6 @@ public class MarksReportGenerator : IReportGenerator
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
 
-
         using (var wb = new XLWorkbook())
         {
             var ws = wb.Worksheets.Add("Проект");
@@ -31,10 +30,8 @@ public class MarksReportGenerator : IReportGenerator
             CreateWorksheetTableHeader(ws);
             FillWorksheetTable(ws, project);
 
-
             ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-
 
             ws.Cells().Style.Alignment.WrapText = true;
             ws.Columns().AdjustToContents();
@@ -81,23 +78,18 @@ public class MarksReportGenerator : IReportGenerator
         var recordNumber = 1;
         const int recordRowOffset = 2;
 
-
         //выводим сформированный список
         foreach (var item in allRecords)
         {
             var upperRecordRow = recordNumber * recordRowOffset;
             var lowerRecordRow = upperRecordRow + 1;
 
-
             ws.Range($"A{upperRecordRow}:A{lowerRecordRow}").Merge().Value = recordNumber;
-
 
             ws.Range($"B{upperRecordRow}:B{lowerRecordRow}").Merge().Value =
                 $"{item.StandKKS} ({item.StandSerialNumber})";
 
-
             ws.Range($"C{upperRecordRow}:C{lowerRecordRow}").Merge().Value = item.SensorKKS;
-
 
             ws.Cell($"D{upperRecordRow}").Value = item.SensorMarkPlus;
             ws.Cell($"D{lowerRecordRow}").Value = item.SensorMarkMinus;
@@ -146,7 +138,6 @@ public class MarksReportGenerator : IReportGenerator
         public string SensorKKS;
         public string SensorMarkPlus;
         public string SensorMarkMinus;
-
 
         public RecordData(string standSerialNumber, string standKKS, string sensorKKS, string sensorMarkPlus,
             string sensorMarkMinus)

@@ -49,7 +49,7 @@ public class NavigationService
         _currentWindow?.Close(); // Закрываем текущее окно, если оно существует
     }
 
-    #endregion
+    #endregion Методы открытия окон
 
     #region Методы отображения контента
 
@@ -105,5 +105,5 @@ public class NavigationService
         }
     }
 
-    #endregion
+    #endregion Методы отображения контента
 }

@@ -70,7 +70,6 @@ public class StandObvyazkaModel : BaseViewModel
             ThirdSensorMarkPlus = thirdSensorMarkPlus,
             ThirdSensorMarkMinus = thirdSensorMarkMinus,
             AdditionalComponents = additionalComponents
-
         };
     }
 }

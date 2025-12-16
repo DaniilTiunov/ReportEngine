@@ -36,7 +36,6 @@ public class ProductionReportGenerator : IReportGenerator
             activeRow = CreateEquipmentTableHeader(ws, project, activeRow);
             activeRow = FillEquipmentTable(ws, project, activeRow);
 
-
             ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
 
@@ -52,8 +51,6 @@ public class ProductionReportGenerator : IReportGenerator
             wb.SaveAs(fullSavePath);
         }
     }
-
-
 
     #region Заголовки
 
@@ -100,11 +97,11 @@ public class ProductionReportGenerator : IReportGenerator
         headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
         ws.Cell($"A{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
 
-
         activeRow++;
 
         return activeRow;
     }
+
     //создает шапку таблицы оборудования
     private int CreateEquipmentTableHeader(IXLWorksheet ws, ProjectInfo project, int row)
     {
@@ -149,7 +146,7 @@ public class ProductionReportGenerator : IReportGenerator
         return activeRow;
     }
 
-    #endregion
+    #endregion Заголовки
 
     #region Заполнители
 
@@ -166,7 +163,6 @@ public class ProductionReportGenerator : IReportGenerator
             SerialNumber = new ValidatedField<string?>(stand.SerialNumber, true),
         });
 
-
         foreach (var standRecord in standsRecords)
         {
             PasteStandRecord(activeRow, standRecord, ws);
@@ -178,13 +174,11 @@ public class ProductionReportGenerator : IReportGenerator
             activeRow++;
         }
 
-
         //формируем общее кол-во стендов
         var standsQuantityStringArea = ws.Range($"A{activeRow}:C{activeRow}").Merge();
         standsQuantityStringArea.Value = "Количество стендов по отчету";
 
         ws.Cell($"D{activeRow}").Value = standsRecords.Count();
-
 
         var floorTableArea = ws.Range($"A{activeRow}:D{activeRow}");
 
@@ -192,9 +186,9 @@ public class ProductionReportGenerator : IReportGenerator
 
         activeRow++;
 
-
         return activeRow;
     }
+
     //создание сводной ведомости комплектующих
     private int FillEquipmentTable(IXLWorksheet ws, ProjectInfo project, int startRow)
     {
@@ -232,6 +226,7 @@ public class ProductionReportGenerator : IReportGenerator
 
         return activeRow;
     }
+
     //Заполняет подтаблицу и возвращает следующую строку
     private int FillSubtableData(int startRow, List<EquipmentRecord> items, IXLWorksheet ws)
     {
@@ -251,19 +246,16 @@ public class ProductionReportGenerator : IReportGenerator
         return currentRow;
     }
 
-    #endregion
-
+    #endregion Заполнители
 
     #region Вспомогательные
 
     //валидация и вывод в таблицу
     private void PastePartRecord(int row, EquipmentRecord record, IXLWorksheet ws)
     {
-
         ws.Cell($"A{row}").Value = record.Name.Value?.ToString();
         ws.Cell($"B{row}").Value = record.Unit.Value?.ToString();
         ws.Cell($"C{row}").Value = record.Quantity.Value?.ToString();
-
 
         //if (!record.Name.IsValid)
         //{
@@ -280,14 +272,13 @@ public class ProductionReportGenerator : IReportGenerator
         //    ws.Cell($"C{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
         //}
     }
+
     //валидация и вывод в таблицу
     private void PasteStandRecord(int row, StandInfoData record, IXLWorksheet ws)
     {
-
         ws.Cell($"A{row}").Value = record.Name.Value?.ToString();
         ws.Range($"B{row}:C{row}").Merge().FirstCell().Value = record.KKS.Value?.ToString();
         ws.Cell($"D{row}").Value = record.SerialNumber.Value?.ToString();
-
 
         //if (!record.Name.IsValid)
         //{
@@ -303,8 +294,7 @@ public class ProductionReportGenerator : IReportGenerator
         //{
         //    ws.Cell($"D{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
         //}
-
     }
 
-    #endregion
+    #endregion Вспомогательные
 }

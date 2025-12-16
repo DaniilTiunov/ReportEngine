@@ -14,6 +14,7 @@ public class DrainagePurpose : IPurposeEntity
 
     // Внешний ключ на дренаж
     public int FormedDrainageId { get; set; }
+
     public virtual FormedDrainage FormedDrainage { get; set; }
     [Key] public int Id { get; set; }
 }
