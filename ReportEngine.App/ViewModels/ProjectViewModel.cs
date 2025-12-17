@@ -308,6 +308,14 @@ public class ProjectViewModel : BaseViewModel
             await _projectService.CopyStandsAsync(CurrentProjectModel);
             await LoadPurposesInStandsAsync();
             await LoadObvyazkiAsync();
+
+
+            var lastStand = CurrentProjectModel.Stands.LastOrDefault();
+
+            if (lastStand == null)
+                return;
+
+            CurrentProjectModel.SelectedStand = lastStand;
         });
     }
 
@@ -1215,6 +1223,7 @@ public class ProjectViewModel : BaseViewModel
         UpdateDrainage();
 
         CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
+        CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewDrainage.Purposes);
     }
 
     public void OnSelectedStandChanged()
@@ -1294,7 +1303,7 @@ public class ProjectViewModel : BaseViewModel
         var sensorsQuantity = CurrentStandModel.CountSensorsQuantity();
         cableInputsRecord.Quantity = inputsPerSensor * sensorsQuantity;
 
-        Debug.WriteLine("Пересчет кабельных вводо завершен");
+        Debug.WriteLine("Пересчет кабельных вводов завершен");
     }
 
     //обновляем кол-во табличек
@@ -1417,14 +1426,13 @@ public class ProjectViewModel : BaseViewModel
         if (selectedStand == null)
             return;
 
-        var drainageParts = selectedStand.NewDrainage.Purposes;
+        var drainageParts = CurrentStandModel.NewDrainage.Purposes;
         var mainPipeRecord = drainageParts.FirstOrDefault(part => part.Purpose == mainPipeTitle);
 
         if (mainPipeRecord == null)
         {
             mainPipeRecord = new DrainagePurpose();
             mainPipeRecord.Purpose = mainPipeTitle;
-
             drainageParts.Add(mainPipeRecord);
         }
 

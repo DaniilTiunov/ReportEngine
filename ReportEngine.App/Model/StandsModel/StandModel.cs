@@ -748,7 +748,7 @@ public class StandModel : BaseViewModel
                 new() { Purpose = "Швеллер", Material = DefaultStandSettings.SteelChannel },
                 new() { Purpose = "Хомуты" },
                 new() { Purpose = "Табличка", Material = DefaultStandSettings.NameTable, Measure = "шт"},
-                new() { Purpose = "Кронштейн" },
+                new() { Purpose = "Кронштейн", Measure = "шт" },
             }
         };
     }
