@@ -113,9 +113,11 @@
                                 <RowDefinition Height="30" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="45" />
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="250" />
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="130" />
+                                <ColumnDefinition Width="10" />
                             </Grid.ColumnDefinitions>
                             <TextBlock
                                 Grid.Row="0"
@@ -125,12 +127,12 @@
                             <TextBox
                                 Grid.Row="0"
                                 Grid.Column="1"
-                                Margin="15,5,5,5"
+                                Margin="10,5,10,5"
                                 Text="{Binding StandSettings.SteelChannel}" />
                             <Button
                                 Grid.Row="0"
-                                Grid.Column="3"
-                                Margin="5,5,15,5"
+                                Grid.Column="2"
+                                Margin="5,5,5,5"
                                 Command="{Binding ShowAllEqipDialogCommand}"
                                 CommandParameter="SteelChannel"
                                 Content="..." />
@@ -143,12 +145,12 @@
                             <TextBox
                                 Grid.Row="1"
                                 Grid.Column="1"
-                                Margin="15,5,5,5"
+                                Margin="10,5,10,5"
                                 Text="{Binding StandSettings.NamePlate, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="1"
-                                Grid.Column="5"
-                                Margin="5,5,15,5"
+                                Grid.Column="2"
+                                Margin="5,5,5,5"
                                 Command="{Binding ShowAllEqipDialogCommand}"
                                 CommandParameter="NamePlate"
                                 Content="..." />
@@ -161,12 +163,12 @@
                             <TextBox
                                 Grid.Row="2"
                                 Grid.Column="1"
-                                Margin="15,5,5,5"
+                                Margin="10,5,10,5"
                                 Text="{Binding StandSettings.NameTable, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="2"
                                 Grid.Column="2"
-                                Margin="5,5,15,5"
+                                Margin="5,5,5,5"
                                 Command="{Binding ShowAllEqipDialogCommand}"
                                 CommandParameter="NameTable"
                                 Content="..." />
@@ -179,12 +181,12 @@
                             <TextBox
                                 Grid.Row="3"
                                 Grid.Column="1"
-                                Margin="15,5,5,5"
+                                Margin="10,5,10,5"
                                 Text="{Binding StandSettings.FrameGalvanizing, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="3"
                                 Grid.Column="2"
-                                Margin="5,5,15,5"
+                                Margin="5,5,5,5"
                                 Command="{Binding ShowAllEqipDialogCommand}"
                                 CommandParameter="FrameGalvanizing"
                                 Content="..." />
@@ -197,12 +199,12 @@
                             <TextBox
                                 Grid.Row="4"
                                 Grid.Column="1"
-                                Margin="15,5,5,5"
+                                Margin="10,5,10,5"
                                 Text="{Binding StandSettings.Bracket, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="4"
                                 Grid.Column="2"
-                                Margin="5,5,15,5"
+                                Margin="5,5,5,5"
                                 Command="{Binding ShowAllEqipDialogCommand}"
                                 CommandParameter="Bracket"
                                 Content="..." />
@@ -215,12 +217,12 @@
                             <TextBox
                                 Grid.Row="5"
                                 Grid.Column="1"
-                                Margin="15,5,5,5"
+                                Margin="10,5,10,5"
                                 Text="{Binding StandSettings.BracketForDif, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="5"
-                                Grid.Column="5"
-                                Margin="5,5,15,5"
+                                Grid.Column="2"
+                                Margin="5,5,5,5"
                                 Command="{Binding ShowAllEqipDialogCommand}"
                                 CommandParameter="BracketForDif"
                                 Content="..." />
@@ -233,12 +235,14 @@
                             <TextBox
                                 Grid.Row="6"
                                 Grid.Column="1"
-                                Margin="15,5,5,5"
+                                Margin="10,5,10,5"
                                 Text="{Binding StandSettings.BracketForAbs, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="6"
-                                Grid.Column="5"
-                                Margin="5,5,15,5"
+                                Grid.Column="2"
+                                Margin="5,5,5,5"
+                                Command="{Binding ShowAllEqipDialogCommand}"
+                                CommandParameter="BracketForAbs"
                                 Content="..." />
 
                             <TextBlock
@@ -249,15 +253,26 @@
                             <TextBox
                                 Grid.Row="7"
                                 Grid.Column="1"
-                                Margin="15,5,5,5"
+                                Margin="10,5,10,5"
                                 Text="{Binding StandSettings.BracketUniversal, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="7"
-                                Grid.Column="5"
-                                Margin="5,5,15,5"
+                                Grid.Column="2"
+                                Margin="5,5,5,5"
                                 Command="{Binding ShowAllEqipDialogCommand}"
                                 CommandParameter="BracketUniversal"
                                 Content="..." />
+
+                            <TextBlock
+                                Grid.Row="8"
+                                Grid.Column="3"
+                                Margin="25,5,5,5"
+                                Text="Кол-во кабеля:" />
+                            <TextBox
+                                Grid.Row="8"
+                                Grid.Column="4"
+                                Margin="10,5,-254,5"
+                                Text="{Binding StandSettings.SensorCountOnFrame, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="8"
@@ -267,12 +282,12 @@
                             <TextBox
                                 Grid.Row="8"
                                 Grid.Column="1"
-                                Margin="15,5,5,5"
+                                Margin="10,5,10,5"
                                 Text="{Binding StandSettings.CabelSixMM, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="8"
                                 Grid.Column="2"
-                                Margin="5,5,15,5"
+                                Margin="5,5,5,5"
                                 Command="{Binding ShowAllEqipDialogCommand}"
                                 CommandParameter="CabelSixMM"
                                 Content="..." />
@@ -285,12 +300,12 @@
                             <TextBox
                                 Grid.Row="9"
                                 Grid.Column="1"
-                                Margin="15,5,5,5"
+                                Margin="10,5,10,5"
                                 Text="{Binding StandSettings.CabelFourMM, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="9"
                                 Grid.Column="2"
-                                Margin="5,5,15,5"
+                                Margin="5,5,5,5"
                                 Command="{Binding ShowAllEqipDialogCommand}"
                                 CommandParameter="CabelFourMM"
                                 Content="..." />
@@ -303,26 +318,35 @@
                             <TextBox
                                 Grid.Row="10"
                                 Grid.Column="1"
-                                Margin="15,5,5,5"
+                                Margin="10,5,10,5"
                                 Text="{Binding StandSettings.SignalCable, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="10"
-                                Grid.Column="4"
-                                Margin="5,5,15,5"
+                                Grid.Column="2"
+                                Margin="5,5,5,5"
                                 Command="{Binding ShowAllEqipDialogCommand}"
                                 CommandParameter="SignalCable"
                                 Content="..." />
+
 
                             <TextBlock
                                 Grid.Row="11"
                                 Grid.Column="0"
                                 Margin="15,5,5,5"
-                                Text="кол-во кабеля: " />
+                                Text="Хомуты: " />
                             <TextBox
                                 Grid.Row="11"
                                 Grid.Column="1"
-                                Margin="15,5,5,5"
-                                Text="{Binding StandSettings.SensorCountOnFrame, Mode=TwoWay}" />
+                                Margin="10,5,10,5"
+                                Text="{Binding StandSettings.SignalCable, Mode=TwoWay}" />
+                            <Button
+                                Grid.Row="11"
+                                Grid.Column="2"
+                                Margin="5,5,5,5"
+                                Command="{Binding ShowAllEqipDialogCommand}"
+                                CommandParameter="SignalCable"
+                                Content="..." />
+
                         </Grid>
                     </TabItem>
                     <TabItem Header="Стенды">

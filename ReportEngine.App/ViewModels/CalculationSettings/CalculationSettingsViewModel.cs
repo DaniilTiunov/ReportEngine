@@ -41,7 +41,7 @@ public class CalculationSettingsViewModel : BaseViewModel
     {
         var selected = _dialogService.ShowAllSortamentsDialog();
 
-        if(Guard.ExitIfNull("Ничего не выбрано", _notificationService, selected))
+        if(selected == null)
             return;
 
         if (p is string propertyName && !string.IsNullOrWhiteSpace(propertyName))
