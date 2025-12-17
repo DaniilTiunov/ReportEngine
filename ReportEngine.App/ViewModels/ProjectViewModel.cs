@@ -1399,7 +1399,7 @@ public class ProjectViewModel : BaseViewModel
     public void UpdateSignalCable()
     {
         const string signalCableTitle = "Сигнальный кабель";
-        const string signalCableMeasureUnit = "шт";
+        const string signalCableMeasureUnit = "м";
 
 
         var standsSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
@@ -1409,13 +1409,15 @@ public class ProjectViewModel : BaseViewModel
         if (!sensorsQuantity.HasValue)
             return;
 
-        var signalCabelQuantity = sensorsQuantity.Value switch
+        var signalCablePerSensor = sensorsQuantity.Value switch
         {
             >= 0 and <= 2 => 2,
             >= 3 and <= 5 => 3,
             >= 6 => 4,
             _ => 0
         };
+
+
 
         var electricComponents = CurrentStandModel.NewElectricalComponent.Purposes;
         var signalCableRecord = electricComponents.FirstOrDefault(purpose => purpose.Purpose == signalCableTitle);
@@ -1428,8 +1430,10 @@ public class ProjectViewModel : BaseViewModel
             electricComponents.Add(signalCableRecord);
         }
 
-        signalCableRecord.Quantity = signalCabelQuantity;
+        signalCableRecord.Quantity = sensorsQuantity * signalCablePerSensor;
         signalCableRecord.Material = standsSettings.SignalCable;
+        //исправить
+        signalCableRecord.Measure = signalCableMeasureUnit;
     }
 
     //сравнение двух обвязок
