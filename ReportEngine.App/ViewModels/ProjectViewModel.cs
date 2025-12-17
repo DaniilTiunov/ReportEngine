@@ -334,16 +334,14 @@ public class ProjectViewModel : BaseViewModel
         if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka, CurrentProjectModel?.SelectedStand))
             return;
 
-        var isAlreadyExist = CurrentProjectModel?.SelectedStand?.ObvyazkiInStand
-                            .Select(obv => obv.NN)
-                            .Contains(CurrentProjectModel.SelectedStand.NN);
+        var isAlreadyExist = CurrentStandModel.ObvyazkiInStand.Any(obv => obv.NN == CurrentProjectModel.SelectedStand.NN);
 
-        if (isAlreadyExist ?? false)
+        if (isAlreadyExist)
         {
             _notificationService.ShowError("Указанный NN обвязки уже существует. Обвязка не добавлена");
             return;
         }
-
+        
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await AddObvToStandAsync();
@@ -660,6 +658,15 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
+
+            var isAlreadyExist = CurrentStandModel.ObvyazkiInStand.Any(obv => obv.NN == CurrentProjectModel.SelectedStand.NN);
+
+            if (isAlreadyExist)
+            {
+                _notificationService.ShowError("Указанный NN обвязки уже существует. Обвязка не добавлена");
+                return;
+            }
+
             await _projectService.UpdateObvInStandAsync(CurrentProjectModel, SelectedObvyazka);
 
             OnObvyazkiInStandChanged();
