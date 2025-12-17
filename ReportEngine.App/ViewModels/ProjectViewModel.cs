@@ -331,17 +331,16 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnSaveObvCommandExecuted(object e)
     {
-        if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka, CurrentProjectModel?.SelectedStand))
+        if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka))
             return;
 
-        var isAlreadyExist = CurrentStandModel.ObvyazkiInStand.Any(obv => obv.NN == CurrentProjectModel.SelectedStand.NN);
-
-        if (isAlreadyExist)
-        {
-            _notificationService.ShowError("Указанный NN обвязки уже существует. Обвязка не добавлена");
+        if (Guard.ExitIfNull("Не был выбран стенд", _notificationService, CurrentProjectModel?.SelectedStand))
             return;
-        }
-        
+
+        //проверка введенного NN обвязки
+        if (!ValidateObvNN(CurrentProjectModel.SelectedStand.NN))
+            return;
+
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await AddObvToStandAsync();
@@ -659,13 +658,9 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
 
-            var isAlreadyExist = CurrentStandModel.ObvyazkiInStand.Any(obv => obv.NN == CurrentProjectModel.SelectedStand.NN);
-
-            if (isAlreadyExist)
-            {
-                _notificationService.ShowError("Указанный NN обвязки уже существует. Обвязка не добавлена");
+            //проверка введенного NN обвязки
+            if (!ValidateObvNN(CurrentProjectModel.SelectedStand.NN))
                 return;
-            }
 
             await _projectService.UpdateObvInStandAsync(CurrentProjectModel, SelectedObvyazka);
 
@@ -1495,7 +1490,29 @@ public class ProjectViewModel : BaseViewModel
         Debug.WriteLine("Пересчет сигнального кабеля завершен");
     }
 
- 
+    //валидация номера обвязки
+    public bool ValidateObvNN(int newObvNN)
+    {
+        var isAlreadyExist = CurrentStandModel.ObvyazkiInStand.Any(obv => obv.NN == newObvNN);
+
+        if (isAlreadyExist)
+        {
+            _notificationService.ShowError("Указанный NN обвязки уже существует. Обвязка не добавлена");
+            return false;
+        }
+
+        var invalidNN = newObvNN < 1;
+
+        if (invalidNN)
+        {
+            _notificationService.ShowError("Указанный NN обвязки некорректен. Обвязка не добавлена");
+            return false;
+        }
+
+        return true;
+
+
+    }
 
 
     #endregion
