@@ -1201,6 +1201,7 @@ public class ProjectViewModel : BaseViewModel
         UpdateTablesQuantity();
         UpdateClampsQuantity();
         UpdateBracketsQuantity();
+        UpdateSignalCable();
 
         CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewElectricalComponent.Purposes);
         CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
@@ -1211,6 +1212,7 @@ public class ProjectViewModel : BaseViewModel
         Debug.WriteLine("Рамы поменялись");
 
         UpdateChannelsQuantity();
+        UpdateDrainage();
 
         CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
     }
@@ -1237,13 +1239,12 @@ public class ProjectViewModel : BaseViewModel
         var channelRecord = additionalEquips
             .FirstOrDefault(equip => equip.Purpose == "Швеллер");
 
-        var framesWidthSum = CurrentStandModel.FramesInStand.Sum(frame => frame.Width);
+        if (channelRecord == null) return;
 
-        if (channelRecord != null)
-        {
-            //швеллер в метрах
-            channelRecord.Quantity = framesWidthSum / 1000.0f;
-        }
+        //швеллер в метрах
+        var framesWidthSum = CurrentStandModel.FramesInStand.Sum(frame => frame.Width);
+        channelRecord.Quantity = framesWidthSum / 1000.0f;
+
     }
 
     //обновляем кол-во хомутов
@@ -1266,12 +1267,11 @@ public class ProjectViewModel : BaseViewModel
         var electricComponents = CurrentStandModel.NewElectricalComponent.Purposes;
         var cableInputsRecord = electricComponents.FirstOrDefault(purpose => purpose.Purpose == "Кабельные вводы");
 
-        var sensorsQuantity = CurrentStandModel.CountSensorsQuantity();
+        if (cableInputsRecord == null) return;
 
-        if (cableInputsRecord != null)
-        {
-            cableInputsRecord.Quantity = inputsPerSensor * sensorsQuantity;
-        }
+        var sensorsQuantity = CurrentStandModel.CountSensorsQuantity();
+        cableInputsRecord.Quantity = inputsPerSensor * sensorsQuantity;
+
     }
 
     //обновляем кол-во табличек
@@ -1325,7 +1325,7 @@ public class ProjectViewModel : BaseViewModel
 
         var standBraceType = CurrentProjectModel?.SelectedStand?.BraceType;
 
-        if( !string.IsNullOrEmpty(standBraceType) && standBraceType == "На кронштейне")
+        if (!string.IsNullOrEmpty(standBraceType) && standBraceType == "На кронштейне")
         {
             var absSensorsQuantity = CurrentStandModel.CountAbsoluteSensorsQuantity();
 
@@ -1369,24 +1369,68 @@ public class ProjectViewModel : BaseViewModel
                 universalBracketRecord.Material = standsSettings.BracketUniversal;
             }
         }
+    }
+
+    //обновляем данные по дренажу
+    public void UpdateDrainage()
+    {
+        const string mainPipeTitle = "Основная труба";
+        const string mainPipeMeasureUnit = "шт";
+
+        var drainageParts = CurrentStandModel.NewDrainage.Purposes;
+        var mainPipeRecord = drainageParts.FirstOrDefault(part => part.Purpose == mainPipeTitle);
 
 
+        if (mainPipeRecord == null)
+        {
+            mainPipeRecord = new DrainagePurpose();
+            mainPipeRecord.Purpose = mainPipeTitle;
+            mainPipeRecord.Measure = mainPipeMeasureUnit;
+            drainageParts.Add(mainPipeRecord);
+        }
 
 
-
-
-
-
-
-
-
-
-
+        mainPipeRecord.Quantity = CurrentStandModel.FramesInStand.Sum(frame => frame.Width); ;
+        mainPipeRecord.Material = "Какая-то дренажная труба";
 
     }
 
+    //обновляем данные по сигнальному кабелю
+    public void UpdateSignalCable()
+    {
+        const string signalCableTitle = "Сигнальный кабель";
+        const string signalCableMeasureUnit = "шт";
 
 
+        var standsSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
+
+        var sensorsQuantity = CurrentProjectModel?.SelectedStand?.CountSensorsQuantity();
+
+        if (!sensorsQuantity.HasValue)
+            return;
+
+        var signalCabelQuantity = sensorsQuantity.Value switch
+        {
+            >= 0 and <= 2 => 2,
+            >= 3 and <= 5 => 3,
+            >= 6 => 4,
+            _ => 0
+        };
+
+        var electricComponents = CurrentStandModel.NewElectricalComponent.Purposes;
+        var signalCableRecord = electricComponents.FirstOrDefault(purpose => purpose.Purpose == signalCableTitle);
+
+        if (signalCableRecord == null)
+        {
+            signalCableRecord = new ElectricalPurpose();
+            signalCableRecord.Purpose = signalCableTitle;
+            signalCableRecord.Measure = signalCableMeasureUnit;
+            electricComponents.Add(signalCableRecord);
+        }
+
+        signalCableRecord.Quantity = signalCabelQuantity;
+        signalCableRecord.Material = standsSettings.SignalCable;
+    }
 
     //сравнение двух обвязок
     public static bool AreObvEqual(ObvyazkaInStand obv1, ObvyazkaInStand obv2)
