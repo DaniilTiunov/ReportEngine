@@ -94,9 +94,9 @@
                     <RowDefinition Height="40" />
                 </Grid.RowDefinitions>
                 <TabControl Grid.Row="0">
-                    <TabItem Header="Стенды">
+                    <TabItem Header="Комплектующие">
                         <Grid>
-                            <!--  Стенды  -->
+                            <!--  Комплектующие  -->
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="30" />
                                 <RowDefinition Height="30" />
@@ -110,17 +110,12 @@
                                 <RowDefinition Height="30" />
                                 <RowDefinition Height="30" />
                                 <RowDefinition Height="30" />
-                                <RowDefinition Height="45" />
-                                <RowDefinition Height="45" />
-                                <RowDefinition Height="45" />
+                                <RowDefinition Height="30" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="85.175" />
-                                <ColumnDefinition Width="32.391" />
-                                <ColumnDefinition Width="19.794" />
-                                <ColumnDefinition Width="12.64" />
+                                <ColumnDefinition Width="0.5*" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="45" />
                             </Grid.ColumnDefinitions>
                             <TextBlock
                                 Grid.Row="0"
@@ -130,13 +125,15 @@
                                 Text="Швеллер: " />
                             <TextBox
                                 Grid.Row="0"
-                                Grid.Column="4"
+                                Grid.Column="1"
                                 Margin="15,5,5,5"
                                 Text="{Binding StandSettings.SteelChannel}" />
                             <Button
                                 Grid.Row="0"
-                                Grid.Column="5"
+                                Grid.Column="3"
                                 Margin="5,5,15,5"
+                                Command="{Binding ShowAllEqipDialogCommand}"
+                                CommandParameter="SteelChannel"
                                 Content="..." />
 
                             <TextBlock
@@ -147,92 +144,97 @@
                                 Text="Шильдик: " />
                             <TextBox
                                 Grid.Row="1"
-                                Grid.Column="4"
+                                Grid.Column="1"
                                 Margin="15,5,5,5"
                                 Text="{Binding StandSettings.NamePlate, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="1"
                                 Grid.Column="5"
                                 Margin="5,5,15,5"
+                                Command="{Binding ShowAllEqipDialogCommand}"
+                                CommandParameter="NamePlate"
                                 Content="..." />
 
                             <TextBlock
                                 Grid.Row="2"
                                 Grid.Column="0"
-                                Grid.ColumnSpan="4"
                                 Margin="15,5,5,5"
                                 Text="Табличка: " />
                             <TextBox
                                 Grid.Row="2"
-                                Grid.Column="4"
+                                Grid.Column="1"
                                 Margin="15,5,5,5"
                                 Text="{Binding StandSettings.NameTable, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="2"
-                                Grid.Column="5"
+                                Grid.Column="2"
                                 Margin="5,5,15,5"
+                                Command="{Binding ShowAllEqipDialogCommand}"
+                                CommandParameter="NameTable"
                                 Content="..." />
 
                             <TextBlock
                                 Grid.Row="3"
                                 Grid.Column="0"
-                                Grid.ColumnSpan="4"
                                 Margin="15,5,5,5"
                                 Text="Оцинковка рам: " />
                             <TextBox
                                 Grid.Row="3"
-                                Grid.Column="4"
+                                Grid.Column="1"
                                 Margin="15,5,5,5"
                                 Text="{Binding StandSettings.FrameGalvanizing, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="3"
-                                Grid.Column="5"
+                                Grid.Column="2"
                                 Margin="5,5,15,5"
+                                Command="{Binding ShowAllEqipDialogCommand}"
+                                CommandParameter="FrameGalvanizing"
                                 Content="..." />
 
                             <TextBlock
                                 Grid.Row="4"
                                 Grid.Column="0"
-                                Grid.ColumnSpan="4"
                                 Margin="15,5,5,5"
                                 Text="Кронштейн: " />
                             <TextBox
                                 Grid.Row="4"
-                                Grid.Column="4"
+                                Grid.Column="1"
                                 Margin="15,5,5,5"
                                 Text="{Binding StandSettings.Bracket, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="4"
-                                Grid.Column="5"
+                                Grid.Column="2"
                                 Margin="5,5,15,5"
+                                Command="{Binding ShowAllEqipDialogCommand}"
+                                CommandParameter="Bracket"
                                 Content="..." />
 
                             <TextBlock
                                 Grid.Row="5"
                                 Grid.Column="0"
-                                Grid.ColumnSpan="4"
                                 Margin="15,5,5,5"
                                 Text="Кронштейн переп.: " />
                             <TextBox
                                 Grid.Row="5"
-                                Grid.Column="4"
+                                Grid.Column="1"
                                 Margin="15,5,5,5"
                                 Text="{Binding StandSettings.BracketForDif, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="5"
                                 Grid.Column="5"
                                 Margin="5,5,15,5"
+                                Command="{Binding ShowAllEqipDialogCommand}"
+                                CommandParameter="BracketForDif"
                                 Content="..." />
 
                             <TextBlock
                                 Grid.Row="6"
                                 Grid.Column="0"
-                                Grid.ColumnSpan="4"
                                 Margin="15,5,5,5"
                                 Text="Кронштейн абсол.: " />
                             <TextBox
                                 Grid.Row="6"
-                                Grid.Column="4"
+                                Grid.Column="1"
                                 Margin="15,5,5,5"
                                 Text="{Binding StandSettings.BracketForAbs, Mode=TwoWay}" />
                             <Button
@@ -244,127 +246,146 @@
                             <TextBlock
                                 Grid.Row="7"
                                 Grid.Column="0"
-                                Grid.ColumnSpan="4"
                                 Margin="15,5,5,5"
                                 Text="Кронштейн унив.: " />
                             <TextBox
                                 Grid.Row="7"
-                                Grid.Column="4"
+                                Grid.Column="1"
                                 Margin="15,5,5,5"
                                 Text="{Binding StandSettings.BracketUniversal, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="7"
                                 Grid.Column="5"
                                 Margin="5,5,15,5"
+                                Command="{Binding ShowAllEqipDialogCommand}"
+                                CommandParameter="BracketUniversal"
                                 Content="..." />
 
                             <TextBlock
                                 Grid.Row="8"
                                 Grid.Column="0"
-                                Grid.ColumnSpan="4"
                                 Margin="15,5,5,5"
                                 Text="Кабель 6мм: " />
                             <TextBox
                                 Grid.Row="8"
-                                Grid.Column="4"
-                                Margin="15,5,397,5"
+                                Grid.Column="1"
+                                Margin="15,5,5,5"
                                 Text="{Binding StandSettings.CabelSixMM, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="8"
-                                Grid.Column="4"
-                                Margin="250,5,360,5"
+                                Grid.Column="2"
+                                Margin="5,5,15,5"
+                                Command="{Binding ShowAllEqipDialogCommand}"
+                                CommandParameter="CabelSixMM"
                                 Content="..." />
-
-                            <TextBlock
-                                Grid.Row="8"
-                                Grid.Column="4"
-                                Margin="310,5,230,5"
-                                Text="кол-во кабеля: " />
-                            <TextBox
-                                Grid.Row="8"
-                                Grid.Column="4"
-                                Margin="425,5,5,5"
-                                Text="{Binding StandSettings.SensorCountOnFrame, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="9"
                                 Grid.Column="0"
-                                Grid.ColumnSpan="4"
                                 Margin="15,5,5,5"
                                 Text="Кабель 4мм: " />
                             <TextBox
                                 Grid.Row="9"
-                                Grid.Column="4"
-                                Margin="15,5,397,5"
+                                Grid.Column="1"
+                                Margin="15,5,5,5"
                                 Text="{Binding StandSettings.CabelFourMM, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="9"
-                                Grid.Column="4"
-                                Margin="250,5,360,5"
+                                Grid.Column="2"
+                                Margin="5,5,15,5"
+                                Command="{Binding ShowAllEqipDialogCommand}"
+                                CommandParameter="CabelFourMM"
                                 Content="..." />
 
                             <TextBlock
                                 Grid.Row="10"
                                 Grid.Column="0"
-                                Grid.ColumnSpan="4"
                                 Margin="15,5,5,5"
                                 Text="Сигн. кабель: " />
                             <TextBox
                                 Grid.Row="10"
-                                Grid.Column="4"
-                                Margin="15,5,397,5"
+                                Grid.Column="1"
+                                Margin="15,5,5,5"
                                 Text="{Binding StandSettings.SignalCable, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="10"
                                 Grid.Column="4"
-                                Margin="250,5,360,5"
+                                Margin="5,5,15,5"
+                                Command="{Binding ShowAllEqipDialogCommand}"
+                                CommandParameter="SignalCable"
                                 Content="..." />
 
                             <TextBlock
                                 Grid.Row="11"
                                 Grid.Column="0"
-                                Grid.ColumnSpan="4"
+                                Margin="15,5,5,5"
+                                Text="кол-во кабеля: " />
+                            <TextBox
+                                Grid.Row="11"
+                                Grid.Column="1"
+                                Margin="15,5,5,5"
+                                Text="{Binding StandSettings.SensorCountOnFrame, Mode=TwoWay}" />
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Стенды">
+                        <Grid>
+                            <!--  Стенды  -->
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="45" />
+                                <RowDefinition Height="45" />
+                                <RowDefinition Height="45" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="3"
                                 Margin="15,5,5,5"
                                 Text="Ведущий инженер: " />
                             <TextBox
-                                Grid.Row="11"
-                                Grid.Column="4"
+                                Grid.Row="0"
+                                Grid.Column="2"
                                 Margin="15,5,5,5"
                                 Text="{Binding StandSettings.SeniorEngineer, Mode=TwoWay}" />
 
                             <TextBlock
-                                Grid.Row="12"
+                                Grid.Row="1"
                                 Grid.Column="0"
-                                Grid.ColumnSpan="4"
+                                Grid.ColumnSpan="2"
                                 Margin="15,5,5,5"
                                 Text="Ответственный за &#x0a;приёмку: " />
                             <TextBox
-                                Grid.Row="12"
-                                Grid.Column="4"
+                                Grid.Row="1"
+                                Grid.Column="2"
                                 Margin="15,5,5,5"
                                 Text="{Binding StandSettings.ResponsibleForAccept, Mode=TwoWay}" />
 
                             <TextBlock
-                                Grid.Row="13"
+                                Grid.Row="2"
                                 Grid.Column="0"
-                                Grid.ColumnSpan="4"
+                                Grid.ColumnSpan="2"
                                 Margin="15,5,5,5"
                                 Text="Специалист &#x0a;II-уровня: " />
                             <TextBox
-                                Grid.Row="13"
-                                Grid.Column="4"
+                                Grid.Row="2"
+                                Grid.Column="2"
                                 Margin="15,5,5,5"
                                 Text="{Binding StandSettings.SecondLevelSpecialist, Mode=TwoWay}" />
 
                             <TextBlock
-                                Grid.Row="14"
+                                Grid.Row="3"
                                 Grid.Column="0"
-                                Grid.ColumnSpan="4"
-                                Margin="15,5,5,5"
+                                Grid.ColumnSpan="2"
+                                Margin="15,5,5,-8"
                                 Text="Представитель &#x0a;Осил: " />
                             <TextBox
-                                Grid.Row="14"
-                                Grid.Column="4"
+                                Grid.Row="3"
+                                Grid.Column="2"
                                 Margin="15,5,5,5"
                                 Text="{Binding StandSettings.OSiL, Mode=TwoWay}" />
                         </Grid>

@@ -1,18 +1,25 @@
 ﻿using System.Windows.Input;
+using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model.CalculationModels;
+using ReportEngine.App.Services;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.Views.Windows;
 
 namespace ReportEngine.App.ViewModels.CalculationSettings;
 
 public class CalculationSettingsViewModel : BaseViewModel
 {
     private readonly INotificationService _notificationService;
+    private readonly IDialogService _dialogService;
 
-    public CalculationSettingsViewModel(INotificationService notificationService)
+    public CalculationSettingsViewModel(
+        INotificationService notificationService,
+        IDialogService dialogService)
     {
         InitializeCommands();
         _notificationService = notificationService;
+        _dialogService = dialogService;
     }
 
     public HumanCostSettingsModel HumanCosts { get; set; } = new();
@@ -22,10 +29,33 @@ public class CalculationSettingsViewModel : BaseViewModel
     public ElectricalSettingsModel ElectricalSettings { get; set; } = new();
 
     public ICommand SaveSettingsCommand { get; set; }
+    public ICommand ShowAllEqipDialogCommand { get; set; }
 
     private void InitializeCommands()
     {
         SaveSettingsCommand = new RelayCommand(OnSaveSettingsCommandExecuted, _ => true);
+        ShowAllEqipDialogCommand = new RelayCommand(OnShowAllEqipDialogCommandExecuted, _ => true);
+    }
+
+    public void OnShowAllEqipDialogCommandExecuted(object p)
+    {
+        var selected = _dialogService.ShowAllSortamentsDialog();
+
+        if(Guard.ExitIfNull("Ничего не выбрано", _notificationService, selected))
+            return;
+
+        if (p is string propertyName && !string.IsNullOrWhiteSpace(propertyName))
+        {
+            var prop = StandSettings.GetType().GetProperty(propertyName);
+            if (prop != null && prop.CanWrite)
+            {
+                prop.SetValue(StandSettings, selected.Name);
+            }
+            else
+            {
+                _notificationService.ShowError($"Свойство '{propertyName}' не найдено.");
+            }
+        }
     }
 
     public async void OnSaveSettingsCommandExecuted(object p)
