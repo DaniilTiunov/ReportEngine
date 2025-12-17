@@ -389,9 +389,16 @@ public class ProjectService : IProjectService
             .Where(s => s.ObvyazkiInStand != null)
             .SelectMany(s => s.ObvyazkiInStand);
 
+        //костыль
+        //фильтруем только уникальные
+        var uniqueObvInStands = obvyazkiInStands
+            .DistinctBy(obv => obv.ObvyazkaName);
+
+
         projectModel.ObvyazkiInProject.Clear();
 
-        foreach (var obvyazkiInStand in obvyazkiInStands) projectModel.ObvyazkiInProject.Add(obvyazkiInStand);
+        foreach (var obvyazka in uniqueObvInStands)
+            projectModel.ObvyazkiInProject.Add(obvyazka);
     }
 
     private async Task CopyFramesToNewStandAsync(StandModel newStand, ObservableCollection<FormedFrame> frames)

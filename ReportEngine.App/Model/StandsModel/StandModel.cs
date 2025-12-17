@@ -744,11 +744,11 @@ public class StandModel : BaseViewModel
         {
             Purposes = new ObservableCollection<AdditionalEquipPurpose>
             {
-                new() { Purpose = "Шильдик", Material = DefaultStandSettings.NamePlate,Quantity = nameplatesPerStand, Measure = "шт"},
+                new() { Purpose = "Шильдик", Material = DefaultStandSettings.NamePlate, Quantity = nameplatesPerStand, Measure = "шт"},
                 new() { Purpose = "Швеллер", Material = DefaultStandSettings.SteelChannel },
                 new() { Purpose = "Хомуты" },
                 new() { Purpose = "Табличка", Material = DefaultStandSettings.NameTable, Measure = "шт"},
-                new() { Purpose = "Кронштейн" },
+                new() { Purpose = "Кронштейн", Measure = "шт" },
             }
         };
     }

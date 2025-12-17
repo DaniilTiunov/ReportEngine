@@ -1340,10 +1340,6 @@
                                 <DataGrid.Columns>
                                     <DataGridTextColumn
                                         Width="*"
-                                        Binding="{Binding NN}"
-                                        Header="NN" />
-                                    <DataGridTextColumn
-                                        Width="*"
                                         Binding="{Binding ObvyazkaName}"
                                         Header="Тип" />
                                     <DataGridTextColumn

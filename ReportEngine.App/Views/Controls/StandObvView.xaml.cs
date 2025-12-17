@@ -91,7 +91,6 @@ public partial class StandObvView : UserControl
     {
         Debug.WriteLine("Стенд изменился");
 
-        _projectViewModel.OnObvyazkiInStandChanged();
-        _projectViewModel.OnFramesInStandChanged();
+        _projectViewModel.OnSelectedStandChanged();
     }
 }
