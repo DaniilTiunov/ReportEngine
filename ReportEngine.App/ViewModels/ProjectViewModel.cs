@@ -22,7 +22,6 @@ using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
 
 
-
 namespace ReportEngine.App.ViewModels;
 
 public class ProjectViewModel : BaseViewModel
@@ -1136,7 +1135,7 @@ public class ProjectViewModel : BaseViewModel
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.ContainerStandsInSelectedBatch);
                     return;
             }
-
+            
             var t = target.GetType();
             var matProp = t.GetProperty("Material");
             var costProp = t.GetProperty("CostPerUnit");
