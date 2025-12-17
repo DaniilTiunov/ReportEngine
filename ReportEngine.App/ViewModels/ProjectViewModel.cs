@@ -1217,6 +1217,14 @@ public class ProjectViewModel : BaseViewModel
         CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
     }
 
+    public void OnSelectedStandChanged()
+    {
+        Debug.WriteLine("Стенд изменился");
+
+        OnFramesInStandChanged();
+        OnObvyazkiInStandChanged();
+    }
+
     //возвращает максимальный NN обвязок в стенде
     public int MaxObvNN
     {
@@ -1230,11 +1238,16 @@ public class ProjectViewModel : BaseViewModel
 
         if (selectedStand != null)
             selectedStand.NN = MaxObvNN + 1;
+
+
+        Debug.WriteLine("NN стенда обновлен");
     }
 
     //обновляем кол-во швеллера
     public void UpdateChannelsQuantity()
     {
+        Debug.WriteLine("Пересчет швеллера начат");
+
         var additionalEquips = CurrentStandModel.NewAdditionalEquip.Purposes;
         var channelRecord = additionalEquips
             .FirstOrDefault(equip => equip.Purpose == "Швеллер");
@@ -1245,11 +1258,16 @@ public class ProjectViewModel : BaseViewModel
         var framesWidthSum = CurrentStandModel.FramesInStand.Sum(frame => frame.Width);
         channelRecord.Quantity = framesWidthSum / 1000.0f;
 
+        Debug.WriteLine("Пересчет швеллера завершен");
     }
+
+
 
     //обновляем кол-во хомутов
     public void UpdateClampsQuantity()
     {
+        Debug.WriteLine("Пересчет хомутов начат");
+
         var additionalEquips = CurrentStandModel.NewAdditionalEquip.Purposes;
         var clampsRecord = additionalEquips.FirstOrDefault(equip => equip.Purpose == "Хомуты");
 
@@ -1257,11 +1275,15 @@ public class ProjectViewModel : BaseViewModel
 
         var clampSum = CurrentStandModel.ObvyazkiInStand.Sum(obv => obv.Clamp);
         clampsRecord.Quantity = clampSum ?? 0.0f;
+
+        Debug.WriteLine("Пересчет хомутов завершен");
     }
 
     //обновляем кол-во кабельных вводов
     public void UpdateCableInputsQuantity()
     {
+        Debug.WriteLine("Пересчет кабельных вводов начат");
+
         const int inputsPerSensor = 2;
 
         var electricComponents = CurrentStandModel.NewElectricalComponent.Purposes;
@@ -1272,11 +1294,15 @@ public class ProjectViewModel : BaseViewModel
         var sensorsQuantity = CurrentStandModel.CountSensorsQuantity();
         cableInputsRecord.Quantity = inputsPerSensor * sensorsQuantity;
 
+        Debug.WriteLine("Пересчет кабельных вводо завершен");
     }
 
     //обновляем кол-во табличек
     public void UpdateTablesQuantity()
     {
+
+        Debug.WriteLine("Пересчет табличек начат");
+
         var sensorsQuantity = CurrentStandModel.CountSensorsQuantity();
 
         var additionalComponents = CurrentStandModel.NewAdditionalEquip.Purposes;
@@ -1286,11 +1312,16 @@ public class ProjectViewModel : BaseViewModel
         {
             tableRecord.Quantity = sensorsQuantity;
         }
+
+        Debug.WriteLine("Пересчет табличек завершен");
     }
 
     //обновляем кол-во кронштейнов
     public void UpdateBracketsQuantity()
     {
+
+        Debug.WriteLine("Пересчет кронштейнов начат");
+
         var standsSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
 
         const int bracketsPerDifSensor = 1;
@@ -1369,35 +1400,46 @@ public class ProjectViewModel : BaseViewModel
                 universalBracketRecord.Material = standsSettings.BracketUniversal;
             }
         }
+
+        Debug.WriteLine("Пересчет кронштейнов завершен");
     }
 
     //обновляем данные по дренажу
     public void UpdateDrainage()
     {
+        Debug.WriteLine("Пересчет дренажной трубы начат");
+
         const string mainPipeTitle = "Основная труба";
-        const string mainPipeMeasureUnit = "шт";
+        const string mainPipeMeasureUnit = "м";
 
-        var drainageParts = CurrentStandModel.NewDrainage.Purposes;
+        var selectedStand = CurrentProjectModel?.SelectedStand;
+
+        if (selectedStand == null)
+            return;
+
+        var drainageParts = selectedStand.NewDrainage.Purposes;
         var mainPipeRecord = drainageParts.FirstOrDefault(part => part.Purpose == mainPipeTitle);
-
 
         if (mainPipeRecord == null)
         {
             mainPipeRecord = new DrainagePurpose();
             mainPipeRecord.Purpose = mainPipeTitle;
-            mainPipeRecord.Measure = mainPipeMeasureUnit;
+
             drainageParts.Add(mainPipeRecord);
         }
 
+        mainPipeRecord.Quantity = selectedStand.FramesInStand.Sum(frame => frame.Width) / 1000.0f;
+        mainPipeRecord.Measure = mainPipeMeasureUnit;
 
-        mainPipeRecord.Quantity = CurrentStandModel.FramesInStand.Sum(frame => frame.Width); ;
-        mainPipeRecord.Material = "Какая-то дренажная труба";
 
+        Debug.WriteLine("Пересчет дренажной трубы завершен");
     }
 
     //обновляем данные по сигнальному кабелю
     public void UpdateSignalCable()
     {
+        Debug.WriteLine("Пересчет сигнального кабеля начат");
+
         const string signalCableTitle = "Сигнальный кабель";
         const string signalCableMeasureUnit = "м";
 
@@ -1417,8 +1459,6 @@ public class ProjectViewModel : BaseViewModel
             _ => 0
         };
 
-
-
         var electricComponents = CurrentStandModel.NewElectricalComponent.Purposes;
         var signalCableRecord = electricComponents.FirstOrDefault(purpose => purpose.Purpose == signalCableTitle);
 
@@ -1426,14 +1466,14 @@ public class ProjectViewModel : BaseViewModel
         {
             signalCableRecord = new ElectricalPurpose();
             signalCableRecord.Purpose = signalCableTitle;
-            signalCableRecord.Measure = signalCableMeasureUnit;
             electricComponents.Add(signalCableRecord);
         }
 
         signalCableRecord.Quantity = sensorsQuantity * signalCablePerSensor;
         signalCableRecord.Material = standsSettings.SignalCable;
-        //исправить
         signalCableRecord.Measure = signalCableMeasureUnit;
+
+        Debug.WriteLine("Пересчет сигнального кабеля завершен");
     }
 
     //сравнение двух обвязок
