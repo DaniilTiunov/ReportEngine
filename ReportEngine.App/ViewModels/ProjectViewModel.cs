@@ -829,7 +829,10 @@ public class ProjectViewModel : BaseViewModel
 
         await _standService.AddObvyazkaToStandAsync(CurrentProjectModel.SelectedStand.Id, entity);
 
-        if (CurrentProjectModel.ObvyazkiInProject.All(obv => !AreObvEqual(obv, entity)))
+        //сравнение по типу
+        var isAlreadyExist = CurrentProjectModel.ObvyazkiInProject.Any(obv => obv.ObvyazkaName == entity.ObvyazkaName);
+
+        if (!isAlreadyExist)
         {
             CurrentProjectModel.ObvyazkiInProject.Add(entity);
         }
@@ -1232,6 +1235,7 @@ public class ProjectViewModel : BaseViewModel
 
         OnFramesInStandChanged();
         OnObvyazkiInStandChanged();
+        UpdateBracketsQuantity();
     }
 
     //возвращает максимальный NN обвязок в стенде
@@ -1484,25 +1488,7 @@ public class ProjectViewModel : BaseViewModel
         Debug.WriteLine("Пересчет сигнального кабеля завершен");
     }
 
-    //сравнение двух обвязок
-    public static bool AreObvEqual(ObvyazkaInStand obv1, ObvyazkaInStand obv2)
-    {
-        var properties = typeof(ObvyazkaInStand)
-            .GetProperties()
-            .Where(p => p.Name != "Id" && p.Name != "StandId" && p.Name != "Stand" && p.Name != "ObvyazkaId" && p.Name != "Obvyazka" && p.Name != "NN" && p.CanRead);
-
-        foreach (var property in properties)
-        {
-            var val1 = property.GetValue(obv1);
-            var val2 = property.GetValue(obv2);
-
-            if (!Equals(val1, val2))
-                return false;
-        }
-
-        return true;
-    }
-
+ 
 
 
     #endregion
