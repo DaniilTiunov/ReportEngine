@@ -20,9 +20,6 @@ using ReportEngine.Shared.Config.IniHeleprs;
 using ReportEngine.Shared.Config.IniHelpers;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Windows.Documents;
 
 
 namespace ReportEngine.App.ViewModels;
@@ -821,7 +818,7 @@ public class ProjectViewModel : BaseViewModel
 
         await _standService.AddObvyazkaToStandAsync(CurrentProjectModel.SelectedStand.Id, entity);
 
-        if (CurrentProjectModel.ObvyazkiInProject.All(obv => !AreObvEqual(obv,entity)))
+        if (CurrentProjectModel.ObvyazkiInProject.All(obv => !AreObvEqual(obv, entity)))
         {
             CurrentProjectModel.ObvyazkiInProject.Add(entity);
         }
@@ -1123,7 +1120,7 @@ public class ProjectViewModel : BaseViewModel
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.ContainerStandsInSelectedBatch);
                     return;
             }
-
+            
             var t = target.GetType();
             var matProp = t.GetProperty("Material");
             var costProp = t.GetProperty("CostPerUnit");
@@ -1386,7 +1383,7 @@ public class ProjectViewModel : BaseViewModel
             var val1 = property.GetValue(obv1);
             var val2 = property.GetValue(obv2);
 
-            if (!Equals(val1,val2))
+            if (!Equals(val1, val2))
                 return false;
         }
 
