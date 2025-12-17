@@ -22,8 +22,16 @@ namespace ReportEngine.App.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.Information("EquipChangesListener запущен");
+            await LoadCurrentDataAsync();
 
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+            }
+        }
+
+        private async Task LoadCurrentDataAsync() 
+        {
             var equipTypes = GetEquipTypes();
 
             using var scope = _serviceProvider.CreateScope();
@@ -32,17 +40,19 @@ namespace ReportEngine.App.Services
             {
                 var repositoryType = typeof(IGenericBaseRepository<,>).MakeGenericType(type, type);
                 dynamic repository = scope.ServiceProvider.GetRequiredService(repositoryType);
+
                 IEnumerable<IBaseEquip> items = await repository.GetAllAsync();
 
                 _cache[type] = items;
 
                 _logger.Information($"Загружено {items.Count()} записей для типа {type.Name}");
             }
+        }
 
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
-            }
+        private IGenericBaseRepository<T, T> GetCurrentRepository<T>(IServiceProvider serviceProvider)
+            where T : class, IBaseEquip
+        {
+            return serviceProvider.GetRequiredService<IGenericBaseRepository<T, T>>();
         }
 
         private List<Type> GetEquipTypes()
