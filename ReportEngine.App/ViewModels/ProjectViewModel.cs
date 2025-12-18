@@ -884,6 +884,9 @@ public class ProjectViewModel : BaseViewModel
             return;
         }
 
+        if (!ValidateStandNN(NewStand.Number))
+            return;
+
         var nextNumber = _projectService.GetStandsInProjectCount(CurrentProjectModel) + 1;
 
         var newStandModel = new StandModel
@@ -928,16 +931,22 @@ public class ProjectViewModel : BaseViewModel
 
     private async Task SaveChangesInStandAsync()
     {
+
         if (CurrentProjectModel.CurrentProjectId == 0)
         {
             _notificationService.ShowInfo("Сначала создайте проект");
             return;
         }
 
-        var stand = CurrentProjectModel.SelectedStand;
+        var stand = CurrentProjectModel?.SelectedStand;
 
         if (Guard.ExitIfNull("Стенд не выбран!", _notificationService, stand))
             return;
+
+
+
+   
+
 
         var standEntity = StandDataConverter.ConvertToStandEntity(stand);
         await _projectRepository.UpdateStandAsync(standEntity);
@@ -1239,10 +1248,19 @@ public class ProjectViewModel : BaseViewModel
         UpdateBracketsQuantity();
     }
 
+    
+    
+
     //возвращает максимальный NN обвязок в стенде
     public int MaxObvNN
     {
         get => CurrentProjectModel?.SelectedStand?.ObvyazkiInStand.Max(obv => obv.NN) ?? 0;
+    }
+
+    //возвращает максимальный NN стендов в проекте
+    public int MaxStandNN
+    {
+        get => CurrentProjectModel?.Stands.Max(stand => stand.Number) ?? 0;
     }
 
     //обновляем поле NN в обвязке
@@ -1250,12 +1268,25 @@ public class ProjectViewModel : BaseViewModel
     {
         var selectedStand = CurrentProjectModel.SelectedStand;
 
-        if (selectedStand != null)
-            selectedStand.NN = MaxObvNN + 1;
+        if (selectedStand == null)
+            return;
+
+        selectedStand.NN = MaxObvNN + 1;
 
 
-        Debug.WriteLine("NN стенда обновлен");
+        Debug.WriteLine("Новый NN обвязки изменен");
     }
+
+    public void UpdateNewStandNN()
+    {
+        if (NewStand == null)
+            return;
+
+        NewStand.Number = MaxStandNN + 1;
+
+        Debug.WriteLine("Новый NN стенда изменен");
+    }
+
 
     //обновляем кол-во швеллера
     public void UpdateChannelsQuantity()
@@ -1509,7 +1540,7 @@ public class ProjectViewModel : BaseViewModel
 
         if (isAlreadyExist)
         {
-            _notificationService.ShowError("Указанный NN обвязки уже существует. Обвязка не добавлена");
+            _notificationService.ShowError("Указанный № обвязки уже существует!");
             return false;
         }
 
@@ -1517,7 +1548,28 @@ public class ProjectViewModel : BaseViewModel
 
         if (invalidNN)
         {
-            _notificationService.ShowError("Указанный NN обвязки некорректен. Обвязка не добавлена");
+            _notificationService.ShowError("Указанный № обвязки некорректен!");
+            return false;
+        }
+
+        return true;
+    }
+
+    public bool ValidateStandNN(int newStandNumber)
+    {
+        var isAlreadyExist = CurrentProjectModel.Stands.Any(stand => stand.Number == newStandNumber);
+
+        if (isAlreadyExist)
+        {
+            _notificationService.ShowError("Указанный № стенда уже существует!");
+            return false;
+        }
+
+        var invalidNN = newStandNumber < 1;
+
+        if (invalidNN)
+        {
+            _notificationService.ShowError("Указанный № стенда некорректен!");
             return false;
         }
 
