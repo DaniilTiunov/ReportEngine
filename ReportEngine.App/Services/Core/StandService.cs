@@ -334,8 +334,7 @@ public class StandService : IStandService
                 }));
             CollectionRefreshHelper.SafeRefreshCollection(stand.ObvyazkaAdditionalComponents);
         }
-
-        ;
+       
 
         await Task.CompletedTask;
     }

@@ -1282,13 +1282,26 @@ public class ProjectViewModel : BaseViewModel
     {
         Debug.WriteLine("Пересчет хомутов начат");
 
+        var standsSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
+
         var additionalEquips = CurrentStandModel.NewAdditionalEquip.Purposes;
         var clampsRecord = additionalEquips.FirstOrDefault(equip => equip.Purpose == "Хомуты");
 
-        if (clampsRecord == null) return;
 
-        var clampSum = CurrentStandModel.ObvyazkiInStand.Sum(obv => obv.Clamp);
-        clampsRecord.Quantity = clampSum ?? 0.0f;
+
+        if (clampsRecord == null)
+        {
+            clampsRecord = new AdditionalEquipPurpose();
+            clampsRecord.Purpose = "Хомуты";
+            clampsRecord.Material = standsSettings.Clamp;
+            clampsRecord.Measure = "шт";
+        }
+
+        if (clampsRecord != null)
+        {
+            var clampSum = CurrentStandModel.ObvyazkiInStand.Sum(obv => obv.Clamp);
+            clampsRecord.Quantity = clampSum ?? 0.0f;
+        }
 
         Debug.WriteLine("Пересчет хомутов завершен");
     }
@@ -1509,8 +1522,6 @@ public class ProjectViewModel : BaseViewModel
         }
 
         return true;
-
-
     }
 
 
