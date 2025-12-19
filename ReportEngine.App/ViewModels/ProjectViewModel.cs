@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Security.AccessControl;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Commands.Providers;
@@ -652,6 +653,33 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
+    //TODO: вынести в standService
+    public async void OnFillStandFieldsFromSelectedStandCommandExecuted(object obj)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            var selectedStand = CurrentProjectModel.SelectedStand;
+
+            if (selectedStand == null)
+                return;
+
+            NewStand.Number = selectedStand.Number;
+            NewStand.KKSCode = selectedStand.KKSCode;
+            NewStand.Design = selectedStand.Design;
+            NewStand.BraceType = selectedStand.BraceType;
+            NewStand.Devices = selectedStand.Devices;
+            NewStand.Width = selectedStand.Width;
+            NewStand.SerialNumber = selectedStand.SerialNumber;
+            NewStand.Weight = selectedStand.Weight;
+            NewStand.StandSummCost = selectedStand.StandSummCost;
+            NewStand.Number = selectedStand.Number;
+            NewStand.ProjectId = selectedStand.ProjectId;
+            NewStand.Comments = selectedStand.Comments;
+            NewStand.DesignStand = selectedStand.DesignStand;
+
+        });
+    }
+
     public async void OnUpdateObvInStandCommandExecuted(object obj)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -871,7 +899,11 @@ public class ProjectViewModel : BaseViewModel
             return;
         }
 
+
+
+        //
         await _projectService.UpdateProjectAsync(CurrentProjectModel);
+
 
         _notificationService.ShowInfo("Изменения успешно сохранены!");
     }
@@ -919,7 +951,6 @@ public class ProjectViewModel : BaseViewModel
 
         CurrentProjectModel.Stands.Add(newStandModel);
 
-        CurrentStandModel = newStandModel;
 
         // Переставляем шаблон на следующий свободный номер
         NewStand = new StandModel { Number = nextNumber + 1 };
@@ -928,9 +959,11 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(NewStand));
         _notificationService.ShowInfo($"Стенд успешно добавлен! {addedStandEntity.Id}");
     }
-
+    ///
     private async Task SaveChangesInStandAsync()
     {
+
+        CurrentProjectModel.Stands.CollectionChanged += (e,p) =>  Debug.WriteLine("СТЕНДЫ ТОЧНО ПОМЕНЯЛИСЬ");
 
         if (CurrentProjectModel.CurrentProjectId == 0)
         {
@@ -938,19 +971,44 @@ public class ProjectViewModel : BaseViewModel
             return;
         }
 
-        var stand = CurrentProjectModel?.SelectedStand;
+        var selectedStand = CurrentProjectModel?.SelectedStand;
 
-        if (Guard.ExitIfNull("Стенд не выбран!", _notificationService, stand))
-            return;
-
-
-
-   
+        if (Guard.ExitIfNull("Стенд не выбран!", _notificationService, selectedStand))
+        return;
 
 
-        var standEntity = StandDataConverter.ConvertToStandEntity(stand);
-        await _projectRepository.UpdateStandAsync(standEntity);
+        var curStandsBefore = CurrentProjectModel.Stands;
 
+        var newStandEntity = StandDataConverter.ConvertToStandEntity(NewStand);
+        var selectedStandEntity = StandDataConverter.ConvertToStandEntity(selectedStand);
+
+
+        selectedStandEntity.Number = newStandEntity.Number;
+        selectedStandEntity.KKSCode = newStandEntity.KKSCode;
+        selectedStandEntity.Design = newStandEntity.Design;
+        selectedStandEntity.BraceType = newStandEntity.BraceType;
+        selectedStandEntity.Devices = newStandEntity.Devices;
+        selectedStandEntity.Width = newStandEntity.Width;
+        selectedStandEntity.SerialNumber = newStandEntity.SerialNumber;
+        selectedStandEntity.Weight = newStandEntity.Weight;
+        selectedStandEntity.StandSummCost = newStandEntity.StandSummCost;
+        selectedStandEntity.Comments = newStandEntity.Comments;
+        selectedStandEntity.DesigneStand = newStandEntity.DesigneStand;
+        
+
+        await _projectRepository.UpdateStandAsync(selectedStandEntity);
+
+
+
+        await LoadProjectInfoAsync(CurrentProjectModel.CurrentProjectId);
+
+        CurrentProjectModel.Stands.Add(new StandModel());
+
+        CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.Stands);
+
+       
+
+        var curStandsAfter = CurrentProjectModel.Stands;
         _notificationService.ShowInfo("Изменения стенда сохранены");
     }
 
@@ -1144,7 +1202,7 @@ public class ProjectViewModel : BaseViewModel
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.ContainerStandsInSelectedBatch);
                     return;
             }
-            
+
             var t = target.GetType();
             var matProp = t.GetProperty("Material");
             var costProp = t.GetProperty("CostPerUnit");
@@ -1248,8 +1306,8 @@ public class ProjectViewModel : BaseViewModel
         UpdateBracketsQuantity();
     }
 
-    
-    
+
+
 
     //возвращает максимальный NN обвязок в стенде
     public int MaxObvNN

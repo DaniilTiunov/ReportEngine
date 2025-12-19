@@ -102,7 +102,12 @@ public class ProjectModel : BaseViewModel
     public int CurrentProjectId;
     private ObservableCollection<StandModel> _standsInContainer;
 
-    public ObservableCollection<StandModel> Stands { get; set; } = new();
+    private ObservableCollection<StandModel> _stands = new();
+    public ObservableCollection<StandModel> Stands
+    {
+        get => _stands;
+        set => Set(ref _stands, value);
+    }
 
     public StandModel? SelectedStand
     {

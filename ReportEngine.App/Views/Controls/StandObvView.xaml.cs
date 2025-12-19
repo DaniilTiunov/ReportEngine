@@ -93,4 +93,9 @@ public partial class StandObvView : UserControl
 
         _projectViewModel.OnSelectedStandChanged();
     }
+
+    private void StandsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        _projectViewModel.OnFillStandFieldsFromSelectedStandCommandExecuted(sender);
+    }
 }
