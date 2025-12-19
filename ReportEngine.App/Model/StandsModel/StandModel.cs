@@ -740,13 +740,15 @@ public class StandModel : BaseViewModel
     {
         float nameplatesPerStand = 1.0f;
 
+
+
         NewAdditionalEquip = new FormedAdditionalEquip
         {
             Purposes = new ObservableCollection<AdditionalEquipPurpose>
             {
                 new() { Purpose = "Шильдик", Material = DefaultStandSettings.NamePlate, Quantity = nameplatesPerStand, Measure = "шт"},
-                new() { Purpose = "Швеллер", Material = DefaultStandSettings.SteelChannel },
-                new() { Purpose = "Хомуты" },
+                new() { Purpose = "Швеллер", Material = DefaultStandSettings.SteelChannel, Measure = "м" },
+                new() { Purpose = "Хомуты" , Material = DefaultStandSettings.Clamp, Measure = "шт"},
                 new() { Purpose = "Табличка", Material = DefaultStandSettings.NameTable, Measure = "шт"},
                 new() { Purpose = "Кронштейн", Measure = "шт" },
             }
@@ -762,12 +764,12 @@ public class StandModel : BaseViewModel
         {
             Purposes = new ObservableCollection<ElectricalPurpose>
             {
-                new() { Purpose = "Клеммная коробка" ,Quantity = usualConnectionBoxQuantity},
-                new() { Purpose = "Кабельные вводы" , Quantity = 1},
-                new() { Purpose = "Сигнальный кабель", Material = DefaultStandSettings.SignalCable, Quantity = usualCablesQuantity },
-                new() { Purpose = "Металлорукав" , Quantity = usualCablesQuantity},
-                new() { Purpose = "Кабель 6мм", Material = DefaultStandSettings.CabelSixMM, Quantity = (float?) DefaultStandSettings.SensorCountOnFrame },
-                new() { Purpose = "Кабель 4мм", Material = DefaultStandSettings.CabelFourMM, Quantity = usualCablesQuantity },
+                new() { Purpose = "Клеммная коробка" ,Quantity = usualConnectionBoxQuantity, Measure = "шт"},
+                new() { Purpose = "Кабельные вводы" , Quantity = 1, Measure = "шт"},
+                new() { Purpose = "Сигнальный кабель", Material = DefaultStandSettings.SignalCable, Quantity = usualCablesQuantity , Measure = "м"},
+                new() { Purpose = "Металлорукав" , Quantity = usualCablesQuantity, Measure = "м"},
+                new() { Purpose = "Кабель 6мм", Material = DefaultStandSettings.CabelSixMM, Quantity = (float?) DefaultStandSettings.SensorCountOnFrame , Measure = "м"},
+                new() { Purpose = "Кабель 4мм", Material = DefaultStandSettings.CabelFourMM, Quantity = usualCablesQuantity, Measure = "м" },
                 new() { Purpose = "Кронштейн коробки" }
             }
         };
