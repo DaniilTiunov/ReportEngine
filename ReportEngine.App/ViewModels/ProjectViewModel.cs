@@ -916,7 +916,7 @@ public class ProjectViewModel : BaseViewModel
             return;
         }
 
-        if (!ValidateStandNN(NewStand.Number))
+        if (!ValidateCorrectStandNN(NewStand.Number) || !ValidateNotExistingStandNN(NewStand.Number,false))
             return;
 
         var nextNumber = _projectService.GetStandsInProjectCount(CurrentProjectModel) + 1;
@@ -974,7 +974,15 @@ public class ProjectViewModel : BaseViewModel
         var selectedStand = CurrentProjectModel?.SelectedStand;
 
         if (Guard.ExitIfNull("Стенд не выбран!", _notificationService, selectedStand))
-        return;
+            return;
+
+
+
+        if (!ValidateCorrectStandNN(NewStand.Number) || !ValidateNotExistingStandNN(NewStand.Number, true)) 
+            return;
+
+
+
 
 
         var curStandsBefore = CurrentProjectModel.Stands;
@@ -1613,21 +1621,36 @@ public class ProjectViewModel : BaseViewModel
         return true;
     }
 
-    public bool ValidateStandNN(int newStandNumber)
-    {
-        var isAlreadyExist = CurrentProjectModel.Stands.Any(stand => stand.Number == newStandNumber);
 
-        if (isAlreadyExist)
-        {
-            _notificationService.ShowError("Указанный № стенда уже существует!");
-            return false;
-        }
+    public bool ValidateCorrectStandNN(int newStandNumber)
+    {
 
         var invalidNN = newStandNumber < 1;
 
         if (invalidNN)
         {
             _notificationService.ShowError("Указанный № стенда некорректен!");
+            return false;
+        }
+
+        return true;
+
+    }
+
+
+    public bool ValidateNotExistingStandNN(int newStandNumber, bool excludeSelected)
+    {
+        var standsCollection = CurrentProjectModel.Stands;
+        var selectedStand = CurrentProjectModel.SelectedStand;
+
+     
+        var isAlreadyExist = excludeSelected
+            ? standsCollection.Where(stand => stand != selectedStand).Any(stand => stand.Number == NewStand.Number)
+            : standsCollection.Any(stand => stand.Number == newStandNumber);
+
+        if (isAlreadyExist)
+        {
+            _notificationService.ShowError("Указанный № стенда уже существует!");
             return false;
         }
 
