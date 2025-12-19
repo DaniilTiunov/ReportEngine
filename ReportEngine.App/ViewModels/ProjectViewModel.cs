@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Security.AccessControl;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Commands.Providers;
@@ -334,11 +333,16 @@ public class ProjectViewModel : BaseViewModel
         if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka))
             return;
 
-        if (Guard.ExitIfNull("Не был выбран стенд", _notificationService, CurrentProjectModel?.SelectedStand))
+        var selectedStand = CurrentProjectModel?.SelectedStand;
+
+        if (Guard.ExitIfNull("Не был выбран стенд", _notificationService, selectedStand))
             return;
 
         //проверка введенного NN обвязки
-        if (!ValidateObvNN(CurrentProjectModel.SelectedStand.NN))
+        if (!ValidateCorrectObvNN(selectedStand.NN))
+            return;
+
+        if (!ValidateNotExistingObvNN(selectedStand.NN, false))
             return;
 
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -685,8 +689,16 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
 
+            var selectedStand = CurrentProjectModel?.SelectedStand;
+
+            if (Guard.ExitIfNull("Не был выбран стенд", _notificationService, selectedStand))
+                return;
+
             //проверка введенного NN обвязки
-            if (!ValidateObvNN(CurrentProjectModel.SelectedStand.NN))
+            if (!ValidateCorrectObvNN(selectedStand.NN))
+                return;
+
+            if (!ValidateNotExistingObvNN(selectedStand.NN, true))
                 return;
 
             await _projectService.UpdateObvInStandAsync(CurrentProjectModel, SelectedObvyazka);
@@ -916,7 +928,10 @@ public class ProjectViewModel : BaseViewModel
             return;
         }
 
-        if (!ValidateCorrectStandNN(NewStand.Number) || !ValidateNotExistingStandNN(NewStand.Number,false))
+        if (!ValidateCorrectStandNN(NewStand.Number))
+            return;
+
+        if (!ValidateNotExistingStandNN(NewStand.Number, false))
             return;
 
         var nextNumber = _projectService.GetStandsInProjectCount(CurrentProjectModel) + 1;
@@ -963,7 +978,7 @@ public class ProjectViewModel : BaseViewModel
     private async Task SaveChangesInStandAsync()
     {
 
-        CurrentProjectModel.Stands.CollectionChanged += (e,p) =>  Debug.WriteLine("СТЕНДЫ ТОЧНО ПОМЕНЯЛИСЬ");
+        CurrentProjectModel.Stands.CollectionChanged += (e, p) => Debug.WriteLine("СТЕНДЫ ТОЧНО ПОМЕНЯЛИСЬ");
 
         if (CurrentProjectModel.CurrentProjectId == 0)
         {
@@ -976,14 +991,11 @@ public class ProjectViewModel : BaseViewModel
         if (Guard.ExitIfNull("Стенд не выбран!", _notificationService, selectedStand))
             return;
 
-
-
-        if (!ValidateCorrectStandNN(NewStand.Number) || !ValidateNotExistingStandNN(NewStand.Number, true)) 
+        if (!ValidateCorrectStandNN(NewStand.Number))
             return;
 
-
-
-
+        if (!ValidateNotExistingStandNN(NewStand.Number, true))
+            return;
 
         var curStandsBefore = CurrentProjectModel.Stands;
 
@@ -1002,7 +1014,7 @@ public class ProjectViewModel : BaseViewModel
         selectedStandEntity.StandSummCost = newStandEntity.StandSummCost;
         selectedStandEntity.Comments = newStandEntity.Comments;
         selectedStandEntity.DesigneStand = newStandEntity.DesigneStand;
-        
+
 
         await _projectRepository.UpdateStandAsync(selectedStandEntity);
 
@@ -1014,7 +1026,7 @@ public class ProjectViewModel : BaseViewModel
 
         CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.Stands);
 
-       
+
 
         var curStandsAfter = CurrentProjectModel.Stands;
         _notificationService.ShowInfo("Изменения стенда сохранены");
@@ -1599,17 +1611,13 @@ public class ProjectViewModel : BaseViewModel
         Debug.WriteLine("Пересчет сигнального кабеля завершен");
     }
 
+    #endregion
+
+    #region Валидация
+
     //валидация номера обвязки
-    public bool ValidateObvNN(int newObvNN)
+    public bool ValidateCorrectObvNN(int newObvNN)
     {
-        var isAlreadyExist = CurrentStandModel.ObvyazkiInStand.Any(obv => obv.NN == newObvNN);
-
-        if (isAlreadyExist)
-        {
-            _notificationService.ShowError("Указанный № обвязки уже существует!");
-            return false;
-        }
-
         var invalidNN = newObvNN < 1;
 
         if (invalidNN)
@@ -1621,6 +1629,25 @@ public class ProjectViewModel : BaseViewModel
         return true;
     }
 
+    public bool ValidateNotExistingObvNN(int newObvNN, bool excludeSelected)
+    {
+        var obvCollection = CurrentStandModel.ObvyazkiInStand;
+        var selectedObv = CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand;
+
+        var isAlreadyExist = excludeSelected
+            ? obvCollection.Any(obv => obv.NN == newObvNN)
+            : obvCollection.Any(obv => obv.NN == newObvNN);
+
+
+        if (isAlreadyExist)
+        {
+            _notificationService.ShowError("Указанный № обвязки уже существует!");
+            return false;
+        }
+
+        return true;
+
+    }
 
     public bool ValidateCorrectStandNN(int newStandNumber)
     {
@@ -1637,15 +1664,14 @@ public class ProjectViewModel : BaseViewModel
 
     }
 
-
     public bool ValidateNotExistingStandNN(int newStandNumber, bool excludeSelected)
     {
         var standsCollection = CurrentProjectModel.Stands;
         var selectedStand = CurrentProjectModel.SelectedStand;
 
-     
+
         var isAlreadyExist = excludeSelected
-            ? standsCollection.Where(stand => stand != selectedStand).Any(stand => stand.Number == NewStand.Number)
+            ? standsCollection.Where(stand => stand.Number != selectedStand.Number).Any(stand => stand.Number == newStandNumber)
             : standsCollection.Any(stand => stand.Number == newStandNumber);
 
         if (isAlreadyExist)
@@ -1656,7 +1682,6 @@ public class ProjectViewModel : BaseViewModel
 
         return true;
     }
-
 
     #endregion
 }
