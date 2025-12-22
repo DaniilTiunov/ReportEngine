@@ -730,7 +730,7 @@ public class StandModel : BaseViewModel
         {
             Purposes = new ObservableCollection<DrainagePurpose>
             {
-                new() { Purpose = "Основная труба" , Measure = "шт"},
+                new() { Purpose = "Основная труба" , Measure = "м"},
                 new() { Purpose = "Патрубок", Quantity = endPipeQuantityPerStand, Measure = "м"},
                 new() { Purpose = "Заглушка основной трубы", Quantity = pipePlugQuantityPerStand,  Measure = "м" },
                 new() { Purpose = "Кронштейн дренажа" },

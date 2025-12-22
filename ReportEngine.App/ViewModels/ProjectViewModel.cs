@@ -1399,9 +1399,14 @@ public class ProjectViewModel : BaseViewModel
     {
         Debug.WriteLine("Пересчет швеллера начат");
 
-        var standBraceType = CurrentProjectModel?.SelectedStand?.BraceType;
+        var selectedStand = CurrentProjectModel.SelectedStand;
 
-        if (string.IsNullOrEmpty(standBraceType) || standBraceType != "Швелллер")
+        if (selectedStand == null)
+            return;
+
+        var standBraceType = selectedStand.BraceType;
+
+        if (string.IsNullOrEmpty(standBraceType) || standBraceType != "Швеллер")
             return;
 
         var additionalEquips = CurrentStandModel.NewAdditionalEquip.Purposes;
@@ -1411,7 +1416,7 @@ public class ProjectViewModel : BaseViewModel
             return;
 
         //швеллер в метрах
-        var framesWidthSum = CurrentStandModel.FramesInStand.Sum(frame => frame.Width);
+        var framesWidthSum = selectedStand.FramesInStand.Sum(frame => frame.Width);
         channelRecord.Quantity = framesWidthSum / 1000.0f;
 
 
