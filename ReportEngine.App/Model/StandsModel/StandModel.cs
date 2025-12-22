@@ -723,13 +723,16 @@ public class StandModel : BaseViewModel
 
     public void InitializeDrainagePurposes()
     {
+        const float endPipeQuantityPerStand = 0.2f;
+        const float pipePlugQuantityPerStand = 2.0f;
+
         NewDrainage = new FormedDrainage
         {
             Purposes = new ObservableCollection<DrainagePurpose>
             {
-                new() { Purpose = "Основная труба" },
-                new() { Purpose = "Патрубок", Quantity = (float)0.2},
-                new() { Purpose = "Заглушка основной трубы", Quantity = 2 },
+                new() { Purpose = "Основная труба" , Measure = "шт"},
+                new() { Purpose = "Патрубок", Quantity = endPipeQuantityPerStand, Measure = "м"},
+                new() { Purpose = "Заглушка основной трубы", Quantity = pipePlugQuantityPerStand,  Measure = "м" },
                 new() { Purpose = "Кронштейн дренажа" },
                 new() { Purpose = "Клапан" }
             }
@@ -738,7 +741,7 @@ public class StandModel : BaseViewModel
 
     public void InitializeAdditionalEquip()
     {
-        float nameplatesPerStand = 1.0f;
+        const float nameplatesPerStand = 1.0f;
 
         NewAdditionalEquip = new FormedAdditionalEquip
         {

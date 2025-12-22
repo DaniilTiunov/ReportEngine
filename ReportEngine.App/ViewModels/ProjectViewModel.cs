@@ -1394,8 +1394,6 @@ public class ProjectViewModel : BaseViewModel
         Debug.WriteLine("Новый NN стенда изменен");
     }
 
-
-
     //обновляем кол-во швеллера
     public void UpdateChannelsQuantity()
     {
@@ -1433,12 +1431,10 @@ public class ProjectViewModel : BaseViewModel
         var additionalEquips = CurrentStandModel.NewAdditionalEquip.Purposes;
         var clampsRecord = additionalEquips.FirstOrDefault(equip => equip.Purpose == "Хомуты");
 
-        if (clampsRecord == null) return;
+        if (clampsRecord == null)
+            return;
 
-        clampsRecord.Material = standsSettings.Clamp;
         clampsRecord.Quantity = CurrentStandModel.ObvyazkiInStand.Sum(obv => obv.Clamp) ?? 0.0f;
-        clampsRecord.Measure = "шт";
-
 
         Debug.WriteLine("Пересчет хомутов завершен");
     }
@@ -1465,7 +1461,6 @@ public class ProjectViewModel : BaseViewModel
     //обновляем кол-во кронштейнов
     public void UpdateBracketsQuantity()
     {
-
         Debug.WriteLine("Пересчет кронштейнов начат");
 
         var standsSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
@@ -1479,16 +1474,12 @@ public class ProjectViewModel : BaseViewModel
 
         if (difSensorsBracketRecord != null)
         {
- 
             difSensorsBracketRecord.Quantity = bracketsPerDifSensor * difSensorsQuantity;
-            difSensorsBracketRecord.Measure = "шт";
         }
 
 
 
         const int bracketsPerAbsoluteSensor = 2;
-        const string absoluteSensorBracketRecordName = "Кронштейн абсолютника";
-        const string absSensorMeasureUnit = "шт";
 
         var standBraceType = CurrentProjectModel?.SelectedStand?.BraceType;
 
@@ -1496,44 +1487,24 @@ public class ProjectViewModel : BaseViewModel
         {
             var absSensorsQuantity = CurrentStandModel.CountAbsoluteSensorsQuantity();
 
-            var absSensorsBracketsRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == absoluteSensorBracketRecordName);
-
-            if (absSensorsBracketsRecord == null && absSensorsQuantity > 0)
-            {
-                absSensorsBracketsRecord = new AdditionalEquipPurpose();
-                absSensorsBracketsRecord.Purpose = absoluteSensorBracketRecordName;
-                absSensorsBracketsRecord.Measure = absSensorMeasureUnit;
-                additionalComponents.Add(absSensorsBracketsRecord);
-            }
+            var absSensorsBracketsRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == "Кронштейн абсолютника");
 
             if (absSensorsBracketsRecord != null)
             {
                 absSensorsBracketsRecord.Quantity = bracketsPerAbsoluteSensor * absSensorsQuantity;
-                absSensorsBracketsRecord.Material = standsSettings.BracketForAbs;
             }
         }
 
 
         const int universalBracketQuantity = 2;
-        const string universalBracketRecordName = "Кронштейн";
-        const string universalBracketMeasureUnit = "шт";
 
         if (!string.IsNullOrEmpty(standBraceType) && standBraceType == "Швеллер")
         {
-            var universalBracketRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == universalBracketRecordName);
-
-            if (universalBracketRecord == null)
-            {
-                universalBracketRecord = new AdditionalEquipPurpose();
-                universalBracketRecord.Purpose = universalBracketRecordName;
-                universalBracketRecord.Measure = universalBracketMeasureUnit;
-                additionalComponents.Add(universalBracketRecord);
-            }
+            var universalBracketRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == "Кронштейн");
 
             if (universalBracketRecord != null)
             {
                 universalBracketRecord.Quantity = universalBracketQuantity;
-                universalBracketRecord.Material = standsSettings.BracketUniversal;
             }
         }
 
@@ -1554,7 +1525,6 @@ public class ProjectViewModel : BaseViewModel
             return;
 
         mainPipeRecord.Quantity = selectedStand.FramesInStand.Sum(frame => frame.Width) / 1000.0f;
-        mainPipeRecord.Measure = "м";
 
 
         Debug.WriteLine("Пересчет дренажной трубы завершен");
@@ -1578,9 +1548,7 @@ public class ProjectViewModel : BaseViewModel
         if (cableInputsRecord != null && sensorsQuantity.HasValue)
         {
             cableInputsQuantity = sensorsQuantity.Value * cableInputsPerSensor;
-
             cableInputsRecord.Quantity = cableInputsQuantity;
-            cableInputsRecord.Measure = "шт";
         }
 
 
@@ -1606,8 +1574,6 @@ public class ProjectViewModel : BaseViewModel
             signalCabelQuantity = sensorsQuantity * signalCablePerSensor;
 
             signalCableRecord.Quantity = signalCabelQuantity;
-            signalCableRecord.Material = standsSettings.SignalCable;
-            signalCableRecord.Measure = "м";
 
         }
 
@@ -1617,19 +1583,8 @@ public class ProjectViewModel : BaseViewModel
         if (fourMmCableRecord != null)
         {
             fourMmCableRecord.Quantity = cableInputsQuantity;
-            fourMmCableRecord.Material = standsSettings.CabelFourMM;
-            fourMmCableRecord.Measure = "м";
         }
 
-        //кабель 6 мм
-        var sixMmCableRecord = electricComponents.FirstOrDefault(purpose => purpose.Purpose == "Кабель 6мм");
-
-        if (sixMmCableRecord != null)
-        {
-            sixMmCableRecord.Quantity = (float?)standsSettings.SensorCountOnFrame;
-            sixMmCableRecord.Material = standsSettings.CabelSixMM;
-            sixMmCableRecord.Measure = "м";
-        }
 
         //металлорукав
         var metalHoseRecord = electricComponents.FirstOrDefault(purpose => purpose.Purpose == "Металлорукав");
@@ -1637,7 +1592,6 @@ public class ProjectViewModel : BaseViewModel
         if (metalHoseRecord != null)
         {
             metalHoseRecord.Quantity = signalCabelQuantity;
-            metalHoseRecord.Measure = "м";
         }
 
         Debug.WriteLine("Пересчет электрики завершен");
