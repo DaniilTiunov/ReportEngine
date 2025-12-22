@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Model.StandsModel;
+using ReportEngine.App.ModelWrappers;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
@@ -370,5 +371,10 @@ public class StandService : IStandService
     public async Task DeleteDrainagePurposeAsync(int purposeId)
     {
         await _formedDrainagesRepository.DeletePurposeAsync(purposeId);
+    }
+
+    public async Task UpdateStandWeight(StandModel stand)
+    {
+        await _projectRepository.UpdateStandAsync(StandDataConverter.ConvertToStandEntity(stand));
     }
 }

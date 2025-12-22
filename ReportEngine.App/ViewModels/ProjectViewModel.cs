@@ -10,6 +10,7 @@ using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
+using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Pipes;
@@ -152,7 +153,8 @@ public class ProjectViewModel : BaseViewModel
                     name => CurrentProjectModel.SelectedStand.MaterialLine = name,
                     measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays);
+                    exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays,
+                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
                 break;
 
             case "Нержавеющие":
@@ -160,7 +162,8 @@ public class ProjectViewModel : BaseViewModel
                     name => CurrentProjectModel.SelectedStand.MaterialLine = name,
                     measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays);
+                    exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays,
+                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
                 break;
 
             case "Углеродистые":
@@ -168,9 +171,12 @@ public class ProjectViewModel : BaseViewModel
                     name => CurrentProjectModel.SelectedStand.MaterialLine = name,
                     measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays);
+                    exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays,
+                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
                 break;
         }
+
+        _standService.UpdateStandWeight(CurrentProjectModel.SelectedStand);
     }
 
     public void OnSelectArmatureFromDialogCommandExecuted(object e)
@@ -187,7 +193,8 @@ public class ProjectViewModel : BaseViewModel
                     name => CurrentProjectModel.SelectedStand.Armature = name,
                     measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays);
+                    exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays,
+                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
                 break;
 
             case "Нержавеющие":
@@ -195,7 +202,8 @@ public class ProjectViewModel : BaseViewModel
                     name => CurrentProjectModel.SelectedStand.Armature = name,
                     measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays);
+                    exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays,
+                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
                 break;
 
             case "Углеродистые":
@@ -203,9 +211,12 @@ public class ProjectViewModel : BaseViewModel
                     name => CurrentProjectModel.SelectedStand.Armature = name,
                     measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays);
+                    exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays,
+                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
                 break;
         }
+
+        _standService.UpdateStandWeight(CurrentProjectModel.SelectedStand);
     }
 
     public void OnSelectTreeSocketFromDialogCommandExecuted(object e)
@@ -222,7 +233,8 @@ public class ProjectViewModel : BaseViewModel
                     name => CurrentProjectModel.SelectedStand.TreeSocket = name,
                     measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays);
+                    exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays,
+                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
                 break;
 
             case "Нержавеющие":
@@ -230,7 +242,8 @@ public class ProjectViewModel : BaseViewModel
                     name => CurrentProjectModel.SelectedStand.TreeSocket = name,
                     measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays);
+                    exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays,
+                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
                 break;
 
             case "Углеродистые":
@@ -238,9 +251,12 @@ public class ProjectViewModel : BaseViewModel
                     name => CurrentProjectModel.SelectedStand.TreeSocket = name,
                     measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays);
+                    exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays,
+                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
                 break;
         }
+
+        _standService.UpdateStandWeight(CurrentProjectModel.SelectedStand);
     }
 
     public void OnSelectKMCHFromDialogCommandExecuted(object e)
@@ -257,7 +273,8 @@ public class ProjectViewModel : BaseViewModel
                     name => CurrentProjectModel.SelectedStand.KMCH = name,
                     measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays);
+                    exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays,
+                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
                 break;
 
             case "Нержавеющие":
@@ -265,7 +282,8 @@ public class ProjectViewModel : BaseViewModel
                     name => CurrentProjectModel.SelectedStand.KMCH = name,
                     measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays);
+                    exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays,
+                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
                 break;
 
             case "Углеродистые":
@@ -273,9 +291,12 @@ public class ProjectViewModel : BaseViewModel
                     name => CurrentProjectModel.SelectedStand.KMCH = name,
                     measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays);
+                    exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays,
+                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
                 break;
         }
+
+        _standService.UpdateStandWeight(CurrentProjectModel.SelectedStand);
     }
 
     public async void OnCreateNewCardCommandExecuted(object? e)
@@ -1072,7 +1093,11 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(NewStand));
     }
 
-    private void SelectEquipment<T>(Action<string> setProperty, Action<string> setMeasure, Action<string> setCost, Action<int> setExportDays)
+    private void SelectEquipment<T>(Action<string> setProperty,
+                                    Action<string> setMeasure,
+                                    Action<string> setCost,
+                                    Action<int> setExportDays,
+                                    Action<float> setWeight)
         where T : class, IBaseEquip, new()
     {
         ExceptionHelper.SafeExecute(() =>
@@ -1084,6 +1109,11 @@ public class ProjectViewModel : BaseViewModel
                 setMeasure(equipment.Measure);
                 setCost(equipment.Cost.ToString());
                 setExportDays(equipment.ExportDays);
+            }
+
+            if (equipment is BaseEquip baseEquip)
+            {
+                setWeight(baseEquip.Weight);
             }
         });
     }
