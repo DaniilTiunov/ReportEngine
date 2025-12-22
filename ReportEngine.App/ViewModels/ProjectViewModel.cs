@@ -1622,13 +1622,33 @@ public class ProjectViewModel : BaseViewModel
 
     public bool ValidateNotExistingObvNN(int newObvNN, bool excludeSelected)
     {
-        var obvCollection = CurrentStandModel.ObvyazkiInStand;
-        var selectedObv = CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand;
 
-        var isAlreadyExist = excludeSelected
-            ? obvCollection.Any(obv => obv.NN == newObvNN)
-            : obvCollection.Any(obv => obv.NN == newObvNN);
+        var selectedStand = CurrentProjectModel.SelectedStand;
 
+        if (selectedStand == null) 
+            return false;
+
+
+        var obvCollection = selectedStand.ObvyazkiInStand;
+        var selectedObv = selectedStand.SelectedObvyazkaInStand;
+
+
+        if (obvCollection == null)
+            return true;
+
+        var isAlreadyExist = true;
+
+        if (!excludeSelected)
+        {
+            isAlreadyExist = obvCollection
+                .Any(obv => obv.NN == newObvNN);
+        }
+        else if (selectedObv != null)
+        {
+            isAlreadyExist = obvCollection
+                .Where(obv => obv.NN != selectedObv.NN)
+                .Any(obv => obv.NN == newObvNN);
+        }
 
         if (isAlreadyExist)
         {
@@ -1660,10 +1680,22 @@ public class ProjectViewModel : BaseViewModel
         var standsCollection = CurrentProjectModel.Stands;
         var selectedStand = CurrentProjectModel.SelectedStand;
 
+        if (standsCollection == null)
+            return true;
 
-        var isAlreadyExist = excludeSelected
-            ? standsCollection.Where(stand => stand.Number != selectedStand.Number).Any(stand => stand.Number == newStandNumber)
-            : standsCollection.Any(stand => stand.Number == newStandNumber);
+        var isAlreadyExist = true;
+
+        if (!excludeSelected)
+        {
+            isAlreadyExist = standsCollection
+                .Any(stand => stand.Number == newStandNumber);
+        }
+        else if(selectedStand != null)
+        {
+            isAlreadyExist = standsCollection
+                .Where(stand => stand.Number != selectedStand.Number)
+                .Any(stand => stand.Number == newStandNumber);
+        }
 
         if (isAlreadyExist)
         {
