@@ -25,6 +25,7 @@ public class StandSettingsModel : BaseViewModel
     private string? _signalCable;
     private string? _steelChannel;
     private string? _clamp;
+    private string? _terminal;
 
     public string? SteelChannel
     {
@@ -128,6 +129,13 @@ public class StandSettingsModel : BaseViewModel
         get => _clamp;
         set => Set(ref _clamp, value);
     } // Хомут
+
+    public string? Terminal
+    {
+        get => _terminal;
+        set => Set(ref _terminal, value);
+    } // Хомут
+
 
 
     public async Task LoadStandsSettingsDataAsync()

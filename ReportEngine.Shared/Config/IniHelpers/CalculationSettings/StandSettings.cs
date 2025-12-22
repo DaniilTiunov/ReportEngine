@@ -27,7 +27,7 @@ public class StandSettings : IIniSettings<StandSettingsData>
                 ? v
                 : 0.0;
         }
-        
+
         return new StandSettingsData
         {
             SteelChannel = standData["StandsSettings"]["steelChannel"],
@@ -46,7 +46,8 @@ public class StandSettings : IIniSettings<StandSettingsData>
             SecondLevelSpecialist = standData["StandsSettings"]["secondLevelSpecialist"],
             OSiL = standData["StandsSettings"]["OSiL"],
             SensorCountOnFrame = Parse(standData["StandsSettings"]["sensorCountOnFrame"]),
-            Clamp = standData["StandsSettings"]["clamp"]
+            Clamp = standData["StandsSettings"]["clamp"],
+            Terminal = standData["StandsSettings"]["terminal"]
         };
     }
 
@@ -77,6 +78,6 @@ public class StandSettings : IIniSettings<StandSettingsData>
         standData["StandsSettings"]["OSiL"] = settingsData.OSiL;
         standData["StandsSettings"]["sensorCountOnFrame"] = F(settingsData.SensorCountOnFrame ?? 0.0);
         standData["StandsSettings"]["clamp"] = settingsData.Clamp;
-        
+        standData["StandsSettings"]["terminal"] = settingsData.Terminal;
     }
 }

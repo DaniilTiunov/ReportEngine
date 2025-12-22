@@ -21,4 +21,5 @@ public class StandSettingsData : IIniData
     public string? OSiL { get; set; } // Представитель ОСиЛ
     public double? SensorCountOnFrame { get; set; } // Кол-во кабеля на 1 раму
     public string? Clamp {  get; set; } // Хомут
+    public string? Terminal { get; set; } //Клемма
 }

@@ -753,7 +753,7 @@ public class StandModel : BaseViewModel
                 new() { Purpose = "Табличка", Material = DefaultStandSettings.NameTable, Measure = "шт"},
                 new() { Purpose = "Кронштейн универсальный",Material = DefaultStandSettings.BracketUniversal, Measure = "шт"},
                 new() { Purpose = "Кронштейн перепадчика",Material = DefaultStandSettings.BracketForDif, Measure = "шт"},
-                new() { Purpose = "Кронштейн абсолютника", Material = DefaultStandSettings.BracketForAbs, Measure = "шт"}
+                new() { Purpose = "Кронштейн абсолютника", Material = DefaultStandSettings.BracketForAbs, Measure = "шт"}         
             }
         };
     }
@@ -774,7 +774,8 @@ public class StandModel : BaseViewModel
                 new() { Purpose = "Металлорукав" , Quantity = usualCablesQuantity, Measure = "м"},
                 new() { Purpose = "Кабель 6мм", Material = DefaultStandSettings.CabelSixMM, Quantity = (float?) DefaultStandSettings.SensorCountOnFrame , Measure = "м"},
                 new() { Purpose = "Кабель 4мм", Material = DefaultStandSettings.CabelFourMM, Quantity = usualCablesQuantity, Measure = "м" },
-                new() { Purpose = "Кронштейн коробки" }
+                new() { Purpose = "Кронштейн коробки" },
+                new() { Purpose = "Клемма", Material = DefaultStandSettings.Terminal, Measure = "шт" }
             }
         };
     }
