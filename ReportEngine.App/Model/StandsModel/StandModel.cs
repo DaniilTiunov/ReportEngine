@@ -740,8 +740,6 @@ public class StandModel : BaseViewModel
     {
         float nameplatesPerStand = 1.0f;
 
-
-
         NewAdditionalEquip = new FormedAdditionalEquip
         {
             Purposes = new ObservableCollection<AdditionalEquipPurpose>
@@ -750,10 +748,13 @@ public class StandModel : BaseViewModel
                 new() { Purpose = "Швеллер", Material = DefaultStandSettings.SteelChannel, Measure = "м" },
                 new() { Purpose = "Хомуты" , Material = DefaultStandSettings.Clamp, Measure = "шт"},
                 new() { Purpose = "Табличка", Material = DefaultStandSettings.NameTable, Measure = "шт"},
-                new() { Purpose = "Кронштейн", Measure = "шт" },
+                new() { Purpose = "Кронштейн универсальный",Material = DefaultStandSettings.BracketUniversal, Measure = "шт"},
+                new() { Purpose = "Кронштейн перепадчика",Material = DefaultStandSettings.BracketForDif, Measure = "шт"},
+                new() { Purpose = "Кронштейн абсолютника", Material = DefaultStandSettings.BracketForAbs, Measure = "шт"}
             }
         };
     }
+
 
     public void InitializeElectricalComponent()
     {
