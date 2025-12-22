@@ -1500,7 +1500,7 @@ public class ProjectViewModel : BaseViewModel
 
         if (!string.IsNullOrEmpty(standBraceType) && standBraceType == "Швеллер")
         {
-            var universalBracketRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == "Кронштейн");
+            var universalBracketRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == "Кронштейн универсальный");
 
             if (universalBracketRecord != null)
             {
