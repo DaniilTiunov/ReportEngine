@@ -36,6 +36,7 @@ public partial class StandObvView : UserControl
 
         projectViewModel.OnObvyazkiInStandChanged();
         projectViewModel.OnFramesInStandChanged();
+        projectViewModel.UpdateNewStandNN();
     }
 
     private async void StandObvView_PreviewKeyDown(object sender, KeyEventArgs e)

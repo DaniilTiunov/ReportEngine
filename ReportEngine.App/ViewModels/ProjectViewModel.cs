@@ -664,8 +664,10 @@ public class ProjectViewModel : BaseViewModel
         {
             var selectedStand = CurrentProjectModel.SelectedStand;
 
-            if (selectedStand == null)
+            if (selectedStand == null) { 
+                Debug.WriteLine("Стенд для перезаполнения пуст");
                 return;
+            }
 
             NewStand.Number = selectedStand.Number;
             NewStand.KKSCode = selectedStand.KKSCode;
@@ -680,6 +682,8 @@ public class ProjectViewModel : BaseViewModel
             NewStand.ProjectId = selectedStand.ProjectId;
             NewStand.Comments = selectedStand.Comments;
             NewStand.DesignStand = selectedStand.DesignStand;
+
+            Debug.WriteLine("Поля перезаполнены");
 
         });
     }
@@ -932,9 +936,7 @@ public class ProjectViewModel : BaseViewModel
             return;
 
         if (!ValidateNotExistingStandNN(NewStand.Number, false))
-            return;
-
-        var nextNumber = _projectService.GetStandsInProjectCount(CurrentProjectModel) + 1;
+            return; 
 
         var newStandModel = new StandModel
         {
@@ -946,7 +948,7 @@ public class ProjectViewModel : BaseViewModel
             SerialNumber = NewStand.SerialNumber,
             Weight = NewStand.Weight,
             StandSummCost = NewStand.StandSummCost,
-            Number = nextNumber,
+            Number = NewStand.Number,
             MaterialLine = NewStand.MaterialLine,
             Armature = NewStand.Armature,
             TreeSocket = NewStand.TreeSocket,
@@ -966,20 +968,15 @@ public class ProjectViewModel : BaseViewModel
 
         CurrentProjectModel.Stands.Add(newStandModel);
 
-
-        // Переставляем шаблон на следующий свободный номер
-        NewStand = new StandModel { Number = nextNumber + 1 };
+        UpdateNewStandNN();
 
         OnPropertyChanged(nameof(CurrentStandModel));
         OnPropertyChanged(nameof(NewStand));
-        _notificationService.ShowInfo($"Стенд успешно добавлен! {addedStandEntity.Id}");
+        _notificationService.ShowInfo($"Стенд с ID {addedStandEntity.Id} успешно добавлен!");
     }
     ///
     private async Task SaveChangesInStandAsync()
     {
-
-        CurrentProjectModel.Stands.CollectionChanged += (e, p) => Debug.WriteLine("СТЕНДЫ ТОЧНО ПОМЕНЯЛИСЬ");
-
         if (CurrentProjectModel.CurrentProjectId == 0)
         {
             _notificationService.ShowInfo("Сначала создайте проект");
@@ -996,8 +993,6 @@ public class ProjectViewModel : BaseViewModel
 
         if (!ValidateNotExistingStandNN(NewStand.Number, true))
             return;
-
-        var curStandsBefore = CurrentProjectModel.Stands;
 
         var newStandEntity = StandDataConverter.ConvertToStandEntity(NewStand);
         var selectedStandEntity = StandDataConverter.ConvertToStandEntity(selectedStand);
@@ -1019,16 +1014,24 @@ public class ProjectViewModel : BaseViewModel
         await _projectRepository.UpdateStandAsync(selectedStandEntity);
 
 
+        //отдельно обновляем UI
+        selectedStand.Number = newStandEntity.Number;
+        selectedStand.KKSCode = newStandEntity.KKSCode;
+        selectedStand.Design = newStandEntity.Design;
+        selectedStand.BraceType = newStandEntity.BraceType;
+        selectedStand.Devices = newStandEntity.Devices;
+        selectedStand.Width = newStandEntity.Width;
+        selectedStand.SerialNumber = newStandEntity.SerialNumber;
+        selectedStand.Weight = newStandEntity.Weight;
+        selectedStand.StandSummCost = newStandEntity.StandSummCost;
+        selectedStand.Comments = newStandEntity.Comments;
+        selectedStand.DesignStand = newStandEntity.DesigneStand;
 
-        await LoadProjectInfoAsync(CurrentProjectModel.CurrentProjectId);
-
-        CurrentProjectModel.Stands.Add(new StandModel());
 
         CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.Stands);
 
+        UpdateNewStandNN();
 
-
-        var curStandsAfter = CurrentProjectModel.Stands;
         _notificationService.ShowInfo("Изменения стенда сохранены");
     }
 
@@ -1051,6 +1054,8 @@ public class ProjectViewModel : BaseViewModel
 
         var nextNumber = CurrentProjectModel.Stands.Any() ? CurrentProjectModel.Stands.Max(s => s.Number) + 1 : 1;
         CurrentStandModel = new StandModel { Number = nextNumber };
+
+        UpdateNewStandNN();
 
         _notificationService.ShowInfo("Стенд удалён и номера обновлены");
     }
@@ -1355,6 +1360,7 @@ public class ProjectViewModel : BaseViewModel
         Debug.WriteLine("Новый NN обвязки изменен");
     }
 
+    //обновляем № п/п стенда
     public void UpdateNewStandNN()
     {
         if (NewStand == null)
