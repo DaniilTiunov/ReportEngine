@@ -53,10 +53,10 @@
                                         FontSize="16"
                                         FontWeight="Bold"
                                         Text="Cтенд в проекте - " />
-                                     <Run
-                                         FontSize="16"
-                                         FontWeight="Bold"
-                                         Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(нет данных)'}" />
+                                    <Run
+                                        FontSize="16"
+                                        FontWeight="Bold"
+                                        Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(нет данных)'}" />
                                 </TextBlock>
                             </GroupBox.Header>
                             <Grid>
@@ -256,7 +256,7 @@
                                 </StackPanel>
                             </Grid>
                         </GroupBox>
-                        <GroupBox/>
+                        <GroupBox />
                     </StackPanel>
                 </Expander>
 
@@ -1044,9 +1044,9 @@
                             x:Name="StandsList"
                             Margin="5,0,5,5"
                             ItemsSource="{Binding CurrentProjectModel.Stands}"
+                            MouseDoubleClick="StandsList_MouseDoubleClick"
                             SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}"
-                            SelectionChanged="StandsList_SelectionChanged"
-                            MouseDoubleClick="StandsList_MouseDoubleClick">
+                            SelectionChanged="StandsList_SelectionChanged">
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn
