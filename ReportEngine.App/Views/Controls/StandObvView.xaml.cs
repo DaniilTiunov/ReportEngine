@@ -37,6 +37,7 @@ public partial class StandObvView : UserControl
         projectViewModel.OnObvyazkiInStandChanged();
         projectViewModel.OnFramesInStandChanged();
         projectViewModel.UpdateNewStandNN();
+        projectViewModel.OnStandsInProjectChanged();
     }
 
     private async void StandObvView_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -90,8 +91,6 @@ public partial class StandObvView : UserControl
 
     private void StandsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        Debug.WriteLine("Стенд изменился");
-
         _projectViewModel.OnSelectedStandChanged();
     }
 
