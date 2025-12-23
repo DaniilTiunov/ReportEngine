@@ -322,9 +322,6 @@ public class ProjectViewModel : BaseViewModel
             if (Guard.ExitIfNull("Стенды для копирования не выбраны!", _notificationService, CurrentProjectModel.SelectedStand))
                 return;
 
-            if (Guard.ExitIfNull("Нет серийного номера стенда!", _notificationService, CurrentProjectModel.SelectedStand.SerialNumber))
-                return;
-
             await _projectService.CopyStandsAsync(CurrentProjectModel);
             await LoadPurposesInStandsAsync();
             await LoadObvyazkiAsync();
@@ -991,8 +988,13 @@ public class ProjectViewModel : BaseViewModel
 
         UpdateNewStandNN();
 
+        
+
         OnPropertyChanged(nameof(CurrentStandModel));
         OnPropertyChanged(nameof(NewStand));
+
+        OnStandsInProjectChanged();
+
         _notificationService.ShowInfo($"Стенд с ID {addedStandEntity.Id} успешно добавлен!");
     }
     ///
@@ -1049,8 +1051,8 @@ public class ProjectViewModel : BaseViewModel
         selectedStand.DesignStand = newStandEntity.DesigneStand;
 
 
-        CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.Stands);
 
+        OnStandsInProjectChanged();
         UpdateNewStandNN();
 
         _notificationService.ShowInfo("Изменения стенда сохранены");
@@ -1069,6 +1071,7 @@ public class ProjectViewModel : BaseViewModel
         CurrentProjectModel.Stands.Remove(selected);
 
         UpdateNewStandNN();
+        OnStandsInProjectChanged();
 
         _notificationService.ShowInfo("Стенд удалён");
     }
@@ -1309,6 +1312,10 @@ public class ProjectViewModel : BaseViewModel
         }
     }
 
+    #endregion
+
+    #region Обновление UI
+
     public async Task UpdateUI()
     {
         await LoadStandsDataAsync();
@@ -1330,6 +1337,16 @@ public class ProjectViewModel : BaseViewModel
 
         CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewElectricalComponent.Purposes);
         CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
+
+        var selectedStand = CurrentProjectModel.SelectedStand;
+
+        if (selectedStand == null)
+            return;
+
+        CollectionRefreshHelper.SafeSortAndRefreshCollection(
+            collection: selectedStand.ObvyazkiInStand,
+            fieldToSortBy: "NN",
+            descending: false);
     }
 
     public void OnFramesInStandChanged()
@@ -1345,11 +1362,22 @@ public class ProjectViewModel : BaseViewModel
 
     public void OnSelectedStandChanged()
     {
-        Debug.WriteLine("Стенд изменился");
+        Debug.WriteLine("Выбранный стенд изменился");
 
         OnFramesInStandChanged();
         OnObvyazkiInStandChanged();
         UpdateBracketsQuantity();
+    }
+
+    public void OnStandsInProjectChanged()
+    {
+        Debug.WriteLine("Стенды изменились");
+
+        //отсортировываем по возрастанию номера
+        CollectionRefreshHelper.SafeSortAndRefreshCollection(
+            collection: CurrentProjectModel.Stands,
+            fieldToSortBy: "Number",
+            descending: false);
     }
 
 
@@ -1366,9 +1394,6 @@ public class ProjectViewModel : BaseViewModel
     {
         get => CurrentProjectModel?.Stands.Max(stand => stand.Number) ?? 0;
     }
-
-
-
 
     //обновляем поле NN в обвязке
     public void UpdateNewObvNN()
@@ -1422,9 +1447,6 @@ public class ProjectViewModel : BaseViewModel
 
         Debug.WriteLine("Пересчет швеллера завершен");
     }
-
-
-
 
     //обновляем кол-во хомутов
     public void UpdateClampsQuantity()
