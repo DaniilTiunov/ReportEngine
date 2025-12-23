@@ -988,12 +988,19 @@ public class ProjectViewModel : BaseViewModel
 
         UpdateNewStandNN();
 
-        
-
         OnPropertyChanged(nameof(CurrentStandModel));
         OnPropertyChanged(nameof(NewStand));
 
         OnStandsInProjectChanged();
+
+
+        //выбираем добавленный стенд
+        var addedStand = CurrentProjectModel.Stands.FirstOrDefault(stand => stand.Id == newStandModel.Id);
+
+        if (addedStand != null)
+        {
+            CurrentProjectModel.SelectedStand = addedStand;
+        }
 
         _notificationService.ShowInfo($"Стенд с ID {addedStandEntity.Id} успешно добавлен!");
     }
