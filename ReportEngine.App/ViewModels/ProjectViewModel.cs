@@ -883,15 +883,21 @@ public class ProjectViewModel : BaseViewModel
 
     private async Task AddObvToStandAsync()
     {
-        if (Guard.ExitIfNull("Не выбран тип обвязки или стенд!", _notificationService, SelectedObvyazka, CurrentProjectModel.SelectedStand))
+        var selectedStand = CurrentProjectModel.SelectedStand;
+
+
+        if (Guard.ExitIfNull("Не выбран стенд!", _notificationService, selectedStand))
             return;
 
-        var entity = await _standService.CreateObvyazkaAsync(CurrentProjectModel.SelectedStand, SelectedObvyazka);
+        if (Guard.ExitIfNull("Не выбран тип обвязки!", _notificationService, SelectedObvyazka))
+            return;
+
+        var entity = await _standService.CreateObvyazkaAsync(selectedStand, SelectedObvyazka);
 
         if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, entity))
             return;
 
-        await _standService.AddObvyazkaToStandAsync(CurrentProjectModel.SelectedStand.Id, entity);
+        await _standService.AddObvyazkaToStandAsync(selectedStand.Id, entity);
 
         //сравнение по типу
         var isAlreadyExist = CurrentProjectModel.ObvyazkiInProject.Any(obv => obv.ObvyazkaName == entity.ObvyazkaName);
