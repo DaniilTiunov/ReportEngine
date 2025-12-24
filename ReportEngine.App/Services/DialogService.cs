@@ -164,26 +164,34 @@ public class DialogService : IDialogService
     }
 
 
-    public (int,int) ShowRenumerateDialog()
+    public (int,int,string,string) ShowRenumerateDialog()
     {
         try
         {
             int resultFromNumber = -1;
             int resultToNumber = -1;
+            string resultPrefix = "";
+            string resultPostfix = "";
 
             var viewModel = _serviceProvider.GetRequiredService<RenumeratorViewModel>();
             var window = new RenumerateView(viewModel);
 
-            viewModel.ResultHandler = (tuple) => { resultFromNumber = tuple.Item1; resultToNumber = tuple.Item2;  };
+            viewModel.ResultHandler = (tuple) =>
+            {
+                resultFromNumber = tuple.Item1;
+                resultToNumber = tuple.Item2;
+                resultPrefix = tuple.Item3;
+                resultPostfix = tuple.Item4;
+            };
              
             window.ShowDialog(); 
 
-            return (resultFromNumber, resultToNumber);
+            return (resultFromNumber, resultToNumber, resultPrefix, resultPostfix);
         }
         catch (Exception ex)
         {
             MessageBoxHelper.ShowError(ex.Message);
-            return (-1, -1);
+            return (-1, -1,"","");
         }
 
     }

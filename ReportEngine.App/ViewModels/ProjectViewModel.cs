@@ -707,7 +707,7 @@ public class ProjectViewModel : BaseViewModel
     }
     public async void OnRenumerateStandsCommandExecuted(object obj)
     {
-        var (fromNumber, toNumber) = _dialogService.ShowRenumerateDialog();
+        var (fromNumber, toNumber,prefix, postfix) = _dialogService.ShowRenumerateDialog();
 
         var incorrectRange = fromNumber < 1 || toNumber < 1;
 
@@ -737,7 +737,7 @@ public class ProjectViewModel : BaseViewModel
 
         foreach (var stand in renumeratedStand)
         {
-            stand.SerialNumber = $"SN-1488.{standNumber}.ЖОПА";
+            stand.SerialNumber = $"{prefix}{standNumber}{postfix}";
 
             var newStandEntity = StandDataConverter.ConvertToStandEntity(stand);
             standEntities.Add(newStandEntity);

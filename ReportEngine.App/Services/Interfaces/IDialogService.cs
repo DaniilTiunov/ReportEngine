@@ -18,5 +18,5 @@ public interface IDialogService
 
     FormedFrame ShowFrameDialog();
 
-    public (int, int) ShowRenumerateDialog();
+    public (int, int, string, string) ShowRenumerateDialog();
 }
