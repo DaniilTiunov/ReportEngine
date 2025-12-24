@@ -111,6 +111,26 @@ public class ProjectInfoRepository : IProjectInfoRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task UpdateStandsGroupAsync(IEnumerable<Stand> stands)
+    {
+        var allStandsId = stands.Select(stand => stand.Id).ToList();
+
+        var existingStands = await _context.Set<Stand>()
+            .Where(stand => allStandsId.Contains(stand.Id))
+            .ToDictionaryAsync(stand => stand.Id);
+
+        foreach (var stand in stands) 
+        {
+            if(existingStands.TryGetValue(stand.Id, out var existingStand))
+            {
+                _context.Entry(existingStand).CurrentValues.SetValues(stand);
+            }
+        }
+
+
+        await _context.SaveChangesAsync();
+    }
+
     public async Task<ProjectInfo> GetStandsByIdAsync(int projectId)
     {
         return await _context.Projects
