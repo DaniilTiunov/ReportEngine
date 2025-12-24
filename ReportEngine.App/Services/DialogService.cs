@@ -165,16 +165,16 @@ public class DialogService : IDialogService
 
 
     public (int,int) ShowRenumerateDialog()
-    { 
+    {
         try
         {
-            int resultFromNumber = 0;
-            int resultToNumber = 0;
+            int resultFromNumber = -1;
+            int resultToNumber = -1;
 
             var viewModel = _serviceProvider.GetRequiredService<RenumeratorViewModel>();
             var window = new RenumerateView(viewModel);
 
-            viewModel.SelectionHandler = (tuple) => { resultFromNumber = tuple.Item1; resultToNumber = tuple.Item2;  };
+            viewModel.ResultHandler = (tuple) => { resultFromNumber = tuple.Item1; resultToNumber = tuple.Item2;  };
              
             window.ShowDialog(); 
 
@@ -183,8 +183,9 @@ public class DialogService : IDialogService
         catch (Exception ex)
         {
             MessageBoxHelper.ShowError(ex.Message);
-            return (-1,-1);
+            return (-1, -1);
         }
+
     }
 
 }

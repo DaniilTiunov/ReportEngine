@@ -5,9 +5,75 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ReportEngine.App.Views.Utils"
         mc:Ignorable="d"
-        Title="Нумерация стендов" Height="125" Width="300">
-    <Grid>
+        Title="Нумерация стендов" 
+        Height="150" 
+        Width="350"
+         Background="{DynamicResource PrimaryColor}"
+        FontFamily="Bahnschrift"
+        FontSize="14"
+        Foreground="{DynamicResource PrimaryForeground}"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+         CaptionHeight="0"
+         CornerRadius="0"
+         GlassFrameThickness="0" />
+    </WindowChrome.WindowChrome>
+    
+    <Border Style="{DynamicResource WindowBorder}">
+        <DockPanel>
+            <!--  Заголовок окна  -->
+            <Border
+            x:Name="WindowTitle"
+            Height="34"
+            Background="#2D2D30"
+            DockPanel.Dock="Top">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel
+                    Margin="10,0,0,0"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                        <Image
+                        Width="18"
+                        Height="18"
+                        Margin="0,0,8,0"
+                        Source="/Resources/Icons/estimate_cost_icon_213382.ico" />
+                        <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        Foreground="White"
+                        Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
+                    </StackPanel>
+
+                    <StackPanel
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                        <Button
+                        x:Name="CloseButton"
+                        Width="40"
+                        Height="30"
+                        Margin="10,0,10,0"
+                        Click="CloseButton_Click"
+                        FontSize="16"
+                        ToolTip="Закрыть">
+                            ✕
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Grid>
         
+
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
             <RowDefinition Height="50" />
@@ -56,27 +122,41 @@
                 Text="по стенд №"
             />
 
+
+
             <TextBox
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Margin="0,5,5,5"
                 Text="{Binding ToNumber, Mode=TwoWay}" />
 
-
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Margin="5,5,5,5"
+                Text="включительно"
+            />
 
 
         </StackPanel>
-        <Button
+
+        <StackPanel 
             Grid.Row="2"
-            Grid.Column="0"
-            Margin="0,5,0,5"
-            HorizontalAlignment="Center"
-            Command="{Binding ApplyCommand}"
-            Content="Применить" MinWidth="100"  />
+            Grid.Column="0">
+            <Button  
+                Margin="0,5,0,5"
+                HorizontalAlignment="Center"  
+                Content="Применить" 
+                MinWidth="100"
+                MinHeight="35" 
+                Command="{Binding ApplyCommand}"
+                Click="Button_Click"/>
+        </StackPanel>
 
 
 
 
-
-    </Grid>
+            </Grid>
+        </DockPanel>
+    </Border>
 </Window>

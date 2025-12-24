@@ -8,11 +8,29 @@ namespace ReportEngine.App.Views.Utils
     /// </summary>
     public partial class RenumerateView : Window
     {
+        private readonly RenumeratorViewModel _viewModel;
 
         public RenumerateView(RenumeratorViewModel viewModel)
         {
             InitializeComponent();
+            _viewModel = viewModel;
             DataContext = viewModel;
         }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (!_viewModel.ValidateNumbers())
+                return;
+
+            _viewModel.OnApplyCommandExecuted(sender);
+            Close();
+        }
+
     }
 }
+

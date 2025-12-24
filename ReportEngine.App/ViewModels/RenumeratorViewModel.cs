@@ -24,8 +24,7 @@ namespace ReportEngine.App.ViewModels
         }
 
         public ICommand ApplyCommand { get; set; }
-        public Action<(int,int)> SelectionHandler {  get; set; }
-
+        public Action<(int,int)> ResultHandler {  get; set; }
 
         public RenumeratorViewModel(INotificationService notificationService)
         {
@@ -33,13 +32,36 @@ namespace ReportEngine.App.ViewModels
             _notificationService = notificationService;
         }
 
+        public (int,int) IncorrectNumbers
+        {
+            get => (-1, -1);
+        }
+
+
+
+        public bool ValidateNumbers()
+        {
+            if (FromNumber < 1 || ToNumber < 1)
+            {
+                _notificationService.ShowError("Некорректные значения");
+                return false;
+            }
+
+            if (FromNumber > ToNumber)
+            {
+                _notificationService.ShowError("Неверный диапазон");
+                return false;
+            }
+
+            return true;
+        }
 
 
         public async void OnApplyCommandExecuted(object sender)
         {
-            //SelectionHandler.Invoke();
+            ResultHandler?.Invoke((FromNumber,ToNumber));
 
-            Debug.WriteLine("OnApply выполнился");
+            Debug.WriteLine("SRAKA");
         }
     }
 }
