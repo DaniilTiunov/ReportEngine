@@ -1,9 +1,10 @@
-﻿using System.Globalization;
-using IniParser;
+﻿using IniParser;
 using IniParser.Model;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs.CalculationSettings.Interfaces;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
+using System.Globalization;
+
 
 namespace ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 
@@ -17,7 +18,7 @@ public class StandSettings : IIniSettings<StandSettingsData>
     {
         if (standData == null)
             return new StandSettingsData();
-
+        ;
         double Parse(string? s)
         {
             if (string.IsNullOrWhiteSpace(s))
@@ -44,7 +45,9 @@ public class StandSettings : IIniSettings<StandSettingsData>
             ResponsibleForAccept = standData["StandsSettings"]["responsibleForAccept"],
             SecondLevelSpecialist = standData["StandsSettings"]["secondLevelSpecialist"],
             OSiL = standData["StandsSettings"]["OSiL"],
-            SensorCountOnFrame = Parse(standData["StandsSettings"]["sensorCountOnFrame"])
+            SensorCountOnFrame = Parse(standData["StandsSettings"]["sensorCountOnFrame"]),
+            Clamp = standData["StandsSettings"]["clamp"],
+            Terminal = standData["StandsSettings"]["terminal"]
         };
     }
 
@@ -57,7 +60,7 @@ public class StandSettings : IIniSettings<StandSettingsData>
         {
             return v.ToString(_csvCulture);
         }
-
+        
         standData["StandsSettings"]["steelChannel"] = settingsData.SteelChannel;
         standData["StandsSettings"]["namePlate"] = settingsData.NamePlate;
         standData["StandsSettings"]["nameTable"] = settingsData.NameTable;
@@ -74,5 +77,7 @@ public class StandSettings : IIniSettings<StandSettingsData>
         standData["StandsSettings"]["secondLevelSpecialist"] = settingsData.SecondLevelSpecialist;
         standData["StandsSettings"]["OSiL"] = settingsData.OSiL;
         standData["StandsSettings"]["sensorCountOnFrame"] = F(settingsData.SensorCountOnFrame ?? 0.0);
+        standData["StandsSettings"]["clamp"] = settingsData.Clamp;
+        standData["StandsSettings"]["terminal"] = settingsData.Terminal;
     }
 }

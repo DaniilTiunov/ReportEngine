@@ -10,6 +10,7 @@ using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
+using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Pipes;
@@ -20,6 +21,7 @@ using ReportEngine.Shared.Config.IniHeleprs;
 using ReportEngine.Shared.Config.IniHelpers;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
+
 
 namespace ReportEngine.App.ViewModels;
 
@@ -151,7 +153,8 @@ public class ProjectViewModel : BaseViewModel
                     name => CurrentProjectModel.SelectedStand.MaterialLine = name,
                     measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays);
+                    exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays,
+                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
                 break;
 
             case "Нержавеющие":
@@ -159,7 +162,8 @@ public class ProjectViewModel : BaseViewModel
                     name => CurrentProjectModel.SelectedStand.MaterialLine = name,
                     measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays);
+                    exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays,
+                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
                 break;
 
             case "Углеродистые":
@@ -167,9 +171,12 @@ public class ProjectViewModel : BaseViewModel
                     name => CurrentProjectModel.SelectedStand.MaterialLine = name,
                     measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays);
+                    exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays,
+                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
                 break;
         }
+
+        _standService.UpdateStandWeight(CurrentProjectModel.SelectedStand);
     }
 
     public void OnSelectArmatureFromDialogCommandExecuted(object e)
@@ -186,7 +193,8 @@ public class ProjectViewModel : BaseViewModel
                     name => CurrentProjectModel.SelectedStand.Armature = name,
                     measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays);
+                    exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays,
+                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
                 break;
 
             case "Нержавеющие":
@@ -194,7 +202,8 @@ public class ProjectViewModel : BaseViewModel
                     name => CurrentProjectModel.SelectedStand.Armature = name,
                     measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays);
+                    exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays,
+                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
                 break;
 
             case "Углеродистые":
@@ -202,9 +211,12 @@ public class ProjectViewModel : BaseViewModel
                     name => CurrentProjectModel.SelectedStand.Armature = name,
                     measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays);
+                    exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays,
+                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
                 break;
         }
+
+        _standService.UpdateStandWeight(CurrentProjectModel.SelectedStand);
     }
 
     public void OnSelectTreeSocketFromDialogCommandExecuted(object e)
@@ -221,7 +233,8 @@ public class ProjectViewModel : BaseViewModel
                     name => CurrentProjectModel.SelectedStand.TreeSocket = name,
                     measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays);
+                    exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays,
+                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
                 break;
 
             case "Нержавеющие":
@@ -229,7 +242,8 @@ public class ProjectViewModel : BaseViewModel
                     name => CurrentProjectModel.SelectedStand.TreeSocket = name,
                     measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays);
+                    exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays,
+                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
                 break;
 
             case "Углеродистые":
@@ -237,9 +251,12 @@ public class ProjectViewModel : BaseViewModel
                     name => CurrentProjectModel.SelectedStand.TreeSocket = name,
                     measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays);
+                    exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays,
+                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
                 break;
         }
+
+        _standService.UpdateStandWeight(CurrentProjectModel.SelectedStand);
     }
 
     public void OnSelectKMCHFromDialogCommandExecuted(object e)
@@ -256,7 +273,8 @@ public class ProjectViewModel : BaseViewModel
                     name => CurrentProjectModel.SelectedStand.KMCH = name,
                     measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays);
+                    exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays,
+                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
                 break;
 
             case "Нержавеющие":
@@ -264,7 +282,8 @@ public class ProjectViewModel : BaseViewModel
                     name => CurrentProjectModel.SelectedStand.KMCH = name,
                     measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays);
+                    exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays,
+                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
                 break;
 
             case "Углеродистые":
@@ -272,9 +291,12 @@ public class ProjectViewModel : BaseViewModel
                     name => CurrentProjectModel.SelectedStand.KMCH = name,
                     measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays);
+                    exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays,
+                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
                 break;
         }
+
+        _standService.UpdateStandWeight(CurrentProjectModel.SelectedStand);
     }
 
     public async void OnCreateNewCardCommandExecuted(object? e)
@@ -300,12 +322,17 @@ public class ProjectViewModel : BaseViewModel
             if (Guard.ExitIfNull("Стенды для копирования не выбраны!", _notificationService, CurrentProjectModel.SelectedStand))
                 return;
 
-            if (Guard.ExitIfNull("Нет серийного номера стенда!", _notificationService, CurrentProjectModel.SelectedStand.SerialNumber))
-                return;
-
             await _projectService.CopyStandsAsync(CurrentProjectModel);
             await LoadPurposesInStandsAsync();
             await LoadObvyazkiAsync();
+
+
+            var lastStand = CurrentProjectModel.Stands.LastOrDefault();
+
+            if (lastStand == null)
+                return;
+
+            CurrentProjectModel.SelectedStand = lastStand;
         });
     }
 
@@ -321,18 +348,20 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnSaveObvCommandExecuted(object e)
     {
-        if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka, CurrentProjectModel?.SelectedStand))
+        if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka))
             return;
 
-        var isAlreadyExist = CurrentProjectModel?.SelectedStand?.ObvyazkiInStand
-                            .Select(obv => obv.NN)
-                            .Contains(CurrentProjectModel.SelectedStand.NN);
+        var selectedStand = CurrentProjectModel?.SelectedStand;
 
-        if (isAlreadyExist ?? false)
-        {
-            _notificationService.ShowError("Указанный NN обвязки уже существует. Обвязка не добавлена");
+        if (Guard.ExitIfNull("Не был выбран стенд", _notificationService, selectedStand))
             return;
-        }
+
+        //проверка введенного NN обвязки
+        if (!ValidateCorrectObvNN(selectedStand.NN))
+            return;
+
+        if (!ValidateNotExistingObvNN(selectedStand.NN, false))
+            return;
 
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
@@ -646,10 +675,93 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
+    //TODO: вынести в standService
+    public async void OnFillStandFieldsFromSelectedStandCommandExecuted(object obj)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            var selectedStand = CurrentProjectModel.SelectedStand;
+
+            if (selectedStand == null)
+            {
+                Debug.WriteLine("Стенд для перезаполнения пуст");
+                return;
+            }
+
+            NewStand.Number = selectedStand.Number;
+            NewStand.KKSCode = selectedStand.KKSCode;
+            NewStand.Design = selectedStand.Design;
+            NewStand.BraceType = selectedStand.BraceType;
+            NewStand.Devices = selectedStand.Devices;
+            NewStand.Width = selectedStand.Width;
+            NewStand.SerialNumber = selectedStand.SerialNumber;
+            NewStand.Weight = selectedStand.Weight;
+            NewStand.StandSummCost = selectedStand.StandSummCost;
+            NewStand.Number = selectedStand.Number;
+            NewStand.ProjectId = selectedStand.ProjectId;
+            NewStand.Comments = selectedStand.Comments;
+            NewStand.DesignStand = selectedStand.DesignStand;
+
+            Debug.WriteLine("Поля перезаполнены");
+        });
+    }
+    public async void OnRenumerateStandsCommandExecuted(object obj)
+    {
+        var renumInfo = _dialogService.ShowRenumerateDialog();
+
+        if (CurrentProjectModel.Stands == null)
+        {
+            _notificationService.ShowError("Список стендов пуст");
+            return;
+        }
+
+        var renumeratedStand = CurrentProjectModel.Stands
+            .Where(stand => stand.Number >= renumInfo.FromNumber && stand.Number <= renumInfo.ToNumber)
+            .OrderBy(stand => stand.Number)
+            .ToList();
+
+        var standNumber = renumeratedStand.FirstOrDefault()?.Number;
+
+        if (!standNumber.HasValue)
+        {
+            _notificationService.ShowError("Не найдены подходящие стенды");
+            return;
+        }
+
+        var standEntities = new List<Stand>();
+
+        foreach (var stand in renumeratedStand)
+        {
+            stand.SerialNumber = $"{renumInfo.Prefix}{standNumber}{renumInfo.Postfix}";
+
+            var newStandEntity = StandDataConverter.ConvertToStandEntity(stand);
+            standEntities.Add(newStandEntity);
+            standNumber++;
+        }
+
+        await _projectRepository.UpdateStandsGroupAsync(standEntities);
+
+        _notificationService.ShowInfo("Стенды пронумерованы");
+
+    }
+
     public async void OnUpdateObvInStandCommandExecuted(object obj)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
+
+            var selectedStand = CurrentProjectModel?.SelectedStand;
+
+            if (Guard.ExitIfNull("Не был выбран стенд", _notificationService, selectedStand))
+                return;
+
+            //проверка введенного NN обвязки
+            if (!ValidateCorrectObvNN(selectedStand.NN))
+                return;
+
+            if (!ValidateNotExistingObvNN(selectedStand.NN, true))
+                return;
+
             await _projectService.UpdateObvInStandAsync(CurrentProjectModel, SelectedObvyazka);
 
             OnObvyazkiInStandChanged();
@@ -807,17 +919,26 @@ public class ProjectViewModel : BaseViewModel
 
     private async Task AddObvToStandAsync()
     {
-        if (Guard.ExitIfNull("Не выбран тип обвязки или стенд!", _notificationService, SelectedObvyazka, CurrentProjectModel.SelectedStand))
+        var selectedStand = CurrentProjectModel.SelectedStand;
+
+
+        if (Guard.ExitIfNull("Не выбран стенд!", _notificationService, selectedStand))
             return;
 
-        var entity = await _standService.CreateObvyazkaAsync(CurrentProjectModel.SelectedStand, SelectedObvyazka);
+        if (Guard.ExitIfNull("Не выбран тип обвязки!", _notificationService, SelectedObvyazka))
+            return;
+
+        var entity = await _standService.CreateObvyazkaAsync(selectedStand, SelectedObvyazka);
 
         if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, entity))
             return;
 
-        await _standService.AddObvyazkaToStandAsync(CurrentProjectModel.SelectedStand.Id, entity);
+        await _standService.AddObvyazkaToStandAsync(selectedStand.Id, entity);
 
-        if (!CurrentProjectModel.ObvyazkiInProject.Contains(entity))
+        //сравнение по типу
+        var isAlreadyExist = CurrentProjectModel.ObvyazkiInProject.Any(obv => obv.ObvyazkaName == entity.ObvyazkaName);
+
+        if (!isAlreadyExist)
         {
             CurrentProjectModel.ObvyazkiInProject.Add(entity);
         }
@@ -855,7 +976,11 @@ public class ProjectViewModel : BaseViewModel
             return;
         }
 
+
+
+        //
         await _projectService.UpdateProjectAsync(CurrentProjectModel);
+
 
         _notificationService.ShowInfo("Изменения успешно сохранены!");
     }
@@ -868,7 +993,11 @@ public class ProjectViewModel : BaseViewModel
             return;
         }
 
-        var nextNumber = _projectService.GetStandsInProjectCount(CurrentProjectModel) + 1;
+        if (!ValidateCorrectStandNN(NewStand.Number))
+            return;
+
+        if (!ValidateNotExistingStandNN(NewStand.Number, false))
+            return;
 
         var newStandModel = new StandModel
         {
@@ -880,12 +1009,11 @@ public class ProjectViewModel : BaseViewModel
             SerialNumber = NewStand.SerialNumber,
             Weight = NewStand.Weight,
             StandSummCost = NewStand.StandSummCost,
-            Number = nextNumber,
+            Number = NewStand.Number,
             MaterialLine = NewStand.MaterialLine,
             Armature = NewStand.Armature,
             TreeSocket = NewStand.TreeSocket,
             KMCH = NewStand.KMCH,
-            FirstSensorType = NewStand.FirstSensorType,
             ProjectId = CurrentProjectModel.CurrentProjectId
         };
 
@@ -900,16 +1028,25 @@ public class ProjectViewModel : BaseViewModel
 
         CurrentProjectModel.Stands.Add(newStandModel);
 
-        CurrentStandModel = newStandModel;
-
-        // Переставляем шаблон на следующий свободный номер
-        NewStand = new StandModel { Number = nextNumber + 1 };
+        UpdateNewStandNN();
 
         OnPropertyChanged(nameof(CurrentStandModel));
         OnPropertyChanged(nameof(NewStand));
-        _notificationService.ShowInfo($"Стенд успешно добавлен! {addedStandEntity.Id}");
-    }
 
+        OnStandsInProjectChanged();
+
+
+        //выбираем добавленный стенд
+        var addedStand = CurrentProjectModel.Stands.FirstOrDefault(stand => stand.Id == newStandModel.Id);
+
+        if (addedStand != null)
+        {
+            CurrentProjectModel.SelectedStand = addedStand;
+        }
+
+        _notificationService.ShowInfo($"Стенд с ID {addedStandEntity.Id} успешно добавлен!");
+    }
+    ///
     private async Task SaveChangesInStandAsync()
     {
         if (CurrentProjectModel.CurrentProjectId == 0)
@@ -918,13 +1055,54 @@ public class ProjectViewModel : BaseViewModel
             return;
         }
 
-        var stand = CurrentProjectModel.SelectedStand;
+        var selectedStand = CurrentProjectModel?.SelectedStand;
 
-        if (Guard.ExitIfNull("Стенд не выбран!", _notificationService, stand))
+        if (Guard.ExitIfNull("Стенд не выбран!", _notificationService, selectedStand))
             return;
 
-        var standEntity = StandDataConverter.ConvertToStandEntity(stand);
-        await _projectRepository.UpdateStandAsync(standEntity);
+        if (!ValidateCorrectStandNN(NewStand.Number))
+            return;
+
+        if (!ValidateNotExistingStandNN(NewStand.Number, true))
+            return;
+
+        var newStandEntity = StandDataConverter.ConvertToStandEntity(NewStand);
+        var selectedStandEntity = StandDataConverter.ConvertToStandEntity(selectedStand);
+
+
+        selectedStandEntity.Number = newStandEntity.Number;
+        selectedStandEntity.KKSCode = newStandEntity.KKSCode;
+        selectedStandEntity.Design = newStandEntity.Design;
+        selectedStandEntity.BraceType = newStandEntity.BraceType;
+        selectedStandEntity.Devices = newStandEntity.Devices;
+        selectedStandEntity.Width = newStandEntity.Width;
+        selectedStandEntity.SerialNumber = newStandEntity.SerialNumber;
+        selectedStandEntity.Weight = newStandEntity.Weight;
+        selectedStandEntity.StandSummCost = newStandEntity.StandSummCost;
+        selectedStandEntity.Comments = newStandEntity.Comments;
+        selectedStandEntity.DesigneStand = newStandEntity.DesigneStand;
+
+
+        await _projectRepository.UpdateStandAsync(selectedStandEntity);
+
+
+        //отдельно обновляем UI
+        selectedStand.Number = newStandEntity.Number;
+        selectedStand.KKSCode = newStandEntity.KKSCode;
+        selectedStand.Design = newStandEntity.Design;
+        selectedStand.BraceType = newStandEntity.BraceType;
+        selectedStand.Devices = newStandEntity.Devices;
+        selectedStand.Width = newStandEntity.Width;
+        selectedStand.SerialNumber = newStandEntity.SerialNumber;
+        selectedStand.Weight = newStandEntity.Weight;
+        selectedStand.StandSummCost = newStandEntity.StandSummCost;
+        selectedStand.Comments = newStandEntity.Comments;
+        selectedStand.DesignStand = newStandEntity.DesigneStand;
+
+
+
+        OnStandsInProjectChanged();
+        UpdateNewStandNN();
 
         _notificationService.ShowInfo("Изменения стенда сохранены");
     }
@@ -941,15 +1119,10 @@ public class ProjectViewModel : BaseViewModel
         await _projectService.DeleteStandAsync(CurrentProjectModel.CurrentProjectId, selected.Id);
         CurrentProjectModel.Stands.Remove(selected);
 
-        for (int i = 0; i < CurrentProjectModel.Stands.Count; i++)
-        {
-            CurrentProjectModel.Stands[i].Number = i + 1;
-        }
+        UpdateNewStandNN();
+        OnStandsInProjectChanged();
 
-        var nextNumber = CurrentProjectModel.Stands.Any() ? CurrentProjectModel.Stands.Max(s => s.Number) + 1 : 1;
-        CurrentStandModel = new StandModel { Number = nextNumber };
-
-        _notificationService.ShowInfo("Стенд удалён и номера обновлены");
+        _notificationService.ShowInfo("Стенд удалён");
     }
 
     private async Task CreateNewProjectCardAsync()
@@ -964,7 +1137,11 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(NewStand));
     }
 
-    private void SelectEquipment<T>(Action<string> setProperty, Action<string> setMeasure, Action<string> setCost, Action<int> setExportDays)
+    private void SelectEquipment<T>(Action<string> setProperty,
+                                    Action<string> setMeasure,
+                                    Action<string> setCost,
+                                    Action<int> setExportDays,
+                                    Action<float> setWeight)
         where T : class, IBaseEquip, new()
     {
         ExceptionHelper.SafeExecute(() =>
@@ -976,6 +1153,11 @@ public class ProjectViewModel : BaseViewModel
                 setMeasure(equipment.Measure);
                 setCost(equipment.Cost.ToString());
                 setExportDays(equipment.ExportDays);
+            }
+
+            if (equipment is BaseEquip baseEquip)
+            {
+                setWeight(baseEquip.Weight);
             }
         });
     }
@@ -1179,6 +1361,10 @@ public class ProjectViewModel : BaseViewModel
         }
     }
 
+    #endregion
+
+    #region Обновление UI
+
     public async Task UpdateUI()
     {
         await LoadStandsDataAsync();
@@ -1193,13 +1379,23 @@ public class ProjectViewModel : BaseViewModel
         Debug.WriteLine("Обвязки поменялись");
 
         UpdateNewObvNN();
-        UpdateCableInputsQuantity();
         UpdateTablesQuantity();
         UpdateClampsQuantity();
         UpdateBracketsQuantity();
+        UpdateElectricEquipment();
 
         CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewElectricalComponent.Purposes);
         CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
+
+        var selectedStand = CurrentProjectModel.SelectedStand;
+
+        if (selectedStand == null)
+            return;
+
+        CollectionRefreshHelper.SafeSortAndRefreshCollection(
+            collection: selectedStand.ObvyazkiInStand,
+            fieldToSortBy: "NN",
+            descending: false);
     }
 
     public void OnFramesInStandChanged()
@@ -1207,9 +1403,34 @@ public class ProjectViewModel : BaseViewModel
         Debug.WriteLine("Рамы поменялись");
 
         UpdateChannelsQuantity();
+        UpdateDrainage();
 
         CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
+        CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewDrainage.Purposes);
     }
+
+    public void OnSelectedStandChanged()
+    {
+        Debug.WriteLine("Выбранный стенд изменился");
+
+        OnFramesInStandChanged();
+        OnObvyazkiInStandChanged();
+        UpdateBracketsQuantity();
+    }
+
+    public void OnStandsInProjectChanged()
+    {
+        Debug.WriteLine("Стенды изменились");
+
+        //отсортировываем по возрастанию номера
+        CollectionRefreshHelper.SafeSortAndRefreshCollection(
+            collection: CurrentProjectModel.Stands,
+            fieldToSortBy: "Number",
+            descending: false);
+    }
+
+
+
 
     //возвращает максимальный NN обвязок в стенде
     public int MaxObvNN
@@ -1217,158 +1438,345 @@ public class ProjectViewModel : BaseViewModel
         get => CurrentProjectModel?.SelectedStand?.ObvyazkiInStand.Max(obv => obv.NN) ?? 0;
     }
 
+    //возвращает максимальный NN стендов в проекте
+    public int MaxStandNN
+    {
+        get => CurrentProjectModel.Stands.Count() > 0 ? CurrentProjectModel.Stands.Max(stand => stand.Number) : 0;
+
+    }
+
     //обновляем поле NN в обвязке
     public void UpdateNewObvNN()
     {
         var selectedStand = CurrentProjectModel.SelectedStand;
 
-        if (selectedStand != null)
-            selectedStand.NN = MaxObvNN + 1;
+        if (selectedStand == null)
+            return;
+
+        selectedStand.NN = MaxObvNN + 1;
+
+
+        Debug.WriteLine("Новый NN обвязки изменен");
+    }
+
+    //обновляем № п/п стенда
+    public void UpdateNewStandNN()
+    {
+        if (NewStand == null) return;
+
+        NewStand.Number = MaxStandNN + 1;
+
+        Debug.WriteLine("Новый NN стенда изменен");
     }
 
     //обновляем кол-во швеллера
     public void UpdateChannelsQuantity()
     {
+        Debug.WriteLine("Пересчет швеллера начат");
+
+        var selectedStand = CurrentProjectModel.SelectedStand;
+
+        if (selectedStand == null)
+            return;
+
+        var standBraceType = selectedStand.BraceType;
+
+        if (string.IsNullOrEmpty(standBraceType) || standBraceType != "Швеллер")
+            return;
+
         var additionalEquips = CurrentStandModel.NewAdditionalEquip.Purposes;
-        var channelRecord = additionalEquips
-            .FirstOrDefault(equip => equip.Purpose == "Швеллер");
+        var channelRecord = additionalEquips.FirstOrDefault(equip => equip.Purpose == "Швеллер");
 
-        var framesWidthSum = CurrentStandModel.FramesInStand.Sum(frame => frame.Width);
+        if (channelRecord == null)
+            return;
 
-        if (channelRecord != null)
-        {
-            //швеллер в метрах
-            channelRecord.Quantity = framesWidthSum / 1000.0f;
-        }
+        //швеллер в метрах
+        var framesWidthSum = selectedStand.FramesInStand.Sum(frame => frame.Width);
+        channelRecord.Quantity = framesWidthSum / 1000.0f;
+
+
+        Debug.WriteLine("Пересчет швеллера завершен");
     }
 
     //обновляем кол-во хомутов
     public void UpdateClampsQuantity()
     {
+        Debug.WriteLine("Пересчет хомутов начат");
+
+        var standsSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
+
         var additionalEquips = CurrentStandModel.NewAdditionalEquip.Purposes;
         var clampsRecord = additionalEquips.FirstOrDefault(equip => equip.Purpose == "Хомуты");
 
-        if (clampsRecord == null) return;
+        if (clampsRecord == null)
+            return;
 
-        var clampSum = CurrentStandModel.ObvyazkiInStand.Sum(obv => obv.Clamp);
-        clampsRecord.Quantity = clampSum ?? 0.0f;
-    }
+        clampsRecord.Quantity = CurrentStandModel.ObvyazkiInStand.Sum(obv => obv.Clamp) ?? 0.0f;
 
-    //обновляем кол-во кабельных вводов
-    public void UpdateCableInputsQuantity()
-    {
-        const int inputsPerSensor = 2;
-
-        var electricComponents = CurrentStandModel.NewElectricalComponent.Purposes;
-        var cableInputsRecord = electricComponents.FirstOrDefault(purpose => purpose.Purpose == "Кабельные вводы");
-
-        var sensorsQuantity = CurrentStandModel.CountSensorsQuantity();
-
-        if (cableInputsRecord != null)
-        {
-            cableInputsRecord.Quantity = inputsPerSensor * sensorsQuantity;
-        }
+        Debug.WriteLine("Пересчет хомутов завершен");
     }
 
     //обновляем кол-во табличек
     public void UpdateTablesQuantity()
     {
+        Debug.WriteLine("Пересчет табличек начат");
+
         var sensorsQuantity = CurrentStandModel.CountSensorsQuantity();
 
         var additionalComponents = CurrentStandModel.NewAdditionalEquip.Purposes;
         var tableRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == "Табличка");
 
-        if (tableRecord != null)
-        {
-            tableRecord.Quantity = sensorsQuantity;
-        }
+        if (tableRecord == null)
+            return;
+
+        tableRecord.Quantity = sensorsQuantity;
+
+
+        Debug.WriteLine("Пересчет табличек завершен");
     }
 
     //обновляем кол-во кронштейнов
     public void UpdateBracketsQuantity()
     {
-        UpdateDifSensorsBrackets();
-        UpdateAbsSensorsBrackets();
-    }
+        Debug.WriteLine("Пересчет кронштейнов начат");
 
-    //обновляем кол-во кронштейнов для абсолютников
-    private void UpdateAbsSensorsBrackets()
-    {
-        var standsSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
-
-        const int bracketsPerAbsoluteSensor = 2;
-        const string absoluteSensorBracketRecordName = "Кронштейн абсолютника";
-        const string measureUnit = "шт";
-
-        var absSensorsQuantity = CurrentStandModel.CountAbsoluteSensorsQuantity();
-
-        var additionalComponents = CurrentStandModel.NewAdditionalEquip.Purposes;
-
-        var absSensorsBracketsRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == absoluteSensorBracketRecordName);
-
-        if (absSensorsBracketsRecord == null && absSensorsQuantity > 0)
-        {
-            absSensorsBracketsRecord = new AdditionalEquipPurpose();
-            absSensorsBracketsRecord.Purpose = absoluteSensorBracketRecordName;
-            absSensorsBracketsRecord.Measure = measureUnit;
-            absSensorsBracketsRecord.Quantity = bracketsPerAbsoluteSensor * absSensorsQuantity;
-            additionalComponents.Add(absSensorsBracketsRecord);
-        }
-
-        if (absSensorsBracketsRecord != null)
-        {
-            absSensorsBracketsRecord.Quantity = bracketsPerAbsoluteSensor * absSensorsQuantity;
-        }
-
-        var standBraceType = CurrentProjectModel?.SelectedStand?.BraceType;
-
-        if (absSensorsBracketsRecord != null && !string.IsNullOrEmpty(standBraceType))
-        {
-            switch (standBraceType)
-            {
-                case "На кронштейне":
-                    absSensorsBracketsRecord.Material = standsSettings.BracketForAbs;
-                    break;
-
-                case "Швеллер":
-                    absSensorsBracketsRecord.Material = standsSettings.BracketUniversal;
-                    break;
-
-                default:
-                    break;
-            }
-        }
-    }
-
-    //обновляем кол-во кронштейнов для перепадчиков
-    private async void UpdateDifSensorsBrackets()
-    {
         var standsSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
 
         const int bracketsPerDifSensor = 1;
-        const string difSensorBracketRecordName = "Кронштейн перепадчика";
-        const string measureUnit = "шт";
 
         var difSensorsQuantity = CurrentStandModel.CountDifSensorsQuantity();
 
         var additionalComponents = CurrentStandModel.NewAdditionalEquip.Purposes;
-        var difSensorsBracketRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == difSensorBracketRecordName);
-
-        if (difSensorsBracketRecord == null && difSensorsQuantity > 0)
-        {
-            difSensorsBracketRecord = new AdditionalEquipPurpose();
-            difSensorsBracketRecord.Purpose = difSensorBracketRecordName;
-            difSensorsBracketRecord.Material = standsSettings.BracketForDif;
-            difSensorsBracketRecord.Measure = measureUnit;
-            difSensorsBracketRecord.Quantity = bracketsPerDifSensor * difSensorsQuantity;
-            additionalComponents.Add(difSensorsBracketRecord);
-        }
+        var difSensorsBracketRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == "Кронштейн перепадчика");
 
         if (difSensorsBracketRecord != null)
         {
             difSensorsBracketRecord.Quantity = bracketsPerDifSensor * difSensorsQuantity;
         }
+
+
+
+        const int bracketsPerAbsoluteSensor = 2;
+
+        var standBraceType = CurrentProjectModel?.SelectedStand?.BraceType;
+
+        if (!string.IsNullOrEmpty(standBraceType) && standBraceType == "На кронштейне")
+        {
+            var absSensorsQuantity = CurrentStandModel.CountAbsoluteSensorsQuantity();
+
+            var absSensorsBracketsRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == "Кронштейн абсолютника");
+
+            if (absSensorsBracketsRecord != null)
+            {
+                absSensorsBracketsRecord.Quantity = bracketsPerAbsoluteSensor * absSensorsQuantity;
+            }
+        }
+
+
+        const int universalBracketQuantity = 2;
+
+        if (!string.IsNullOrEmpty(standBraceType) && standBraceType == "Швеллер")
+        {
+            var universalBracketRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == "Кронштейн универсальный");
+
+            if (universalBracketRecord != null)
+            {
+                universalBracketRecord.Quantity = universalBracketQuantity;
+            }
+        }
+
+        Debug.WriteLine("Пересчет кронштейнов завершен");
     }
 
-    #endregion Методы расчёта и создания отчётности
+    //обновляем данные по дренажу
+    public void UpdateDrainage()
+    {
+        Debug.WriteLine("Пересчет дренажной трубы начат");
+
+        var selectedStand = CurrentProjectModel?.SelectedStand;
+
+        var drainageParts = CurrentStandModel.NewDrainage.Purposes;
+        var mainPipeRecord = drainageParts.FirstOrDefault(part => part.Purpose == "Основная труба");
+
+        if (mainPipeRecord == null || selectedStand == null)
+            return;
+
+        mainPipeRecord.Quantity = selectedStand.FramesInStand.Sum(frame => frame.Width) / 1000.0f;
+
+
+        Debug.WriteLine("Пересчет дренажной трубы завершен");
+    }
+
+    //обновляем данные по электрике
+    public void UpdateElectricEquipment()
+    {
+        Debug.WriteLine("Пересчет электрики начат");
+
+        var electricComponents = CurrentStandModel.NewElectricalComponent.Purposes;
+
+        //кабельные ввода
+        var cableInputsPerSensor = 2;
+        var cableInputsRecord = electricComponents.FirstOrDefault(purpose => purpose.Purpose == "Кабельные вводы");
+
+        var cableInputsQuantity = 0;
+
+        var sensorsQuantity = CurrentProjectModel.SelectedStand?.CountSensorsQuantity();
+
+        if (cableInputsRecord != null && sensorsQuantity.HasValue)
+        {
+            cableInputsQuantity = sensorsQuantity.Value * cableInputsPerSensor;
+            cableInputsRecord.Quantity = cableInputsQuantity;
+        }
+
+
+        //сигнальный кабель
+        var standsSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
+
+        var signalCableRecord = electricComponents.FirstOrDefault(purpose => purpose.Purpose == "Сигнальный кабель");
+
+        var signalCablePerSensor = 0;
+        int? signalCabelQuantity = 0;
+
+
+        if (sensorsQuantity.HasValue && signalCableRecord != null)
+        {
+            signalCablePerSensor = sensorsQuantity.Value switch
+            {
+                >= 0 and <= 2 => 2,
+                >= 3 and <= 5 => 3,
+                >= 6 => 4,
+                _ => 0
+            };
+
+            signalCabelQuantity = sensorsQuantity * signalCablePerSensor;
+
+            signalCableRecord.Quantity = signalCabelQuantity;
+
+        }
+
+        //кабель 4 мм
+        var fourMmCableRecord = electricComponents.FirstOrDefault(purpose => purpose.Purpose == "Кабель 4мм");
+
+        if (fourMmCableRecord != null)
+        {
+            fourMmCableRecord.Quantity = cableInputsQuantity;
+        }
+
+
+        //металлорукав
+        var metalHoseRecord = electricComponents.FirstOrDefault(purpose => purpose.Purpose == "Металлорукав");
+
+        if (metalHoseRecord != null)
+        {
+            metalHoseRecord.Quantity = signalCabelQuantity;
+        }
+
+        Debug.WriteLine("Пересчет электрики завершен");
+    }
+
+    #endregion
+
+    #region Валидация
+
+    //валидация номера обвязки
+    public bool ValidateCorrectObvNN(int newObvNN)
+    {
+        var invalidNN = newObvNN < 1;
+
+        if (invalidNN)
+        {
+            _notificationService.ShowError("Указанный № обвязки некорректен!");
+            return false;
+        }
+
+        return true;
+    }
+
+    public bool ValidateNotExistingObvNN(int newObvNN, bool excludeSelected)
+    {
+
+        var selectedStand = CurrentProjectModel.SelectedStand;
+
+        if (selectedStand == null)
+            return false;
+
+
+        var obvCollection = selectedStand.ObvyazkiInStand;
+        var selectedObv = selectedStand.SelectedObvyazkaInStand;
+
+
+        if (obvCollection == null)
+            return true;
+
+        var isAlreadyExist = true;
+
+        if (!excludeSelected)
+        {
+            isAlreadyExist = obvCollection
+                .Any(obv => obv.NN == newObvNN);
+        }
+        else if (selectedObv != null)
+        {
+            isAlreadyExist = obvCollection
+                .Where(obv => obv.NN != selectedObv.NN)
+                .Any(obv => obv.NN == newObvNN);
+        }
+
+        if (isAlreadyExist)
+        {
+            _notificationService.ShowError("Указанный № обвязки уже существует!");
+            return false;
+        }
+
+        return true;
+
+    }
+
+    public bool ValidateCorrectStandNN(int newStandNumber)
+    {
+
+        var invalidNN = newStandNumber < 1;
+
+        if (invalidNN)
+        {
+            _notificationService.ShowError("Указанный № стенда некорректен!");
+            return false;
+        }
+
+        return true;
+
+    }
+
+    public bool ValidateNotExistingStandNN(int newStandNumber, bool excludeSelected)
+    {
+        var standsCollection = CurrentProjectModel.Stands;
+        var selectedStand = CurrentProjectModel.SelectedStand;
+
+        if (standsCollection == null)
+            return true;
+
+        var isAlreadyExist = true;
+
+        if (!excludeSelected)
+        {
+            isAlreadyExist = standsCollection
+                .Any(stand => stand.Number == newStandNumber);
+        }
+        else if (selectedStand != null)
+        {
+            isAlreadyExist = standsCollection
+                .Where(stand => stand.Number != selectedStand.Number)
+                .Any(stand => stand.Number == newStandNumber);
+        }
+
+        if (isAlreadyExist)
+        {
+            _notificationService.ShowError("Указанный № стенда уже существует!");
+            return false;
+        }
+
+        return true;
+    }
+
+    #endregion
 }

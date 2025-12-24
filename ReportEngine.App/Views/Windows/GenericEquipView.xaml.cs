@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
@@ -11,20 +12,38 @@ namespace ReportEngine.App.Views.Windows;
 public partial class GenericEquipView : Window
 {
     private readonly bool _isDialog;
+    private bool _allowEdit;
 
     public GenericEquipView(bool IsDialog = false)
     {
         InitializeComponent();
         _isDialog = IsDialog;
     }
+    private void DataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+    {
+        if (!_allowEdit)
+            e.Cancel = true;
+    }
 
     private void SelectEquip_DoubleClick(object sender, MouseButtonEventArgs e)
-    {
-        if (!_isDialog)
-            return;
-
+    {           
         ExceptionHelper.SafeExecute(() =>
         {
+            if (!_isDialog)
+            {
+                if (sender is not DataGrid grid)
+                    return;
+
+                _allowEdit = true;
+
+                if (grid.CurrentCell != null)
+                {
+                    grid.BeginEdit();
+                }
+
+                _allowEdit = false;
+            }
+
             var type = DataContext.GetType();
 
             if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(GenericEquipViewModel<>))

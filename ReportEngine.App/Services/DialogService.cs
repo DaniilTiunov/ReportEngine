@@ -1,9 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
+using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Display;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.Contacts;
+using ReportEngine.App.ViewModels.DTO;
 using ReportEngine.App.ViewModels.FormedEquips;
+using ReportEngine.App.Views.Utils;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
@@ -159,4 +163,35 @@ public class DialogService : IDialogService
             return null;
         }
     }
+
+
+    public RenumerationInfo ShowRenumerateDialog()
+    {
+        var resultData = new RenumerationInfo()
+        {
+            FromNumber = -1,
+            ToNumber = -1,
+            Prefix = "",
+            Postfix = ""
+        };
+   
+        try
+        {
+            var viewModel = _serviceProvider.GetRequiredService<RenumeratorViewModel>();
+            var window = new RenumerateView(viewModel);
+
+            viewModel.ResultHandler = (info) => { resultData = info; };
+
+            window.ShowDialog(); 
+
+            return resultData;
+        }
+        catch (Exception ex)
+        {
+            MessageBoxHelper.ShowError(ex.Message);
+            return resultData;
+        }
+
+    }
+
 }

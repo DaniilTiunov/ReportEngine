@@ -151,8 +151,6 @@ public class ProjectService : IProjectService
 
     private async Task<StandModel> CopyStandFromSourceStandAsync(StandModel sourceStand, int projectId, int copyIndex)
     {
-        if (Guard.ExitIfNull("Отсутствует серийный номер!", _notificationService, sourceStand.SerialNumber, sourceStand))
-            return null;
 
         var newStand = new StandModel
         {
@@ -167,7 +165,7 @@ public class ProjectService : IProjectService
             NN = sourceStand.NN + copyIndex,
             Number = sourceStand.Number + copyIndex,
             ObvyazkaName = sourceStand.ObvyazkaName,
-            SerialNumber = StandUniqNameHelper.SetUniqNameForStand(sourceStand, copyIndex),
+            SerialNumber = sourceStand.SerialNumber,
             TreeSocket = sourceStand.TreeSocket,
             Weight = sourceStand.Weight,
             Width = sourceStand.Width,
@@ -389,9 +387,16 @@ public class ProjectService : IProjectService
             .Where(s => s.ObvyazkiInStand != null)
             .SelectMany(s => s.ObvyazkiInStand);
 
+        //костыль
+        //фильтруем только уникальные
+        var uniqueObvInStands = obvyazkiInStands
+            .DistinctBy(obv => obv.ObvyazkaName);
+
+
         projectModel.ObvyazkiInProject.Clear();
 
-        foreach (var obvyazkiInStand in obvyazkiInStands) projectModel.ObvyazkiInProject.Add(obvyazkiInStand);
+        foreach (var obvyazka in uniqueObvInStands)
+            projectModel.ObvyazkiInProject.Add(obvyazka);
     }
 
     private async Task CopyFramesToNewStandAsync(StandModel newStand, ObservableCollection<FormedFrame> frames)

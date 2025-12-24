@@ -10,6 +10,8 @@ public interface IProjectInfoRepository : IBaseRepository<ProjectInfo>
 
     Task UpdateStandAsync(Stand stand);
 
+    Task UpdateStandsGroupAsync(IEnumerable<Stand> stands);
+
     Task<ProjectInfo> GetStandsByIdAsync(int projectId);
 
     Task AddStandObvyazkaAsync(int standId, ObvyazkaInStand standObvyazka);

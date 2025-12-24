@@ -150,6 +150,9 @@ public static class ProjectCommandsInitializer
 
         vm.ProjectCommandProvider.UpdateUICommand =
             new RelayCommand(vm.OnUpdateUICommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.RenumerateStandsCommand =
+            new RelayCommand(vm.OnRenumerateStandsCommandExecuted, vm.CanAllCommandsExecute);
     }
 
     public static void InitializeGenericCommands(ProjectViewModel vm)

@@ -24,6 +24,8 @@ public class StandSettingsModel : BaseViewModel
     private double? _sensorCountOnFrame;
     private string? _signalCable;
     private string? _steelChannel;
+    private string? _clamp;
+    private string? _terminal;
 
     public string? SteelChannel
     {
@@ -120,6 +122,21 @@ public class StandSettingsModel : BaseViewModel
         get => _sensorCountOnFrame;
         set => Set(ref _sensorCountOnFrame, value);
     } // Кол-во кабеля на 1 раму
+
+
+    public string? Clamp
+    {
+        get => _clamp;
+        set => Set(ref _clamp, value);
+    } // Хомут
+
+    public string? Terminal
+    {
+        get => _terminal;
+        set => Set(ref _terminal, value);
+    } // Хомут
+
+
 
     public async Task LoadStandsSettingsDataAsync()
     {

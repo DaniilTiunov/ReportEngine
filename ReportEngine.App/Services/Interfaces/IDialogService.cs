@@ -1,4 +1,5 @@
-﻿using ReportEngine.Domain.Entities;
+﻿using ReportEngine.App.ViewModels.DTO;
+using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 
 namespace ReportEngine.App.Services.Interfaces;
@@ -17,4 +18,6 @@ public interface IDialogService
     string ShowSubjectDialog();
 
     FormedFrame ShowFrameDialog();
+
+    public RenumerationInfo ShowRenumerateDialog();
 }
