@@ -723,13 +723,16 @@ public class StandModel : BaseViewModel
 
     public void InitializeDrainagePurposes()
     {
+        const float endPipeQuantityPerStand = 0.2f;
+        const float pipePlugQuantityPerStand = 2.0f;
+
         NewDrainage = new FormedDrainage
         {
             Purposes = new ObservableCollection<DrainagePurpose>
             {
-                new() { Purpose = "Основная труба" },
-                new() { Purpose = "Патрубок", Quantity = (float)0.2},
-                new() { Purpose = "Заглушка основной трубы", Quantity = 2 },
+                new() { Purpose = "Основная труба" , Measure = "м"},
+                new() { Purpose = "Патрубок", Quantity = endPipeQuantityPerStand, Measure = "м"},
+                new() { Purpose = "Заглушка основной трубы", Quantity = pipePlugQuantityPerStand,  Measure = "м" },
                 new() { Purpose = "Кронштейн дренажа" },
                 new() { Purpose = "Клапан" }
             }
@@ -738,9 +741,7 @@ public class StandModel : BaseViewModel
 
     public void InitializeAdditionalEquip()
     {
-        float nameplatesPerStand = 1.0f;
-
-
+        const float nameplatesPerStand = 1.0f;
 
         NewAdditionalEquip = new FormedAdditionalEquip
         {
@@ -750,10 +751,13 @@ public class StandModel : BaseViewModel
                 new() { Purpose = "Швеллер", Material = DefaultStandSettings.SteelChannel, Measure = "м" },
                 new() { Purpose = "Хомуты" , Material = DefaultStandSettings.Clamp, Measure = "шт"},
                 new() { Purpose = "Табличка", Material = DefaultStandSettings.NameTable, Measure = "шт"},
-                new() { Purpose = "Кронштейн", Measure = "шт" },
+                new() { Purpose = "Кронштейн универсальный",Material = DefaultStandSettings.BracketUniversal, Measure = "шт"},
+                new() { Purpose = "Кронштейн перепадчика",Material = DefaultStandSettings.BracketForDif, Measure = "шт"},
+                new() { Purpose = "Кронштейн абсолютника", Material = DefaultStandSettings.BracketForAbs, Measure = "шт"}         
             }
         };
     }
+
 
     public void InitializeElectricalComponent()
     {
@@ -770,7 +774,8 @@ public class StandModel : BaseViewModel
                 new() { Purpose = "Металлорукав" , Quantity = usualCablesQuantity, Measure = "м"},
                 new() { Purpose = "Кабель 6мм", Material = DefaultStandSettings.CabelSixMM, Quantity = (float?) DefaultStandSettings.SensorCountOnFrame , Measure = "м"},
                 new() { Purpose = "Кабель 4мм", Material = DefaultStandSettings.CabelFourMM, Quantity = usualCablesQuantity, Measure = "м" },
-                new() { Purpose = "Кронштейн коробки" }
+                new() { Purpose = "Кронштейн коробки" },
+                new() { Purpose = "Клемма", Material = DefaultStandSettings.Terminal, Measure = "шт" }
             }
         };
     }

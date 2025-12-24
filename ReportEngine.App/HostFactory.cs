@@ -13,6 +13,7 @@ using ReportEngine.App.ViewModels.FormedEquips;
 using ReportEngine.App.Views;
 using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Settings;
+using ReportEngine.App.Views.Utils;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
@@ -168,6 +169,7 @@ public class HostFactory
         services.AddScoped<CalculationSettingsViewModel>();
         services.AddScoped<AuthWindowViewModel>();
         services.AddScoped<SubjectViewModel>();
+        services.AddScoped<RenumeratorViewModel>();
 
         services.AddScoped(typeof(GenericEquipViewModel<>));
     }
@@ -201,5 +203,6 @@ public class HostFactory
         services.AddTransient<AuthWindow>();
         services.AddTransient<SubjectsView>();
         services.AddTransient<UpdateInfoView>();
+        services.AddTransient<RenumerateView>();
     }
 }
