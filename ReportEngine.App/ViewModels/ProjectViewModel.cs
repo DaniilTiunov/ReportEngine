@@ -707,12 +707,7 @@ public class ProjectViewModel : BaseViewModel
     }
     public async void OnRenumerateStandsCommandExecuted(object obj)
     {
-        var (fromNumber, toNumber,prefix, postfix) = _dialogService.ShowRenumerateDialog();
-
-        var incorrectRange = fromNumber < 1 || toNumber < 1;
-
-        if (incorrectRange)
-            return;
+        var renumInfo = _dialogService.ShowRenumerateDialog();
 
         if (CurrentProjectModel.Stands == null)
         {
@@ -721,7 +716,7 @@ public class ProjectViewModel : BaseViewModel
         }
 
         var renumeratedStand = CurrentProjectModel.Stands
-            .Where(stand => stand.Number >= fromNumber && stand.Number <= toNumber)
+            .Where(stand => stand.Number >= renumInfo.FromNumber && stand.Number <= renumInfo.ToNumber)
             .OrderBy(stand => stand.Number)
             .ToList();
 
@@ -737,7 +732,7 @@ public class ProjectViewModel : BaseViewModel
 
         foreach (var stand in renumeratedStand)
         {
-            stand.SerialNumber = $"{prefix}{standNumber}{postfix}";
+            stand.SerialNumber = $"{renumInfo.Prefix}{standNumber}{renumInfo.Postfix}";
 
             var newStandEntity = StandDataConverter.ConvertToStandEntity(stand);
             standEntities.Add(newStandEntity);
@@ -746,7 +741,6 @@ public class ProjectViewModel : BaseViewModel
 
         await _projectRepository.UpdateStandsGroupAsync(standEntities);
 
-        ;
         _notificationService.ShowInfo("Стенды пронумерованы");
 
     }

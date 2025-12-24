@@ -5,6 +5,7 @@ using ReportEngine.App.Display;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.Contacts;
+using ReportEngine.App.ViewModels.DTO;
 using ReportEngine.App.ViewModels.FormedEquips;
 using ReportEngine.App.Views.Utils;
 using ReportEngine.App.Views.Windows;
@@ -164,34 +165,31 @@ public class DialogService : IDialogService
     }
 
 
-    public (int,int,string,string) ShowRenumerateDialog()
+    public RenumerationInfo ShowRenumerateDialog()
     {
+        var resultData = new RenumerationInfo()
+        {
+            FromNumber = -1,
+            ToNumber = -1,
+            Prefix = "",
+            Postfix = ""
+        };
+   
         try
         {
-            int resultFromNumber = -1;
-            int resultToNumber = -1;
-            string resultPrefix = "";
-            string resultPostfix = "";
-
             var viewModel = _serviceProvider.GetRequiredService<RenumeratorViewModel>();
             var window = new RenumerateView(viewModel);
 
-            viewModel.ResultHandler = (tuple) =>
-            {
-                resultFromNumber = tuple.Item1;
-                resultToNumber = tuple.Item2;
-                resultPrefix = tuple.Item3;
-                resultPostfix = tuple.Item4;
-            };
-             
+            viewModel.ResultHandler = (info) => { resultData = info; };
+
             window.ShowDialog(); 
 
-            return (resultFromNumber, resultToNumber, resultPrefix, resultPostfix);
+            return resultData;
         }
         catch (Exception ex)
         {
             MessageBoxHelper.ShowError(ex.Message);
-            return (-1, -1,"","");
+            return resultData;
         }
 
     }

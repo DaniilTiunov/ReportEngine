@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.ViewModels.DTO;
 
 namespace ReportEngine.App.ViewModels
 {
@@ -38,20 +39,13 @@ namespace ReportEngine.App.ViewModels
         }
 
         public ICommand ApplyCommand { get; set; }
-        public Action<(int,int,string,string)> ResultHandler {  get; set; }
+        public Action<RenumerationInfo> ResultHandler {  get; set; }
 
         public RenumeratorViewModel(INotificationService notificationService)
         {
             ApplyCommand = new RelayCommand(OnApplyCommandExecuted, _ => true);
             _notificationService = notificationService;
         }
-
-        public (int,int) IncorrectNumbers
-        {
-            get => (-1, -1);
-        }
-
-
 
         public bool ValidateData()
         {
@@ -73,7 +67,13 @@ namespace ReportEngine.App.ViewModels
 
         public async void OnApplyCommandExecuted(object sender)
         {
-            ResultHandler?.Invoke((FromNumber,ToNumber,Prefix,Postfix));
+            ResultHandler?.Invoke(new RenumerationInfo()
+            {
+                FromNumber = FromNumber,
+                ToNumber = ToNumber,
+                Prefix = Prefix,
+                Postfix = Postfix
+            });
         }
     }
 }
