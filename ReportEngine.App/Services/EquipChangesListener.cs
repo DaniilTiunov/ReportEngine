@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ReportEngine.Domain.Background;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Repositories.Interfaces;
@@ -13,11 +14,13 @@ namespace ReportEngine.App.Services
         private readonly Dictionary<Type, IEnumerable<IBaseEquip>> _cache = new();
         private readonly ILogger _logger;
         private readonly IServiceProvider _serviceProvider;
+        private readonly ReAppContext _dbContext;
 
-        public EquipChangesListener(IServiceProvider serviceProvider)
+        public EquipChangesListener(IServiceProvider serviceProvider, ReAppContext dbContext)
         {
             _serviceProvider = serviceProvider;
             _logger = LoggerConfig.InitializeLogger();
+            _dbContext = dbContext;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -44,9 +47,12 @@ namespace ReportEngine.App.Services
                 IEnumerable<IBaseEquip> items = await repository.GetAllAsync();
 
                 _cache[type] = items;
-
-                _logger.Information($"Загружено {items.Count()} записей для типа {type.Name}");
             }
+        }
+
+        private async Task GetChangesAsync()
+        {
+
         }
 
         private IGenericBaseRepository<T, T> GetCurrentRepository<T>(IServiceProvider serviceProvider)
