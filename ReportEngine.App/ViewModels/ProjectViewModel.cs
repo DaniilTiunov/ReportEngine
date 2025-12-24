@@ -703,8 +703,30 @@ public class ProjectViewModel : BaseViewModel
             NewStand.DesignStand = selectedStand.DesignStand;
 
             Debug.WriteLine("Поля перезаполнены");
-
         });
+    }
+    public async void OnRenumerateStandsCommandExecuted(object obj)
+    {
+        var (fromNumber,toNumber) = _dialogService.ShowRenumerateDialog();
+
+        var incorrectRange = fromNumber < 1 || toNumber < 1;
+
+        if (incorrectRange)
+            return;
+
+        if (CurrentProjectModel.Stands == null)
+        {
+            _notificationService.ShowError("Список стендов пуст");
+            return;
+        }
+
+        var renumeratedStand = CurrentProjectModel.Stands
+            .Where(stand => stand.Number >= fromNumber && stand.Number <= toNumber)
+            .OrderBy(stand => stand.Number)
+            .ToList() ;
+
+        ;
+        
     }
 
     public async void OnUpdateObvInStandCommandExecuted(object obj)
@@ -876,8 +898,6 @@ public class ProjectViewModel : BaseViewModel
     }
 
     #endregion Методы загрузки данных на view
-
-
 
     #region Методы для CRUD с проектами и стендами
 
@@ -1405,7 +1425,8 @@ public class ProjectViewModel : BaseViewModel
     //возвращает максимальный NN стендов в проекте
     public int MaxStandNN
     {
-        get => CurrentProjectModel?.Stands.Max(stand => stand.Number) ?? 0;
+        get => CurrentProjectModel.Stands.Count() > 0 ? CurrentProjectModel.Stands.Max(stand => stand.Number) : 0;
+   
     }
 
     //обновляем поле NN в обвязке
