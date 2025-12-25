@@ -23,6 +23,7 @@ public class ProjectService : IProjectService
     private readonly IStandService _standService;
     private readonly IBaseRepository<Subject> _subjectRepository;
     private readonly IFrameRepository _frameRepository;
+    private readonly IDialogService _dialogService;
 
     public ProjectService(
         IProjectInfoRepository projectRepository,
@@ -33,7 +34,8 @@ public class ProjectService : IProjectService
         IFormedDrainagesRepository drainagesRepository,
         IBaseRepository<Company> companyRepository,
         IBaseRepository<Subject> subjectRepository,
-        IFrameRepository frameRepository)
+        IFrameRepository frameRepository,
+        IDialogService dialogService)
     {
         _drainagesRepository = drainagesRepository;
         _additionalEquipsRepository = additionalEquipsRepository;
@@ -44,6 +46,7 @@ public class ProjectService : IProjectService
         _companyRepository = companyRepository;
         _subjectRepository = subjectRepository;
         _frameRepository = frameRepository;
+        _dialogService = dialogService;
     }
 
     public int GetStandsInProjectCount(ProjectModel projectModel)
@@ -125,7 +128,8 @@ public class ProjectService : IProjectService
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            var count = Convert.ToInt32(Interaction.InputBox("Введите количество копий", "Копирование стенда", "1"));
+            var count = _dialogService.ShowStandCopyDialog();
+
             var selectedStand = projectModel.SelectedStand;
             if (selectedStand == null)
             {
@@ -133,23 +137,29 @@ public class ProjectService : IProjectService
                 return;
             }
 
-            var existingKKS = projectModel.Stands.Select(s => s.KKSCode).ToHashSet();
-            var existingDesign = projectModel.Stands.Select(s => s.Design).ToHashSet();
-
             // Копируем всегда с исходного стенда, а не с предыдущей копии
+
             for (var i = 1; i <= count; i++)
             {
-                var newStand = await CopyStandFromSourceStandAsync(selectedStand, projectModel.CurrentProjectId, i);
+                var maxStandNumber = projectModel.Stands.Count > 0 ? projectModel.Stands.Max(stand => stand.Number) : 0;
+
+                var newStandNumber = maxStandNumber + 1;
+
+                var newStand = await CopyStandFromSourceStandAsync(selectedStand, projectModel.CurrentProjectId, newStandNumber);
+
+                newStand.Number = newStandNumber;
+
 
                 projectModel.Stands.Add(newStand);
             }
+
 
             await _standService.LoadStandsDataAsync(projectModel.Stands);
             _notificationService.ShowInfo($"Создано копий: {count}");
         });
     }
 
-    private async Task<StandModel> CopyStandFromSourceStandAsync(StandModel sourceStand, int projectId, int copyIndex)
+    private async Task<StandModel> CopyStandFromSourceStandAsync(StandModel sourceStand, int projectId, int newNumber)
     {
 
         var newStand = new StandModel
@@ -162,8 +172,7 @@ public class ProjectService : IProjectService
             Devices = sourceStand.Devices,
             KMCH = sourceStand.KMCH,
             MaterialLine = sourceStand.MaterialLine,
-            NN = sourceStand.NN + copyIndex,
-            Number = sourceStand.Number + copyIndex,
+            Number = newNumber,
             ObvyazkaName = sourceStand.ObvyazkaName,
             SerialNumber = sourceStand.SerialNumber,
             TreeSocket = sourceStand.TreeSocket,

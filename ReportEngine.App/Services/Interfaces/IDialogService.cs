@@ -20,4 +20,6 @@ public interface IDialogService
     FormedFrame ShowFrameDialog();
 
     public RenumerationInfo ShowRenumerateDialog();
+
+    public int ShowStandCopyDialog();
 }

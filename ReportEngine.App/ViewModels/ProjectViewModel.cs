@@ -82,7 +82,7 @@ public class ProjectViewModel : BaseViewModel
     }
     public int MaxStandNN
     {
-        get => CurrentProjectModel.Stands.Count() > 0 ? CurrentProjectModel.Stands.Max(stand => stand.Number) : 0;
+        get => CurrentProjectModel.Stands.Count > 0 ? CurrentProjectModel.Stands.Max(stand => stand.Number) : 0;
     }
 
     public bool CanAllCommandsExecute(object? e)
@@ -322,13 +322,17 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(AddNewStandToProjectAsync);
     }
 
-    // TODO: Сделать красивое окно
     public async void OnCopyStandsCommandExecuted(object? e)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            if (Guard.ExitIfNull("Стенды для копирования не выбраны!", _notificationService, CurrentProjectModel.SelectedStand))
+
+            if (CurrentProjectModel.SelectedStand == null)
+            {
+                _notificationService.ShowError("Стенды для копирования не выбраны!");
                 return;
+            }
+
 
             await _projectService.CopyStandsAsync(CurrentProjectModel);
             await LoadPurposesInStandsAsync();
@@ -340,6 +344,7 @@ public class ProjectViewModel : BaseViewModel
             if (lastStand == null)
                 return;
 
+      
             CurrentProjectModel.SelectedStand = lastStand;
         });
     }
@@ -723,14 +728,18 @@ public class ProjectViewModel : BaseViewModel
             return;
         }
 
+        if (!renumInfo.StartValue.HasValue || !renumInfo.Step.HasValue)
+        {
+            _notificationService.ShowError("Неверно введенны данные. Операция отменена.");
+            return;
+        }
+
         var renumeratedStand = CurrentProjectModel.Stands
             .Where(stand => stand.Number >= renumInfo.FromNumber && stand.Number <= renumInfo.ToNumber)
             .OrderBy(stand => stand.Number)
             .ToList();
 
-        var standNumber = renumeratedStand.FirstOrDefault()?.Number;
-
-        if (!standNumber.HasValue)
+        if (renumeratedStand == null || renumeratedStand.Count < 1)
         {
             _notificationService.ShowError("Не найдены подходящие стенды");
             return;
@@ -738,13 +747,19 @@ public class ProjectViewModel : BaseViewModel
 
         var standEntities = new List<Stand>();
 
+        int iteration = 1;
+
         foreach (var stand in renumeratedStand)
         {
-            stand.SerialNumber = $"{renumInfo.Prefix}{standNumber}{renumInfo.Postfix}";
+            var iterPart = renumInfo.StartValue.Value + (iteration-1) * renumInfo.Step.Value;
+            string formattedIterPart = iterPart.ToString().PadLeft(renumInfo.StartValueLength, '0');
+
+            stand.SerialNumber = $"{renumInfo.Prefix}{formattedIterPart}{renumInfo.Postfix}";
 
             var newStandEntity = StandDataConverter.ConvertToStandEntity(stand);
             standEntities.Add(newStandEntity);
-            standNumber++;
+
+            iteration++;
         }
 
         await _projectRepository.UpdateStandsGroupAsync(standEntities);

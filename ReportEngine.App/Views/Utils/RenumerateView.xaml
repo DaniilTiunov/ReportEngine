@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:ReportEngine.App.Views.Utils"
         mc:Ignorable="d"
         Title="Нумерация стендов" 
-        Height="250" 
+        Height="200" 
         Width="400"
-         Background="{DynamicResource PrimaryColor}"
+        Background="{DynamicResource PrimaryColor}"
         FontFamily="Bahnschrift"
         FontSize="14"
         Foreground="{DynamicResource PrimaryForeground}"
@@ -76,9 +76,9 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
-            <RowDefinition Height="50" />
-            <RowDefinition Height="25" />
-            <RowDefinition Height="50" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -93,8 +93,7 @@
             Grid.ColumnSpan="2"
             HorizontalAlignment="Center"
             Margin="0,5,0,5"
-            Text="Выставить серийный номер для стендов"
-        />
+            Text="Выставить серийный номер для стендов" />
 
         <StackPanel
             Orientation="Horizontal"
@@ -108,88 +107,118 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Margin="5,5,5,5"
-                Text="Cо стенда №"
-            />
+                Text="c стенда №" />
 
             <TextBox
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Margin="0,5,0,5"
+                MinWidth="30"
                 Text="{Binding FromNumber, Mode=TwoWay}" />
 
             <TextBlock
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Margin="5,5,5,5"
-                Text="по стенд №"
-            />
-
-
+                Text="по стенд №" />
 
             <TextBox
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Margin="0,5,5,5"
+                MinWidth="30"
                 Text="{Binding ToNumber, Mode=TwoWay}" />
 
             <TextBlock
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Margin="5,5,5,5"
-                Text="включительно"
-            />
+                Text="включительно" />
+            
         </StackPanel>
 
 
-                <TextBlock
-            Grid.Row="2"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
-            HorizontalAlignment="Center"
-            Margin="0,5,0,5"
-            Text="по шаблону"
-        />
+       
+                
+                <StackPanel  Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center" >
+
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        Margin="0,5,0,5"
+                        Text="по шаблону:"/>       
+
+                    <TextBox
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Margin="5,5,0,5"
+                        MinWidth="30"
+                        Text="{Binding Prefix, Mode=TwoWay}" />
+
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Margin="0,5,0,5"
+                        Text="значение" />  
+
+                    <TextBox
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Margin="0,5,5,5"
+                        MinWidth="30"
+                        Text="{Binding Postfix, Mode=TwoWay}" />
+
+                </StackPanel>
+
                 <StackPanel  Grid.Row="3"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                >
-
-                    <TextBox
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Margin="0,5,0,5"
-                Text="{Binding Prefix, Mode=TwoWay}" />
+                    VerticalAlignment="Center" >
 
                     <TextBlock
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Margin="5,5,5,5"
-                Text="№ стенда" />
+                        HorizontalAlignment="Center"
+                        Margin="0,5,0,5"
+                        Text="Стартовое значение:"/>
 
                     <TextBox
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Margin="0,5,0,5"
-                Text="{Binding Postfix, Mode=TwoWay}" />
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Margin="5,5,5,5"
+                        MinWidth="30"
+                        Text="{Binding StartValue, Mode=TwoWay}" />
+
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Margin="0,5,0,5"
+                        Text="Шаг:" />
+                    <TextBox
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Margin="5,5,5,5"
+                        MinWidth="30"
+                        Text="{Binding Step, Mode=TwoWay}" />
+
+
 
                 </StackPanel>
 
                 <StackPanel 
-            Grid.Row="4"
-            Grid.Column="0">
-            <Button  
-                Margin="0,0,0,5"
-                HorizontalAlignment="Center"  
-                Content="Применить" 
-                MinWidth="100"
-                MinHeight="35" 
-                Command="{Binding ApplyCommand}"
-                Click="Button_Click"/>
-        </StackPanel>
-
-
-
+                    Grid.Row="4"
+                    Grid.Column="0">
+                    
+                    <Button  
+                        Margin="0,5,0,5"
+                        HorizontalAlignment="Center"  
+                        Content="Применить" 
+                        MinWidth="100"
+                        MinHeight="35" 
+                        Command="{Binding ApplyCommand}"
+                        Click="Button_Click" />
+                    
+                </StackPanel>
 
             </Grid>
         </DockPanel>
