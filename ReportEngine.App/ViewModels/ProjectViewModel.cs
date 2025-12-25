@@ -733,12 +733,10 @@ public class ProjectViewModel : BaseViewModel
             return;
         }
 
-
         var renumeratedStand = CurrentProjectModel.Stands
             .Where(stand => stand.Number >= renumInfo.FromNumber && stand.Number <= renumInfo.ToNumber)
             .OrderBy(stand => stand.Number)
             .ToList();
-
 
         if (renumeratedStand == null || renumeratedStand.Count < 1)
         {
@@ -748,22 +746,19 @@ public class ProjectViewModel : BaseViewModel
 
         var standEntities = new List<Stand>();
 
-        var initialValue = renumInfo.StartValue.Value;
-        var iterStep = renumInfo.Step.Value;
-
-        int standNumber = 0;
+        int iteration = 1;
 
         foreach (var stand in renumeratedStand)
         {
+            var iterPart = renumInfo.StartValue.Value + (iteration-1) * renumInfo.Step.Value;
+            string formattedIterPart = iterPart.ToString().PadLeft(renumInfo.StartValueLength, '0');
 
-            var iterPart = initialValue + standNumber * iterStep;
-
-            stand.SerialNumber = $"{renumInfo.Prefix}{iterPart}{renumInfo.Postfix}";
+            stand.SerialNumber = $"{renumInfo.Prefix}{formattedIterPart}{renumInfo.Postfix}";
 
             var newStandEntity = StandDataConverter.ConvertToStandEntity(stand);
             standEntities.Add(newStandEntity);
 
-            standNumber++;
+            iteration++;
         }
 
         await _projectRepository.UpdateStandsGroupAsync(standEntities);

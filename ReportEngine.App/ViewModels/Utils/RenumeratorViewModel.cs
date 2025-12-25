@@ -90,6 +90,7 @@ namespace ReportEngine.App.ViewModels.Utils
 
         public async void OnApplyCommandExecuted(object sender)
         {
+
             ResultHandler?.Invoke(new RenumerationInfo()
             {
                 FromNumber = FromNumber,
@@ -97,7 +98,8 @@ namespace ReportEngine.App.ViewModels.Utils
                 Prefix = Prefix,
                 Postfix = Postfix,
                 StartValue = int.TryParse(StartValue, out int resultStartValue) ? resultStartValue : null,
-                Step = int.TryParse(Step, out int resultStepValue) ? resultStepValue : null
+                Step = int.TryParse(Step, out int resultStepValue) ? resultStepValue : null,
+                StartValueLength = StartValue.Length
             });
         }
     }

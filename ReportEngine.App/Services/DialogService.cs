@@ -175,7 +175,8 @@ public class DialogService : IDialogService
             Prefix = "",
             Postfix = "",
             StartValue = null,
-            Step = null
+            Step = null,
+            StartValueLength = 0
         };
    
         try

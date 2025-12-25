@@ -129,6 +129,7 @@ public class ProjectService : IProjectService
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             var count = _dialogService.ShowStandCopyDialog();
+
             var selectedStand = projectModel.SelectedStand;
             if (selectedStand == null)
             {
