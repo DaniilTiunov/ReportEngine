@@ -715,12 +715,7 @@ public class ProjectViewModel : BaseViewModel
     }
     public async void OnRenumerateStandsCommandExecuted(object obj)
     {
-        var (fromNumber,toNumber) = _dialogService.ShowRenumerateDialog();
-
-        var incorrectRange = fromNumber < 1 || toNumber < 1;
-
-        if (incorrectRange)
-            return;
+        var renumInfo = _dialogService.ShowRenumerateDialog();
 
         if (CurrentProjectModel.Stands == null)
         {
@@ -729,12 +724,33 @@ public class ProjectViewModel : BaseViewModel
         }
 
         var renumeratedStand = CurrentProjectModel.Stands
-            .Where(stand => stand.Number >= fromNumber && stand.Number <= toNumber)
+            .Where(stand => stand.Number >= renumInfo.FromNumber && stand.Number <= renumInfo.ToNumber)
             .OrderBy(stand => stand.Number)
-            .ToList() ;
+            .ToList();
 
-        ;
-        
+        var standNumber = renumeratedStand.FirstOrDefault()?.Number;
+
+        if (!standNumber.HasValue)
+        {
+            _notificationService.ShowError("Не найдены подходящие стенды");
+            return;
+        }
+
+        var standEntities = new List<Stand>();
+
+        foreach (var stand in renumeratedStand)
+        {
+            stand.SerialNumber = $"{renumInfo.Prefix}{standNumber}{renumInfo.Postfix}";
+
+            var newStandEntity = StandDataConverter.ConvertToStandEntity(stand);
+            standEntities.Add(newStandEntity);
+            standNumber++;
+        }
+
+        await _projectRepository.UpdateStandsGroupAsync(standEntities);
+
+        _notificationService.ShowInfo("Стенды пронумерованы");
+
     }
 
     public async void OnUpdateObvInStandCommandExecuted(object obj)
@@ -1420,6 +1436,7 @@ public class ProjectViewModel : BaseViewModel
             fieldToSortBy: "Number",
             descending: false);
     }
+    
     //обновляем поле NN в обвязке
     public void UpdateNewObvNN()
     {
@@ -1672,7 +1689,7 @@ public class ProjectViewModel : BaseViewModel
 
         var selectedStand = CurrentProjectModel.SelectedStand;
 
-        if (selectedStand == null) 
+        if (selectedStand == null)
             return false;
 
 
@@ -1737,7 +1754,7 @@ public class ProjectViewModel : BaseViewModel
             isAlreadyExist = standsCollection
                 .Any(stand => stand.Number == newStandNumber);
         }
-        else if(selectedStand != null)
+        else if (selectedStand != null)
         {
             isAlreadyExist = standsCollection
                 .Where(stand => stand.Number != selectedStand.Number)

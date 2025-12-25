@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.ViewModels.DTO;
 
 namespace ReportEngine.App.ViewModels
 {
@@ -9,8 +10,10 @@ namespace ReportEngine.App.ViewModels
     {
         private readonly INotificationService _notificationService;
 
-        private int _fromNumber;
-        private int _toNumber;
+        private int _fromNumber = 1;
+        private int _toNumber = 2;
+        private string _prefix = "Текст до номера";
+        private string _postfix = "Текст после номера";
 
         public int FromNumber
         {
@@ -23,8 +26,20 @@ namespace ReportEngine.App.ViewModels
             set => Set(ref _toNumber, value);
         }
 
+        public string Prefix
+        {
+            get => _prefix;
+            set => Set(ref _prefix, value);
+        }
+
+        public string Postfix
+        {
+            get => _postfix;
+            set => Set(ref _postfix, value);
+        }
+
         public ICommand ApplyCommand { get; set; }
-        public Action<(int,int)> ResultHandler {  get; set; }
+        public Action<RenumerationInfo> ResultHandler {  get; set; }
 
         public RenumeratorViewModel(INotificationService notificationService)
         {
@@ -32,24 +47,17 @@ namespace ReportEngine.App.ViewModels
             _notificationService = notificationService;
         }
 
-        public (int,int) IncorrectNumbers
-        {
-            get => (-1, -1);
-        }
-
-
-
-        public bool ValidateNumbers()
+        public bool ValidateData()
         {
             if (FromNumber < 1 || ToNumber < 1)
             {
-                _notificationService.ShowError("Некорректные значения");
+                _notificationService.ShowError("Некорректные значения № стендов");
                 return false;
             }
 
             if (FromNumber > ToNumber)
             {
-                _notificationService.ShowError("Неверный диапазон");
+                _notificationService.ShowError("Некорректный диапазон № стендов");
                 return false;
             }
 
@@ -59,9 +67,13 @@ namespace ReportEngine.App.ViewModels
 
         public async void OnApplyCommandExecuted(object sender)
         {
-            ResultHandler?.Invoke((FromNumber,ToNumber));
-
-            Debug.WriteLine("SRAKA");
+            ResultHandler?.Invoke(new RenumerationInfo()
+            {
+                FromNumber = FromNumber,
+                ToNumber = ToNumber,
+                Prefix = Prefix,
+                Postfix = Postfix
+            });
         }
     }
 }

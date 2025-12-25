@@ -24,7 +24,7 @@ namespace ReportEngine.App.Views.Utils
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (!_viewModel.ValidateNumbers())
+            if (!_viewModel.ValidateData())
                 return;
 
             _viewModel.OnApplyCommandExecuted(sender);
