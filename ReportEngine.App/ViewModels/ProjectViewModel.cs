@@ -76,6 +76,14 @@ public class ProjectViewModel : BaseViewModel
     public ProjectModel CurrentProjectModel { get; set; } = new();
     public ProjectCommandProvider ProjectCommandProvider { get; set; } = new();
     public MaterialLinesModel CurrentMaterials { get; set; } = new();
+    public int MaxObvNN
+    {
+        get => CurrentProjectModel?.SelectedStand?.ObvyazkiInStand.Max(obv => obv.NN) ?? 0;
+    }
+    public int MaxStandNN
+    {
+        get => CurrentProjectModel.Stands.Count() > 0 ? CurrentProjectModel.Stands.Max(stand => stand.Number) : 0;
+    }
 
     public bool CanAllCommandsExecute(object? e)
     {
@@ -1428,23 +1436,7 @@ public class ProjectViewModel : BaseViewModel
             fieldToSortBy: "Number",
             descending: false);
     }
-
-
-
-
-    //возвращает максимальный NN обвязок в стенде
-    public int MaxObvNN
-    {
-        get => CurrentProjectModel?.SelectedStand?.ObvyazkiInStand.Max(obv => obv.NN) ?? 0;
-    }
-
-    //возвращает максимальный NN стендов в проекте
-    public int MaxStandNN
-    {
-        get => CurrentProjectModel.Stands.Count() > 0 ? CurrentProjectModel.Stands.Max(stand => stand.Number) : 0;
-
-    }
-
+    
     //обновляем поле NN в обвязке
     public void UpdateNewObvNN()
     {
