@@ -344,8 +344,7 @@ public class ProjectViewModel : BaseViewModel
             if (lastStand == null)
                 return;
 
-          
-
+      
             CurrentProjectModel.SelectedStand = lastStand;
         });
     }

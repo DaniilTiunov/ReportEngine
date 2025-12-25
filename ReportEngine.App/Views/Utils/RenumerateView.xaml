@@ -113,6 +113,7 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Margin="0,5,0,5"
+                MinWidth="30"
                 Text="{Binding FromNumber, Mode=TwoWay}" />
 
             <TextBlock
@@ -125,6 +126,7 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Margin="0,5,5,5"
+                MinWidth="30"
                 Text="{Binding ToNumber, Mode=TwoWay}" />
 
             <TextBlock
@@ -152,6 +154,7 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Margin="5,5,0,5"
+                        MinWidth="30"
                         Text="{Binding Prefix, Mode=TwoWay}" />
 
                     <TextBlock
@@ -164,6 +167,7 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Margin="0,5,5,5"
+                        MinWidth="30"
                         Text="{Binding Postfix, Mode=TwoWay}" />
 
                 </StackPanel>
@@ -182,6 +186,7 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Margin="5,5,5,5"
+                        MinWidth="30"
                         Text="{Binding StartValue, Mode=TwoWay}" />
 
                     <TextBlock
@@ -193,6 +198,7 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Margin="5,5,5,5"
+                        MinWidth="30"
                         Text="{Binding Step, Mode=TwoWay}" />
 
 
