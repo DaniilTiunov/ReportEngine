@@ -82,7 +82,7 @@ public class ProjectViewModel : BaseViewModel
     }
     public int MaxStandNN
     {
-        get => CurrentProjectModel.Stands.Count() > 0 ? CurrentProjectModel.Stands.Max(stand => stand.Number) : 0;
+        get => CurrentProjectModel.Stands.Count > 0 ? CurrentProjectModel.Stands.Max(stand => stand.Number) : 0;
     }
 
     public bool CanAllCommandsExecute(object? e)
@@ -343,6 +343,8 @@ public class ProjectViewModel : BaseViewModel
 
             if (lastStand == null)
                 return;
+
+          
 
             CurrentProjectModel.SelectedStand = lastStand;
         });

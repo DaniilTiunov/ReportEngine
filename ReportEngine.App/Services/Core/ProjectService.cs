@@ -137,13 +137,18 @@ public class ProjectService : IProjectService
                 return;
             }
 
-            var existingKKS = projectModel.Stands.Select(s => s.KKSCode).ToHashSet();
-            var existingDesign = projectModel.Stands.Select(s => s.Design).ToHashSet();
-
             // Копируем всегда с исходного стенда, а не с предыдущей копии
+
             for (var i = 1; i <= count; i++)
             {
-                var newStand = await CopyStandFromSourceStandAsync(selectedStand, projectModel.CurrentProjectId, i);
+                var maxStandNumber = projectModel.Stands.Count > 0 ? projectModel.Stands.Max(stand => stand.Number) : 0;
+
+                var newStandNumber = maxStandNumber + 1;
+
+                var newStand = await CopyStandFromSourceStandAsync(selectedStand, projectModel.CurrentProjectId, newStandNumber);
+
+                newStand.Number = newStandNumber;
+
 
                 projectModel.Stands.Add(newStand);
             }
@@ -154,7 +159,7 @@ public class ProjectService : IProjectService
         });
     }
 
-    private async Task<StandModel> CopyStandFromSourceStandAsync(StandModel sourceStand, int projectId, int copyIndex)
+    private async Task<StandModel> CopyStandFromSourceStandAsync(StandModel sourceStand, int projectId, int newNumber)
     {
 
         var newStand = new StandModel
@@ -167,8 +172,7 @@ public class ProjectService : IProjectService
             Devices = sourceStand.Devices,
             KMCH = sourceStand.KMCH,
             MaterialLine = sourceStand.MaterialLine,
-            NN = sourceStand.NN + copyIndex,
-            Number = sourceStand.Number + copyIndex,
+            Number = newNumber,
             ObvyazkaName = sourceStand.ObvyazkaName,
             SerialNumber = sourceStand.SerialNumber,
             TreeSocket = sourceStand.TreeSocket,
