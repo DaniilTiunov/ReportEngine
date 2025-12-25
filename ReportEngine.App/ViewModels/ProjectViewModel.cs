@@ -322,13 +322,17 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(AddNewStandToProjectAsync);
     }
 
-    // TODO: Сделать красивое окно
     public async void OnCopyStandsCommandExecuted(object? e)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            if (Guard.ExitIfNull("Стенды для копирования не выбраны!", _notificationService, CurrentProjectModel.SelectedStand))
+
+            if (CurrentProjectModel.SelectedStand == null)
+            {
+                _notificationService.ShowError("Стенды для копирования не выбраны!");
                 return;
+            }
+
 
             await _projectService.CopyStandsAsync(CurrentProjectModel);
             await LoadPurposesInStandsAsync();
@@ -723,14 +727,20 @@ public class ProjectViewModel : BaseViewModel
             return;
         }
 
+        if (!renumInfo.StartValue.HasValue || !renumInfo.Step.HasValue)
+        {
+            _notificationService.ShowError("Неверно введенны данные. Операция отменена.");
+            return;
+        }
+
+
         var renumeratedStand = CurrentProjectModel.Stands
             .Where(stand => stand.Number >= renumInfo.FromNumber && stand.Number <= renumInfo.ToNumber)
             .OrderBy(stand => stand.Number)
             .ToList();
 
-        var standNumber = renumeratedStand.FirstOrDefault()?.Number;
 
-        if (!standNumber.HasValue)
+        if (renumeratedStand == null || renumeratedStand.Count < 1)
         {
             _notificationService.ShowError("Не найдены подходящие стенды");
             return;
@@ -738,12 +748,21 @@ public class ProjectViewModel : BaseViewModel
 
         var standEntities = new List<Stand>();
 
+        var initialValue = renumInfo.StartValue.Value;
+        var iterStep = renumInfo.Step.Value;
+
+        int standNumber = 0;
+
         foreach (var stand in renumeratedStand)
         {
-            stand.SerialNumber = $"{renumInfo.Prefix}{standNumber}{renumInfo.Postfix}";
+
+            var iterPart = initialValue + standNumber * iterStep;
+
+            stand.SerialNumber = $"{renumInfo.Prefix}{iterPart}{renumInfo.Postfix}";
 
             var newStandEntity = StandDataConverter.ConvertToStandEntity(stand);
             standEntities.Add(newStandEntity);
+
             standNumber++;
         }
 

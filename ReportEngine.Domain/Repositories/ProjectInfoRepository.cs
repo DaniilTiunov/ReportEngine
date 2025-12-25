@@ -85,13 +85,36 @@ public class ProjectInfoRepository : IProjectInfoRepository
         return 1;
     }
 
+    public async Task<IEnumerable<Stand>> AddStandsGroupAsync(int projectId, IEnumerable<Stand> stands)
+    {
+        var project = await _context.Projects
+          .Include(p => p.Stands)
+          .FirstOrDefaultAsync(p => p.Id == projectId);
+
+        if (project == null) 
+            throw new ArgumentException($"Проект с ID: {projectId} не найден.");
+
+        foreach (var stand in stands)
+        {
+            stand.ProjectInfoId = projectId;
+        }
+
+        _context.Stands.AddRange(stands);
+
+        await _context.SaveChangesAsync();
+
+        return stands;
+
+    }
+
     public async Task<Stand> AddStandAsync(int projectId, Stand stand)
     {
         var project = await _context.Projects
             .Include(p => p.Stands)
             .FirstOrDefaultAsync(p => p.Id == projectId);
 
-        if (project == null) throw new ArgumentException($"Проект с ID: {projectId} не найден.");
+        if (project == null) 
+            throw new ArgumentException($"Проект с ID: {projectId} не найден.");
 
         stand.ProjectInfoId = projectId;
         project.Stands.Add(stand);
@@ -106,7 +129,8 @@ public class ProjectInfoRepository : IProjectInfoRepository
         var existingStand = await _context.Set<Stand>()
             .FirstOrDefaultAsync(p => p.Id == stand.Id);
 
-        if (existingStand != null) _context.Entry(existingStand).CurrentValues.SetValues(stand);
+        if (existingStand != null) 
+            _context.Entry(existingStand).CurrentValues.SetValues(stand);
 
         await _context.SaveChangesAsync();
     }

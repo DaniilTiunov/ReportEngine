@@ -23,6 +23,7 @@ public class ProjectService : IProjectService
     private readonly IStandService _standService;
     private readonly IBaseRepository<Subject> _subjectRepository;
     private readonly IFrameRepository _frameRepository;
+    private readonly IDialogService _dialogService;
 
     public ProjectService(
         IProjectInfoRepository projectRepository,
@@ -33,7 +34,8 @@ public class ProjectService : IProjectService
         IFormedDrainagesRepository drainagesRepository,
         IBaseRepository<Company> companyRepository,
         IBaseRepository<Subject> subjectRepository,
-        IFrameRepository frameRepository)
+        IFrameRepository frameRepository,
+        IDialogService dialogService)
     {
         _drainagesRepository = drainagesRepository;
         _additionalEquipsRepository = additionalEquipsRepository;
@@ -44,6 +46,7 @@ public class ProjectService : IProjectService
         _companyRepository = companyRepository;
         _subjectRepository = subjectRepository;
         _frameRepository = frameRepository;
+        _dialogService = dialogService;
     }
 
     public int GetStandsInProjectCount(ProjectModel projectModel)
@@ -125,7 +128,7 @@ public class ProjectService : IProjectService
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            var count = Convert.ToInt32(Interaction.InputBox("Введите количество копий", "Копирование стенда", "1"));
+            var count = _dialogService.ShowStandCopyDialog();
             var selectedStand = projectModel.SelectedStand;
             if (selectedStand == null)
             {
@@ -143,6 +146,7 @@ public class ProjectService : IProjectService
 
                 projectModel.Stands.Add(newStand);
             }
+
 
             await _standService.LoadStandsDataAsync(projectModel.Stands);
             _notificationService.ShowInfo($"Создано копий: {count}");

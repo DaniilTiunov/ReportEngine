@@ -7,6 +7,7 @@ using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.Contacts;
 using ReportEngine.App.ViewModels.DTO;
 using ReportEngine.App.ViewModels.FormedEquips;
+using ReportEngine.App.ViewModels.Utils;
 using ReportEngine.App.Views.Utils;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Entities;
@@ -172,7 +173,9 @@ public class DialogService : IDialogService
             FromNumber = -1,
             ToNumber = -1,
             Prefix = "",
-            Postfix = ""
+            Postfix = "",
+            StartValue = null,
+            Step = null
         };
    
         try
@@ -192,6 +195,28 @@ public class DialogService : IDialogService
             return resultData;
         }
 
+    }
+
+    public int ShowStandCopyDialog()
+    {
+        int resultCopyCount = 0;
+
+        try
+        {
+            var viewModel = _serviceProvider.GetRequiredService<StandCopyViewModel>();
+            var window = new StandCopyView(viewModel);
+
+            viewModel.ResultHandler = (copyCount) => { resultCopyCount = copyCount; };
+
+            window.ShowDialog();
+
+            return resultCopyCount;
+        }
+        catch (Exception ex)
+        {
+            MessageBoxHelper.ShowError(ex.Message);
+            return resultCopyCount;
+        }
     }
 
 }

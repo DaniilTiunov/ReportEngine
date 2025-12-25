@@ -4,7 +4,7 @@ using ReportEngine.App.Commands;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.ViewModels.DTO;
 
-namespace ReportEngine.App.ViewModels
+namespace ReportEngine.App.ViewModels.Utils
 {
     public class RenumeratorViewModel : BaseViewModel
     {
@@ -12,8 +12,11 @@ namespace ReportEngine.App.ViewModels
 
         private int _fromNumber = 1;
         private int _toNumber = 2;
-        private string _prefix = "Текст до номера";
-        private string _postfix = "Текст после номера";
+        private string _prefix = "01-01.";
+       
+        private string _postfix = ".Ex";
+        private string _startValue = "001";
+        private string _step = "1";
 
         public int FromNumber
         {
@@ -38,6 +41,20 @@ namespace ReportEngine.App.ViewModels
             set => Set(ref _postfix, value);
         }
 
+
+        public string StartValue
+        {
+            get => _startValue;
+            set => Set(ref _startValue, value);
+        }
+
+        public string Step
+        {
+            get => _step;
+            set => Set(ref _step, value);
+        }
+
+
         public ICommand ApplyCommand { get; set; }
         public Action<RenumerationInfo> ResultHandler {  get; set; }
 
@@ -49,15 +66,21 @@ namespace ReportEngine.App.ViewModels
 
         public bool ValidateData()
         {
-            if (FromNumber < 1 || ToNumber < 1)
+            if (FromNumber > ToNumber || FromNumber < 1 || ToNumber < 1)
             {
-                _notificationService.ShowError("Некорректные значения № стендов");
+                _notificationService.ShowError("Некорректный диапазон № стендов");
                 return false;
             }
 
-            if (FromNumber > ToNumber)
+            if (string.IsNullOrEmpty(StartValue) || !int.TryParse(StartValue, out _))
             {
-                _notificationService.ShowError("Некорректный диапазон № стендов");
+                _notificationService.ShowError("Некорректное cтартовое значение");
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(Step) || !int.TryParse(Step, out _))
+            {
+                _notificationService.ShowError("Некорректное значение шага");
                 return false;
             }
 
@@ -72,7 +95,9 @@ namespace ReportEngine.App.ViewModels
                 FromNumber = FromNumber,
                 ToNumber = ToNumber,
                 Prefix = Prefix,
-                Postfix = Postfix
+                Postfix = Postfix,
+                StartValue = int.TryParse(StartValue, out int resultStartValue) ? resultStartValue : null,
+                Step = int.TryParse(Step, out int resultStepValue) ? resultStepValue : null
             });
         }
     }
