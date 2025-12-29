@@ -45,8 +45,6 @@ public class CalculationSettingsViewModel : BaseViewModel
         if(selected == null)
             return;
 
-        
-    
         if (p is string propertyName && !string.IsNullOrWhiteSpace(propertyName))
         {
             var nameProp = StandSettings.GetType().GetProperty(propertyName);
@@ -72,8 +70,6 @@ public class CalculationSettingsViewModel : BaseViewModel
                 Debug.WriteLine($"Свойство '{measurePropertyName}' не найдено.");
             }
         }
-
-        ;
     }
 
     public async void OnSaveSettingsCommandExecuted(object p)
