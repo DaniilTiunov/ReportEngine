@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Diagnostics;
+using System.Windows.Input;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model.CalculationModels;
@@ -46,14 +47,27 @@ public class CalculationSettingsViewModel : BaseViewModel
 
         if (p is string propertyName && !string.IsNullOrWhiteSpace(propertyName))
         {
-            var prop = StandSettings.GetType().GetProperty(propertyName);
-            if (prop != null && prop.CanWrite)
+            var nameProp = StandSettings.GetType().GetProperty(propertyName);
+   
+            if (nameProp != null && nameProp.CanWrite)
             {
-                prop.SetValue(StandSettings, selected.Name);
+                nameProp.SetValue(StandSettings, selected.Name);
             }
             else
             {
                 _notificationService.ShowError($"Свойство '{propertyName}' не найдено.");
+            }
+
+            var measurePropertyName = propertyName + "Measure";
+            var measureProp = StandSettings.GetType().GetProperty(measurePropertyName);
+
+            if (measureProp != null && measureProp.CanWrite)
+            {
+                measureProp.SetValue(StandSettings, selected.Measure);
+            }
+            else
+            {
+                Debug.WriteLine($"Свойство '{measurePropertyName}' не найдено.");
             }
         }
     }
