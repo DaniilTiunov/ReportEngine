@@ -1230,7 +1230,7 @@
                                     <GridViewColumn
                                         Width="100"
                                         DisplayMemberBinding="{Binding NN}"
-                                        Header="NN" />
+                                        Header="№" />
                                     <GridViewColumn
                                         Width="100"
                                         DisplayMemberBinding="{Binding ObvyazkaName}"
