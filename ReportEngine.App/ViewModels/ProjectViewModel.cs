@@ -1375,6 +1375,22 @@ public class ProjectViewModel : BaseViewModel
 
     private async Task CreateReportAsync(ReportType typeGenerator, string reportName)
     {
+        //Проверяем на дубликаты KKS
+        bool hasDuplicates = CurrentProjectModel.Stands
+            .GroupBy(stand => stand.KKSCode)
+            .Any(group => group.Count() > 1);
+
+        if (hasDuplicates)
+        {
+            bool confirmationResult = _notificationService.ShowConfirmation("Обнаружены дублирования KKS-кодов стендов.\nПродолжить?");
+
+            if (!confirmationResult)
+            {
+                _notificationService.ShowInfo("Генерация отчета отменена");
+                return;
+            }         
+        }
+
         await _reportService.GenerateReportAsync(typeGenerator, CurrentProjectModel.CurrentProjectId);
 
         if (_notificationService.ShowConfirmation($"Ведомость {reportName} создана!\nОткрыть папку с отчётами?"))
