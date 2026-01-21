@@ -217,6 +217,8 @@
                     </ListView.View>
                     <ListView.ContextMenu>
                         <ContextMenu>
+                            <MenuItem Command="{Binding ProjectCommandProvider.OpenObvSettingsWindowCommand}" Header="Создать обвязку" />
+                            <Separator />
                             <MenuItem Command="{Binding ProjectCommandProvider.FillStandFieldsFromObvyazkaCommand}" Header="Редактировать обвязку" />
                             <MenuItem Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}" Header="Скопировать в выбранный стенд" />
                             <Separator />

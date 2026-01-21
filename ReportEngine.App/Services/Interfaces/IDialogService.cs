@@ -1,4 +1,6 @@
-﻿using ReportEngine.App.ViewModels.DTO;
+﻿using ReportEngine.App.Model.StandsModel;
+using ReportEngine.App.ViewModels;
+using ReportEngine.App.ViewModels.DTO;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 
@@ -22,4 +24,8 @@ public interface IDialogService
     public RenumerationInfo ShowRenumerateDialog();
 
     public int ShowStandCopyDialog();
+
+    void ShowObvSettingsWindow(ProjectViewModel projectViewModel);
+
+    void ShowEditObvSettingsWindow(ProjectViewModel projectViewModel, StandModel standModel, ObvyazkaInStand selectedObvyazka);
 }

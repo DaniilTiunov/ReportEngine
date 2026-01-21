@@ -153,6 +153,9 @@ public static class ProjectCommandsInitializer
 
         vm.ProjectCommandProvider.RenumerateStandsCommand =
             new RelayCommand(vm.OnRenumerateStandsCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.OpenObvSettingsWindowCommand =
+            new RelayCommand(vm.OnOpenObvSettingsWindowCommandExecuted, vm.CanAllCommandsExecute);
     }
 
     public static void InitializeGenericCommands(ProjectViewModel vm)

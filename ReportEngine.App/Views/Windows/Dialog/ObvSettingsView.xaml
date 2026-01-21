@@ -1,0 +1,668 @@
+﻿<Window
+    x:Class="ReportEngine.App.Views.Windows.Dialog.ObvSettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:ReportEngine.App.Display"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ReportEngine.App.Views.Windows.Dialog"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Создание и редактирование обвязок"
+    d:DesignHeight="1200"
+    d:DesignWidth="970"
+    Background="{DynamicResource PrimaryColor}"
+    FontFamily="Bahnschrift"
+    FontSize="14"
+    Foreground="{DynamicResource PrimaryForeground}"
+    ResizeMode="CanResize"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
+    mc:Ignorable="d">
+
+    <Window.Resources>
+        <converters:ObvyazkaImagePathConverter x:Key="ObvyazkaImagePathConverter" />
+        <converters:DrainagesVisibilityConverter x:Key="DrainagesVisibilityConverter" />
+    </Window.Resources>
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="0"
+            CornerRadius="0"
+            GlassFrameThickness="0" />
+    </WindowChrome.WindowChrome>
+
+    <Border Style="{DynamicResource WindowBorder}">
+        <DockPanel>
+            <Border
+                Height="34"
+                Background="#2D2D30"
+                DockPanel.Dock="Top"
+                MouseLeftButtonDown="Window_MouseLeftButtonDown">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <Image
+                            Width="18"
+                            Height="18"
+                            Margin="0,0,8,0"
+                            Source="/Resources/Icons/estimate_cost_icon_213382.ico" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            Foreground="White"
+                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <Button
+                            x:Name="MinimizeButton"
+                            Width="40"
+                            Height="30"
+                            Click="MinimizeButton_Click"
+                            FontSize="16"
+                            ToolTip="Свернуть">
+                            ─
+                        </Button>
+                        <Button
+                            x:Name="MaxRestoreButton"
+                            Width="40"
+                            Height="30"
+                            Margin="10,0,0,0"
+                            Click="MaxRestoreButton_Click"
+                            FontSize="16"
+                            ToolTip="Развернуть">
+                            ▢
+                        </Button>
+                        <Button
+                            x:Name="CloseButton"
+                            Width="40"
+                            Height="30"
+                            Margin="10,0,10,0"
+                            Click="CloseButton_Click"
+                            FontSize="16"
+                            ToolTip="Закрыть">
+                            ✕
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <ScrollViewer>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="700" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="450" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <GroupBox Grid.Row="0" Grid.Column="0">
+                        <GroupBox.Header>
+                            <TextBlock>
+                                <Run
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Text="Обвязки и датчики в стенде — " />
+                                <Run
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(нет данных)'}" />
+                            </TextBlock>
+                        </GroupBox.Header>
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="220" />
+                                <ColumnDefinition Width="70" />
+                                <ColumnDefinition Width="70" />
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="30" />
+
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="5"
+                                HorizontalAlignment="Center"
+                                FontWeight="DemiBold"
+                                Text="Материал" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="2"
+                                Margin="5"
+                                HorizontalAlignment="Center"
+                                FontWeight="DemiBold"
+                                Text="Кол-во" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="3"
+                                Margin="5,5,5,5"
+                                HorizontalAlignment="Center"
+                                FontWeight="DemiBold"
+                                Text="Ед. изм" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="4"
+                                Margin="5,5,5,5"
+                                HorizontalAlignment="Center"
+                                FontWeight="DemiBold"
+                                Text="Тип материала" />
+
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="2"
+                                Grid.ColumnSpan="2"
+                                Height="25"
+                                Margin="5,5,5,5"
+                                VerticalAlignment="Top"
+                                Text="Тип обвязки:" />
+                            <TextBox
+                                Grid.Row="0"
+                                Grid.Column="4"
+                                Height="25"
+                                Margin="5,5,5,5"
+                                VerticalAlignment="Top"
+                                Text="{Binding CurrentProjectModel.SelectedStand.ObvyazkaName}" />
+                            <Button
+                                Grid.Row="0"
+                                Grid.Column="5"
+                                Width="25"
+                                Height="25"
+                                Margin="0,5,0,0"
+                                VerticalAlignment="Top"
+                                Command="{Binding ProjectCommandProvider.SelectObvFromDialogCommand}"
+                                Content="..." />
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Height="25"
+                                Margin="5,5,5,5"
+                                VerticalAlignment="Top"
+                                Text="№ обвязки:" />
+                            <TextBox
+                                x:Name="ObvImg"
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Width="50"
+                                Margin="5,5,5,5"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Text="{Binding CurrentProjectModel.SelectedStand.NN}" />
+
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Height="25"
+                                Margin="5,5,5,5"
+                                Text="Линия:" />
+                            <TextBox
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Height="25"
+                                Margin="5,5,5,5"
+                                Text="{Binding CurrentProjectModel.SelectedStand.MaterialLine}" />
+                            <TextBox
+                                Grid.Row="2"
+                                Grid.Column="2"
+                                Width="50"
+                                Height="25"
+                                Margin="5,5,5,5"
+                                Text="{Binding CurrentProjectModel.SelectedStand.MaterialLineCount}"
+                                ToolTip="Количество материала линии" />
+                            <TextBox
+                                Grid.Row="2"
+                                Grid.Column="3"
+                                Width="50"
+                                Height="25"
+                                Margin="5,5,5,5"
+                                Text="{Binding CurrentProjectModel.SelectedStand.MaterialLineMeasure}"
+                                ToolTip="Ед. измерения" />
+
+                            <ComboBox
+                                Grid.Row="2"
+                                Grid.Column="4"
+                                Width="140"
+                                Height="25"
+                                Margin="5,5,5,5"
+                                ItemsSource="{Binding CurrentMaterials.MaterialLineTypes}"
+                                SelectedItem="{Binding CurrentMaterials.SelectedMaterialLine, Mode=TwoWay}" />
+
+                            <Button
+                                Grid.Row="2"
+                                Grid.Column="5"
+                                Width="25"
+                                Height="25"
+                                Margin="5,0,0,0"
+                                Command="{Binding ProjectCommandProvider.SelectMaterialLineDialogCommand}"
+                                Content="..." />
+
+                            <TextBlock
+                                Grid.Row="3"
+                                Grid.Column="0"
+                                Height="25"
+                                Margin="5,5,5,5"
+                                Text="Арматура:" />
+                            <TextBox
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                Height="25"
+                                Margin="5,5,5,5"
+                                Text="{Binding CurrentProjectModel.SelectedStand.Armature}" />
+                            <TextBox
+                                Grid.Row="3"
+                                Grid.Column="2"
+                                Width="50"
+                                Height="25"
+                                Margin="5,5,5,5"
+                                Text="{Binding CurrentProjectModel.SelectedStand.ArmatureCount}"
+                                ToolTip="Количество арматуры" />
+                            <TextBox
+                                Grid.Row="3"
+                                Grid.Column="3"
+                                Width="50"
+                                Height="25"
+                                Margin="5,5,5,5"
+                                Text="{Binding CurrentProjectModel.SelectedStand.ArmatureMeasure}"
+                                ToolTip="Ед. измерения" />
+                            <ComboBox
+                                Grid.Row="3"
+                                Grid.Column="4"
+                                Width="140"
+                                Height="25"
+                                Margin="5,5,5,5"
+                                ItemsSource="{Binding CurrentMaterials.AramuteresTypes}"
+                                SelectedItem="{Binding CurrentMaterials.SelectedAramuteres, Mode=TwoWay}" />
+                            <Button
+                                Grid.Row="3"
+                                Grid.Column="5"
+                                Width="25"
+                                Height="25"
+                                Margin="5,0,0,0"
+                                Command="{Binding ProjectCommandProvider.SelectArmatureDialogCommand}"
+                                Content="..." />
+
+                            <TextBlock
+                                Grid.Row="4"
+                                Grid.Column="0"
+                                Height="25"
+                                Margin="5,5,5,5"
+                                Text="Тройник:" />
+                            <TextBox
+                                Grid.Row="4"
+                                Grid.Column="1"
+                                Height="25"
+                                Margin="5,5,5,5"
+                                Text="{Binding CurrentProjectModel.SelectedStand.TreeSocket}" />
+                            <TextBox
+                                Grid.Row="4"
+                                Grid.Column="2"
+                                Width="50"
+                                Height="25"
+                                Margin="5,5,5,5"
+                                Text="{Binding CurrentProjectModel.SelectedStand.TreeSocketMaterialCount}"
+                                ToolTip="Количество тройников" />
+                            <TextBox
+                                Grid.Row="4"
+                                Grid.Column="3"
+                                Width="50"
+                                Height="25"
+                                Margin="5,5,5,5"
+                                Text="{Binding CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure}"
+                                ToolTip="Ед. измерения" />
+                            <ComboBox
+                                Grid.Row="4"
+                                Grid.Column="4"
+                                Width="140"
+                                Margin="5,5,5,5"
+                                ItemsSource="{Binding CurrentMaterials.TreeSocketTypes}"
+                                SelectedItem="{Binding CurrentMaterials.SelectedSocketTypes, Mode=TwoWay}" />
+                            <Button
+                                Grid.Row="4"
+                                Grid.Column="5"
+                                Width="25"
+                                Height="25"
+                                Margin="5,0,0,0"
+                                Command="{Binding ProjectCommandProvider.SelectTreeSocketDialogCommand}"
+                                Content="..." />
+
+                            <TextBlock
+                                Grid.Row="5"
+                                Grid.Column="0"
+                                Height="25"
+                                Margin="5,5,5,5"
+                                Text="КМЧ:" />
+                            <TextBox
+                                Grid.Row="5"
+                                Grid.Column="1"
+                                Height="25"
+                                Margin="5,5,5,5"
+                                Text="{Binding CurrentProjectModel.SelectedStand.KMCH}" />
+                            <TextBox
+                                Grid.Row="5"
+                                Grid.Column="2"
+                                Width="50"
+                                Height="25"
+                                Margin="5,5,5,5"
+                                Text="{Binding CurrentProjectModel.SelectedStand.KMCHCount}"
+                                ToolTip="Количество КМЧ" />
+                            <TextBox
+                                Grid.Row="5"
+                                Grid.Column="3"
+                                Width="50"
+                                Height="25"
+                                Margin="5,5,5,5"
+                                Text="{Binding CurrentProjectModel.SelectedStand.KMCHMeasure}"
+                                ToolTip="Ед. измерения" />
+                            <ComboBox
+                                Grid.Row="5"
+                                Grid.Column="4"
+                                Width="140"
+                                Height="25"
+                                Margin="5,5,5,5"
+                                ItemsSource="{Binding CurrentMaterials.KMCHTypes}"
+                                SelectedItem="{Binding CurrentMaterials.SelectedKMCHType, Mode=TwoWay}" />
+                            <Button
+                                Grid.Row="5"
+                                Grid.Column="5"
+                                Width="25"
+                                Height="25"
+                                Margin="5,0,0,0"
+                                Command="{Binding ProjectCommandProvider.SelectKMCHDialogCommand}"
+                                Content="..." />
+                            <StackPanel Grid.Row="6" Grid.ColumnSpan="7">
+                                <DataGrid
+                                    Margin="5"
+                                    AutoGenerateColumns="False"
+                                    CanUserAddRows="True"
+                                    ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkaAdditionalComponents}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Назначение" />
+                                        <DataGridTextColumn
+                                            Width="*"
+                                            Binding="{Binding Material, Mode=TwoWay}"
+                                            Header="Доп.комплектующее" />
+                                        <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay}" Header="Кол-во" />
+                                        <DataGridTextColumn Binding="{Binding Measure, Mode=TwoWay}" Header="Ед. изм." />
+                                        <DataGridTemplateColumn Header="Выбрать">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button
+                                                        Margin="2,0,2,0"
+                                                        Padding="5,0,5,0"
+                                                        Command="{Binding DataContext.ProjectCommandProvider.OpenAllSortamentsDialogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"
+                                                        Content="Выбрать" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </StackPanel>
+                        </Grid>
+                    </GroupBox>
+
+
+                    <Border
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Width="215"
+                        Height="245"
+                        Margin="0,0,10,195"
+                        Padding="6"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Background="WhiteSmoke"
+                        BorderBrush="LightGray"
+                        BorderThickness="1"
+                        CornerRadius="4">
+                        <Image
+                            MaxWidth="200"
+                            MaxHeight="200"
+                            VerticalAlignment="Top"
+                            Source="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.ImageName, Converter={StaticResource ObvyazkaImagePathConverter}}"
+                            Stretch="Uniform"
+                            ToolTip="Изображение обвязки" />
+                    </Border>
+
+                    <GroupBox
+                        Grid.Row="1"
+                        Padding="8"
+                        Header="">
+                        <Grid>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Text="Тип датчика 1:" />
+                            <ComboBox
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="0,0,200,5"
+                                materialDesign:HintAssist.Hint="Выбор типа датчика"
+                                ItemsSource="{Binding CurrentProjectModel.SelectedStand.SensorType}"
+                                SelectedIndex="1"
+                                SelectedItem="{Binding CurrentProjectModel.SelectedStand.FirstSensorType, Mode=TwoWay}" />
+
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Text="KKS-контура:" />
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="0,0,5,5"
+                                Text="{Binding CurrentProjectModel.SelectedStand.FirstSensorKKS}" />
+
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Text="Маркировка (+):" />
+                            <TextBox
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Margin="0,0,5,5"
+                                Text="{Binding CurrentProjectModel.SelectedStand.FirstSensorMarkPlus}" />
+
+                            <TextBlock
+                                Grid.Row="3"
+                                Grid.Column="0"
+                                Text="Маркировка (-):" />
+                            <TextBox
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                Margin="0,0,5,5"
+                                Text="{Binding CurrentProjectModel.SelectedStand.FirstSensorMarkMinus}" />
+
+                            <TextBlock
+                                Grid.Row="4"
+                                Grid.Column="0"
+                                Text="Описание:" />
+                            <TextBox
+                                Grid.Row="4"
+                                Grid.Column="1"
+                                Height="40"
+                                Margin="0,0,5,0"
+                                AcceptsReturn="True"
+                                Text="{Binding CurrentProjectModel.SelectedStand.FirstSensorDescription}"
+                                TextWrapping="Wrap" />
+                            <!--  <Border  -->
+                            <TextBlock
+                                Grid.Row="5"
+                                Grid.Column="0"
+                                Text="Тип датчика 2:" />
+                            <ComboBox
+                                Grid.Row="5"
+                                Grid.Column="1"
+                                Margin="0,0,200,5"
+                                materialDesign:HintAssist.Hint="Выбор типа датчика"
+                                ItemsSource="{Binding CurrentProjectModel.SelectedStand.SensorType}"
+                                SelectedItem="{Binding CurrentProjectModel.SelectedStand.SecondSensorType}" />
+
+                            <TextBlock
+                                Grid.Row="6"
+                                Grid.Column="0"
+                                Text="KKS-контура:" />
+                            <TextBox
+                                Grid.Row="6"
+                                Grid.Column="1"
+                                Margin="0,0,5,5"
+                                Text="{Binding CurrentProjectModel.SelectedStand.SecondSensorKKS}" />
+
+                            <TextBlock
+                                Grid.Row="7"
+                                Grid.Column="0"
+                                Text="Маркировка (+):" />
+                            <TextBox
+                                Grid.Row="7"
+                                Grid.Column="1"
+                                Margin="0,0,5,5"
+                                Text="{Binding CurrentProjectModel.SelectedStand.SecondSensorMarkPlus}" />
+
+                            <TextBlock
+                                Grid.Row="8"
+                                Grid.Column="0"
+                                Text="Маркировка (-):" />
+                            <TextBox
+                                Grid.Row="8"
+                                Grid.Column="1"
+                                Margin="0,0,5,5"
+                                Text="{Binding CurrentProjectModel.SelectedStand.SecondSensorMarkMinus}" />
+
+                            <TextBlock
+                                Grid.Row="9"
+                                Grid.Column="0"
+                                Text="Описание:" />
+                            <TextBox
+                                Grid.Row="9"
+                                Grid.Column="1"
+                                Height="40"
+                                Margin="0,0,5,0"
+                                AcceptsReturn="True"
+                                Text="{Binding CurrentProjectModel.SelectedStand.SecondSensorDescription}"
+                                TextWrapping="Wrap" />
+                            <!--  <Border  -->
+                            <TextBlock
+                                Grid.Row="10"
+                                Grid.Column="0"
+                                Text="Тип датчика 3:" />
+                            <ComboBox
+                                Grid.Row="10"
+                                Grid.Column="1"
+                                Margin="0,0,200,5"
+                                materialDesign:HintAssist.Hint="Выбор типа датчика"
+                                ItemsSource="{Binding CurrentProjectModel.SelectedStand.SensorType}"
+                                SelectedItem="{Binding CurrentProjectModel.SelectedStand.ThirdSensorType}" />
+
+                            <TextBlock
+                                Grid.Row="11"
+                                Grid.Column="0"
+                                Text="KKS-контура:" />
+                            <TextBox
+                                Grid.Row="11"
+                                Grid.Column="1"
+                                Margin="0,0,5,5"
+                                Text="{Binding CurrentProjectModel.SelectedStand.ThirdSensorKKS}" />
+
+                            <TextBlock
+                                Grid.Row="12"
+                                Grid.Column="0"
+                                Text="Маркировка (+):" />
+                            <TextBox
+                                Grid.Row="12"
+                                Grid.Column="1"
+                                Margin="0,0,5,5"
+                                Text="{Binding CurrentProjectModel.SelectedStand.ThirdSensorMarkPlus}" />
+
+                            <TextBlock
+                                Grid.Row="13"
+                                Grid.Column="0"
+                                Text="Маркировка (-):" />
+                            <TextBox
+                                Grid.Row="13"
+                                Grid.Column="1"
+                                Margin="0,0,5,5"
+                                Text="{Binding CurrentProjectModel.SelectedStand.ThirdSensorMarkMinus}" />
+
+                            <TextBlock
+                                Grid.Row="14"
+                                Grid.Column="0"
+                                Text="Описание:" />
+                            <TextBox
+                                Grid.Row="14"
+                                Grid.Column="1"
+                                Height="40"
+                                Margin="0,0,5,0"
+                                AcceptsReturn="True"
+                                Text="{Binding CurrentProjectModel.SelectedStand.ThirdSensorDescription}"
+                                TextWrapping="Wrap" />
+
+                            <StackPanel
+                                Grid.Row="15"
+                                Grid.ColumnSpan="2"
+                                Margin="0,10,0,0"
+                                HorizontalAlignment="Right"
+                                Orientation="Horizontal">
+                                <Button
+                                    Width="150"
+                                    Height="30"
+                                    Margin="0,0,10,0"
+                                    Command="{Binding ProjectCommandProvider.SaveObvCommand}"
+                                    Content="Добавить новую" />
+                                <Button
+                                    Width="178"
+                                    Height="30"
+                                    Command="{Binding ProjectCommandProvider.UpdateObvInStandCommand}"
+                                    Content="Сохранить изменения" />
+                            </StackPanel>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+            </ScrollViewer>
+        </DockPanel>
+    </Border>
+</Window>

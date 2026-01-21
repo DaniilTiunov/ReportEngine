@@ -57,6 +57,7 @@ public class ProjectCommandProvider
     public ICommand ShowSubjectDialogCommand { get; set; }
     public ICommand UpdateUICommand { get; set; }
     public ICommand RenumerateStandsCommand { get; set; }
+    public ICommand OpenObvSettingsWindowCommand { get; set; }
 
     public ICommand Bind(ICommand command, Action<object> execute, Func<object, bool> canExecute = null)
     {

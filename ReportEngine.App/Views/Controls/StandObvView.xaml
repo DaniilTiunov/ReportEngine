@@ -292,8 +292,7 @@
                                     <ColumnDefinition Width="200*" />
                                 </Grid.ColumnDefinitions>
 
-                                <Grid
-                                    Grid.Column="0">
+                                <Grid Grid.Column="0">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="50" />
                                         <RowDefinition Height="Auto" />
@@ -338,19 +337,18 @@
                                         Grid.Row="1"
                                         Grid.Column="4"
                                         Margin="5,5,5,5"
-                                        FontWeight="DemiBold"
                                         HorizontalAlignment="Center"
+                                        FontWeight="DemiBold"
                                         Text="Тип материала" />
 
                                     <TextBlock
                                         Grid.Row="0"
                                         Grid.Column="2"
                                         Grid.ColumnSpan="2"
-                                        Text="Тип обвязки:"
-                                        
                                         Height="25"
+                                        Margin="5,5,5,5"
                                         VerticalAlignment="Top"
-                                        Margin="5,5,5,5"/>
+                                        Text="Тип обвязки:" />
                                     <TextBox
                                         Grid.Row="0"
                                         Grid.Column="4"
@@ -379,17 +377,17 @@
                                         Grid.Row="0"
                                         Grid.Column="1"
                                         Width="50"
+                                        Margin="5,5,5,5"
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Top"
-                                        Margin="5,5,5,5"
                                         Text="{Binding CurrentProjectModel.SelectedStand.NN}" />
 
                                     <TextBlock
                                         Grid.Row="2"
                                         Grid.Column="0"
-                                        Text="Линия:"
                                         Height="25"
-                                        Margin="5,5,5,5"/>
+                                        Margin="5,5,5,5"
+                                        Text="Линия:" />
                                     <TextBox
                                         Grid.Row="2"
                                         Grid.Column="1"
@@ -472,16 +470,16 @@
                                         Grid.Column="5"
                                         Width="25"
                                         Height="25"
-                                        Margin="5,0,0,0"                                    
+                                        Margin="5,0,0,0"
                                         Command="{Binding ProjectCommandProvider.SelectArmatureDialogCommand}"
                                         Content="..." />
 
                                     <TextBlock
                                         Grid.Row="4"
                                         Grid.Column="0"
-                                        Text="Тройник:" 
                                         Height="25"
-                                        Margin="5,5,5,5"/>
+                                        Margin="5,5,5,5"
+                                        Text="Тройник:" />
                                     <TextBox
                                         Grid.Row="4"
                                         Grid.Column="1"
@@ -574,7 +572,7 @@
                                     Background="WhiteSmoke"
                                     BorderBrush="LightGray"
                                     BorderThickness="1"
-                                    CornerRadius="4" >
+                                    CornerRadius="4">
                                     <Image
                                         MaxWidth="200"
                                         MaxHeight="200"

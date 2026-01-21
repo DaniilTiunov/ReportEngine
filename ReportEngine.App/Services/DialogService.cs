@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Display;
+using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.Contacts;
@@ -10,6 +11,7 @@ using ReportEngine.App.ViewModels.FormedEquips;
 using ReportEngine.App.ViewModels.Utils;
 using ReportEngine.App.Views.Utils;
 using ReportEngine.App.Views.Windows;
+using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 
@@ -19,9 +21,12 @@ public class DialogService : IDialogService
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public DialogService(IServiceProvider serviceProvider)
+    private readonly IStandService _standService;
+
+    public DialogService(IServiceProvider serviceProvider, IStandService standService)
     {
         _serviceProvider = serviceProvider;
+        _standService = standService;
     }
 
     public T? ShowEquipDialog<T>()
@@ -220,4 +225,27 @@ public class DialogService : IDialogService
         }
     }
 
+    public void ShowObvSettingsWindow(ProjectViewModel projectViewModel)
+    {
+        var window = new ObvSettingsView();
+
+        window.DataContext = projectViewModel;
+
+        projectViewModel.SelectedObvyazka = null;
+
+        window.ShowDialog();
+    }
+
+    public void ShowEditObvSettingsWindow(ProjectViewModel projectViewModel,
+        StandModel standModel,
+        ObvyazkaInStand selectedObvyazka)
+    {
+        var window = new ObvSettingsView();
+
+        window.DataContext = projectViewModel;
+
+        _standService.FillStandFieldsFromObvyazka(standModel, selectedObvyazka);
+
+        window.ShowDialog();
+    }
 }
