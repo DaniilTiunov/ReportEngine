@@ -125,6 +125,14 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
+    public async void OnOpenObvSettingsWindowCommandExecuted(object e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            _dialogService.ShowObvSettingsWindow(this);
+        });
+    }
+
     public async void OnShowFrameDialogExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -314,6 +322,22 @@ public class ProjectViewModel : BaseViewModel
             await CreateNewProjectCardAsync();
             await _projectService.GetOrAddCompnayAsync(CurrentProjectModel.Company);
             await _projectService.GetOrAddSubjectAsync(CurrentProjectModel.Object, CurrentProjectModel.Company);
+        });
+    }
+
+    public async void OnOpenCreateNewStandCommandExecuted(object? e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            _dialogService.ShowStandsSettingsWindow(this);
+        });
+    }
+
+    public async void OnOpenEditStandCommandExecuted(object? e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            _dialogService.ShowEditStandsObvSettingsWindow(this, CurrentProjectModel.SelectedStand);
         });
     }
 
@@ -683,8 +707,9 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            await _standService.FillStandFieldsFromObvyazka(CurrentProjectModel.SelectedStand,
-                                        CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand);
+            _dialogService.ShowEditObvSettingsWindow(this,
+                CurrentProjectModel.SelectedStand,
+                CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand);
         });
     }
 

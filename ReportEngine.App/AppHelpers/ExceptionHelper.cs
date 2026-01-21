@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using ReportEngine.App.Display;
-using ReportEngine.Shared.Config.DebugConsol;
+﻿using ReportEngine.App.Display;
 using Serilog;
 
 namespace ReportEngine.App.AppHelpers;
@@ -15,8 +13,6 @@ public static class ExceptionHelper
         }
         catch (Exception ex)
         {
-            DebugConsole.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
-            Debug.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
             MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}");
         }
     }
@@ -29,8 +25,6 @@ public static class ExceptionHelper
         }
         catch (Exception ex)
         {
-            DebugConsole.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
-            Debug.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
             MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}\n{message}");
         }
     }
@@ -48,8 +42,6 @@ public static class ExceptionHelper
         catch (Exception ex)
         {
             Log.Error(ex, "Произошла ошибка в методе {MethodName}", methodName ?? "Unknown");
-            DebugConsole.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
-            Debug.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
             MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}\n{message}");
         }
     }
@@ -62,8 +54,6 @@ public static class ExceptionHelper
         }
         catch (Exception ex)
         {
-            DebugConsole.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
-            Debug.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
             MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}");
         }
     }
@@ -76,8 +66,6 @@ public static class ExceptionHelper
         }
         catch (Exception ex)
         {
-            DebugConsole.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
-            Debug.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
             MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}\n{message}");
         }
     }
@@ -95,8 +83,6 @@ public static class ExceptionHelper
         catch (Exception ex)
         {
             Log.Error(ex, "Произошла ошибка в методе {MethodName}", methodName ?? "Unknown");
-            DebugConsole.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
-            Debug.WriteLine($"Произшла ошибка: {ex.Message}", ConsoleColor.Red);
             MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}\n{message}");
         }
     }

@@ -395,7 +395,7 @@ public class ProjectService : IProjectService
         var obvyazkiInStands = projectInfo.Stands
             .Where(s => s.ObvyazkiInStand != null)
             .SelectMany(s => s.ObvyazkiInStand);
-
+        
         //костыль
         //фильтруем только уникальные
         var uniqueObvInStands = obvyazkiInStands

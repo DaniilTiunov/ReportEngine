@@ -16,6 +16,7 @@ using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Settings;
 using ReportEngine.App.Views.Utils;
 using ReportEngine.App.Views.Windows;
+using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
@@ -207,5 +208,7 @@ public class HostFactory
         services.AddTransient<UpdateInfoView>();
         services.AddTransient<RenumerateView>();
         services.AddTransient<StandCopyView>();
+        services.AddTransient<ObvSettingsView>();
+        services.AddTransient<StandsSettingsView>();
     }
 }
