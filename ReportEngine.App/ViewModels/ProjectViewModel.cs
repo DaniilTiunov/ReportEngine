@@ -1497,6 +1497,8 @@ public class ProjectViewModel : BaseViewModel
     {
         Debug.WriteLine("Пересчет швеллера начат");
 
+        
+
         var selectedStand = CurrentProjectModel.SelectedStand;
 
         if (selectedStand == null)
@@ -1513,9 +1515,11 @@ public class ProjectViewModel : BaseViewModel
         if (channelRecord == null)
             return;
 
-        //швеллер в метрах
-        var framesWidthSum = selectedStand.FramesInStand.Sum(frame => frame.Width);
-        channelRecord.Quantity = framesWidthSum / 1000.0f;
+        //швеллер в штуках
+        const int channelPerFrame = 1;
+
+        var framesCount = selectedStand.FramesInStand.Count;
+        channelRecord.Quantity = framesCount * channelPerFrame;
 
 
         Debug.WriteLine("Пересчет швеллера завершен");
