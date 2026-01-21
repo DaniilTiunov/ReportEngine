@@ -325,6 +325,22 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
+    public async void OnOpenCreateNewStandCommandExecuted(object? e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            _dialogService.ShowStandsSettingsWindow(this);
+        });
+    }
+
+    public async void OnOpenEditStandCommandExecuted(object? e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            _dialogService.ShowEditStandsObvSettingsWindow(this, CurrentProjectModel.SelectedStand);
+        });
+    }
+
     public async void OnAddNewStandCommandExecuted(object? e)
     {
         await ExceptionHelper.SafeExecuteAsync(AddNewStandToProjectAsync);

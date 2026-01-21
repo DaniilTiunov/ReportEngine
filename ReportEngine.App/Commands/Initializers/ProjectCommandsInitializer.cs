@@ -156,6 +156,12 @@ public static class ProjectCommandsInitializer
 
         vm.ProjectCommandProvider.OpenObvSettingsWindowCommand =
             new RelayCommand(vm.OnOpenObvSettingsWindowCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.OpenCreateNewStandCommand =
+            new RelayCommand(vm.OnOpenCreateNewStandCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.OpenEditStandCommand =
+            new RelayCommand(vm.OnOpenEditStandCommandExecuted, vm.CanAllCommandsExecute);
     }
 
     public static void InitializeGenericCommands(ProjectViewModel vm)

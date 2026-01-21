@@ -248,4 +248,41 @@ public class DialogService : IDialogService
 
         window.ShowDialog();
     }
+
+    public void ShowStandsSettingsWindow(ProjectViewModel projectViewModel)
+    {
+        try
+        {
+            var window = new StandsSettingsView();
+
+            window.DataContext = projectViewModel;
+
+            projectViewModel.CurrentProjectModel.SelectedStand = null;
+
+            window.ShowDialog();
+        }
+        catch (Exception ex)
+        {
+            MessageBoxHelper.ShowError(ex.Message);
+        }
+    }
+
+    public void ShowEditStandsObvSettingsWindow(ProjectViewModel projectViewModel, StandModel standModel)
+    {
+        try
+        {
+            var window = new StandsSettingsView();
+
+            window.DataContext = projectViewModel;
+
+            projectViewModel.CurrentProjectModel.SelectedStand = standModel;
+            projectViewModel.NewStand = standModel;
+
+            window.ShowDialog();
+        }
+        catch (Exception ex)
+        {
+            MessageBoxHelper.ShowError(ex.Message);
+        }
+    }
 }

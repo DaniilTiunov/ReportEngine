@@ -58,6 +58,9 @@ public class ProjectCommandProvider
     public ICommand UpdateUICommand { get; set; }
     public ICommand RenumerateStandsCommand { get; set; }
     public ICommand OpenObvSettingsWindowCommand { get; set; }
+    public ICommand OpenCreateNewStandCommand {  get; set; }
+    public ICommand OpenEditStandCommand { get; set; }
+
 
     public ICommand Bind(ICommand command, Action<object> execute, Func<object, bool> canExecute = null)
     {

@@ -98,6 +98,9 @@
                     </ListView.View>
                     <ListView.ContextMenu>
                         <ContextMenu>
+                            <MenuItem Command="{Binding ProjectCommandProvider.OpenCreateNewStandCommand}" Header="Создать стенд" />
+                            <MenuItem Command="{Binding ProjectCommandProvider.OpenEditStandCommand}" Header="Редактировать" />
+                            <Separator />
                             <MenuItem Command="{Binding ProjectCommandProvider.CopyStandsCommand}" Header="Создать копию на основе прототипа" />
                             <Separator />
                             <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}" Header="Удалить стенд из проекта" />

@@ -209,5 +209,6 @@ public class HostFactory
         services.AddTransient<RenumerateView>();
         services.AddTransient<StandCopyView>();
         services.AddTransient<ObvSettingsView>();
+        services.AddTransient<StandsSettingsView>();
     }
 }
