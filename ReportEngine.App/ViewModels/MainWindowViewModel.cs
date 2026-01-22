@@ -112,7 +112,7 @@ public class MainWindowViewModel : BaseViewModel
         {
             _navigation.CloseContent();
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
-            mainWindow.MainContentControl.Content = mainWindow.MainDataGrid;
+            mainWindow.MainContentControl.Content = mainWindow.MainGrid;
         });
     }
 
@@ -181,7 +181,12 @@ public class MainWindowViewModel : BaseViewModel
     public async Task ShowAllProjectsAsync()
     {
         var projects = await _projectRepository.GetAllAsync();
-        MainWindowModel.AllProjects = new ObservableCollection<ProjectInfo>(projects);
+
+        MainWindowModel.AllProjects.Clear();
+        foreach (var project in projects)
+        {
+            MainWindowModel.AllProjects.Add(project);
+        }
     }
 
     public async Task DeleteSelectedProjectAsync()

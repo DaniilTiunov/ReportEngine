@@ -29,7 +29,7 @@ public interface IDialogService
 
     void ShowEditObvSettingsWindow(ProjectViewModel projectViewModel, StandModel standModel, ObvyazkaInStand selectedObvyazka);
 
-    void ShowStandsSettingsWindow(ProjectViewModel projectViewModel);
+    void ShowStandsSettingsWindow(ProjectViewModel projectViewModel, bool editMode);
 
-    void ShowEditStandsObvSettingsWindow(ProjectViewModel projectViewModel, StandModel standModel);
+    void ShowEditStandsObvSettingsWindow(ProjectViewModel projectViewModel, StandModel standModel, bool editMode);
 }

@@ -59,7 +59,8 @@
                 <ListView
                     FontSize="15"
                     ItemsSource="{Binding CurrentProjectModel.Stands}"
-                    SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}">
+                    SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}"
+                    SelectionChanged="StandsList_SelectionChanged">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn
@@ -99,8 +100,9 @@
                     <ListView.ContextMenu>
                         <ContextMenu>
                             <MenuItem Command="{Binding ProjectCommandProvider.OpenCreateNewStandCommand}" Header="Создать стенд" />
-                            <MenuItem Command="{Binding ProjectCommandProvider.OpenEditStandCommand}" Header="Редактировать" />
+                            <MenuItem Command="{Binding ProjectCommandProvider.OpenEditStandCommand}" Header="Редактировать стенд" />
                             <Separator />
+                            <MenuItem Command="{Binding ProjectCommandProvider.RenumerateStandsCommand}" Header="Пронумеровать стенды..." />
                             <MenuItem Command="{Binding ProjectCommandProvider.CopyStandsCommand}" Header="Создать копию на основе прототипа" />
                             <Separator />
                             <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}" Header="Удалить стенд из проекта" />
@@ -123,44 +125,58 @@
                             Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(нет данных)'}" />
                     </TextBlock>
                 </GroupBox.Header>
-                <ListView
-                    DisplayMemberPath="Name"
-                    FontSize="15"
-                    ItemsSource="{Binding CurrentProjectModel.SelectedStand.FramesInStand}"
-                    SelectedItem="{Binding CurrentStandModel.SelectedFrame}">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn
-                                Width="150"
-                                DisplayMemberBinding="{Binding Name}"
-                                Header="Наименование" />
-                            <GridViewColumn
-                                Width="150"
-                                DisplayMemberBinding="{Binding FrameType}"
-                                Header="Тип" />
-                            <GridViewColumn
-                                Width="80"
-                                DisplayMemberBinding="{Binding Width}"
-                                Header="Ширина" />
-                            <GridViewColumn
-                                Width="80"
-                                DisplayMemberBinding="{Binding Height}"
-                                Header="Высота" />
-                            <GridViewColumn
-                                Width="80"
-                                DisplayMemberBinding="{Binding Depth}"
-                                Header="Глубина" />
-                            <GridViewColumn
-                                Width="80"
-                                DisplayMemberBinding="{Binding Weight}"
-                                Header="Масса" />
-                            <GridViewColumn
-                                Width="150"
-                                DisplayMemberBinding="{Binding Designe}"
-                                Header="Описание по КД" />
-                        </GridView>
-                    </ListView.View>
-                </ListView>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="40" />
+                    </Grid.ColumnDefinitions>
+                    <ListView
+                        Grid.Column="0"
+                        DisplayMemberPath="Name"
+                        FontSize="15"
+                        ItemsSource="{Binding CurrentProjectModel.SelectedStand.FramesInStand}"
+                        SelectedItem="{Binding CurrentStandModel.SelectedFrame}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn
+                                    Width="150"
+                                    DisplayMemberBinding="{Binding Name}"
+                                    Header="Наименование" />
+                                <GridViewColumn
+                                    Width="150"
+                                    DisplayMemberBinding="{Binding FrameType}"
+                                    Header="Тип" />
+                                <GridViewColumn
+                                    Width="80"
+                                    DisplayMemberBinding="{Binding Width}"
+                                    Header="Ширина" />
+                                <GridViewColumn
+                                    Width="80"
+                                    DisplayMemberBinding="{Binding Height}"
+                                    Header="Высота" />
+                                <GridViewColumn
+                                    Width="80"
+                                    DisplayMemberBinding="{Binding Depth}"
+                                    Header="Глубина" />
+                                <GridViewColumn
+                                    Width="80"
+                                    DisplayMemberBinding="{Binding Weight}"
+                                    Header="Масса" />
+                                <GridViewColumn
+                                    Width="150"
+                                    DisplayMemberBinding="{Binding Designe}"
+                                    Header="Описание по КД" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Button
+                        Grid.Column="1"
+                        MaxHeight="20"
+                        Margin="10,10,10,10"
+                        Command="{Binding ProjectCommandProvider.ShowFrameDialogCommand}"
+                        Content="..." />
+                </Grid>
             </GroupBox>
 
             <!--  Обвязки по стенду  -->

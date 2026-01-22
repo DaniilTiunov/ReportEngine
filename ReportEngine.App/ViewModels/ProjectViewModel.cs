@@ -329,7 +329,7 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            _dialogService.ShowStandsSettingsWindow(this);
+            _dialogService.ShowStandsSettingsWindow(this, false);
         });
     }
 
@@ -337,7 +337,7 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            _dialogService.ShowEditStandsObvSettingsWindow(this, CurrentProjectModel.SelectedStand);
+            _dialogService.ShowEditStandsObvSettingsWindow(this, CurrentProjectModel.SelectedStand, true);
         });
     }
 

@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using Microsoft.Extensions.DependencyInjection;
-using ReportEngine.App.AppHelpers;
+﻿using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.Display;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
@@ -183,7 +181,7 @@ public class DialogService : IDialogService
             Step = null,
             StartValueLength = 0
         };
-   
+
         try
         {
             var viewModel = _serviceProvider.GetRequiredService<RenumeratorViewModel>();
@@ -191,7 +189,7 @@ public class DialogService : IDialogService
 
             viewModel.ResultHandler = (info) => { resultData = info; };
 
-            window.ShowDialog(); 
+            window.ShowDialog();
 
             return resultData;
         }
@@ -249,7 +247,7 @@ public class DialogService : IDialogService
         window.ShowDialog();
     }
 
-    public void ShowStandsSettingsWindow(ProjectViewModel projectViewModel)
+    public void ShowStandsSettingsWindow(ProjectViewModel projectViewModel, bool editMode)
     {
         try
         {
@@ -257,7 +255,27 @@ public class DialogService : IDialogService
 
             window.DataContext = projectViewModel;
 
+            if (!editMode)
+            {
+                window.CreateStandButton.Visibility = System.Windows.Visibility.Visible;
+                window.EditStandbutton.Visibility = System.Windows.Visibility.Hidden;
+            }
+
             projectViewModel.CurrentProjectModel.SelectedStand = null;
+            projectViewModel.NewStand = new StandModel();
+
+            var stands = projectViewModel.CurrentProjectModel.Stands;
+            if (stands == null || !stands.Any())
+            {
+                projectViewModel.NewStand.Number = 1;
+            }
+            else
+            {
+                var maxStandNumber = stands.Max(s => s.Number);
+                projectViewModel.NewStand.Number = maxStandNumber + 1;
+            }
+
+
 
             window.ShowDialog();
         }
@@ -267,13 +285,19 @@ public class DialogService : IDialogService
         }
     }
 
-    public void ShowEditStandsObvSettingsWindow(ProjectViewModel projectViewModel, StandModel standModel)
+    public void ShowEditStandsObvSettingsWindow(ProjectViewModel projectViewModel, StandModel standModel, bool editMode)
     {
         try
         {
             var window = new StandsSettingsView();
 
             window.DataContext = projectViewModel;
+
+            if (editMode)
+            {
+                window.CreateStandButton.Visibility = System.Windows.Visibility.Hidden;
+                window.EditStandbutton.Visibility = System.Windows.Visibility.Visible;
+            }
 
             projectViewModel.CurrentProjectModel.SelectedStand = standModel;
             projectViewModel.NewStand = standModel;

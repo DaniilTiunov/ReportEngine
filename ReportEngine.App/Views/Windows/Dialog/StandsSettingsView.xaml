@@ -291,12 +291,14 @@
                             Orientation="Horizontal">
 
                             <Button
+                                x:Name="CreateStandButton"
                                 Width="150"
                                 Margin="0,0,10,0"
                                 Command="{Binding ProjectCommandProvider.AddNewStandCommand}"
                                 Content="Добавить новый" />
 
                             <Button
+                                x:Name="EditStandbutton"
                                 Width="220"
                                 Margin="0,0,10,0"
                                 Command="{Binding ProjectCommandProvider.SaveChangesInStandCommand}"
