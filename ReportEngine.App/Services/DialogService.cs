@@ -168,7 +168,6 @@ public class DialogService : IDialogService
         }
     }
 
-
     public RenumerationInfo ShowRenumerateDialog()
     {
         var resultData = new RenumerationInfo()
@@ -198,7 +197,6 @@ public class DialogService : IDialogService
             MessageBoxHelper.ShowError(ex.Message);
             return resultData;
         }
-
     }
 
     public int ShowStandCopyDialog()
@@ -274,8 +272,6 @@ public class DialogService : IDialogService
                 var maxStandNumber = stands.Max(s => s.Number);
                 projectViewModel.NewStand.Number = maxStandNumber + 1;
             }
-
-
 
             window.ShowDialog();
         }

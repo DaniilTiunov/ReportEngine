@@ -1,9 +1,8 @@
 ﻿<Window
     x:Class="ReportEngine.App.Views.Windows.Dialog.StandsSettingsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:ReportEngine.App.Views.Windows.Dialog"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Создание и редактирование стендов"
     d:DesignHeight="900"
@@ -349,7 +348,6 @@
                     </ListView>
                 </GroupBox>
             </Grid>
-
         </DockPanel>
     </Border>
 </Window>

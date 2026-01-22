@@ -55,5 +55,4 @@ public partial class CalculationSettingsWindow : Window
     {
         Close();
     }
-
 }

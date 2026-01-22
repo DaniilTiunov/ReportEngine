@@ -1,6 +1,5 @@
 ﻿using Mapster;
 using ReportEngine.App.ViewModels;
-using ReportEngine.App.ViewModels.DTO;
 using ReportEngine.Shared.Config.IniHelpers;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
@@ -41,7 +40,6 @@ public class StandSettingsModel : BaseViewModel
     private string? _responsibleForAccept;
     private string? _secondLevelSpecialist;
     private string? _seniorEngineer;
-    
 
     private string? _signalCable;
     private string? _signalCableMeasure;
@@ -181,7 +179,6 @@ public class StandSettingsModel : BaseViewModel
         set => Set(ref _signalCableMeasure, value);
     } // Кабель сигнальный - ед.изм
 
-
     public string? SeniorEngineer
     {
         get => _seniorEngineer;
@@ -212,7 +209,6 @@ public class StandSettingsModel : BaseViewModel
         set => Set(ref _sensorCountOnFrame, value);
     } // Кол-во кабеля на 1 раму
 
-
     public string? Clamp
     {
         get => _clamp;
@@ -237,12 +233,10 @@ public class StandSettingsModel : BaseViewModel
         set => Set(ref _terminalMeasure, value);
     } // Клемма - ед.изм
 
-
-
     public async Task LoadStandsSettingsDataAsync()
     {
         var iniData = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
-        
+
         if (iniData == null)
             return;
 

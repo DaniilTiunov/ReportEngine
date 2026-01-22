@@ -30,7 +30,5 @@ namespace ReportEngine.App.Views.Utils
             _viewModel.OnApplyCommandExecuted(sender);
             Close();
         }
-
     }
 }
-

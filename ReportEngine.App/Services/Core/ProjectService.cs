@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using Microsoft.VisualBasic;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
@@ -149,10 +148,8 @@ public class ProjectService : IProjectService
 
                 newStand.Number = newStandNumber;
 
-
                 projectModel.Stands.Add(newStand);
             }
-
 
             await _standService.LoadStandsDataAsync(projectModel.Stands);
             _notificationService.ShowInfo($"Создано копий: {count}");
@@ -161,7 +158,6 @@ public class ProjectService : IProjectService
 
     private async Task<StandModel> CopyStandFromSourceStandAsync(StandModel sourceStand, int projectId, int newNumber)
     {
-
         var newStand = new StandModel
         {
             Design = sourceStand.Design,
@@ -472,12 +468,11 @@ public class ProjectService : IProjectService
         var obvyazkiInStands = projectInfo.Stands
             .Where(s => s.ObvyazkiInStand != null)
             .SelectMany(s => s.ObvyazkiInStand);
-        
+
         //костыль
         //фильтруем только уникальные
         var uniqueObvInStands = obvyazkiInStands
             .DistinctBy(obv => obv.ObvyazkaName);
-
 
         projectModel.ObvyazkiInProject.Clear();
 

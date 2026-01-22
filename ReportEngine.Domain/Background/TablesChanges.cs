@@ -6,6 +6,7 @@ namespace ReportEngine.Domain.Background
     {
         [Key]
         public int Id { get; set; }
+
         public string TableName { get; set; } = string.Empty;
         public int EquipId { get; set; }
         public string OldName { get; set; }

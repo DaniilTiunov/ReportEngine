@@ -1,6 +1,4 @@
-﻿using Microsoft.WindowsAPICodePack.Shell.Interop;
-using ReportEngine.App.Display;
-using ReportEngine.App.Model.StandsModel;
+﻿using ReportEngine.App.Model.StandsModel;
 
 namespace ReportEngine.App.AppHelpers;
 

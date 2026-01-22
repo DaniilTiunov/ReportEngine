@@ -138,7 +138,6 @@
                                 <ColumnDefinition Width="70" />
                                 <ColumnDefinition Width="150" />
                                 <ColumnDefinition Width="30" />
-
                             </Grid.ColumnDefinitions>
 
                             <TextBlock
@@ -423,7 +422,6 @@
                         </Grid>
                     </GroupBox>
 
-
                     <Border
                         Grid.Row="0"
                         Grid.Column="1"
@@ -679,7 +677,6 @@
                                     FontWeight="Bold"
                                     Text="Обвязки в проекте" />
                             </TextBlock>
-
                         </GroupBox.Header>
                         <DataGrid
                             AutoGenerateColumns="False"

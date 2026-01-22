@@ -329,7 +329,6 @@
                                 CommandParameter="SignalCable"
                                 Content="..." />
 
-
                             <TextBlock
                                 Grid.Row="11"
                                 Grid.Column="0"
@@ -347,7 +346,6 @@
                                 Command="{Binding ShowAllEqipDialogCommand}"
                                 CommandParameter="Clamp"
                                 Content="..." />
-
 
                             <TextBlock
                                 Grid.Row="12"

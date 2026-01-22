@@ -19,6 +19,7 @@ public partial class GenericEquipView : Window
         InitializeComponent();
         _isDialog = IsDialog;
     }
+
     private void DataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
     {
         if (!_allowEdit)
@@ -26,7 +27,7 @@ public partial class GenericEquipView : Window
     }
 
     private void SelectEquip_DoubleClick(object sender, MouseButtonEventArgs e)
-    {           
+    {
         ExceptionHelper.SafeExecute(() =>
         {
             if (!_isDialog)

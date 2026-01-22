@@ -272,9 +272,6 @@
             </StatusBarItem>
         </StatusBar>
 
-
-
-
         <ContentControl x:Name="MainContentControl" Grid.Row="1">
             <Grid x:Name="MainGrid">
                 <Grid.RowDefinitions>

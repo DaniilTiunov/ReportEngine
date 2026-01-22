@@ -58,7 +58,7 @@ public class ProjectCommandProvider
     public ICommand UpdateUICommand { get; set; }
     public ICommand RenumerateStandsCommand { get; set; }
     public ICommand OpenObvSettingsWindowCommand { get; set; }
-    public ICommand OpenCreateNewStandCommand {  get; set; }
+    public ICommand OpenCreateNewStandCommand { get; set; }
     public ICommand OpenEditStandCommand { get; set; }
     public ICommand FillObvFieldsTiEditCommand { get; set; }
 

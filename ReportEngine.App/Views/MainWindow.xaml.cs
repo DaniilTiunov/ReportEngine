@@ -35,11 +35,10 @@ public partial class MainWindow : Window //Это так называемый "C
         _mainViewModel = mainViewModel;
         _serviceProvider = serviceProvider;
 
-        
-
         Loaded += MainWindow_Loaded;
         StateChanged += MindowWindow_StateChanges;
     }
+
     // Событие загрузки окна
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
@@ -60,6 +59,7 @@ public partial class MainWindow : Window //Это так называемый "C
             MainDataGrid.ItemsSource = _projectsView;
         });
     }
+
     private void MainDataGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
         _mainViewModel.OnEditProjectCommandExecuted(e);
@@ -70,46 +70,56 @@ public partial class MainWindow : Window //Это так называемый "C
         var calcSettings = _serviceProvider.GetRequiredService<CalculationSettingsViewModel>();
         await calcSettings.LoadSettingsAsync();
     }
+
     // Событие изменения состояния окна
     private void MindowWindow_StateChanges(object? sender, EventArgs e)
     {
         if (WindowState == WindowState.Maximized)
             WindowState = WindowState.Normal;
     }
+
     private void ShowAboutProgram(object sender, RoutedEventArgs e) //Просто простые синхронные операции
     {
         var aboutWindow = new AboutProgram();
         aboutWindow.Show();
     }
+
     private void ShowUpdateIndo(object sender, RoutedEventArgs e)
     {
         var updateInfo = new UpdateInfoView();
         updateInfo.Show();
     }
+
     private void ShowCalculator(object sender, RoutedEventArgs e)
     {
         Process.Start("calc.exe");
     }
+
     private void ShowNotepad(object sender, RoutedEventArgs e)
     {
         Process.Start("notepad.exe");
     }
+
     private void ChangeDarkTheme(object sender, RoutedEventArgs e)
     {
         ChangesTheme("/Resources/Dictionaries/ColorThemes/DarkTheme.xaml");
     }
+
     private void StandartTheme(object sender, RoutedEventArgs e)
     {
         ChangesTheme("/Resources/Dictionaries/ColorThemes/LightTheme.xaml");
     }
+
     private void MangoParadiseTheme(object sender, RoutedEventArgs e)
     {
         ChangesTheme("/Resources/Dictionaries/ColorThemes/MangoParadiseTheme.xaml");
     }
+
     private void BubbleGumTheme(object sender, RoutedEventArgs e)
     {
         ChangesTheme("/Resources/Dictionaries/ColorThemes/BubbleGumTheme.xaml");
     }
+
     private void ChangesTheme(string dictPath)
     {
         var uri = new Uri(dictPath, UriKind.Relative);
@@ -128,6 +138,7 @@ public partial class MainWindow : Window //Это так называемый "C
         // Если цветовая тема ещё не подключена
         mergedDicts.Add(themeDict);
     }
+
     private void MainWindow_StartUpState()
     {
         var area = SystemParameters.WorkArea;
@@ -136,6 +147,7 @@ public partial class MainWindow : Window //Это так называемый "C
         Width = area.Width;
         Height = area.Height;
     }
+
     private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         if (e.ClickCount == 2)
@@ -143,10 +155,12 @@ public partial class MainWindow : Window //Это так называемый "C
         else
             DragMove();
     }
+
     private void MinimizeButton_Click(object sender, RoutedEventArgs e)
     {
         WindowState = WindowState.Minimized;
     }
+
     private void MaxRestoreButton_Click(object sender, RoutedEventArgs e)
     {
         var area = SystemParameters.WorkArea;
@@ -165,10 +179,12 @@ public partial class MainWindow : Window //Это так называемый "C
             Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
         }
     }
+
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
         Application.Current.Shutdown();
     }
+
     private void AutoUpdate(object sender, RoutedEventArgs e)
     {
         try
@@ -192,6 +208,7 @@ public partial class MainWindow : Window //Это так называемый "C
             MessageBox.Show($"Ошибка запуска обновления: {ex.Message}");
         }
     }
+
     private void OpenHelp(object sender, RoutedEventArgs e)
     {
         var helpPath = Path.Combine(DirectoryHelper.GetDirectory(), "Help", "HelpDesk.chm");
@@ -205,6 +222,7 @@ public partial class MainWindow : Window //Это так называемый "C
             });
         });
     }
+
     private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
         if (_projectsView == null)

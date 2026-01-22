@@ -30,7 +30,7 @@ public class StandSettingsData : IIniData
     public string? SecondLevelSpecialist { get; set; } // Специалист 2-го уровня
     public string? OSiL { get; set; } // Представитель ОСиЛ
     public double? SensorCountOnFrame { get; set; } // Кол-во кабеля на 1 раму
-    public string? Clamp {  get; set; } // Хомут
+    public string? Clamp { get; set; } // Хомут
     public string? ClampMeasure { get; set; } // Хомут - ед.изм
     public string? Terminal { get; set; } //Клемма
     public string? TerminalMeasure { get; set; } //Клемма - ед.изм
