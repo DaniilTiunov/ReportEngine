@@ -41,7 +41,8 @@ public class HumanCostSettings : IIniSettings<HumanCostSettingsData>
             TimeForPrepareAllEquipment = Parse(costData["HumanCostSettings"]["timeForPrepareAllEquipment"]),
             TimeForDrillOneBus = Parse(costData["HumanCostSettings"]["timeForDrillOneBus"]),
             TimeForMontageOneInput = Parse(costData["HumanCostSettings"]["timeForMontageOneInput"]),
-            TimeForOthersOperations = Parse(costData["HumanCostSettings"]["timeForOthersOperations"])
+            TimeForOthersOperations = Parse(costData["HumanCostSettings"]["timeForOthersOperations"]),
+            GalvanizedStands = Parse(costData["HumanCostSettings"]["galvanizedStands"])
         };
     }
 
@@ -69,6 +70,7 @@ public class HumanCostSettings : IIniSettings<HumanCostSettingsData>
         costData["HumanCostSettings"]["timeForDrillOneBus"] = F(settingsData.TimeForDrillOneBus);
         costData["HumanCostSettings"]["timeForMontageOneInput"] = F(settingsData.TimeForMontageOneInput);
         costData["HumanCostSettings"]["timeForOthersOperations"] = F(settingsData.TimeForOthersOperations);
+        costData["HumanCostSettings"]["timeForOthersOperations"] = F(settingsData.GalvanizedStands);
 
         _parser.WriteFile(_iniFile, costData);
     }

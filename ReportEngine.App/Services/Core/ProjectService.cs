@@ -363,11 +363,88 @@ public class ProjectService : IProjectService
         obv.HumanCost = selectedObvyazka.HumanCost;
         obv.ImageName = selectedObvyazka.ImageName;
 
+        UpdateObvyazka(projectModel, projectModel.SelectedStand.SelectedObvyazkaInStand);
+
         CollectionRefreshHelper.SafeRefreshCollection(projectModel.SelectedStand.ObvyazkiInStand);
 
         await _projectRepository.UpdateObvInStandAsync(projectModel.SelectedStand.Id,
             projectModel.SelectedStand.SelectedObvyazkaInStand);
+
         _notificationService.ShowInfo("Обвязка обновлена");
+    }
+
+    public void UpdateObvyazka(ProjectModel projectModel, ObvyazkaInStand selectedObvyazka)
+    {
+        var current = projectModel.SelectedStand.SelectedObvyazkaInStand;
+
+        if (current == null)
+            return;
+
+        var oldName = current.ObvyazkaName;
+        var newName = projectModel.SelectedStand.ObvyazkaName;
+
+        if (oldName != newName)
+            return;
+
+        var related = projectModel.SelectedStand.ObvyazkiInStand
+            .Where(x => x != current && x.ObvyazkaName == oldName)
+            .ToList();
+
+        foreach (var obv in related)
+        {
+            obv.MaterialLine = current.MaterialLine;
+            obv.MaterialLineCount = current.MaterialLineCount;
+            obv.MaterialLineMeasure = current.MaterialLineMeasure;
+            obv.MaterialLineExportDays = current.MaterialLineExportDays;
+
+            obv.Armature = current.Armature;
+            obv.ArmatureCount = current.ArmatureCount;
+            obv.ArmatureMeasure = current.ArmatureMeasure;
+            obv.ArmatureExportDays = current.ArmatureExportDays;
+
+            obv.TreeSocket = current.TreeSocket;
+            obv.TreeSocketMaterialCount = current.TreeSocketMaterialCount;
+            obv.TreeSocketMaterialMeasure = current.TreeSocketMaterialMeasure;
+            obv.TreeSocketExportDays = current.TreeSocketExportDays;
+
+            obv.KMCH = current.KMCH;
+            obv.KMCHCount = current.KMCHCount;
+            obv.KMCHMeasure = current.KMCHMeasure;
+            obv.KMCHExportDays = current.KMCHExportDays;
+
+            obv.NN = current.NN;
+
+            obv.FirstSensorType = current.FirstSensorType;
+            obv.FirstSensorKKS = current.FirstSensorKKS;
+            obv.FirstSensorMarkPlus = current.FirstSensorMarkPlus;
+            obv.FirstSensorMarkMinus = current.FirstSensorMarkMinus;
+            obv.FirstSensorDescription = current.FirstSensorDescription;
+
+            obv.SecondSensorType = current.SecondSensorType;
+            obv.SecondSensorKKS = current.SecondSensorKKS;
+            obv.SecondSensorMarkPlus = current.SecondSensorMarkPlus;
+            obv.SecondSensorMarkMinus = current.SecondSensorMarkMinus;
+            obv.SecondSensorDescription = current.SecondSensorDescription;
+
+            obv.ThirdSensorType = current.ThirdSensorType;
+            obv.ThirdSensorKKS = current.ThirdSensorKKS;
+            obv.ThirdSensorMarkPlus = current.ThirdSensorMarkPlus;
+            obv.ThirdSensorMarkMinus = current.ThirdSensorMarkMinus;
+            obv.ThirdSensorDescription = current.ThirdSensorDescription;
+
+            obv.LineLength = current.LineLength;
+            obv.ZraCount = current.ZraCount;
+            obv.Sensor = current.Sensor;
+            obv.SensorType = current.SensorType;
+            obv.Clamp = current.Clamp;
+            obv.WidthOnFrame = current.WidthOnFrame;
+            obv.OtherLineCount = current.OtherLineCount;
+            obv.Weight = current.Weight;
+            obv.TreeSocketCount = current.TreeSocketCount;
+            obv.KMCHCount = current.KMCHCount;
+            obv.HumanCost = current.HumanCost;
+            obv.ImageName = current.ImageName;
+        }
     }
 
     public async Task DeleteFrameFromStandAsync(ProjectModel projectModel)

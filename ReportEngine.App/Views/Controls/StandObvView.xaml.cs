@@ -54,7 +54,7 @@ public partial class StandObvView : UserControl
     {
         ExceptionHelper.SafeExecute(() =>
         {
-            _projectViewModel.OnFillStandFieldsFromObvyazkaCommandExecuted(sender);
+            _projectViewModel.OnEditObvSettingsCommandExecuted(sender);
         });
     }
 

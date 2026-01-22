@@ -703,13 +703,22 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async void OnFillStandFieldsFromObvyazkaCommandExecuted(object obj)
+    public async void OnEditObvSettingsCommandExecuted(object obj)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             _dialogService.ShowEditObvSettingsWindow(this,
                 CurrentProjectModel.SelectedStand,
                 CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand);
+        });
+    }
+
+    public async void OnFillObvFieldsCommandExecuted(object obj)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            _standService.FillStandFieldsFromObvyazka(CurrentProjectModel.SelectedStand,
+                CurrentProjectModel.SelectedObvyazkaToCopy);
         });
     }
 
@@ -755,7 +764,7 @@ public class ProjectViewModel : BaseViewModel
 
         if (!renumInfo.StartValue.HasValue || !renumInfo.Step.HasValue)
         {
-            _notificationService.ShowError("Неверно введенны данные. Операция отменена.");
+            _notificationService.ShowError("Неверно введены данные. Операция отменена.");
             return;
         }
 
