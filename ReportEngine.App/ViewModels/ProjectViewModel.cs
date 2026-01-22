@@ -20,6 +20,7 @@ using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
 using ReportEngine.Shared.Config.IniHelpers;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
+using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -1094,7 +1095,6 @@ public class ProjectViewModel : BaseViewModel
         _notificationService.ShowInfo($"Стенд с ID {addedStandEntity.Id} успешно добавлен!");
     }
 
-    ///
     private async Task SaveChangesInStandAsync()
     {
         if (CurrentProjectModel.CurrentProjectId == 0)
