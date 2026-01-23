@@ -9,7 +9,7 @@ public class ReAppContextFactory : IDesignTimeDbContextFactory<ReAppContext>
     {
         var optionsBuilder = new DbContextOptionsBuilder<ReAppContext>();
         optionsBuilder.UseNpgsql(
-            "Host=172.16.10.58;Port=5432;Database=reportengine;Username=postgres;Password=postgres");
+            "Host=172.16.0.210;Port=5432;Database=reportengine;Username=postgres;Password=postgres");
         return new ReAppContext(optionsBuilder.Options);
     }
 }

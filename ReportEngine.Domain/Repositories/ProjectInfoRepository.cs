@@ -168,6 +168,13 @@ public class ProjectInfoRepository : IProjectInfoRepository
         if (stand == null)
             throw new ArgumentException($"Стенд с ID: {standId} не найден.");
 
+        // Проверяем, существует ли Obvyazka
+        var obvyazkaExists = await _context.Obvyazki
+            .AnyAsync(o => o.Id == standObvyazka.ObvyazkaId);
+
+        if (!obvyazkaExists)
+            throw new ArgumentException($"Обвязка с ID {standObvyazka.ObvyazkaId} не найдена.");
+
         stand.ObvyazkiInStand.Add(standObvyazka);
         await _context.SaveChangesAsync();
     }
