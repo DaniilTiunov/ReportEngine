@@ -290,6 +290,7 @@
                 Grid.Row="2"
                 Grid.RowSpan="2"
                 Grid.Column="1"
+                MinHeight="450"
                 Margin="5"
                 Padding="5">
                 <GroupBox.Header>
@@ -499,7 +500,7 @@
             <!--  Дренаж в стенде  -->
             <GroupBox
                 Grid.Row="4"
-                Grid.Column="1"
+                Grid.Column="0"
                 Margin="5"
                 Padding="5">
                 <GroupBox.Header>
