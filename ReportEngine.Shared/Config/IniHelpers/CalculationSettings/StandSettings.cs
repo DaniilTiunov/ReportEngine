@@ -1,10 +1,9 @@
-﻿using IniParser;
+﻿using System.Globalization;
+using IniParser;
 using IniParser.Model;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs.CalculationSettings.Interfaces;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
-using System.Globalization;
-
 
 namespace ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 
@@ -61,7 +60,6 @@ public class StandSettings : IIniSettings<StandSettingsData>
             Terminal = standData["StandsSettings"]["terminal"],
             TerminalMeasure = standData["StandsSettings"]["terminalMeasure"]
         };
-        
     }
 
     public static void WriteToIni(IniData standData, StandSettingsData settingsData)
@@ -73,7 +71,7 @@ public class StandSettings : IIniSettings<StandSettingsData>
         {
             return v.ToString(_csvCulture);
         }
-        
+
         standData["StandsSettings"]["steelChannel"] = settingsData.SteelChannel;
         standData["StandsSettings"]["steelChannelMeasure"] = settingsData.SteelChannelMeasure;
         standData["StandsSettings"]["namePlate"] = settingsData.NamePlate;

@@ -1,11 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Windows.Input;
-using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model.CalculationModels;
-using ReportEngine.App.Services;
 using ReportEngine.App.Services.Interfaces;
-using ReportEngine.App.Views.Windows;
 
 namespace ReportEngine.App.ViewModels.CalculationSettings;
 
@@ -42,13 +39,13 @@ public class CalculationSettingsViewModel : BaseViewModel
     {
         var selected = _dialogService.ShowAllSortamentsDialog();
 
-        if(selected == null)
+        if (selected == null)
             return;
 
         if (p is string propertyName && !string.IsNullOrWhiteSpace(propertyName))
         {
             var nameProp = StandSettings.GetType().GetProperty(propertyName);
-   
+
             if (nameProp != null && nameProp.CanWrite)
             {
                 nameProp.SetValue(StandSettings, selected.Name);

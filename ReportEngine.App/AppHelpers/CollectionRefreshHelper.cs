@@ -42,7 +42,6 @@ public static class CollectionRefreshHelper
             view.SortDescriptions.Add(
                 new SortDescription(fieldToSortBy, sortType));
             view?.Refresh();
-
         }
         catch (InvalidOperationException)
         {

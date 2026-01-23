@@ -1,12 +1,16 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.CalculationSettings;
 using ReportEngine.App.Views.Windows;
+using ReportEngine.Domain.Entities;
 using ReportEngine.Shared.Config.Directory;
 using AboutProgram = ReportEngine.App.Views.Windows.AboutProgram;
 
@@ -17,6 +21,8 @@ namespace ReportEngine.App;
 /// </summary>
 public partial class MainWindow : Window //Это так называемый "Code Behind" файл для MainWindow.xaml
 {
+    private ICollectionView _projectsView;
+
     private readonly MainWindowViewModel _mainViewModel;
     private readonly IServiceProvider _serviceProvider;
 
@@ -48,6 +54,9 @@ public partial class MainWindow : Window //Это так называемый "C
 
             await _mainViewModel.CheckDbConnectionAsync();
             await LoadCalculationSettingsDataAsync();
+
+            _projectsView = CollectionViewSource.GetDefaultView(_mainViewModel.MainWindowModel.AllProjects);
+            MainDataGrid.ItemsSource = _projectsView;
         });
     }
 
@@ -212,5 +221,29 @@ public partial class MainWindow : Window //Это так называемый "C
                 UseShellExecute = true
             });
         });
+    }
+
+    private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (_projectsView == null)
+            return;
+
+        var query = SearchTextBox.Text.Trim().ToLower();
+
+        if (string.IsNullOrEmpty(query))
+            _projectsView.Filter = null;
+        else
+            _projectsView.Filter = obj =>
+            {
+                if (obj is ProjectInfo prj)
+                {
+                    bool companyMatch = !string.IsNullOrEmpty(prj.Company) && prj.Company.ToLower().Contains(query);
+                    bool objectMatch = !string.IsNullOrEmpty(prj.Object) && prj.Object.ToLower().Contains(query);
+                    return companyMatch || objectMatch;
+                }
+                return false;
+            };
+
+        _projectsView.Refresh();
     }
 }

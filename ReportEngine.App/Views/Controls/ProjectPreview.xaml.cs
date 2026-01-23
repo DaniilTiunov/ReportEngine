@@ -129,4 +129,9 @@ public partial class ProjectPreview : UserControl
 
         _allowEdit = false;
     }
+
+    private void StandsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        _projectViewModel.OnSelectedStandChanged();
+    }
 }

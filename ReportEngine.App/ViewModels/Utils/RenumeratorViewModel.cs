@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.ViewModels.DTO;
@@ -13,7 +12,7 @@ namespace ReportEngine.App.ViewModels.Utils
         private int _fromNumber = 1;
         private int _toNumber = 2;
         private string _prefix = "01-01.";
-       
+
         private string _postfix = "";
         private string _startValue = "001";
         private string _step = "1";
@@ -23,36 +22,39 @@ namespace ReportEngine.App.ViewModels.Utils
             get => _fromNumber;
             set => Set(ref _fromNumber, value);
         }
+
         public int ToNumber
         {
             get => _toNumber;
             set => Set(ref _toNumber, value);
         }
+
         public string Prefix
         {
             get => _prefix;
             set => Set(ref _prefix, value);
         }
+
         public string Postfix
         {
             get => _postfix;
             set => Set(ref _postfix, value);
         }
+
         public string StartValue
         {
             get => _startValue;
             set => Set(ref _startValue, value);
         }
+
         public string Step
         {
             get => _step;
             set => Set(ref _step, value);
         }
 
-
         public ICommand ApplyCommand { get; set; }
-        public Action<RenumerationInfo> ResultHandler {  get; set; }
-
+        public Action<RenumerationInfo> ResultHandler { get; set; }
 
         public RenumeratorViewModel(INotificationService notificationService)
         {
@@ -82,7 +84,6 @@ namespace ReportEngine.App.ViewModels.Utils
 
             return true;
         }
-
 
         public async void OnApplyCommandExecuted(object sender)
         {

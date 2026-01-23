@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ReportEngine.Domain.Background;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Repositories.Interfaces;
@@ -33,7 +32,7 @@ namespace ReportEngine.App.Services
             }
         }
 
-        private async Task LoadCurrentDataAsync() 
+        private async Task LoadCurrentDataAsync()
         {
             var equipTypes = GetEquipTypes();
 
@@ -52,7 +51,6 @@ namespace ReportEngine.App.Services
 
         private async Task GetChangesAsync()
         {
-
         }
 
         private IGenericBaseRepository<T, T> GetCurrentRepository<T>(IServiceProvider serviceProvider)
@@ -79,4 +77,3 @@ namespace ReportEngine.App.Services
         }
     }
 }
-

@@ -8,8 +8,8 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Создание и редактирование обвязок"
-    d:DesignHeight="1200"
-    d:DesignWidth="970"
+    Width="950"
+    Height="1000"
     Background="{DynamicResource PrimaryColor}"
     FontFamily="Bahnschrift"
     FontSize="14"
@@ -138,7 +138,6 @@
                                 <ColumnDefinition Width="70" />
                                 <ColumnDefinition Width="150" />
                                 <ColumnDefinition Width="30" />
-
                             </Grid.ColumnDefinitions>
 
                             <TextBlock
@@ -411,7 +410,7 @@
                                                     <Button
                                                         Margin="2,0,2,0"
                                                         Padding="5,0,5,0"
-                                                        Command="{Binding DataContext.ProjectCommandProvider.OpenAllSortamentsDialogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        Command="{Binding DataContext.ProjectCommandProvider.OpenAllSortamentsDialogCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                         CommandParameter="{Binding}"
                                                         Content="Выбрать" />
                                                 </DataTemplate>
@@ -422,7 +421,6 @@
                             </StackPanel>
                         </Grid>
                     </GroupBox>
-
 
                     <Border
                         Grid.Row="0"
@@ -446,10 +444,19 @@
                             ToolTip="Изображение обвязки" />
                     </Border>
 
-                    <GroupBox
-                        Grid.Row="1"
-                        Padding="8"
-                        Header="">
+                    <GroupBox Grid.Row="1" Padding="8">
+                        <GroupBox.Header>
+                            <TextBlock>
+                                <Run
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Text="Датчики в обвязке" />
+                                <Run
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(нет данных)'}" />
+                            </TextBlock>
+                        </GroupBox.Header>
                         <Grid>
 
                             <Grid.RowDefinitions>
@@ -660,6 +667,44 @@
                                     Content="Сохранить изменения" />
                             </StackPanel>
                         </Grid>
+                    </GroupBox>
+
+                    <GroupBox Grid.Row="1" Grid.Column="1">
+                        <GroupBox.Header>
+                            <TextBlock>
+                                <Run
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Text="Обвязки в проекте" />
+                            </TextBlock>
+                        </GroupBox.Header>
+                        <DataGrid
+                            AutoGenerateColumns="False"
+                            IsReadOnly="True"
+                            ItemsSource="{Binding CurrentProjectModel.ObvyazkiInProject}"
+                            SelectedItem="{Binding CurrentProjectModel.SelectedObvyazkaToCopy}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding ObvyazkaName}"
+                                    Header="Тип" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding MaterialLine}"
+                                    Header="Материал" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Armature}"
+                                    Header="Арматура" />
+                            </DataGrid.Columns>
+                            <DataGrid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}" Header="Скопировать в выбранный стенд" />
+                                    <Separator />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.FillObvFieldsTiEditCommand}" Header="Заполнить поля из этой обвязки" />
+                                </ContextMenu>
+                            </DataGrid.ContextMenu>
+                        </DataGrid>
                     </GroupBox>
                 </Grid>
             </ScrollViewer>

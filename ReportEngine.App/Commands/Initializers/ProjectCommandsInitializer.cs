@@ -110,7 +110,7 @@ public static class ProjectCommandsInitializer
             new RelayCommand(vm.OnSaveObvCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.FillStandFieldsFromObvyazkaCommand =
-            new RelayCommand(vm.OnFillStandFieldsFromObvyazkaCommandExecuted, vm.CanAllCommandsExecute);
+            new RelayCommand(vm.OnEditObvSettingsCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.UpdateObvInStandCommand =
             new RelayCommand(vm.OnUpdateObvInStandCommandExecuted, vm.CanAllCommandsExecute);
@@ -162,6 +162,9 @@ public static class ProjectCommandsInitializer
 
         vm.ProjectCommandProvider.OpenEditStandCommand =
             new RelayCommand(vm.OnOpenEditStandCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.FillObvFieldsTiEditCommand =
+            new RelayCommand(vm.OnFillObvFieldsCommandExecuted, vm.CanAllCommandsExecute);
     }
 
     public static void InitializeGenericCommands(ProjectViewModel vm)

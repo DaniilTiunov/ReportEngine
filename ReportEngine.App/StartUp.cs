@@ -7,7 +7,7 @@ using Serilog;
 
 namespace ReportEngine.App;
 
-public class StartUp
+public static class StartUp
 {
     [STAThread]
     public static void Main()
@@ -36,7 +36,7 @@ public class StartUp
         catch (Exception ex)
         {
             Log.Fatal(ex, "Приложение не запущено");
-            throw; // Пробрасываем исключение дальше для отладки
+            throw;
         }
         finally
         {
@@ -46,9 +46,11 @@ public class StartUp
 
     public static void SetCulture()
     {
-        CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("ru-RU");
-        CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("ru-RU");
-        Thread.CurrentThread.CurrentCulture = new CultureInfo("ru-RU");
-        Thread.CurrentThread.CurrentUICulture = new CultureInfo("ru-RU");
+        var culture = new CultureInfo("ru-RU");
+
+        CultureInfo.DefaultThreadCurrentCulture = culture;
+        CultureInfo.DefaultThreadCurrentUICulture = culture;
+        Thread.CurrentThread.CurrentCulture = culture;
+        Thread.CurrentThread.CurrentUICulture = culture;
     }
 }

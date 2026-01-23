@@ -753,11 +753,10 @@ public class StandModel : BaseViewModel
                 new() { Purpose = "Табличка", Material = DefaultStandSettings.NameTable, Measure = DefaultStandSettings.NameTableMeasure},
                 new() { Purpose = "Кронштейн универсальный",Material = DefaultStandSettings.BracketUniversal, Measure = DefaultStandSettings.BracketUniversalMeasure},
                 new() { Purpose = "Кронштейн перепадчика",Material = DefaultStandSettings.BracketForDif, Measure = DefaultStandSettings.BracketForDifMeasure},
-                new() { Purpose = "Кронштейн абсолютника", Material = DefaultStandSettings.BracketForAbs, Measure = DefaultStandSettings.BracketForAbsMeasure}         
+                new() { Purpose = "Кронштейн абсолютника", Material = DefaultStandSettings.BracketForAbs, Measure = DefaultStandSettings.BracketForAbsMeasure}
             }
         };
     }
-
 
     public void InitializeElectricalComponent()
     {

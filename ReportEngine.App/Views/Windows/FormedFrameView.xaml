@@ -1,8 +1,8 @@
 ﻿<Window
     x:Class="ReportEngine.App.Views.Windows.FormedFrameView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Создание и редактирование рам"
     Background="{DynamicResource PrimaryColor}"
@@ -92,7 +92,7 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="0.75*" />
                 </Grid.ColumnDefinitions>
 
                 <!--  Левая часть: Список рам и параметры  -->
@@ -446,6 +446,12 @@
                                         Foreground="{DynamicResource PrimaryForeground}"
                                         Text="Кол-во:" />
                                     <TextBox Width="60" Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock
+                                        Margin="5,0,5,0"
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource PrimaryForeground}"
+                                        Text="Кол-во(шт):" />
+                                    <TextBox Width="60" Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
                                 <Button
                                     Margin="5"
@@ -474,7 +480,14 @@
                                     <TextBlock
                                         Margin="0,0,5,0"
                                         VerticalAlignment="Center"
+                                        Foreground="{DynamicResource PrimaryForeground}"
                                         Text="Длина (м):" />
+                                    <TextBox Width="60" Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock
+                                        Margin="5,0,5,0"
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource PrimaryForeground}"
+                                        Text="Кол-во(шт):" />
                                     <TextBox Width="60" Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
                                 <Button
@@ -501,11 +514,20 @@
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <StackPanel Margin="5,0,0,5" Orientation="Horizontal">
-                                    <TextBlock
-                                        Margin="0,0,5,0"
-                                        VerticalAlignment="Center"
-                                        Text="Длина (м):" />
-                                    <TextBox Width="60" Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <StackPanel Margin="5,0,0,5" Orientation="Horizontal">
+                                        <TextBlock
+                                            Margin="0,0,5,0"
+                                            VerticalAlignment="Center"
+                                            Foreground="{DynamicResource PrimaryForeground}"
+                                            Text="Длина (м):" />
+                                        <TextBox Width="60" Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBlock
+                                            Margin="5,0,5,0"
+                                            VerticalAlignment="Center"
+                                            Foreground="{DynamicResource PrimaryForeground}"
+                                            Text="Кол-во(шт):" />
+                                        <TextBox Width="60" Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </StackPanel>
                                 </StackPanel>
                                 <Button
                                     Margin="5"

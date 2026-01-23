@@ -91,7 +91,7 @@ public class ProjectInfoRepository : IProjectInfoRepository
           .Include(p => p.Stands)
           .FirstOrDefaultAsync(p => p.Id == projectId);
 
-        if (project == null) 
+        if (project == null)
             throw new ArgumentException($"Проект с ID: {projectId} не найден.");
 
         foreach (var stand in stands)
@@ -104,7 +104,6 @@ public class ProjectInfoRepository : IProjectInfoRepository
         await _context.SaveChangesAsync();
 
         return stands;
-
     }
 
     public async Task<Stand> AddStandAsync(int projectId, Stand stand)
@@ -113,7 +112,7 @@ public class ProjectInfoRepository : IProjectInfoRepository
             .Include(p => p.Stands)
             .FirstOrDefaultAsync(p => p.Id == projectId);
 
-        if (project == null) 
+        if (project == null)
             throw new ArgumentException($"Проект с ID: {projectId} не найден.");
 
         stand.ProjectInfoId = projectId;
@@ -129,7 +128,7 @@ public class ProjectInfoRepository : IProjectInfoRepository
         var existingStand = await _context.Set<Stand>()
             .FirstOrDefaultAsync(p => p.Id == stand.Id);
 
-        if (existingStand != null) 
+        if (existingStand != null)
             _context.Entry(existingStand).CurrentValues.SetValues(stand);
 
         await _context.SaveChangesAsync();
@@ -143,14 +142,13 @@ public class ProjectInfoRepository : IProjectInfoRepository
             .Where(stand => allStandsId.Contains(stand.Id))
             .ToDictionaryAsync(stand => stand.Id);
 
-        foreach (var stand in stands) 
+        foreach (var stand in stands)
         {
-            if(existingStands.TryGetValue(stand.Id, out var existingStand))
+            if (existingStands.TryGetValue(stand.Id, out var existingStand))
             {
                 _context.Entry(existingStand).CurrentValues.SetValues(stand);
             }
         }
-
 
         await _context.SaveChangesAsync();
     }

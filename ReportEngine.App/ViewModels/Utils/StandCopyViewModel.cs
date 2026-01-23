@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Services.Interfaces;
-using ReportEngine.App.ViewModels.DTO;
 
 namespace ReportEngine.App.ViewModels.Utils
 {
@@ -14,11 +8,13 @@ namespace ReportEngine.App.ViewModels.Utils
     {
         private readonly INotificationService _notificationService;
         private int _copyCount = 1;
+
         public int CopyCount
         {
             get => _copyCount;
-            set => Set(ref _copyCount,value);
+            set => Set(ref _copyCount, value);
         }
+
         public ICommand ApplyCommand { get; set; }
 
         public Action<int> ResultHandler { get; set; }
@@ -28,9 +24,10 @@ namespace ReportEngine.App.ViewModels.Utils
             ApplyCommand = new RelayCommand(OnApplyCommandExecuted, _ => true);
             _notificationService = notificationService;
         }
+
         public bool ValidateData()
         {
-            if (CopyCount<1)
+            if (CopyCount < 1)
             {
                 _notificationService.ShowError("Некорретные данные");
                 return false;
@@ -38,12 +35,9 @@ namespace ReportEngine.App.ViewModels.Utils
             return true;
         }
 
-
         public async void OnApplyCommandExecuted(object sender)
         {
             ResultHandler?.Invoke(CopyCount);
         }
     }
-
 }
-
