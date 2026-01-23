@@ -7,7 +7,7 @@ public class LoggerConfig
     public static ILogger InitializeLogger()
     {
 #if DEBUG
-        var logPath = @"C:\Users\pr-naladka14\Source\Repos\ReportEngine\ReportEngine.App\logs\log.txt";
+        var logPath = @"C:\Work\Prjs\ReportEngine\ReportEngine.App\logs\log.txt";
 #else
         var logPath = DirectoryHelper.GetLogsPath();
 #endif
