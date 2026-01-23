@@ -1437,19 +1437,21 @@ public class ProjectViewModel : BaseViewModel
     {
         Debug.WriteLine("Обвязки поменялись");
 
+        var selectedStand = CurrentProjectModel.SelectedStand;
+
+        if (selectedStand == null)
+            return;
+
         UpdateNewObvNN();
         UpdateTablesQuantity();
         UpdateClampsQuantity();
         UpdateBracketsQuantity();
         UpdateElectricEquipment();
 
-        CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewElectricalComponent.Purposes);
-        CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
+        CollectionRefreshHelper.SafeRefreshCollection(selectedStand.AllElectricalPurposesInStand);
+        CollectionRefreshHelper.SafeRefreshCollection(selectedStand.AllAdditionalEquipPurposesInStand);
 
-        var selectedStand = CurrentProjectModel.SelectedStand;
 
-        if (selectedStand == null)
-            return;
 
         CollectionRefreshHelper.SafeSortAndRefreshCollection(
             collection: selectedStand.ObvyazkiInStand,
@@ -1464,8 +1466,13 @@ public class ProjectViewModel : BaseViewModel
         UpdateChannelsQuantity();
         UpdateDrainage();
 
-        CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
-        CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewDrainage.Purposes);
+        var selectedStand = CurrentProjectModel.SelectedStand;
+
+        if (selectedStand == null)
+            return;
+
+        CollectionRefreshHelper.SafeRefreshCollection(selectedStand.AllAdditionalEquipPurposesInStand);
+        CollectionRefreshHelper.SafeRefreshCollection(selectedStand.AllDrainagePurposesInStand);
     }
 
     public void OnSelectedStandChanged()
@@ -1516,8 +1523,6 @@ public class ProjectViewModel : BaseViewModel
     {
         Debug.WriteLine("Пересчет швеллера начат");
 
-        
-
         var selectedStand = CurrentProjectModel.SelectedStand;
 
         if (selectedStand == null)
@@ -1528,7 +1533,7 @@ public class ProjectViewModel : BaseViewModel
         if (string.IsNullOrEmpty(standBraceType) || standBraceType != "Швеллер")
             return;
 
-        var additionalEquips = CurrentStandModel.NewAdditionalEquip.Purposes;
+        var additionalEquips = selectedStand.AllAdditionalEquipPurposesInStand;
         var channelRecord = additionalEquips.FirstOrDefault(equip => equip.Purpose == "Швеллер");
 
         if (channelRecord == null)
@@ -1550,13 +1555,18 @@ public class ProjectViewModel : BaseViewModel
 
         var standsSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
 
-        var additionalEquips = CurrentStandModel.NewAdditionalEquip.Purposes;
+        var selectedStand = CurrentProjectModel.SelectedStand;
+
+        if (selectedStand == null)
+            return;
+
+        var additionalEquips = selectedStand.AllAdditionalEquipPurposesInStand;
         var clampsRecord = additionalEquips.FirstOrDefault(equip => equip.Purpose == "Хомуты");
 
         if (clampsRecord == null)
             return;
 
-        clampsRecord.Quantity = CurrentStandModel.ObvyazkiInStand.Sum(obv => obv.Clamp) ?? 0.0f;
+        clampsRecord.Quantity = selectedStand.ObvyazkiInStand.Sum(obv => obv.Clamp) ?? 0.0f;
 
         Debug.WriteLine("Пересчет хомутов завершен");
     }
@@ -1566,9 +1576,15 @@ public class ProjectViewModel : BaseViewModel
     {
         Debug.WriteLine("Пересчет табличек начат");
 
-        var sensorsQuantity = CurrentStandModel.CountSensorsQuantity();
 
-        var additionalComponents = CurrentStandModel.NewAdditionalEquip.Purposes;
+        var selectedStand = CurrentProjectModel.SelectedStand;
+
+        if (selectedStand == null)
+            return;
+
+        var sensorsQuantity = selectedStand.CountSensorsQuantity();
+
+        var additionalComponents = selectedStand.AllAdditionalEquipPurposesInStand;
         var tableRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == "Табличка");
 
         if (tableRecord == null)
@@ -1586,11 +1602,16 @@ public class ProjectViewModel : BaseViewModel
 
         var standsSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
 
+        var selectedStand = CurrentProjectModel.SelectedStand;
+
+        if (selectedStand == null)
+            return;
+
         const int bracketsPerDifSensor = 1;
 
-        var difSensorsQuantity = CurrentStandModel.CountDifSensorsQuantity();
+        var difSensorsQuantity = selectedStand.CountDifSensorsQuantity();
 
-        var additionalComponents = CurrentStandModel.NewAdditionalEquip.Purposes;
+        var additionalComponents = selectedStand.AllAdditionalEquipPurposesInStand;
         var difSensorsBracketRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == "Кронштейн перепадчика");
 
         if (difSensorsBracketRecord != null)
@@ -1600,11 +1621,11 @@ public class ProjectViewModel : BaseViewModel
 
         const int bracketsPerAbsoluteSensor = 2;
 
-        var standBraceType = CurrentProjectModel?.SelectedStand?.BraceType;
+        var standBraceType = selectedStand.BraceType;
 
         if (!string.IsNullOrEmpty(standBraceType) && standBraceType == "На кронштейне")
         {
-            var absSensorsQuantity = CurrentStandModel.CountAbsoluteSensorsQuantity();
+            var absSensorsQuantity = selectedStand.CountAbsoluteSensorsQuantity();
 
             var absSensorsBracketsRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == "Кронштейн абсолютника");
 
@@ -1634,9 +1655,12 @@ public class ProjectViewModel : BaseViewModel
     {
         Debug.WriteLine("Пересчет дренажной трубы начат");
 
-        var selectedStand = CurrentProjectModel?.SelectedStand;
+        var selectedStand = CurrentProjectModel.SelectedStand;
 
-        var drainageParts = CurrentStandModel.NewDrainage.Purposes;
+        if (selectedStand == null)
+            return;
+
+        var drainageParts = selectedStand.AllDrainagePurposesInStand;
         var mainPipeRecord = drainageParts.FirstOrDefault(part => part.Purpose == "Основная труба");
 
         if (mainPipeRecord == null || selectedStand == null)
@@ -1652,19 +1676,24 @@ public class ProjectViewModel : BaseViewModel
     {
         Debug.WriteLine("Пересчет электрики начат");
 
-        var electricComponents = CurrentStandModel.NewElectricalComponent.Purposes;
+        var selectedStand = CurrentProjectModel.SelectedStand;
+
+        if (selectedStand == null)
+            return;
+
+        var electricComponents = selectedStand.AllElectricalPurposesInStand;
 
         //кабельные ввода
-        var cableInputsPerSensor = 2;
+        const int cableInputsPerSensor = 2;
         var cableInputsRecord = electricComponents.FirstOrDefault(purpose => purpose.Purpose == "Кабельные вводы");
 
         var cableInputsQuantity = 0;
 
-        var sensorsQuantity = CurrentProjectModel.SelectedStand?.CountSensorsQuantity();
+        var sensorsQuantity = selectedStand.CountSensorsQuantity();
 
-        if (cableInputsRecord != null && sensorsQuantity.HasValue)
+        if (cableInputsRecord != null)
         {
-            cableInputsQuantity = sensorsQuantity.Value * cableInputsPerSensor;
+            cableInputsQuantity = sensorsQuantity * cableInputsPerSensor;
             cableInputsRecord.Quantity = cableInputsQuantity;
         }
 
@@ -1676,9 +1705,9 @@ public class ProjectViewModel : BaseViewModel
         var signalCablePerSensor = 0;
         int? signalCabelQuantity = 0;
 
-        if (sensorsQuantity.HasValue && signalCableRecord != null)
+        if ( signalCableRecord != null)
         {
-            signalCablePerSensor = sensorsQuantity.Value switch
+            signalCablePerSensor = sensorsQuantity switch
             {
                 >= 0 and <= 2 => 2,
                 >= 3 and <= 5 => 3,
