@@ -375,3 +375,6 @@ Documentation.xml
 .idea/.idea.ReportEngine.App/.idea/copilot.data.migration.ask.xml
 *.pdf
 *.pdf
+ReportEngine.Shared/Config/Logger/LoggerConfig.cs
+/ReportEngine.Shared/Config/Logger
+/ReportEngine.Shared/Config/Logger/LoggerConfig.cs
