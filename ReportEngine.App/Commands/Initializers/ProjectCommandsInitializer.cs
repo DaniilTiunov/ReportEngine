@@ -28,15 +28,6 @@ public static class ProjectCommandsInitializer
         vm.ProjectCommandProvider.AddDrainageToStandCommand =
             new RelayCommand(vm.OnAddDrainageToStandExecuted, vm.CanAllCommandsExecute);
 
-        vm.ProjectCommandProvider.AddCustomDrainageToStandCommand =
-            new RelayCommand(vm.OnAddCustomDrainageToStandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.AddCustomElectricalComponentToStandCommand =
-            new RelayCommand(vm.OnAddCustomElectricalComponentToStandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.AddCustomAdditionalEquipToStandCommand =
-            new RelayCommand(vm.OnAddCustomAdditionalEquipToStandExecuted, vm.CanAllCommandsExecute);
-
         vm.ProjectCommandProvider.SelectObvFromDialogCommand =
             new RelayCommand(vm.OnSelectObvCommandExecuted, vm.CanAllCommandsExecute);
 

@@ -359,7 +359,7 @@ public class ProjectService : IProjectService
         obv.HumanCost = selectedObvyazka.HumanCost;
         obv.ImageName = selectedObvyazka.ImageName;
 
-        UpdateObvyazka(projectModel, projectModel.SelectedStand.SelectedObvyazkaInStand);
+        await UpdateObvyazka(projectModel, projectModel.SelectedStand.SelectedObvyazkaInStand);
 
         CollectionRefreshHelper.SafeRefreshCollection(projectModel.SelectedStand.ObvyazkiInStand);
         CollectionRefreshHelper.SafeRefreshCollection(projectModel.ObvyazkiInProject);
@@ -370,7 +370,7 @@ public class ProjectService : IProjectService
         _notificationService.ShowInfo("Обвязка обновлена");
     }
 
-    public void UpdateObvyazka(ProjectModel projectModel, ObvyazkaInStand selectedObvyazka)
+    public async Task UpdateObvyazka(ProjectModel projectModel, ObvyazkaInStand selectedObvyazka)
     {
         var current = projectModel.SelectedStand.SelectedObvyazkaInStand;
 
@@ -447,6 +447,8 @@ public class ProjectService : IProjectService
                 obv.ImageName = selectedObvyazka.ImageName;
             }
         }
+
+        await LoadAllObvyazkiInProject(projectModel);
     }
 
     public async Task DeleteFrameFromStandAsync(ProjectModel projectModel)

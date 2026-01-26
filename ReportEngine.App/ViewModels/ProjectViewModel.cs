@@ -424,11 +424,6 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async void OnAddCustomDrainageToStandExecuted(object p)
-    {
-        await ExceptionHelper.SafeExecuteAsync(AddCustomDrainageToStandAsync);
-    }
-
     public async void OnAddDrainageToStandExecuted(object p)
     {
         await ExceptionHelper.SafeExecuteAsync(AddDrainageToStandAsync);
@@ -437,16 +432,6 @@ public class ProjectViewModel : BaseViewModel
     public async void OnAddFrameToStandExecuted(object p)
     {
         await ExceptionHelper.SafeExecuteAsync(AddFrameToStandAsync);
-    }
-
-    public async void OnAddCustomElectricalComponentToStandExecuted(object p)
-    {
-        await ExceptionHelper.SafeExecuteAsync(AddCustomElectricalComponentToStandAsync);
-    }
-
-    public async void OnAddCustomAdditionalEquipToStandExecuted(object p)
-    {
-        await ExceptionHelper.SafeExecuteAsync(AddCustomAdditionalEquipToStandAsync);
     }
 
     public async void OnCopyObvyazkaToStandsCommandExecuted(object p)
@@ -950,7 +935,6 @@ public class ProjectViewModel : BaseViewModel
 
             CurrentProjectModel = loadedModel;
             CurrentStandModel = loadedModel.SelectedStand ?? new StandModel();
-            CurrentStandModel.InitializeDefaultPurposes();
 
             await LoadObvyazkiAsync();
             await LoadStandsDataAsync();
@@ -1029,7 +1013,6 @@ public class ProjectViewModel : BaseViewModel
             return;
         }
 
-        //
         await _projectService.UpdateProjectAsync(CurrentProjectModel);
 
         _notificationService.ShowInfo("Изменения успешно сохранены!");
@@ -1238,55 +1221,6 @@ public class ProjectViewModel : BaseViewModel
 
             CurrentProjectModel.SelectedStand.DrainagesInStand.Add(CurrentStandModel.SelectedDrainage);
         }
-    }
-
-    private async Task AddCustomDrainageToStandAsync()
-    {
-        await _standService.AddCustomDrainageAsync(
-            CurrentProjectModel.SelectedStand.Id,
-            CurrentStandModel.NewDrainage);
-
-        AllAvailableDrainages.Add(CurrentStandModel.NewDrainage);
-        CurrentProjectModel.SelectedStand.DrainagesInStand.Add(CurrentStandModel.NewDrainage);
-
-        OnPropertyChanged(nameof(AllAvailableDrainages));
-
-        CurrentStandModel.NewDrainage = new FormedDrainage();
-        CurrentStandModel.InitializeDrainagePurposes();
-
-        await LoadPurposesInStandsAsync();
-    }
-
-    private async Task AddCustomElectricalComponentToStandAsync()
-    {
-        await _standService.AddCustomElectricalComponentAsync(
-            CurrentProjectModel.SelectedStand.Id,
-            CurrentStandModel.NewElectricalComponent);
-
-        AllAvailableElectricalComponents.Add(CurrentStandModel.NewElectricalComponent);
-        CurrentProjectModel.SelectedStand.ElectricalComponentsInStand.Add(CurrentStandModel.NewElectricalComponent);
-
-        OnPropertyChanged(nameof(AllAvailableElectricalComponents));
-        CurrentStandModel.NewElectricalComponent = new FormedElectricalComponent();
-        CurrentStandModel.InitializeElectricalComponent();
-
-        await LoadPurposesInStandsAsync();
-    }
-
-    private async Task AddCustomAdditionalEquipToStandAsync()
-    {
-        await _standService.AddCustomAdditionalEquipAsync(
-            CurrentProjectModel.SelectedStand.Id,
-            CurrentStandModel.NewAdditionalEquip);
-
-        AllAvailableAdditionalEquips.Add(CurrentStandModel.NewAdditionalEquip);
-        CurrentProjectModel.SelectedStand.AdditionalEquipsInStand.Add(CurrentStandModel.NewAdditionalEquip);
-
-        OnPropertyChanged(nameof(AllAvailableAdditionalEquips));
-        CurrentStandModel.NewAdditionalEquip = new FormedAdditionalEquip();
-        CurrentStandModel.InitializeAdditionalEquip();
-
-        await LoadPurposesInStandsAsync();
     }
 
     public async Task UpdateStandBlueprintAsync(byte[] imageData, string imageType)
