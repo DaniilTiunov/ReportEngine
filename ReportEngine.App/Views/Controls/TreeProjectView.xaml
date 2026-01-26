@@ -48,10 +48,10 @@
                                             Margin="0,3,0,3"
                                             Header="Стенды"
                                             Tag="Stand" />-->
-                                        <TreeViewItem
+                                        <!--<TreeViewItem
                                             Margin="0,3,0,3"
                                             Header="Формирование стендов"
-                                            Tag="StandObv" />
+                                            Tag="StandObv" />-->
                                         <!--<TreeViewItem Margin="0,3,0,3" Header="Формирование стенда" Tag="FrameDrainages" />-->
                                         <TreeViewItem
                                             Margin="0,3,10,3"
