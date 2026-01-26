@@ -144,7 +144,6 @@ public class StandService : IStandService
 
         await _formedDrainagesRepository.AddAsync(entity);
         await _projectRepository.AddDrainageToStandAsync(standId, entity.Id);
-        _notificationService.ShowInfo($"Собранный дренаж успешно добавлен! Id {standId}");
     }
 
     public async Task AddObvyazkaToStandAsync(int standId, ObvyazkaInStand obvyazka)
@@ -171,7 +170,6 @@ public class StandService : IStandService
 
         await _formedElectricalRepository.AddAsync(entity);
         await _projectRepository.AddElectricalComponentToStandAsync(standId, entity.Id);
-        _notificationService.ShowInfo($"Собранный электрический компонент успешно добавлен! Id {standId}");
     }
 
     public async Task AddCustomAdditionalEquipAsync(int standId, FormedAdditionalEquip customEquip)
@@ -192,7 +190,6 @@ public class StandService : IStandService
 
         await _formedAdditionalEquipsRepository.AddAsync(entity);
         await _projectRepository.AddAdditionalEquipToStandAsync(standId, entity.Id);
-        _notificationService.ShowInfo($"Собранное комплектующее успешно добавлено! Id {standId}");
     }
 
     public Task<ObvyazkaInStand> CreateObvyazkaAsync(StandModel standModel, Obvyazka selectedObvyazka)
