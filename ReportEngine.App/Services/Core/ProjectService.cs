@@ -362,6 +362,7 @@ public class ProjectService : IProjectService
         UpdateObvyazka(projectModel, projectModel.SelectedStand.SelectedObvyazkaInStand);
 
         CollectionRefreshHelper.SafeRefreshCollection(projectModel.SelectedStand.ObvyazkiInStand);
+        CollectionRefreshHelper.SafeRefreshCollection(projectModel.ObvyazkiInProject);
 
         await _projectRepository.UpdateObvInStandAsync(projectModel.SelectedStand.Id,
             projectModel.SelectedStand.SelectedObvyazkaInStand);
@@ -382,64 +383,69 @@ public class ProjectService : IProjectService
         if (oldName != newName)
             return;
 
-        var related = projectModel.SelectedStand.ObvyazkiInStand
-            .Where(x => x != current && x.ObvyazkaName == oldName)
+
+        foreach (var stand in projectModel.Stands)
+        {
+
+            var related = stand.ObvyazkiInStand
+            .Where(x => x != selectedObvyazka && x.ObvyazkaName == oldName)
             .ToList();
 
-        foreach (var obv in related)
-        {
-            obv.MaterialLine = current.MaterialLine;
-            obv.MaterialLineCount = current.MaterialLineCount;
-            obv.MaterialLineMeasure = current.MaterialLineMeasure;
-            obv.MaterialLineExportDays = current.MaterialLineExportDays;
+            foreach (var obv in related)
+            {
+                obv.MaterialLine = selectedObvyazka.MaterialLine;
+                obv.MaterialLineCount = selectedObvyazka.MaterialLineCount;
+                obv.MaterialLineMeasure = selectedObvyazka.MaterialLineMeasure;
+                obv.MaterialLineExportDays = selectedObvyazka.MaterialLineExportDays;
 
-            obv.Armature = current.Armature;
-            obv.ArmatureCount = current.ArmatureCount;
-            obv.ArmatureMeasure = current.ArmatureMeasure;
-            obv.ArmatureExportDays = current.ArmatureExportDays;
+                obv.Armature = selectedObvyazka.Armature;
+                obv.ArmatureCount = selectedObvyazka.ArmatureCount;
+                obv.ArmatureMeasure = selectedObvyazka.ArmatureMeasure;
+                obv.ArmatureExportDays = selectedObvyazka.ArmatureExportDays;
 
-            obv.TreeSocket = current.TreeSocket;
-            obv.TreeSocketMaterialCount = current.TreeSocketMaterialCount;
-            obv.TreeSocketMaterialMeasure = current.TreeSocketMaterialMeasure;
-            obv.TreeSocketExportDays = current.TreeSocketExportDays;
+                obv.TreeSocket = selectedObvyazka.TreeSocket;
+                obv.TreeSocketMaterialCount = selectedObvyazka.TreeSocketMaterialCount;
+                obv.TreeSocketMaterialMeasure = selectedObvyazka.TreeSocketMaterialMeasure;
+                obv.TreeSocketExportDays = selectedObvyazka.TreeSocketExportDays;
 
-            obv.KMCH = current.KMCH;
-            obv.KMCHCount = current.KMCHCount;
-            obv.KMCHMeasure = current.KMCHMeasure;
-            obv.KMCHExportDays = current.KMCHExportDays;
+                obv.KMCH = selectedObvyazka.KMCH;
+                obv.KMCHCount = selectedObvyazka.KMCHCount;
+                obv.KMCHMeasure = selectedObvyazka.KMCHMeasure;
+                obv.KMCHExportDays = selectedObvyazka.KMCHExportDays;
 
-            obv.NN = current.NN;
+                obv.NN = selectedObvyazka.NN;
 
-            obv.FirstSensorType = current.FirstSensorType;
-            obv.FirstSensorKKS = current.FirstSensorKKS;
-            obv.FirstSensorMarkPlus = current.FirstSensorMarkPlus;
-            obv.FirstSensorMarkMinus = current.FirstSensorMarkMinus;
-            obv.FirstSensorDescription = current.FirstSensorDescription;
+                obv.FirstSensorType = selectedObvyazka.FirstSensorType;
+                obv.FirstSensorKKS = selectedObvyazka.FirstSensorKKS;
+                obv.FirstSensorMarkPlus = selectedObvyazka.FirstSensorMarkPlus;
+                obv.FirstSensorMarkMinus = selectedObvyazka.FirstSensorMarkMinus;
+                obv.FirstSensorDescription = selectedObvyazka.FirstSensorDescription;
 
-            obv.SecondSensorType = current.SecondSensorType;
-            obv.SecondSensorKKS = current.SecondSensorKKS;
-            obv.SecondSensorMarkPlus = current.SecondSensorMarkPlus;
-            obv.SecondSensorMarkMinus = current.SecondSensorMarkMinus;
-            obv.SecondSensorDescription = current.SecondSensorDescription;
+                obv.SecondSensorType = selectedObvyazka.SecondSensorType;
+                obv.SecondSensorKKS = selectedObvyazka.SecondSensorKKS;
+                obv.SecondSensorMarkPlus = selectedObvyazka.SecondSensorMarkPlus;
+                obv.SecondSensorMarkMinus = selectedObvyazka.SecondSensorMarkMinus;
+                obv.SecondSensorDescription = selectedObvyazka.SecondSensorDescription;
 
-            obv.ThirdSensorType = current.ThirdSensorType;
-            obv.ThirdSensorKKS = current.ThirdSensorKKS;
-            obv.ThirdSensorMarkPlus = current.ThirdSensorMarkPlus;
-            obv.ThirdSensorMarkMinus = current.ThirdSensorMarkMinus;
-            obv.ThirdSensorDescription = current.ThirdSensorDescription;
+                obv.ThirdSensorType = selectedObvyazka.ThirdSensorType;
+                obv.ThirdSensorKKS = selectedObvyazka.ThirdSensorKKS;
+                obv.ThirdSensorMarkPlus = selectedObvyazka.ThirdSensorMarkPlus;
+                obv.ThirdSensorMarkMinus = selectedObvyazka.ThirdSensorMarkMinus;
+                obv.ThirdSensorDescription = selectedObvyazka.ThirdSensorDescription;
 
-            obv.LineLength = current.LineLength;
-            obv.ZraCount = current.ZraCount;
-            obv.Sensor = current.Sensor;
-            obv.SensorType = current.SensorType;
-            obv.Clamp = current.Clamp;
-            obv.WidthOnFrame = current.WidthOnFrame;
-            obv.OtherLineCount = current.OtherLineCount;
-            obv.Weight = current.Weight;
-            obv.TreeSocketCount = current.TreeSocketCount;
-            obv.KMCHCount = current.KMCHCount;
-            obv.HumanCost = current.HumanCost;
-            obv.ImageName = current.ImageName;
+                obv.LineLength = selectedObvyazka.LineLength;
+                obv.ZraCount = selectedObvyazka.ZraCount;
+                obv.Sensor = selectedObvyazka.Sensor;
+                obv.SensorType = selectedObvyazka.SensorType;
+                obv.Clamp = selectedObvyazka.Clamp;
+                obv.WidthOnFrame = selectedObvyazka.WidthOnFrame;
+                obv.OtherLineCount = selectedObvyazka.OtherLineCount;
+                obv.Weight = selectedObvyazka.Weight;
+                obv.TreeSocketCount = selectedObvyazka.TreeSocketCount;
+                obv.KMCHCount = selectedObvyazka.KMCHCount;
+                obv.HumanCost = selectedObvyazka.HumanCost;
+                obv.ImageName = selectedObvyazka.ImageName;
+            }
         }
     }
 

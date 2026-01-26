@@ -187,7 +187,7 @@
                 Padding="5">
                 <GroupBox.Header>
                     <TextBlock>
-                        <Run FontSize="16" Text="Обвязки по стенду — " />
+                        <Run FontSize="16" Text="Обвязки в стенде — " />
                         <Run
                             FontSize="15"
                             FontWeight="Bold"
@@ -279,6 +279,34 @@
                                 Width="120"
                                 DisplayMemberBinding="{Binding MaterialLine}"
                                 Header="Материал" />
+                            <GridViewColumn
+                                Width="120"
+                                DisplayMemberBinding="{Binding MaterialLine}"
+                                Header="Материал" />
+                            <GridViewColumn
+                                Width="120"
+                                DisplayMemberBinding="{Binding Armature}"
+                                Header="Арматура" />
+                            <GridViewColumn
+                                Width="120"
+                                DisplayMemberBinding="{Binding TreeSocket}"
+                                Header="Тройник" />
+                            <GridViewColumn
+                                Width="120"
+                                DisplayMemberBinding="{Binding KMCH}"
+                                Header="КМЧ" />
+                            <GridViewColumn
+                                Width="120"
+                                DisplayMemberBinding="{Binding FirstSensorType}"
+                                Header="Датчик 1" />
+                            <GridViewColumn
+                                Width="120"
+                                DisplayMemberBinding="{Binding SecondSensorType}"
+                                Header="Датчик 2" />
+                            <GridViewColumn
+                                Width="120"
+                                DisplayMemberBinding="{Binding ThirdSensorType}"
+                                Header="Датчик 3" />
                         </GridView>
                     </ListView.View>
                     <ListView.ContextMenu>
