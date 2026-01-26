@@ -23,6 +23,7 @@ using ReportEngine.Shared.Config.IniHeleprs;
 using ReportEngine.Shared.Config.IniHelpers;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -1231,6 +1232,60 @@ public class ProjectViewModel : BaseViewModel
 
             CurrentProjectModel.SelectedStand.DrainagesInStand.Add(CurrentStandModel.SelectedDrainage);
         }
+    }
+
+    private async Task AddCustomDrainageToStandAsync()
+    {
+        await _standService.AddCustomDrainageAsync(
+            CurrentProjectModel.SelectedStand.Id,
+            CurrentStandModel.NewDrainage);
+
+        AllAvailableDrainages.Add(CurrentStandModel.NewDrainage);
+        CurrentProjectModel.SelectedStand.DrainagesInStand.Add(CurrentStandModel.NewDrainage);
+
+        OnPropertyChanged(nameof(AllAvailableDrainages));
+
+        CurrentStandModel.NewDrainage = new FormedDrainage();
+        CurrentStandModel.InitializeDrainagePurposes();
+        
+
+        await LoadPurposesInStandsAsync();
+    }
+
+    private async Task AddCustomElectricalComponentToStandAsync()
+    {
+        await _standService.AddCustomElectricalComponentAsync(
+            CurrentProjectModel.SelectedStand.Id,
+            CurrentStandModel.NewElectricalComponent);
+
+        AllAvailableElectricalComponents.Add(CurrentStandModel.NewElectricalComponent);
+        CurrentProjectModel.SelectedStand.ElectricalComponentsInStand.Add(CurrentStandModel.NewElectricalComponent);
+
+        OnPropertyChanged(nameof(AllAvailableElectricalComponents));
+        CurrentStandModel.NewElectricalComponent = new FormedElectricalComponent();
+        CurrentStandModel.InitializeElectricalComponent();
+
+        
+
+        //OnUpdateElectricalComponentInStandCommandExecuted(CurrentStandModel);
+
+        await LoadPurposesInStandsAsync();
+    }
+
+    private async Task AddCustomAdditionalEquipToStandAsync()
+    {
+        await _standService.AddCustomAdditionalEquipAsync(
+            CurrentProjectModel.SelectedStand.Id,
+            CurrentStandModel.NewAdditionalEquip);
+
+        AllAvailableAdditionalEquips.Add(CurrentStandModel.NewAdditionalEquip);
+        CurrentProjectModel.SelectedStand.AdditionalEquipsInStand.Add(CurrentStandModel.NewAdditionalEquip);
+
+        OnPropertyChanged(nameof(AllAvailableAdditionalEquips));
+        CurrentStandModel.NewAdditionalEquip = new FormedAdditionalEquip();
+        CurrentStandModel.InitializeAdditionalEquip();
+
+        await LoadPurposesInStandsAsync();
     }
 
     public async Task UpdateStandBlueprintAsync(byte[] imageData, string imageType)
