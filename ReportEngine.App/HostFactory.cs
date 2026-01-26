@@ -131,6 +131,8 @@ public class HostFactory
 
     private static void ConfigureApplicationServices(IServiceCollection services)
     {
+        services.AddSingleton<UpdaterStandService>();
+        services.AddSingleton<EquipChangesListener>();
         services.AddSingleton<GenericEquipWindowFactory>();
         services.AddSingleton<NavigationService>();
         services.AddSingleton<IDialogService, DialogService>();
@@ -140,7 +142,6 @@ public class HostFactory
         services.AddScoped<IProjectService, ProjectService>();
         services.AddScoped<IProjectDataLoaderService, ProjectDataLoaderSerive>();
         services.AddScoped<ContainerService>();
-        services.AddHostedService<EquipChangesListener>();
     }
 
     private static void ConfigureReportsServices(IServiceCollection services)

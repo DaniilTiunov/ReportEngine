@@ -1,4 +1,5 @@
 ﻿using ReportEngine.App.Model;
+using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
 
@@ -8,6 +9,9 @@ public class CalculationService : ICalculationService
 {
     private readonly INotificationService _notificationService;
     private readonly IProjectService _projectService;
+
+    public StandSettingsModel DefaultStandSettings { get; set; } = new();
+    public HumanCostSettingsModel HumanCostSettingsModel { get; set; } = new();
 
     public CalculationService(
         IProjectService projectService,
@@ -24,7 +28,10 @@ public class CalculationService : ICalculationService
         foreach (var stand in project.Stands)
             stand.StandSummCost = CalculateStandEquipCost(stand);
 
-        project.Cost = project.Stands.Sum(stand => stand.StandSummCost);
+        var standsCost = project.Stands.Sum(stand => stand.StandSummCost);
+        var galvanizedCost = CalculateGalvanizedCost(project);
+
+        project.Cost = standsCost + galvanizedCost;
 
         project.HumanCost = project.Stands.Sum(ObvHumanCostCalculation);
 
@@ -58,6 +65,18 @@ public class CalculationService : ICalculationService
         cost += standModel.DrainagesInStand
             .SelectMany(d => d.Purposes)
             .Sum(p => (decimal)(p.CostPerUnit ?? 0) * (decimal)(p.Quantity ?? 0));
+
+        return cost;
+    }
+
+    private decimal CalculateGalvanizedCost(ProjectModel projectModel)
+    {
+        decimal cost = 0;
+
+        if (projectModel.IsGalvanized)
+        {
+            cost = projectModel.Stands.Count * (decimal)HumanCostSettingsModel.GalvanizedStands;
+        }
 
         return cost;
     }

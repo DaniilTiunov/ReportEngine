@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ReportEngine.Domain.Database.Context;
@@ -11,9 +12,11 @@ using ReportEngine.Domain.Database.Context;
 namespace ReportEngine.Domain.Migrations
 {
     [DbContext(typeof(ReAppContext))]
-    partial class ReAppContextModelSnapshot : ModelSnapshot
+    [Migration("20260126102431_NullGOOOD")]
+    partial class NullGOOOD
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,22 +33,25 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("ChangedAt")
+                    b.Property<DateTime>("ChangedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("EquipId")
+                    b.Property<int>("EquipId")
                         .HasColumnType("integer");
 
                     b.Property<string>("NewName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("OldName")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool?>("Processed")
+                    b.Property<bool>("Processed")
                         .HasColumnType("boolean");
 
                     b.Property<string>("TableName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
