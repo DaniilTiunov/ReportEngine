@@ -794,12 +794,33 @@ public class StandModel : BaseViewModel
         return standSensorQuantity;
     }
 
+    public int CountElectricSensorsQuantity()
+    {
+        var isElectricSensor = (string? typeOfSensor) => !string.IsNullOrEmpty(typeOfSensor) && typeOfSensor != "Манометр";
+
+        int electricSensorsQuantity = ObvyazkiInStand
+            .Sum(obv =>
+            {
+                int sensorsQuantity = 0;
+
+                if (isElectricSensor(obv.FirstSensorType))
+                    sensorsQuantity++;
+
+                if (isElectricSensor(obv.SecondSensorType))
+                    sensorsQuantity++;
+
+                if (isElectricSensor(obv.ThirdSensorType))
+                    sensorsQuantity++;
+
+                return sensorsQuantity;
+            });
+
+        return electricSensorsQuantity;
+    }
+
     public int CountDifSensorsQuantity()
     {
-        var isDifSensor = (string? typeOfSensor) =>
-        {
-            return !string.IsNullOrEmpty(typeOfSensor) ? typeOfSensor == "Датчик перепада давления" : false;
-        };
+        var isDifSensor = (string? typeOfSensor) => !string.IsNullOrEmpty(typeOfSensor) && typeOfSensor == "Датчик перепада давления";
 
         int difSensorQuantity = ObvyazkiInStand
             .Sum(obv =>
@@ -823,10 +844,7 @@ public class StandModel : BaseViewModel
 
     public int CountAbsoluteSensorsQuantity()
     {
-        var isAbsoluteSensor = (string? typeOfSensor) =>
-        {
-            return !string.IsNullOrEmpty(typeOfSensor) ? typeOfSensor == "Датчик абсолютного давления" : false;
-        };
+        var isAbsoluteSensor = (string? typeOfSensor) => !string.IsNullOrEmpty(typeOfSensor) && typeOfSensor == "Датчик абсолютного давления";
 
         int absoluteSensorQuantity = ObvyazkiInStand
             .Sum(obv =>
