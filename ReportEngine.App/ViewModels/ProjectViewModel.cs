@@ -22,6 +22,7 @@ using ReportEngine.Shared.Config.IniHeleprs;
 using ReportEngine.Shared.Config.IniHelpers;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -1244,6 +1245,7 @@ public class ProjectViewModel : BaseViewModel
 
         CurrentStandModel.NewDrainage = new FormedDrainage();
         CurrentStandModel.InitializeDrainagePurposes();
+        
 
         await LoadPurposesInStandsAsync();
     }
@@ -1260,6 +1262,10 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(AllAvailableElectricalComponents));
         CurrentStandModel.NewElectricalComponent = new FormedElectricalComponent();
         CurrentStandModel.InitializeElectricalComponent();
+
+        
+
+        //OnUpdateElectricalComponentInStandCommandExecuted(CurrentStandModel);
 
         await LoadPurposesInStandsAsync();
     }
