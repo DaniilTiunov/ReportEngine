@@ -7,6 +7,7 @@ using ReportEngine.App.Commands.Providers;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
+using ReportEngine.App.Services;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
@@ -29,6 +30,7 @@ public class ProjectViewModel : BaseViewModel
 {
     private readonly ICalculationService _calculationService;
     private readonly IBaseRepository<Company> _companyRepository;
+    private readonly UpdaterStandService _updaterStandService;
     private readonly IContainerRepository _containerRepository;
     private readonly ContainerService _containerService;
     private readonly IDialogService _dialogService;
@@ -47,7 +49,8 @@ public class ProjectViewModel : BaseViewModel
         IProjectDataLoaderService projectDataLoaderService,
         IReportService reportService,
         ICalculationService calculationService,
-        ContainerService containerService)
+        ContainerService containerService,
+        UpdaterStandService updaterStandService)
     {
         _projectRepository = projectRepository;
         _dialogService = dialogService;
@@ -58,6 +61,7 @@ public class ProjectViewModel : BaseViewModel
         _reportService = reportService;
         _calculationService = calculationService;
         _containerService = containerService;
+        _updaterStandService = updaterStandService;
 
         NewStand = new StandModel { Number = 1 };
 
@@ -423,7 +427,13 @@ public class ProjectViewModel : BaseViewModel
             _notificationService.ShowInfo("Рама удалена из стенда");
         });
     }
-
+    public async void OnUpdateStandsAfterEquipsCommandExecuted(object e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await _updaterStandService.ApplyChangesAndSaveAsync(CurrentProjectModel);
+        });
+    }
     public async void OnAddDrainageToStandExecuted(object p)
     {
         await ExceptionHelper.SafeExecuteAsync(AddDrainageToStandAsync);
@@ -1188,12 +1198,12 @@ public class ProjectViewModel : BaseViewModel
                 setProperty(equipment.Name);
                 setMeasure(equipment.Measure);
                 setCost(equipment.Cost.ToString());
-                setExportDays(equipment.ExportDays);
+                setExportDays((int)equipment.ExportDays);
             }
 
             if (equipment is BaseEquip baseEquip)
             {
-                setWeight(baseEquip.Weight);
+                setWeight((float)baseEquip.Weight);
             }
         });
     }

@@ -4,6 +4,7 @@ namespace ReportEngine.App.Commands.Providers;
 
 public class ProjectCommandProvider
 {
+    public ICommand UpdateStandsAfterEquipsCommand { get; set; }
     public ICommand SelectMaterialLineDialogCommand { get; set; }
     public ICommand SelectArmatureDialogCommand { get; set; }
     public ICommand SelectTreeSocketDialogCommand { get; set; }

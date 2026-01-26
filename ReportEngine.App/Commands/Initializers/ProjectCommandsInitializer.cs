@@ -10,6 +10,9 @@ public static class ProjectCommandsInitializer
         if (vm == null)
             return;
 
+        vm.ProjectCommandProvider.UpdateStandsAfterEquipsCommand =
+            new RelayCommand(vm.OnUpdateStandsAfterEquipsCommandExecuted, vm.CanAllCommandsExecute);
+
         vm.ProjectCommandProvider.CreateNewCardCommand =
             new RelayCommand(vm.OnCreateNewCardCommandExecuted, vm.CanAllCommandsExecute);
 
