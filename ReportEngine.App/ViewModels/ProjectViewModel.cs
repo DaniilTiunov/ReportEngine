@@ -1074,7 +1074,7 @@ public class ProjectViewModel : BaseViewModel
         newStandModel.Id = addedStandEntity.Id;
         newStandModel.ProjectId = addedStandEntity.ProjectInfoId;
 
-        await newStandModel.InitializeDefaultPurposes();
+        await CreateDefaultPurposesAsync(newStandModel);
 
         CurrentProjectModel.Stands.Add(newStandModel);
 
@@ -1094,6 +1094,15 @@ public class ProjectViewModel : BaseViewModel
         }
 
         _notificationService.ShowInfo($"Стенд с ID {addedStandEntity.Id} успешно добавлен!");
+    }
+
+    private async Task CreateDefaultPurposesAsync(StandModel newStandModel)
+    {
+        await newStandModel.InitializeDefaultPurposes();
+
+        await _standService.AddCustomDrainageAsync(newStandModel.Id, newStandModel.NewDrainage);
+        await _standService.AddCustomElectricalComponentAsync(newStandModel.Id, newStandModel.NewElectricalComponent);
+        await _standService.AddCustomAdditionalEquipAsync(newStandModel.Id, newStandModel.NewAdditionalEquip);
     }
 
     private async Task SaveChangesInStandAsync()
