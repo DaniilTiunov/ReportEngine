@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using Microsoft.Extensions.DependencyInjection;
+using ReportEngine.App.Services;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
 using ReportEngine.Shared.Config.Logger;
@@ -24,12 +25,14 @@ public static class StartUp
 
             var app = host.Services.GetRequiredService<App>();
 
+            //var equipListener = host.Services.GetRequiredService<EquipChangesListener>();
+
+            //equipListener.LoadCurrentDataAsync().GetAwaiter().GetResult();
+
             var mainWindow = host.Services.GetRequiredService<MainWindow>();
             app.MainWindow = mainWindow;
 
             mainWindow.Show();
-
-            host.StartAsync();
 
             app.Run();
         }

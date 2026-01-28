@@ -48,10 +48,10 @@
                                             Margin="0,3,0,3"
                                             Header="Стенды"
                                             Tag="Stand" />-->
-                                        <TreeViewItem
+                                        <!--<TreeViewItem
                                             Margin="0,3,0,3"
                                             Header="Формирование стендов"
-                                            Tag="StandObv" />
+                                            Tag="StandObv" />-->
                                         <!--<TreeViewItem Margin="0,3,0,3" Header="Формирование стенда" Tag="FrameDrainages" />-->
                                         <TreeViewItem
                                             Margin="0,3,10,3"
@@ -66,6 +66,8 @@
                                 <TreeViewItem Header="Создание отчётов" ToolTip="Нажмите ПКМ для выбор отчёта">
                                     <TreeViewItem.ContextMenu>
                                         <ContextMenu>
+                                            <MenuItem Command="{Binding ProjectCommandProvider.UpdateStandsAfterEquipsCommand}" Header="Переформировать" />
+                                            <Separator />
                                             <MenuItem Command="{Binding ProjectCommandProvider.CalculateProjectCommand}" Header="Расчитать проект" />
                                             <Separator />
                                             <MenuItem Command="{Binding ProjectCommandProvider.CreateSummaryReportCommand}" Header="Сводная ведомость" />
