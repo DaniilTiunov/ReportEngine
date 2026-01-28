@@ -169,6 +169,11 @@
                                     Header="Описание по КД" />
                             </GridView>
                         </ListView.View>
+                        <ListView.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding ProjectCommandProvider.RemoveFrameStandCommand}" Header="Удалить раму" />
+                            </ContextMenu>
+                        </ListView.ContextMenu>
                     </ListView>
                     <Button
                         Grid.Column="1"

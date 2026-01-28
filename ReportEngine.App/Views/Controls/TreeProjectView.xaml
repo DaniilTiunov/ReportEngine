@@ -55,7 +55,7 @@
                                         <!--<TreeViewItem Margin="0,3,0,3" Header="Формирование стенда" Tag="FrameDrainages" />-->
                                         <TreeViewItem
                                             Margin="0,3,10,3"
-                                            Header="Предварительный просмотр проекта"
+                                            Header="Расчёт стенда"
                                             Tag="ProjectPreview" />
                                         <TreeViewItem
                                             Margin="0,3,0,3"
