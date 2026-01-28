@@ -415,24 +415,6 @@ public class ProjectService : IProjectService
 
                 obv.NN = selectedObvyazka.NN;
 
-                obv.FirstSensorType = selectedObvyazka.FirstSensorType;
-                obv.FirstSensorKKS = selectedObvyazka.FirstSensorKKS;
-                obv.FirstSensorMarkPlus = selectedObvyazka.FirstSensorMarkPlus;
-                obv.FirstSensorMarkMinus = selectedObvyazka.FirstSensorMarkMinus;
-                obv.FirstSensorDescription = selectedObvyazka.FirstSensorDescription;
-
-                obv.SecondSensorType = selectedObvyazka.SecondSensorType;
-                obv.SecondSensorKKS = selectedObvyazka.SecondSensorKKS;
-                obv.SecondSensorMarkPlus = selectedObvyazka.SecondSensorMarkPlus;
-                obv.SecondSensorMarkMinus = selectedObvyazka.SecondSensorMarkMinus;
-                obv.SecondSensorDescription = selectedObvyazka.SecondSensorDescription;
-
-                obv.ThirdSensorType = selectedObvyazka.ThirdSensorType;
-                obv.ThirdSensorKKS = selectedObvyazka.ThirdSensorKKS;
-                obv.ThirdSensorMarkPlus = selectedObvyazka.ThirdSensorMarkPlus;
-                obv.ThirdSensorMarkMinus = selectedObvyazka.ThirdSensorMarkMinus;
-                obv.ThirdSensorDescription = selectedObvyazka.ThirdSensorDescription;
-
                 obv.LineLength = selectedObvyazka.LineLength;
                 obv.ZraCount = selectedObvyazka.ZraCount;
                 obv.Sensor = selectedObvyazka.Sensor;

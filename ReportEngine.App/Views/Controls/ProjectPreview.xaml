@@ -448,6 +448,15 @@
                     ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}"
                     MouseDoubleClick="DataGrid_MouseDoubleClick"
                     SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedElectricalComponent}">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding DataContext.ElectricalPurposesChanges, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                    <Setter Property="Background" Value="PaleGreen" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
                         <DataGridTextColumn
@@ -502,6 +511,15 @@
                     ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand}"
                     MouseDoubleClick="DataGrid_MouseDoubleClick"
                     SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedAdditionalEquip}">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding DataContext.AdditionalPurposesChanges, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                    <Setter Property="Background" Value="PaleGreen" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
                         <DataGridTextColumn
@@ -556,6 +574,15 @@
                     ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand}"
                     MouseDoubleClick="DataGrid_MouseDoubleClick"
                     SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedDrainagePurpose}">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding DataContext.DrainagePurposesChanges, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                    <Setter Property="Background" Value="PaleGreen" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
                         <DataGridTextColumn

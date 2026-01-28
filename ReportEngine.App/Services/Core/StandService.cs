@@ -126,66 +126,39 @@ public class StandService : IStandService
         _notificationService.ShowInfo($"Дренаж успешно добавлен в стенд. {standId}");
     }
 
-    public async Task AddCustomDrainageAsync(int standId, FormedDrainage customDrainage)
+    public async Task AddObvyazkaToStandAsync(int standId, ObvyazkaInStand obvyazka)
+    {
+        await _projectRepository.AddStandObvyazkaAsync(standId, obvyazka);
+        _notificationService.ShowInfo($"Обвязка успешно добавлена в стенд. Id{standId} ");
+    }
+    public async Task AddCustomDrainageAsync(int standId, List<DrainagePurpose> drainagePurposes, FormedDrainage customDrainage)
     {
         var entity = new FormedDrainage
         {
-            Name = customDrainage.Name,
-            Purposes = customDrainage.Purposes.Select(p => new DrainagePurpose
-            {
-                Purpose = p.Purpose,
-                Material = p.Material,
-                Quantity = p.Quantity,
-                CostPerUnit = p.CostPerUnit,
-                Measure = p.Measure,
-                ExportDays = p.ExportDays
-            }).ToList()
+            Purposes = drainagePurposes
         };
 
         await _formedDrainagesRepository.AddAsync(entity);
         await _projectRepository.AddDrainageToStandAsync(standId, entity.Id);
     }
 
-    public async Task AddObvyazkaToStandAsync(int standId, ObvyazkaInStand obvyazka)
-    {
-        await _projectRepository.AddStandObvyazkaAsync(standId, obvyazka);
-        _notificationService.ShowInfo($"Обвязка успешно добавлена в стенд. Id{standId} ");
-    }
 
-    public async Task AddCustomElectricalComponentAsync(int standId, FormedElectricalComponent customElectrical)
+    public async Task AddCustomElectricalComponentAsync(int standId, List<ElectricalPurpose> electricalPurpose, FormedElectricalComponent customElectrical)
     {
         var entity = new FormedElectricalComponent
         {
-            Name = customElectrical.Name,
-            Purposes = customElectrical.Purposes.Select(p => new ElectricalPurpose
-            {
-                Purpose = p.Purpose,
-                Material = p.Material,
-                Quantity = p.Quantity,
-                CostPerUnit = p.CostPerUnit,
-                Measure = p.Measure,
-                ExportDays = p.ExportDays
-            }).ToList()
+            Purposes = electricalPurpose
         };
 
-        await _formedElectricalRepository.AddAsync(entity);
-        await _projectRepository.AddElectricalComponentToStandAsync(standId, entity.Id);
+        await _formedElectricalRepository.AddAsync(customElectrical);
+        await _projectRepository.AddElectricalComponentToStandAsync(standId, customElectrical.Id);
     }
 
-    public async Task AddCustomAdditionalEquipAsync(int standId, FormedAdditionalEquip customEquip)
+    public async Task AddCustomAdditionalEquipAsync(int standId, List<AdditionalEquipPurpose> additionalEquipPurposes, FormedAdditionalEquip customEquip)
     {
         var entity = new FormedAdditionalEquip
         {
-            Name = customEquip.Name,
-            Purposes = customEquip.Purposes.Select(p => new AdditionalEquipPurpose
-            {
-                Purpose = p.Purpose,
-                Material = p.Material,
-                Quantity = p.Quantity,
-                CostPerUnit = p.CostPerUnit,
-                Measure = p.Measure,
-                ExportDays = p.ExportDays
-            }).ToList()
+            Purposes = additionalEquipPurposes
         };
 
         await _formedAdditionalEquipsRepository.AddAsync(entity);
