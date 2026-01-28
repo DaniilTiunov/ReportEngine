@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Windows.Data;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Commands.Providers;
@@ -39,6 +40,9 @@ public class ProjectViewModel : BaseViewModel
     private readonly IProjectService _projectService;
     private readonly IReportService _reportService;
     private readonly IStandService _standService;
+    public bool ElectricalPurposesChanges { get; set; } = false;
+    public bool AdditionalPurposesChanges { get; set; } = false;
+    public bool DrainagePurposesChanges { get; set; } = false;
 
     public ProjectViewModel(IProjectInfoRepository projectRepository,
         IDialogService dialogService,
@@ -324,12 +328,6 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            if (!ValidateCorrectProjNN(CurrentProjectModel.Number))
-            { return; }
-
-            if (!await ValidateNotExistingProjNN(CurrentProjectModel.Number, false))
-            { return; }
-
             await CreateNewProjectCardAsync();
             await _projectService.GetOrAddCompnayAsync(CurrentProjectModel.Company);
             await _projectService.GetOrAddSubjectAsync(CurrentProjectModel.Object, CurrentProjectModel.Company);
@@ -387,16 +385,7 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnSaveChangesCommandExecuted(object? e)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
-        {
-            if (!ValidateCorrectProjNN(CurrentProjectModel.Number))
-                { return; }
-
-            if (!await ValidateNotExistingProjNN(CurrentProjectModel.Number, true))
-                { return; }
-
-            await SaveProjectChangesAsync();
-        });
+        await ExceptionHelper.SafeExecuteAsync(SaveProjectChangesAsync);
     }
 
     public async void OnSaveObvCommandExecuted(object e)
@@ -632,6 +621,9 @@ public class ProjectViewModel : BaseViewModel
             await UpdatePurposeAsync(selectedPurpose,
                 _standService.UpdateElectricalPurposeAsync,
                 "Электрические компоненты сохранены");
+
+            ElectricalPurposesChanges = false;
+            OnPropertyChanged(nameof(ElectricalPurposesChanges));
         });
     }
 
@@ -670,6 +662,9 @@ public class ProjectViewModel : BaseViewModel
             await UpdatePurposeAsync(CurrentProjectModel.SelectedStand.SelectedAdditionalEquip,
                 _standService.UpdateAdditionalPurposeAsync,
                 "Доп. комплектующие сохранены");
+
+            AdditionalPurposesChanges = false;
+            OnPropertyChanged(nameof(AdditionalPurposesChanges));
         });
     }
 
@@ -707,6 +702,9 @@ public class ProjectViewModel : BaseViewModel
             await UpdatePurposeAsync(CurrentProjectModel.SelectedStand.SelectedDrainagePurpose,
                 _standService.UpdateDrainagePurposeAsync,
                 "Дренажное комплектующее сохранено");
+
+            DrainagePurposesChanges = false;
+            OnPropertyChanged(nameof(DrainagePurposesChanges));
         });
     }
 
@@ -1081,9 +1079,12 @@ public class ProjectViewModel : BaseViewModel
         newStandModel.Id = addedStandEntity.Id;
         newStandModel.ProjectId = addedStandEntity.ProjectInfoId;
 
+        CurrentProjectModel.Stands.Add(newStandModel);
+
+        CurrentProjectModel.SelectedStand = newStandModel;
+
         await CreateDefaultPurposesAsync(newStandModel);
 
-        CurrentProjectModel.Stands.Add(newStandModel);
 
         UpdateNewStandNN();
 
@@ -1092,13 +1093,6 @@ public class ProjectViewModel : BaseViewModel
 
         OnStandsInProjectChanged();
 
-        //выбираем добавленный стенд
-        var addedStand = CurrentProjectModel.Stands.FirstOrDefault(stand => stand.Id == newStandModel.Id);
-
-        if (addedStand != null)
-        {
-            CurrentProjectModel.SelectedStand = addedStand;
-        }
 
         _notificationService.ShowInfo($"Стенд с ID {addedStandEntity.Id} успешно добавлен!");
     }
@@ -1107,9 +1101,22 @@ public class ProjectViewModel : BaseViewModel
     {
         await newStandModel.InitializeDefaultPurposes();
 
-        await _standService.AddCustomDrainageAsync(newStandModel.Id, newStandModel.NewDrainage);
-        await _standService.AddCustomElectricalComponentAsync(newStandModel.Id, newStandModel.NewElectricalComponent);
-        await _standService.AddCustomAdditionalEquipAsync(newStandModel.Id, newStandModel.NewAdditionalEquip);
+        newStandModel.NewElectricalComponent.Purposes = CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand.ToList();
+        newStandModel.NewDrainage.Purposes = CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand.ToList();
+        newStandModel.NewAdditionalEquip.Purposes = CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand.ToList();
+
+
+        await _standService.AddCustomDrainageAsync(newStandModel.Id,
+            newStandModel.NewDrainage.Purposes.ToList(),
+            newStandModel.NewDrainage);
+
+        await _standService.AddCustomElectricalComponentAsync(newStandModel.Id,
+            newStandModel.NewElectricalComponent.Purposes.ToList(),
+            newStandModel.NewElectricalComponent);
+
+        await _standService.AddCustomAdditionalEquipAsync(newStandModel.Id,
+            newStandModel.NewAdditionalEquip.Purposes.ToList(),
+            newStandModel.NewAdditionalEquip);
     }
 
     private async Task SaveChangesInStandAsync()
@@ -1245,60 +1252,6 @@ public class ProjectViewModel : BaseViewModel
 
             CurrentProjectModel.SelectedStand.DrainagesInStand.Add(CurrentStandModel.SelectedDrainage);
         }
-    }
-
-    private async Task AddCustomDrainageToStandAsync()
-    {
-        await _standService.AddCustomDrainageAsync(
-            CurrentProjectModel.SelectedStand.Id,
-            CurrentStandModel.NewDrainage);
-
-        AllAvailableDrainages.Add(CurrentStandModel.NewDrainage);
-        CurrentProjectModel.SelectedStand.DrainagesInStand.Add(CurrentStandModel.NewDrainage);
-
-        OnPropertyChanged(nameof(AllAvailableDrainages));
-
-        CurrentStandModel.NewDrainage = new FormedDrainage();
-        CurrentStandModel.InitializeDrainagePurposes();
-
-
-        await LoadPurposesInStandsAsync();
-    }
-
-    private async Task AddCustomElectricalComponentToStandAsync()
-    {
-        await _standService.AddCustomElectricalComponentAsync(
-            CurrentProjectModel.SelectedStand.Id,
-            CurrentStandModel.NewElectricalComponent);
-
-        AllAvailableElectricalComponents.Add(CurrentStandModel.NewElectricalComponent);
-        CurrentProjectModel.SelectedStand.ElectricalComponentsInStand.Add(CurrentStandModel.NewElectricalComponent);
-
-        OnPropertyChanged(nameof(AllAvailableElectricalComponents));
-        CurrentStandModel.NewElectricalComponent = new FormedElectricalComponent();
-        CurrentStandModel.InitializeElectricalComponent();
-
-
-
-        //OnUpdateElectricalComponentInStandCommandExecuted(CurrentStandModel);
-
-        await LoadPurposesInStandsAsync();
-    }
-
-    private async Task AddCustomAdditionalEquipToStandAsync()
-    {
-        await _standService.AddCustomAdditionalEquipAsync(
-            CurrentProjectModel.SelectedStand.Id,
-            CurrentStandModel.NewAdditionalEquip);
-
-        AllAvailableAdditionalEquips.Add(CurrentStandModel.NewAdditionalEquip);
-        CurrentProjectModel.SelectedStand.AdditionalEquipsInStand.Add(CurrentStandModel.NewAdditionalEquip);
-
-        OnPropertyChanged(nameof(AllAvailableAdditionalEquips));
-        CurrentStandModel.NewAdditionalEquip = new FormedAdditionalEquip();
-        CurrentStandModel.InitializeAdditionalEquip();
-
-        await LoadPurposesInStandsAsync();
     }
 
     public async Task UpdateStandBlueprintAsync(byte[] imageData, string imageType)
@@ -1567,6 +1520,8 @@ public class ProjectViewModel : BaseViewModel
         var framesCount = selectedStand.FramesInStand.Count;
         channelRecord.Quantity = framesCount * channelPerFrame;
 
+        AdditionalPurposesChanges = true;
+
         Debug.WriteLine("Пересчет швеллера завершен");
     }
 
@@ -1589,6 +1544,8 @@ public class ProjectViewModel : BaseViewModel
             return;
 
         clampsRecord.Quantity = selectedStand.ObvyazkiInStand.Sum(obv => obv.Clamp) ?? 0.0f;
+
+        AdditionalPurposesChanges = true;
 
         Debug.WriteLine("Пересчет хомутов завершен");
     }
@@ -1613,6 +1570,8 @@ public class ProjectViewModel : BaseViewModel
             return;
 
         tableRecord.Quantity = sensorsQuantity;
+
+        AdditionalPurposesChanges = true;
 
         Debug.WriteLine("Пересчет табличек завершен");
     }
@@ -1669,6 +1628,8 @@ public class ProjectViewModel : BaseViewModel
             }
         }
 
+        AdditionalPurposesChanges = true;
+
         Debug.WriteLine("Пересчет кронштейнов завершен");
     }
 
@@ -1689,6 +1650,8 @@ public class ProjectViewModel : BaseViewModel
             return;
 
         mainPipeRecord.Quantity = selectedStand.FramesInStand.Sum(frame => frame.Width) / 1000.0f;
+
+        DrainagePurposesChanges = true;
 
         Debug.WriteLine("Пересчет дренажной трубы завершен");
     }
@@ -1711,7 +1674,7 @@ public class ProjectViewModel : BaseViewModel
 
         var cableInputsQuantity = 0;
 
-        var sensorsQuantity = selectedStand.CountElectricSensorsQuantity();
+        var sensorsQuantity = selectedStand.CountSensorsQuantity();
 
         if (cableInputsRecord != null)
         {
@@ -1727,7 +1690,7 @@ public class ProjectViewModel : BaseViewModel
         var signalCablePerSensor = 0;
         int? signalCabelQuantity = 0;
 
-        if (signalCableRecord != null)
+        if ( signalCableRecord != null)
         {
             signalCablePerSensor = sensorsQuantity switch
             {
@@ -1757,6 +1720,8 @@ public class ProjectViewModel : BaseViewModel
         {
             metalHoseRecord.Quantity = signalCabelQuantity;
         }
+
+        ElectricalPurposesChanges = true;
 
         Debug.WriteLine("Пересчет электрики завершен");
     }
@@ -1802,7 +1767,7 @@ public class ProjectViewModel : BaseViewModel
         else if (selectedObv != null)
         {
             isAlreadyExist = obvCollection
-                .Where(obv => obv.Id != selectedObv.Id)
+                .Where(obv => obv.NN != selectedObv.NN)
                 .Any(obv => obv.NN == newObvNN);
         }
 
@@ -1846,7 +1811,7 @@ public class ProjectViewModel : BaseViewModel
         else if (selectedStand != null)
         {
             isAlreadyExist = standsCollection
-                .Where(stand => stand.Id != selectedStand.Id)
+                .Where(stand => stand.Number != selectedStand.Number)
                 .Any(stand => stand.Number == newStandNumber);
         }
 
@@ -1856,49 +1821,6 @@ public class ProjectViewModel : BaseViewModel
             return false;
         }
 
-        return true;
-    }
-
-    public bool ValidateCorrectProjNN(int newProjNumber)
-    {
-        var invalidNN = newProjNumber < 1;
-
-        if (invalidNN)
-        {
-            _notificationService.ShowError("Указанный № проекта некорректен!");
-            return false;
-        }
-
-        return true;
-    }
-
-    public async Task<bool> ValidateNotExistingProjNN(int newProjNumber, bool excludeSelected)
-    {
-        var allProjects = await _projectRepository.GetAllAsync();
-
-        if (allProjects == null)
-            return true;
-
-        var isAlreadyExist = true;
-
-        if (!excludeSelected)
-        {
-            isAlreadyExist = allProjects
-                .Any(proj => proj.Number == newProjNumber);
-        }
-        else if (CurrentProjectModel != null)
-        {
-            isAlreadyExist = allProjects
-                .Where(proj => proj.Id != CurrentProjectModel.CurrentProjectId)
-                .Any(proj => proj.Number == newProjNumber);
-        }
-        
-        if (isAlreadyExist)
-        {
-            _notificationService.ShowError("Указанный № проекта уже существует!");
-            return false;
-        }
-        
         return true;
     }
 
