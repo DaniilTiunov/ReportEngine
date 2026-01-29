@@ -439,6 +439,10 @@ public class ProjectService : IProjectService
     {
         var stand = projectModel.SelectedStand;
         var frame = stand.SelectedFrame;
+
+        if (Guard.ExitIfNull("Выберите раму для удаления!", _notificationService, frame))
+            return;
+
         var standFrame = frame.StandFrames?.FirstOrDefault(sf => sf.StandId == stand.Id && sf.FrameId == frame.Id);
 
         stand.FramesInStand.Remove(frame);
