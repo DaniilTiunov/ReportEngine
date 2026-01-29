@@ -2,34 +2,24 @@
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
-using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Background;
 using ReportEngine.Domain.Database.Context;
-using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.App.Services
 {
-    public class UpdaterStandService
+    public class UpdaterStandService(
+        ReAppContext context,
+        IProjectService projectService,
+        IStandService standService,
+        IProjectInfoRepository projectRepository,
+        INotificationService notificationService)
     {
-        private readonly ReAppContext _context;
-        private readonly IProjectService _projectService;
-        private readonly IStandService _standService;
-        private readonly IProjectInfoRepository _projectRepository;
-        private readonly INotificationService _notificationService;
-
-        public UpdaterStandService(ReAppContext context,
-            IProjectService projectService,
-            IStandService standService,
-            IProjectInfoRepository projectRepository,
-            INotificationService notificationService   )
-        {
-            _projectRepository = projectRepository;
-            _context = context;
-            _projectService = projectService;
-            _standService = standService;
-            _notificationService = notificationService;
-        }
+        private readonly ReAppContext _context = context;
+        private readonly IProjectService _projectService = projectService;
+        private readonly IStandService _standService = standService;
+        private readonly IProjectInfoRepository _projectRepository = projectRepository;
+        private readonly INotificationService _notificationService = notificationService;
 
         public async Task ApplyChangesAndSaveAsync(ProjectModel project)
         {
@@ -45,9 +35,14 @@ namespace ReportEngine.App.Services
                     foreach (var prop in stringProps)
                     {
                         var value = (string?)prop.GetValue(stand);
-                        if (!string.IsNullOrEmpty(value) && value.Contains(change.OldName))
+
+                        if (!string.IsNullOrEmpty(value) &&
+                            value.Contains(change.OldName))
                         {
-                            prop.SetValue(stand, value.Replace(change.OldName, change.NewName));
+                            prop.SetValue(
+                                stand,
+                                value.Replace(change.OldName, change.NewName)
+                            );
                         }
                     }
 
@@ -58,7 +53,6 @@ namespace ReportEngine.App.Services
             }
 
             await _projectService.UpdateStandEntity(project);
-
             await _standService.LoadObvyazkiInStandsAsync(project.Stands);
 
             await _context.SaveChangesAsync();
@@ -82,7 +76,7 @@ namespace ReportEngine.App.Services
         public async Task<List<TablesChanges>> GetUnprocessedChangesAsync(ProjectModel project)
         {
             return await _context.TablesChanges
-                .Where(c => c.Processed == false)
+                .Where(c => !c.Processed == false)
                 .ToListAsync();
         }
     }

@@ -10,6 +10,8 @@ namespace ReportEngine.App.Views.Controls;
 
 public partial class TreeProjectView : UserControl, IDisposable
 {
+    private readonly Dictionary<string, Action> _tagActionMap;
+
     private readonly ProjectViewModel _projectViewModel;
     private bool _disposed;
 
@@ -18,6 +20,21 @@ public partial class TreeProjectView : UserControl, IDisposable
         InitializeComponent();
         _projectViewModel = projectViewModel;
         DataContext = projectViewModel;
+
+        _tagActionMap = new Dictionary<string, Action>
+            {
+                { "CalculateProject", () => _projectViewModel.OnCalculateProjectCommandExecuted(null) },
+                { "UpdateAllProps", () => _projectViewModel.OnUpdateStandsAfterEquipsCommandExecuted(null) },
+                { "SummaryReport", () => _projectViewModel.OnCreateSummaryReportCommandExecuted(null) },
+                { "ComponentsList", () => _projectViewModel.OnCreateSummaryReportCommandExecuted(null) },
+                { "NamePlates", () => _projectViewModel.OnCreateNameplatesReportCommandExecuted(null) },
+                { "MarksReport", () => _projectViewModel.OnCreateMarksReportCommandExecuted(null) },
+                { "ProductionList", () => _projectViewModel.OnCreateProductionReportCommandExecuted(null) },
+                { "FinPlan", () => _projectViewModel.OnCreateFinplanReportCommandExecuted(null) },
+                { "ContainersReport", () => _projectViewModel.OnCreateContainerReportCommandExecuted(null) },
+                { "Passport", () => _projectViewModel.OnCreatePassportReportCommandExecuted(null) },
+                { "TechCards", () => _projectViewModel.OnCreateTechnologicalCardsCommandExecute(null) }
+            };
     }
 
     public void Dispose()
@@ -99,7 +116,7 @@ public partial class TreeProjectView : UserControl, IDisposable
             if (string.IsNullOrEmpty(tag))
                 return null;
 
-            UserControl control = tag switch
+            return tag switch
             {
                 "ProjectCard" => new ProjectCardView(_projectViewModel),
                 "Stand" => new StandView(_projectViewModel),
@@ -108,8 +125,6 @@ public partial class TreeProjectView : UserControl, IDisposable
                 "ProjectPreview" => new ProjectPreview(_projectViewModel),
                 "StandsContainer" => new StandsContainerView(_projectViewModel)
             };
-
-            return control;
         }
         catch (Exception ex)
         {
@@ -181,6 +196,16 @@ public partial class TreeProjectView : UserControl, IDisposable
         return false;
     }
 
+    private void ReportTree_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (ReportTree.SelectedItem is TreeViewItem treeViewItem && treeViewItem.Tag is string tag)
+        {
+            if (_tagActionMap.TryGetValue(tag, out var action))
+            {
+                action();
+            }
+        }
+    }
     ~TreeProjectView()
     {
         Dispose();
