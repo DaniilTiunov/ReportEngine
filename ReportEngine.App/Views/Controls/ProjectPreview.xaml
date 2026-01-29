@@ -57,6 +57,7 @@
                     </TextBlock>
                 </GroupBox.Header>
                 <ListView
+                    MaxHeight="300"
                     FontSize="15"
                     ItemsSource="{Binding CurrentProjectModel.Stands}"
                     SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}"
@@ -133,6 +134,7 @@
                     </Grid.ColumnDefinitions>
                     <ListView
                         Grid.Column="0"
+                        MaxHeight="300"
                         DisplayMemberPath="Name"
                         FontSize="15"
                         ItemsSource="{Binding CurrentProjectModel.SelectedStand.FramesInStand}"
@@ -200,6 +202,7 @@
                     </TextBlock>
                 </GroupBox.Header>
                 <ListView
+                    MaxHeight="300"
                     FontSize="15"
                     ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}"
                     SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand, Mode=TwoWay}">
@@ -271,6 +274,7 @@
                     </TextBlock>
                 </GroupBox.Header>
                 <ListView
+                    MaxHeight="300"
                     FontSize="15"
                     ItemsSource="{Binding CurrentProjectModel.ObvyazkiInProject}"
                     SelectedItem="{Binding CurrentProjectModel.SelectedObvyazkaToCopy}">

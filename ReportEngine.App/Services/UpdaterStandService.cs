@@ -1,24 +1,34 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ReportEngine.App.Model;
+using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Background;
 using ReportEngine.Domain.Database.Context;
+using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.App.Services
 {
     public class UpdaterStandService
     {
-        private readonly EquipChangesListener _changesListener;
         private readonly ReAppContext _context;
         private readonly IProjectService _projectService;
+        private readonly IStandService _standService;
+        private readonly IProjectInfoRepository _projectRepository;
+        private readonly INotificationService _notificationService;
 
-        public UpdaterStandService(EquipChangesListener changesListener,
-            ReAppContext context,
-            IProjectService projectService)
+        public UpdaterStandService(ReAppContext context,
+            IProjectService projectService,
+            IStandService standService,
+            IProjectInfoRepository projectRepository,
+            INotificationService notificationService   )
         {
-            _changesListener = changesListener;
+            _projectRepository = projectRepository;
             _context = context;
             _projectService = projectService;
+            _standService = standService;
+            _notificationService = notificationService;
         }
 
         public async Task ApplyChangesAndSaveAsync(ProjectModel project)
@@ -41,15 +51,32 @@ namespace ReportEngine.App.Services
                         }
                     }
 
-                    // Помечаем изменение как обработанное
                     change.Processed = true;
-                    change.ChangedAt = DateTime.UtcNow;
                 }
+
+                await SyncStandPropertiesToObvyazkiAsync(stand);
             }
 
             await _projectService.UpdateStandEntity(project);
 
+            await _standService.LoadObvyazkiInStandsAsync(project.Stands);
+
             await _context.SaveChangesAsync();
+
+            _notificationService.ShowInfo("Данные комплектующих обновлены!");
+        }
+
+        public async Task SyncStandPropertiesToObvyazkiAsync(StandModel stand)
+        {
+            foreach (var obvyazka in stand.ObvyazkiInStand)
+            {
+                obvyazka.MaterialLine = stand.MaterialLine;
+                obvyazka.Armature = stand.Armature;
+                obvyazka.TreeSocket = stand.TreeSocket;
+                obvyazka.KMCH = stand.KMCH;
+
+                await _projectRepository.UpdateObvInStandAsync(stand.Id, obvyazka);
+            }
         }
 
         public async Task<List<TablesChanges>> GetUnprocessedChangesAsync(ProjectModel project)

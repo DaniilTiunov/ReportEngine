@@ -12,6 +12,6 @@ namespace ReportEngine.Domain.Background
         public string? OldName { get; set; }
         public string? NewName { get; set; }
         public bool? Processed { get; set; }
-        public DateTime? ChangedAt { get; set; }
+        public DateTimeOffset? ChangedAt { get; set; }
     }
 }
