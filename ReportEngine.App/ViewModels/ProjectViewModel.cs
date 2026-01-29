@@ -328,6 +328,12 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
+            if (!ValidateCorrectProjNN(CurrentProjectModel.Number))
+            { return; }
+
+            if (!await ValidateNotExistingProjNN(CurrentProjectModel.Number, false))
+            { return; }
+
             await CreateNewProjectCardAsync();
             await _projectService.GetOrAddCompnayAsync(CurrentProjectModel.Company);
             await _projectService.GetOrAddSubjectAsync(CurrentProjectModel.Object, CurrentProjectModel.Company);
@@ -385,7 +391,16 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnSaveChangesCommandExecuted(object? e)
     {
-        await ExceptionHelper.SafeExecuteAsync(SaveProjectChangesAsync);
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            if (!ValidateCorrectProjNN(CurrentProjectModel.Number))
+            { return; }
+
+            if (!await ValidateNotExistingProjNN(CurrentProjectModel.Number, true))
+            { return; }
+
+            await SaveProjectChangesAsync();
+        });
     }
 
     public async void OnSaveObvCommandExecuted(object e)
