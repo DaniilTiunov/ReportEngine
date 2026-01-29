@@ -30,7 +30,7 @@ public partial class ProjectPreview : UserControl
     private async Task InitializeDataAsync(ProjectViewModel projectViewModel)
     {
         await projectViewModel.LoadObvyazkiAsync();
-        await projectViewModel.LoadStandsDataAsync();
+        //await projectViewModel.LoadStandsDataAsync();
         await projectViewModel.LoadPurposesInStandsAsync();
         await projectViewModel.LoadAllAvaileDataAsync();
     }
