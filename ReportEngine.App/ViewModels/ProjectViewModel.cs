@@ -1688,7 +1688,7 @@ public class ProjectViewModel : BaseViewModel
 
         var cableInputsQuantity = 0;
 
-        var sensorsQuantity = selectedStand.CountSensorsQuantity();
+        var sensorsQuantity = selectedStand.CountElectricSensorsQuantity();
 
         if (cableInputsRecord != null)
         {
