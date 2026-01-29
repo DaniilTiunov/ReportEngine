@@ -26,67 +26,100 @@
 
         <avalonDock:DockingManager>
             <avalonDock:LayoutRoot>
-                <avalonDock:LayoutPanel x:Name="LayoutPanel" Orientation="Horizontal">
-                    <avalonDock:LayoutAnchorablePane DockHeight="300">
+                <avalonDock:LayoutPanel x:Name="LayoutPanel" Orientation="Vertical">
+                    <avalonDock:LayoutAnchorablePane DockHeight="900">
                         <avalonDock:LayoutAnchorable
                             Title="Навигация по проекту"
                             CanClose="False"
                             CanHide="False">
-                            <TreeView
-                                x:Name="MainTree"
-                                MinWidth="200"
-                                FontSize="14"
-                                MouseDoubleClick="OpenCurrentView">
-                                <TreeViewItem Header="Проект" IsExpanded="True">
-                                    <TreeViewItem
-                                        x:Name="ProjectCard"
-                                        Margin="0,3,0,3"
-                                        Header="Карточка проекта"
-                                        Tag="ProjectCard" />
-                                    <TreeViewItem Header="Редактирование стенда" IsExpanded="True">
-                                        <!--<TreeViewItem
-                                            Margin="0,3,0,3"
-                                            Header="Стенды"
-                                            Tag="Stand" />-->
-                                        <!--<TreeViewItem
-                                            Margin="0,3,0,3"
-                                            Header="Формирование стендов"
-                                            Tag="StandObv" />-->
-                                        <!--<TreeViewItem Margin="0,3,0,3" Header="Формирование стенда" Tag="FrameDrainages" />-->
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="0.25*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <!--  Первое дерево  -->
+                                <TreeView
+                                    x:Name="MainTree"
+                                    Grid.Row="0"
+                                    MinWidth="200"
+                                    FontSize="14"
+                                    MouseDoubleClick="OpenCurrentView">
+                                    <TreeViewItem Header="Проект" IsExpanded="True">
                                         <TreeViewItem
-                                            Margin="0,3,10,3"
-                                            Header="Расчёт стенда"
-                                            Tag="ProjectPreview" />
-                                        <TreeViewItem
+                                            x:Name="ProjectCard"
                                             Margin="0,3,0,3"
-                                            Header="Формирование упаковки"
-                                            Tag="StandsContainer" />
+                                            Header="Карточка проекта"
+                                            Tag="ProjectCard" />
+                                        <TreeViewItem Header="Редактирование стенда" IsExpanded="True">
+                                            <TreeViewItem
+                                                Margin="0,3,10,3"
+                                                Header="Расчёт стенда"
+                                                Tag="ProjectPreview" />
+                                            <TreeViewItem
+                                                Margin="0,3,0,3"
+                                                Header="Формирование упаковки"
+                                                Tag="StandsContainer" />
+                                        </TreeViewItem>
                                     </TreeViewItem>
-                                </TreeViewItem>
-                                <TreeViewItem Header="Создание отчётов" ToolTip="Нажмите ПКМ для выбор отчёта">
-                                    <TreeViewItem.ContextMenu>
-                                        <ContextMenu>
-                                            <MenuItem Command="{Binding ProjectCommandProvider.UpdateStandsAfterEquipsCommand}" Header="Переформировать" />
-                                            <Separator />
-                                            <MenuItem Command="{Binding ProjectCommandProvider.CalculateProjectCommand}" Header="Расчитать проект" />
-                                            <Separator />
-                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateSummaryReportCommand}" Header="Сводная ведомость" />
-                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateComponentsListReportCommand}" Header="Ведомость комплектующих" />
-                                            <Separator />
-                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateNameplatesReportCommand}" Header="Шильдики и таблички" />
-                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateMarkReportCommand}" Header="Маркировка" />
-                                            <Separator />
-                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateProductionReportCommand}" Header="Производство" />
-                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateFinplanReportCommand}" Header="Фин. план" />
-                                            <Separator />
-                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateContainerReportCommand}" Header="Отчёт тара" />
-                                            <Separator />
-                                            <MenuItem Command="{Binding ProjectCommandProvider.CreatePassportReportCommand}" Header="Паспорт" />
-                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateTechnologicalCardsReportCommand}" Header="Технологические карты" />
-                                        </ContextMenu>
-                                    </TreeViewItem.ContextMenu>
-                                </TreeViewItem>
-                            </TreeView>
+                                </TreeView>
+
+                                <!--  Второе дерево  -->
+                                <TreeView
+                                    x:Name="ReportTree"
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    MinHeight="500"
+                                    FontSize="14"
+                                    MouseDoubleClick="ReportTree_MouseDoubleClick">
+                                    <TreeViewItem Header="Создание отчётов и расчёт" IsExpanded="True">
+                                        <TreeViewItem
+                                            Margin="0,3,0,3"
+                                            Header="Расчитать проект"
+                                            Tag="CalculateProject" />
+                                        <TreeViewItem
+                                            Margin="0,3,0,3"
+                                            Header="Переформировать комплектущие"
+                                            Tag="UpdateAllProps" />
+                                        <TreeViewItem
+                                            Margin="0,3,0,3"
+                                            Header="Сводная ведомость"
+                                            Tag="SummaryReport" />
+                                        <TreeViewItem
+                                            Margin="0,3,0,3"
+                                            Header="Ведомость комплектующих"
+                                            Tag="ComponentsList" />
+                                        <TreeViewItem
+                                            Margin="0,3,0,3"
+                                            Header="Шильдики и таблички"
+                                            Tag="NamePlates" />
+                                        <TreeViewItem
+                                            Margin="0,3,0,3"
+                                            Header="Маркировка"
+                                            Tag="MarksReport" />
+                                        <TreeViewItem
+                                            Margin="0,3,0,3"
+                                            Header="Производство"
+                                            Tag="ProductionList" />
+                                        <TreeViewItem
+                                            Margin="0,3,0,3"
+                                            Header="Фин. план"
+                                            Tag="FinPlan" />
+                                        <TreeViewItem
+                                            Margin="0,3,0,3"
+                                            Header="Отчёт тара"
+                                            Tag="ContainersReport" />
+                                        <TreeViewItem
+                                            Margin="0,3,0,3"
+                                            Header="Паспорт"
+                                            Tag="Passport" />
+                                        <TreeViewItem
+                                            Margin="0,3,0,3"
+                                            Header="Технологические карты"
+                                            Tag="TechCards" />
+                                    </TreeViewItem>
+                                </TreeView>
+                            </Grid>
                         </avalonDock:LayoutAnchorable>
                     </avalonDock:LayoutAnchorablePane>
                 </avalonDock:LayoutPanel>
@@ -107,3 +140,37 @@
             ShowDefaultCloseButton="True" />
     </Grid>
 </UserControl>
+
+<!--<TreeViewItem Header="Создание отчётов" ToolTip="Нажмите ПКМ для выбор отчёта">-->
+<!--<TreeViewItem.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Command="{Binding ProjectCommandProvider.UpdateStandsAfterEquipsCommand}" Header="Переформировать комплектющие" />
+                                            <Separator />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CalculateProjectCommand}" Header="Расчитать проект" />
+                                            <Separator />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateSummaryReportCommand}" Header="Сводная ведомость" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateComponentsListReportCommand}" Header="Ведомость комплектующих" />
+                                            <Separator />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateNameplatesReportCommand}" Header="Шильдики и таблички" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateMarkReportCommand}" Header="Маркировка" />
+                                            <Separator />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateProductionReportCommand}" Header="Производство" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateFinplanReportCommand}" Header="Фин. план" />
+                                            <Separator />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateContainerReportCommand}" Header="Отчёт тара" />
+                                            <Separator />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreatePassportReportCommand}" Header="Паспорт" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateTechnologicalCardsReportCommand}" Header="Технологические карты" />
+                                        </ContextMenu>
+                                    </TreeViewItem.ContextMenu>-->
+<!--</TreeViewItem>-->
+
+<!--<TreeViewItem
+                                            Margin="0,3,0,3"
+                                            Header="Стенды"
+                                            Tag="Stand" />-->
+<!--<TreeViewItem
+                                            Margin="0,3,0,3"
+                                            Header="Формирование стендов"
+                                            Tag="StandObv" />-->
+<!--<TreeViewItem Margin="0,3,0,3" Header="Формирование стенда" Tag="FrameDrainages" />-->
