@@ -456,7 +456,7 @@
                         <Style TargetType="DataGridRow">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding DataContext.ElectricalPurposesChanges, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
-                                    <Setter Property="Background" Value="PaleGreen" />
+                                    <Setter Property="Background" Value="{DynamicResource UnsafeDetails}" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -519,7 +519,7 @@
                         <Style TargetType="DataGridRow">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding DataContext.AdditionalPurposesChanges, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
-                                    <Setter Property="Background" Value="PaleGreen" />
+                                    <Setter Property="Background" Value="{DynamicResource UnsafeDetails}" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -582,7 +582,7 @@
                         <Style TargetType="DataGridRow">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding DataContext.DrainagePurposesChanges, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
-                                    <Setter Property="Background" Value="PaleGreen" />
+                                    <Setter Property="Background" Value="{DynamicResource UnsafeDetails}" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>

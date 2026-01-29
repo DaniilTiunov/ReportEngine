@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Windows.Data;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Commands.Providers;
@@ -1705,7 +1704,7 @@ public class ProjectViewModel : BaseViewModel
         var signalCablePerSensor = 0;
         int? signalCabelQuantity = 0;
 
-        if ( signalCableRecord != null)
+        if (signalCableRecord != null)
         {
             signalCablePerSensor = sensorsQuantity switch
             {

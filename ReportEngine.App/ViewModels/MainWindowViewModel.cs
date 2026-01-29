@@ -11,6 +11,7 @@ using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Windows;
+using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
@@ -26,6 +27,7 @@ public class MainWindowViewModel : BaseViewModel
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IServiceProvider _serviceProvider;
     private readonly IProjectService _projectService;
+    private readonly IDialogService _dialogService;
 
     #region Конструктор
 
@@ -35,7 +37,8 @@ public class MainWindowViewModel : BaseViewModel
         IProjectInfoRepository projectRepository,
         ICalculationService calculationService,
         INotificationService notificationService,
-        IProjectService projectService)
+        IProjectService projectService,
+        IDialogService dialogService)
     {
         _notificationService = notificationService;
         _calculationService = calculationService;
@@ -43,6 +46,7 @@ public class MainWindowViewModel : BaseViewModel
         _projectRepository = projectRepository;
         _navigation = navigation;
         _projectService = projectService;
+        _dialogService = dialogService;
 
         InitializeMainWindowCommands();
         InitializeGenericEquipCommands();
@@ -98,10 +102,14 @@ public class MainWindowViewModel : BaseViewModel
         if (MainWindowModel.SelectedProject == null) return;
 
         await ExceptionHelper.SafeExecuteAsync(async () =>
-        {
+        {          
             var projectViewModel = _serviceProvider.GetRequiredService<ProjectViewModel>();
-            await projectViewModel.LoadProjectInfoAsync(MainWindowModel.SelectedProject.Id);
-            _navigation.ShowContent<TreeProjectView>();
+
+            _dialogService.RunWithProgressDialogAsync(async () =>
+            {
+                await projectViewModel.LoadProjectInfoAsync(MainWindowModel.SelectedProject.Id);
+                _navigation.ShowContent<TreeProjectView>();
+            });
         });
     }
 
