@@ -1767,7 +1767,7 @@ public class ProjectViewModel : BaseViewModel
         else if (selectedObv != null)
         {
             isAlreadyExist = obvCollection
-                .Where(obv => obv.NN != selectedObv.NN)
+                .Where(obv => obv.Id != selectedObv.Id)
                 .Any(obv => obv.NN == newObvNN);
         }
 
@@ -1811,13 +1811,56 @@ public class ProjectViewModel : BaseViewModel
         else if (selectedStand != null)
         {
             isAlreadyExist = standsCollection
-                .Where(stand => stand.Number != selectedStand.Number)
+                .Where(stand => stand.Id != selectedStand.Id)
                 .Any(stand => stand.Number == newStandNumber);
         }
 
         if (isAlreadyExist)
         {
             _notificationService.ShowError("Указанный № стенда уже существует!");
+            return false;
+        }
+
+        return true;
+    }
+
+    public bool ValidateCorrectProjNN(int newProjNumber)
+    {
+        var invalidNN = newProjNumber < 1;
+
+        if (invalidNN)
+        {
+            _notificationService.ShowError("Указанный № проекта некорректен!");
+            return false;
+        }
+
+        return true;
+    }
+
+    public async Task<bool> ValidateNotExistingProjNN(int newProjNumber, bool excludeSelected)
+    {
+        var allProjects = await _projectRepository.GetAllAsync();
+
+        if (allProjects == null)
+            return true;
+
+        var isAlreadyExist = true;
+
+        if (!excludeSelected)
+        {
+            isAlreadyExist = allProjects
+                .Any(proj => proj.Number == newProjNumber);
+        }
+        else if (CurrentProjectModel != null)
+        {
+            isAlreadyExist = allProjects
+                .Where(proj => proj.Id != CurrentProjectModel.CurrentProjectId)
+                .Any(proj => proj.Number == newProjNumber);
+        }
+
+        if (isAlreadyExist)
+        {
+            _notificationService.ShowError("Указанный № проекта уже существует!");
             return false;
         }
 

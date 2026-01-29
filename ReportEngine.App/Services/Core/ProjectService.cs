@@ -115,7 +115,7 @@ public class ProjectService : IProjectService
 
     public async Task CreateProjectAsync(ProjectModel projectModel)
     {
-         var project = projectModel.CreateNewProjectCard();
+        var project = projectModel.CreateNewProjectCard();
 
         project.Id = 0;
         await _projectRepository.AddAsync(project);
