@@ -375,8 +375,7 @@ public class ProjectViewModel : BaseViewModel
                 await _projectService.CopyStandsAsync(CurrentProjectModel);
                 await LoadPurposesInStandsAsync();
                 await LoadObvyazkiAsync();
-            }
-            );
+            });
 
             var lastStand = CurrentProjectModel.Stands.LastOrDefault();
 
