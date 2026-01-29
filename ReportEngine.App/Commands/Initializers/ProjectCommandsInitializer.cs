@@ -130,9 +130,6 @@ public static class ProjectCommandsInitializer
         vm.ProjectCommandProvider.RemoveStandFromContainerCommand =
             new RelayCommand(vm.OnRemoveStandFromContainerCommandExecuted, vm.CanAllCommandsExecute);
 
-        vm.ProjectCommandProvider.CreateMarkReportAsyncCommand =
-            new AsyncRelayCommand(vm.OnCreateMarksReportAsyncCommandExecuted, vm.CanAllCommandsExecute);
-
         vm.ProjectCommandProvider.ShowCompanyDialogCommand =
             new RelayCommand(vm.OnShowCompanyDialogExecuted, vm.CanAllCommandsExecute);
 

@@ -178,6 +178,7 @@ public partial class TreeProjectView : UserControl, IDisposable
             return false;
 
         foreach (var item in MainTabControl.Items.OfType<TabItem>())
+        {
             if (item.Tag is string existingTag && !string.IsNullOrEmpty(existingTag))
             {
                 if (string.Equals(existingTag, tag, StringComparison.Ordinal))
@@ -194,7 +195,7 @@ public partial class TreeProjectView : UserControl, IDisposable
                     return true;
                 }
             }
-
+        }
         return false;
     }
 

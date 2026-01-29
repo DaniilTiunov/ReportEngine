@@ -513,87 +513,62 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnCalculateProjectCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(CalculateProjectAsync);
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+            _dialogService.RunWithProgressDialogAsync(CalculateProjectAsync));
     }
 
     public async void OnComponentsListReportCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
-        {
-            await CreateReportAsync(ReportType.ComponentsListReport, "комплектующих");
-        });
+        await ExceptionHelper.SafeExecuteAsync(
+            async () => _dialogService.RunWithProgressDialogAsync(() => CreateReportAsync(ReportType.ComponentsListReport, "комплектующих")));
     }
 
     public async void OnCreateSummaryReportCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
-        {
-            await CreateReportAsync(ReportType.SummaryReport, "сводная");
-        });
+        await ExceptionHelper.SafeExecuteAsync(
+            async () => _dialogService.RunWithProgressDialogAsync(() => CreateReportAsync(ReportType.SummaryReport, "сводная")));
     }
 
     public async void OnCreateMarksReportCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
-        {
-            await CreateReportAsync(ReportType.MarksReport, "маркировки");
-        });
-    }
-
-    public async Task OnCreateMarksReportAsyncCommandExecuted(object p)
-    {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
-        {
-            await CreateReportAsync(ReportType.MarksReport, "маркировки");
-        });
+        await ExceptionHelper.SafeExecuteAsync(
+            async () => _dialogService.RunWithProgressDialogAsync(() => CreateReportAsync(ReportType.MarksReport, "маркировки")));
     }
 
     public async void OnCreateNameplatesReportCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
-        {
-            await CreateReportAsync(ReportType.NameplatesReport, "шильдики");
-        });
+        await ExceptionHelper.SafeExecuteAsync(
+            async () => _dialogService.RunWithProgressDialogAsync(() => CreateReportAsync(ReportType.NameplatesReport, "шильдики и таблички")));
     }
 
     public async void OnCreateContainerReportCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
-        {
-            await CreateReportAsync(ReportType.ContainerReport, "тара");
-        });
+        await ExceptionHelper.SafeExecuteAsync(
+            async () => _dialogService.RunWithProgressDialogAsync(() => CreateReportAsync(ReportType.ContainerReport, "тара")));
     }
 
     public async void OnCreateProductionReportCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
-        {
-            await CreateReportAsync(ReportType.ProductionReport, "производство");
-        });
+        await ExceptionHelper.SafeExecuteAsync(
+            async () => _dialogService.RunWithProgressDialogAsync(() => CreateReportAsync(ReportType.ProductionReport, "производство")));
     }
 
     public async void OnCreateFinplanReportCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
-        {
-            await CreateReportAsync(ReportType.FinPlanReport, "финплан");
-        });
+        await ExceptionHelper.SafeExecuteAsync(
+            async () => _dialogService.RunWithProgressDialogAsync(() => CreateReportAsync(ReportType.FinPlanReport, "финплан")));
     }
 
     public async void OnCreatePassportReportCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
-        {
-            await CreateReportAsync(ReportType.PassportsReport, "паспорт");
-        });
+        await ExceptionHelper.SafeExecuteAsync(
+            async () => _dialogService.RunWithProgressDialogAsync(() => CreateReportAsync(ReportType.PassportsReport, "паспорта")));
     }
 
     public async void OnCreateTechnologicalCardsCommandExecute(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
-        {
-            await CreateReportAsync(ReportType.TechnologicalCards, "технологические карты");
-        });
+        await ExceptionHelper.SafeExecuteAsync(
+            async () => _dialogService.RunWithProgressDialogAsync(() => CreateReportAsync(ReportType.TechnologicalCards, "технологические карты")));
     }
 
     public async void OnSaveChangesInStandCommandExecuted(object obj)
@@ -929,10 +904,8 @@ public class ProjectViewModel : BaseViewModel
 
     public async Task LoadStandsDataAsync()
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
-        {
-            await _standService.LoadStandsDataAsync(CurrentProjectModel.Stands);
-        });
+        await ExceptionHelper.SafeExecuteAsync(
+            async () => _dialogService.RunWithProgressDialogAsync(()=>_standService.LoadStandsDataAsync(CurrentProjectModel.Stands)));
     }
 
     public async Task LoadPurposesInStandsAsync()
