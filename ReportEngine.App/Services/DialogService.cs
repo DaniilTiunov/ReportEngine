@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.Display;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
@@ -303,6 +304,40 @@ public class DialogService : IDialogService
         catch (Exception ex)
         {
             MessageBoxHelper.ShowError(ex.Message);
+        }
+    }
+
+    public void RunWithProgressDialog(Action action)
+    {
+        var progressDialog = new ProgressDialog();
+        var owner = Application.Current.MainWindow;
+
+        progressDialog.Show();
+
+        try
+        {
+            action();
+        }
+        finally
+        {
+            progressDialog.Close();
+        }
+    }
+
+    public async void RunWithProgressDialogAsync(Func<Task> action)
+    {
+        var progressDialog = new ProgressDialog();
+        var owner = Application.Current.MainWindow;
+
+        progressDialog.Show();
+
+        try
+        {
+            await action();
+        }
+        finally
+        {
+            progressDialog.Close();
         }
     }
 }

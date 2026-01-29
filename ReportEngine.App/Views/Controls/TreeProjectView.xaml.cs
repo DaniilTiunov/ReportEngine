@@ -3,7 +3,9 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using ReportEngine.App.AppHelpers;
+using ReportEngine.App.Display;
 using ReportEngine.App.ViewModels;
+using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Shared.Config.DebugConsol;
 
 namespace ReportEngine.App.Views.Controls;
@@ -196,13 +198,20 @@ public partial class TreeProjectView : UserControl, IDisposable
         return false;
     }
 
-    private void ReportTree_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    private async void ReportTree_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
         if (ReportTree.SelectedItem is TreeViewItem treeViewItem && treeViewItem.Tag is string tag)
         {
             if (_tagActionMap.TryGetValue(tag, out var action))
             {
-                action();
+                try
+                {
+                    action();
+                }
+                catch (Exception ex)
+                {
+                    MessageBoxHelper.ShowError("Ошибка при генерации: " + ex.Message);
+                }
             }
         }
     }
