@@ -370,9 +370,13 @@ public class ProjectViewModel : BaseViewModel
                 return;
             }
 
-            await _projectService.CopyStandsAsync(CurrentProjectModel);
-            await LoadPurposesInStandsAsync();
-            await LoadObvyazkiAsync();
+            _dialogService.RunWithProgressDialogAsync(async ()=>
+            {
+                await _projectService.CopyStandsAsync(CurrentProjectModel);
+                await LoadPurposesInStandsAsync();
+                await LoadObvyazkiAsync();
+            }
+            );
 
             var lastStand = CurrentProjectModel.Stands.LastOrDefault();
 
