@@ -115,10 +115,12 @@ public class ProjectService : IProjectService
 
     public async Task CreateProjectAsync(ProjectModel projectModel)
     {
-        var project = projectModel.CreateNewProjectCard();
+         var project = projectModel.CreateNewProjectCard();
 
         project.Id = 0;
         await _projectRepository.AddAsync(project);
+
+        projectModel.CurrentProjectId = project.Id;
 
         _notificationService.ShowInfo($"Новая карточка проекта создана! ID: {project.Id}");
     }
