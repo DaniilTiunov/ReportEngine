@@ -76,6 +76,11 @@ public class StandService : IStandService
             var standDrainages = await _projectRepository.GetAllDrainagesInStandAsync(standModel.Id);
             var standElectricals = await _projectRepository.GetAllElectricalComponentsInStandAsync(standModel.Id);
             var standAdditionals = await _projectRepository.GetAllAdditionalEquipsInStandAsync(standModel.Id);
+            //var obvyazkiInStands = await _projectRepository.GetAllObvyazkiInStandAsync(standModel.Id);
+
+            //standModel.ObvyazkiInStand.Clear();
+            //foreach (var obvyazka in obvyazkiInStands)
+            //    standModel.ObvyazkiInStand.Add(obvyazka);
 
             standModel.FramesInStand.Clear();
             foreach (var frame in standFrames.Select(sf => sf.Frame))
