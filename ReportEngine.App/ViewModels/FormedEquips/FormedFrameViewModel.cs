@@ -1,6 +1,7 @@
 ﻿using System.Windows.Input;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
+using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Model.FormedEquipsModels;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
@@ -38,6 +39,9 @@ public class FormedFrameViewModel : BaseViewModel
     public FormedFrameModel FormedFrameModel { get; } = new();
 
     public Action<FormedFrame> SelectedItem { get; set; }
+
+    public FrameSettingsModel FrameSettings { get; set; } = new();
+
 
     public async void LoadDetailsData()
     {
@@ -121,6 +125,23 @@ public class FormedFrameViewModel : BaseViewModel
 
         var addedFrame = await _formedFrameRepository.GetByIdAsync(newFrame.Id);
         FormedFrameModel.AllFrames.Add(addedFrame);
+
+        if(FormedFrameModel.Disassembled == true)
+        {
+            var defaultFirstComponent = new FrameComponent
+            {
+                ComponentName = FrameSettings.MaterialOne,
+                Count = (int)FrameSettings.CountMaterialOne,
+            };
+            var defaultSecondComponent = new FrameComponent
+            {
+                ComponentName = FrameSettings.MaterialTwo,
+                Count = (int)FrameSettings.CountMaterialTwo,
+            };
+
+            //_formedFrameRepository.Add(addedFrame.Id, defaultFirstComponent, null);
+
+        }
 
         FormedFrameModel.NewFrame = new FormedFrame();
 

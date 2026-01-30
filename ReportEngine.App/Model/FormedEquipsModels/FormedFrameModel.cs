@@ -22,8 +22,8 @@ public class FormedFrameModel : BaseViewModel
     private ObservableCollection<PillarEqiup> _pillarEqiups = new();
     private IBaseEquip _selectedComponentForAdd;
     private DisplayedComponent _selectedComponentInFrame;
-
     private FormedFrame _selectedFrame = new(); //Свойства для выбранного элемента на UI
+    private bool? _disassembled = false;
 
     public FormedFrameModel()
     {
@@ -85,6 +85,15 @@ public class FormedFrameModel : BaseViewModel
         {
             Set(ref _selectedFrame, value);
             UpdateDisplayedComponents();
+        }
+    }
+
+    public bool? Disassembled
+    {
+        get => _disassembled;
+        set
+        {
+            Set(ref _disassembled, value);
         }
     }
 

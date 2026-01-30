@@ -16,6 +16,7 @@ public class FormedFrame
     public float Depth { get; set; }
     public float Weight { get; set; }
     public string Designe { get; set; }
+    public bool? Disassembled { get; set; }
 
     public virtual ICollection<StandFrame> StandFrames { get; set; } = new List<StandFrame>();
     public virtual ICollection<FrameComponent> Components { get; set; } = new List<FrameComponent>();

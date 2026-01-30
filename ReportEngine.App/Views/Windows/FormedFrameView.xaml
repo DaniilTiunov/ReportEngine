@@ -213,6 +213,7 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -309,6 +310,13 @@
                                 Grid.Column="1"
                                 Margin="5"
                                 Text="{Binding FormedFrameModel.NewFrame.Designe}" />
+
+                            <CheckBox
+                                Grid.Row="7"
+                                Grid.Column="0"
+                                Margin="5,0,0,0"
+                                Content="Разборная"
+                                IsChecked="{Binding FormedFrameModel.Disassembled}" />
                         </Grid>
                     </GroupBox>
 
@@ -319,6 +327,7 @@
                         Header="Редактирование рамы из списка">
                         <Grid>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -422,6 +431,13 @@
                                 Grid.Column="1"
                                 Margin="5"
                                 Text="{Binding FormedFrameModel.SelectedFrame.Designe}" />
+
+                            <CheckBox
+                                Grid.Row="7"
+                                Grid.Column="0"
+                                Margin="5,0,0,0"
+                                Content="Разборная"
+                                IsChecked="{Binding FormedFrameModel.SelectedFrame.Disassembled}" />
                         </Grid>
                     </GroupBox>
 

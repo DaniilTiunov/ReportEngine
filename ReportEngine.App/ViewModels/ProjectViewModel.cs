@@ -370,7 +370,7 @@ public class ProjectViewModel : BaseViewModel
                 return;
             }
 
-            _dialogService.RunWithProgressDialogAsync(async ()=>
+            _dialogService.RunWithProgressDialogAsync(async () =>
             {
                 await _projectService.CopyStandsAsync(CurrentProjectModel);
                 await LoadPurposesInStandsAsync();
@@ -447,6 +447,7 @@ public class ProjectViewModel : BaseViewModel
             _notificationService.ShowInfo("Рама удалена из стенда");
         });
     }
+
     public async void OnUpdateStandsAfterEquipsCommandExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -454,6 +455,7 @@ public class ProjectViewModel : BaseViewModel
             await _updaterStandService.ApplyChangesAndSaveAsync(CurrentProjectModel);
         });
     }
+
     public async void OnAddDrainageToStandExecuted(object p)
     {
         await ExceptionHelper.SafeExecuteAsync(AddDrainageToStandAsync);
@@ -908,7 +910,7 @@ public class ProjectViewModel : BaseViewModel
     public async Task LoadStandsDataAsync()
     {
         await ExceptionHelper.SafeExecuteAsync(
-            async () => _dialogService.RunWithProgressDialogAsync(()=>_standService.LoadStandsDataAsync(CurrentProjectModel.Stands)));
+            async () => _dialogService.RunWithProgressDialogAsync(() => _standService.LoadStandsDataAsync(CurrentProjectModel.Stands)));
     }
 
     public async Task LoadPurposesInStandsAsync()
@@ -1075,14 +1077,12 @@ public class ProjectViewModel : BaseViewModel
 
         await CreateDefaultPurposesAsync(newStandModel);
 
-
         UpdateNewStandNN();
 
         OnPropertyChanged(nameof(CurrentStandModel));
         OnPropertyChanged(nameof(NewStand));
 
         OnStandsInProjectChanged();
-
 
         _notificationService.ShowInfo($"Стенд успешно добавлен!");
     }
@@ -1094,7 +1094,6 @@ public class ProjectViewModel : BaseViewModel
         newStandModel.NewElectricalComponent.Purposes = CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand.ToList();
         newStandModel.NewDrainage.Purposes = CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand.ToList();
         newStandModel.NewAdditionalEquip.Purposes = CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand.ToList();
-
 
         await _standService.AddCustomDrainageAsync(newStandModel.Id,
             newStandModel.NewDrainage.Purposes.ToList(),
@@ -1416,8 +1415,6 @@ public class ProjectViewModel : BaseViewModel
         CollectionRefreshHelper.SafeRefreshCollection(selectedStand.AllElectricalPurposesInStand);
         CollectionRefreshHelper.SafeRefreshCollection(selectedStand.AllAdditionalEquipPurposesInStand);
 
-
-
         CollectionRefreshHelper.SafeSortAndRefreshCollection(
             collection: selectedStand.ObvyazkiInStand,
             fieldToSortBy: "NN",
@@ -1544,7 +1541,6 @@ public class ProjectViewModel : BaseViewModel
     public void UpdateTablesQuantity()
     {
         Debug.WriteLine("Пересчет табличек начат");
-
 
         var selectedStand = CurrentProjectModel.SelectedStand;
 

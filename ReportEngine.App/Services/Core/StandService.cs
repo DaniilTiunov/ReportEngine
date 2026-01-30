@@ -122,19 +122,20 @@ public class StandService : IStandService
     public async Task AddFrameToStandAsync(int standId, int frameId)
     {
         await _projectRepository.AddFrameToStandAsync(standId, frameId);
-        _notificationService.ShowInfo($"Рама успешно добавлена в стенд. {standId}");
+        _notificationService.ShowInfo($"Рама успешно добавлена в стенд");
     }
 
     public async Task AddDrainageToStandAsync(int standId, int drainageId)
     {
         await _projectRepository.AddDrainageToStandAsync(standId, drainageId);
-        _notificationService.ShowInfo($"Дренаж успешно добавлен в стенд. {standId}");
+        _notificationService.ShowInfo($"Дренаж успешно добавлен в стенд");
     }
 
     public async Task AddObvyazkaToStandAsync(int standId, ObvyazkaInStand obvyazka)
     {
         await _projectRepository.AddStandObvyazkaAsync(standId, obvyazka);
     }
+
     public async Task AddCustomDrainageAsync(int standId, List<DrainagePurpose> drainagePurposes, FormedDrainage customDrainage)
     {
         var entity = new FormedDrainage
@@ -145,7 +146,6 @@ public class StandService : IStandService
         await _formedDrainagesRepository.AddAsync(entity);
         await _projectRepository.AddDrainageToStandAsync(standId, entity.Id);
     }
-
 
     public async Task AddCustomElectricalComponentAsync(int standId, List<ElectricalPurpose> electricalPurpose, FormedElectricalComponent customElectrical)
     {

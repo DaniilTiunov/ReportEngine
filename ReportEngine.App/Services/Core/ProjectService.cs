@@ -122,7 +122,7 @@ public class ProjectService : IProjectService
 
         projectModel.CurrentProjectId = project.Id;
 
-        _notificationService.ShowInfo($"Новая карточка проекта создана! ID: {project.Id}");
+        _notificationService.ShowInfo($"Новая карточка проекта создана!");
     }
 
     public async Task CopyStandsAsync(ProjectModel projectModel)
@@ -241,7 +241,7 @@ public class ProjectService : IProjectService
     public async Task DeleteStandAsync(int projectId, int standId)
     {
         await _projectRepository.DeleteStandAsync(projectId, standId);
-        _notificationService.ShowInfo($"Стенд с Id {standId} удалён из\n Проекта c Id {projectId}");
+        _notificationService.ShowInfo($"Стенд удалён из проекта");
     }
 
     public async Task AddStandToProjectAsync(int projectId, StandModel standModel)
