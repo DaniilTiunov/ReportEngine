@@ -11,7 +11,6 @@ using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Windows;
-using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
@@ -102,7 +101,7 @@ public class MainWindowViewModel : BaseViewModel
         if (MainWindowModel.SelectedProject == null) return;
 
         await ExceptionHelper.SafeExecuteAsync(async () =>
-        {          
+        {
             var projectViewModel = _serviceProvider.GetRequiredService<ProjectViewModel>();
 
             _dialogService.RunWithProgressDialogAsync(async () =>

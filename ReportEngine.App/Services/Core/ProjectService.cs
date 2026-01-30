@@ -385,10 +385,8 @@ public class ProjectService : IProjectService
         if (oldName != newName)
             return;
 
-
         foreach (var stand in projectModel.Stands)
         {
-
             var related = stand.ObvyazkiInStand
             .Where(x => x != selectedObvyazka && x.ObvyazkaName == oldName)
             .ToList();

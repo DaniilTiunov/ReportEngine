@@ -483,7 +483,7 @@ public class ProjectViewModel : BaseViewModel
 
             OnObvyazkiInStandChanged();
 
-            _notificationService.ShowInfo("Обвязка скопирована в стенд");
+            _notificationService.ShowInfo("Обвязка успешно добавлена в стенд!");
         });
     }
 
@@ -495,7 +495,7 @@ public class ProjectViewModel : BaseViewModel
         {
             SelectedObvyazka = _dialogService.ShowObvyazkaDialog();
 
-            if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka))
+            if (Guard.ExitIfNull("Не был выбран тип обвязки!", _notificationService, SelectedObvyazka))
                 return;
 
             var stand = CurrentProjectModel.SelectedStand;
@@ -1084,7 +1084,7 @@ public class ProjectViewModel : BaseViewModel
         OnStandsInProjectChanged();
 
 
-        _notificationService.ShowInfo($"Стенд с ID {addedStandEntity.Id} успешно добавлен!");
+        _notificationService.ShowInfo($"Стенд успешно добавлен!");
     }
 
     private async Task CreateDefaultPurposesAsync(StandModel newStandModel)

@@ -134,7 +134,6 @@ public class StandService : IStandService
     public async Task AddObvyazkaToStandAsync(int standId, ObvyazkaInStand obvyazka)
     {
         await _projectRepository.AddStandObvyazkaAsync(standId, obvyazka);
-        _notificationService.ShowInfo($"Обвязка успешно добавлена в стенд. Id{standId} ");
     }
     public async Task AddCustomDrainageAsync(int standId, List<DrainagePurpose> drainagePurposes, FormedDrainage customDrainage)
     {

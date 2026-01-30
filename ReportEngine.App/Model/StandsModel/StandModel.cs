@@ -734,7 +734,6 @@ public class StandModel : BaseViewModel
                 new() { Purpose = "Кронштейн дренажа" },
                 new() { Purpose = "Клапан" }
             };
-
     }
 
     public void InitializeAdditionalEquip()

@@ -24,7 +24,6 @@ public partial class ProjectPreview : UserControl
         Loaded += async (_, __) => await InitializeDataAsync(projectViewModel);
 
         PreviewKeyDown += StandObvView_PreviewKeyDown;
-
     }
 
     private async Task InitializeDataAsync(ProjectViewModel projectViewModel)

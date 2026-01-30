@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using ReportEngine.Domain.Entities.BaseEntities;
+﻿using ReportEngine.Domain.Entities.BaseEntities;
 
 namespace ReportEngine.Domain.Entities.Pipes;
 
