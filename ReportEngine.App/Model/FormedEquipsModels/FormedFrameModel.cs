@@ -113,7 +113,8 @@ public class FormedFrameModel : BaseViewModel
             Depth = NewFrame.Depth,
             Width = NewFrame.Width,
             Height = NewFrame.Height,
-            Designe = NewFrame.Designe
+            Designe = NewFrame.Designe,
+            Disassembled = NewFrame.Disassembled,
         };
     }
 
@@ -136,7 +137,7 @@ public class FormedFrameModel : BaseViewModel
                 var displayed = new DisplayedComponent
                 {
                     Component = component,
-                    Count = frameComponent.Count,
+                    Count = frameComponent.Count ?? 0,
                     CostComponent = frameComponent.CostComponent,
                     Measure = frameComponent.Measure,
                 };

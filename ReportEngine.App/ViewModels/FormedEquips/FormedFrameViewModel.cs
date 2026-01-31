@@ -130,17 +130,19 @@ public class FormedFrameViewModel : BaseViewModel
         {
             var defaultFirstComponent = new FrameComponent
             {
+                FormedFrameId = addedFrame.Id,
                 ComponentName = FrameSettings.MaterialOne,
                 Count = (int)FrameSettings.CountMaterialOne,
             };
             var defaultSecondComponent = new FrameComponent
             {
+                FormedFrameId = addedFrame.Id,
                 ComponentName = FrameSettings.MaterialTwo,
                 Count = (int)FrameSettings.CountMaterialTwo,
             };
 
-            //_formedFrameRepository.Add(addedFrame.Id, defaultFirstComponent, null);
-
+            await _formedFrameRepository.AddComponentAsync(defaultFirstComponent);
+            await _formedFrameRepository.AddComponentAsync(defaultSecondComponent);
         }
 
         FormedFrameModel.NewFrame = new FormedFrame();
