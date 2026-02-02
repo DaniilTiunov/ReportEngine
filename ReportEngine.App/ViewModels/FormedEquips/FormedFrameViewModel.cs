@@ -7,6 +7,7 @@ using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.Frame;
+using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.App.ViewModels.FormedEquips;
@@ -31,6 +32,8 @@ public class FormedFrameViewModel : BaseViewModel
         _pillarEqiupRepository = pillarEqiupRepository;
         _formedFrameRepository = formedFrameRepository;
         _notificationService = notificationService;
+
+        FrameSettings.LoadFrameDataFromIniAsync();
 
         LoadDetailsData();
         InitializeCommands();
@@ -131,18 +134,43 @@ public class FormedFrameViewModel : BaseViewModel
             var defaultFirstComponent = new FrameComponent
             {
                 FormedFrameId = addedFrame.Id,
+                ComponentId = 1,
+                ExportDays = 0,
+                Measure = "шт",
+                CostComponent = 100,
+                Length = 0,
+                ComponentType = nameof(FrameDetail),
                 ComponentName = FrameSettings.MaterialOne,
                 Count = (int)FrameSettings.CountMaterialOne,
             };
             var defaultSecondComponent = new FrameComponent
             {
+                ComponentId = 2,
                 FormedFrameId = addedFrame.Id,
+                ExportDays = 0,
+                Measure = "шт",
+                CostComponent = 100,
+                Length = 0,
+                ComponentType = nameof(FrameDetail),
                 ComponentName = FrameSettings.MaterialTwo,
                 Count = (int)FrameSettings.CountMaterialTwo,
             };
 
             await _formedFrameRepository.AddComponentAsync(defaultFirstComponent);
             await _formedFrameRepository.AddComponentAsync(defaultSecondComponent);
+
+            var updatedFrame = await _formedFrameRepository.GetByIdAsync(addedFrame.Id);
+            var idx = FormedFrameModel.AllFrames.IndexOf(addedFrame);
+            if (idx >= 0)
+                FormedFrameModel.AllFrames[idx] = updatedFrame;
+
+            FormedFrameModel.SelectedFrame = updatedFrame;
+            FormedFrameModel.UpdateDisplayedComponents();
+        }
+        else
+        {
+            FormedFrameModel.SelectedFrame = addedFrame;
+            FormedFrameModel.UpdateDisplayedComponents();
         }
 
         FormedFrameModel.NewFrame = new FormedFrame();

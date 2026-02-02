@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using ReportEngine.App.ViewModels;
+using ProgressDialog = ReportEngine.App.Views.Windows.Dialog.ProgressDialog;
 
 namespace ReportEngine.App.Views.Controls;
 
@@ -28,10 +29,20 @@ public partial class ProjectPreview : UserControl
 
     private async Task InitializeDataAsync(ProjectViewModel projectViewModel)
     {
-        await projectViewModel.LoadObvyazkiAsync();
-        //await projectViewModel.LoadStandsDataAsync();
-        await projectViewModel.LoadPurposesInStandsAsync();
-        await projectViewModel.LoadAllAvaileDataAsync();
+        var progress = new ProgressDialog();
+
+        var owner = Application.Current.MainWindow;
+
+        progress.Show();
+
+        try
+        {
+            await projectViewModel.UpdateUI();
+        }
+        finally
+        {
+            progress.Close();
+        }
     }
 
     private async void StandObvView_PreviewKeyDown(object sender, KeyEventArgs e)

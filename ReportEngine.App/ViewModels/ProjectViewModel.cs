@@ -1390,7 +1390,6 @@ public class ProjectViewModel : BaseViewModel
 
     public async Task UpdateUI()
     {
-        await LoadStandsDataAsync();
         await LoadObvyazkiAsync();
         await LoadPurposesInStandsAsync();
         await LoadAllAvaileDataAsync();

@@ -9,7 +9,7 @@
     <!--  фон окна  -->
     <SolidColorBrush x:Key="SecondaryColor" Color="#2B2B2B" />
     <!--  панели, подложки  -->
-    <SolidColorBrush x:Key="AccentColor" Color="#FF8C00" />
+    <SolidColorBrush x:Key="AccentColor" Color="#5C6BC0" />
     <!--  акценты (кнопки, выделения)  -->
     <SolidColorBrush x:Key="BorderColor" Color="#3A3A3A" />
     <!--  рамки  -->
@@ -35,9 +35,9 @@
     <SolidColorBrush x:Key="ControlPressedColor" Color="#FF184461" />
     <SolidColorBrush x:Key="BorderLightColor" Color="#FFCCCCCC" />
     <SolidColorBrush x:Key="BorderMediumColor" Color="#3A3A3A" />
-    <SolidColorBrush x:Key="GlyphColor" Color="#FF8C00" />
+    <SolidColorBrush x:Key="GlyphColor" Color="#5C6BC0" />
     <SolidColorBrush x:Key="SelectedBackgroundColor" Color="#666666" />
     <SolidColorBrush x:Key="DisabledForegroundColor" Color="#FF888888" />
     <SolidColorBrush x:Key="DisabledControlDarkColor" Color="#FFDDDDDD" />
-    <SolidColorBrush x:Key="UnsafeDetails" Color="LightGray" />
+    <SolidColorBrush x:Key="UnsafeDetails" Color="#383F45" />
 </ResourceDictionary>

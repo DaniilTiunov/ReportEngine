@@ -21,8 +21,16 @@ public class CalculationService : ICalculationService
         _notificationService = notificationService;
     }
 
+    private async Task LoadSettingsCost()
+    {
+        await DefaultStandSettings.LoadStandsSettingsDataAsync();
+        await HumanCostSettingsModel.LoadHumanCostDataFromIniAsync();
+    }
+
     public async Task CalculateProjectAsync(ProjectModel project)
     {
+        await LoadSettingsCost();
+
         await CalculateStandsCountAsync(project);
 
         foreach (var stand in project.Stands)
@@ -55,7 +63,7 @@ public class CalculationService : ICalculationService
         cost += standModel.FramesInStand
             .SelectMany(f => f.Components)
             .Sum(c => c.Length == null
-                ? c.Count * (decimal)(c.CostComponent ?? 0)
+                ? (c.Count ?? 0) * (decimal)(c.CostComponent ?? 0)
                 : (decimal)(c.Length ?? 0) * (decimal)(c.CostComponent ?? 0));
 
         cost += standModel.ElectricalComponentsInStand
