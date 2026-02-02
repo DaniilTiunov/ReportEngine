@@ -39,6 +39,7 @@ public class ProjectViewModel : BaseViewModel
     private readonly IProjectService _projectService;
     private readonly IReportService _reportService;
     private readonly IStandService _standService;
+    private readonly SemaphoreSlim _updateUiLock = new(1, 1);
     public bool ElectricalPurposesChanges { get; set; } = false;
     public bool AdditionalPurposesChanges { get; set; } = false;
     public bool DrainagePurposesChanges { get; set; } = false;
@@ -1390,10 +1391,20 @@ public class ProjectViewModel : BaseViewModel
 
     public async Task UpdateUI()
     {
-        await LoadObvyazkiAsync();
-        await LoadPurposesInStandsAsync();
-        await LoadAllAvaileDataAsync();
-        await LoadProjectInfoAsync(CurrentProjectModel.CurrentProjectId);
+        if (!await _updateUiLock.WaitAsync(0))
+            return;
+
+        try
+        {
+            await LoadStandsDataAsync();
+            await LoadObvyazkiAsync();
+            await LoadPurposesInStandsAsync();
+            await LoadAllAvaileDataAsync();
+        }
+        finally
+        {
+            _updateUiLock.Release();
+        }
     }
 
     public void OnObvyazkiInStandChanged()

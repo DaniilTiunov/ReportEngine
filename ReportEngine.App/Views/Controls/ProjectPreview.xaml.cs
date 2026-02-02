@@ -3,8 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using ReportEngine.App.Display;
 using ReportEngine.App.ViewModels;
-using ProgressDialog = ReportEngine.App.Views.Windows.Dialog.ProgressDialog;
 
 namespace ReportEngine.App.Views.Controls;
 
@@ -22,36 +22,52 @@ public partial class ProjectPreview : UserControl
 
         CommandBindings.Add(new CommandBinding(ApplicationCommands.Paste, OnPasteExecuted, OnPasteCanExecute));
 
-        Loaded += async (_, __) => await InitializeDataAsync(projectViewModel);
+        Loaded += OnLoaded;
 
         PreviewKeyDown += StandObvView_PreviewKeyDown;
     }
 
     private async Task InitializeDataAsync(ProjectViewModel projectViewModel)
     {
-        var progress = new ProgressDialog();
-
-        var owner = Application.Current.MainWindow;
-
-        progress.Show();
-
         try
         {
             await projectViewModel.UpdateUI();
         }
-        finally
+        catch (Exception ex)
         {
-            progress.Close();
+            MessageBoxHelper.ShowError(ex.Message);
         }
     }
 
+    // Защита от повторного вызова
+    private async void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        Loaded -= OnLoaded;
+
+        try
+        {
+            await InitializeDataAsync(_projectViewModel);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
+        }
+    }
+    // Защита от автоповтора F5
     private async void StandObvView_PreviewKeyDown(object sender, KeyEventArgs e)
     {
-        if (e.Key == Key.F5)
-        {
-            e.Handled = true;
+        if (e.Key != Key.F5 || e.IsRepeat)
+            return;
 
+        e.Handled = true;
+
+        try
+        {
             await InitializeDataAsync(_projectViewModel);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
         }
     }
 
