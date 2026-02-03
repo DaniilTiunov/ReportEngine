@@ -44,20 +44,27 @@
                                     Grid.Row="0"
                                     MinWidth="200"
                                     FontSize="14"
+                                    Foreground="{DynamicResource PrimaryForeground}"
                                     MouseDoubleClick="OpenCurrentView">
                                     <TreeViewItem Header="Проект" IsExpanded="True">
                                         <TreeViewItem
                                             x:Name="ProjectCard"
                                             Margin="0,3,0,3"
+                                            Foreground="{DynamicResource PrimaryForeground}"
                                             Header="Карточка проекта"
                                             Tag="ProjectCard" />
-                                        <TreeViewItem Header="Редактирование стенда" IsExpanded="True">
+                                        <TreeViewItem
+                                            Foreground="{DynamicResource PrimaryForeground}"
+                                            Header="Редактирование стенда"
+                                            IsExpanded="True">
                                             <TreeViewItem
                                                 Margin="0,3,10,3"
+                                                Foreground="{DynamicResource PrimaryForeground}"
                                                 Header="Расчёт стенда"
                                                 Tag="ProjectPreview" />
                                             <TreeViewItem
                                                 Margin="0,3,0,3"
+                                                Foreground="{DynamicResource PrimaryForeground}"
                                                 Header="Формирование упаковки"
                                                 Tag="StandsContainer" />
                                         </TreeViewItem>
@@ -71,50 +78,65 @@
                                     Grid.Column="1"
                                     MinHeight="500"
                                     FontSize="14"
+                                    Foreground="{DynamicResource PrimaryForeground}"
                                     MouseDoubleClick="ReportTree_MouseDoubleClick">
-                                    <TreeViewItem Header="Создание отчётов и расчёт" IsExpanded="True">
+                                    <TreeViewItem
+                                        Foreground="{DynamicResource PrimaryForeground}"
+                                        Header="Создание отчётов и расчёт"
+                                        IsExpanded="True">
                                         <TreeViewItem
                                             Margin="0,3,0,3"
+                                            Foreground="{DynamicResource PrimaryForeground}"
                                             Header="Расчитать проект"
                                             Tag="CalculateProject" />
                                         <TreeViewItem
                                             Margin="0,3,0,3"
+                                            Foreground="{DynamicResource PrimaryForeground}"
                                             Header="Переформировать комплектущие"
                                             Tag="UpdateAllProps" />
                                         <TreeViewItem
                                             Margin="0,3,0,3"
+                                            Foreground="{DynamicResource PrimaryForeground}"
                                             Header="Сводная ведомость"
                                             Tag="SummaryReport" />
                                         <TreeViewItem
                                             Margin="0,3,0,3"
+                                            Foreground="{DynamicResource PrimaryForeground}"
                                             Header="Ведомость комплектующих"
                                             Tag="ComponentsList" />
                                         <TreeViewItem
                                             Margin="0,3,0,3"
+                                            Foreground="{DynamicResource PrimaryForeground}"
                                             Header="Шильдики и таблички"
                                             Tag="NamePlates" />
                                         <TreeViewItem
                                             Margin="0,3,0,3"
+                                            Foreground="{DynamicResource PrimaryForeground}"
                                             Header="Маркировка"
                                             Tag="MarksReport" />
                                         <TreeViewItem
                                             Margin="0,3,0,3"
+                                            Foreground="{DynamicResource PrimaryForeground}"
                                             Header="Производство"
                                             Tag="ProductionList" />
                                         <TreeViewItem
                                             Margin="0,3,0,3"
+                                            Foreground="{DynamicResource PrimaryForeground}"
                                             Header="Фин. план"
                                             Tag="FinPlan" />
                                         <TreeViewItem
                                             Margin="0,3,0,3"
+                                            Foreground="{DynamicResource PrimaryForeground}"
                                             Header="Отчёт тара"
                                             Tag="ContainersReport" />
                                         <TreeViewItem
                                             Margin="0,3,0,3"
+                                            Foreground="{DynamicResource PrimaryForeground}"
                                             Header="Паспорт"
                                             Tag="Passport" />
                                         <TreeViewItem
                                             Margin="0,3,0,3"
+                                            Foreground="{DynamicResource PrimaryForeground}"
                                             Header="Технологические карты"
                                             Tag="TechCards" />
                                     </TreeViewItem>

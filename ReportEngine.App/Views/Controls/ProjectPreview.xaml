@@ -41,7 +41,8 @@
                 Grid.Row="0"
                 Grid.Column="0"
                 Margin="5"
-                Padding="5">
+                Padding="5"
+                BorderThickness="0">
                 <GroupBox.Header>
                     <TextBlock>
                         <Run FontSize="16" Text="Стенды в проекте — " />
@@ -116,7 +117,8 @@
                 Grid.Row="0"
                 Grid.Column="1"
                 Margin="5"
-                Padding="5">
+                Padding="5"
+                BorderThickness="0">
                 <GroupBox.Header>
                     <TextBlock>
                         <Run FontSize="16" Text="Рамы в стенде — " />
@@ -191,7 +193,8 @@
                 Grid.Row="1"
                 Grid.Column="0"
                 Margin="5"
-                Padding="5">
+                Padding="5"
+                BorderThickness="0">
                 <GroupBox.Header>
                     <TextBlock>
                         <Run FontSize="16" Text="Обвязки в стенде — " />
@@ -263,7 +266,8 @@
                 Grid.Column="1"
                 MinHeight="250"
                 Margin="5"
-                Padding="5">
+                Padding="5"
+                BorderThickness="0">
                 <GroupBox.Header>
                     <TextBlock>
                         <Run FontSize="16" Text="Обвязки в проекте — " />
@@ -333,7 +337,8 @@
                 Grid.Column="1"
                 MinHeight="450"
                 Margin="5"
-                Padding="5">
+                Padding="5"
+                BorderThickness="0">
                 <GroupBox.Header>
                     <TextBlock>
                         <Run FontSize="16" Text="Чертёж стенда и информация по обвязке — " />
@@ -435,7 +440,8 @@
                 Grid.Row="2"
                 Grid.Column="0"
                 Margin="5"
-                Padding="5">
+                Padding="5"
+                BorderThickness="0">
                 <GroupBox.Header>
                     <TextBlock>
                         <Run FontSize="16" Text="Электрические компоненты в стенде — " />
@@ -498,7 +504,8 @@
                 Grid.Row="3"
                 Grid.Column="0"
                 Margin="5"
-                Padding="5">
+                Padding="5"
+                BorderThickness="0">
                 <GroupBox.Header>
                     <TextBlock>
                         <Run FontSize="16" Text="Дополнительные компоненты в стенде — " />
@@ -561,7 +568,8 @@
                 Grid.Row="4"
                 Grid.Column="0"
                 Margin="5"
-                Padding="5">
+                Padding="5"
+                BorderThickness="0">
                 <GroupBox.Header>
                     <TextBlock>
                         <Run FontSize="16" Text="Дренаж в стенде — " />

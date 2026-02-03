@@ -11,7 +11,6 @@ public interface IStandService
 
     Task AddDrainageToStandAsync(int standId, int drainageId);
 
-
     Task AddObvyazkaToStandAsync(int standId, ObvyazkaInStand obvyazka);
 
     Task LoadObvyazkiInStandsAsync(IEnumerable<StandModel> standModels);
@@ -23,7 +22,8 @@ public interface IStandService
     Task<IEnumerable<FormedElectricalComponent>> LoadAllAvailableElectricalComponentsAsync();
 
     Task<IEnumerable<FormedAdditionalEquip>> LoadAllAvailableAdditionalEquipsAsync();
-    Task AddCustomDrainageAsync(int standId, List<DrainagePurpose> drainagePurposes,FormedDrainage customDrainage);
+
+    Task AddCustomDrainageAsync(int standId, List<DrainagePurpose> drainagePurposes, FormedDrainage customDrainage);
 
     Task AddCustomElectricalComponentAsync(int standId, List<ElectricalPurpose> electricalPurpose, FormedElectricalComponent customElectrical);
 

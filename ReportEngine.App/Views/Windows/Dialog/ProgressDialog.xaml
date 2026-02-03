@@ -12,6 +12,7 @@
     FontFamily="Bahnschrift"
     Foreground="{DynamicResource PrimaryForeground}"
     ResizeMode="NoResize"
+    Topmost="True"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d">

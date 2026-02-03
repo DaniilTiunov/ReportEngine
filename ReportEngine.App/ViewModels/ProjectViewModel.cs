@@ -39,6 +39,7 @@ public class ProjectViewModel : BaseViewModel
     private readonly IProjectService _projectService;
     private readonly IReportService _reportService;
     private readonly IStandService _standService;
+    private readonly SemaphoreSlim _updateUiLock = new(1, 1);
     public bool ElectricalPurposesChanges { get; set; } = false;
     public bool AdditionalPurposesChanges { get; set; } = false;
     public bool DrainagePurposesChanges { get; set; } = false;
@@ -370,7 +371,7 @@ public class ProjectViewModel : BaseViewModel
                 return;
             }
 
-            _dialogService.RunWithProgressDialogAsync(async ()=>
+            _dialogService.RunWithProgressDialogAsync(async () =>
             {
                 await _projectService.CopyStandsAsync(CurrentProjectModel);
                 await LoadPurposesInStandsAsync();
@@ -447,6 +448,7 @@ public class ProjectViewModel : BaseViewModel
             _notificationService.ShowInfo("Рама удалена из стенда");
         });
     }
+
     public async void OnUpdateStandsAfterEquipsCommandExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -454,6 +456,7 @@ public class ProjectViewModel : BaseViewModel
             await _updaterStandService.ApplyChangesAndSaveAsync(CurrentProjectModel);
         });
     }
+
     public async void OnAddDrainageToStandExecuted(object p)
     {
         await ExceptionHelper.SafeExecuteAsync(AddDrainageToStandAsync);
@@ -483,7 +486,7 @@ public class ProjectViewModel : BaseViewModel
 
             OnObvyazkiInStandChanged();
 
-            _notificationService.ShowInfo("Обвязка скопирована в стенд");
+            _notificationService.ShowInfo("Обвязка успешно добавлена в стенд!");
         });
     }
 
@@ -495,7 +498,7 @@ public class ProjectViewModel : BaseViewModel
         {
             SelectedObvyazka = _dialogService.ShowObvyazkaDialog();
 
-            if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka))
+            if (Guard.ExitIfNull("Не был выбран тип обвязки!", _notificationService, SelectedObvyazka))
                 return;
 
             var stand = CurrentProjectModel.SelectedStand;
@@ -908,7 +911,7 @@ public class ProjectViewModel : BaseViewModel
     public async Task LoadStandsDataAsync()
     {
         await ExceptionHelper.SafeExecuteAsync(
-            async () => _dialogService.RunWithProgressDialogAsync(()=>_standService.LoadStandsDataAsync(CurrentProjectModel.Stands)));
+            async () => _dialogService.RunWithProgressDialogAsync(() => _standService.LoadStandsDataAsync(CurrentProjectModel.Stands)));
     }
 
     public async Task LoadPurposesInStandsAsync()
@@ -1075,7 +1078,6 @@ public class ProjectViewModel : BaseViewModel
 
         await CreateDefaultPurposesAsync(newStandModel);
 
-
         UpdateNewStandNN();
 
         OnPropertyChanged(nameof(CurrentStandModel));
@@ -1083,8 +1085,7 @@ public class ProjectViewModel : BaseViewModel
 
         OnStandsInProjectChanged();
 
-
-        _notificationService.ShowInfo($"Стенд с ID {addedStandEntity.Id} успешно добавлен!");
+        _notificationService.ShowInfo($"Стенд успешно добавлен!");
     }
 
     private async Task CreateDefaultPurposesAsync(StandModel newStandModel)
@@ -1094,7 +1095,6 @@ public class ProjectViewModel : BaseViewModel
         newStandModel.NewElectricalComponent.Purposes = CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand.ToList();
         newStandModel.NewDrainage.Purposes = CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand.ToList();
         newStandModel.NewAdditionalEquip.Purposes = CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand.ToList();
-
 
         await _standService.AddCustomDrainageAsync(newStandModel.Id,
             newStandModel.NewDrainage.Purposes.ToList(),
@@ -1391,11 +1391,20 @@ public class ProjectViewModel : BaseViewModel
 
     public async Task UpdateUI()
     {
-        await LoadStandsDataAsync();
-        await LoadObvyazkiAsync();
-        await LoadPurposesInStandsAsync();
-        await LoadAllAvaileDataAsync();
-        await LoadProjectInfoAsync(CurrentProjectModel.CurrentProjectId);
+        if (!await _updateUiLock.WaitAsync(0))
+            return;
+
+        try
+        {
+            await LoadStandsDataAsync();
+            await LoadObvyazkiAsync();
+            await LoadPurposesInStandsAsync();
+            await LoadAllAvaileDataAsync();
+        }
+        finally
+        {
+            _updateUiLock.Release();
+        }
     }
 
     public void OnObvyazkiInStandChanged()
@@ -1415,8 +1424,6 @@ public class ProjectViewModel : BaseViewModel
 
         CollectionRefreshHelper.SafeRefreshCollection(selectedStand.AllElectricalPurposesInStand);
         CollectionRefreshHelper.SafeRefreshCollection(selectedStand.AllAdditionalEquipPurposesInStand);
-
-
 
         CollectionRefreshHelper.SafeSortAndRefreshCollection(
             collection: selectedStand.ObvyazkiInStand,
@@ -1544,7 +1551,6 @@ public class ProjectViewModel : BaseViewModel
     public void UpdateTablesQuantity()
     {
         Debug.WriteLine("Пересчет табличек начат");
-
 
         var selectedStand = CurrentProjectModel.SelectedStand;
 

@@ -34,6 +34,6 @@ public interface IDialogService
     void ShowEditStandsObvSettingsWindow(ProjectViewModel projectViewModel, StandModel standModel, bool editMode);
 
     void RunWithProgressDialog(Action action);
-    void RunWithProgressDialogAsync(Func<Task> action);
 
+    void RunWithProgressDialogAsync(Func<Task> action);
 }

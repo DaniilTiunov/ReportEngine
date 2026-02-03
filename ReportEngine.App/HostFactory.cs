@@ -213,4 +213,6 @@ public class HostFactory
         services.AddTransient<StandsSettingsView>();
         services.AddTransient<ProgressDialog>();
     }
+
+
 }

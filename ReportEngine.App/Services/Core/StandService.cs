@@ -76,11 +76,6 @@ public class StandService : IStandService
             var standDrainages = await _projectRepository.GetAllDrainagesInStandAsync(standModel.Id);
             var standElectricals = await _projectRepository.GetAllElectricalComponentsInStandAsync(standModel.Id);
             var standAdditionals = await _projectRepository.GetAllAdditionalEquipsInStandAsync(standModel.Id);
-            //var obvyazkiInStands = await _projectRepository.GetAllObvyazkiInStandAsync(standModel.Id);
-
-            //standModel.ObvyazkiInStand.Clear();
-            //foreach (var obvyazka in obvyazkiInStands)
-            //    standModel.ObvyazkiInStand.Add(obvyazka);
 
             standModel.FramesInStand.Clear();
             foreach (var frame in standFrames.Select(sf => sf.Frame))
@@ -122,20 +117,20 @@ public class StandService : IStandService
     public async Task AddFrameToStandAsync(int standId, int frameId)
     {
         await _projectRepository.AddFrameToStandAsync(standId, frameId);
-        _notificationService.ShowInfo($"Рама успешно добавлена в стенд. {standId}");
+        _notificationService.ShowInfo($"Рама успешно добавлена в стенд");
     }
 
     public async Task AddDrainageToStandAsync(int standId, int drainageId)
     {
         await _projectRepository.AddDrainageToStandAsync(standId, drainageId);
-        _notificationService.ShowInfo($"Дренаж успешно добавлен в стенд. {standId}");
+        _notificationService.ShowInfo($"Дренаж успешно добавлен в стенд");
     }
 
     public async Task AddObvyazkaToStandAsync(int standId, ObvyazkaInStand obvyazka)
     {
         await _projectRepository.AddStandObvyazkaAsync(standId, obvyazka);
-        _notificationService.ShowInfo($"Обвязка успешно добавлена в стенд. Id{standId} ");
     }
+
     public async Task AddCustomDrainageAsync(int standId, List<DrainagePurpose> drainagePurposes, FormedDrainage customDrainage)
     {
         var entity = new FormedDrainage
@@ -147,7 +142,6 @@ public class StandService : IStandService
         await _projectRepository.AddDrainageToStandAsync(standId, entity.Id);
     }
 
-
     public async Task AddCustomElectricalComponentAsync(int standId, List<ElectricalPurpose> electricalPurpose, FormedElectricalComponent customElectrical)
     {
         var entity = new FormedElectricalComponent
@@ -155,8 +149,8 @@ public class StandService : IStandService
             Purposes = electricalPurpose
         };
 
-        await _formedElectricalRepository.AddAsync(customElectrical);
-        await _projectRepository.AddElectricalComponentToStandAsync(standId, customElectrical.Id);
+        await _formedElectricalRepository.AddAsync(entity);
+        await _projectRepository.AddElectricalComponentToStandAsync(standId, entity.Id);
     }
 
     public async Task AddCustomAdditionalEquipAsync(int standId, List<AdditionalEquipPurpose> additionalEquipPurposes, FormedAdditionalEquip customEquip)

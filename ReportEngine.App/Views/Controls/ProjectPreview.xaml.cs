@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using ReportEngine.App.Display;
 using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Views.Controls;
@@ -24,24 +25,50 @@ public partial class ProjectPreview : UserControl
         Loaded += async (_, __) => await InitializeDataAsync(projectViewModel);
 
         PreviewKeyDown += StandObvView_PreviewKeyDown;
-
     }
 
     private async Task InitializeDataAsync(ProjectViewModel projectViewModel)
     {
+        await projectViewModel.LoadStandsDataAsync();
         await projectViewModel.LoadObvyazkiAsync();
-        //await projectViewModel.LoadStandsDataAsync();
-        await projectViewModel.LoadPurposesInStandsAsync();
         await projectViewModel.LoadAllAvaileDataAsync();
+        await projectViewModel.LoadPurposesInStandsAsync();
+
+        projectViewModel.OnObvyazkiInStandChanged();
+        projectViewModel.OnFramesInStandChanged();
+        projectViewModel.UpdateNewStandNN();
+        projectViewModel.OnStandsInProjectChanged();
     }
 
+    // Защита от повторного вызова
+    private async void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        Loaded -= OnLoaded;
+
+        try
+        {
+            await InitializeDataAsync(_projectViewModel);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
+        }
+    }
+    // Защита от автоповтора F5
     private async void StandObvView_PreviewKeyDown(object sender, KeyEventArgs e)
     {
-        if (e.Key == Key.F5)
-        {
-            e.Handled = true;
+        if (e.Key != Key.F5 || e.IsRepeat)
+            return;
 
+        e.Handled = true;
+
+        try
+        {
             await InitializeDataAsync(_projectViewModel);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
         }
     }
 

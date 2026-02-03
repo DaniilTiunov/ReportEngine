@@ -5,7 +5,6 @@ using System.Windows.Media;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Display;
 using ReportEngine.App.ViewModels;
-using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Shared.Config.DebugConsol;
 
 namespace ReportEngine.App.Views.Controls;
@@ -216,6 +215,7 @@ public partial class TreeProjectView : UserControl, IDisposable
             }
         }
     }
+
     ~TreeProjectView()
     {
         Dispose();

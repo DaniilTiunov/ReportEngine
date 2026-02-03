@@ -132,7 +132,7 @@ public class GenericEquipViewModel<T> : BaseViewModel
                     continue;
                 }
 
-                if (equip.Id == 0)      
+                if (equip.Id == 0)
                     await _genericEquipRepository.AddAsync(equip);
                 else
                     await _genericEquipRepository.UpdateAsync(equip);

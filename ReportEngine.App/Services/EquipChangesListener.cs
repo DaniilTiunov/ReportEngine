@@ -1,7 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using DocumentFormat.OpenXml.InkML;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
@@ -33,7 +31,6 @@ namespace ReportEngine.App.Services
         {
             using var scope = _serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ReAppContext>();
-
 
             foreach (var type in GetEquipTypes(context))
             {

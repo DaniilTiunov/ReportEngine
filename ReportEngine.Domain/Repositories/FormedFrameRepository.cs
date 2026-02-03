@@ -71,6 +71,15 @@ public class FormedFrameRepository : IFrameRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task AddComponentAsync(FrameComponent component)
+    {
+        if (component == null || component.FormedFrameId == 0)
+            return;
+
+        await _context.FrameComponents.AddAsync(component);
+        await _context.SaveChangesAsync();
+    }
+
     public async Task DeleteAsync(FormedFrame entity)
     {
         if (entity != null)

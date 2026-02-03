@@ -8,7 +8,7 @@ namespace ReportEngine.App.Display
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var item = value as DisplayedComponent; 
+            var item = value as DisplayedComponent;
 
             if (item == null)
                 return "";
