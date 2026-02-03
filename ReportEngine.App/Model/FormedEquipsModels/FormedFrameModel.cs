@@ -113,8 +113,7 @@ public class FormedFrameModel : BaseViewModel
             Depth = NewFrame.Depth,
             Width = NewFrame.Width,
             Height = NewFrame.Height,
-            Designe = NewFrame.Designe,
-            Disassembled = NewFrame.Disassembled,
+            Designe = NewFrame.Designe
         };
     }
 

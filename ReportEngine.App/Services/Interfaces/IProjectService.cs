@@ -32,7 +32,7 @@ public interface IProjectService
 
     Task GetOrAddSubjectAsync(string objectName, string companyName);
 
-    float GetSummWidthObvyzakaAsync(ProjectModel projectModel);
+    float GetSummWidthObvyzaka(ProjectModel projectModel);
 
     Task<int> GetProjectsCountAsync();
 

@@ -393,8 +393,10 @@
                                 <DataGrid
                                     Margin="5"
                                     AutoGenerateColumns="False"
+                                    BeginningEdit="DataGrid_BeginningEdit"
                                     CanUserAddRows="True"
-                                    ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkaAdditionalComponents}">
+                                    ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkaAdditionalComponents}"
+                                    MouseDoubleClick="DataGrid_MouseDoubleClick">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Назначение" />
                                         <DataGridTextColumn
