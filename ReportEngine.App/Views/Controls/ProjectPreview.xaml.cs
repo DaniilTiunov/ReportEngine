@@ -22,21 +22,22 @@ public partial class ProjectPreview : UserControl
 
         CommandBindings.Add(new CommandBinding(ApplicationCommands.Paste, OnPasteExecuted, OnPasteCanExecute));
 
-        Loaded += OnLoaded;
+        Loaded += async (_, __) => await InitializeDataAsync(projectViewModel);
 
         PreviewKeyDown += StandObvView_PreviewKeyDown;
     }
 
     private async Task InitializeDataAsync(ProjectViewModel projectViewModel)
     {
-        try
-        {
-            await projectViewModel.UpdateUI();
-        }
-        catch (Exception ex)
-        {
-            MessageBoxHelper.ShowError(ex.Message);
-        }
+        await projectViewModel.LoadStandsDataAsync();
+        await projectViewModel.LoadObvyazkiAsync();
+        await projectViewModel.LoadAllAvaileDataAsync();
+        await projectViewModel.LoadPurposesInStandsAsync();
+
+        projectViewModel.OnObvyazkiInStandChanged();
+        projectViewModel.OnFramesInStandChanged();
+        projectViewModel.UpdateNewStandNN();
+        projectViewModel.OnStandsInProjectChanged();
     }
 
     // Защита от повторного вызова
