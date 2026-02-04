@@ -45,9 +45,11 @@ public interface IStandService
 
     Task DeleteDrainagePurposeAsync(int purposeId);
 
-    Task FillStandFieldsFromObvyazka(StandModel stand, ObvyazkaInStand obv);
+    void FillStandFieldsFromObvyazka(StandModel stand, ObvyazkaInStand obv);
 
     Task UpdateStandWeight(StandModel stand);
 
-    Task DeleteAdditinalPurposeFromObvAsync(ObvyazkaAdditionalEquipPurpose obv, StandModel standModel);
+    Task DeleteAdditionalPurposeFromObvAsync(ObvyazkaAdditionalEquipPurpose obv, StandModel standModel);
+
+    Task UpdateAdditionalPurposeFromObvAsync(ObvyazkaAdditionalEquipPurpose obv);
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using Microsoft.EntityFrameworkCore;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
@@ -250,8 +251,7 @@ public class StandService : IStandService
 
         return Task.FromResult(entity);
     }
-
-    public async Task FillStandFieldsFromObvyazka(StandModel stand, ObvyazkaInStand obv)
+    public async void FillStandFieldsFromObvyazka(StandModel stand, ObvyazkaInStand obv)
     {
         if (stand == null || obv == null)
             return;
@@ -292,27 +292,33 @@ public class StandService : IStandService
         stand.ThirdSensorMarkMinus = obv.ThirdSensorMarkMinus;
         stand.ThirdSensorDescription = obv.ThirdSensorDescription;
 
+        var additionalComponents = await GetAdditionalComponentsAsync(obv);
+
+        stand.ObvyazkaAdditionalComponents.Clear();
+        foreach (var additionalEqip in additionalComponents)
+        {
+            stand.ObvyazkaAdditionalComponents.Add(additionalEqip);
+        }
+    }
+    private async Task<List<ObvyazkaAdditionalEquipPurpose>> GetAdditionalComponentsAsync(ObvyazkaInStand obv)
+    {
         if (obv.AdditionalComponents != null)
         {
-            stand.ObvyazkaAdditionalComponents = new ObservableCollection<ObvyazkaAdditionalEquipPurpose>(
-                obv.AdditionalComponents
-                .Select(component => new ObvyazkaAdditionalEquipPurpose
-                {
-                    Purpose = component.Purpose,
-                    Material = component.Material,
-                    Quantity = component.Quantity,
-                    CostPerUnit = component.CostPerUnit,
-                    Measure = component.Measure,
-                    ExportDays = component.ExportDays,
-                    Id = component.Id
-                }));
-            CollectionRefreshHelper.SafeRefreshCollection(stand.ObvyazkaAdditionalComponents);
+            return obv.AdditionalComponents.ToList();
         }
 
-        await Task.CompletedTask;
+        if (obv.Id != 0)
+        {
+            return await _context.ObvyazkaAdditionalEquipPurpose
+                .Where(a => a.ObvyazkaInStandId == obv.Id)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        return new List<ObvyazkaAdditionalEquipPurpose>();
     }
 
-    public async Task DeleteAdditinalPurposeFromObvAsync(ObvyazkaAdditionalEquipPurpose obv, StandModel standModel)
+    public async Task DeleteAdditionalPurposeFromObvAsync(ObvyazkaAdditionalEquipPurpose obv, StandModel standModel)
     {
         if(obv == null || standModel == null)
         {
@@ -323,6 +329,19 @@ public class StandService : IStandService
         standModel.ObvyazkaAdditionalComponents.Remove(obv);
         await _obvyazkaInStandRepository.DeleteObvyazkaPurposesAsync(obv.Id);
     }
+
+    public async Task UpdateAdditionalPurposeFromObvAsync(ObvyazkaAdditionalEquipPurpose obv)
+    {
+        if (obv == null)
+        {
+            _notificationService.ShowError("Доп. комплектующее или стенд не выбраны!");
+            return;
+        }
+
+        await _obvyazkaInStandRepository.UpdateObvyazkaPurposesAsync(obv);
+        _notificationService.ShowInfo("Комплектующие обновлены");
+    }
+
     public async Task UpdateElectricalPurposeAsync(ElectricalPurpose entity)
     {
         if (entity == null) return;

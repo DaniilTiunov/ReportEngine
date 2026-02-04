@@ -63,6 +63,7 @@ public class ProjectCommandProvider
     public ICommand OpenEditStandCommand { get; set; }
     public ICommand FillObvFieldsTiEditCommand { get; set; }
     public ICommand DeleteAdditionalEquipFromObvCommand {  get; set; }
+    public ICommand UpdateAdditionalEquipFromObvCommand { get; set; }
 
     public ICommand Bind(ICommand command, Action<object> execute, Func<object, bool> canExecute = null)
     {

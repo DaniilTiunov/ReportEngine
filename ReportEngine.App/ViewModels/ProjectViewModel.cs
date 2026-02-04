@@ -464,14 +464,23 @@ public class ProjectViewModel : BaseViewModel
 
             OnObvyazkiInStandChanged();
         });
+
+        _notificationService.ShowInfo("Обвязка добавлена в стенд");
     }
 
     public async void OnDeleteAdditionalEquipFromObvCommandExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(async() =>
-        await _standService.DeleteAdditinalPurposeFromObvAsync(
+        await _standService.DeleteAdditionalPurposeFromObvAsync(
             CurrentProjectModel.SelectedStand.SelectedObvyazkaAdditionalEquipPurpose,
             CurrentProjectModel.SelectedStand));
+    }
+
+    public async void OnUpdateAdditionalEquipFromObvCommandExecuted(object e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+            await _standService.UpdateAdditionalPurposeFromObvAsync(
+                CurrentProjectModel.SelectedStand.SelectedObvyazkaAdditionalEquipPurpose));
     }
 
     public async void OnRemoveObvCommandExecuted(object e)
@@ -749,7 +758,7 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            await _standService.FillStandFieldsFromObvyazka(CurrentProjectModel.SelectedStand,
+            _standService.FillStandFieldsFromObvyazka(CurrentProjectModel.SelectedStand,
                 CurrentProjectModel.SelectedObvyazkaToCopy);
         });
     }
