@@ -196,15 +196,34 @@
                 Padding="5"
                 BorderThickness="0">
                 <GroupBox.Header>
-                    <TextBlock>
-                        <Run FontSize="16" Text="Обвязки в стенде — " />
-                        <Run
-                            FontSize="15"
-                            FontWeight="Bold"
-                            Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(нет данных)'}" />
-                    </TextBlock>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" HorizontalAlignment="Stretch">
+                            <Run FontSize="16" 
+                                 Text="Обвязки в стенде — " />
+                            <Run
+                               FontSize="15"
+                               FontWeight="Bold"                           
+                               Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(нет данных)'}" />
+                        </TextBlock>
+
+                        <TextBlock Grid.Column="1"  >
+                            <Run FontSize="16" 
+                                 Text="Общее количество датчиков в стенде - " />
+                            <Run FontSize="15"                             
+                                 FontWeight="Bold"
+                                 Text="{Binding CurrentProjectModel.SelectedStand.StandSensorsQuantity, TargetNullValue='(нет данных)'}" />
+                            <Run FontSize="14" Text="шт." />     
+                        </TextBlock>
+                      </Grid>
                 </GroupBox.Header>
-                <ListView
+
+               
+                    <ListView
                     MaxHeight="300"
                     FontSize="15"
                     ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}"
@@ -249,6 +268,7 @@
                                 Header="Датчик 3" />
                         </GridView>
                     </ListView.View>
+                        
                     <ListView.ContextMenu>
                         <ContextMenu>
                             <MenuItem Command="{Binding ProjectCommandProvider.OpenObvSettingsWindowCommand}" Header="Создать обвязку" />
@@ -259,6 +279,8 @@
                         </ContextMenu>
                     </ListView.ContextMenu>
                 </ListView>
+                
+
             </GroupBox>
 
             <GroupBox

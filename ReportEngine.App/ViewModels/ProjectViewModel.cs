@@ -470,7 +470,7 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnDeleteAdditionalEquipFromObvCommandExecuted(object e)
     {
-        await ExceptionHelper.SafeExecuteAsync(async() =>
+        await ExceptionHelper.SafeExecuteAsync(async () =>
         await _standService.DeleteAdditionalPurposeFromObvAsync(
             CurrentProjectModel.SelectedStand.SelectedObvyazkaAdditionalEquipPurpose,
             CurrentProjectModel.SelectedStand));
@@ -641,6 +641,11 @@ public class ProjectViewModel : BaseViewModel
         {
             var selectedPurpose = CurrentProjectModel.SelectedStand.SelectedElectricalComponent;
 
+            if (Guard.ExitIfNull("Не выбран компонент!",
+                _notificationService,
+                selectedPurpose))
+                return;
+
             if (selectedPurpose.Id == 0)
             {
                 var selectedComponent = CurrentProjectModel.SelectedStand.ElectricalComponentsInStand.FirstOrDefault();
@@ -680,6 +685,12 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             var selectedPurpose = CurrentProjectModel.SelectedStand.SelectedAdditionalEquip;
+
+            if (Guard.ExitIfNull("Не выбран компонент!",
+                _notificationService,
+                selectedPurpose))
+                return;
+
 
             if (selectedPurpose.Id == 0)
             {
@@ -721,6 +732,13 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             var selectedPurpose = CurrentProjectModel.SelectedStand.SelectedDrainagePurpose;
+
+
+            if (Guard.ExitIfNull("Не выбран компонент!",
+                 _notificationService,
+                 selectedPurpose))
+                return;
+
 
             if (selectedPurpose.Id == 0)
             {
@@ -1480,6 +1498,9 @@ public class ProjectViewModel : BaseViewModel
             collection: selectedStand.ObvyazkiInStand,
             fieldToSortBy: "NN",
             descending: false);
+
+
+        selectedStand.StandSensorsQuantity = selectedStand.CountElectricSensorsQuantity();
     }
 
     public void OnFramesInStandChanged()

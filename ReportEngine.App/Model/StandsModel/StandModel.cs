@@ -206,6 +206,9 @@ public class StandModel : BaseViewModel
     private int? _treeSocketExportDays;
     private int _number;
 
+
+    private int _standSensorsQuantity;
+
     public StandModel()
     {
     }
@@ -437,6 +440,12 @@ public class StandModel : BaseViewModel
     {
         get => _treeSocketMaterialMeasure;
         set => Set(ref _treeSocketMaterialMeasure, value);
+    }
+
+    public int StandSensorsQuantity
+    {
+        get => _standSensorsQuantity;
+        set => Set(ref _standSensorsQuantity, value);
     }
 
     // КМЧ
