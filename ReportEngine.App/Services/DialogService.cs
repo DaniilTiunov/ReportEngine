@@ -228,7 +228,7 @@ public class DialogService : IDialogService
 
         window.DataContext = projectViewModel;
 
-        projectViewModel.SelectedObvyazka = null;
+        projectViewModel.CurrentStandModel.SelectedObvyazkaInStand = new();
 
         window.ShowDialog();
     }

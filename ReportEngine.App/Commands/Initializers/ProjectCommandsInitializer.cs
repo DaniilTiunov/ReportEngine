@@ -155,6 +155,9 @@ public static class ProjectCommandsInitializer
 
         vm.ProjectCommandProvider.FillObvFieldsTiEditCommand =
             new RelayCommand(vm.OnFillObvFieldsCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.DeleteAdditionalEquipFromObvCommand =
+            new RelayCommand(vm.OnDeleteAdditionalEquipFromObvCommandExecuted, vm.CanAllCommandsExecute);
     }
 
     public static void InitializeGenericCommands(ProjectViewModel vm)

@@ -48,4 +48,6 @@ public interface IStandService
     Task FillStandFieldsFromObvyazka(StandModel stand, ObvyazkaInStand obv);
 
     Task UpdateStandWeight(StandModel stand);
+
+    Task DeleteAdditinalPurposeFromObvAsync(ObvyazkaAdditionalEquipPurpose obv, StandModel standModel);
 }

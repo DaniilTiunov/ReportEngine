@@ -41,11 +41,6 @@ public class ProjectViewModel : BaseViewModel
     private readonly IReportService _reportService;
     private readonly IStandService _standService;
     private readonly SemaphoreSlim _updateUiLock = new(1, 1);
-    public bool ElectricalPurposesChanges { get; set; } = false;
-    public bool AdditionalPurposesChanges { get; set; } = false;
-    public bool DrainagePurposesChanges { get; set; } = false;
-
-    public FrameSettingsModel FrameSettings { get; set; } = new();
 
     public ProjectViewModel(IProjectInfoRepository projectRepository,
         IDialogService dialogService,
@@ -75,7 +70,10 @@ public class ProjectViewModel : BaseViewModel
         InitializeTime();
         InitializeGenericCommands();
     }
-
+    public bool ElectricalPurposesChanges { get; set; } = false;
+    public bool AdditionalPurposesChanges { get; set; } = false;
+    public bool DrainagePurposesChanges { get; set; } = false;
+    public FrameSettingsModel FrameSettings { get; set; } = new();
     public ObservableCollection<FormedFrame> AllAvailableFrames { get; set; } = new();
     public ObservableCollection<FormedDrainage> AllAvailableDrainages { get; set; } = new();
     public ObservableCollection<FormedElectricalComponent> AllAvailableElectricalComponents { get; set; } = new();
@@ -130,11 +128,7 @@ public class ProjectViewModel : BaseViewModel
     public async void OnShowSubjectDialogExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
-        {
-            var subjectName = _dialogService.ShowSubjectDialog();
-
-            CurrentProjectModel.Object = subjectName;
-        });
+                CurrentProjectModel.Object = _dialogService.ShowSubjectDialog());
     }
 
     public async void OnOpenObvSettingsWindowCommandExecuted(object e)
@@ -470,6 +464,14 @@ public class ProjectViewModel : BaseViewModel
 
             OnObvyazkiInStandChanged();
         });
+    }
+
+    public async void OnDeleteAdditionalEquipFromObvCommandExecuted(object e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async() =>
+        await _standService.DeleteAdditinalPurposeFromObvAsync(
+            CurrentProjectModel.SelectedStand.SelectedObvyazkaAdditionalEquipPurpose,
+            CurrentProjectModel.SelectedStand));
     }
 
     public async void OnRemoveObvCommandExecuted(object e)

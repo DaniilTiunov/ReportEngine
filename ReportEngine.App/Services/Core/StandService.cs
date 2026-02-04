@@ -5,6 +5,7 @@ using ReportEngine.App.ModelWrappers;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.App.Services.Core;
@@ -17,6 +18,7 @@ public class StandService : IStandService
     private readonly IFormedElectricalRepository _formedElectricalRepository;
     private readonly IFrameRepository _formedFrameRepository;
     private readonly INotificationService _notificationService;
+    private readonly ObvyazkaInStandRepository _obvyazkaInStandRepository;
     private readonly IProjectInfoRepository _projectRepository;
     private readonly ReAppContext _context;
 
@@ -27,8 +29,10 @@ public class StandService : IStandService
         IFormedAdditionalEquipsRepository formedAdditionalEquipsRepository,
         IFormedElectricalRepository formedElectricalRepository,
         IContainerRepository containerRepository,
+        ObvyazkaInStandRepository obvyazkaInStandRepository,
         ReAppContext context)
     {
+        _obvyazkaInStandRepository = obvyazkaInStandRepository;
         _projectRepository = projectRepository;
         _formedFrameRepository = frameRepository;
         _formedDrainagesRepository = drainagesRepository;
@@ -308,6 +312,17 @@ public class StandService : IStandService
         await Task.CompletedTask;
     }
 
+    public async Task DeleteAdditinalPurposeFromObvAsync(ObvyazkaAdditionalEquipPurpose obv, StandModel standModel)
+    {
+        if(obv == null || standModel == null)
+        {
+            _notificationService.ShowError("Доп. комплектующее или стенд не выбраны!");
+            return;
+        }
+
+        standModel.ObvyazkaAdditionalComponents.Remove(obv);
+        await _obvyazkaInStandRepository.DeleteObvyazkaPurposesAsync(obv.Id);
+    }
     public async Task UpdateElectricalPurposeAsync(ElectricalPurpose entity)
     {
         if (entity == null) return;

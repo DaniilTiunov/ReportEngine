@@ -165,7 +165,7 @@ public class StandModel : BaseViewModel
     private StandObvyazkaModel _selectedObvyazka;
 
     // Выбранная обвязка в стенде
-    private ObvyazkaInStand _selectedObvyazkaInStand = new();
+    private ObvyazkaInStand? _selectedObvyazkaInStand =  null;
 
     // Серийный номер стенда
     private string _serialNumber;
@@ -643,7 +643,7 @@ public class StandModel : BaseViewModel
     }
 
     // Выбранная обвязка в стенде
-    public ObvyazkaInStand SelectedObvyazkaInStand
+    public ObvyazkaInStand? SelectedObvyazkaInStand
     {
         get => _selectedObvyazkaInStand;
         set => Set(ref _selectedObvyazkaInStand, value);

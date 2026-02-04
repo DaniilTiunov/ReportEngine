@@ -422,9 +422,9 @@
                                     </DataGrid.Columns>
                                     <DataGrid.ContextMenu>
                                         <ContextMenu>
-                                            <Button Content="Сохранить изменения" />
+                                            <MenuItem Header="Сохранить изменения" />
                                             <Separator />
-                                            <Button Content="Удалить" />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteAdditionalEquipFromObvCommand}" Header="Удалить" />
                                         </ContextMenu>
                                     </DataGrid.ContextMenu>
                                 </DataGrid>
