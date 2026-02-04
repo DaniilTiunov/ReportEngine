@@ -25,12 +25,12 @@ public partial class ProjectPreview : UserControl
 
         CommandBindings.Add(new CommandBinding(ApplicationCommands.Paste, OnPasteExecuted, OnPasteCanExecute));
 
-        Loaded += async (_, __) => await InitializeDataAsync(_projectViewModel);
+        Loaded += async (_, __) => await InitializeDataAndRecalculateAsync(_projectViewModel);
 
         PreviewKeyDown += StandObvView_PreviewKeyDown;
     }
 
-    private async Task InitializeDataAsync(ProjectViewModel projectViewModel)
+    private async Task InitializeDataAndRecalculateAsync(ProjectViewModel projectViewModel)
     {
         await projectViewModel.LoadStandsDataAsync();
         await projectViewModel.LoadObvyazkiAsync();
@@ -41,6 +41,14 @@ public partial class ProjectPreview : UserControl
         projectViewModel.OnFramesInStandChanged();
         projectViewModel.UpdateNewStandNN();
         projectViewModel.OnStandsInProjectChanged();
+    }
+
+    private async Task InitializeDataAsync(ProjectViewModel projectViewModel)
+    {
+        await projectViewModel.LoadStandsDataAsync();
+        await projectViewModel.LoadObvyazkiAsync();
+        await projectViewModel.LoadAllAvaileDataAsync();
+        await projectViewModel.LoadPurposesInStandsAsync();
     }
 
     // Защита от повторного вызова

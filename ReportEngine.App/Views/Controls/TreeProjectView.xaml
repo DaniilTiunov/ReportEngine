@@ -20,16 +20,16 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="2" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <avalonDock:DockingManager>
             <avalonDock:LayoutRoot>
                 <avalonDock:LayoutPanel x:Name="LayoutPanel" Orientation="Vertical">
-                    <avalonDock:LayoutAnchorablePane DockHeight="900">
+                    <avalonDock:LayoutAnchorablePane DockHeight="*">
                         <avalonDock:LayoutAnchorable
-                            Title="Навигация по проекту"
+                            Title=" Навигация по проекту"
                             CanClose="False"
                             CanHide="False">
                             <Grid>
@@ -152,14 +152,10 @@
             Grid.Column="1"
             Width="2"
             HorizontalAlignment="Stretch"
-            Background="WhiteSmoke" />
+            Background="{DynamicResource SecondaryColor}" />
 
-        <dragablz:TabablzControl
-            x:Name="MainTabControl"
-            Grid.Column="2"
-            ConsolidateOrphanedItems="True"
-            InterTabController="{StaticResource InterTabController}"
-            ShowDefaultCloseButton="True" />
+
+        <TabControl x:Name="MainTabControl" Grid.Column="2" />
     </Grid>
 </UserControl>
 

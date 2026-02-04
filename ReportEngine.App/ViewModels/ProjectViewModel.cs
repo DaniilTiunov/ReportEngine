@@ -555,7 +555,7 @@ public class ProjectViewModel : BaseViewModel
 
             var stand = CurrentProjectModel.SelectedStand;
 
-            var tmp = stand.SelectedObvyazkaInStand;
+            var tmp = stand.SelectedObvyazkaInStand ?? new ObvyazkaInStand();
 
             tmp.ImageName = SelectedObvyazka.ImageName;
 
