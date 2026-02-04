@@ -51,5 +51,5 @@ public interface IStandService
 
     Task DeleteAdditionalPurposeFromObvAsync(ObvyazkaAdditionalEquipPurpose obv, StandModel standModel);
 
-    Task UpdateAdditionalPurposeFromObvAsync(ObvyazkaAdditionalEquipPurpose obv);
+    Task UpdateAdditionalPurposeFromObvAsync(ObvyazkaAdditionalEquipPurpose obv, int obvyazkaInStand);
 }

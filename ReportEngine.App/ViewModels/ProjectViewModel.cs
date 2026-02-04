@@ -480,7 +480,8 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
             await _standService.UpdateAdditionalPurposeFromObvAsync(
-                CurrentProjectModel.SelectedStand.SelectedObvyazkaAdditionalEquipPurpose));
+                CurrentProjectModel.SelectedStand.SelectedObvyazkaAdditionalEquipPurpose,
+                CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.Id));
     }
 
     public async void OnRemoveObvCommandExecuted(object e)

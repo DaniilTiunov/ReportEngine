@@ -31,17 +31,19 @@ namespace ReportEngine.Domain.Repositories
         }
 
 
-        public async Task UpdateObvyazkaPurposesAsync(ObvyazkaAdditionalEquipPurpose obvyazka)
+        public async Task UpdateObvyazkaPurposesAsync(ObvyazkaAdditionalEquipPurpose obvyazka, int obvyazkaInStandId)
         {
             if(obvyazka == null)
                 return;
 
             if(obvyazka.Id == 0)
             {
+                obvyazka.ObvyazkaInStandId = obvyazkaInStandId;
                 await _context.ObvyazkaAdditionalEquipPurpose.AddAsync(obvyazka);
             }
             else
             {
+                obvyazka.ObvyazkaInStandId = obvyazkaInStandId;
                 _context.ObvyazkaAdditionalEquipPurpose.Update(obvyazka);
             }
 

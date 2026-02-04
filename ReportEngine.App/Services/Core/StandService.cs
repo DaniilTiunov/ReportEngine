@@ -330,7 +330,7 @@ public class StandService : IStandService
         await _obvyazkaInStandRepository.DeleteObvyazkaPurposesAsync(obv.Id);
     }
 
-    public async Task UpdateAdditionalPurposeFromObvAsync(ObvyazkaAdditionalEquipPurpose obv)
+    public async Task UpdateAdditionalPurposeFromObvAsync(ObvyazkaAdditionalEquipPurpose obv, int obvyazkaInStand)
     {
         if (obv == null)
         {
@@ -338,7 +338,7 @@ public class StandService : IStandService
             return;
         }
 
-        await _obvyazkaInStandRepository.UpdateObvyazkaPurposesAsync(obv);
+        await _obvyazkaInStandRepository.UpdateObvyazkaPurposesAsync(obv, obvyazkaInStand);
         _notificationService.ShowInfo("Комплектующие обновлены");
     }
 

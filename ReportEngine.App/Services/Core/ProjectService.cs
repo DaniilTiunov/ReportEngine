@@ -410,8 +410,6 @@ public class ProjectService : IProjectService
                 obv.KMCHMeasure = selectedObvyazka.KMCHMeasure;
                 obv.KMCHExportDays = selectedObvyazka.KMCHExportDays;
 
-                obv.NN = selectedObvyazka.NN;
-
                 obv.LineLength = selectedObvyazka.LineLength;
                 obv.ZraCount = selectedObvyazka.ZraCount;
                 obv.Sensor = selectedObvyazka.Sensor;
