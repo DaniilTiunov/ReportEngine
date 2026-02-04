@@ -396,15 +396,17 @@
                                     BeginningEdit="DataGrid_BeginningEdit"
                                     CanUserAddRows="True"
                                     ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkaAdditionalComponents}"
-                                    MouseDoubleClick="DataGrid_MouseDoubleClick">
+                                    MouseDoubleClick="DataGrid_MouseDoubleClick"
+                                    SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaAdditionalEquipPurpose}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Назначение" />
                                         <DataGridTextColumn
-                                            Width="*"
+                                            Width="170"
                                             Binding="{Binding Material, Mode=TwoWay}"
                                             Header="Доп.комплектующее" />
                                         <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay}" Header="Кол-во" />
                                         <DataGridTextColumn Binding="{Binding Measure, Mode=TwoWay}" Header="Ед. изм." />
+                                        <DataGridTextColumn Binding="{Binding CostPerUnit}" Header="Цена" />
                                         <DataGridTemplateColumn Header="Выбрать">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
@@ -418,6 +420,13 @@
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
                                     </DataGrid.Columns>
+                                    <DataGrid.ContextMenu>
+                                        <ContextMenu>
+                                            <Button Content="Сохранить изменения" />
+                                            <Separator />
+                                            <Button Content="Удалить" />
+                                        </ContextMenu>
+                                    </DataGrid.ContextMenu>
                                 </DataGrid>
                             </StackPanel>
                         </Grid>

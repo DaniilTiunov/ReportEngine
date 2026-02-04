@@ -55,6 +55,8 @@ public class StandModel : BaseViewModel
     //коллекция доп комплектующих обвязки
     private ObservableCollection<ObvyazkaAdditionalEquipPurpose> _obvyazkaAdditionalComponents = new();
 
+    private ObvyazkaAdditionalEquipPurpose _selectedObvyazkaAdditional = new();
+
     // Коллекция дренажей, находящихся в стенде
     private ObservableCollection<FormedDrainage> _drainagesInStand = new();
 
@@ -206,6 +208,12 @@ public class StandModel : BaseViewModel
 
     public StandModel()
     {
+    }
+
+    public ObvyazkaAdditionalEquipPurpose SelectedObvyazkaAdditionalEquipPurpose
+    {
+        get => _selectedObvyazkaAdditional;
+        set => Set(ref _selectedObvyazkaAdditional, value);
     }
 
     // Коллекция обвязок для отображения

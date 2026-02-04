@@ -1020,6 +1020,8 @@ public class ProjectViewModel : BaseViewModel
         {
             CurrentProjectModel.ObvyazkiInProject.Add(entity);
         }
+
+        CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand.ObvyazkaAdditionalComponents);
     }
 
     private async Task DeleteObvFromStandAsync()
@@ -1038,6 +1040,8 @@ public class ProjectViewModel : BaseViewModel
         var toRemove = stand.ObvyazkiInStand?.FirstOrDefault(o => o.Id == obvId);
         if (toRemove != null)
             stand.ObvyazkiInStand.Remove(toRemove);
+
+        //CurrentProjectModel.ObvyazkiInProject.Remove(toRemove!);
 
         stand.SelectedObvyazkaInStand = null;
 
@@ -1327,6 +1331,13 @@ public class ProjectViewModel : BaseViewModel
                         .AllElectricalPurposesInStand);
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand
                         .ElectricalComponentsInStand);
+                    return;
+
+                case ObvyazkaAdditionalEquipPurpose obv:
+                    obv.Material = selected.Name;
+                    obv.CostPerUnit = selected.Cost;
+                    obv.Measure = selected.Measure;
+                    CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand.ObvyazkaAdditionalComponents);
                     return;
 
                 case ContainerStand cs:

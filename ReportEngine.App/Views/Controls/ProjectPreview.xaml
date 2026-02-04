@@ -325,6 +325,8 @@
                     <ListView.ContextMenu>
                         <ContextMenu>
                             <MenuItem Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}" Header="Скопировать в выбранный стенд" />
+                            <Separator />
+
                         </ContextMenu>
                     </ListView.ContextMenu>
                 </ListView>
