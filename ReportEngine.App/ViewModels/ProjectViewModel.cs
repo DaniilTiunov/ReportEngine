@@ -4,6 +4,7 @@ using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Commands.Providers;
 using ReportEngine.App.Model;
+using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
 using ReportEngine.App.Services;
@@ -40,9 +41,6 @@ public class ProjectViewModel : BaseViewModel
     private readonly IReportService _reportService;
     private readonly IStandService _standService;
     private readonly SemaphoreSlim _updateUiLock = new(1, 1);
-    public bool ElectricalPurposesChanges { get; set; } = false;
-    public bool AdditionalPurposesChanges { get; set; } = false;
-    public bool DrainagePurposesChanges { get; set; } = false;
 
     public ProjectViewModel(IProjectInfoRepository projectRepository,
         IDialogService dialogService,
@@ -72,7 +70,10 @@ public class ProjectViewModel : BaseViewModel
         InitializeTime();
         InitializeGenericCommands();
     }
-
+    public bool ElectricalPurposesChanges { get; set; } = false;
+    public bool AdditionalPurposesChanges { get; set; } = false;
+    public bool DrainagePurposesChanges { get; set; } = false;
+    public FrameSettingsModel FrameSettings { get; set; } = new();
     public ObservableCollection<FormedFrame> AllAvailableFrames { get; set; } = new();
     public ObservableCollection<FormedDrainage> AllAvailableDrainages { get; set; } = new();
     public ObservableCollection<FormedElectricalComponent> AllAvailableElectricalComponents { get; set; } = new();
@@ -127,17 +128,15 @@ public class ProjectViewModel : BaseViewModel
     public async void OnShowSubjectDialogExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
-        {
-            var subjectName = _dialogService.ShowSubjectDialog();
-
-            CurrentProjectModel.Object = subjectName;
-        });
+                CurrentProjectModel.Object = _dialogService.ShowSubjectDialog());
     }
 
     public async void OnOpenObvSettingsWindowCommandExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
+            CurrentProjectModel.SelectedStand.ObvyazkaAdditionalComponents.Clear();
+
             _dialogService.ShowObvSettingsWindow(this);
         });
     }
@@ -146,7 +145,7 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            var totalWidth = _projectService.GetSummWidthObvyzakaAsync(CurrentProjectModel);
+            var totalWidth = _projectService.GetSummWidthObvyzaka(CurrentProjectModel);
             _notificationService.ShowInfo("Рекомендуемая рама: Рама с длиной " + totalWidth);
 
             var selectedFrame = _dialogService.ShowFrameDialog();
@@ -157,10 +156,45 @@ public class ProjectViewModel : BaseViewModel
                            CurrentProjectModel.SelectedStand)) return;
 
             await _standService.AddFrameToStandAsync(CurrentProjectModel.SelectedStand.Id, selectedFrame.Id);
-            CurrentProjectModel.SelectedStand.FramesInStand.Add(selectedFrame);
+
+            if (selectedFrame.Disassembled == true)
+            {
+                await DisambledFrameUpdateAsync();
+            }
 
             OnFramesInStandChanged();
         });
+    }
+
+    public async Task DisambledFrameUpdateAsync()
+    {
+        await FrameSettings.LoadFrameDataFromIniAsync();
+
+        var items = new List<AdditionalEquipPurpose>
+        {
+            new()
+            {
+                Material = FrameSettings.MaterialOne,
+                Quantity = (float)FrameSettings.CountMaterialOne,
+                CostPerUnit = 0,
+                Measure = "шт",
+                FormedAdditionalEquipId = CurrentProjectModel.SelectedStand.AdditionalEquipsInStand.FirstOrDefault().Id
+            },
+            new()
+            {
+                Material = FrameSettings.MaterialTwo,
+                Quantity = (float)FrameSettings.CountMaterialTwo,
+                CostPerUnit = 0,
+                Measure = "шт",
+                FormedAdditionalEquipId = CurrentProjectModel.SelectedStand.AdditionalEquipsInStand.FirstOrDefault().Id
+            }
+        };
+
+        foreach (var item in items)
+        {
+            await _standService.UpdateAdditionalPurposeAsync(item);
+            CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand.Add(item);
+        }
     }
 
     // TODO: Сделать тут рефакторинг команд
@@ -329,10 +363,10 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             if (!ValidateCorrectProjNN(CurrentProjectModel.Number))
-            { return; }
+                return;
 
             if (!await ValidateNotExistingProjNN(CurrentProjectModel.Number, false))
-            { return; }
+                return;
 
             await CreateNewProjectCardAsync();
             await _projectService.GetOrAddCompnayAsync(CurrentProjectModel.Company);
@@ -397,10 +431,10 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             if (!ValidateCorrectProjNN(CurrentProjectModel.Number))
-            { return; }
+                return;
 
             if (!await ValidateNotExistingProjNN(CurrentProjectModel.Number, true))
-            { return; }
+                return;
 
             await SaveProjectChangesAsync();
         });
@@ -430,6 +464,23 @@ public class ProjectViewModel : BaseViewModel
 
             OnObvyazkiInStandChanged();
         });
+
+        _notificationService.ShowInfo("Обвязка добавлена в стенд");
+    }
+
+    public async void OnDeleteAdditionalEquipFromObvCommandExecuted(object e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async() =>
+        await _standService.DeleteAdditionalPurposeFromObvAsync(
+            CurrentProjectModel.SelectedStand.SelectedObvyazkaAdditionalEquipPurpose,
+            CurrentProjectModel.SelectedStand));
+    }
+
+    public async void OnUpdateAdditionalEquipFromObvCommandExecuted(object e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+            await _standService.UpdateAdditionalPurposeFromObvAsync(
+                CurrentProjectModel.SelectedStand.SelectedObvyazkaAdditionalEquipPurpose));
     }
 
     public async void OnRemoveObvCommandExecuted(object e)
@@ -519,62 +570,52 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnCalculateProjectCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
-            _dialogService.RunWithProgressDialogAsync(CalculateProjectAsync));
+        await ExceptionHelper.SafeExecuteAsync(CalculateProjectAsync);
     }
 
     public async void OnComponentsListReportCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(
-            async () => _dialogService.RunWithProgressDialogAsync(() => CreateReportAsync(ReportType.ComponentsListReport, "комплектующих")));
+        await ExceptionHelper.SafeExecuteAsync(() => CreateReportAsync(ReportType.ComponentsListReport, "комплектующих"));
     }
 
     public async void OnCreateSummaryReportCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(
-            async () => _dialogService.RunWithProgressDialogAsync(() => CreateReportAsync(ReportType.SummaryReport, "сводная")));
+        await ExceptionHelper.SafeExecuteAsync(() => CreateReportAsync(ReportType.SummaryReport, "сводная"));
     }
 
     public async void OnCreateMarksReportCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(
-            async () => _dialogService.RunWithProgressDialogAsync(() => CreateReportAsync(ReportType.MarksReport, "маркировки")));
+        await ExceptionHelper.SafeExecuteAsync(() => CreateReportAsync(ReportType.MarksReport, "маркировки"));
     }
 
     public async void OnCreateNameplatesReportCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(
-            async () => _dialogService.RunWithProgressDialogAsync(() => CreateReportAsync(ReportType.NameplatesReport, "шильдики и таблички")));
+        await ExceptionHelper.SafeExecuteAsync(() => CreateReportAsync(ReportType.NameplatesReport, "шильдики и таблички"));
     }
 
     public async void OnCreateContainerReportCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(
-            async () => _dialogService.RunWithProgressDialogAsync(() => CreateReportAsync(ReportType.ContainerReport, "тара")));
+        await ExceptionHelper.SafeExecuteAsync(() => CreateReportAsync(ReportType.ContainerReport, "тара"));
     }
 
     public async void OnCreateProductionReportCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(
-            async () => _dialogService.RunWithProgressDialogAsync(() => CreateReportAsync(ReportType.ProductionReport, "производство")));
+        await ExceptionHelper.SafeExecuteAsync(() => CreateReportAsync(ReportType.ProductionReport, "производство"));
     }
 
     public async void OnCreateFinplanReportCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(
-            async () => _dialogService.RunWithProgressDialogAsync(() => CreateReportAsync(ReportType.FinPlanReport, "финплан")));
+        await ExceptionHelper.SafeExecuteAsync(() => CreateReportAsync(ReportType.FinPlanReport, "финплан"));
     }
 
     public async void OnCreatePassportReportCommandExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(
-            async () => _dialogService.RunWithProgressDialogAsync(() => CreateReportAsync(ReportType.PassportsReport, "паспорта")));
+        await ExceptionHelper.SafeExecuteAsync(() => CreateReportAsync(ReportType.PassportsReport, "паспорта"));
     }
 
     public async void OnCreateTechnologicalCardsCommandExecute(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(
-            async () => _dialogService.RunWithProgressDialogAsync(() => CreateReportAsync(ReportType.TechnologicalCards, "технологические карты")));
+        await ExceptionHelper.SafeExecuteAsync(async () => await CreateReportAsync(ReportType.TechnologicalCards, "технологические карты"));
     }
 
     public async void OnSaveChangesInStandCommandExecuted(object obj)
@@ -910,17 +951,13 @@ public class ProjectViewModel : BaseViewModel
 
     public async Task LoadStandsDataAsync()
     {
-        await ExceptionHelper.SafeExecuteAsync(
-            async () => _dialogService.RunWithProgressDialogAsync(() => _standService.LoadStandsDataAsync(CurrentProjectModel.Stands)));
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+            await _standService.LoadStandsDataAsync(CurrentProjectModel.Stands));
     }
 
     public async Task LoadPurposesInStandsAsync()
     {
-        await ExceptionHelper.SafeExecuteAsync(() =>
-        {
-            _standService.LoadPurposesInStands(CurrentProjectModel.Stands);
-            return Task.CompletedTask;
-        });
+        await ExceptionHelper.SafeExecuteAsync(async () => _standService.LoadPurposesInStands(CurrentProjectModel.Stands));
     }
 
     public async Task LoadObvyazkiAsync()
@@ -994,6 +1031,8 @@ public class ProjectViewModel : BaseViewModel
         {
             CurrentProjectModel.ObvyazkiInProject.Add(entity);
         }
+
+        CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand.ObvyazkaAdditionalComponents);
     }
 
     private async Task DeleteObvFromStandAsync()
@@ -1012,6 +1051,8 @@ public class ProjectViewModel : BaseViewModel
         var toRemove = stand.ObvyazkiInStand?.FirstOrDefault(o => o.Id == obvId);
         if (toRemove != null)
             stand.ObvyazkiInStand.Remove(toRemove);
+
+        //CurrentProjectModel.ObvyazkiInProject.Remove(toRemove!);
 
         stand.SelectedObvyazkaInStand = null;
 
@@ -1303,6 +1344,13 @@ public class ProjectViewModel : BaseViewModel
                         .ElectricalComponentsInStand);
                     return;
 
+                case ObvyazkaAdditionalEquipPurpose obv:
+                    obv.Material = selected.Name;
+                    obv.CostPerUnit = selected.Cost;
+                    obv.Measure = selected.Measure;
+                    CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand.ObvyazkaAdditionalComponents);
+                    return;
+
                 case ContainerStand cs:
                     cs.Name = selected.Name;
                     cs.ContainerCost = selected.Cost;
@@ -1376,7 +1424,9 @@ public class ProjectViewModel : BaseViewModel
             }
         }
 
-        await _reportService.GenerateReportAsync(typeGenerator, CurrentProjectModel.CurrentProjectId);
+        _dialogService.RunWithProgressDialogAsync(() =>
+                _reportService.GenerateReportAsync(typeGenerator, CurrentProjectModel.CurrentProjectId));
+
 
         if (_notificationService.ShowConfirmation($"Ведомость {reportName} создана!\nОткрыть папку с отчётами?"))
         {

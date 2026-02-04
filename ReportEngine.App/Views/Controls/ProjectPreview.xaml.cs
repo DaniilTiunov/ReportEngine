@@ -10,6 +10,9 @@ namespace ReportEngine.App.Views.Controls;
 
 public partial class ProjectPreview : UserControl
 {
+
+    // TODO: Нужен фикс
+
     private bool _allowEdit;
 
     private readonly ProjectViewModel _projectViewModel;
@@ -22,7 +25,7 @@ public partial class ProjectPreview : UserControl
 
         CommandBindings.Add(new CommandBinding(ApplicationCommands.Paste, OnPasteExecuted, OnPasteCanExecute));
 
-        Loaded += async (_, __) => await InitializeDataAsync(projectViewModel);
+        Loaded += async (_, __) => await InitializeDataAsync(_projectViewModel);
 
         PreviewKeyDown += StandObvView_PreviewKeyDown;
     }

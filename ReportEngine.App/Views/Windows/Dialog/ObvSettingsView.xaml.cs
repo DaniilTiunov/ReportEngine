@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace ReportEngine.App.Views.Windows.Dialog
@@ -8,6 +9,8 @@ namespace ReportEngine.App.Views.Windows.Dialog
     /// </summary>
     public partial class ObvSettingsView : Window
     {
+        private bool _allowEdit;
+
         public ObvSettingsView()
         {
             InitializeComponent();
@@ -48,6 +51,27 @@ namespace ReportEngine.App.Views.Windows.Dialog
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void DataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+        {
+            if (!_allowEdit)
+                e.Cancel = true;
+        }
+
+        private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is not DataGrid grid)
+                return;
+
+            _allowEdit = true;
+
+            if (grid.CurrentCell != null)
+            {
+                grid.BeginEdit();
+            }
+
+            _allowEdit = false;
         }
     }
 }

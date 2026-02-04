@@ -55,6 +55,8 @@ public class StandModel : BaseViewModel
     //коллекция доп комплектующих обвязки
     private ObservableCollection<ObvyazkaAdditionalEquipPurpose> _obvyazkaAdditionalComponents = new();
 
+    private ObvyazkaAdditionalEquipPurpose _selectedObvyazkaAdditional = new();
+
     // Коллекция дренажей, находящихся в стенде
     private ObservableCollection<FormedDrainage> _drainagesInStand = new();
 
@@ -163,7 +165,7 @@ public class StandModel : BaseViewModel
     private StandObvyazkaModel _selectedObvyazka;
 
     // Выбранная обвязка в стенде
-    private ObvyazkaInStand _selectedObvyazkaInStand = new();
+    private ObvyazkaInStand? _selectedObvyazkaInStand =  null;
 
     // Серийный номер стенда
     private string _serialNumber;
@@ -206,6 +208,12 @@ public class StandModel : BaseViewModel
 
     public StandModel()
     {
+    }
+
+    public ObvyazkaAdditionalEquipPurpose SelectedObvyazkaAdditionalEquipPurpose
+    {
+        get => _selectedObvyazkaAdditional;
+        set => Set(ref _selectedObvyazkaAdditional, value);
     }
 
     // Коллекция обвязок для отображения
@@ -635,7 +643,7 @@ public class StandModel : BaseViewModel
     }
 
     // Выбранная обвязка в стенде
-    public ObvyazkaInStand SelectedObvyazkaInStand
+    public ObvyazkaInStand? SelectedObvyazkaInStand
     {
         get => _selectedObvyazkaInStand;
         set => Set(ref _selectedObvyazkaInStand, value);

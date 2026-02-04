@@ -59,15 +59,12 @@ public class ProjectService : IProjectService
         return projects.Count();
     }
 
-    public float GetSummWidthObvyzakaAsync(ProjectModel projectModel)
+    public float GetSummWidthObvyzaka(ProjectModel projectModel)
     {
         var totalWidth = 0.0f;
 
-        foreach (var stand in projectModel.Stands)
-        {
-            var obvyazkaWidth = stand.ObvyazkiInStand.Sum(obv => obv.WidthOnFrame);
-            totalWidth += obvyazkaWidth ?? 0.0f;
-        }
+        var obvyazkaWidth = projectModel.SelectedStand.ObvyazkiInStand.Sum(obv => obv.WidthOnFrame);
+        totalWidth += 240.0f + obvyazkaWidth ?? 0.0f;
 
         return totalWidth;
     }
@@ -427,6 +424,8 @@ public class ProjectService : IProjectService
                 obv.KMCHCount = selectedObvyazka.KMCHCount;
                 obv.HumanCost = selectedObvyazka.HumanCost;
                 obv.ImageName = selectedObvyazka.ImageName;
+
+                obv.AdditionalComponents = selectedObvyazka.AdditionalComponents;
             }
         }
 
@@ -437,7 +436,7 @@ public class ProjectService : IProjectService
     {
         var stand = projectModel.SelectedStand;
         var frame = stand.SelectedFrame;
-
+        
         if (Guard.ExitIfNull("Выберите раму для удаления!", _notificationService, frame))
             return;
 

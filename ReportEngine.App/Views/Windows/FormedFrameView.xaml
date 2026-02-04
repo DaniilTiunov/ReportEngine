@@ -311,12 +311,6 @@
                                 Margin="5"
                                 Text="{Binding FormedFrameModel.NewFrame.Designe}" />
 
-                            <CheckBox
-                                Grid.Row="7"
-                                Grid.Column="0"
-                                Margin="5,0,0,0"
-                                Content="Разборная"
-                                IsChecked="{Binding FormedFrameModel.Disassembled}" />
                         </Grid>
                     </GroupBox>
 
@@ -431,13 +425,6 @@
                                 Grid.Column="1"
                                 Margin="5"
                                 Text="{Binding FormedFrameModel.SelectedFrame.Designe}" />
-
-                            <CheckBox
-                                Grid.Row="7"
-                                Grid.Column="0"
-                                Margin="5,0,0,0"
-                                Content="Разборная"
-                                IsChecked="{Binding FormedFrameModel.SelectedFrame.Disassembled}" />
                         </Grid>
                     </GroupBox>
 
