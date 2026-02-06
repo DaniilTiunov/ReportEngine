@@ -207,9 +207,9 @@
                             <Run FontSize="16" 
                                  Text="Обвязки в стенде — " />
                             <Run
-                               FontSize="15"
-                               FontWeight="Bold"                           
-                               Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(нет данных)'}" />
+                                FontSize="15"
+                                FontWeight="Bold"
+                                Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(нет данных)'}" />
                         </TextBlock>
                         <TextBlock Grid.Column="1" MinWidth ="250">
                         </TextBlock>
@@ -221,11 +221,11 @@
                                  Text="{Binding CurrentProjectModel.SelectedStand.StandSensorsQuantity, TargetNullValue='(нет данных)'}" />
                             <Run FontSize="14" Text="шт." />     
                         </TextBlock>
-                      </Grid>
+                    </Grid>
                 </GroupBox.Header>
 
-               
-                    <ListView
+
+                <ListView
                     MaxHeight="300"
                     FontSize="15"
                     ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}"
@@ -270,7 +270,7 @@
                                 Header="Датчик 3" />
                         </GridView>
                     </ListView.View>
-                        
+
                     <ListView.ContextMenu>
                         <ContextMenu>
                             <MenuItem Command="{Binding ProjectCommandProvider.OpenObvSettingsWindowCommand}" Header="Создать обвязку" />
@@ -281,7 +281,7 @@
                         </ContextMenu>
                     </ListView.ContextMenu>
                 </ListView>
-                
+
 
             </GroupBox>
 
