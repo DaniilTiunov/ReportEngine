@@ -71,6 +71,25 @@ public class ProjectInfoRepository : IProjectInfoRepository
         if (existingStand != null)
             _context.Set<Stand>().Remove(existingStand);
 
+        var additionalFormedEquips = await _context.Set<FormedAdditionalEquip>()
+            .Where(fe => _context.Set<StandAdditionalEquip>()
+            .Any(sae => sae.StandId == standId && sae.AdditionalEquipId == fe.Id))
+            .ToListAsync();
+
+        var electricalFormedEquips = await _context.Set<FormedElectricalComponent>()
+            .Where(fe => _context.Set<StandElectricalComponent>()
+            .Any(sae => sae.StandId == standId && sae.ElectricalComponentId == fe.Id))
+            .ToListAsync();
+
+        var drainagesFormedEquips = await _context.Set<FormedDrainage>()
+            .Where(fe => _context.Set<StandDrainage>()
+            .Any(sae => sae.StandId == standId && sae.DrainageId == fe.Id))
+            .ToListAsync();
+
+        _context.RemoveRange(additionalFormedEquips);
+        _context.RemoveRange(electricalFormedEquips);
+        _context.RemoveRange(drainagesFormedEquips);
+
         await _context.SaveChangesAsync();
     }
 
