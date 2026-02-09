@@ -137,20 +137,23 @@ public class ProjectService : IProjectService
 
             // Копируем всегда с исходного стенда, а не с предыдущей копии
 
-            for (var i = 1; i <= count; i++)
+            _dialogService.RunWithProgressDialogAsync(async () =>
             {
-                var maxStandNumber = projectModel.Stands.Count > 0 ? projectModel.Stands.Max(stand => stand.Number) : 0;
+                for (var i = 1; i <= count; i++)
+                {
+                    var maxStandNumber = projectModel.Stands.Count > 0 ? projectModel.Stands.Max(stand => stand.Number) : 0;
 
-                var newStandNumber = maxStandNumber + 1;
+                    var newStandNumber = maxStandNumber + 1;
 
-                var newStand = await CopyStandFromSourceStandAsync(selectedStand, projectModel.CurrentProjectId, newStandNumber);
+                    var newStand = await CopyStandFromSourceStandAsync(selectedStand, projectModel.CurrentProjectId, newStandNumber);
 
-                newStand.Number = newStandNumber;
+                    newStand.Number = newStandNumber;
 
-                projectModel.Stands.Add(newStand);
-            }
+                    projectModel.Stands.Add(newStand);
+                }
 
-            await _standService.LoadStandsDataAsync(projectModel.Stands);
+                await _standService.LoadStandsDataAsync(projectModel.Stands);
+            });
             _notificationService.ShowInfo($"Создано копий: {count}");
         });
     }
