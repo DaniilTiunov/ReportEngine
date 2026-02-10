@@ -461,16 +461,12 @@ public class ProjectService : IProjectService
 
         var obvyazkiInStands = projectInfo.Stands
             .Where(s => s.ObvyazkiInStand != null)
-            .SelectMany(s => s.ObvyazkiInStand);
-
-        //костыль
-        //фильтруем только уникальные
-        var uniqueObvInStands = obvyazkiInStands
-            .DistinctBy(obv => obv.ObvyazkaName);
-
+            .SelectMany(s => s.ObvyazkiInStand)
+            .DistinctBy(obv => obv.ObvyazkaName); ;
+      
         projectModel.ObvyazkiInProject.Clear();
 
-        foreach (var obvyazka in uniqueObvInStands)
+        foreach (var obvyazka in obvyazkiInStands)
             projectModel.ObvyazkiInProject.Add(obvyazka);
     }
 

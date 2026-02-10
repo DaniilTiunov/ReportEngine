@@ -299,6 +299,7 @@ public class StandService : IStandService
         {
             stand.ObvyazkaAdditionalComponents.Add(additionalEqip);
         }
+        
     }
     private async Task<List<ObvyazkaAdditionalEquipPurpose>> GetAdditionalComponentsAsync(ObvyazkaInStand obv)
     {
