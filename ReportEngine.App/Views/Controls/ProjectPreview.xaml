@@ -314,10 +314,6 @@
                                 Header="Материал" />
                             <GridViewColumn
                                 Width="120"
-                                DisplayMemberBinding="{Binding MaterialLine}"
-                                Header="Материал" />
-                            <GridViewColumn
-                                Width="120"
                                 DisplayMemberBinding="{Binding Armature}"
                                 Header="Арматура" />
                             <GridViewColumn

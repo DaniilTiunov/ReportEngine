@@ -348,6 +348,7 @@ public class ProjectInfoRepository : IProjectInfoRepository
     {
         var stand = await _context.Stands
             .Include(s => s.ObvyazkiInStand)
+            .ThenInclude(obv => obv.AdditionalComponents)
             .FirstOrDefaultAsync(s => s.Id == standId);
 
         return stand?.ObvyazkiInStand ?? Enumerable.Empty<ObvyazkaInStand>();

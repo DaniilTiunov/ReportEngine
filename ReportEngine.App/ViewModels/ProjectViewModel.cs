@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
@@ -517,15 +518,20 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(AddFrameToStandAsync);
     }
 
-    public async void OnCopyObvyazkaToStandsCommandExecuted(object p)
+    public async void OnCopyObvyazkaToStandsCommandExecuted(object p) 
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             var sourceObv = CurrentProjectModel.SelectedObvyazkaToCopy;
+
+            if (Guard.ExitIfNull("Не выбран стенд!", _notificationService, CurrentProjectModel.SelectedStand))
+                return;
+
             var standId = CurrentProjectModel.SelectedStand.Id;
 
             var newObvyazka = ObvyzkaModelWrapper.CloneForStand(sourceObv, standId);
             newObvyazka.NN = MaxObvNN + 1;
+       
 
             await _standService.AddObvyazkaToStandAsync(standId, newObvyazka);
 
@@ -1069,7 +1075,7 @@ public class ProjectViewModel : BaseViewModel
         if (toRemove != null)
             stand.ObvyazkiInStand.Remove(toRemove);
 
-        //CurrentProjectModel.ObvyazkiInProject.Remove(toRemove!);
+        //CurrentProjectModel.ObvyazkiInProject.Remove(toRemove);
 
         stand.SelectedObvyazkaInStand = null;
 
