@@ -49,5 +49,32 @@ namespace ReportEngine.Domain.Repositories
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task UpdateFromSourceObvyazkaAsync(ObvyazkaInStand sourceObv, ObvyazkaInStand targetObv)
+        {
+            // удалить старые компоненты target из базы
+            var existing = await _context.ObvyazkaAdditionalEquipPurpose
+                .Where(x => x.ObvyazkaInStandId == targetObv.Id)
+                .ToListAsync();
+
+            _context.ObvyazkaAdditionalEquipPurpose.RemoveRange(existing);
+
+            var newComponents = sourceObv.AdditionalComponents
+                .Select(sourceItem => new ObvyazkaAdditionalEquipPurpose
+                {
+                    ObvyazkaInStandId = targetObv.Id,
+
+                    Purpose = sourceItem.Purpose,
+                    ExportDays = sourceItem.ExportDays,
+                    Material = sourceItem.Material,
+                    Quantity = sourceItem.Quantity,
+                    Measure = sourceItem.Measure,
+                })
+                .ToList();
+
+            await _context.ObvyazkaAdditionalEquipPurpose.AddRangeAsync(newComponents);
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

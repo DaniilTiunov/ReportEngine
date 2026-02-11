@@ -6,6 +6,7 @@ using ReportEngine.App.ModelWrappers;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Enums;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
 
@@ -23,6 +24,7 @@ public class ProjectService : IProjectService
     private readonly IBaseRepository<Subject> _subjectRepository;
     private readonly IFrameRepository _frameRepository;
     private readonly IDialogService _dialogService;
+    private readonly ObvyazkaInStandRepository _obvyazkaInStandRepository;
 
     public ProjectService(
         IProjectInfoRepository projectRepository,
@@ -34,7 +36,8 @@ public class ProjectService : IProjectService
         IBaseRepository<Company> companyRepository,
         IBaseRepository<Subject> subjectRepository,
         IFrameRepository frameRepository,
-        IDialogService dialogService)
+        IDialogService dialogService,
+        ObvyazkaInStandRepository obvyazkaInStandRepository)
     {
         _drainagesRepository = drainagesRepository;
         _additionalEquipsRepository = additionalEquipsRepository;
@@ -46,6 +49,7 @@ public class ProjectService : IProjectService
         _subjectRepository = subjectRepository;
         _frameRepository = frameRepository;
         _dialogService = dialogService;
+        _obvyazkaInStandRepository = obvyazkaInStandRepository;
     }
 
     public int GetStandsInProjectCount(ProjectModel projectModel)
@@ -426,7 +430,7 @@ public class ProjectService : IProjectService
                 obv.HumanCost = selectedObvyazka.HumanCost;
                 obv.ImageName = selectedObvyazka.ImageName;
 
-                obv.AdditionalComponents = selectedObvyazka.AdditionalComponents;
+                await _obvyazkaInStandRepository.UpdateFromSourceObvyazkaAsync(selectedObvyazka, obv);
             }
         }
 
