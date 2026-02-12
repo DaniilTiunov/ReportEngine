@@ -68,6 +68,7 @@ namespace ReportEngine.Domain.Repositories
                     ExportDays = sourceItem.ExportDays,
                     Material = sourceItem.Material,
                     Quantity = sourceItem.Quantity,
+                    CostPerUnit = sourceItem.CostPerUnit,
                     Measure = sourceItem.Measure,
                 })
                 .ToList();
