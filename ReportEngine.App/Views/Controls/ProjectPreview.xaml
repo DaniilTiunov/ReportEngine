@@ -61,6 +61,7 @@
                     MaxHeight="300"
                     FontSize="15"
                     ItemsSource="{Binding CurrentProjectModel.Stands}"
+                    MouseDoubleClick="StandListView_MouseDoubleClick"
                     SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}"
                     SelectionChanged="StandsList_SelectionChanged">
                     <ListView.View>
