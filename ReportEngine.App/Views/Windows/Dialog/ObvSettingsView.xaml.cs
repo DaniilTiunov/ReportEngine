@@ -99,12 +99,10 @@ namespace ReportEngine.App.Views.Windows.Dialog
                     if (i == 0)
                     {
                         Grid.SetColumnSpan(cell, columnCount);
-                        cell.Content = new TextBlock
+                        cell.Content = new Button
                         {
-                            Text = "Нажмите ЛКМ два раза, чтобы добавить новый элемент",
-                            Foreground = Brushes.Gray,
-                            FontStyle = FontStyles.Italic,
-                            Margin = new Thickness(5, 0, 0, 0),
+                            Content = "➕",
+                            Foreground = Brushes.White,
                             VerticalAlignment = VerticalAlignment.Center
                         };
                     }
