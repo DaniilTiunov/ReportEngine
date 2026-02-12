@@ -96,6 +96,8 @@ public class ProjectViewModel : BaseViewModel
     {
         CurrentProjectModel.CreationDate = DateTime.Now.Date;
         CurrentProjectModel.StartDate = DateTime.Now.Date;
+        CurrentProjectModel.OutOfProduction = DateTime.Now.Date;
+        CurrentProjectModel.EndDate = DateTime.Now.Date;
     }
 
     public void InitializeCommands()
@@ -186,6 +188,8 @@ public class ProjectViewModel : BaseViewModel
             {
                 await DisambledFrameUpdateAsync();
             }
+
+            CurrentProjectModel.SelectedStand.FramesInStand.Add(selectedFrame);
 
             OnFramesInStandChanged();
         });

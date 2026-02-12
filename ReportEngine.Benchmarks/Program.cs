@@ -6,8 +6,7 @@ namespace ReportEngine.Benchmarks
     {
         static void Main(string[] args)
         {
-            BenchmarkRunner.Run<IniReaderBenchmarks>(
-            new BenchmarkDotNet.Configs.DebugInProcessConfig());
+            
         }
     }
 }
