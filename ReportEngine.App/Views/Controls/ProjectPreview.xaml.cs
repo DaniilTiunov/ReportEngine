@@ -6,7 +6,6 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using ReportEngine.App.Display;
 using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Views.Controls;
@@ -176,12 +175,12 @@ public partial class ProjectPreview : UserControl
     {
         _projectViewModel.OnSelectedStandChanged();
     }
-    
+
     private void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
     {
         if (e.Row.Item != CollectionView.NewItemPlaceholder)
             return;
-            
+
         var dataGrid = sender as DataGrid;
         if (dataGrid == null)
             return;
@@ -221,6 +220,7 @@ public partial class ProjectPreview : UserControl
             }
         }), System.Windows.Threading.DispatcherPriority.Loaded);
     }
+
     private static T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
     {
         for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
@@ -235,5 +235,10 @@ public partial class ProjectPreview : UserControl
                 return childOfChild;
         }
         return null;
+    }
+
+    private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        _projectViewModel.OnEditObvSettingsCommandExecuted(e);
     }
 }

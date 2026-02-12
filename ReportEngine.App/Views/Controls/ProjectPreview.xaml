@@ -227,6 +227,7 @@
                     MaxHeight="300"
                     FontSize="15"
                     ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}"
+                    MouseDoubleClick="ListView_MouseDoubleClick"
                     SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand, Mode=TwoWay}">
                     <ListView.View>
                         <GridView>
