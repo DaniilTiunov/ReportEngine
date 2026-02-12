@@ -241,4 +241,9 @@ public partial class ProjectPreview : UserControl
     {
         _projectViewModel.OnEditObvSettingsCommandExecuted(e);
     }
+
+    private void StandListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        _projectViewModel.OnOpenEditStandCommandExecuted(e);
+    }
 }
