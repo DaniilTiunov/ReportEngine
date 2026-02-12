@@ -8,7 +8,7 @@ namespace ReportEngine.Benchmarks
 {
     [MemoryDiagnoser]
     [SimpleJob(RuntimeMoniker.Net48)]
-    public class IniReaderBenchmarks
+    public class IniReaderBenchmarkss
     {
         [Benchmark]
         public void LoadSettings()
