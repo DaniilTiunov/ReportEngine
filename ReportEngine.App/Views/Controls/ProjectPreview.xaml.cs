@@ -176,11 +176,12 @@ public partial class ProjectPreview : UserControl
     {
         _projectViewModel.OnSelectedStandChanged();
     }
+    
     private void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
     {
         if (e.Row.Item != CollectionView.NewItemPlaceholder)
             return;
-
+            
         var dataGrid = sender as DataGrid;
         if (dataGrid == null)
             return;
