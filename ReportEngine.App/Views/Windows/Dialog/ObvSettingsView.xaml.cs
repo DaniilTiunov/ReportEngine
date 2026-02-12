@@ -1,6 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace ReportEngine.App.Views.Windows.Dialog
 {
@@ -72,6 +75,62 @@ namespace ReportEngine.App.Views.Windows.Dialog
             }
 
             _allowEdit = false;
+        }
+
+        private void ObvyazkiDataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            if (e.Row.Item != CollectionView.NewItemPlaceholder)
+                return;
+
+            e.Row.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                var presenter = FindVisualChild<DataGridCellsPresenter>(e.Row);
+                if (presenter == null)
+                    return;
+
+                int columnCount = ObvyazkiDataGrid.Columns.Count;
+
+                for (int i = 0; i < columnCount; i++)
+                {
+                    var cell = (DataGridCell)presenter.ItemContainerGenerator.ContainerFromIndex(i);
+                    if (cell == null)
+                        continue;
+
+                    if (i == 0)
+                    {
+                        Grid.SetColumnSpan(cell, columnCount);
+                        cell.Content = new TextBlock
+                        {
+                            Text = "Нажмите ЛКМ два раза, чтобы добавить новый элемент",
+                            Foreground = Brushes.Gray,
+                            FontStyle = FontStyles.Italic,
+                            Margin = new Thickness(5, 0, 0, 0),
+                            VerticalAlignment = VerticalAlignment.Center
+                        };
+                    }
+                    else
+                    {
+                        // Остальные скрываем
+                        cell.Visibility = Visibility.Collapsed;
+                    }
+                }
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
+        }
+
+        private static T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                var child = VisualTreeHelper.GetChild(obj, i);
+
+                if (child is T t)
+                    return t;
+
+                var childOfChild = FindVisualChild<T>(child);
+                if (childOfChild != null)
+                    return childOfChild;
+            }
+            return null;
         }
     }
 }
