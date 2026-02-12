@@ -69,6 +69,7 @@ public class ProjectViewModel : BaseViewModel
         InitializeCommands();
         InitializeTime();
         InitializeGenericCommands();
+        InitializeStandsData();
     }
     public bool ElectricalPurposesChanges { get; set; } = false;
     public bool AdditionalPurposesChanges { get; set; } = false;
@@ -84,6 +85,30 @@ public class ProjectViewModel : BaseViewModel
     public ProjectModel CurrentProjectModel { get; set; } = new();
     public ProjectCommandProvider ProjectCommandProvider { get; set; } = new();
     public MaterialLinesModel CurrentMaterials { get; set; } = new();
+    public StandSettingsData StandSettings { get; set; } = new();
+
+    #region Инициализация
+    public void InitializeStandsData()
+    {
+        StandSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
+    }
+    public void InitializeTime()
+    {
+        CurrentProjectModel.CreationDate = DateTime.Now.Date;
+        CurrentProjectModel.StartDate = DateTime.Now.Date;
+    }
+
+    public void InitializeCommands()
+    {
+        ProjectCommandsInitializer.InitializeCommands(this);
+    }
+
+    public void InitializeGenericCommands()
+    {
+        ProjectCommandsInitializer.InitializeGenericCommands(this);
+    }
+
+    #endregion Инициализация
 
     public int MaxObvNN
     {
@@ -949,26 +974,6 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(CurrentStandModel));
     }
 
-    #region Инициализация
-
-    public void InitializeTime()
-    {
-        CurrentProjectModel.CreationDate = DateTime.Now.Date;
-        CurrentProjectModel.StartDate = DateTime.Now.Date;
-    }
-
-    public void InitializeCommands()
-    {
-        ProjectCommandsInitializer.InitializeCommands(this);
-    }
-
-    public void InitializeGenericCommands()
-    {
-        ProjectCommandsInitializer.InitializeGenericCommands(this);
-    }
-
-    #endregion Инициализация
-
     #region Методы загрузки данных на view
 
     public async Task LoadStandsDataAsync()
@@ -1602,7 +1607,7 @@ public class ProjectViewModel : BaseViewModel
     {
         Debug.WriteLine("Пересчет хомутов начат");
 
-        var standsSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
+        var standsSettings = StandSettings;
 
         var selectedStand = CurrentProjectModel.SelectedStand;
 
@@ -1652,7 +1657,7 @@ public class ProjectViewModel : BaseViewModel
     {
         Debug.WriteLine("Пересчет кронштейнов начат");
 
-        var standsSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
+        var standsSettings = StandSettings;
 
         var selectedStand = CurrentProjectModel.SelectedStand;
 
@@ -1754,7 +1759,7 @@ public class ProjectViewModel : BaseViewModel
         }
 
         //сигнальный кабель
-        var standsSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
+        var standsSettings = StandSettings;
 
         var signalCableRecord = electricComponents.FirstOrDefault(purpose => purpose.Purpose == "Сигнальный кабель");
 
