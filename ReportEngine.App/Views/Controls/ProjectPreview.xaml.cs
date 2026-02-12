@@ -176,6 +176,64 @@ public partial class ProjectPreview : UserControl
     {
         _projectViewModel.OnSelectedStandChanged();
     }
-
     
+    private void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+    {
+        if (e.Row.Item != CollectionView.NewItemPlaceholder)
+            return;
+            
+        var dataGrid = sender as DataGrid;
+        if (dataGrid == null)
+            return;
+
+        e.Row.Dispatcher.BeginInvoke(new Action(() =>
+        {
+            var presenter = FindVisualChild<DataGridCellsPresenter>(e.Row);
+            if (presenter == null)
+                return;
+
+            int columnCount = dataGrid.Columns.Count;
+
+            for (int i = 0; i < columnCount; i++)
+            {
+                var cell = (DataGridCell)presenter.ItemContainerGenerator.ContainerFromIndex(i);
+                if (cell == null)
+                    continue;
+
+                if (i == 0)
+                {
+                    Grid.SetColumnSpan(cell, columnCount);
+
+                    var button = new Button
+                    {
+                        Content = "➕",
+                        Foreground = Brushes.White,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Cursor = Cursors.Hand
+                    };
+
+                    cell.Content = button;
+                }
+                else
+                {
+                    cell.Visibility = Visibility.Collapsed;
+                }
+            }
+        }), System.Windows.Threading.DispatcherPriority.Loaded);
+    }
+    private static T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
+    {
+        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+        {
+            var child = VisualTreeHelper.GetChild(obj, i);
+
+            if (child is T t)
+                return t;
+
+            var childOfChild = FindVisualChild<T>(child);
+            if (childOfChild != null)
+                return childOfChild;
+        }
+        return null;
+    }
 }
