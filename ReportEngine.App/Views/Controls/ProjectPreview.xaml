@@ -473,6 +473,7 @@
                     CanUserAddRows="True"
                     FontSize="15"
                     ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}"
+                    LoadingRow="DataGrid_LoadingRow"
                     MouseDoubleClick="DataGrid_MouseDoubleClick"
                     SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedElectricalComponent}">
                     <DataGrid.RowStyle>
@@ -537,6 +538,7 @@
                     CanUserAddRows="True"
                     FontSize="15"
                     ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand}"
+                    LoadingRow="DataGrid_LoadingRow"
                     MouseDoubleClick="DataGrid_MouseDoubleClick"
                     SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedAdditionalEquip}">
                     <DataGrid.RowStyle>
@@ -601,6 +603,7 @@
                     CanUserAddRows="True"
                     FontSize="15"
                     ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand}"
+                    LoadingRow="DataGrid_LoadingRow"
                     MouseDoubleClick="DataGrid_MouseDoubleClick"
                     SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedDrainagePurpose}">
                     <DataGrid.RowStyle>

@@ -103,12 +103,12 @@ namespace ReportEngine.App.Views.Windows.Dialog
                         {
                             Content = "➕",
                             Foreground = Brushes.White,
-                            VerticalAlignment = VerticalAlignment.Center
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Cursor = Cursors.Hand
                         };
                     }
                     else
                     {
-                        // Остальные скрываем
                         cell.Visibility = Visibility.Collapsed;
                     }
                 }
