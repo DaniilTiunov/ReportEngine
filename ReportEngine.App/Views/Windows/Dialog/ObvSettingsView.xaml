@@ -704,6 +704,12 @@
                                     Height="30"
                                     Command="{Binding ProjectCommandProvider.UpdateObvInStandCommand}"
                                     Content="Сохранить изменения" />
+                                <Button
+                                    Width="190"
+                                    Height="30"
+                                    Margin="5,0,5,0"
+                                    Command="{Binding ProjectCommandProvider.AdditionalTestCommand}"
+                                    Content="Заполнить доп. компоненты" />
                             </StackPanel>
                         </Grid>
                     </GroupBox>

@@ -40,6 +40,7 @@ public class ProjectViewModel : BaseViewModel
     private readonly IProjectService _projectService;
     private readonly IReportService _reportService;
     private readonly IStandService _standService;
+    private readonly AdditionalEquipService _additionalEquipService;
     private readonly SemaphoreSlim _updateUiLock = new(1, 1);
 
     public ProjectViewModel(IProjectInfoRepository projectRepository,
@@ -51,7 +52,8 @@ public class ProjectViewModel : BaseViewModel
         IReportService reportService,
         ICalculationService calculationService,
         ContainerService containerService,
-        UpdaterStandService updaterStandService)
+        UpdaterStandService updaterStandService,
+        AdditionalEquipService additionalEquipService)
     {
         _projectRepository = projectRepository;
         _dialogService = dialogService;
@@ -63,6 +65,7 @@ public class ProjectViewModel : BaseViewModel
         _calculationService = calculationService;
         _containerService = containerService;
         _updaterStandService = updaterStandService;
+        _additionalEquipService = additionalEquipService;
 
         NewStand = new StandModel { Number = 1 };
 
@@ -197,6 +200,10 @@ public class ProjectViewModel : BaseViewModel
 
             OnFramesInStandChanged();
         });
+    }
+    public async void OnAdditionalTestCommandExecuted(object e)
+    {
+        await _additionalEquipService.CreateEquipsFromObvyzkaAsync(CurrentProjectModel);
     }
 
     public async Task DisambledFrameUpdateAsync()
