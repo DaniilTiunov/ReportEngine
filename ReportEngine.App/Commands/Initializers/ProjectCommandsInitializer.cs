@@ -161,6 +161,9 @@ public static class ProjectCommandsInitializer
 
         vm.ProjectCommandProvider.UpdateAdditionalEquipFromObvCommand =
             new RelayCommand(vm.OnUpdateAdditionalEquipFromObvCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.AdditionalTestCommand =
+            new RelayCommand(vm.OnAdditionalTestCommandExecuted, vm.CanAllCommandsExecute);
     }
 
     public static void InitializeGenericCommands(ProjectViewModel vm)

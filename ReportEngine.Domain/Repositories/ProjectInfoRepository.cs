@@ -194,6 +194,8 @@ public class ProjectInfoRepository : IProjectInfoRepository
         if (!obvyazkaExists)
             throw new ArgumentException($"Обвязка с ID {standObvyazka.ObvyazkaId} не найдена.");
 
+        standObvyazka.Id = 0;
+
         stand.ObvyazkiInStand.Add(standObvyazka);
         await _context.SaveChangesAsync();
     }

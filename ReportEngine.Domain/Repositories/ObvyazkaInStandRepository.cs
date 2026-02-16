@@ -33,10 +33,10 @@ namespace ReportEngine.Domain.Repositories
 
         public async Task UpdateObvyazkaPurposesAsync(ObvyazkaAdditionalEquipPurpose obvyazka, int obvyazkaInStandId)
         {
-            if(obvyazka == null)
+            if (obvyazka == null)
                 return;
 
-            if(obvyazka.Id == 0)
+            if (obvyazka.Id == 0)
             {
                 obvyazka.ObvyazkaInStandId = obvyazkaInStandId;
                 await _context.ObvyazkaAdditionalEquipPurpose.AddAsync(obvyazka);
@@ -52,18 +52,16 @@ namespace ReportEngine.Domain.Repositories
 
         public async Task UpdateFromSourceObvyazkaAsync(ObvyazkaInStand sourceObv, ObvyazkaInStand targetObv)
         {
-            // удалить старые компоненты target из базы
             var existing = await _context.ObvyazkaAdditionalEquipPurpose
                 .Where(x => x.ObvyazkaInStandId == targetObv.Id)
                 .ToListAsync();
 
             _context.ObvyazkaAdditionalEquipPurpose.RemoveRange(existing);
 
-            var newComponents = sourceObv.AdditionalComponents
+            var newComponents = (sourceObv.AdditionalComponents ?? Enumerable.Empty<ObvyazkaAdditionalEquipPurpose>())
                 .Select(sourceItem => new ObvyazkaAdditionalEquipPurpose
                 {
                     ObvyazkaInStandId = targetObv.Id,
-
                     Purpose = sourceItem.Purpose,
                     ExportDays = sourceItem.ExportDays,
                     Material = sourceItem.Material,
@@ -73,7 +71,8 @@ namespace ReportEngine.Domain.Repositories
                 })
                 .ToList();
 
-            await _context.ObvyazkaAdditionalEquipPurpose.AddRangeAsync(newComponents);
+            if (newComponents.Count > 0)
+                await _context.ObvyazkaAdditionalEquipPurpose.AddRangeAsync(newComponents);
 
             await _context.SaveChangesAsync();
         }

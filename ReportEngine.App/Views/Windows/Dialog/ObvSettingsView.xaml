@@ -445,6 +445,13 @@
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
                                     </DataGrid.Columns>
+                                    <DataGrid.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Command="{Binding ProjectCommandProvider.UpdateAdditionalEquipFromObvCommand}" Header="Сохранить изменения" />
+                                            <Separator />
+                                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteAdditionalEquipFromObvCommand}" Header="Удалить" />
+                                        </ContextMenu>
+                                    </DataGrid.ContextMenu>
                                 </DataGrid>
                             </Grid>
                         </Grid>
@@ -689,7 +696,7 @@
                                 <Button
                                     Width="150"
                                     Height="30"
-                                    Margin="0,0,10,0"
+                                    Margin="0,0,5,0"
                                     Command="{Binding ProjectCommandProvider.SaveObvCommand}"
                                     Content="Добавить новую" />
                                 <Button
@@ -697,6 +704,12 @@
                                     Height="30"
                                     Command="{Binding ProjectCommandProvider.UpdateObvInStandCommand}"
                                     Content="Сохранить изменения" />
+                                <Button
+                                    Width="190"
+                                    Height="30"
+                                    Margin="5,0,5,0"
+                                    Command="{Binding ProjectCommandProvider.AdditionalTestCommand}"
+                                    Content="Заполнить доп. компоненты" />
                             </StackPanel>
                         </Grid>
                     </GroupBox>

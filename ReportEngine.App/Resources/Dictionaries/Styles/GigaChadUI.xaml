@@ -710,13 +710,8 @@
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 Command="ScrollBar.LineUpCommand"
-                                Focusable="False">
-                                <Path
-                                    Margin="3"
-                                    Data="M 0,10 L 5,0 L 10,10 Z"
-                                    Fill="{DynamicResource PrimaryForeground}"
-                                    Stretch="Uniform" />
-                            </RepeatButton>
+                                Content="▲"
+                                Focusable="False" />
                             <Track
                                 x:Name="PART_Track"
                                 Grid.Row="1"
@@ -756,11 +751,12 @@
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 Command="ScrollBar.LineDownCommand"
                                 Focusable="False">
-                                <Path
-                                    Margin="3"
-                                    Data="M 0,0 L 5,10 L 10,0 Z"
-                                    Fill="{DynamicResource PrimaryForeground}"
-                                    Stretch="Uniform" />
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="10"
+                                    Foreground="{DynamicResource PrimaryForeground}"
+                                    Text="▼" />
                             </RepeatButton>
                         </Grid>
                         <Grid x:Name="HorizontalTemplate" Visibility="Collapsed">
@@ -776,11 +772,12 @@
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 Command="ScrollBar.LineLeftCommand"
                                 Focusable="False">
-                                <Path
-                                    Margin="3"
-                                    Data="M 10,0 L 0,5 L 10,10 Z"
-                                    Fill="{DynamicResource PrimaryForeground}"
-                                    Stretch="Uniform" />
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="10"
+                                    Foreground="{DynamicResource PrimaryForeground}"
+                                    Text="◀" />
                             </RepeatButton>
                             <Track
                                 x:Name="PART_HorizontalTrack"
@@ -821,11 +818,12 @@
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 Command="ScrollBar.LineRightCommand"
                                 Focusable="False">
-                                <Path
-                                    Margin="3"
-                                    Data="M 0,0 L 10,5 L 0,10 Z"
-                                    Fill="{DynamicResource PrimaryForeground}"
-                                    Stretch="Uniform" />
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="10"
+                                    Foreground="{DynamicResource PrimaryForeground}"
+                                    Text="▶" />
                             </RepeatButton>
                         </Grid>
                     </Grid>

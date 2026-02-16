@@ -7,18 +7,14 @@ namespace ReportEngine.App.Services.Core;
 
 public class CalculationService : ICalculationService
 {
-    private readonly INotificationService _notificationService;
     private readonly IProjectService _projectService;
 
     public StandSettingsModel DefaultStandSettings { get; set; } = new();
     public HumanCostSettingsModel HumanCostSettingsModel { get; set; } = new();
 
-    public CalculationService(
-        IProjectService projectService,
-        INotificationService notificationService)
+    public CalculationService(IProjectService projectService)
     {
-        _projectService = projectService;
-        _notificationService = notificationService;
+        _projectService = projectService;;
     }
 
     private async Task LoadSettingsCost()
@@ -79,14 +75,10 @@ public class CalculationService : ICalculationService
 
     private decimal CalculateGalvanizedCost(ProjectModel projectModel)
     {
-        decimal cost = 0;
+        if (!projectModel.IsGalvanized)
+            return 0;
 
-        if (projectModel.IsGalvanized)
-        {
-            cost = projectModel.Stands.Count * (decimal)HumanCostSettingsModel.GalvanizedStands;
-        }
-
-        return cost;
+        return projectModel.StandCount * (decimal)HumanCostSettingsModel.GalvanizedStands;
     }
 
     private float ObvHumanCostCalculation(StandModel stand)

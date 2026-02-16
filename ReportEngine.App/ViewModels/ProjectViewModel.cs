@@ -40,6 +40,7 @@ public class ProjectViewModel : BaseViewModel
     private readonly IProjectService _projectService;
     private readonly IReportService _reportService;
     private readonly IStandService _standService;
+    private readonly AdditionalEquipService _additionalEquipService;
     private readonly SemaphoreSlim _updateUiLock = new(1, 1);
 
     public ProjectViewModel(IProjectInfoRepository projectRepository,
@@ -51,7 +52,8 @@ public class ProjectViewModel : BaseViewModel
         IReportService reportService,
         ICalculationService calculationService,
         ContainerService containerService,
-        UpdaterStandService updaterStandService)
+        UpdaterStandService updaterStandService,
+        AdditionalEquipService additionalEquipService)
     {
         _projectRepository = projectRepository;
         _dialogService = dialogService;
@@ -63,6 +65,7 @@ public class ProjectViewModel : BaseViewModel
         _calculationService = calculationService;
         _containerService = containerService;
         _updaterStandService = updaterStandService;
+        _additionalEquipService = additionalEquipService;
 
         NewStand = new StandModel { Number = 1 };
 
@@ -172,6 +175,9 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
+            if (Guard.ExitIfNull("Сначала создайте стенд!", _notificationService, CurrentProjectModel.SelectedStand))
+                return;
+
             var totalWidth = _projectService.GetSummWidthObvyzaka(CurrentProjectModel);
             _notificationService.ShowInfo("Рекомендуемая рама: Рама с длиной " + totalWidth);
 
@@ -180,7 +186,8 @@ public class ProjectViewModel : BaseViewModel
             if (Guard.ExitIfNull("Рама или стенд не выбраны!",
                            _notificationService,
                            selectedFrame,
-                           CurrentProjectModel.SelectedStand)) return;
+                           CurrentProjectModel.SelectedStand))
+                return;
 
             await _standService.AddFrameToStandAsync(CurrentProjectModel.SelectedStand.Id, selectedFrame.Id);
 
@@ -193,6 +200,10 @@ public class ProjectViewModel : BaseViewModel
 
             OnFramesInStandChanged();
         });
+    }
+    public async void OnAdditionalTestCommandExecuted(object e)
+    {
+        await _additionalEquipService.CreateEquipsFromObvyzkaAsync(CurrentProjectModel);
     }
 
     public async Task DisambledFrameUpdateAsync()
@@ -478,11 +489,11 @@ public class ProjectViewModel : BaseViewModel
             return;
 
         //проверка введенного NN обвязки
-        if (!ValidateCorrectObvNN(selectedStand.NN))
-            return;
+        //if (!ValidateCorrectObvNN(selectedStand.NN))
+        //    return;
 
-        if (!ValidateNotExistingObvNN(selectedStand.NN, false))
-            return;
+        //if (!ValidateNotExistingObvNN(selectedStand.NN, false))
+        //    return;
 
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
@@ -576,8 +587,6 @@ public class ProjectViewModel : BaseViewModel
 
     public void OnSelectObvCommandExecuted(object p)
     {
-        var selectedStand = CurrentProjectModel.SelectedStand;
-
         ExceptionHelper.SafeExecute(() =>
         {
             SelectedObvyazka = _dialogService.ShowObvyazkaDialog();
@@ -587,7 +596,8 @@ public class ProjectViewModel : BaseViewModel
 
             var stand = CurrentProjectModel.SelectedStand;
 
-            var tmp = stand.SelectedObvyazkaInStand ?? new ObvyazkaInStand();
+            // ВСЕГДА новый объект
+            var tmp = new ObvyazkaInStand();
 
             tmp.ImageName = SelectedObvyazka.ImageName;
 
@@ -596,8 +606,7 @@ public class ProjectViewModel : BaseViewModel
             stand.TreeSocketMaterialCount = SelectedObvyazka.TreeSocket;
             stand.KMCHCount = SelectedObvyazka.KMCHCount;
 
-            stand.SelectedObvyazkaInStand = null;
-            stand.SelectedObvyazkaInStand = tmp;
+            CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand = tmp;
         });
     }
 
@@ -903,12 +912,12 @@ public class ProjectViewModel : BaseViewModel
             if (Guard.ExitIfNull("Не был выбран стенд", _notificationService, selectedStand))
                 return;
 
-            //проверка введенного NN обвязки
-            if (!ValidateCorrectObvNN(selectedStand.NN))
-                return;
+            ////проверка введенного NN обвязки
+            //if (!ValidateCorrectObvNN(selectedStand.NN))
+            //    return;
 
-            if (!ValidateNotExistingObvNN(selectedStand.NN, true))
-                return;
+            //if (!ValidateNotExistingObvNN(selectedStand.NN, true))
+            //    return;
 
             await _projectService.UpdateObvInStandAsync(CurrentProjectModel, SelectedObvyazka);
 

@@ -244,7 +244,7 @@ public class StandService : IStandService
                                         CostPerUnit = component.CostPerUnit,
                                         Measure = component.Measure,
                                         ExportDays = component.ExportDays,
-                                        Id = component.Id
+                                        Id = 0
                                     })
                                     .ToList()
         };
