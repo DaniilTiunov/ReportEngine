@@ -517,9 +517,26 @@ public class ProjectViewModel : BaseViewModel
     public async void OnUpdateAdditionalEquipFromObvCommandExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
-            await _standService.UpdateAdditionalPurposeFromObvAsync(
-                CurrentProjectModel.SelectedStand.SelectedObvyazkaAdditionalEquipPurpose,
-                CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.Id));
+        {
+            var stand = CurrentProjectModel.SelectedStand;
+
+            if (Guard.ExitIfNull("Стенд не выбран!", _notificationService, stand))
+                return;
+
+            var obvyazki = stand.ObvyazkaAdditionalComponents.ToList();
+
+            foreach (var obv in obvyazki)
+            {
+                if (obv.Id == 0)
+                {
+                    obv.ObvyazkaInStandId = stand.SelectedObvyazkaInStand?.Id;
+                }
+
+                await _standService.UpdateAdditionalPurposeFromObvAsync(obv, obv.ObvyazkaInStandId ?? 0);
+            }
+
+            _notificationService.ShowInfo("Все комплектующие обвязок сохранены");
+        });
     }
 
     public async void OnRemoveObvCommandExecuted(object e)
@@ -680,33 +697,29 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            var selectedPurpose = CurrentProjectModel.SelectedStand.SelectedElectricalComponent;
+            var stand = CurrentProjectModel.SelectedStand;
 
-            if (Guard.ExitIfNull("Не выбран компонент!",
-                _notificationService,
-                selectedPurpose))
+            if (Guard.ExitIfNull("Стенд не выбран!", _notificationService, stand))
                 return;
 
-            if (selectedPurpose.Id == 0)
-            {
-                var selectedComponent = CurrentProjectModel.SelectedStand.ElectricalComponentsInStand.FirstOrDefault();
-                if (selectedComponent != null)
-                {
-                    selectedPurpose.FormedElectricalComponentId = selectedComponent.Id;
-                }
-                else
-                {
-                    _notificationService.ShowError("Нет электрического компонента для назначения.");
-                    return;
-                }
-            }
+            var purposes = stand.AllElectricalPurposesInStand.ToList();
 
-            await UpdatePurposeAsync(selectedPurpose,
-                _standService.UpdateElectricalPurposeAsync,
-                "Электрические компоненты сохранены");
+            foreach (var purpose in purposes)
+            {
+                if (purpose.Id == 0)
+                {
+                    var firstComponent = stand.AllElectricalPurposesInStand.FirstOrDefault();
+                    if (firstComponent != null)
+                        purpose.FormedElectricalComponentId = firstComponent.Id;
+                }
+
+                await _standService.UpdateElectricalPurposeAsync(purpose);
+            }
 
             ElectricalPurposesChanges = false;
             OnPropertyChanged(nameof(ElectricalPurposesChanges));
+
+            _notificationService.ShowInfo("Все электрические компоненты сохранены");
         });
     }
 
@@ -725,35 +738,27 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            var selectedPurpose = CurrentProjectModel.SelectedStand.SelectedAdditionalEquip;
+            var stand = CurrentProjectModel.SelectedStand;
 
-            if (Guard.ExitIfNull("Не выбран компонент!",
-                _notificationService,
-                selectedPurpose))
+            if (Guard.ExitIfNull("Стенд не выбран!", _notificationService, stand))
                 return;
 
-
-            if (selectedPurpose.Id == 0)
+            foreach (var purpose in stand.AllAdditionalEquipPurposesInStand.ToList())
             {
-                var selectedComponent = CurrentProjectModel.SelectedStand.AdditionalEquipsInStand.FirstOrDefault();
+                if (purpose.Id == 0)
+                {
+                    var firstComponent = stand.AdditionalEquipsInStand.FirstOrDefault();
+                    if (firstComponent != null)
+                        purpose.FormedAdditionalEquipId = firstComponent.Id;
+                }
 
-                if (Guard.ExitIfNull("Стенд или доп. комплектующее не выбраны!",
-                    _notificationService,
-                    CurrentProjectModel.SelectedStand,
-                    selectedComponent))
-                    return;
-
-                selectedPurpose.FormedAdditionalEquipId = selectedComponent.Id;
-
-                _notificationService.ShowError("Нет дополнительного компонента для назначения.");
+                await _standService.UpdateAdditionalPurposeAsync(purpose);
             }
-
-            await UpdatePurposeAsync(CurrentProjectModel.SelectedStand.SelectedAdditionalEquip,
-                _standService.UpdateAdditionalPurposeAsync,
-                "Доп. комплектующие сохранены");
 
             AdditionalPurposesChanges = false;
             OnPropertyChanged(nameof(AdditionalPurposesChanges));
+
+            _notificationService.ShowInfo("Все доп. комплектующие сохранены");
         });
     }
 
@@ -788,11 +793,7 @@ public class ProjectViewModel : BaseViewModel
                 {
                     selectedPurpose.FormedDrainageId = selectedComponent.Id;
                 }
-                else
-                {
-                    _notificationService.ShowError("Нет дренажа для назначения.");
-                    return;
-                }
+
             }
 
             await UpdatePurposeAsync(CurrentProjectModel.SelectedStand.SelectedDrainagePurpose,

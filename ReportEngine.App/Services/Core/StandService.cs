@@ -340,7 +340,6 @@ public class StandService : IStandService
         }
 
         await _obvyazkaInStandRepository.UpdateObvyazkaPurposesAsync(obv, obvyazkaInStand);
-        _notificationService.ShowInfo("Комплектующие обновлены");
     }
 
     public async Task UpdateElectricalPurposeAsync(ElectricalPurpose entity)
