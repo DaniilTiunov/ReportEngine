@@ -141,7 +141,7 @@
                         DisplayMemberPath="Name"
                         FontSize="15"
                         ItemsSource="{Binding CurrentProjectModel.SelectedStand.FramesInStand}"
-                        SelectedItem="{Binding CurrentStandModel.SelectedFrame}">
+                        SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedFrame}">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn
