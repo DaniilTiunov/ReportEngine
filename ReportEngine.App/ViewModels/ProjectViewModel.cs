@@ -17,6 +17,7 @@ using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Pipes;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
@@ -44,6 +45,8 @@ public class ProjectViewModel : BaseViewModel
     private readonly AdditionalEquipService _additionalEquipService;
     private readonly SemaphoreSlim _updateUiLock = new(1, 1);
     private readonly UIValidatorService _uiValidatorService;
+
+
 
     public ProjectViewModel(
         IProjectInfoRepository projectRepository,
@@ -712,14 +715,19 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            //OnUpdateElectricalComponentInStandCommandExecuted(obj);
-            //OnUpdateAdditionalComponentInStandCommandExecuted(obj);
-            //OnUpdateDrainageComponentInStandCommandExecuted(obj);
+            if(CurrentProjectModel.SelectedStand == null)
+            {
+                _notificationService.ShowError("Стенд не выбран");
+                return;
+            }
 
-            //DrainagePurposesChanges = false;
-            //ElectricalPurposesChanges = false;
-            //AdditionalPurposesChanges = false;
-            _notificationService.ShowInfo("Пока что не работает :(");
+            await _standService.SaveAllPurposesInStandAsync(CurrentProjectModel.SelectedStand);
+
+            DrainagePurposesChanges = false;
+            ElectricalPurposesChanges = false;
+            AdditionalPurposesChanges = false;
+
+            _notificationService.ShowInfo("Все изменения сохранены");
         });
     }
 

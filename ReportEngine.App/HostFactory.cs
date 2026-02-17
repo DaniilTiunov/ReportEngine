@@ -90,6 +90,10 @@ public class HostFactory
         services.AddScoped<IFormedElectricalRepository, FormedElectricalRepository>();
         services.AddScoped<IContainerRepository, ContainerRepository>();
         services.AddScoped<ObvyazkaInStandRepository>();
+        services.AddScoped<IPurposesRepository<AdditionalEquipPurpose>, FormedAdditionalEquipsRepository>();
+        services.AddScoped<IPurposesRepository<ElectricalPurpose>, FormedElectricalRepository>();
+        services.AddScoped<IPurposesRepository<DrainagePurpose>, FormedDrainagesRepository>();
+
     }
 
     private static void ConfigureGenericRepositories(IServiceCollection services)
