@@ -1,5 +1,6 @@
-﻿using ReportEngine.App.Display;
-using Serilog;
+﻿using System.Windows;
+using ReportEngine.App.Enums;
+using ReportEngine.App.Views.Windows.Dialog;
 
 namespace ReportEngine.App.AppHelpers;
 
@@ -13,36 +14,7 @@ public static class ExceptionHelper
         }
         catch (Exception ex)
         {
-            MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}");
-        }
-    }
-
-    public static void SafeExecute(Action action, string message)
-    {
-        try
-        {
-            action();
-        }
-        catch (Exception ex)
-        {
-            MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}\n{message}");
-        }
-    }
-
-    public static void SafeExecute(Action action, string message, string? methodName = null)
-    {
-        try
-        {
-            if (!string.IsNullOrEmpty(methodName))
-            {
-                Log.Information("Вызван метод: {MethodName}", methodName);
-            }
-            action();
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex, "Произошла ошибка в методе {MethodName}", methodName ?? "Unknown");
-            MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}\n{message}");
+            ShowError(ex);
         }
     }
 
@@ -54,36 +26,22 @@ public static class ExceptionHelper
         }
         catch (Exception ex)
         {
-            MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}");
+            ShowError(ex);
         }
     }
 
-    public static async Task SafeExecuteAsync(Func<Task> action, string message)
+    private static void ShowError(Exception ex)
     {
-        try
-        {
-            await action();
-        }
-        catch (Exception ex)
-        {
-            MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}\n{message}");
-        }
+        ShowNotification(ex.Message, "Ошибка", NotificationType.Error);
     }
 
-    public static async Task SafeExecuteAsync(Func<Task> action, string message, string? methodName = null)
+    private static void ShowNotification(string message, string title, NotificationType type)
     {
-        try
-        {
-            if (!string.IsNullOrEmpty(methodName))
-            {
-                Log.Information("Вызван метод: {MethodName}", methodName);
-            }
-            await action();
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex, "Произошла ошибка в методе {MethodName}", methodName ?? "Unknown");
-            MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}\n{message}");
-        }
+        var window = new NotifyWindow(message, type, title);
+
+        if (Application.Current?.MainWindow != window)
+            window.Owner = Application.Current?.MainWindow;
+
+        window.ShowDialog();
     }
 }

@@ -1,5 +1,7 @@
 ﻿using ReportEngine.App.Model.StandsModel;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.BaseEntities.Interface;
+using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.App.Services.Interfaces;
 
@@ -52,4 +54,6 @@ public interface IStandService
     Task DeleteAdditionalPurposeFromObvAsync(ObvyazkaAdditionalEquipPurpose obv, StandModel standModel);
 
     Task UpdateAdditionalPurposeFromObvAsync(ObvyazkaAdditionalEquipPurpose obv, int obvyazkaInStand);
+
+    Task SaveAllPurposesInStandAsync(StandModel stand);
 }

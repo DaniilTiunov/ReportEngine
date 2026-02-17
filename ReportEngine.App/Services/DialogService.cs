@@ -19,13 +19,17 @@ namespace ReportEngine.App.Services;
 public class DialogService : IDialogService
 {
     private readonly IServiceProvider _serviceProvider;
-
     private readonly IStandService _standService;
+    private readonly INotificationService _notificationService;
 
-    public DialogService(IServiceProvider serviceProvider, IStandService standService)
+    public DialogService(
+        IServiceProvider serviceProvider,
+        IStandService standService,
+        INotificationService notificationService)
     {
         _serviceProvider = serviceProvider;
         _standService = standService;
+        _notificationService = notificationService;
     }
 
     public T? ShowEquipDialog<T>()
@@ -49,7 +53,7 @@ public class DialogService : IDialogService
         }
         catch (Exception ex)
         {
-            MessageBoxHelper.ShowError(ex.Message);
+            _notificationService.ShowError(ex.Message);
             return null;
         }
     }
@@ -70,7 +74,7 @@ public class DialogService : IDialogService
         }
         catch (Exception e)
         {
-            MessageBoxHelper.ShowError(e.Message);
+            _notificationService.ShowError(e.Message);
             return null;
         }
     }
@@ -95,7 +99,7 @@ public class DialogService : IDialogService
         }
         catch (Exception ex)
         {
-            MessageBoxHelper.ShowError(ex.Message);
+            _notificationService.ShowError(ex.Message);
             return null;
         }
     }
@@ -118,7 +122,7 @@ public class DialogService : IDialogService
         }
         catch (Exception ex)
         {
-            MessageBoxHelper.ShowError(ex.Message);
+            _notificationService.ShowError(ex.Message);
             return string.Empty;
         }
     }
@@ -141,7 +145,7 @@ public class DialogService : IDialogService
         }
         catch (Exception ex)
         {
-            MessageBoxHelper.ShowError(ex.Message);
+            _notificationService.ShowError(ex.Message);
             return string.Empty;
         }
     }
@@ -164,7 +168,7 @@ public class DialogService : IDialogService
         }
         catch (Exception ex)
         {
-            MessageBoxHelper.ShowError(ex.Message);
+            _notificationService.ShowError(ex.Message);
             return null;
         }
     }
@@ -195,7 +199,7 @@ public class DialogService : IDialogService
         }
         catch (Exception ex)
         {
-            MessageBoxHelper.ShowError(ex.Message);
+            _notificationService.ShowError(ex.Message);
             return resultData;
         }
     }
@@ -217,7 +221,7 @@ public class DialogService : IDialogService
         }
         catch (Exception ex)
         {
-            MessageBoxHelper.ShowError(ex.Message);
+            _notificationService.ShowError(ex.Message);
             return resultCopyCount;
         }
     }
@@ -278,7 +282,7 @@ public class DialogService : IDialogService
         }
         catch (Exception ex)
         {
-            MessageBoxHelper.ShowError(ex.Message);
+            _notificationService.ShowError(ex.Message);
         }
     }
 
@@ -304,7 +308,7 @@ public class DialogService : IDialogService
         }
         catch (Exception ex)
         {
-            MessageBoxHelper.ShowError(ex.Message);
+            _notificationService.ShowError(ex.Message);
         }
     }
 

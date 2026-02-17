@@ -5,7 +5,7 @@ using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.Domain.Repositories;
 
-public class FormedElectricalRepository : IFormedElectricalRepository
+public class FormedElectricalRepository : IFormedElectricalRepository, IPurposesRepository<ElectricalPurpose>
 {
     private readonly ReAppContext _context;
 
