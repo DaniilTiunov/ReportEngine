@@ -840,8 +840,10 @@
         </Setter>
     </Style>
 
-    <Style BasedOn="{x:Null}" TargetType="CheckBox">
+    <Style BasedOn="{StaticResource MaterialDesignCheckBox}" TargetType="CheckBox">
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+        <Setter Property="Background" Value="{DynamicResource PrimaryForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryForeground}" />
     </Style>
 
     <Style BasedOn="{x:Null}" TargetType="GridSplitter">
@@ -849,4 +851,6 @@
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
     </Style>
+
+
 </ResourceDictionary>
