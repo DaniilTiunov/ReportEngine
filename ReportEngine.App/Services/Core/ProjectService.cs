@@ -73,7 +73,7 @@ public class ProjectService : IProjectService
         return totalWidth;
     }
 
-    public async Task GetOrAddCompnayAsync(string name)
+    public async Task GetOrAddCompanyAsync(string name)
     {
         var companies = await _companyRepository.GetAllAsync();
 
