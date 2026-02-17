@@ -5,7 +5,7 @@ using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.Domain.Repositories;
 
-public class FormedDrainagesRepository : IFormedDrainagesRepository
+public class FormedDrainagesRepository : IFormedDrainagesRepository, IPurposesRepository<DrainagePurpose>
 {
     private readonly ReAppContext _context;
 
