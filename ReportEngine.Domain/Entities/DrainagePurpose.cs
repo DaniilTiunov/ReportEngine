@@ -5,16 +5,17 @@ namespace ReportEngine.Domain.Entities;
 
 public class DrainagePurpose : IPurposeEntity
 {
+    [Key] public int Id { get; set; }
     public string? Purpose { get; set; } // Например, "Клапан", "Труба"
     public string? Material { get; set; } // Просто текстовое поле для материала
     public float? Quantity { get; set; } // Количество
     public float? CostPerUnit { get; set; }
     public string? Measure { get; set; }
     public int? ExportDays { get; set; }
+    public bool? IsAutoCalculationEnabled { get; set; } = true;
 
     // Внешний ключ на дренаж
     public int FormedDrainageId { get; set; }
 
     public virtual FormedDrainage FormedDrainage { get; set; }
-    [Key] public int Id { get; set; }
 }
