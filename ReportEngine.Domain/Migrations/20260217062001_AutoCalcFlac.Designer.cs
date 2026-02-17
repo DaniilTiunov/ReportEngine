@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ReportEngine.Domain.Database.Context;
@@ -11,9 +12,11 @@ using ReportEngine.Domain.Database.Context;
 namespace ReportEngine.Domain.Migrations
 {
     [DbContext(typeof(ReAppContext))]
-    partial class ReAppContextModelSnapshot : ModelSnapshot
+    [Migration("20260217062001_AutoCalcFlac")]
+    partial class AutoCalcFlac
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -760,7 +763,7 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<int>("FormedElectricalComponentId")
                         .HasColumnType("integer");
 
-                    b.Property<bool?>("IsAutoCalculationEnabled")
+                    b.Property<bool>("IsAutoCalculationEnabled")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Material")
