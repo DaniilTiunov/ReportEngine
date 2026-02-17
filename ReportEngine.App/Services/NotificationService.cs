@@ -1,5 +1,7 @@
 ﻿using System.Windows;
+using ReportEngine.App.Enums;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.Views.Windows.Dialog;
 
 namespace ReportEngine.App.Services;
 
@@ -7,18 +9,29 @@ public class NotificationService : INotificationService
 {
     public void ShowError(string message)
     {
-        MessageBox.Show(message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+        var window = new NotifyWindow(message, NotificationType.Error, "Ошибка")
+        {
+            Owner = Application.Current.MainWindow,
+        };
+        window.ShowDialog();
     }
 
     public void ShowInfo(string message)
     {
-        MessageBox.Show(message, "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+        var window = new NotifyWindow(message, NotificationType.Info, "Информация")
+        {
+            Owner = Application.Current.MainWindow
+        };
+        window.ShowDialog();
     }
 
     public bool ShowConfirmation(string message, string title = "Подтверждение")
     {
-        var owner = Application.Current.MainWindow;
-        return MessageBox.Show(owner, message, title, MessageBoxButton.YesNo, MessageBoxImage.Question) ==
-           MessageBoxResult.Yes;
+        var window = new NotifyWindow(message, NotificationType.Confirmation, title)
+        {
+            Owner = Application.Current.MainWindow,
+        };
+        bool? result = window.ShowDialog();
+        return result == true;
     }
 }
