@@ -17,6 +17,9 @@
 
     <ItemGroup>
         <None Remove="Resources\Icons\estimate_cost_icon_213382.ico" />
+        <None Remove="Resources\Icons\IconConfirm.png" />
+        <None Remove="Resources\Icons\IconError.png" />
+        <None Remove="Resources\Icons\IconInfo.png" />
         <None Remove="Resources\Icons\install_line_icon_236048.ico" />
         <None Remove="Resources\Images\EAC.jpg" />
         <None Remove="Resources\Images\Etalon.jpg" />
@@ -155,6 +158,12 @@
         </Resource>
         <Resource Include="Resources\Icons\estimate_cost_icon_213382_prev.ico">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Resources\Icons\IconConfirm.png">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Resources\Icons\IconInfo.png">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Resource>
         <Resource Include="Resources\Icons\install_line_icon_236048.ico">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
