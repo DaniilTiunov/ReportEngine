@@ -495,11 +495,17 @@ public class ProjectViewModel : BaseViewModel
             return;
 
         //проверка введенного NN обвязки
-        //if (!ValidateCorrectObvNN(selectedStand.NN))
-        //    return;
+        if (!ValidateCorrectObvNN(selectedStand.NN))
+            return;
 
-        //if (!ValidateNotExistingObvNN(selectedStand.NN, false))
-        //    return;
+        if (!ValidateNotExistingObvNN(selectedStand.NN, false))
+            return;
+
+
+        //проверка на датчики
+        if (!ValidateSensorsQuantityInNewObv())
+            return;
+
 
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
@@ -932,12 +938,19 @@ public class ProjectViewModel : BaseViewModel
             if (Guard.ExitIfNull("Не был выбран стенд", _notificationService, selectedStand))
                 return;
 
-            ////проверка введенного NN обвязки
-            //if (!ValidateCorrectObvNN(selectedStand.NN))
-            //    return;
+            //проверка введенного NN обвязки
+            if (!ValidateCorrectObvNN(selectedStand.NN))
+                return;
 
-            //if (!ValidateNotExistingObvNN(selectedStand.NN, true))
-            //    return;
+            if (!ValidateNotExistingObvNN(selectedStand.NN, true))
+                return;
+
+
+            //проверка на датчики
+            if (!ValidateSensorsQuantityInNewObv())
+                return;
+
+
 
             await _projectService.UpdateObvInStandAsync(CurrentProjectModel, SelectedObvyazka);
 
@@ -1977,6 +1990,39 @@ public class ProjectViewModel : BaseViewModel
 
         return true;
     }
+
+    //проверяем кол-во указанных датчиков и датчиков в обвязке
+    public bool ValidateSensorsQuantityInNewObv()
+    {
+
+        var selectedStand = CurrentProjectModel.SelectedStand;
+
+        //считаем кол-во датчиков, сравниваем с тем что в выбранной обвязке
+        int newObvSensorsQuantity = 0;
+
+        if (!string.IsNullOrEmpty(selectedStand.FirstSensorType))
+            newObvSensorsQuantity++;
+
+        if (!string.IsNullOrEmpty(selectedStand.SecondSensorType))
+            newObvSensorsQuantity++;
+
+        if (!string.IsNullOrEmpty(selectedStand.ThirdSensorType))
+            newObvSensorsQuantity++;
+
+
+
+        //смотрим кол-во датчиков в выбранной обвязке
+        var sensorsQuantityInObv = SelectedObvyazka.Sensor;
+
+        if (newObvSensorsQuantity > sensorsQuantityInObv)
+        {
+            _notificationService.ShowError("Количество выбранных датчиков превышает их количество в обвязке!");
+            return false;
+        }
+
+        return true;
+    }
+
 
     #endregion Валидация
 }

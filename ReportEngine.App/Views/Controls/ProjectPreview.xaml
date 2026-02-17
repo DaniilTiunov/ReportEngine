@@ -91,7 +91,6 @@
                                 Width="100"
                                 DisplayMemberBinding="{Binding ObvyazkaName}"
                                 Header="Тип обвязки" />
-    
                             <GridViewColumn
                                 Width="100"
                                 DisplayMemberBinding="{Binding StandSummCost}"

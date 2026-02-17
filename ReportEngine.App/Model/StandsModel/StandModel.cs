@@ -787,6 +787,9 @@ public class StandModel : BaseViewModel
             };
     }
 
+
+    
+
     public int CountSensorsQuantity()
     {
         return ObvyazkiInStand
