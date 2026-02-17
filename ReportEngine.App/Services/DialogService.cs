@@ -250,7 +250,7 @@ public class DialogService : IDialogService
     {
         try
         {
-            var window = new StandsSettingsView();
+            var window = new StandsSettingsView(projectViewModel);
 
             window.DataContext = projectViewModel;
 
@@ -286,7 +286,7 @@ public class DialogService : IDialogService
     {
         try
         {
-            var window = new StandsSettingsView();
+            var window = new StandsSettingsView(projectViewModel);
 
             window.DataContext = projectViewModel;
 
@@ -297,7 +297,8 @@ public class DialogService : IDialogService
             }
 
             projectViewModel.CurrentProjectModel.SelectedStand = standModel;
-            projectViewModel.NewStand = standModel;
+            projectViewModel.OnFillStandFieldsFromSelectedStandCommandExecuted(new());
+
 
             window.ShowDialog();
         }

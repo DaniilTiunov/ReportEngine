@@ -981,7 +981,10 @@ public class ProjectViewModel : BaseViewModel
 
         NewStand = new StandModel { Number = 1 };
 
-        CurrentProjectModel.Number = await _projectService.GetProjectsCountAsync();
+        var projects = await _projectRepository.GetAllAsync();
+        var maxProjNumber = projects?.Max(proj => proj.Number) ?? 0;
+
+        CurrentProjectModel.Number = maxProjNumber + 1;
 
         InitializeTime();
         OnPropertyChanged(nameof(CurrentProjectModel));
