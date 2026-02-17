@@ -207,7 +207,19 @@ namespace ReportEngine.App.ViewModels.Utils
         }
 
 
-       
+
+        public bool ValidateSelectedStand(ProjectViewModel projectViewModel)
+        {
+            if (projectViewModel.CurrentProjectModel.SelectedStand == null)
+            {
+                _notificationService.ShowError("Не выбран стенд!");
+                return false;
+            }
+
+            return true;
+        }
+
+
     }
 
 }
