@@ -29,18 +29,21 @@ namespace ReportEngine.App.Views.Windows.Dialog
                     OkButton.Visibility = Visibility.Visible;
                     CancelButton.Visibility = Visibility.Collapsed;
                     IconImage.Source = new BitmapImage(new Uri("/Resources/Icons/IconInfo.png", UriKind.Relative));
+                    TitleIcon.Source = IconImage.Source;
                     SystemSounds.Asterisk.Play();
                     break;
                 case NotificationType.Confirmation:
                     OkButton.Visibility = Visibility.Visible;
                     CancelButton.Visibility = Visibility.Visible;
                     IconImage.Source = new BitmapImage(new Uri("/Resources/Icons/IconConfirm.png", UriKind.Relative));
+                    TitleIcon.Source = IconImage.Source;
                     SystemSounds.Question.Play();
                     break;
                 case NotificationType.Error:
                     OkButton.Visibility = Visibility.Visible;
                     CancelButton.Visibility = Visibility.Collapsed;
                     IconImage.Source = new BitmapImage(new Uri("/Resources/Icons/Icon_Error.png", UriKind.Relative));
+                    TitleIcon.Source = IconImage.Source;
                     SystemSounds.Hand.Play();
                     break;
             }

@@ -3,7 +3,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using ReportEngine.App.AppHelpers;
-using ReportEngine.App.Display;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Shared.Config.DebugConsol;
 
@@ -203,14 +202,7 @@ public partial class TreeProjectView : UserControl, IDisposable
         {
             if (_tagActionMap.TryGetValue(tag, out var action))
             {
-                try
-                {
-                    action();
-                }
-                catch (Exception ex)
-                {
-                    MessageBoxHelper.ShowError("Ошибка при генерации: " + ex.Message);
-                }
+                action();
             }
         }
     }

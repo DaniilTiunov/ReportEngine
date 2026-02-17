@@ -20,6 +20,7 @@
         <None Remove="Resources\Icons\IconConfirm.png" />
         <None Remove="Resources\Icons\IconError.png" />
         <None Remove="Resources\Icons\IconInfo.png" />
+        <None Remove="Resources\Icons\Icon_Error.png" />
         <None Remove="Resources\Icons\install_line_icon_236048.ico" />
         <None Remove="Resources\Images\EAC.jpg" />
         <None Remove="Resources\Images\Etalon.jpg" />
@@ -163,6 +164,9 @@
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Resource>
         <Resource Include="Resources\Icons\IconInfo.png">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Resources\Icons\Icon_Error.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Resource>
         <Resource Include="Resources\Icons\install_line_icon_236048.ico">

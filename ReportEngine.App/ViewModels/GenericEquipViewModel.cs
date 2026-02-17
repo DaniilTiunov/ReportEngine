@@ -22,7 +22,9 @@ public class GenericEquipViewModel<T> : BaseViewModel
 
     private readonly INotificationService _notificationService;
 
-    public GenericEquipViewModel(IGenericBaseRepository<T, T> genericEquipRepository, INotificationService notificationService)
+    public GenericEquipViewModel(
+        IGenericBaseRepository<T, T> genericEquipRepository,
+        INotificationService notificationService)
     {
         InitializeCommands(); // Инициализируем команды
         _genericEquipRepository = genericEquipRepository; // Устанавливаем репозиторий
@@ -128,7 +130,7 @@ public class GenericEquipViewModel<T> : BaseViewModel
                 // Проверяем обязательные поля
                 if (string.IsNullOrWhiteSpace(equip.Name))
                 {
-                    MessageBoxHelper.ShowInfo("Поле 'Название' обязательно для заполнения.");
+                    _notificationService.ShowInfo("Поле 'Название' обязательно для заполнения.");
                     continue;
                 }
 
@@ -147,7 +149,7 @@ public class GenericEquipViewModel<T> : BaseViewModel
             var selectedEquip = GenericEquipModel.SelectedBaseEquip;
             if (selectedEquip == null)
             {
-                MessageBoxHelper.ShowInfo("Пожалуйста, выберите оборудование для удаления.");
+                _notificationService.ShowInfo("Пожалуйста, выберите оборудование для удаления.");
                 return;
             }
 
