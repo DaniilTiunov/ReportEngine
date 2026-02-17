@@ -408,6 +408,12 @@ public class ProjectViewModel : BaseViewModel
             if (!await ValidateNotExistingProjNN(CurrentProjectModel.Number, false))
                 return;
 
+            if (string.IsNullOrEmpty(CurrentProjectModel.Status))
+            {
+                _notificationService.ShowError("Не указан статус проекта!");
+                return;
+            }
+                
             await CreateNewProjectCardAsync();
             await _projectService.GetOrAddCompnayAsync(CurrentProjectModel.Company);
             await _projectService.GetOrAddSubjectAsync(CurrentProjectModel.Object, CurrentProjectModel.Company);
@@ -981,7 +987,10 @@ public class ProjectViewModel : BaseViewModel
 
         NewStand = new StandModel { Number = 1 };
 
-        CurrentProjectModel.Number = await _projectService.GetProjectsCountAsync();
+        var projects = await _projectRepository.GetAllAsync();
+        var maxProjNumber = projects?.Max(proj => proj.Number) ?? 0;
+
+        CurrentProjectModel.Number = maxProjNumber + 1;
 
         InitializeTime();
         OnPropertyChanged(nameof(CurrentProjectModel));

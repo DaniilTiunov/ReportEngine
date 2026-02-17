@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Views.Windows.Dialog
 {
@@ -8,9 +9,12 @@ namespace ReportEngine.App.Views.Windows.Dialog
     /// </summary>
     public partial class StandsSettingsView : Window
     {
-        public StandsSettingsView()
+        private readonly ProjectViewModel _projectViewModel;
+
+        public StandsSettingsView(ProjectViewModel projectViewModel)
         {
             InitializeComponent();
+            _projectViewModel = projectViewModel;
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -48,6 +52,11 @@ namespace ReportEngine.App.Views.Windows.Dialog
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void StandsList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            _projectViewModel.OnFillStandFieldsFromSelectedStandCommandExecuted(sender);
         }
     }
 }
