@@ -414,7 +414,6 @@ public class ProjectViewModel : BaseViewModel
                 return;
             }
                 
-
             await CreateNewProjectCardAsync();
             await _projectService.GetOrAddCompnayAsync(CurrentProjectModel.Company);
             await _projectService.GetOrAddSubjectAsync(CurrentProjectModel.Object, CurrentProjectModel.Company);
