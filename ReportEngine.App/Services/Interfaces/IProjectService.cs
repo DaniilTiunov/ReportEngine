@@ -28,7 +28,7 @@ public interface IProjectService
 
     Task LoadAllObvyazkiInProject(ProjectModel projectModel);
 
-    Task GetOrAddCompnayAsync(string name);
+    Task GetOrAddCompanyAsync(string name);
 
     Task GetOrAddSubjectAsync(string objectName, string companyName);
 

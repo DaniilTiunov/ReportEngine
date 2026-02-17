@@ -10,6 +10,7 @@ using ReportEngine.App.ModelWrappers;
 using ReportEngine.App.Services;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.ViewModels.Utils;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.BaseEntities;
@@ -42,8 +43,10 @@ public class ProjectViewModel : BaseViewModel
     private readonly IStandService _standService;
     private readonly AdditionalEquipService _additionalEquipService;
     private readonly SemaphoreSlim _updateUiLock = new(1, 1);
+    private readonly UIValidatorService _uiValidatorService;
 
-    public ProjectViewModel(IProjectInfoRepository projectRepository,
+    public ProjectViewModel(
+        IProjectInfoRepository projectRepository,
         IDialogService dialogService,
         INotificationService notificationService,
         IStandService standService,
@@ -53,7 +56,8 @@ public class ProjectViewModel : BaseViewModel
         ICalculationService calculationService,
         ContainerService containerService,
         UpdaterStandService updaterStandService,
-        AdditionalEquipService additionalEquipService)
+        AdditionalEquipService additionalEquipService,
+        UIValidatorService uiValidatorService)
     {
         _projectRepository = projectRepository;
         _dialogService = dialogService;
@@ -66,6 +70,7 @@ public class ProjectViewModel : BaseViewModel
         _containerService = containerService;
         _updaterStandService = updaterStandService;
         _additionalEquipService = additionalEquipService;
+        _uiValidatorService = uiValidatorService;
 
         NewStand = new StandModel { Number = 1 };
 
@@ -402,20 +407,23 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            if (!ValidateCorrectProjNN(CurrentProjectModel.Number))
+            var isCorrectProjNumber = _uiValidatorService.ValidateCorrectProjNN(CurrentProjectModel.Number);
+
+            if (!isCorrectProjNumber)
                 return;
 
-            if (!await ValidateNotExistingProjNN(CurrentProjectModel.Number, false))
+            var isFreeProjNumber = await _uiValidatorService.ValidateFreeProjNN(this, CurrentProjectModel.Number, false);
+
+            if (!isFreeProjNumber)
                 return;
 
-            if (string.IsNullOrEmpty(CurrentProjectModel.Status))
-            {
-                _notificationService.ShowError("Не указан статус проекта!");
+            var isCorrectStatus = _uiValidatorService.ValidateProjectStatus(this);
+
+            if (!isCorrectStatus)
                 return;
-            }
-                
+
             await CreateNewProjectCardAsync();
-            await _projectService.GetOrAddCompnayAsync(CurrentProjectModel.Company);
+            await _projectService.GetOrAddCompanyAsync(CurrentProjectModel.Company);
             await _projectService.GetOrAddSubjectAsync(CurrentProjectModel.Object, CurrentProjectModel.Company);
         });
     }
@@ -474,10 +482,14 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            if (!ValidateCorrectProjNN(CurrentProjectModel.Number))
+            var isCorrectProjNumber = _uiValidatorService.ValidateCorrectProjNN(CurrentProjectModel.Number);
+
+            if (!isCorrectProjNumber)
                 return;
 
-            if (!await ValidateNotExistingProjNN(CurrentProjectModel.Number, true))
+            var isFreeProjNumber = await _uiValidatorService.ValidateFreeProjNN(this, CurrentProjectModel.Number, true);
+
+            if (!isFreeProjNumber)
                 return;
 
             await SaveProjectChangesAsync();
@@ -494,18 +506,20 @@ public class ProjectViewModel : BaseViewModel
         if (Guard.ExitIfNull("Не был выбран стенд", _notificationService, selectedStand))
             return;
 
-        //проверка введенного NN обвязки
-        if (!ValidateCorrectObvNN(selectedStand.NN))
+        var isCorrectObvNumber = _uiValidatorService.ValidateCorrectObvNN(selectedStand.NN);
+
+        if (!isCorrectObvNumber)
             return;
 
-        if (!ValidateNotExistingObvNN(selectedStand.NN, false))
+        var isFreeObvNumber = _uiValidatorService.ValidateFreeObvNN(this, selectedStand.NN, false);
+
+        if (!isFreeObvNumber)
             return;
 
+        var isCorrectSensorsData = _uiValidatorService.ValidateSensorsQuantityInNewObv(this);
 
-        //проверка на датчики
-        if (!ValidateSensorsQuantityInNewObv())
+        if (!isCorrectSensorsData)
             return;
-
 
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
@@ -938,18 +952,20 @@ public class ProjectViewModel : BaseViewModel
             if (Guard.ExitIfNull("Не был выбран стенд", _notificationService, selectedStand))
                 return;
 
-            //проверка введенного NN обвязки
-            if (!ValidateCorrectObvNN(selectedStand.NN))
+            var isCorrectObvNumber = _uiValidatorService.ValidateCorrectObvNN(selectedStand.NN);
+
+            if (!isCorrectObvNumber)
                 return;
 
-            if (!ValidateNotExistingObvNN(selectedStand.NN, true))
+            var isFreeObvNumber = _uiValidatorService.ValidateFreeObvNN(this, selectedStand.NN, true);
+
+            if (!isFreeObvNumber)
                 return;
 
+            var isCorrectSensorsData = _uiValidatorService.ValidateSensorsQuantityInNewObv(this);
 
-            //проверка на датчики
-            if (!ValidateSensorsQuantityInNewObv())
+            if (!isCorrectSensorsData)
                 return;
-
 
 
             await _projectService.UpdateObvInStandAsync(CurrentProjectModel, SelectedObvyazka);
@@ -1158,10 +1174,14 @@ public class ProjectViewModel : BaseViewModel
             return;
         }
 
-        if (!ValidateCorrectStandNN(NewStand.Number))
+        var isCorrectStandNumber = _uiValidatorService.ValidateCorrectStandNN(NewStand.Number);
+
+        if (!isCorrectStandNumber)
             return;
 
-        if (!ValidateNotExistingStandNN(NewStand.Number, false))
+        var isFreeStandNumber = _uiValidatorService.ValidateFreeStandNN(this, NewStand.Number, false);
+
+        if (!isFreeStandNumber)
             return;
 
         var newStandModel = new StandModel
@@ -1240,10 +1260,14 @@ public class ProjectViewModel : BaseViewModel
         if (Guard.ExitIfNull("Стенд не выбран!", _notificationService, selectedStand))
             return;
 
-        if (!ValidateCorrectStandNN(NewStand.Number))
+        var isCorrectStandNumber = _uiValidatorService.ValidateCorrectStandNN(NewStand.Number);
+
+        if (!isCorrectStandNumber)
             return;
 
-        if (!ValidateNotExistingStandNN(NewStand.Number, true))
+        var isFreeStandNumber = _uiValidatorService.ValidateFreeStandNN(this, NewStand.Number, true);
+
+        if (!isFreeStandNumber)
             return;
 
         var newStandEntity = StandDataConverter.ConvertToStandEntity(NewStand);
@@ -1605,7 +1629,7 @@ public class ProjectViewModel : BaseViewModel
         if (selectedStand == null)
             return;
 
-        selectedStand.NN = MaxObvNN + 1; 
+        selectedStand.NN = MaxObvNN + 1;
     }
 
     //обновляем № п/п стенда
@@ -1644,7 +1668,7 @@ public class ProjectViewModel : BaseViewModel
             channelRecord.Quantity = framesCount * channelPerFrame;
 
             AdditionalPurposesChanges = true;
-        }   
+        }
     }
 
     //обновляем кол-во хомутов
@@ -1693,7 +1717,7 @@ public class ProjectViewModel : BaseViewModel
             tableRecord.Quantity = sensorsQuantity;
 
             AdditionalPurposesChanges = true;
-        }  
+        }
     }
 
     //обновляем кол-во кронштейнов
@@ -1852,177 +1876,5 @@ public class ProjectViewModel : BaseViewModel
 
     #endregion Обновление UI
 
-    #region Валидация
 
-    //валидация номера обвязки
-    public bool ValidateCorrectObvNN(int newObvNN)
-    {
-        var invalidNN = newObvNN < 1;
-
-        if (invalidNN)
-        {
-            _notificationService.ShowError("Указанный № обвязки некорректен!");
-            return false;
-        }
-
-        return true;
-    }
-
-    public bool ValidateNotExistingObvNN(int newObvNN, bool excludeSelected)
-    {
-        var selectedStand = CurrentProjectModel.SelectedStand;
-
-        if (selectedStand == null)
-            return false;
-
-        var obvCollection = selectedStand.ObvyazkiInStand;
-        var selectedObv = selectedStand.SelectedObvyazkaInStand;
-
-        if (obvCollection == null)
-            return true;
-
-        var isAlreadyExist = true;
-
-        if (!excludeSelected)
-        {
-            isAlreadyExist = obvCollection
-                .Any(obv => obv.NN == newObvNN);
-        }
-        else if (selectedObv != null)
-        {
-            isAlreadyExist = obvCollection
-                .Where(obv => obv.Id != selectedObv.Id)
-                .Any(obv => obv.NN == newObvNN);
-        }
-
-        if (isAlreadyExist)
-        {
-            _notificationService.ShowError("Указанный № обвязки уже существует!");
-            return false;
-        }
-
-        return true;
-    }
-
-    public bool ValidateCorrectStandNN(int newStandNumber)
-    {
-        var invalidNN = newStandNumber < 1;
-
-        if (invalidNN)
-        {
-            _notificationService.ShowError("Указанный № стенда некорректен!");
-            return false;
-        }
-
-        return true;
-    }
-
-    public bool ValidateNotExistingStandNN(int newStandNumber, bool excludeSelected)
-    {
-        var standsCollection = CurrentProjectModel.Stands;
-        var selectedStand = CurrentProjectModel.SelectedStand;
-
-        if (standsCollection == null)
-            return true;
-
-        var isAlreadyExist = true;
-
-        if (!excludeSelected)
-        {
-            isAlreadyExist = standsCollection
-                .Any(stand => stand.Number == newStandNumber);
-        }
-        else if (selectedStand != null)
-        {
-            isAlreadyExist = standsCollection
-                .Where(stand => stand.Id != selectedStand.Id)
-                .Any(stand => stand.Number == newStandNumber);
-        }
-
-        if (isAlreadyExist)
-        {
-            _notificationService.ShowError("Указанный № стенда уже существует!");
-            return false;
-        }
-
-        return true;
-    }
-
-    public bool ValidateCorrectProjNN(int newProjNumber)
-    {
-        var invalidNN = newProjNumber < 1;
-
-        if (invalidNN)
-        {
-            _notificationService.ShowError("Указанный № проекта некорректен!");
-            return false;
-        }
-
-        return true;
-    }
-
-    public async Task<bool> ValidateNotExistingProjNN(int newProjNumber, bool excludeSelected)
-    {
-        var allProjects = await _projectRepository.GetAllAsync();
-
-        if (allProjects == null)
-            return true;
-
-        var isAlreadyExist = true;
-
-        if (!excludeSelected)
-        {
-            isAlreadyExist = allProjects
-                .Any(proj => proj.Number == newProjNumber);
-        }
-        else if (CurrentProjectModel != null)
-        {
-            isAlreadyExist = allProjects
-                .Where(proj => proj.Id != CurrentProjectModel.CurrentProjectId)
-                .Any(proj => proj.Number == newProjNumber);
-        }
-
-        if (isAlreadyExist)
-        {
-            _notificationService.ShowError("Указанный № проекта уже существует!");
-            return false;
-        }
-
-        return true;
-    }
-
-    //проверяем кол-во указанных датчиков и датчиков в обвязке
-    public bool ValidateSensorsQuantityInNewObv()
-    {
-
-        var selectedStand = CurrentProjectModel.SelectedStand;
-
-        //считаем кол-во датчиков, сравниваем с тем что в выбранной обвязке
-        int newObvSensorsQuantity = 0;
-
-        if (!string.IsNullOrEmpty(selectedStand.FirstSensorType))
-            newObvSensorsQuantity++;
-
-        if (!string.IsNullOrEmpty(selectedStand.SecondSensorType))
-            newObvSensorsQuantity++;
-
-        if (!string.IsNullOrEmpty(selectedStand.ThirdSensorType))
-            newObvSensorsQuantity++;
-
-
-
-        //смотрим кол-во датчиков в выбранной обвязке
-        var sensorsQuantityInObv = SelectedObvyazka.Sensor;
-
-        if (newObvSensorsQuantity > sensorsQuantityInObv)
-        {
-            _notificationService.ShowError("Количество выбранных датчиков превышает их количество в обвязке!");
-            return false;
-        }
-
-        return true;
-    }
-
-
-    #endregion Валидация
 }
