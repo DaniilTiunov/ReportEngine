@@ -14,7 +14,7 @@ public class ElectricalPurpose : IPurposeEntity
     public string? Measure { get; set; }
     public int? ExportDays { get; set; }
     public int FormedElectricalComponentId { get; set; }
-    public bool? IsAutoCalculationEnabled { get; set; }
+    public bool? IsAutoCalculationEnabled { get; set; } = true;
 
     [ForeignKey(nameof(FormedElectricalComponentId))]
     public virtual FormedElectricalComponent FormedElectricalComponent { get; set; }
