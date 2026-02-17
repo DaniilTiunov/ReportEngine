@@ -408,6 +408,13 @@ public class ProjectViewModel : BaseViewModel
             if (!await ValidateNotExistingProjNN(CurrentProjectModel.Number, false))
                 return;
 
+            if (string.IsNullOrEmpty(CurrentProjectModel.Status))
+            {
+                _notificationService.ShowError("Не указан статус проекта!");
+                return;
+            }
+                
+
             await CreateNewProjectCardAsync();
             await _projectService.GetOrAddCompnayAsync(CurrentProjectModel.Company);
             await _projectService.GetOrAddSubjectAsync(CurrentProjectModel.Object, CurrentProjectModel.Company);
