@@ -1592,9 +1592,7 @@ public class ProjectViewModel : BaseViewModel
         if (selectedStand == null)
             return;
 
-        selectedStand.NN = MaxObvNN + 1;
-
-        Debug.WriteLine("Новый NN обвязки изменен");
+        selectedStand.NN = MaxObvNN + 1; 
     }
 
     //обновляем № п/п стенда
@@ -1603,15 +1601,11 @@ public class ProjectViewModel : BaseViewModel
         if (NewStand == null) return;
 
         NewStand.Number = MaxStandNN + 1;
-
-        Debug.WriteLine("Новый NN стенда изменен");
     }
 
     //обновляем кол-во швеллера
     public void UpdateChannelsQuantity()
     {
-        Debug.WriteLine("Пересчет швеллера начат");
-
         var selectedStand = CurrentProjectModel.SelectedStand;
 
         if (selectedStand == null)
@@ -1631,18 +1625,18 @@ public class ProjectViewModel : BaseViewModel
         //швеллер в штуках
         const int channelPerFrame = 1;
 
-        var framesCount = selectedStand.FramesInStand.Count;
-        channelRecord.Quantity = framesCount * channelPerFrame;
+        if (channelRecord.IsAutoCalculationEnabled == true)
+        {
+            var framesCount = selectedStand.FramesInStand.Count;
+            channelRecord.Quantity = framesCount * channelPerFrame;
 
-        AdditionalPurposesChanges = true;
-
-        Debug.WriteLine("Пересчет швеллера завершен");
+            AdditionalPurposesChanges = true;
+        }   
     }
 
     //обновляем кол-во хомутов
     public void UpdateClampsQuantity()
     {
-        Debug.WriteLine("Пересчет хомутов начат");
 
         var standsSettings = StandSettings;
 
@@ -1657,18 +1651,17 @@ public class ProjectViewModel : BaseViewModel
         if (clampsRecord == null)
             return;
 
-        clampsRecord.Quantity = selectedStand.ObvyazkiInStand.Sum(obv => obv.Clamp) ?? 0.0f;
+        if (clampsRecord.IsAutoCalculationEnabled == true)
+        {
+            clampsRecord.Quantity = selectedStand.ObvyazkiInStand.Sum(obv => obv.Clamp) ?? 0.0f;
 
-        AdditionalPurposesChanges = true;
-
-        Debug.WriteLine("Пересчет хомутов завершен");
+            AdditionalPurposesChanges = true;
+        }
     }
 
     //обновляем кол-во табличек
     public void UpdateTablesQuantity()
     {
-        Debug.WriteLine("Пересчет табличек начат");
-
         var selectedStand = CurrentProjectModel.SelectedStand;
 
         if (selectedStand == null)
@@ -1682,18 +1675,17 @@ public class ProjectViewModel : BaseViewModel
         if (tableRecord == null)
             return;
 
-        tableRecord.Quantity = sensorsQuantity;
+        if (tableRecord.IsAutoCalculationEnabled == true)
+        {
+            tableRecord.Quantity = sensorsQuantity;
 
-        AdditionalPurposesChanges = true;
-
-        Debug.WriteLine("Пересчет табличек завершен");
+            AdditionalPurposesChanges = true;
+        }  
     }
 
     //обновляем кол-во кронштейнов
     public void UpdateBracketsQuantity()
     {
-        Debug.WriteLine("Пересчет кронштейнов начат");
-
         var standsSettings = StandSettings;
 
         var selectedStand = CurrentProjectModel.SelectedStand;
@@ -1708,9 +1700,11 @@ public class ProjectViewModel : BaseViewModel
         var additionalComponents = selectedStand.AllAdditionalEquipPurposesInStand;
         var difSensorsBracketRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == "Кронштейн перепадчика");
 
-        if (difSensorsBracketRecord != null)
+        if (difSensorsBracketRecord != null && difSensorsBracketRecord.IsAutoCalculationEnabled == true)
         {
             difSensorsBracketRecord.Quantity = bracketsPerDifSensor * difSensorsQuantity;
+
+            AdditionalPurposesChanges = true;
         }
 
         const int bracketsPerAbsoluteSensor = 2;
@@ -1723,9 +1717,11 @@ public class ProjectViewModel : BaseViewModel
 
             var absSensorsBracketsRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == "Кронштейн абсолютника");
 
-            if (absSensorsBracketsRecord != null)
+            if (absSensorsBracketsRecord != null && absSensorsBracketsRecord.IsAutoCalculationEnabled == true)
             {
                 absSensorsBracketsRecord.Quantity = bracketsPerAbsoluteSensor * absSensorsQuantity;
+
+                AdditionalPurposesChanges = true;
             }
         }
 
@@ -1735,22 +1731,18 @@ public class ProjectViewModel : BaseViewModel
         {
             var universalBracketRecord = additionalComponents.FirstOrDefault(purpose => purpose.Purpose == "Кронштейн универсальный");
 
-            if (universalBracketRecord != null)
+            if (universalBracketRecord != null && universalBracketRecord.IsAutoCalculationEnabled == true)
             {
                 universalBracketRecord.Quantity = universalBracketQuantity;
+
+                AdditionalPurposesChanges = true;
             }
         }
-
-        AdditionalPurposesChanges = true;
-
-        Debug.WriteLine("Пересчет кронштейнов завершен");
     }
 
     //обновляем данные по дренажу
     public void UpdateDrainage()
     {
-        Debug.WriteLine("Пересчет дренажной трубы начат");
-
         var selectedStand = CurrentProjectModel.SelectedStand;
 
         if (selectedStand == null)
@@ -1759,14 +1751,16 @@ public class ProjectViewModel : BaseViewModel
         var drainageParts = selectedStand.AllDrainagePurposesInStand;
         var mainPipeRecord = drainageParts.FirstOrDefault(part => part.Purpose == "Основная труба");
 
-        if (mainPipeRecord == null || selectedStand == null)
+        if (mainPipeRecord == null)
             return;
 
-        mainPipeRecord.Quantity = selectedStand.FramesInStand.Sum(frame => frame.Width) / 1000.0f;
 
-        DrainagePurposesChanges = true;
+        if (mainPipeRecord.IsAutoCalculationEnabled == true)
+        {
+            mainPipeRecord.Quantity = selectedStand.FramesInStand.Sum(frame => frame.Width) / 1000.0f;
 
-        Debug.WriteLine("Пересчет дренажной трубы завершен");
+            DrainagePurposesChanges = true;
+        }
     }
 
     //обновляем данные по электрике
@@ -1789,10 +1783,14 @@ public class ProjectViewModel : BaseViewModel
 
         var sensorsQuantity = selectedStand.CountElectricSensorsQuantity();
 
-        if (cableInputsRecord != null)
+
+
+        if (cableInputsRecord != null && cableInputsRecord.IsAutoCalculationEnabled == true)
         {
             cableInputsQuantity = sensorsQuantity * cableInputsPerSensor;
             cableInputsRecord.Quantity = cableInputsQuantity;
+
+            ElectricalPurposesChanges = true;
         }
 
         //сигнальный кабель
@@ -1803,7 +1801,7 @@ public class ProjectViewModel : BaseViewModel
         var signalCablePerSensor = 0;
         int? signalCabelQuantity = 0;
 
-        if (signalCableRecord != null)
+        if (signalCableRecord != null && signalCableRecord.IsAutoCalculationEnabled == true)
         {
             signalCablePerSensor = sensorsQuantity switch
             {
@@ -1816,12 +1814,14 @@ public class ProjectViewModel : BaseViewModel
             signalCabelQuantity = sensorsQuantity * signalCablePerSensor;
 
             signalCableRecord.Quantity = signalCabelQuantity;
+
+            ElectricalPurposesChanges = true;
         }
 
         //кабель 4 мм
         var fourMmCableRecord = electricComponents.FirstOrDefault(purpose => purpose.Purpose == "Кабель 4мм");
 
-        if (fourMmCableRecord != null)
+        if (fourMmCableRecord != null && fourMmCableRecord.IsAutoCalculationEnabled == true)
         {
             fourMmCableRecord.Quantity = cableInputsQuantity;
         }
@@ -1829,14 +1829,12 @@ public class ProjectViewModel : BaseViewModel
         //металлорукав
         var metalHoseRecord = electricComponents.FirstOrDefault(purpose => purpose.Purpose == "Металлорукав");
 
-        if (metalHoseRecord != null)
+        if (metalHoseRecord != null && metalHoseRecord.IsAutoCalculationEnabled == true)
         {
             metalHoseRecord.Quantity = signalCabelQuantity;
+
+            ElectricalPurposesChanges = true;
         }
-
-        ElectricalPurposesChanges = true;
-
-        Debug.WriteLine("Пересчет электрики завершен");
     }
 
     #endregion Обновление UI
