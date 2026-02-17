@@ -164,6 +164,9 @@ public static class ProjectCommandsInitializer
 
         vm.ProjectCommandProvider.AdditionalTestCommand =
             new RelayCommand(vm.OnAdditionalTestCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.SaveAllChangesInComponentsCommand =
+            new RelayCommand(vm.OnSaveAllChangesInComponentsCommandExecuted, vm.CanAllCommandsExecute);
     }
 
     public static void InitializeGenericCommands(ProjectViewModel vm)

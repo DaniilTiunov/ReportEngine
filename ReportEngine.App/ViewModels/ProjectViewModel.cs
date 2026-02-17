@@ -682,6 +682,21 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(SaveChangesInStandAsync);
     }
 
+    public async void OnSaveAllChangesInComponentsCommandExecuted(object obj)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            //OnUpdateElectricalComponentInStandCommandExecuted(obj);
+            //OnUpdateAdditionalComponentInStandCommandExecuted(obj);
+            //OnUpdateDrainageComponentInStandCommandExecuted(obj);
+
+            //DrainagePurposesChanges = false;
+            //ElectricalPurposesChanges = false;
+            //AdditionalPurposesChanges = false;
+            _notificationService.ShowInfo("Пока что не работает :(");
+        });
+    }
+
     public async void OnDeleteElectricalComponentFromStandCommandExecuted(object obj)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -708,7 +723,7 @@ public class ProjectViewModel : BaseViewModel
             {
                 if (purpose.Id == 0)
                 {
-                    var firstComponent = stand.AllElectricalPurposesInStand.FirstOrDefault();
+                    var firstComponent = stand.ElectricalComponentsInStand.FirstOrDefault();
                     if (firstComponent != null)
                         purpose.FormedElectricalComponentId = firstComponent.Id;
                 }
@@ -777,31 +792,29 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            var selectedPurpose = CurrentProjectModel.SelectedStand.SelectedDrainagePurpose;
+            var stand = CurrentProjectModel.SelectedStand;
 
-
-            if (Guard.ExitIfNull("Не выбран компонент!",
-                 _notificationService,
-                 selectedPurpose))
+            if (Guard.ExitIfNull("Стенд не выбран!", _notificationService, stand))
                 return;
 
+            var purposes = stand.AllDrainagePurposesInStand.ToList();
 
-            if (selectedPurpose.Id == 0)
+            foreach (var purpose in purposes)
             {
-                var selectedComponent = CurrentProjectModel.SelectedStand.DrainagesInStand.FirstOrDefault();
-                if (selectedComponent != null)
+                if (purpose.Id == 0)
                 {
-                    selectedPurpose.FormedDrainageId = selectedComponent.Id;
+                    var firstDrainage = stand.DrainagesInStand.FirstOrDefault();
+                    if (firstDrainage != null)
+                        purpose.FormedDrainageId = firstDrainage.Id;
                 }
 
+                await _standService.UpdateDrainagePurposeAsync(purpose);
             }
-
-            await UpdatePurposeAsync(CurrentProjectModel.SelectedStand.SelectedDrainagePurpose,
-                _standService.UpdateDrainagePurposeAsync,
-                "Дренажное комплектующее сохранено");
 
             DrainagePurposesChanges = false;
             OnPropertyChanged(nameof(DrainagePurposesChanges));
+
+            _notificationService.ShowInfo("Все дренажные компоненты сохранены");
         });
     }
 
@@ -1148,6 +1161,7 @@ public class ProjectViewModel : BaseViewModel
         };
 
         var newStandEntity = StandDataConverter.ConvertToStandEntity(newStandModel);
+
         var addedStandEntity =
             await _projectRepository.AddStandAsync(CurrentProjectModel.CurrentProjectId, newStandEntity);
 

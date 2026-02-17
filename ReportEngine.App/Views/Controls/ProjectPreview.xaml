@@ -31,6 +31,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -508,6 +509,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
+                        <DataGridCheckBoxColumn Binding="{Binding IsAutoCalculationEnabled, Mode=TwoWay}" Header="Авто" />
                     </DataGrid.Columns>
                     <DataGrid.ContextMenu>
                         <ContextMenu>
@@ -648,6 +650,18 @@
                     </DataGrid.ContextMenu>
                 </DataGrid>
             </GroupBox>
+
+            <StackPanel
+                Grid.Row="5"
+                Grid.Column="0"
+                Margin="5"
+                HorizontalAlignment="Right">
+                <Button
+                    Width="165"
+                    Height="30"
+                    Command="{Binding ProjectCommandProvider.SaveAllChangesInComponentsCommand}"
+                    Content="Сохранить все изменения" />
+            </StackPanel>
         </Grid>
     </ScrollViewer>
 </UserControl>
