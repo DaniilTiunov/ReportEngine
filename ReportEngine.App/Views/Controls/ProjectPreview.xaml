@@ -494,10 +494,19 @@
                             Width="*"
                             Binding="{Binding Material}"
                             Header="Доп. комплектующее" />
-                        <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Кол-во" />
-                        <DataGridTextColumn Binding="{Binding Measure}" Header="Ед. изм." />
-                        <DataGridTextColumn Binding="{Binding CostPerUnit}" Header="Цена" />
-                        <DataGridTemplateColumn Header="Выбрать">
+                        <DataGridTextColumn
+                            Width="70"
+                            Binding="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Header="Кол-во" />
+                        <DataGridTextColumn
+                            Width="75"
+                            Binding="{Binding Measure}"
+                            Header="Ед. изм." />
+                        <DataGridTextColumn
+                            Width="70"
+                            Binding="{Binding CostPerUnit}"
+                            Header="Цена" />
+                        <DataGridTemplateColumn Width="90" Header="Выбрать">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button
@@ -509,7 +518,16 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridCheckBoxColumn Binding="{Binding IsAutoCalculationEnabled, Mode=TwoWay}" Header="Авто" />
+                        <DataGridTemplateColumn Width="70" Header="Авто">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        IsChecked="{Binding IsAutoCalculationEnabled, Mode=TwoWay}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                     <DataGrid.ContextMenu>
                         <ContextMenu>
