@@ -499,14 +499,15 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async void OnSaveObvCommandExecuted(object e)
+    public async void OnAddObvCommandExecuted(object e)
     {
-        if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka))
-            return;
 
         var selectedStand = CurrentProjectModel?.SelectedStand;
 
         if (Guard.ExitIfNull("Не был выбран стенд", _notificationService, selectedStand))
+            return;
+
+        if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka))
             return;
 
         var isCorrectObvNumber = _uiValidatorService.ValidateCorrectObvNN(selectedStand.NN);
@@ -523,6 +524,7 @@ public class ProjectViewModel : BaseViewModel
 
         if (!isCorrectSensorsData)
             return;
+
 
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
@@ -637,7 +639,8 @@ public class ProjectViewModel : BaseViewModel
         {
             SelectedObvyazka = _dialogService.ShowObvyazkaDialog();
 
-            if (Guard.ExitIfNull("Не был выбран тип обвязки!", _notificationService, SelectedObvyazka))
+            //если не выбрали - просто выходим
+            if (SelectedObvyazka == null)
                 return;
 
             var stand = CurrentProjectModel.SelectedStand;
@@ -965,10 +968,11 @@ public class ProjectViewModel : BaseViewModel
             if (!isCorrectObvNumber)
                 return;
 
-            var isFreeObvNumber = _uiValidatorService.ValidateFreeObvNN(this, selectedStand.NN, true);
 
-            if (!isFreeObvNumber)
-                return;
+            //var isFreeObvNumber = _uiValidatorService.ValidateFreeObvNN(this, selectedStand.NN, true);
+
+            //if (!isFreeObvNumber)
+            //    return;
 
             var isCorrectSensorsData = _uiValidatorService.ValidateSensorsQuantityInNewObv(this);
 

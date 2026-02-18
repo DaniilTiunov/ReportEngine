@@ -206,7 +206,7 @@ public class StandModel : BaseViewModel
     private int? _treeSocketExportDays;
     private int _number;
 
-
+    private int? _sensor;
     private int _standSensorsQuantity;
 
     public StandModel()
@@ -567,6 +567,12 @@ public class StandModel : BaseViewModel
     {
         get => _thirdSensorDescription;
         set => Set(ref _thirdSensorDescription, value);
+    }
+    //кол-во датчиков в обвязке
+    public int? Sensor
+    {
+        get => _sensor;
+        set => Set(ref _sensor, value);
     }
 
     // Описание стенда

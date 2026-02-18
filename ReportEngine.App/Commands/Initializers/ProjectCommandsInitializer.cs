@@ -100,7 +100,7 @@ public static class ProjectCommandsInitializer
             new RelayCommand(vm.OnUpdateDrainageComponentInStandCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.SaveObvCommand =
-            new RelayCommand(vm.OnSaveObvCommandExecuted, vm.CanAllCommandsExecute);
+            new RelayCommand(vm.OnAddObvCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.FillStandFieldsFromObvyazkaCommand =
             new RelayCommand(vm.OnEditObvSettingsCommandExecuted, vm.CanAllCommandsExecute);
