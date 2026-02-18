@@ -208,6 +208,9 @@ public class StandModel : BaseViewModel
 
 
     private int _standSensorsQuantity;
+    private bool _electricalPurposesChanges;
+    private bool _additionalPurposesChanges;
+    private bool _drainagePurposesChanges;
 
     public StandModel()
     {
@@ -728,6 +731,21 @@ public class StandModel : BaseViewModel
         set => Set(ref _allAdditionalEquipPurposesInStand, value);
     }
 
+    public bool ElectricalPurposesChanges
+    {
+        get => _electricalPurposesChanges;
+        set => Set(ref _electricalPurposesChanges, value);
+    }
+    public bool AdditionalPurposesChanges
+    {
+        get => _additionalPurposesChanges;
+        set => Set(ref _additionalPurposesChanges, value);
+    }
+    public bool DrainagePurposesChanges
+    {
+        get => _drainagePurposesChanges;
+        set => Set(ref _drainagePurposesChanges, value);
+    }
     public StandSettingsModel DefaultStandSettings { get; set; } = new();
 
     public void InitializeObvAdditionalPurposes()

@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /Y /E /I &quot;$(TargetDir)*&quot; &quot;C:\Work\Share\Output\ReportEngineRelease&quot;" />
+    <Exec Command="xcopy /Y /E /I &quot;$(TargetDir)*&quot; &quot;T:\00 ОКП АСУ\01 Группа разработки ПО\Тиунов\Приложение Стенды КИП&quot;" />
   </Target>
 
 </Project>

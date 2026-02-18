@@ -1,9 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace ReportUpdater
 {
@@ -25,11 +20,12 @@ namespace ReportUpdater
         private TextBox textLocalPath;
         private TextBox textUpdatePath;
         private Button buttonUpdate;
+        private Button buttonCheckPath;
 
         public UpdaterForm()
         {
             Width = 500;
-            Height = 220;
+            Height = 250;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
             StartPosition = FormStartPosition.CenterScreen;
@@ -44,24 +40,29 @@ namespace ReportUpdater
             Label labelUpdate = new Label() { Left = 10, Top = 40, Width = 120, Text = "Папка обновлений:" };
             Controls.Add(labelUpdate);
             textUpdatePath = new TextBox() { Left = 140, Top = 40, Width = 320 };
-            textUpdatePath.Text = @"\\172.16.10.16\Share\Output\ReportEngineRelease";
+            textUpdatePath.Text = @"T:\00 ОКП АСУ\01 Группа разработки ПО\Тиунов\Приложение Стенды КИП";
             Controls.Add(textUpdatePath);
 
-            buttonUpdate = new Button() { Left = 10, Top = 75, Width = 450, Height = 30, Text = "Обновить" };
+            buttonUpdate = new Button() { Left = 10, Top = 115, Width = 450, Height = 30, Text = "Обновить" };
             buttonUpdate.Click += ButtonUpdate_Click;
             Controls.Add(buttonUpdate);
+
+            buttonCheckPath = new Button() { Left = 10, Top = 80, Width = 450, Height = 30, Text = "Проверить доступность папки обновлений" };
+            buttonCheckPath.Click += ButtonCheckPath_Click;
+            Controls.Add(buttonCheckPath);
 
             labelStatus = new Label() { Left = 10, Top = 115, Width = 450, Text = "Ожидание..." };
             Controls.Add(labelStatus);
 
-            progressBar = new ProgressBar() { Left = 10, Top = 145, Width = 450, Height = 25 };
+            progressBar = new ProgressBar() { Left = 10, Top = 155, Width = 450, Height = 25 };
             Controls.Add(progressBar);
+
         }
 
         private async void ButtonUpdate_Click(object sender, EventArgs e)
         {
             buttonUpdate.Enabled = false;
-            string localPath = textLocalPath.Text.Trim(); 
+            string localPath = textLocalPath.Text.Trim();
             string updatePath = textUpdatePath.Text.Trim();
 
             if (!Directory.Exists(updatePath))
@@ -146,6 +147,19 @@ namespace ReportUpdater
                 catch { }
             }
             System.Threading.Thread.Sleep(1000);
+        }
+
+        private void ButtonCheckPath_Click(object sender, EventArgs e)
+        {
+            string updatePath = textUpdatePath.Text.Trim();
+            if (Directory.Exists(updatePath))
+            {
+                MessageBox.Show("Папка найдена", "Проверка", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Папка не найдена", "Проверка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
