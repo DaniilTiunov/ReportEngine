@@ -34,10 +34,7 @@ public partial class ProjectPreview : UserControl
 
     private async Task InitializeDataAndRecalculateAsync(ProjectViewModel projectViewModel)
     {
-        await projectViewModel.LoadStandsDataAsync();
-        await projectViewModel.LoadObvyazkiAsync();
-        await projectViewModel.LoadAllAvaileDataAsync();
-        await projectViewModel.LoadPurposesInStandsAsync();
+        await InitializeDataAsync(projectViewModel);
 
         projectViewModel.OnObvyazkiInStandChanged();
         projectViewModel.OnFramesInStandChanged();

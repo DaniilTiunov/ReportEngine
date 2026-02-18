@@ -9,6 +9,8 @@ public interface IStandService
 {
     Task LoadStandsDataAsync(IEnumerable<StandModel> standModels);
 
+    Task LoadAllStandsDataAsync(int projectId, IEnumerable<StandModel> standModels);
+
     Task AddFrameToStandAsync(int standId, int frameId);
 
     Task AddDrainageToStandAsync(int standId, int drainageId);
@@ -31,7 +33,7 @@ public interface IStandService
 
     Task AddCustomAdditionalEquipAsync(int standId, List<AdditionalEquipPurpose> additionalEquipPurposes, FormedAdditionalEquip customEquip);
 
-    void LoadPurposesInStands(IEnumerable<StandModel> stands);
+    Task LoadPurposesInStands(IEnumerable<StandModel> stands);
 
     Task<ObvyazkaInStand> CreateObvyazkaAsync(StandModel standModel, Obvyazka selectedObvyazka);
 
