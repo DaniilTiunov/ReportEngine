@@ -682,7 +682,7 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(() => CreateReportAsync(ReportType.PassportsReport, "паспорта"));
     }
-    
+
     public async void OnCreateTechnologicalCardsCommandExecute(object p)
     {
         await ExceptionHelper.SafeExecuteAsync(async () => await CreateReportAsync(ReportType.TechnologicalCards, "технологические карты"));
@@ -1622,6 +1622,17 @@ public class ProjectViewModel : BaseViewModel
             collection: CurrentProjectModel.Stands,
             fieldToSortBy: "Number",
             descending: false);
+
+
+        var selectedStand = CurrentProjectModel.SelectedStand;
+
+        if (selectedStand == null)
+            return;
+
+        UpdateChannelsQuantity();
+
+        CollectionRefreshHelper.SafeRefreshCollection(collection: selectedStand.AllAdditionalEquipPurposesInStand);
+
     }
 
     //обновляем поле NN в обвязке
@@ -1653,7 +1664,7 @@ public class ProjectViewModel : BaseViewModel
 
         var standBraceType = selectedStand.BraceType;
 
-        if (string.IsNullOrEmpty(standBraceType) || standBraceType != "Швеллер")
+        if (string.IsNullOrEmpty(standBraceType))
             return;
 
         var additionalEquips = selectedStand.AllAdditionalEquipPurposesInStand;
@@ -1665,13 +1676,21 @@ public class ProjectViewModel : BaseViewModel
         //швеллер в штуках
         const int channelPerFrame = 1;
 
-        if (channelRecord.IsAutoCalculationEnabled == true)
+        if (channelRecord.IsAutoCalculationEnabled != true)
+            return;
+
+        if (standBraceType == "Швеллер")
         {
             var framesCount = selectedStand.FramesInStand.Count;
             channelRecord.Quantity = framesCount * channelPerFrame;
-
-            AdditionalPurposesChanges = true;
         }
+        else
+        {
+            channelRecord.Quantity = 0;
+        }
+
+        AdditionalPurposesChanges = true;
+
     }
 
     //обновляем кол-во хомутов
