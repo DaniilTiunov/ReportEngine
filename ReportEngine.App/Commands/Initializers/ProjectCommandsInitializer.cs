@@ -167,6 +167,9 @@ public static class ProjectCommandsInitializer
 
         vm.ProjectCommandProvider.SaveAllChangesInComponentsCommand =
             new RelayCommand(vm.OnSaveAllChangesInComponentsCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.RenumerateObvInStandCommand =
+            new RelayCommand(vm.OnRenumerateObvInStandAsyncCommandExecuted, vm.CanAllCommandsExecute);
     }
 
     public static void InitializeGenericCommands(ProjectViewModel vm)

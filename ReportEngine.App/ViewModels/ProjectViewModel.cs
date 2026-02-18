@@ -504,20 +504,11 @@ public class ProjectViewModel : BaseViewModel
 
         var selectedStand = CurrentProjectModel?.SelectedStand;
 
+
         if (Guard.ExitIfNull("Не был выбран стенд", _notificationService, selectedStand))
             return;
 
         if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka))
-            return;
-
-        var isCorrectObvNumber = _uiValidatorService.ValidateCorrectObvNN(selectedStand.NN);
-
-        if (!isCorrectObvNumber)
-            return;
-
-        var isFreeObvNumber = _uiValidatorService.ValidateFreeObvNN(this, selectedStand.NN, false);
-
-        if (!isFreeObvNumber)
             return;
 
         var isCorrectSensorsData = _uiValidatorService.ValidateSensorsQuantityInNewObv(this);
@@ -703,7 +694,7 @@ public class ProjectViewModel : BaseViewModel
     {
         await ExceptionHelper.SafeExecuteAsync(() => CreateReportAsync(ReportType.PassportsReport, "паспорта"));
     }
-
+    
     public async void OnCreateTechnologicalCardsCommandExecute(object p)
     {
         await ExceptionHelper.SafeExecuteAsync(async () => await CreateReportAsync(ReportType.TechnologicalCards, "технологические карты"));
@@ -941,6 +932,7 @@ public class ProjectViewModel : BaseViewModel
             var iterPart = renumInfo.StartValue.Value + (iteration - 1) * renumInfo.Step.Value;
             string formattedIterPart = iterPart.ToString().PadLeft(renumInfo.StartValueLength, '0');
 
+
             stand.SerialNumber = $"{renumInfo.Prefix}{formattedIterPart}{renumInfo.Postfix}";
 
             var newStandEntity = StandDataConverter.ConvertToStandEntity(stand);
@@ -963,16 +955,8 @@ public class ProjectViewModel : BaseViewModel
             if (Guard.ExitIfNull("Не был выбран стенд", _notificationService, selectedStand))
                 return;
 
-            var isCorrectObvNumber = _uiValidatorService.ValidateCorrectObvNN(selectedStand.NN);
-
-            if (!isCorrectObvNumber)
+            if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka))
                 return;
-
-
-            //var isFreeObvNumber = _uiValidatorService.ValidateFreeObvNN(this, selectedStand.NN, true);
-
-            //if (!isFreeObvNumber)
-            //    return;
 
             var isCorrectSensorsData = _uiValidatorService.ValidateSensorsQuantityInNewObv(this);
 
@@ -1120,6 +1104,9 @@ public class ProjectViewModel : BaseViewModel
 
         if (Guard.ExitIfNull("Не выбран тип обвязки!", _notificationService, SelectedObvyazka))
             return;
+
+        //автонумерация
+        selectedStand.NN = MaxObvNN + 1;
 
         var entity = await _standService.CreateObvyazkaAsync(selectedStand, SelectedObvyazka);
 
@@ -1384,6 +1371,37 @@ public class ProjectViewModel : BaseViewModel
 
             CurrentProjectModel.SelectedStand.FramesInStand.Add(CurrentStandModel.SelectedFrame);
         }
+    }
+
+    public async void OnRenumerateObvInStandAsyncCommandExecuted(object obj)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            var selectedStand = CurrentProjectModel.SelectedStand;
+
+            if (selectedStand == null)
+            {
+                _notificationService.ShowError("Стенд не выбран");
+                return;
+            }
+
+
+            int obvNumber = 1;
+
+            foreach (var obv in selectedStand.ObvyazkiInStand)
+            {
+                obv.NN = obvNumber;
+
+                await _projectRepository.UpdateObvInStandAsync(selectedStand.Id, obv);
+
+                obvNumber++;
+            }
+
+            CollectionRefreshHelper.SafeSortAndRefreshCollection(selectedStand.ObvyazkiInStand, "NN", false);
+
+            _notificationService.ShowInfo("Обвязки пронумерованы");
+
+        });
     }
 
     private async Task AddDrainageToStandAsync()
