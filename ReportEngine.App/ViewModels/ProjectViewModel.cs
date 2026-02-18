@@ -693,7 +693,7 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(SaveChangesInStandAsync);
     }
 
-    public async Task OnSaveAllChangesInComponentsCommandExecuted(object obj)
+    public async void OnSaveAllChangesInComponentsCommandExecuted(object obj)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
