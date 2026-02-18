@@ -16,12 +16,12 @@
         <converters:ByteArrayImageConverter x:Key="ByteArrayImageConverter" />
     </UserControl.Resources>
 
-    <UserControl.InputBindings>
+    <!--<UserControl.InputBindings>
         <KeyBinding
             Key="F5"
             Command="{Binding ProjectCommandProvider.UpdateUICommand}"
             CommandParameter="{x:Null}" />
-    </UserControl.InputBindings>
+    </UserControl.InputBindings>-->
 
     <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
         <Grid Margin="10">
@@ -479,7 +479,7 @@
                     <DataGrid.RowStyle>
                         <Style TargetType="DataGridRow">
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding DataContext.ElectricalPurposesChanges, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                <DataTrigger Binding="{Binding DataContext.CurrentProjectModel.SelectedStand.ElectricalPurposesChanges, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
                                     <Setter Property="Background" Value="{DynamicResource UnsafeDetails}" />
                                 </DataTrigger>
                             </Style.Triggers>
@@ -563,7 +563,7 @@
                     <DataGrid.RowStyle>
                         <Style TargetType="DataGridRow">
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding DataContext.AdditionalPurposesChanges, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                <DataTrigger Binding="{Binding DataContext.CurrentProjectModel.SelectedStand.AdditionalPurposesChanges, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
                                     <Setter Property="Background" Value="{DynamicResource UnsafeDetails}" />
                                 </DataTrigger>
                             </Style.Triggers>
@@ -638,7 +638,7 @@
                     <DataGrid.RowStyle>
                         <Style TargetType="DataGridRow">
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding DataContext.DrainagePurposesChanges, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                <DataTrigger Binding="{Binding DataContext.CurrentProjectModel.SelectedStand.DrainagePurposesChanges, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
                                     <Setter Property="Background" Value="{DynamicResource UnsafeDetails}" />
                                 </DataTrigger>
                             </Style.Triggers>

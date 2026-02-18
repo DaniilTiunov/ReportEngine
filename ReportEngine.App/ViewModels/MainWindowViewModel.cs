@@ -1,11 +1,13 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using ControlzEx.Standard;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Commands.Providers;
 using ReportEngine.App.Model;
+using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
@@ -116,10 +118,41 @@ public class MainWindowViewModel : BaseViewModel
     {
         ExceptionHelper.SafeExecute(() =>
         {
+            var projectViewModel = _serviceProvider.GetRequiredService<ProjectViewModel>();
+
+            //if (CheckUnsafeDetails(projectViewModel))
+            //{
+            //    var result = _notificationService.ShowConfirmation("У вас есть несохраненные изменения. \nВы уверены, что хотите вернуться на главный экран?", "Подтверждение");
+            //    if (!result)
+            //        return;
+            //}
+
+            //if(projectViewModel.CurrentProjectModel.Stands.Count == 0 || projectViewModel.CurrentProjectModel.Stands == null)
+            //{
+            //    _navigation.CloseContent();
+            //}
+            
             _navigation.CloseContent();
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
             mainWindow.MainContentControl.Content = mainWindow.MainGrid;
         });
+    }
+
+    private bool CheckUnsafeDetails(ProjectViewModel projectViewModel)
+    {
+        var stands = projectViewModel.CurrentProjectModel.Stands;
+
+        if (stands.Count == 0 || stands == null)
+            return false;
+
+        if (stands.Any(s => s.ElectricalPurposesChanges || s.DrainagePurposesChanges == true)) //s.AdditionalPurposesChanges
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public void OpenOthersWindowCommandExecuted<T>(object e)

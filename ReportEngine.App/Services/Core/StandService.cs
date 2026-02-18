@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
+using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
 using ReportEngine.App.Services.Interfaces;
@@ -76,11 +78,21 @@ public class StandService : IStandService
     }
 
     public async Task LoadObvyazkiInStandsAsync(IEnumerable<StandModel> standModels)
-    {
+    {     
         foreach (var standModel in standModels)
         {
             var obvyazkiInStand = await _projectRepository.GetAllObvyazkiInStandAsync(standModel.Id);
             standModel.ObvyazkiInStand = new ObservableCollection<ObvyazkaInStand>(obvyazkiInStand);
+        }
+    }
+
+    public async Task LoadAllStandsDataAsync(int projectId, IEnumerable<StandModel> standModels)
+    {
+        var standsEntities = await _projectRepository.GetStandsByIdAsync(projectId);
+
+        foreach (var (entity, model) in standsEntities.Stands.Zip(standModels))
+        {
+            model.ImageData = entity.ImageData;
         }
     }
 
@@ -92,6 +104,7 @@ public class StandService : IStandService
             var standDrainages = await _projectRepository.GetAllDrainagesInStandAsync(standModel.Id);
             var standElectricals = await _projectRepository.GetAllElectricalComponentsInStandAsync(standModel.Id);
             var standAdditionals = await _projectRepository.GetAllAdditionalEquipsInStandAsync(standModel.Id);
+            
 
             standModel.FramesInStand.Clear();
             foreach (var frame in standFrames.Select(sf => sf.Frame))
@@ -111,7 +124,7 @@ public class StandService : IStandService
         }
     }
 
-    public void LoadPurposesInStands(IEnumerable<StandModel> stands)
+    public async Task LoadPurposesInStands(IEnumerable<StandModel> stands)
     {
         foreach (var stand in stands)
         {
