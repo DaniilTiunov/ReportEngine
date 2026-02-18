@@ -92,7 +92,7 @@ public class StandService : IStandService
 
         foreach (var (entity, model) in standsEntities.Stands.Zip(standModels))
         {
-            //entity.Adapt(model);
+            model.ImageData = entity.ImageData;
         }
     }
 
