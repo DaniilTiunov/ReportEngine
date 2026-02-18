@@ -127,7 +127,6 @@ public class ProjectViewModel : BaseViewModel
     {
         get => CurrentProjectModel.Stands.Count > 0 ? CurrentProjectModel.Stands.Max(stand => stand.Number) : 0;
     }
-    public bool AdditionalPurposesChanges { get; private set; }
 
     public bool CanAllCommandsExecute(object? e)
     {
@@ -786,8 +785,8 @@ public class ProjectViewModel : BaseViewModel
                 await _standService.UpdateAdditionalPurposeAsync(purpose);
             }
 
-            AdditionalPurposesChanges = false;
-            OnPropertyChanged(nameof(AdditionalPurposesChanges));
+            stand.AdditionalPurposesChanges = false;
+            OnPropertyChanged(nameof(stand.AdditionalPurposesChanges));
 
             _notificationService.ShowInfo("Все доп. комплектующие сохранены");
         });
@@ -1611,6 +1610,16 @@ public class ProjectViewModel : BaseViewModel
         OnFramesInStandChanged();
         OnObvyazkiInStandChanged();
         UpdateBracketsQuantity();
+
+        var selectedStand = CurrentProjectModel.SelectedStand;
+
+        if (selectedStand == null)
+            return;
+
+        selectedStand.AdditionalPurposesChanges = false;
+        selectedStand.ElectricalPurposesChanges = false;
+        selectedStand.DrainagePurposesChanges = false;
+
     }
 
     public void OnStandsInProjectChanged()
@@ -1689,7 +1698,7 @@ public class ProjectViewModel : BaseViewModel
             channelRecord.Quantity = 0;
         }
 
-        AdditionalPurposesChanges = true;
+        selectedStand.AdditionalPurposesChanges = true;
 
     }
 
@@ -1714,7 +1723,7 @@ public class ProjectViewModel : BaseViewModel
         {
             clampsRecord.Quantity = selectedStand.ObvyazkiInStand.Sum(obv => obv.Clamp) ?? 0.0f;
 
-            AdditionalPurposesChanges = true;
+            selectedStand.AdditionalPurposesChanges = true;
         }
     }
 
@@ -1738,7 +1747,7 @@ public class ProjectViewModel : BaseViewModel
         {
             tableRecord.Quantity = sensorsQuantity;
 
-            AdditionalPurposesChanges = true;
+            selectedStand.AdditionalPurposesChanges = true;
         }
     }
 
@@ -1763,7 +1772,7 @@ public class ProjectViewModel : BaseViewModel
         {
             difSensorsBracketRecord.Quantity = bracketsPerDifSensor * difSensorsQuantity;
 
-            AdditionalPurposesChanges = true;
+            selectedStand.AdditionalPurposesChanges = true;
         }
 
         const int bracketsPerAbsoluteSensor = 2;
@@ -1780,7 +1789,7 @@ public class ProjectViewModel : BaseViewModel
             {
                 absSensorsBracketsRecord.Quantity = bracketsPerAbsoluteSensor * absSensorsQuantity;
 
-                AdditionalPurposesChanges = true;
+                selectedStand.AdditionalPurposesChanges = true;
             }
         }
 
@@ -1794,7 +1803,7 @@ public class ProjectViewModel : BaseViewModel
             {
                 universalBracketRecord.Quantity = universalBracketQuantity;
 
-                AdditionalPurposesChanges = true;
+                selectedStand.AdditionalPurposesChanges = true;
             }
         }
     }
@@ -1818,7 +1827,7 @@ public class ProjectViewModel : BaseViewModel
         {
             mainPipeRecord.Quantity = selectedStand.FramesInStand.Sum(frame => frame.Width) / 1000.0f;
 
-            CurrentProjectModel.SelectedStand.DrainagePurposesChanges = true;
+            selectedStand.DrainagePurposesChanges = true;
         }
     }
 
@@ -1849,7 +1858,7 @@ public class ProjectViewModel : BaseViewModel
             cableInputsQuantity = sensorsQuantity * cableInputsPerSensor;
             cableInputsRecord.Quantity = cableInputsQuantity;
 
-            CurrentProjectModel.SelectedStand.ElectricalPurposesChanges = true;
+            selectedStand.ElectricalPurposesChanges = true;
         }
 
         //сигнальный кабель
@@ -1874,7 +1883,7 @@ public class ProjectViewModel : BaseViewModel
 
             signalCableRecord.Quantity = signalCabelQuantity;
 
-            CurrentProjectModel.SelectedStand.ElectricalPurposesChanges = true;
+            selectedStand.ElectricalPurposesChanges = true;
         }
 
         //кабель 4 мм
@@ -1892,7 +1901,7 @@ public class ProjectViewModel : BaseViewModel
         {
             metalHoseRecord.Quantity = signalCabelQuantity;
 
-            CurrentProjectModel.SelectedStand.ElectricalPurposesChanges = true;
+            selectedStand.ElectricalPurposesChanges = true;
         }
     }
 
