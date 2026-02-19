@@ -45,8 +45,6 @@ public class ProjectViewModel : BaseViewModel
     private readonly SemaphoreSlim _updateUiLock = new(1, 1);
     private readonly UIValidatorService _uiValidatorService;
 
-
-
     public ProjectViewModel(
         IProjectInfoRepository projectRepository,
         IDialogService dialogService,
@@ -488,9 +486,7 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnAddObvCommandExecuted(object e)
     {
-
         var selectedStand = CurrentProjectModel?.SelectedStand;
-
 
         if (Guard.ExitIfNull("Не был выбран стенд", _notificationService, selectedStand))
             return;
@@ -498,11 +494,10 @@ public class ProjectViewModel : BaseViewModel
         if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka))
             return;
 
-        var isCorrectSensorsData = _uiValidatorService.ValidateSensorsQuantityInNewObv(this);
+        //var isCorrectSensorsData = _uiValidatorService.(this);
 
-        if (!isCorrectSensorsData)
-            return;
-
+        //if (!isCorrectSensorsData)
+        //    return;
 
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
@@ -945,10 +940,10 @@ public class ProjectViewModel : BaseViewModel
             if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka))
                 return;
 
-            var isCorrectSensorsData = _uiValidatorService.ValidateSensorsQuantityInNewObv(this);
+            //var isCorrectSensorsData = _uiValidatorService.ValidateSensorsQuantityInNewObv(this);
 
-            if (!isCorrectSensorsData)
-                return;
+            //if (!isCorrectSensorsData)
+            //    return;
 
 
             await _projectService.UpdateObvInStandAsync(CurrentProjectModel, SelectedObvyazka);

@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:ReportEngine.AtomicApp"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="Атомик Стенды КИП"
+    Title="АтомСтенды КИПиА"
     Background="{DynamicResource PrimaryColor}"
     FontFamily="Bahnschrift"
     Foreground="{DynamicResource PrimaryForeground}"
@@ -27,72 +27,179 @@
             <Image x:Key="refresh-button.png" Source="/Resources/Images/refresh-button.png" />
         </ResourceDictionary>
     </Window.Resources>
-    <DockPanel>
-        <Border
-            x:Name="MainWindowControlTitle"
-            Height="34"
-            Background="#2D2D30"
-            DockPanel.Dock="Top"
-            MouseLeftButtonDown="Window_MouseLeftButtonDown">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
 
-                <StackPanel
-                    Margin="10,0,0,0"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal">
-                    <Image
-                        Width="18"
-                        Height="18"
-                        Margin="0,0,8,0"
-                        Source="/Resources/Icons/atom-editor.ico" />
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        FontSize="14"
-                        Foreground="White"
-                        Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
-                </StackPanel>
+    <Border Style="{DynamicResource WindowBorder}">
+        <DockPanel>
+            <Border
+                x:Name="MainWindowControlTitle"
+                Height="34"
+                Background="#2D2D30"
+                DockPanel.Dock="Top"
+                MouseLeftButtonDown="Window_MouseLeftButtonDown">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-                <StackPanel
-                    Grid.Column="1"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal">
-                    <Button
-                        x:Name="MinimizeButton"
-                        Width="40"
-                        Height="30"
-                        Click="MinimizeButton_Click"
-                        FontSize="16"
-                        ToolTip="Свернуть">
-                        ─
-                    </Button>
-                    <Button
-                        x:Name="MaxRestoreButton"
-                        Width="40"
-                        Height="30"
+                    <StackPanel
                         Margin="10,0,0,0"
-                        Click="MaxRestoreButton_Click"
-                        FontSize="16"
-                        ToolTip="Развернуть">
-                        ▢
-                    </Button>
-                    <Button
-                        x:Name="CloseButton"
-                        Width="40"
-                        Height="30"
-                        Margin="10,0,10,0"
-                        Click="CloseButton_Click"
-                        FontSize="16"
-                        ToolTip="Закрыть">
-                        ✕
-                    </Button>
-                </StackPanel>
-            </Grid>
-        </Border>
-        <Grid />
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <Image
+                            Width="18"
+                            Height="18"
+                            Margin="0,0,8,0"
+                            Source="/Resources/Icons/atom-editor.ico" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            Foreground="White"
+                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
+                    </StackPanel>
 
-    </DockPanel>
+                    <StackPanel
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <Button
+                            x:Name="MinimizeButton"
+                            Width="40"
+                            Height="30"
+                            Click="MinimizeButton_Click"
+                            FontSize="16"
+                            ToolTip="Свернуть">
+                            ─
+                        </Button>
+                        <Button
+                            x:Name="MaxRestoreButton"
+                            Width="40"
+                            Height="30"
+                            Margin="10,0,0,0"
+                            Click="MaxRestoreButton_Click"
+                            FontSize="16"
+                            ToolTip="Развернуть">
+                            ▢
+                        </Button>
+                        <Button
+                            x:Name="CloseButton"
+                            Width="40"
+                            Height="30"
+                            Margin="10,0,10,0"
+                            Click="CloseButton_Click"
+                            FontSize="16"
+                            ToolTip="Закрыть">
+                            ✕
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+            <Menu
+                Height="25"
+                DockPanel.Dock="Top"
+                FontFamily="Bahnschrift"
+                FontSize="14">
+                <MenuItem Header="Проект">
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenTreeViewCommand}" Header="Создать новый проект" />
+                    <Separator />
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenMainWindowCommand}" Header="На главный экран" />
+                </MenuItem>
+
+                <MenuItem Header="Настройки">
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenSettingsWindow}" Header="Настройки приложения" />
+                    <Separator />
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenCalculationSettingsWindow}" Header="Настройки расчета" />
+                </MenuItem>
+
+                <MenuItem Header="Вид" Tag="ThemeItemChanger">
+                    <MenuItem
+                        Click="StandardTheme"
+                        Header="Светлая тема"
+                        Tag="Standart" />
+                    <Separator />
+                    <MenuItem
+                        Click="ChangeDarkTheme"
+                        Header="Тёмная тема"
+                        Tag="Dark" />
+                    <Separator />
+                    <MenuItem
+                        Click="MangoParadiseTheme"
+                        Header="Манговый рай"
+                        Tag="Mango" />
+                    <Separator />
+                    <MenuItem
+                        Click="BubbleGumTheme"
+                        Header="Жвачка"
+                        Tag="Bubble" />
+                </MenuItem>
+                <MenuItem Header="Контакты">
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllUsersCommand}" Header="Сотрудники" />
+                    <Separator />
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllCompaniesCommand}" Header="Заказчики" />
+                    <Separator />
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllSubjectsCommand}" Header="Объекты" />
+                </MenuItem>
+                <MenuItem Header="Комплектующие">
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllObvyazkiCommand}" Header="Обвязки" />
+                    <Separator />
+                    <MenuItem Header="Сортамент труб">
+                        <MenuItem Command="{Binding GenericEquipCommandProvider.OpenHeaterPipeCommand}" Header="Жаропрочная сталь" />
+                        <MenuItem Command="{Binding GenericEquipCommandProvider.OpenStainlessPipeCommand}" Header="Нержавеющая сталь" />
+                        <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCarbonPipeCommand}" Header="Углеродистая сталь" />
+                    </MenuItem>
+                    <MenuItem Header="Запорные арматуры">
+                        <MenuItem Command="{Binding GenericEquipCommandProvider.OpenHeaterArmatureCommand}" Header="Жаропрочная сталь" />
+                        <MenuItem Command="{Binding GenericEquipCommandProvider.OpenStainlessArmatureCommand}" Header="Нержавеющая сталь" />
+                        <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCarbonArmatureCommand}" Header="Углеродистая сталь" />
+                    </MenuItem>
+                    <MenuItem Header="Тройники и КМЧ">
+                        <MenuItem Command="{Binding GenericEquipCommandProvider.OpenHeaterSocketsCommand}" Header="Жаропрочная сталь" />
+                        <MenuItem Command="{Binding GenericEquipCommandProvider.OpenStainlessSocketsCommand}" Header="Нержавеющая сталь" />
+                        <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCarbonSocketsCommand}" Header="Углеродистая сталь" />
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenDrainageCommand}" Header="Дренаж" />
+                    <Separator />
+                    <MenuItem Header="Рамные комплектующие">
+                        <MenuItem Command="{Binding GenericEquipCommandProvider.OpenFrameDetailsCommand}" Header="Детали рамы" />
+                        <MenuItem Command="{Binding GenericEquipCommandProvider.OpenPillarEquipCommand}" Header="Комплектующие для стойки" />
+                        <MenuItem Command="{Binding GenericEquipCommandProvider.OpenFrameRollCommand}" Header="Прокат" />
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem Header="Кронштейны">
+                        <MenuItem Command="{Binding GenericEquipCommandProvider.OpenBoxesBracesommand}" Header="Крепление клеммных коробок" />
+                        <MenuItem Command="{Binding GenericEquipCommandProvider.OpenDrainageBracesCommand}" Header="Крепление дренажа" />
+                        <MenuItem Command="{Binding GenericEquipCommandProvider.OpenSensorsBracesCommand}" Header="Крепление датчиков" />
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem Header="Электрические компоненты">
+                        <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCabelProductionCommand}" Header="Кабельная продукция" />
+                        <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCabelInputCommand}" Header="Кабельные вводы" />
+                        <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCabelBoxeCommand}" Header="Клеммные коробки" />
+                        <MenuItem Command="{Binding GenericEquipCommandProvider.OpenHeaterCommand}" Header="Обогрев" />
+                        <MenuItem Command="{Binding GenericEquipCommandProvider.OpenCabelProtectionCommand}" Header="Средства прокладки и защиты кабеля" />
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenOthersCommand}" Header="Прочие" />
+                    <Separator />
+                    <MenuItem Command="{Binding GenericEquipCommandProvider.OpenConteinersCommand}" Header="Тара" />
+                    <Separator />
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllSortamentsCommand}" Header="Весь сортамент" />
+                </MenuItem>
+                <MenuItem Header="Формирование комплектующих">
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenFormedFramesCommand}" Header="Создание и редактирование рам" />
+                    <Separator />
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllDrainagesCommand}" Header="Дренажи" />
+                </MenuItem>
+                <MenuItem Header="Инструменты">
+                    <MenuItem Click="ShowCalculator" Header="Калькулятор" />
+                    <MenuItem Click="ShowNotepad" Header="Блокнот" />
+                </MenuItem>
+                <MenuItem Header="Справка" />
+                <MenuItem Command="{Binding MainWindowCommandProvider.OpenAuthWindowCommand}" Header="Авторизация" />
+            </Menu>
+            <Grid />
+
+        </DockPanel>
+    </Border>
 </Window>
