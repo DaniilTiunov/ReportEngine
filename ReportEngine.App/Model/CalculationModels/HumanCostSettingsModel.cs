@@ -21,6 +21,13 @@ public class HumanCostSettingsModel : BaseViewModel
     private double _timeForOneDrill;
     private double _timeForOthersOperations;
     private double _timeForPrepareAllEquipment;
+    private double _galvanizedStands;
+
+    public double GalvanizedStands
+    {
+        get => _galvanizedStands;
+        set => Set(ref _galvanizedStands, value);
+    }
 
     public double ObvzyakaProduction
     {

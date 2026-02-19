@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
-using ReportEngine.App.Display;
-using ReportEngine.Shared.Config.DebugConsol;
+﻿using System.Windows;
+using ReportEngine.App.Enums;
+using ReportEngine.App.Views.Windows.Dialog;
 
 namespace ReportEngine.App.AppHelpers;
 
@@ -14,23 +14,7 @@ public static class ExceptionHelper
         }
         catch (Exception ex)
         {
-            DebugConsole.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
-            Debug.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
-            MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}");
-        }
-    }
-
-    public static void SafeExecute(Action action, string message)
-    {
-        try
-        {
-            action();
-        }
-        catch (Exception ex)
-        {
-            DebugConsole.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
-            Debug.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
-            MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}\n{message}");
+            ShowError(ex);
         }
     }
 
@@ -42,23 +26,22 @@ public static class ExceptionHelper
         }
         catch (Exception ex)
         {
-            DebugConsole.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
-            Debug.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
-            MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}");
+            ShowError(ex);
         }
     }
 
-    public static async Task SafeExecuteAsync(Func<Task> action, string message)
+    private static void ShowError(Exception ex)
     {
-        try
-        {
-            await action();
-        }
-        catch (Exception ex)
-        {
-            DebugConsole.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
-            Debug.WriteLine($"Произошла ошибка: {ex.Message}", ConsoleColor.Red);
-            MessageBoxHelper.ShowError($"Произошла ошибка: {ex.Message}\n{message}");
-        }
+        ShowNotification(ex.Message, "Ошибка", NotificationType.Error);
+    }
+
+    private static void ShowNotification(string message, string title, NotificationType type)
+    {
+        var window = new NotifyWindow(message, type, title);
+
+        if (Application.Current?.MainWindow != window)
+            window.Owner = Application.Current?.MainWindow;
+
+        window.ShowDialog();
     }
 }

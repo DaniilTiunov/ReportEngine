@@ -1,4 +1,5 @@
 ﻿using ReportEngine.App.Model;
+using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
 
@@ -6,25 +7,35 @@ namespace ReportEngine.App.Services.Core;
 
 public class CalculationService : ICalculationService
 {
-    private readonly INotificationService _notificationService;
     private readonly IProjectService _projectService;
 
-    public CalculationService(
-        IProjectService projectService,
-        INotificationService notificationService)
+    public StandSettingsModel DefaultStandSettings { get; set; } = new();
+    public HumanCostSettingsModel HumanCostSettingsModel { get; set; } = new();
+
+    public CalculationService(IProjectService projectService)
     {
-        _projectService = projectService;
-        _notificationService = notificationService;
+        _projectService = projectService;;
+    }
+
+    private async Task LoadSettingsCost()
+    {
+        await DefaultStandSettings.LoadStandsSettingsDataAsync();
+        await HumanCostSettingsModel.LoadHumanCostDataFromIniAsync();
     }
 
     public async Task CalculateProjectAsync(ProjectModel project)
     {
+        await LoadSettingsCost();
+
         await CalculateStandsCountAsync(project);
 
         foreach (var stand in project.Stands)
             stand.StandSummCost = CalculateStandEquipCost(stand);
 
-        project.Cost = project.Stands.Sum(stand => stand.StandSummCost);
+        var standsCost = project.Stands.Sum(stand => stand.StandSummCost);
+        var galvanizedCost = CalculateGalvanizedCost(project);
+
+        project.Cost = standsCost + galvanizedCost;
 
         project.HumanCost = project.Stands.Sum(ObvHumanCostCalculation);
 
@@ -48,7 +59,7 @@ public class CalculationService : ICalculationService
         cost += standModel.FramesInStand
             .SelectMany(f => f.Components)
             .Sum(c => c.Length == null
-                ? c.Count * (decimal)(c.CostComponent ?? 0)
+                ? (c.Count ?? 0) * (decimal)(c.CostComponent ?? 0)
                 : (decimal)(c.Length ?? 0) * (decimal)(c.CostComponent ?? 0));
 
         cost += standModel.ElectricalComponentsInStand
@@ -60,6 +71,14 @@ public class CalculationService : ICalculationService
             .Sum(p => (decimal)(p.CostPerUnit ?? 0) * (decimal)(p.Quantity ?? 0));
 
         return cost;
+    }
+
+    private decimal CalculateGalvanizedCost(ProjectModel projectModel)
+    {
+        if (!projectModel.IsGalvanized)
+            return 0;
+
+        return projectModel.StandCount * (decimal)HumanCostSettingsModel.GalvanizedStands;
     }
 
     private float ObvHumanCostCalculation(StandModel stand)

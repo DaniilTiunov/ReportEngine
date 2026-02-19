@@ -10,11 +10,13 @@ using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.CalculationSettings;
 using ReportEngine.App.ViewModels.Contacts;
 using ReportEngine.App.ViewModels.FormedEquips;
+using ReportEngine.App.ViewModels.Utils;
 using ReportEngine.App.Views;
 using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Settings;
 using ReportEngine.App.Views.Utils;
 using ReportEngine.App.Views.Windows;
+using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
@@ -87,6 +89,11 @@ public class HostFactory
         services.AddScoped<IFormedAdditionalEquipsRepository, FormedAdditionalEquipsRepository>();
         services.AddScoped<IFormedElectricalRepository, FormedElectricalRepository>();
         services.AddScoped<IContainerRepository, ContainerRepository>();
+        services.AddScoped<ObvyazkaInStandRepository>();
+        services.AddScoped<IPurposesRepository<AdditionalEquipPurpose>, FormedAdditionalEquipsRepository>();
+        services.AddScoped<IPurposesRepository<ElectricalPurpose>, FormedElectricalRepository>();
+        services.AddScoped<IPurposesRepository<DrainagePurpose>, FormedDrainagesRepository>();
+
     }
 
     private static void ConfigureGenericRepositories(IServiceCollection services)
@@ -129,6 +136,8 @@ public class HostFactory
 
     private static void ConfigureApplicationServices(IServiceCollection services)
     {
+        services.AddSingleton<UpdaterStandService>();
+        services.AddSingleton<EquipChangesListener>();
         services.AddSingleton<GenericEquipWindowFactory>();
         services.AddSingleton<NavigationService>();
         services.AddSingleton<IDialogService, DialogService>();
@@ -138,7 +147,8 @@ public class HostFactory
         services.AddScoped<IProjectService, ProjectService>();
         services.AddScoped<IProjectDataLoaderService, ProjectDataLoaderSerive>();
         services.AddScoped<ContainerService>();
-        services.AddHostedService<EquipChangesListener>();
+        services.AddScoped<AdditionalEquipService>();
+        services.AddScoped<UIValidatorService>();
     }
 
     private static void ConfigureReportsServices(IServiceCollection services)
@@ -170,6 +180,7 @@ public class HostFactory
         services.AddScoped<AuthWindowViewModel>();
         services.AddScoped<SubjectViewModel>();
         services.AddScoped<RenumeratorViewModel>();
+        services.AddScoped<StandCopyViewModel>();
 
         services.AddScoped(typeof(GenericEquipViewModel<>));
     }
@@ -204,5 +215,10 @@ public class HostFactory
         services.AddTransient<SubjectsView>();
         services.AddTransient<UpdateInfoView>();
         services.AddTransient<RenumerateView>();
+        services.AddTransient<StandCopyView>();
+        services.AddTransient<ObvSettingsView>();
+        services.AddTransient<StandsSettingsView>();
+        services.AddTransient<ProgressDialog>();
+        services.AddTransient<NotifyWindow>();
     }
 }

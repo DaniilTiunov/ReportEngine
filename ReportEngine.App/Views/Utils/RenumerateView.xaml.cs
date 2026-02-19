@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using ReportEngine.App.ViewModels;
+using ReportEngine.App.ViewModels.Utils;
 
 namespace ReportEngine.App.Views.Utils
 {
@@ -30,7 +30,5 @@ namespace ReportEngine.App.Views.Utils
             _viewModel.OnApplyCommandExecuted(sender);
             Close();
         }
-
     }
 }
-

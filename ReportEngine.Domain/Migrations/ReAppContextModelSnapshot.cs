@@ -30,25 +30,22 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("ChangedAt")
+                    b.Property<DateTimeOffset?>("ChangedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("EquipId")
+                    b.Property<int?>("EquipId")
                         .HasColumnType("integer");
 
                     b.Property<string>("NewName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("OldName")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("Processed")
+                    b.Property<bool?>("Processed")
                         .HasColumnType("boolean");
 
                     b.Property<string>("TableName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -72,6 +69,9 @@ namespace ReportEngine.Domain.Migrations
 
                     b.Property<int>("FormedAdditionalEquipId")
                         .HasColumnType("integer");
+
+                    b.Property<bool?>("IsAutoCalculationEnabled")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Material")
                         .HasColumnType("text");
@@ -100,34 +100,31 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<float>("Cost")
+                    b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<float>("Depth")
+                    b.Property<float?>("Depth")
                         .HasColumnType("real");
 
-                    b.Property<int>("ExportDays")
+                    b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
 
-                    b.Property<float>("Height")
+                    b.Property<float?>("Height")
                         .HasColumnType("real");
 
                     b.Property<string>("Measure")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Type")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<float>("Weight")
+                    b.Property<float?>("Weight")
                         .HasColumnType("real");
 
-                    b.Property<float>("Width")
+                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -143,34 +140,31 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<float>("Cost")
+                    b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<float>("Depth")
+                    b.Property<float?>("Depth")
                         .HasColumnType("real");
 
-                    b.Property<int>("ExportDays")
+                    b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
 
-                    b.Property<float>("Height")
+                    b.Property<float?>("Height")
                         .HasColumnType("real");
 
                     b.Property<string>("Measure")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Type")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<float>("Weight")
+                    b.Property<float?>("Weight")
                         .HasColumnType("real");
 
-                    b.Property<float>("Width")
+                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -186,34 +180,31 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<float>("Cost")
+                    b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<float>("Depth")
+                    b.Property<float?>("Depth")
                         .HasColumnType("real");
 
-                    b.Property<int>("ExportDays")
+                    b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
 
-                    b.Property<float>("Height")
+                    b.Property<float?>("Height")
                         .HasColumnType("real");
 
                     b.Property<string>("Measure")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Type")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<float>("Weight")
+                    b.Property<float?>("Weight")
                         .HasColumnType("real");
 
-                    b.Property<float>("Width")
+                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -229,18 +220,16 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<float>("Cost")
+                    b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<int>("ExportDays")
+                    b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
 
                     b.Property<string>("Measure")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -256,18 +245,16 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<float>("Cost")
+                    b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<int>("ExportDays")
+                    b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
 
                     b.Property<string>("Measure")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -283,18 +270,16 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<float>("Cost")
+                    b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<int>("ExportDays")
+                    b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
 
                     b.Property<string>("Measure")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -403,34 +388,31 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<float>("Cost")
+                    b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<float>("Depth")
+                    b.Property<float?>("Depth")
                         .HasColumnType("real");
 
-                    b.Property<int>("ExportDays")
+                    b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
 
-                    b.Property<float>("Height")
+                    b.Property<float?>("Height")
                         .HasColumnType("real");
 
                     b.Property<string>("Measure")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Type")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<float>("Weight")
+                    b.Property<float?>("Weight")
                         .HasColumnType("real");
 
-                    b.Property<float>("Width")
+                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -454,6 +436,9 @@ namespace ReportEngine.Domain.Migrations
 
                     b.Property<int>("FormedDrainageId")
                         .HasColumnType("integer");
+
+                    b.Property<bool?>("IsAutoCalculationEnabled")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Material")
                         .HasColumnType("text");
@@ -482,27 +467,25 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Cabel")
+                    b.Property<int?>("Cabel")
                         .HasColumnType("integer");
 
-                    b.Property<int>("CabelInput")
+                    b.Property<int?>("CabelInput")
                         .HasColumnType("integer");
 
-                    b.Property<float>("Cost")
+                    b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<int>("ElectricProtection")
+                    b.Property<int?>("ElectricProtection")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ExportDays")
+                    b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
 
                     b.Property<string>("Measure")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -518,27 +501,25 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Cabel")
+                    b.Property<int?>("Cabel")
                         .HasColumnType("integer");
 
-                    b.Property<int>("CabelInput")
+                    b.Property<int?>("CabelInput")
                         .HasColumnType("integer");
 
-                    b.Property<float>("Cost")
+                    b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<int>("ElectricProtection")
+                    b.Property<int?>("ElectricProtection")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ExportDays")
+                    b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
 
                     b.Property<string>("Measure")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -554,27 +535,25 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Cabel")
+                    b.Property<int?>("Cabel")
                         .HasColumnType("integer");
 
-                    b.Property<int>("CabelInput")
+                    b.Property<int?>("CabelInput")
                         .HasColumnType("integer");
 
-                    b.Property<float>("Cost")
+                    b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<int>("ElectricProtection")
+                    b.Property<int?>("ElectricProtection")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ExportDays")
+                    b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
 
                     b.Property<string>("Measure")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -590,27 +569,25 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Cabel")
+                    b.Property<int?>("Cabel")
                         .HasColumnType("integer");
 
-                    b.Property<int>("CabelInput")
+                    b.Property<int?>("CabelInput")
                         .HasColumnType("integer");
 
-                    b.Property<float>("Cost")
+                    b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<int>("ElectricProtection")
+                    b.Property<int?>("ElectricProtection")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ExportDays")
+                    b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
 
                     b.Property<string>("Measure")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -626,27 +603,25 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Cabel")
+                    b.Property<int?>("Cabel")
                         .HasColumnType("integer");
 
-                    b.Property<int>("CabelInput")
+                    b.Property<int?>("CabelInput")
                         .HasColumnType("integer");
 
-                    b.Property<float>("Cost")
+                    b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<int>("ElectricProtection")
+                    b.Property<int?>("ElectricProtection")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ExportDays")
+                    b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
 
                     b.Property<string>("Measure")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -662,34 +637,31 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<float>("Cost")
+                    b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<float>("Depth")
+                    b.Property<float?>("Depth")
                         .HasColumnType("real");
 
-                    b.Property<int>("ExportDays")
+                    b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
 
-                    b.Property<float>("Height")
+                    b.Property<float?>("Height")
                         .HasColumnType("real");
 
                     b.Property<string>("Measure")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Type")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<float>("Weight")
+                    b.Property<float?>("Weight")
                         .HasColumnType("real");
 
-                    b.Property<float>("Width")
+                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -705,34 +677,31 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<float>("Cost")
+                    b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<float>("Depth")
+                    b.Property<float?>("Depth")
                         .HasColumnType("real");
 
-                    b.Property<int>("ExportDays")
+                    b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
 
-                    b.Property<float>("Height")
+                    b.Property<float?>("Height")
                         .HasColumnType("real");
 
                     b.Property<string>("Measure")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Type")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<float>("Weight")
+                    b.Property<float?>("Weight")
                         .HasColumnType("real");
 
-                    b.Property<float>("Width")
+                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -748,34 +717,31 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<float>("Cost")
+                    b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<float>("Depth")
+                    b.Property<float?>("Depth")
                         .HasColumnType("real");
 
-                    b.Property<int>("ExportDays")
+                    b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
 
-                    b.Property<float>("Height")
+                    b.Property<float?>("Height")
                         .HasColumnType("real");
 
                     b.Property<string>("Measure")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Type")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<float>("Weight")
+                    b.Property<float?>("Weight")
                         .HasColumnType("real");
 
-                    b.Property<float>("Width")
+                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -799,6 +765,9 @@ namespace ReportEngine.Domain.Migrations
 
                     b.Property<int>("FormedElectricalComponentId")
                         .HasColumnType("integer");
+
+                    b.Property<bool?>("IsAutoCalculationEnabled")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Material")
                         .HasColumnType("text");
@@ -882,6 +851,9 @@ namespace ReportEngine.Domain.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool?>("Disassembled")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("FrameType")
                         .IsRequired()
                         .HasColumnType("text");
@@ -912,18 +884,16 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<float>("Cost")
+                    b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<int>("ExportDays")
+                    b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
 
                     b.Property<string>("Measure")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -939,18 +909,16 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<float>("Cost")
+                    b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<int>("ExportDays")
+                    b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
 
                     b.Property<string>("Measure")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -966,18 +934,16 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<float>("Cost")
+                    b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<int>("ExportDays")
+                    b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
 
                     b.Property<string>("Measure")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -1006,7 +972,7 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float?>("CostComponent")
                         .HasColumnType("real");
 
-                    b.Property<int>("Count")
+                    b.Property<int?>("Count")
                         .HasColumnType("integer");
 
                     b.Property<int?>("ExportDays")
@@ -1293,30 +1259,28 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<float>("Cost")
+                    b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<float>("Depth")
+                    b.Property<float?>("Depth")
                         .HasColumnType("real");
 
-                    b.Property<int>("ExportDays")
+                    b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
 
-                    b.Property<float>("Height")
+                    b.Property<float?>("Height")
                         .HasColumnType("real");
 
                     b.Property<string>("Measure")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<float>("Weight")
+                    b.Property<float?>("Weight")
                         .HasColumnType("real");
 
-                    b.Property<float>("Width")
+                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -1332,30 +1296,28 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<float>("Cost")
+                    b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<float>("Depth")
+                    b.Property<float?>("Depth")
                         .HasColumnType("real");
 
-                    b.Property<int>("ExportDays")
+                    b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
 
-                    b.Property<float>("Height")
+                    b.Property<float?>("Height")
                         .HasColumnType("real");
 
                     b.Property<string>("Measure")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<float>("Weight")
+                    b.Property<float?>("Weight")
                         .HasColumnType("real");
 
-                    b.Property<float>("Width")
+                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -1371,34 +1333,31 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<float>("Cost")
+                    b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<float>("Depth")
+                    b.Property<float?>("Depth")
                         .HasColumnType("real");
 
-                    b.Property<int>("ExportDays")
+                    b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
 
-                    b.Property<float>("Height")
+                    b.Property<float?>("Height")
                         .HasColumnType("real");
 
                     b.Property<string>("Measure")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Type")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<float>("Weight")
+                    b.Property<float?>("Weight")
                         .HasColumnType("real");
 
-                    b.Property<float>("Width")
+                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -1414,34 +1373,31 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<float>("Cost")
+                    b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<float>("Depth")
+                    b.Property<float?>("Depth")
                         .HasColumnType("real");
 
-                    b.Property<int>("ExportDays")
+                    b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
 
-                    b.Property<float>("Height")
+                    b.Property<float?>("Height")
                         .HasColumnType("real");
 
                     b.Property<string>("Measure")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Type")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<float>("Weight")
+                    b.Property<float?>("Weight")
                         .HasColumnType("real");
 
-                    b.Property<float>("Width")
+                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -1457,34 +1413,31 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<float>("Cost")
+                    b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<float>("Depth")
+                    b.Property<float?>("Depth")
                         .HasColumnType("real");
 
-                    b.Property<int>("ExportDays")
+                    b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
 
-                    b.Property<float>("Height")
+                    b.Property<float?>("Height")
                         .HasColumnType("real");
 
                     b.Property<string>("Measure")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Type")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<float>("Weight")
+                    b.Property<float?>("Weight")
                         .HasColumnType("real");
 
-                    b.Property<float>("Width")
+                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");

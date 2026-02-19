@@ -12,10 +12,15 @@
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <DocumentationFile>C:\Work\Prjs\ReportEngine\Documentation.xml</DocumentationFile>
         <UseWindowsForms>False</UseWindowsForms>
+		<RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
     </PropertyGroup>
 
     <ItemGroup>
         <None Remove="Resources\Icons\estimate_cost_icon_213382.ico" />
+        <None Remove="Resources\Icons\IconConfirm.png" />
+        <None Remove="Resources\Icons\IconError.png" />
+        <None Remove="Resources\Icons\IconInfo.png" />
+        <None Remove="Resources\Icons\Icon_Error.png" />
         <None Remove="Resources\Icons\install_line_icon_236048.ico" />
         <None Remove="Resources\Images\EAC.jpg" />
         <None Remove="Resources\Images\Etalon.jpg" />
@@ -111,6 +116,15 @@
         </PackageReference>
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.10" />
         <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.10" />
+        <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+        <PackageReference Include="Roslynator.Analyzers" Version="4.15.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Roslynator.CodeFixes" Version="4.15.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Serilog" Version="4.3.0" />
         <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />
         <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.2" />
@@ -145,6 +159,15 @@
         </Resource>
         <Resource Include="Resources\Icons\estimate_cost_icon_213382_prev.ico">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Resources\Icons\IconConfirm.png">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Resources\Icons\IconInfo.png">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Resources\Icons\Icon_Error.png">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Resource>
         <Resource Include="Resources\Icons\install_line_icon_236048.ico">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -416,6 +439,6 @@
     </ItemGroup>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Release'">
-        <Exec Command="xcopy /Y /E /I &quot;$(TargetDir)*&quot; &quot;T:\00 ОКП АСУ\01 Группа разработки ПО\Тиунов\Приложение Стенды КИП&quot;" />
+        <Exec Command="xcopy /Y /E /I &quot;$(TargetDir)*&quot; &quot;\\S32fs.gk-etalon.local\GrandVera1\00 ОКП АСУ\01 Группа разработки ПО\Тиунов\Приложение Стенды КИП&quot;" />
     </Target>
 </Project>

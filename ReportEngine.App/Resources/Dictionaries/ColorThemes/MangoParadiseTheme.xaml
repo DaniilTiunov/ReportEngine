@@ -25,4 +25,5 @@
     <SolidColorBrush x:Key="ButtonDisabledBackground" Color="#3B2924" />
     <SolidColorBrush x:Key="ButtonDisabledForeground" Color="#AA8865" />
     <SolidColorBrush x:Key="DisabledForeground" Color="#A58B6C" />
+    <SolidColorBrush x:Key="UnsafeDetails" Color="#A58B6C" />
 </ResourceDictionary>

@@ -4,6 +4,7 @@ namespace ReportEngine.App.Commands.Providers;
 
 public class ProjectCommandProvider
 {
+    public ICommand UpdateStandsAfterEquipsCommand { get; set; }
     public ICommand SelectMaterialLineDialogCommand { get; set; }
     public ICommand SelectArmatureDialogCommand { get; set; }
     public ICommand SelectTreeSocketDialogCommand { get; set; }
@@ -57,6 +58,17 @@ public class ProjectCommandProvider
     public ICommand ShowSubjectDialogCommand { get; set; }
     public ICommand UpdateUICommand { get; set; }
     public ICommand RenumerateStandsCommand { get; set; }
+    public ICommand OpenObvSettingsWindowCommand { get; set; }
+    public ICommand OpenCreateNewStandCommand { get; set; }
+    public ICommand OpenEditStandCommand { get; set; }
+    public ICommand FillObvFieldsTiEditCommand { get; set; }
+    public ICommand DeleteAdditionalEquipFromObvCommand {  get; set; }
+    public ICommand UpdateAdditionalEquipFromObvCommand { get; set; }
+
+    public ICommand AdditionalTestCommand { get; set;  }
+    public ICommand SaveAllChangesInComponentsCommand {  get; set; }
+
+    public ICommand RenumerateObvInStandCommand { get; set; }
 
     public ICommand Bind(ICommand command, Action<object> execute, Func<object, bool> canExecute = null)
     {

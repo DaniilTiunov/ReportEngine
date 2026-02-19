@@ -20,71 +20,128 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="2" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <avalonDock:DockingManager>
             <avalonDock:LayoutRoot>
-                <avalonDock:LayoutPanel x:Name="LayoutPanel" Orientation="Horizontal">
-                    <avalonDock:LayoutAnchorablePane DockHeight="300">
+                <avalonDock:LayoutPanel x:Name="LayoutPanel" Orientation="Vertical">
+                    <avalonDock:LayoutAnchorablePane DockHeight="*">
                         <avalonDock:LayoutAnchorable
-                            Title="Навигация по проекту"
+                            Title=" Навигация по проекту"
                             CanClose="False"
                             CanHide="False">
-                            <TreeView
-                                x:Name="MainTree"
-                                MinWidth="200"
-                                FontSize="14"
-                                MouseDoubleClick="OpenCurrentView">
-                                <TreeViewItem Header="Проект" IsExpanded="True">
-                                    <TreeViewItem
-                                        x:Name="ProjectCard"
-                                        Margin="0,3,0,3"
-                                        Header="Карточка проекта"
-                                        Tag="ProjectCard" />
-                                    <TreeViewItem Header="Редактирование стенда" IsExpanded="True">
-                                        <!--<TreeViewItem
-                                            Margin="0,3,0,3"
-                                            Header="Стенды"
-                                            Tag="Stand" />-->
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="0.25*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <!--  Первое дерево  -->
+                                <TreeView
+                                    x:Name="MainTree"
+                                    Grid.Row="0"
+                                    MinWidth="200"
+                                    FontSize="14"
+                                    Foreground="{DynamicResource PrimaryForeground}"
+                                    MouseDoubleClick="OpenCurrentView">
+                                    <TreeViewItem Header="Проект" IsExpanded="True">
                                         <TreeViewItem
+                                            x:Name="ProjectCard"
                                             Margin="0,3,0,3"
-                                            Header="Формирование стендов"
-                                            Tag="StandObv" />
-                                        <!--<TreeViewItem Margin="0,3,0,3" Header="Формирование стенда" Tag="FrameDrainages" />-->
+                                            Foreground="{DynamicResource PrimaryForeground}"
+                                            Header="Карточка проекта"
+                                            Tag="ProjectCard" />
                                         <TreeViewItem
-                                            Margin="0,3,10,3"
-                                            Header="Предварительный просмотр проекта"
-                                            Tag="ProjectPreview" />
-                                        <TreeViewItem
-                                            Margin="0,3,0,3"
-                                            Header="Формирование упаковки"
-                                            Tag="StandsContainer" />
+                                            Foreground="{DynamicResource PrimaryForeground}"
+                                            Header="Редактирование стенда"
+                                            IsExpanded="True">
+                                            <TreeViewItem
+                                                Margin="0,3,10,3"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Header="Расчёт стенда"
+                                                Tag="ProjectPreview" />
+                                            <TreeViewItem
+                                                Margin="0,3,0,3"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Header="Формирование упаковки"
+                                                Tag="StandsContainer" />
+                                        </TreeViewItem>
                                     </TreeViewItem>
-                                </TreeViewItem>
-                                <TreeViewItem Header="Создание отчётов" ToolTip="Нажмите ПКМ для выбор отчёта">
-                                    <TreeViewItem.ContextMenu>
-                                        <ContextMenu>
-                                            <MenuItem Command="{Binding ProjectCommandProvider.CalculateProjectCommand}" Header="Расчитать проект" />
-                                            <Separator />
-                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateSummaryReportCommand}" Header="Сводная ведомость" />
-                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateComponentsListReportCommand}" Header="Ведомость комплектующих" />
-                                            <Separator />
-                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateNameplatesReportCommand}" Header="Шильдики и таблички" />
-                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateMarkReportCommand}" Header="Маркировка" />
-                                            <Separator />
-                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateProductionReportCommand}" Header="Производство" />
-                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateFinplanReportCommand}" Header="Фин. план" />
-                                            <Separator />
-                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateContainerReportCommand}" Header="Отчёт тара" />
-                                            <Separator />
-                                            <MenuItem Command="{Binding ProjectCommandProvider.CreatePassportReportCommand}" Header="Паспорт" />
-                                            <MenuItem Command="{Binding ProjectCommandProvider.CreateTechnologicalCardsReportCommand}" Header="Технологические карты" />
-                                        </ContextMenu>
-                                    </TreeViewItem.ContextMenu>
-                                </TreeViewItem>
-                            </TreeView>
+                                </TreeView>
+
+                                <!--  Второе дерево  -->
+                                <TreeView
+                                    x:Name="ReportTree"
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    MinHeight="500"
+                                    FontSize="14"
+                                    Foreground="{DynamicResource PrimaryForeground}"
+                                    MouseDoubleClick="ReportTree_MouseDoubleClick">
+                                    <TreeViewItem
+                                        Foreground="{DynamicResource PrimaryForeground}"
+                                        Header="Создание отчётов и расчёт"
+                                        IsExpanded="True">
+                                        <TreeViewItem
+                                            Margin="0,3,0,3"
+                                            Foreground="{DynamicResource PrimaryForeground}"
+                                            Header="Расчитать проект"
+                                            Tag="CalculateProject" />
+                                        <TreeViewItem
+                                            Margin="0,3,0,3"
+                                            Foreground="{DynamicResource PrimaryForeground}"
+                                            Header="Переформировать комплектущие"
+                                            Tag="UpdateAllProps" />
+                                        <TreeViewItem
+                                            Margin="0,3,0,3"
+                                            Foreground="{DynamicResource PrimaryForeground}"
+                                            Header="Сводная ведомость"
+                                            Tag="SummaryReport" />
+                                        <TreeViewItem
+                                            Margin="0,3,0,3"
+                                            Foreground="{DynamicResource PrimaryForeground}"
+                                            Header="Ведомость комплектующих"
+                                            Tag="ComponentsList" />
+                                        <TreeViewItem
+                                            Margin="0,3,0,3"
+                                            Foreground="{DynamicResource PrimaryForeground}"
+                                            Header="Шильдики и таблички"
+                                            Tag="NamePlates" />
+                                        <TreeViewItem
+                                            Margin="0,3,0,3"
+                                            Foreground="{DynamicResource PrimaryForeground}"
+                                            Header="Маркировка"
+                                            Tag="MarksReport" />
+                                        <TreeViewItem
+                                            Margin="0,3,0,3"
+                                            Foreground="{DynamicResource PrimaryForeground}"
+                                            Header="Производство"
+                                            Tag="ProductionList" />
+                                        <TreeViewItem
+                                            Margin="0,3,0,3"
+                                            Foreground="{DynamicResource PrimaryForeground}"
+                                            Header="Фин. план"
+                                            Tag="FinPlan" />
+                                        <TreeViewItem
+                                            Margin="0,3,0,3"
+                                            Foreground="{DynamicResource PrimaryForeground}"
+                                            Header="Отчёт тара"
+                                            Tag="ContainersReport" />
+                                        <TreeViewItem
+                                            Margin="0,3,0,3"
+                                            Foreground="{DynamicResource PrimaryForeground}"
+                                            Header="Паспорт"
+                                            Tag="Passport" />
+                                        <TreeViewItem
+                                            Margin="0,3,0,3"
+                                            Foreground="{DynamicResource PrimaryForeground}"
+                                            Header="Технологические карты"
+                                            Tag="TechCards" />
+                                    </TreeViewItem>
+                                </TreeView>
+                            </Grid>
                         </avalonDock:LayoutAnchorable>
                     </avalonDock:LayoutAnchorablePane>
                 </avalonDock:LayoutPanel>
@@ -95,13 +152,9 @@
             Grid.Column="1"
             Width="2"
             HorizontalAlignment="Stretch"
-            Background="WhiteSmoke" />
+            Background="{DynamicResource SecondaryColor}" />
 
-        <dragablz:TabablzControl
-            x:Name="MainTabControl"
-            Grid.Column="2"
-            ConsolidateOrphanedItems="True"
-            InterTabController="{StaticResource InterTabController}"
-            ShowDefaultCloseButton="True" />
+
+        <TabControl x:Name="MainTabControl" Grid.Column="2" />
     </Grid>
 </UserControl>

@@ -103,6 +103,7 @@ public class ProjectModel : BaseViewModel
     private ObservableCollection<StandModel> _standsInContainer;
 
     private ObservableCollection<StandModel> _stands = new();
+
     public ObservableCollection<StandModel> Stands
     {
         get => _stands;

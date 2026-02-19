@@ -17,4 +17,5 @@ public class HumanCostSettingsData : IIniData
     public double TimeForDrillOneBus { get; set; } // Время на сверления одной шины
     public double TimeForMontageOneInput { get; set; } // Время монтажа одного ввода
     public double TimeForOthersOperations { get; set; } // Время на другие операции
+    public double GalvanizedStands { get; set; } // Оцинковка рам
 }

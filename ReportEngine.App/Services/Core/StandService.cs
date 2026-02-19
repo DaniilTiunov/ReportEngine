@@ -1,10 +1,14 @@
 ﻿using System.Collections.ObjectModel;
-using ReportEngine.App.AppHelpers;
+using Mapster;
+using Microsoft.EntityFrameworkCore;
+using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.BaseEntities.Interface;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.App.Services.Core;
@@ -17,18 +21,29 @@ public class StandService : IStandService
     private readonly IFormedElectricalRepository _formedElectricalRepository;
     private readonly IFrameRepository _formedFrameRepository;
     private readonly INotificationService _notificationService;
+    private readonly ObvyazkaInStandRepository _obvyazkaInStandRepository;
     private readonly IProjectInfoRepository _projectRepository;
     private readonly ReAppContext _context;
 
-    public StandService(IProjectInfoRepository projectRepository,
+    private readonly IPurposesRepository<AdditionalEquipPurpose> _additionalPurposesRepository;
+    private readonly IPurposesRepository<ElectricalPurpose> _electricalPurposesRepository;
+    private readonly IPurposesRepository<DrainagePurpose> _drainagesPurposesRepository;
+
+    public StandService(
+        IProjectInfoRepository projectRepository,
         IFrameRepository frameRepository,
         IFormedDrainagesRepository drainagesRepository,
         INotificationService notificationService,
         IFormedAdditionalEquipsRepository formedAdditionalEquipsRepository,
         IFormedElectricalRepository formedElectricalRepository,
         IContainerRepository containerRepository,
+        ObvyazkaInStandRepository obvyazkaInStandRepository,
+        IPurposesRepository<AdditionalEquipPurpose> additionalPurposesRepository,
+        IPurposesRepository<ElectricalPurpose> electricalPurposesRepository,
+        IPurposesRepository<DrainagePurpose> drainagesPurposesRepository,
         ReAppContext context)
     {
+        _obvyazkaInStandRepository = obvyazkaInStandRepository;
         _projectRepository = projectRepository;
         _formedFrameRepository = frameRepository;
         _formedDrainagesRepository = drainagesRepository;
@@ -36,6 +51,9 @@ public class StandService : IStandService
         _formedAdditionalEquipsRepository = formedAdditionalEquipsRepository;
         _formedElectricalRepository = formedElectricalRepository;
         _containerRepository = containerRepository;
+        _additionalPurposesRepository = additionalPurposesRepository;
+        _electricalPurposesRepository = electricalPurposesRepository;
+        _drainagesPurposesRepository = drainagesPurposesRepository;
         _context = context;
     }
 
@@ -60,11 +78,21 @@ public class StandService : IStandService
     }
 
     public async Task LoadObvyazkiInStandsAsync(IEnumerable<StandModel> standModels)
-    {
+    {     
         foreach (var standModel in standModels)
         {
             var obvyazkiInStand = await _projectRepository.GetAllObvyazkiInStandAsync(standModel.Id);
             standModel.ObvyazkiInStand = new ObservableCollection<ObvyazkaInStand>(obvyazkiInStand);
+        }
+    }
+
+    public async Task LoadAllStandsDataAsync(int projectId, IEnumerable<StandModel> standModels)
+    {
+        var standsEntities = await _projectRepository.GetStandsByIdAsync(projectId);
+
+        foreach (var (entity, model) in standsEntities.Stands.Zip(standModels))
+        {
+            model.ImageData = entity.ImageData;
         }
     }
 
@@ -76,6 +104,7 @@ public class StandService : IStandService
             var standDrainages = await _projectRepository.GetAllDrainagesInStandAsync(standModel.Id);
             var standElectricals = await _projectRepository.GetAllElectricalComponentsInStandAsync(standModel.Id);
             var standAdditionals = await _projectRepository.GetAllAdditionalEquipsInStandAsync(standModel.Id);
+            
 
             standModel.FramesInStand.Clear();
             foreach (var frame in standFrames.Select(sf => sf.Frame))
@@ -95,7 +124,7 @@ public class StandService : IStandService
         }
     }
 
-    public void LoadPurposesInStands(IEnumerable<StandModel> stands)
+    public async Task LoadPurposesInStands(IEnumerable<StandModel> stands)
     {
         foreach (var stand in stands)
         {
@@ -117,82 +146,51 @@ public class StandService : IStandService
     public async Task AddFrameToStandAsync(int standId, int frameId)
     {
         await _projectRepository.AddFrameToStandAsync(standId, frameId);
-        _notificationService.ShowInfo($"Рама успешно добавлена в стенд. {standId}");
+        _notificationService.ShowInfo($"Рама успешно добавлена в стенд");
     }
 
     public async Task AddDrainageToStandAsync(int standId, int drainageId)
     {
         await _projectRepository.AddDrainageToStandAsync(standId, drainageId);
-        _notificationService.ShowInfo($"Дренаж успешно добавлен в стенд. {standId}");
-    }
-
-    public async Task AddCustomDrainageAsync(int standId, FormedDrainage customDrainage)
-    {
-        var entity = new FormedDrainage
-        {
-            Name = customDrainage.Name,
-            Purposes = customDrainage.Purposes.Select(p => new DrainagePurpose
-            {
-                Purpose = p.Purpose,
-                Material = p.Material,
-                Quantity = p.Quantity,
-                CostPerUnit = p.CostPerUnit,
-                Measure = p.Measure,
-                ExportDays = p.ExportDays
-            }).ToList()
-        };
-
-        await _formedDrainagesRepository.AddAsync(entity);
-        await _projectRepository.AddDrainageToStandAsync(standId, entity.Id);
-        _notificationService.ShowInfo($"Собранный дренаж успешно добавлен! Id {standId}");
+        _notificationService.ShowInfo($"Дренаж успешно добавлен в стенд");
     }
 
     public async Task AddObvyazkaToStandAsync(int standId, ObvyazkaInStand obvyazka)
     {
         await _projectRepository.AddStandObvyazkaAsync(standId, obvyazka);
-        _notificationService.ShowInfo($"Обвязка успешно добавлена в стенд. Id{standId} ");
     }
 
-    public async Task AddCustomElectricalComponentAsync(int standId, FormedElectricalComponent customElectrical)
+    public async Task AddCustomDrainageAsync(int standId, List<DrainagePurpose> drainagePurposes, FormedDrainage customDrainage)
+    {
+        var entity = new FormedDrainage
+        {
+            Purposes = drainagePurposes
+        };
+
+        await _formedDrainagesRepository.AddAsync(entity);
+        await _projectRepository.AddDrainageToStandAsync(standId, entity.Id);
+    }
+
+    public async Task AddCustomElectricalComponentAsync(int standId, List<ElectricalPurpose> electricalPurpose, FormedElectricalComponent customElectrical)
     {
         var entity = new FormedElectricalComponent
         {
-            Name = customElectrical.Name,
-            Purposes = customElectrical.Purposes.Select(p => new ElectricalPurpose
-            {
-                Purpose = p.Purpose,
-                Material = p.Material,
-                Quantity = p.Quantity,
-                CostPerUnit = p.CostPerUnit,
-                Measure = p.Measure,
-                ExportDays = p.ExportDays
-            }).ToList()
+            Purposes = electricalPurpose
         };
 
         await _formedElectricalRepository.AddAsync(entity);
         await _projectRepository.AddElectricalComponentToStandAsync(standId, entity.Id);
-        _notificationService.ShowInfo($"Собранный электрический компонент успешно добавлен! Id {standId}");
     }
 
-    public async Task AddCustomAdditionalEquipAsync(int standId, FormedAdditionalEquip customEquip)
+    public async Task AddCustomAdditionalEquipAsync(int standId, List<AdditionalEquipPurpose> additionalEquipPurposes, FormedAdditionalEquip customEquip)
     {
         var entity = new FormedAdditionalEquip
         {
-            Name = customEquip.Name,
-            Purposes = customEquip.Purposes.Select(p => new AdditionalEquipPurpose
-            {
-                Purpose = p.Purpose,
-                Material = p.Material,
-                Quantity = p.Quantity,
-                CostPerUnit = p.CostPerUnit,
-                Measure = p.Measure,
-                ExportDays = p.ExportDays
-            }).ToList()
+            Purposes = additionalEquipPurposes
         };
 
         await _formedAdditionalEquipsRepository.AddAsync(entity);
         await _projectRepository.AddAdditionalEquipToStandAsync(standId, entity.Id);
-        _notificationService.ShowInfo($"Собранное комплектующее успешно добавлено! Id {standId}");
     }
 
     public Task<ObvyazkaInStand> CreateObvyazkaAsync(StandModel standModel, Obvyazka selectedObvyazka)
@@ -270,15 +268,14 @@ public class StandService : IStandService
                                         CostPerUnit = component.CostPerUnit,
                                         Measure = component.Measure,
                                         ExportDays = component.ExportDays,
-                                        Id = component.Id
+                                        Id = 0
                                     })
                                     .ToList()
         };
 
         return Task.FromResult(entity);
     }
-
-    public async Task FillStandFieldsFromObvyazka(StandModel stand, ObvyazkaInStand obv)
+    public async void FillStandFieldsFromObvyazka(StandModel stand, ObvyazkaInStand obv)
     {
         if (stand == null || obv == null)
             return;
@@ -319,26 +316,57 @@ public class StandService : IStandService
         stand.ThirdSensorMarkMinus = obv.ThirdSensorMarkMinus;
         stand.ThirdSensorDescription = obv.ThirdSensorDescription;
 
+        var additionalComponents = await GetAdditionalComponentsAsync(obv);
+
+        stand.ObvyazkaAdditionalComponents.Clear();
+        foreach (var additionalEqip in additionalComponents)
+        {
+            stand.ObvyazkaAdditionalComponents.Add(additionalEqip);
+        }
+
+    }
+    private async Task<List<ObvyazkaAdditionalEquipPurpose>> GetAdditionalComponentsAsync(ObvyazkaInStand obv)
+    {
         if (obv.AdditionalComponents != null)
         {
-            stand.ObvyazkaAdditionalComponents = new ObservableCollection<ObvyazkaAdditionalEquipPurpose>(
-                obv.AdditionalComponents
-                .Select(component => new ObvyazkaAdditionalEquipPurpose
-                {
-                    Purpose = component.Purpose,
-                    Material = component.Material,
-                    Quantity = component.Quantity,
-                    CostPerUnit = component.CostPerUnit,
-                    Measure = component.Measure,
-                    ExportDays = component.ExportDays,
-                    Id = component.Id
-                }));
-            CollectionRefreshHelper.SafeRefreshCollection(stand.ObvyazkaAdditionalComponents);
+            return obv.AdditionalComponents.ToList();
         }
-       
 
-        await Task.CompletedTask;
+        if (obv.Id != 0)
+        {
+            return await _context.ObvyazkaAdditionalEquipPurpose
+                .Where(a => a.ObvyazkaInStandId == obv.Id)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        return new List<ObvyazkaAdditionalEquipPurpose>();
     }
+
+    public async Task DeleteAdditionalPurposeFromObvAsync(ObvyazkaAdditionalEquipPurpose obv, StandModel standModel)
+    {
+        if (obv == null || standModel == null)
+        {
+            _notificationService.ShowError("Доп. комплектующее или стенд не выбраны!");
+            return;
+        }
+
+        standModel.ObvyazkaAdditionalComponents.Remove(obv);
+        await _obvyazkaInStandRepository.DeleteObvyazkaPurposesAsync(obv.Id);
+    }
+
+    public async Task UpdateAdditionalPurposeFromObvAsync(ObvyazkaAdditionalEquipPurpose obv, int obvyazkaInStand)
+    {
+        if (obv == null)
+        {
+            _notificationService.ShowError("Доп. комплектующее или стенд не выбраны!");
+            return;
+        }
+
+        await _obvyazkaInStandRepository.UpdateObvyazkaPurposesAsync(obv, obvyazkaInStand);
+    }
+
+
 
     public async Task UpdateElectricalPurposeAsync(ElectricalPurpose entity)
     {
@@ -376,5 +404,62 @@ public class StandService : IStandService
     public async Task UpdateStandWeight(StandModel stand)
     {
         await _projectRepository.UpdateStandAsync(StandDataConverter.ConvertToStandEntity(stand));
+    }
+
+    public async Task SaveAllPurposesInStandAsync(StandModel stand)
+    {
+        if (stand == null)
+            _notificationService.ShowError("Стенд не выбран!");
+
+        var collections = new List<(IEnumerable<IPurposeEntity> items, Func<IPurposeEntity, Task> updater)>
+        {
+            (
+                stand.AllAdditionalEquipPurposesInStand,
+                async item =>
+                {
+                    if (item is AdditionalEquipPurpose ad && ad.Id == 0)
+                    {
+                        var firstAdditional = stand.AdditionalEquipsInStand.FirstOrDefault();
+                        if (firstAdditional != null)
+                            ad.FormedAdditionalEquipId = firstAdditional.Id;
+                    }
+                    await _additionalPurposesRepository.UpdateAsync((AdditionalEquipPurpose)item);
+                }
+            ),
+            (
+                stand.AllElectricalPurposesInStand,
+                async item =>
+                {
+                    if (item is ElectricalPurpose ep && ep.Id == 0)
+                    {
+                        var firstElectrical = stand.ElectricalComponentsInStand.FirstOrDefault();
+                        if (firstElectrical != null)
+                            ep.FormedElectricalComponentId = firstElectrical.Id;
+                    }
+                    await _electricalPurposesRepository.UpdateAsync((ElectricalPurpose)item);
+                }
+            ),
+            (
+                stand.AllDrainagePurposesInStand,
+                async item =>
+                {
+                    if (item is DrainagePurpose dp && dp.Id == 0)
+                    {
+                        var firstDrainage = stand.DrainagesInStand.FirstOrDefault();
+                        if (firstDrainage != null)
+                            dp.FormedDrainageId = firstDrainage.Id;
+                    }
+                    await _drainagesPurposesRepository.UpdateAsync((DrainagePurpose)item);
+                }
+            )
+        };
+
+        foreach (var (items, updater) in collections)
+        {
+            foreach (var item in items.ToList()) // ToList, чтобы безопасно изменять коллекцию
+            {
+                await updater(item);
+            }
+        }
     }
 }

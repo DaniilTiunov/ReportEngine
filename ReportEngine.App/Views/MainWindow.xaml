@@ -109,16 +109,19 @@
             FontSize="14">
             <MenuItem Header="Проект">
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenTreeViewCommand}" Header="Создать новый проект" />
-                <MenuItem Command="{Binding MainWindowCommandProvider.OpenMainWindowCommand}" Header="На главный экран" />
                 <Separator />
-                <MenuItem Command="{Binding MainWindowCommandProvider.OpenSettingsWindow}" Header="Настройки" />
+                <MenuItem Command="{Binding MainWindowCommandProvider.OpenMainWindowCommand}" Header="На главный экран" />
+            </MenuItem>
+
+            <MenuItem Header="Настройки">
+                <MenuItem Command="{Binding MainWindowCommandProvider.OpenSettingsWindow}" Header="Настройки приложения" />
                 <Separator />
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenCalculationSettingsWindow}" Header="Настройки расчета" />
             </MenuItem>
 
             <MenuItem Header="Вид" Tag="ThemeItemChanger">
                 <MenuItem
-                    Click="StandartTheme"
+                    Click="StandardTheme"
                     Header="Светлая тема"
                     Tag="Standart" />
                 <Separator />
@@ -269,88 +272,107 @@
             </StatusBarItem>
         </StatusBar>
 
-        <ContentControl x:Name="MainContentControl" Margin="10,0,10,10">
-            <DataGrid
-                x:Name="MainDataGrid"
-                Margin="10,30,10,10"
-                AutoGenerateColumns="False"
-                IsReadOnly="True"
-                ItemsSource="{Binding MainWindowModel.AllProjects}"
-                MouseDoubleClick="MainDataGrid_OnMouseDoubleClick"
-                SelectedItem="{Binding MainWindowModel.SelectedProject}"
-                SelectionUnit="FullRow">
-                <DataGrid.Columns>
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding Number}"
-                        Header="№п/п"
-                        SortMemberPath="Number" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding Company}"
-                        Header="Заказчик" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding Object}"
-                        Header="Объект" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding StandCount}"
-                        Header="Кол-во стендов" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding Status}"
-                        Header="Статус" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding StartDate, StringFormat={}{0:dd-MM-yy}}"
-                        Header="Старт проекта" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding OutOfProduction, StringFormat={}{0:dd-MM-yy}}"
-                        Header="Выход из производства" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding EndDate, StringFormat={}{0:dd-MM-yy}}"
-                        Header="Дата окончания договора" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding OrderCustomer}"
-                        Header="Заказ покупателя" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding RequestProduction}"
-                        Header="Заявка на производство" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding HumanCost}"
-                        Header="Трудозатраты" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding Manager}"
-                        Header="Руководитель" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding MarkPlus}"
-                        Header="Маркировка +" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding MarkMinus}"
-                        Header="Маркировка -" />
-                </DataGrid.Columns>
-                <DataGrid.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Command="{Binding MainWindowCommandProvider.EditProjectCommand}" Header="Редактировать проект" />
-                        <MenuItem Command="{Binding MainWindowCommandProvider.RecalculateProjectCommand}" Header="Переформировать" />
-                        <MenuItem
-                            Command="{Binding MainWindowCommandProvider.DeleteSelectedProjectCommand}"
-                            Header="Удалить проект"
-                            Visibility="{Binding CurrentUser.SystemRole, Converter={StaticResource AdminVisibilityConverter}}" />
-                        <Separator />
-                        <MenuItem Command="{Binding MainWindowCommandProvider.ShowAllProjectsCommand}" Header="Обновить список проектов" />
-                    </ContextMenu>
-                </DataGrid.ContextMenu>
-            </DataGrid>
+        <ContentControl x:Name="MainContentControl" Grid.Row="1">
+            <Grid x:Name="MainGrid">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="35" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <TextBlock
+                        Margin="5,5,10,10"
+                        FontSize="16"
+                        Text="Поиск: " />
+                    <TextBox
+                        x:Name="SearchTextBox"
+                        Width="500"
+                        Margin="0,5,0,5"
+                        FontSize="16"
+                        Text=""
+                        TextChanged="SearchTextBox_TextChanged" />
+                </StackPanel>
+                <DataGrid
+                    x:Name="MainDataGrid"
+                    Grid.Row="1"
+                    Margin="0,5,0,5"
+                    AutoGenerateColumns="False"
+                    IsReadOnly="True"
+                    MouseDoubleClick="MainDataGrid_OnMouseDoubleClick"
+                    SelectedItem="{Binding MainWindowModel.SelectedProject}"
+                    SelectionUnit="FullRow">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding Number}"
+                            Header="№п/п"
+                            SortMemberPath="Number" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding Company}"
+                            Header="Заказчик" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding Object}"
+                            Header="Объект" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding StandCount}"
+                            Header="Кол-во стендов" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding Status}"
+                            Header="Статус" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding StartDate, StringFormat={}{0:dd-MM-yy}}"
+                            Header="Старт проекта" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding OutOfProduction, StringFormat={}{0:dd-MM-yy}}"
+                            Header="Выход из производства" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding EndDate, StringFormat={}{0:dd-MM-yy}}"
+                            Header="Дата окончания договора" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding OrderCustomer}"
+                            Header="Заказ покупателя" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding RequestProduction}"
+                            Header="Заявка на производство" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding HumanCost}"
+                            Header="Трудозатраты" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding Manager}"
+                            Header="Руководитель" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding MarkPlus}"
+                            Header="Маркировка +" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding MarkMinus}"
+                            Header="Маркировка -" />
+                    </DataGrid.Columns>
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding MainWindowCommandProvider.EditProjectCommand}" Header="Редактировать проект" />
+                            <MenuItem Command="{Binding MainWindowCommandProvider.RecalculateProjectCommand}" Header="Переформировать" />
+                            <MenuItem
+                                Command="{Binding MainWindowCommandProvider.DeleteSelectedProjectCommand}"
+                                Header="Удалить проект"
+                                Visibility="{Binding CurrentUser.SystemRole, Converter={StaticResource AdminVisibilityConverter}}" />
+                            <Separator />
+                            <MenuItem Command="{Binding MainWindowCommandProvider.ShowAllProjectsCommand}" Header="Обновить список проектов" />
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                </DataGrid>
+            </Grid>
         </ContentControl>
     </DockPanel>
 </Window>

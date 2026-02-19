@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using ReportEngine.Domain.Background;
+﻿using System.Collections.Concurrent;
+using Microsoft.Extensions.DependencyInjection;
+using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Repositories.Interfaces;
@@ -9,12 +9,15 @@ using Serilog;
 
 namespace ReportEngine.App.Services
 {
-    public class EquipChangesListener : BackgroundService
+    public class EquipChangesListener
     {
-        private readonly Dictionary<Type, IEnumerable<IBaseEquip>> _cache = new();
+        private readonly ConcurrentDictionary<Type, IEnumerable<IBaseEquip>> _cache = new();
+        public IReadOnlyDictionary<Type, IEnumerable<IBaseEquip>> Cache => _cache;
+
         private readonly ILogger _logger;
         private readonly IServiceProvider _serviceProvider;
         private readonly ReAppContext _dbContext;
+        private readonly IProjectService projectService;
 
         public EquipChangesListener(IServiceProvider serviceProvider, ReAppContext dbContext)
         {
@@ -23,60 +26,39 @@ namespace ReportEngine.App.Services
             _dbContext = dbContext;
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            await LoadCurrentDataAsync();
-
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
-            }
-        }
-
-        private async Task LoadCurrentDataAsync() 
-        {
-            var equipTypes = GetEquipTypes();
-
-            using var scope = _serviceProvider.CreateScope();
-
-            foreach (var type in equipTypes)
-            {
-                var repositoryType = typeof(IGenericBaseRepository<,>).MakeGenericType(type, type);
-                dynamic repository = scope.ServiceProvider.GetRequiredService(repositoryType);
-
-                IEnumerable<IBaseEquip> items = await repository.GetAllAsync();
-
-                _cache[type] = items;
-            }
-        }
-
-        private async Task GetChangesAsync()
-        {
-
-        }
-
-        private IGenericBaseRepository<T, T> GetCurrentRepository<T>(IServiceProvider serviceProvider)
-            where T : class, IBaseEquip
-        {
-            return serviceProvider.GetRequiredService<IGenericBaseRepository<T, T>>();
-        }
-
-        private List<Type> GetEquipTypes()
+        // Теперь этот метод можно вызывать извне
+        public async Task LoadCurrentDataAsync()
         {
             using var scope = _serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ReAppContext>();
 
+            foreach (var type in GetEquipTypes(context))
+            {
+                dynamic repository = CreateRepository(scope, type);
+
+                _cache[type] = (IEnumerable<IBaseEquip>)await repository.GetAllAsync();
+
+                _logger.Information($"Загружено {_cache[type].Count()} записей для типа {type.Name}");
+            }
+
+            ;
+        }
+
+        private static object CreateRepository(IServiceScope scope, Type entityType)
+        {
+            var repositoryType =
+                typeof(IGenericBaseRepository<,>).MakeGenericType(entityType, entityType);
+
+            return scope.ServiceProvider.GetRequiredService(repositoryType);
+        }
+
+        private List<Type> GetEquipTypes(ReAppContext context)
+        {
             return context.Model
                 .GetEntityTypes()
                 .Select(e => e.ClrType)
                 .Where(t => typeof(IBaseEquip).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)
                 .ToList();
         }
-
-        public IEnumerable<IBaseEquip> GetCachedEquip(Type type)
-        {
-            return _cache.TryGetValue(type, out var items) ? items : Enumerable.Empty<IBaseEquip>();
-        }
     }
 }
-

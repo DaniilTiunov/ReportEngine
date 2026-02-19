@@ -71,6 +71,25 @@ public class ProjectInfoRepository : IProjectInfoRepository
         if (existingStand != null)
             _context.Set<Stand>().Remove(existingStand);
 
+        var additionalFormedEquips = await _context.Set<FormedAdditionalEquip>()
+            .Where(fe => _context.Set<StandAdditionalEquip>()
+            .Any(sae => sae.StandId == standId && sae.AdditionalEquipId == fe.Id))
+            .ToListAsync();
+
+        var electricalFormedEquips = await _context.Set<FormedElectricalComponent>()
+            .Where(fe => _context.Set<StandElectricalComponent>()
+            .Any(sae => sae.StandId == standId && sae.ElectricalComponentId == fe.Id))
+            .ToListAsync();
+
+        var drainagesFormedEquips = await _context.Set<FormedDrainage>()
+            .Where(fe => _context.Set<StandDrainage>()
+            .Any(sae => sae.StandId == standId && sae.DrainageId == fe.Id))
+            .ToListAsync();
+
+        _context.RemoveRange(additionalFormedEquips);
+        _context.RemoveRange(electricalFormedEquips);
+        _context.RemoveRange(drainagesFormedEquips);
+
         await _context.SaveChangesAsync();
     }
 
@@ -85,13 +104,35 @@ public class ProjectInfoRepository : IProjectInfoRepository
         return 1;
     }
 
+    public async Task<IEnumerable<Stand>> AddStandsGroupAsync(int projectId, IEnumerable<Stand> stands)
+    {
+        var project = await _context.Projects
+          .Include(p => p.Stands)
+          .FirstOrDefaultAsync(p => p.Id == projectId);
+
+        if (project == null)
+            throw new ArgumentException($"Проект с ID: {projectId} не найден.");
+
+        foreach (var stand in stands)
+        {
+            stand.ProjectInfoId = projectId;
+        }
+
+        _context.Stands.AddRange(stands);
+
+        await _context.SaveChangesAsync();
+
+        return stands;
+    }
+
     public async Task<Stand> AddStandAsync(int projectId, Stand stand)
     {
         var project = await _context.Projects
             .Include(p => p.Stands)
             .FirstOrDefaultAsync(p => p.Id == projectId);
 
-        if (project == null) throw new ArgumentException($"Проект с ID: {projectId} не найден.");
+        if (project == null)
+            throw new ArgumentException($"Проект с ID: {projectId} не найден.");
 
         stand.ProjectInfoId = projectId;
         project.Stands.Add(stand);
@@ -106,7 +147,8 @@ public class ProjectInfoRepository : IProjectInfoRepository
         var existingStand = await _context.Set<Stand>()
             .FirstOrDefaultAsync(p => p.Id == stand.Id);
 
-        if (existingStand != null) _context.Entry(existingStand).CurrentValues.SetValues(stand);
+        if (existingStand != null)
+            _context.Entry(existingStand).CurrentValues.SetValues(stand);
 
         await _context.SaveChangesAsync();
     }
@@ -119,14 +161,13 @@ public class ProjectInfoRepository : IProjectInfoRepository
             .Where(stand => allStandsId.Contains(stand.Id))
             .ToDictionaryAsync(stand => stand.Id);
 
-        foreach (var stand in stands) 
+        foreach (var stand in stands)
         {
-            if(existingStands.TryGetValue(stand.Id, out var existingStand))
+            if (existingStands.TryGetValue(stand.Id, out var existingStand))
             {
                 _context.Entry(existingStand).CurrentValues.SetValues(stand);
             }
         }
-
 
         await _context.SaveChangesAsync();
     }
@@ -145,6 +186,15 @@ public class ProjectInfoRepository : IProjectInfoRepository
 
         if (stand == null)
             throw new ArgumentException($"Стенд с ID: {standId} не найден.");
+
+        // Проверяем, существует ли Obvyazka
+        var obvyazkaExists = await _context.Obvyazki
+            .AnyAsync(o => o.Id == standObvyazka.ObvyazkaId);
+
+        if (!obvyazkaExists)
+            throw new ArgumentException($"Обвязка с ID {standObvyazka.ObvyazkaId} не найдена.");
+
+        standObvyazka.Id = 0;
 
         stand.ObvyazkiInStand.Add(standObvyazka);
         await _context.SaveChangesAsync();
@@ -300,6 +350,7 @@ public class ProjectInfoRepository : IProjectInfoRepository
     {
         var stand = await _context.Stands
             .Include(s => s.ObvyazkiInStand)
+            .ThenInclude(obv => obv.AdditionalComponents)
             .FirstOrDefaultAsync(s => s.Id == standId);
 
         return stand?.ObvyazkiInStand ?? Enumerable.Empty<ObvyazkaInStand>();

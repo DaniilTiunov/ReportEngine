@@ -6,6 +6,7 @@ namespace ReportEngine.Domain.Entities;
 
 public class ElectricalPurpose : IPurposeEntity
 {
+    [Key] public int Id { get; set; }
     public string? Purpose { get; set; }
     public string? Material { get; set; }
     public float? Quantity { get; set; }
@@ -13,9 +14,9 @@ public class ElectricalPurpose : IPurposeEntity
     public string? Measure { get; set; }
     public int? ExportDays { get; set; }
     public int FormedElectricalComponentId { get; set; }
+    public bool? IsAutoCalculationEnabled { get; set; } = true;
 
     [ForeignKey(nameof(FormedElectricalComponentId))]
     public virtual FormedElectricalComponent FormedElectricalComponent { get; set; }
 
-    [Key] public int Id { get; set; }
 }

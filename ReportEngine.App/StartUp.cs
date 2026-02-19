@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Globalization;
+using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
 using ReportEngine.Shared.Config.Logger;
@@ -6,13 +7,15 @@ using Serilog;
 
 namespace ReportEngine.App;
 
-public class StartUp
+public static class StartUp
 {
     [STAThread]
     public static void Main()
     {
         try
         {
+            SetCulture();
+
             Log.Logger = LoggerConfig.InitializeLogger();
 
             var connString = JsonHandler.GetConnectionString(DirectoryHelper.GetConfigPath());
@@ -21,23 +24,35 @@ public class StartUp
 
             var app = host.Services.GetRequiredService<App>();
 
+            //var equipListener = host.Services.GetRequiredService<EquipChangesListener>();
+
+            //equipListener.LoadCurrentDataAsync().GetAwaiter().GetResult();
+
             var mainWindow = host.Services.GetRequiredService<MainWindow>();
             app.MainWindow = mainWindow;
 
             mainWindow.Show();
-
-            host.StartAsync();
 
             app.Run();
         }
         catch (Exception ex)
         {
             Log.Fatal(ex, "Приложение не запущено");
-            throw; // Пробрасываем исключение дальше для отладки
+            throw;
         }
         finally
         {
             Log.CloseAndFlush();
         }
+    }
+
+    public static void SetCulture()
+    {
+        var culture = new CultureInfo("ru-RU");
+
+        CultureInfo.DefaultThreadCurrentCulture = culture;
+        CultureInfo.DefaultThreadCurrentUICulture = culture;
+        Thread.CurrentThread.CurrentCulture = culture;
+        Thread.CurrentThread.CurrentUICulture = culture;
     }
 }

@@ -2,6 +2,7 @@
     x:Class="ReportEngine.App.Views.Windows.FormedFrameView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:ReportEngine.App.Display"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Создание и редактирование рам"
@@ -20,6 +21,12 @@
             CornerRadius="0"
             GlassFrameThickness="0" />
     </WindowChrome.WindowChrome>
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <converters:FrameComponentsCountConverter x:Key="FrameComponentsCountConverter" />
+        </ResourceDictionary>
+    </Window.Resources>
 
     <Border Style="{DynamicResource WindowBorder}">
         <DockPanel>
@@ -92,7 +99,7 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="0.75*" />
                 </Grid.ColumnDefinitions>
 
                 <!--  Левая часть: Список рам и параметры  -->
@@ -148,15 +155,39 @@
                                     SelectedItem="{Binding FormedFrameModel.SelectedComponentInFrame}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding Component.Name}" Header="Наименование" />
-                                        <DataGridTextColumn Binding="{Binding Count}" Header="Кол-во" />
-                                        <DataGridTextColumn Binding="{Binding Length, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Длина (м)" />
                                         <DataGridTextColumn Binding="{Binding CostComponent, StringFormat={}{0:N2}}" Header="Цена за ед." />
                                         <DataGridTextColumn Binding="{Binding Measure}" Header="Ед. изм." />
+
+                                        <!--  Кол-во и Длина в одном столбце  -->
+                                        <DataGridTemplateColumn Header="Кол-во">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Converter={StaticResource FrameComponentsCountConverter}}" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+
+                                            <!--  Если нужно редактирование  -->
+                                            <DataGridTemplateColumn.CellEditingTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBox Width="50" Text="{Binding Count, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                                                        <TextBlock Margin="5,0" Text=" / " />
+
+                                                        <TextBox Width="70" Text="{Binding Length, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellEditingTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <!--  Кнопка отдельно  -->
                                         <DataGridTemplateColumn Header="Действия">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <Button
-                                                        Command="{Binding DataContext.RemoveComponentCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                                        Command="{Binding DataContext.RemoveComponentCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                         CommandParameter="{Binding}"
                                                         Content="Удалить" />
                                                 </DataTemplate>
@@ -175,6 +206,7 @@
                         Header="Добавление новой рамы">
                         <Grid>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -278,6 +310,7 @@
                                 Grid.Column="1"
                                 Margin="5"
                                 Text="{Binding FormedFrameModel.NewFrame.Designe}" />
+
                         </Grid>
                     </GroupBox>
 
@@ -288,6 +321,7 @@
                         Header="Редактирование рамы из списка">
                         <Grid>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -445,7 +479,7 @@
                                         Margin="0,0,5,0"
                                         VerticalAlignment="Center"
                                         Foreground="{DynamicResource PrimaryForeground}"
-                                        Text="Длина (м):" />
+                                        Text="Кол-во:" />
                                     <TextBox Width="60" Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
                                 <Button
@@ -475,7 +509,8 @@
                                     <TextBlock
                                         Margin="0,0,5,0"
                                         VerticalAlignment="Center"
-                                        Text="Длина (м):" />
+                                        Foreground="{DynamicResource PrimaryForeground}"
+                                        Text="Кол-во:" />
                                     <TextBox Width="60" Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
                                 <Button
@@ -502,11 +537,14 @@
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <StackPanel Margin="5,0,0,5" Orientation="Horizontal">
-                                    <TextBlock
-                                        Margin="0,0,5,0"
-                                        VerticalAlignment="Center"
-                                        Text="Длина (м):" />
-                                    <TextBox Width="60" Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <StackPanel Margin="5,0,0,5" Orientation="Horizontal">
+                                        <TextBlock
+                                            Margin="0,0,5,0"
+                                            VerticalAlignment="Center"
+                                            Foreground="{DynamicResource PrimaryForeground}"
+                                            Text="Кол-во:" />
+                                        <TextBox Width="60" Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </StackPanel>
                                 </StackPanel>
                                 <Button
                                     Margin="5"

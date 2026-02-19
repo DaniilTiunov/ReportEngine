@@ -1,12 +1,13 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
+using ControlzEx.Standard;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Commands.Providers;
 using ReportEngine.App.Model;
+using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
@@ -27,6 +28,7 @@ public class MainWindowViewModel : BaseViewModel
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IServiceProvider _serviceProvider;
     private readonly IProjectService _projectService;
+    private readonly IDialogService _dialogService;
 
     #region Конструктор
 
@@ -36,7 +38,8 @@ public class MainWindowViewModel : BaseViewModel
         IProjectInfoRepository projectRepository,
         ICalculationService calculationService,
         INotificationService notificationService,
-        IProjectService projectService)
+        IProjectService projectService,
+        IDialogService dialogService)
     {
         _notificationService = notificationService;
         _calculationService = calculationService;
@@ -44,6 +47,7 @@ public class MainWindowViewModel : BaseViewModel
         _projectRepository = projectRepository;
         _navigation = navigation;
         _projectService = projectService;
+        _dialogService = dialogService;
 
         InitializeMainWindowCommands();
         InitializeGenericEquipCommands();
@@ -101,8 +105,12 @@ public class MainWindowViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             var projectViewModel = _serviceProvider.GetRequiredService<ProjectViewModel>();
-            await projectViewModel.LoadProjectInfoAsync(MainWindowModel.SelectedProject.Id);
-            _navigation.ShowContent<TreeProjectView>();
+
+            _dialogService.RunWithProgressDialogAsync(async () =>
+            {
+                await projectViewModel.LoadProjectInfoAsync(MainWindowModel.SelectedProject.Id);
+                _navigation.ShowContent<TreeProjectView>();
+            });
         });
     }
 
@@ -110,10 +118,41 @@ public class MainWindowViewModel : BaseViewModel
     {
         ExceptionHelper.SafeExecute(() =>
         {
+            var projectViewModel = _serviceProvider.GetRequiredService<ProjectViewModel>();
+
+            //if (CheckUnsafeDetails(projectViewModel))
+            //{
+            //    var result = _notificationService.ShowConfirmation("У вас есть несохраненные изменения. \nВы уверены, что хотите вернуться на главный экран?", "Подтверждение");
+            //    if (!result)
+            //        return;
+            //}
+
+            //if(projectViewModel.CurrentProjectModel.Stands.Count == 0 || projectViewModel.CurrentProjectModel.Stands == null)
+            //{
+            //    _navigation.CloseContent();
+            //}
+            
             _navigation.CloseContent();
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
-            mainWindow.MainContentControl.Content = mainWindow.MainDataGrid;
+            mainWindow.MainContentControl.Content = mainWindow.MainGrid;
         });
+    }
+
+    private bool CheckUnsafeDetails(ProjectViewModel projectViewModel)
+    {
+        var stands = projectViewModel.CurrentProjectModel.Stands;
+
+        if (stands.Count == 0 || stands == null)
+            return false;
+
+        if (stands.Any(s => s.ElectricalPurposesChanges || s.DrainagePurposesChanges == true)) //s.AdditionalPurposesChanges
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public void OpenOthersWindowCommandExecuted<T>(object e)
@@ -181,7 +220,12 @@ public class MainWindowViewModel : BaseViewModel
     public async Task ShowAllProjectsAsync()
     {
         var projects = await _projectRepository.GetAllAsync();
-        MainWindowModel.AllProjects = new ObservableCollection<ProjectInfo>(projects);
+
+        MainWindowModel.AllProjects.Clear();
+        foreach (var project in projects)
+        {
+            MainWindowModel.AllProjects.Add(project);
+        }
     }
 
     public async Task DeleteSelectedProjectAsync()

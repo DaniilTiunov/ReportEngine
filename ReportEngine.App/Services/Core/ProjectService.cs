@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using Microsoft.VisualBasic;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
@@ -7,6 +6,7 @@ using ReportEngine.App.ModelWrappers;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Enums;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
 
@@ -23,6 +23,8 @@ public class ProjectService : IProjectService
     private readonly IStandService _standService;
     private readonly IBaseRepository<Subject> _subjectRepository;
     private readonly IFrameRepository _frameRepository;
+    private readonly IDialogService _dialogService;
+    private readonly ObvyazkaInStandRepository _obvyazkaInStandRepository;
 
     public ProjectService(
         IProjectInfoRepository projectRepository,
@@ -33,7 +35,9 @@ public class ProjectService : IProjectService
         IFormedDrainagesRepository drainagesRepository,
         IBaseRepository<Company> companyRepository,
         IBaseRepository<Subject> subjectRepository,
-        IFrameRepository frameRepository)
+        IFrameRepository frameRepository,
+        IDialogService dialogService,
+        ObvyazkaInStandRepository obvyazkaInStandRepository)
     {
         _drainagesRepository = drainagesRepository;
         _additionalEquipsRepository = additionalEquipsRepository;
@@ -44,6 +48,8 @@ public class ProjectService : IProjectService
         _companyRepository = companyRepository;
         _subjectRepository = subjectRepository;
         _frameRepository = frameRepository;
+        _dialogService = dialogService;
+        _obvyazkaInStandRepository = obvyazkaInStandRepository;
     }
 
     public int GetStandsInProjectCount(ProjectModel projectModel)
@@ -57,20 +63,17 @@ public class ProjectService : IProjectService
         return projects.Count();
     }
 
-    public float GetSummWidthObvyzakaAsync(ProjectModel projectModel)
+    public float GetSummWidthObvyzaka(ProjectModel projectModel)
     {
         var totalWidth = 0.0f;
 
-        foreach (var stand in projectModel.Stands)
-        {
-            var obvyazkaWidth = stand.ObvyazkiInStand.Sum(obv => obv.WidthOnFrame);
-            totalWidth += obvyazkaWidth ?? 0.0f;
-        }
+        var obvyazkaWidth = projectModel.SelectedStand.ObvyazkiInStand.Sum(obv => obv.WidthOnFrame);
+        totalWidth += 240.0f + obvyazkaWidth ?? 0.0f;
 
         return totalWidth;
     }
 
-    public async Task GetOrAddCompnayAsync(string name)
+    public async Task GetOrAddCompanyAsync(string name)
     {
         var companies = await _companyRepository.GetAllAsync();
 
@@ -115,17 +118,20 @@ public class ProjectService : IProjectService
     {
         var project = projectModel.CreateNewProjectCard();
 
+        project.Id = 0;
         await _projectRepository.AddAsync(project);
+
         projectModel.CurrentProjectId = project.Id;
 
-        _notificationService.ShowInfo($"Новая карточка проекта создана! ID: {project.Id}");
+        _notificationService.ShowInfo($"Новая карточка проекта создана!");
     }
 
     public async Task CopyStandsAsync(ProjectModel projectModel)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            var count = Convert.ToInt32(Interaction.InputBox("Введите количество копий", "Копирование стенда", "1"));
+            var count = _dialogService.ShowStandCopyDialog();
+
             var selectedStand = projectModel.SelectedStand;
             if (selectedStand == null)
             {
@@ -133,25 +139,31 @@ public class ProjectService : IProjectService
                 return;
             }
 
-            var existingKKS = projectModel.Stands.Select(s => s.KKSCode).ToHashSet();
-            var existingDesign = projectModel.Stands.Select(s => s.Design).ToHashSet();
-
             // Копируем всегда с исходного стенда, а не с предыдущей копии
-            for (var i = 1; i <= count; i++)
+
+            _dialogService.RunWithProgressDialogAsync(async () =>
             {
-                var newStand = await CopyStandFromSourceStandAsync(selectedStand, projectModel.CurrentProjectId, i);
+                for (var i = 1; i <= count; i++)
+                {
+                    var maxStandNumber = projectModel.Stands.Count > 0 ? projectModel.Stands.Max(stand => stand.Number) : 0;
 
-                projectModel.Stands.Add(newStand);
-            }
+                    var newStandNumber = maxStandNumber + 1;
 
-            await _standService.LoadStandsDataAsync(projectModel.Stands);
+                    var newStand = await CopyStandFromSourceStandAsync(selectedStand, projectModel.CurrentProjectId, newStandNumber);
+
+                    newStand.Number = newStandNumber;
+
+                    projectModel.Stands.Add(newStand);
+                }
+
+                await _standService.LoadStandsDataAsync(projectModel.Stands);
+            });
             _notificationService.ShowInfo($"Создано копий: {count}");
         });
     }
 
-    private async Task<StandModel> CopyStandFromSourceStandAsync(StandModel sourceStand, int projectId, int copyIndex)
+    private async Task<StandModel> CopyStandFromSourceStandAsync(StandModel sourceStand, int projectId, int newNumber)
     {
-
         var newStand = new StandModel
         {
             Design = sourceStand.Design,
@@ -162,8 +174,7 @@ public class ProjectService : IProjectService
             Devices = sourceStand.Devices,
             KMCH = sourceStand.KMCH,
             MaterialLine = sourceStand.MaterialLine,
-            NN = sourceStand.NN + copyIndex,
-            Number = sourceStand.Number + copyIndex,
+            Number = newNumber,
             ObvyazkaName = sourceStand.ObvyazkaName,
             SerialNumber = sourceStand.SerialNumber,
             TreeSocket = sourceStand.TreeSocket,
@@ -234,7 +245,7 @@ public class ProjectService : IProjectService
     public async Task DeleteStandAsync(int projectId, int standId)
     {
         await _projectRepository.DeleteStandAsync(projectId, standId);
-        _notificationService.ShowInfo($"Стенд с Id {standId} удалён из\n Проекта c Id {projectId}");
+        _notificationService.ShowInfo($"Стенд удалён из проекта");
     }
 
     public async Task AddStandToProjectAsync(int projectId, StandModel standModel)
@@ -354,17 +365,86 @@ public class ProjectService : IProjectService
         obv.HumanCost = selectedObvyazka.HumanCost;
         obv.ImageName = selectedObvyazka.ImageName;
 
+        await UpdateObvyazka(projectModel, projectModel.SelectedStand.SelectedObvyazkaInStand);
+
         CollectionRefreshHelper.SafeRefreshCollection(projectModel.SelectedStand.ObvyazkiInStand);
+        CollectionRefreshHelper.SafeRefreshCollection(projectModel.ObvyazkiInProject);
 
         await _projectRepository.UpdateObvInStandAsync(projectModel.SelectedStand.Id,
             projectModel.SelectedStand.SelectedObvyazkaInStand);
+
         _notificationService.ShowInfo("Обвязка обновлена");
+    }
+
+    public async Task UpdateObvyazka(ProjectModel projectModel, ObvyazkaInStand selectedObvyazka)
+    {
+        var current = projectModel.SelectedStand.SelectedObvyazkaInStand;
+
+        if (current == null)
+            return;
+
+        var oldName = current.ObvyazkaName;
+        var newName = projectModel.SelectedStand.ObvyazkaName;
+
+        if (oldName != newName)
+            return;
+
+        foreach (var stand in projectModel.Stands)
+        {
+            var related = stand.ObvyazkiInStand
+            .Where(x => x != selectedObvyazka && x.ObvyazkaName == oldName)
+            .ToList();
+
+            foreach (var obv in related)
+            {
+                obv.MaterialLine = selectedObvyazka.MaterialLine;
+                obv.MaterialLineCount = selectedObvyazka.MaterialLineCount;
+                obv.MaterialLineMeasure = selectedObvyazka.MaterialLineMeasure;
+                obv.MaterialLineExportDays = selectedObvyazka.MaterialLineExportDays;
+
+                obv.Armature = selectedObvyazka.Armature;
+                obv.ArmatureCount = selectedObvyazka.ArmatureCount;
+                obv.ArmatureMeasure = selectedObvyazka.ArmatureMeasure;
+                obv.ArmatureExportDays = selectedObvyazka.ArmatureExportDays;
+
+                obv.TreeSocket = selectedObvyazka.TreeSocket;
+                obv.TreeSocketMaterialCount = selectedObvyazka.TreeSocketMaterialCount;
+                obv.TreeSocketMaterialMeasure = selectedObvyazka.TreeSocketMaterialMeasure;
+                obv.TreeSocketExportDays = selectedObvyazka.TreeSocketExportDays;
+
+                obv.KMCH = selectedObvyazka.KMCH;
+                obv.KMCHCount = selectedObvyazka.KMCHCount;
+                obv.KMCHMeasure = selectedObvyazka.KMCHMeasure;
+                obv.KMCHExportDays = selectedObvyazka.KMCHExportDays;
+
+                obv.LineLength = selectedObvyazka.LineLength;
+                obv.ZraCount = selectedObvyazka.ZraCount;
+                obv.Sensor = selectedObvyazka.Sensor;
+                obv.SensorType = selectedObvyazka.SensorType;
+                obv.Clamp = selectedObvyazka.Clamp;
+                obv.WidthOnFrame = selectedObvyazka.WidthOnFrame;
+                obv.OtherLineCount = selectedObvyazka.OtherLineCount;
+                obv.Weight = selectedObvyazka.Weight;
+                obv.TreeSocketCount = selectedObvyazka.TreeSocketCount;
+                obv.KMCHCount = selectedObvyazka.KMCHCount;
+                obv.HumanCost = selectedObvyazka.HumanCost;
+                obv.ImageName = selectedObvyazka.ImageName;
+
+                await _obvyazkaInStandRepository.UpdateFromSourceObvyazkaAsync(selectedObvyazka, obv);
+            }
+        }
+
+        await LoadAllObvyazkiInProject(projectModel);
     }
 
     public async Task DeleteFrameFromStandAsync(ProjectModel projectModel)
     {
         var stand = projectModel.SelectedStand;
         var frame = stand.SelectedFrame;
+
+        if (Guard.ExitIfNull("Выберите раму для удаления!", _notificationService, frame))
+            return;
+
         var standFrame = frame.StandFrames?.FirstOrDefault(sf => sf.StandId == stand.Id && sf.FrameId == frame.Id);
 
         stand.FramesInStand.Remove(frame);
@@ -385,17 +465,12 @@ public class ProjectService : IProjectService
 
         var obvyazkiInStands = projectInfo.Stands
             .Where(s => s.ObvyazkiInStand != null)
-            .SelectMany(s => s.ObvyazkiInStand);
-
-        //костыль
-        //фильтруем только уникальные
-        var uniqueObvInStands = obvyazkiInStands
-            .DistinctBy(obv => obv.ObvyazkaName);
-
-
+            .SelectMany(s => s.ObvyazkiInStand)
+            .DistinctBy(obv => obv.ObvyazkaName); ;
+      
         projectModel.ObvyazkiInProject.Clear();
 
-        foreach (var obvyazka in uniqueObvInStands)
+        foreach (var obvyazka in obvyazkiInStands)
             projectModel.ObvyazkiInProject.Add(obvyazka);
     }
 

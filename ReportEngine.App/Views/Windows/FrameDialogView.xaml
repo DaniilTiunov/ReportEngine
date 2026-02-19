@@ -72,13 +72,18 @@
             </Border>
 
             <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="160" />
+                </Grid.ColumnDefinitions>
+
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <DataGrid
                     x:Name="FrameDataGrid"
                     Grid.Column="0"
-                    Margin="5"
+                    Margin="10,5,10,10"
                     AutoGenerateColumns="False"
                     CanUserAddRows="False"
                     ItemsSource="{Binding FormedFrameModel.AllFrames}"
@@ -94,6 +99,18 @@
                         <DataGridTextColumn Binding="{Binding Designe}" Header="Описание по КД" />
                     </DataGrid.Columns>
                 </DataGrid>
+                <StackPanel
+                    Grid.Column="1"
+                    Margin="10"
+                    VerticalAlignment="Top">
+
+                    <CheckBox
+                        VerticalAlignment="Top"
+                        Content="Разборная"
+                        FontSize="16"
+                        IsChecked="{Binding FormedFrameModel.SelectedFrame.Disassembled, Mode=TwoWay}" />
+
+                </StackPanel>
             </Grid>
         </DockPanel>
     </Border>

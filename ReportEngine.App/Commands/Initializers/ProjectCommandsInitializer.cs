@@ -10,6 +10,9 @@ public static class ProjectCommandsInitializer
         if (vm == null)
             return;
 
+        vm.ProjectCommandProvider.UpdateStandsAfterEquipsCommand =
+            new RelayCommand(vm.OnUpdateStandsAfterEquipsCommandExecuted, vm.CanAllCommandsExecute);
+
         vm.ProjectCommandProvider.CreateNewCardCommand =
             new RelayCommand(vm.OnCreateNewCardCommandExecuted, vm.CanAllCommandsExecute);
 
@@ -27,15 +30,6 @@ public static class ProjectCommandsInitializer
 
         vm.ProjectCommandProvider.AddDrainageToStandCommand =
             new RelayCommand(vm.OnAddDrainageToStandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.AddCustomDrainageToStandCommand =
-            new RelayCommand(vm.OnAddCustomDrainageToStandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.AddCustomElectricalComponentToStandCommand =
-            new RelayCommand(vm.OnAddCustomElectricalComponentToStandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.AddCustomAdditionalEquipToStandCommand =
-            new RelayCommand(vm.OnAddCustomAdditionalEquipToStandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.SelectObvFromDialogCommand =
             new RelayCommand(vm.OnSelectObvCommandExecuted, vm.CanAllCommandsExecute);
@@ -86,31 +80,31 @@ public static class ProjectCommandsInitializer
             new RelayCommand(vm.OnSaveChangesInStandCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.DeleteElectricalComponentFromStandCommand =
-            new RelayCommand(vm.OnDeleteElectricalComponentFromStandCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnDeleteElectricalComponentFromStandCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.UpdateElectricalComponentInStandCommand =
-            new RelayCommand(vm.OnUpdateElectricalComponentInStandCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnUpdateElectricalComponentInStandCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.DeleteAdditionalComponentFromStandCommand =
-            new RelayCommand(vm.OnDeleteAdditionalComponentFromStandCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnDeleteAdditionalComponentFromStandCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.UpdateAdditionalComponentInStandCommand =
-            new RelayCommand(vm.OnUpdateAdditionalComponentInStandCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnUpdateAdditionalComponentInStandCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.DeleteDrainageComponentFromStandCommand =
-            new RelayCommand(vm.OnDeleteDrainageComponentFromStandCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnDeleteDrainageComponentFromStandCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.RemoveFrameStandCommand =
             new RelayCommand(vm.OnRemoveFrameFromStandCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.UpdateDrainageComponentInStandCommand =
-            new RelayCommand(vm.OnUpdateDrainageComponentInStandCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnUpdateDrainageComponentInStandCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.SaveObvCommand =
-            new RelayCommand(vm.OnSaveObvCommandExecuted, vm.CanAllCommandsExecute);
+            new RelayCommand(vm.OnAddObvCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.FillStandFieldsFromObvyazkaCommand =
-            new RelayCommand(vm.OnFillStandFieldsFromObvyazkaCommandExecuted, vm.CanAllCommandsExecute);
+            new RelayCommand(vm.OnEditObvSettingsCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.UpdateObvInStandCommand =
             new RelayCommand(vm.OnUpdateObvInStandCommandExecuted, vm.CanAllCommandsExecute);
@@ -136,9 +130,6 @@ public static class ProjectCommandsInitializer
         vm.ProjectCommandProvider.RemoveStandFromContainerCommand =
             new RelayCommand(vm.OnRemoveStandFromContainerCommandExecuted, vm.CanAllCommandsExecute);
 
-        vm.ProjectCommandProvider.CreateMarkReportAsyncCommand =
-            new AsyncRelayCommand(vm.OnCreateMarksReportAsyncCommandExecuted, vm.CanAllCommandsExecute);
-
         vm.ProjectCommandProvider.ShowCompanyDialogCommand =
             new RelayCommand(vm.OnShowCompanyDialogExecuted, vm.CanAllCommandsExecute);
 
@@ -148,11 +139,35 @@ public static class ProjectCommandsInitializer
         vm.ProjectCommandProvider.ShowSubjectDialogCommand =
             new RelayCommand(vm.OnShowSubjectDialogExecuted, vm.CanAllCommandsExecute);
 
-        vm.ProjectCommandProvider.UpdateUICommand =
-            new RelayCommand(vm.OnUpdateUICommandExecuted, vm.CanAllCommandsExecute);
-
         vm.ProjectCommandProvider.RenumerateStandsCommand =
             new RelayCommand(vm.OnRenumerateStandsCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.OpenObvSettingsWindowCommand =
+            new RelayCommand(vm.OnOpenObvSettingsWindowCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.OpenCreateNewStandCommand =
+            new RelayCommand(vm.OnOpenCreateNewStandCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.OpenEditStandCommand =
+            new RelayCommand(vm.OnOpenEditStandCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.FillObvFieldsTiEditCommand =
+            new RelayCommand(vm.OnFillObvFieldsCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.DeleteAdditionalEquipFromObvCommand =
+            new RelayCommand(vm.OnDeleteAdditionalEquipFromObvCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.UpdateAdditionalEquipFromObvCommand =
+            new RelayCommand(vm.OnUpdateAdditionalEquipFromObvCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.AdditionalTestCommand =
+            new RelayCommand(vm.OnAdditionalTestCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.SaveAllChangesInComponentsCommand =
+            new RelayCommand(vm.OnSaveAllChangesInComponentsCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.RenumerateObvInStandCommand =
+            new RelayCommand(vm.OnRenumerateObvInStandAsyncCommandExecuted, vm.CanAllCommandsExecute);
     }
 
     public static void InitializeGenericCommands(ProjectViewModel vm)

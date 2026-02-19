@@ -15,7 +15,7 @@ public class FrameComponent
     public int ComponentId { get; set; }
     public string ComponentType { get; set; }
     public string? ComponentName { get; set; }
-    public int Count { get; set; }
+    public int? Count { get; set; }
     public float? CostComponent { get; set; }
     public float? Length { get; set; } // Метраж
     public string? Measure { get; set; }

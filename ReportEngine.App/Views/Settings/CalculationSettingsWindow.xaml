@@ -116,7 +116,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="150" />
                                 <ColumnDefinition Width="250" />
-                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="40" />
                                 <ColumnDefinition Width="130" />
                                 <ColumnDefinition Width="10" />
                             </Grid.ColumnDefinitions>
@@ -284,13 +284,13 @@
                                 Grid.Row="8"
                                 Grid.Column="1"
                                 Margin="10,5,10,5"
-                                Text="{Binding StandSettings.CabelSixMM, Mode=TwoWay}" />
+                                Text="{Binding StandSettings.CabelSixMm, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="8"
                                 Grid.Column="2"
                                 Margin="5,5,5,5"
                                 Command="{Binding ShowAllEqipDialogCommand}"
-                                CommandParameter="CabelSixMM"
+                                CommandParameter="CabelSixMm"
                                 Content="..." />
 
                             <TextBlock
@@ -302,13 +302,13 @@
                                 Grid.Row="9"
                                 Grid.Column="1"
                                 Margin="10,5,10,5"
-                                Text="{Binding StandSettings.CabelFourMM, Mode=TwoWay}" />
+                                Text="{Binding StandSettings.CabelFourMm, Mode=TwoWay}" />
                             <Button
                                 Grid.Row="9"
                                 Grid.Column="2"
                                 Margin="5,5,5,5"
                                 Command="{Binding ShowAllEqipDialogCommand}"
-                                CommandParameter="CabelFourMM"
+                                CommandParameter="CabelFourMm"
                                 Content="..." />
 
                             <TextBlock
@@ -329,7 +329,6 @@
                                 CommandParameter="SignalCable"
                                 Content="..." />
 
-
                             <TextBlock
                                 Grid.Row="11"
                                 Grid.Column="0"
@@ -347,7 +346,6 @@
                                 Command="{Binding ShowAllEqipDialogCommand}"
                                 CommandParameter="Clamp"
                                 Content="..." />
-
 
                             <TextBlock
                                 Grid.Row="12"
@@ -493,6 +491,17 @@
                                 Grid.Column="1"
                                 Margin="0,20,0,20"
                                 Text="{Binding HumanCosts.CommonCheckStand, Mode=TwoWay}" />
+
+                            <TextBlock
+                                Grid.Row="4"
+                                Grid.Column="0"
+                                Margin="5,15,0,10"
+                                Text="Оцинковка стенда: " />
+                            <TextBox
+                                Grid.Row="4"
+                                Grid.Column="1"
+                                Margin="0,20,0,20"
+                                Text="{Binding HumanCosts.GalvanizedStands, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="0"
