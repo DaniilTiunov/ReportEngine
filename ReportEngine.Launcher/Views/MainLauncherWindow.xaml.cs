@@ -2,6 +2,8 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using ReportEngine.Shared.Config.Directory;
+using ReportEngine.Shared.Config.JsonHelpers;
 
 namespace ReportEngine.Launcher.Views
 {
@@ -10,9 +12,13 @@ namespace ReportEngine.Launcher.Views
     /// </summary>
     public partial class MainWindow : Window
     {
+        public string Version => JsonHandler.GetCurrentVersion(DirectoryHelper.GetConfigPath());
+
         public MainWindow()
         {
             StandardTheme(null, null);
+
+            DataContext = this;
 
             InitializeComponent();
         }
@@ -26,7 +32,82 @@ namespace ReportEngine.Launcher.Views
 
                 if (!File.Exists(appPath))
                 {
-                    MessageBox.Show("Приложение 'Стенды КИПа' не найдено!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Приложение 'Стенды КИПиА' не найдено!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                Process.Start(appPath);
+
+                // Завершаем текущий WPF
+                Application.Current.Shutdown();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка запуска приложения: {ex.Message}");
+            }
+        }
+
+        private void UpdateApp(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var localPath = AppDomain.CurrentDomain.BaseDirectory;
+                var updaterPath = Path.Combine(localPath, "ReportUpdater.exe");
+
+                if (!File.Exists(updaterPath))
+                {
+                    MessageBox.Show("ReportUpdater.exe не найден!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                Process.Start(updaterPath);
+
+                ShutDownApplications();
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка запуска обновления: {ex.Message}");
+            }
+        }
+
+        private void ShutDownApplications()
+        {
+            foreach (var procName in new[] { "ReportEngine.App", "ReportEngine.AtomicApp" })
+            {
+                var processes = Process.GetProcessesByName(procName);
+                foreach (var proc in processes)
+                {
+                    try
+                    {
+                        if (!proc.HasExited)
+                        {
+                            proc.CloseMainWindow();
+                            proc.WaitForExit(2000);
+                            if (!proc.HasExited)
+                                proc.Kill();
+                        }
+                    }
+                    catch
+                    {
+                        
+                    }
+                }
+            }
+
+            Application.Current.Shutdown();
+        }
+
+        private void StartAtomicApp(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var localPath = AppDomain.CurrentDomain.BaseDirectory;
+                var appPath = Path.Combine(localPath, "ReportEngine.AtomicApp.exe");
+
+                if (!File.Exists(appPath))
+                {
+                    MessageBox.Show("Приложение 'АтомСтенды КИПиА' не найдено!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 

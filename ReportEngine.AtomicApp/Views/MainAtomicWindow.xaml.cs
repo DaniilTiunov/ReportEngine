@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Input;
 
 namespace ReportEngine.AtomicApp.Views
@@ -17,9 +18,34 @@ namespace ReportEngine.AtomicApp.Views
             StateChanged += MainWindow_StateChanges;
         }
 
+        private void ShowCalculator(object sender, RoutedEventArgs e)
+        {
+            Process.Start("calc.exe");
+        }
+
+        private void ShowNotepad(object sender, RoutedEventArgs e)
+        {
+            Process.Start("notepad.exe");
+        }
+
+        private void ChangeDarkTheme(object sender, RoutedEventArgs e)
+        {
+            ChangesTheme("/Resources/Dictionaries/ColorThemes/DarkTheme.xaml");
+        }
+
         private void StandardTheme(object sender, RoutedEventArgs e)
         {
             ChangesTheme("/Resources/Dictionaries/ColorThemes/LightTheme.xaml");
+        }
+
+        private void MangoParadiseTheme(object sender, RoutedEventArgs e)
+        {
+            ChangesTheme("/Resources/Dictionaries/ColorThemes/MangoParadiseTheme.xaml");
+        }
+
+        private void BubbleGumTheme(object sender, RoutedEventArgs e)
+        {
+            ChangesTheme("/Resources/Dictionaries/ColorThemes/BubbleGumTheme.xaml");
         }
 
         private void ChangesTheme(string dictPath)

@@ -437,6 +437,13 @@ public class ProjectService : IProjectService
         await LoadAllObvyazkiInProject(projectModel);
     }
 
+    private bool IsObvyazkaNameDuplicate(ProjectModel projectModel, ObvyazkaInStand current)
+    {
+        return projectModel.Stands
+            .SelectMany(s => s.ObvyazkiInStand)
+            .Any(x => x != current && x.ObvyazkaName == current.ObvyazkaName);
+    }
+
     public async Task DeleteFrameFromStandAsync(ProjectModel projectModel)
     {
         var stand = projectModel.SelectedStand;
@@ -467,7 +474,7 @@ public class ProjectService : IProjectService
             .Where(s => s.ObvyazkiInStand != null)
             .SelectMany(s => s.ObvyazkiInStand)
             .DistinctBy(obv => obv.ObvyazkaName); ;
-      
+
         projectModel.ObvyazkiInProject.Clear();
 
         foreach (var obvyazka in obvyazkiInStands)

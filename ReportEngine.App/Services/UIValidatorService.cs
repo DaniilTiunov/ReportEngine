@@ -159,8 +159,6 @@ namespace ReportEngine.App.ViewModels.Utils
             return true;
         }
 
-
-
         public bool ValidateProjectStatus(ProjectViewModel projectViewModel)
         {
             if (string.IsNullOrEmpty(projectViewModel.CurrentProjectModel.Status))
@@ -172,14 +170,10 @@ namespace ReportEngine.App.ViewModels.Utils
             return true;
         }
 
-
-
-
-
         //проверяем кол-во указанных датчиков и датчиков в обвязке
+        //попробовать не с SelectedObvyazka а с SelectedObvyazkaInStand
         public bool ValidateSensorsQuantityInNewObv(ProjectViewModel projectViewModel)
         {
-
             var selectedStand = projectViewModel.CurrentProjectModel.SelectedStand;
 
             //считаем кол-во датчиков, сравниваем с тем что в выбранной обвязке
@@ -197,6 +191,9 @@ namespace ReportEngine.App.ViewModels.Utils
             //смотрим кол-во датчиков в выбранной обвязке
             var sensorsQuantityInObv = projectViewModel.SelectedObvyazka.Sensor;
 
+            var temp = projectViewModel.CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.Sensor;
+
+
             if (newObvSensorsQuantity > sensorsQuantityInObv)
             {
                 _notificationService.ShowError("Количество выбранных датчиков превышает их количество в обвязке!");
@@ -205,8 +202,6 @@ namespace ReportEngine.App.ViewModels.Utils
 
             return true;
         }
-
-
 
         public bool ValidateSelectedStand(ProjectViewModel projectViewModel)
         {
@@ -218,9 +213,6 @@ namespace ReportEngine.App.ViewModels.Utils
 
             return true;
         }
-
-
     }
-
 }
 
