@@ -36,7 +36,7 @@ public partial class MainWindow : Window //Это так называемый "C
         _serviceProvider = serviceProvider;
 
         Loaded += MainWindow_Loaded;
-        StateChanged += MindowWindow_StateChanges;
+        StateChanged += MainWindow_StateChanges;
     }
 
     // Событие загрузки окна
@@ -44,7 +44,7 @@ public partial class MainWindow : Window //Это так называемый "C
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            StandartTheme(null, null);
+            StandardTheme(null, null);
 
             MainWindow_StartUpState();
 
@@ -72,7 +72,7 @@ public partial class MainWindow : Window //Это так называемый "C
     }
 
     // Событие изменения состояния окна
-    private void MindowWindow_StateChanges(object? sender, EventArgs e)
+    private void MainWindow_StateChanges(object? sender, EventArgs e)
     {
         if (WindowState == WindowState.Maximized)
             WindowState = WindowState.Normal;
@@ -105,7 +105,7 @@ public partial class MainWindow : Window //Это так называемый "C
         ChangesTheme("/Resources/Dictionaries/ColorThemes/DarkTheme.xaml");
     }
 
-    private void StandartTheme(object sender, RoutedEventArgs e)
+    private void StandardTheme(object sender, RoutedEventArgs e)
     {
         ChangesTheme("/Resources/Dictionaries/ColorThemes/LightTheme.xaml");
     }
@@ -135,7 +135,6 @@ public partial class MainWindow : Window //Это так называемый "C
             }
         }
 
-        // Если цветовая тема ещё не подключена
         mergedDicts.Add(themeDict);
     }
 

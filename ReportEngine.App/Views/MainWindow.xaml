@@ -121,7 +121,7 @@
 
             <MenuItem Header="Вид" Tag="ThemeItemChanger">
                 <MenuItem
-                    Click="StandartTheme"
+                    Click="StandardTheme"
                     Header="Светлая тема"
                     Tag="Standart" />
                 <Separator />

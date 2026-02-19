@@ -29,7 +29,7 @@
             <Border
                 x:Name="MainWindowControlTitle"
                 Height="34"
-                Background="#2D2D30"
+                Background="LightGray"
                 DockPanel.Dock="Top"
                 MouseLeftButtonDown="Window_MouseLeftButtonDown">
                 <Grid>
@@ -46,11 +46,11 @@
                             Width="18"
                             Height="18"
                             Margin="0,0,8,0"
-                            Source="/ReportEngine.App;component/Resources/Icons/estimate_cost_icon_213382.ico" />
+                            Source="/Resources/Icons/launcher_icon.ico" />
                         <TextBlock
                             VerticalAlignment="Center"
                             FontSize="14"
-                            Foreground="White"
+                            Foreground="Black"
                             Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
                     </StackPanel>
 
@@ -143,7 +143,7 @@
                     <Button
                         Margin="10"
                         Padding="10"
-                        Click="StartStandartApp"
+                        Click="StartStandardApp"
                         Content="Открыть 'Стенды КИПа'"
                         FontSize="16" />
                 </StackPanel>

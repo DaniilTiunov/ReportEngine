@@ -6,7 +6,12 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Resources\Icons\atomic_icon.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Icons\atom-editor.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Noto\NotoSans-Bold.ttf" Link="Resources\Noto\NotoSans-Bold.ttf">
@@ -163,7 +168,10 @@
       <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
       <Pack>false</Pack>
     </Content>
-    <Content Include="Resources\Icons\estimate_cost_icon_213382_prev.ico">
+    <Content Include="Resources\Icons\atom-editor.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\atomic_icon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Images\EAC.jpg">
@@ -186,9 +194,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\Icons\estimate_cost_icon_213382.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
     <Resource Include="Resources\Icons\IconConfirm.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
@@ -197,9 +202,6 @@
     </Resource>
     <Resource Include="Resources\Icons\Icon_Error.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Icons\install_line_icon_236048.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\Images\logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -213,11 +215,17 @@
     <Page Update="Resources\Dictionaries\ColorThemes\BubbleGumTheme.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
+    <Page Update="Resources\Dictionaries\ColorThemes\DarkTheme.xaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Page>
+    <Page Update="Resources\Dictionaries\ColorThemes\LightTheme.xaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Page>
     <Page Update="Resources\Dictionaries\ColorThemes\MangoParadiseTheme.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Update="Resources\Dictionaries\Styles\GigaChadUI.xaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Page>
   </ItemGroup>
 

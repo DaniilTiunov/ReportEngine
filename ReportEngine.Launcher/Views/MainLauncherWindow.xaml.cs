@@ -12,12 +12,12 @@ namespace ReportEngine.Launcher.Views
     {
         public MainWindow()
         {
-            StandartTheme(null, null);
+            StandardTheme(null, null);
 
             InitializeComponent();
         }
 
-        private void StartStandartApp(object sender, RoutedEventArgs e)
+        private void StartStandardApp(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -41,7 +41,7 @@ namespace ReportEngine.Launcher.Views
             }
         }
 
-        private void StandartTheme(object sender, RoutedEventArgs e)
+        private void StandardTheme(object sender, RoutedEventArgs e)
         {
             ChangesTheme("Resources/Dictionaries/ColorThemes/LightTheme.xaml");
         }
