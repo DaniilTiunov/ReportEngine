@@ -127,7 +127,6 @@ public class ProjectViewModel : BaseViewModel
     {
         get => CurrentProjectModel.Stands.Count > 0 ? CurrentProjectModel.Stands.Max(stand => stand.Number) : 0;
     }
-    public bool AdditionalPurposesChanges { get; private set; }
 
     public bool CanAllCommandsExecute(object? e)
     {
@@ -487,30 +486,23 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async void OnSaveObvCommandExecuted(object e)
+    public async void OnAddObvCommandExecuted(object e)
     {
-        if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka))
-            return;
 
         var selectedStand = CurrentProjectModel?.SelectedStand;
 
-        //if (Guard.ExitIfNull("Не был выбран стенд", _notificationService, selectedStand))
-        //    return;
 
-        //var isCorrectObvNumber = _uiValidatorService.ValidateCorrectObvNN(selectedStand.NN);
+        if (Guard.ExitIfNull("Не был выбран стенд", _notificationService, selectedStand))
+            return;
 
-        //if (!isCorrectObvNumber)
-        //    return;
-
-        //var isFreeObvNumber = _uiValidatorService.ValidateFreeObvNN(this, selectedStand.NN, false);
-
-        //if (!isFreeObvNumber)
-        //    return;
+        if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka))
+            return;
 
         var isCorrectSensorsData = _uiValidatorService.ValidateSensorsQuantityInNewObv(this);
 
         if (!isCorrectSensorsData)
             return;
+
 
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
@@ -625,7 +617,8 @@ public class ProjectViewModel : BaseViewModel
         {
             SelectedObvyazka = _dialogService.ShowObvyazkaDialog();
 
-            if (Guard.ExitIfNull("Не был выбран тип обвязки!", _notificationService, SelectedObvyazka))
+            //если не выбрали - просто выходим
+            if (SelectedObvyazka == null)
                 return;
 
             var stand = CurrentProjectModel.SelectedStand;
@@ -699,7 +692,7 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(SaveChangesInStandAsync);
     }
 
-    public async Task OnSaveAllChangesInComponentsCommandExecuted(object obj)
+    public async void OnSaveAllChangesInComponentsCommandExecuted(object obj)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
@@ -792,8 +785,8 @@ public class ProjectViewModel : BaseViewModel
                 await _standService.UpdateAdditionalPurposeAsync(purpose);
             }
 
-            AdditionalPurposesChanges = false;
-            OnPropertyChanged(nameof(AdditionalPurposesChanges));
+            stand.AdditionalPurposesChanges = false;
+            OnPropertyChanged(nameof(stand.AdditionalPurposesChanges));
 
             _notificationService.ShowInfo("Все доп. комплектующие сохранены");
         });
@@ -926,6 +919,7 @@ public class ProjectViewModel : BaseViewModel
             var iterPart = renumInfo.StartValue.Value + (iteration - 1) * renumInfo.Step.Value;
             string formattedIterPart = iterPart.ToString().PadLeft(renumInfo.StartValueLength, '0');
 
+
             stand.SerialNumber = $"{renumInfo.Prefix}{formattedIterPart}{renumInfo.Postfix}";
 
             var newStandEntity = StandDataConverter.ConvertToStandEntity(stand);
@@ -948,15 +942,8 @@ public class ProjectViewModel : BaseViewModel
             if (Guard.ExitIfNull("Не был выбран стенд", _notificationService, selectedStand))
                 return;
 
-            //var isCorrectObvNumber = _uiValidatorService.ValidateCorrectObvNN(selectedStand.NN);
-
-            //if (!isCorrectObvNumber)
-            //    return;
-
-            //var isFreeObvNumber = _uiValidatorService.ValidateFreeObvNN(this, selectedStand.NN, true);
-
-            //if (!isFreeObvNumber)
-            //    return;
+            if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka))
+                return;
 
             var isCorrectSensorsData = _uiValidatorService.ValidateSensorsQuantityInNewObv(this);
 
@@ -1108,6 +1095,9 @@ public class ProjectViewModel : BaseViewModel
 
         if (Guard.ExitIfNull("Не выбран тип обвязки!", _notificationService, SelectedObvyazka))
             return;
+
+        //автонумерация
+        selectedStand.NN = MaxObvNN + 1;
 
         var entity = await _standService.CreateObvyazkaAsync(selectedStand, SelectedObvyazka);
 
@@ -1374,6 +1364,37 @@ public class ProjectViewModel : BaseViewModel
         }
     }
 
+    public async void OnRenumerateObvInStandAsyncCommandExecuted(object obj)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            var selectedStand = CurrentProjectModel.SelectedStand;
+
+            if (selectedStand == null)
+            {
+                _notificationService.ShowError("Стенд не выбран");
+                return;
+            }
+
+
+            int obvNumber = 1;
+
+            foreach (var obv in selectedStand.ObvyazkiInStand)
+            {
+                obv.NN = obvNumber;
+
+                await _projectRepository.UpdateObvInStandAsync(selectedStand.Id, obv);
+
+                obvNumber++;
+            }
+
+            CollectionRefreshHelper.SafeSortAndRefreshCollection(selectedStand.ObvyazkiInStand, "NN", false);
+
+            _notificationService.ShowInfo("Обвязки пронумерованы");
+
+        });
+    }
+
     private async Task AddDrainageToStandAsync()
     {
         if (CurrentStandModel.SelectedDrainage != null)
@@ -1589,6 +1610,16 @@ public class ProjectViewModel : BaseViewModel
         OnFramesInStandChanged();
         OnObvyazkiInStandChanged();
         UpdateBracketsQuantity();
+
+        var selectedStand = CurrentProjectModel.SelectedStand;
+
+        if (selectedStand == null)
+            return;
+
+        selectedStand.AdditionalPurposesChanges = false;
+        selectedStand.ElectricalPurposesChanges = false;
+        selectedStand.DrainagePurposesChanges = false;
+
     }
 
     public void OnStandsInProjectChanged()
@@ -1600,6 +1631,17 @@ public class ProjectViewModel : BaseViewModel
             collection: CurrentProjectModel.Stands,
             fieldToSortBy: "Number",
             descending: false);
+
+
+        var selectedStand = CurrentProjectModel.SelectedStand;
+
+        if (selectedStand == null)
+            return;
+
+        UpdateChannelsQuantity();
+
+        CollectionRefreshHelper.SafeRefreshCollection(collection: selectedStand.AllAdditionalEquipPurposesInStand);
+
     }
 
     //обновляем поле NN в обвязке
@@ -1631,7 +1673,7 @@ public class ProjectViewModel : BaseViewModel
 
         var standBraceType = selectedStand.BraceType;
 
-        if (string.IsNullOrEmpty(standBraceType) || standBraceType != "Швеллер")
+        if (string.IsNullOrEmpty(standBraceType))
             return;
 
         var additionalEquips = selectedStand.AllAdditionalEquipPurposesInStand;
@@ -1643,13 +1685,21 @@ public class ProjectViewModel : BaseViewModel
         //швеллер в штуках
         const int channelPerFrame = 1;
 
-        if (channelRecord.IsAutoCalculationEnabled == true)
+        if (channelRecord.IsAutoCalculationEnabled != true)
+            return;
+
+        if (standBraceType == "Швеллер")
         {
             var framesCount = selectedStand.FramesInStand.Count;
             channelRecord.Quantity = framesCount * channelPerFrame;
-
-            AdditionalPurposesChanges = true;
         }
+        else
+        {
+            channelRecord.Quantity = 0;
+        }
+
+        selectedStand.AdditionalPurposesChanges = true;
+
     }
 
     //обновляем кол-во хомутов
@@ -1673,7 +1723,7 @@ public class ProjectViewModel : BaseViewModel
         {
             clampsRecord.Quantity = selectedStand.ObvyazkiInStand.Sum(obv => obv.Clamp) ?? 0.0f;
 
-            AdditionalPurposesChanges = true;
+            selectedStand.AdditionalPurposesChanges = true;
         }
     }
 
@@ -1697,7 +1747,7 @@ public class ProjectViewModel : BaseViewModel
         {
             tableRecord.Quantity = sensorsQuantity;
 
-            AdditionalPurposesChanges = true;
+            selectedStand.AdditionalPurposesChanges = true;
         }
     }
 
@@ -1722,7 +1772,7 @@ public class ProjectViewModel : BaseViewModel
         {
             difSensorsBracketRecord.Quantity = bracketsPerDifSensor * difSensorsQuantity;
 
-            AdditionalPurposesChanges = true;
+            selectedStand.AdditionalPurposesChanges = true;
         }
 
         const int bracketsPerAbsoluteSensor = 2;
@@ -1739,7 +1789,7 @@ public class ProjectViewModel : BaseViewModel
             {
                 absSensorsBracketsRecord.Quantity = bracketsPerAbsoluteSensor * absSensorsQuantity;
 
-                AdditionalPurposesChanges = true;
+                selectedStand.AdditionalPurposesChanges = true;
             }
         }
 
@@ -1753,7 +1803,7 @@ public class ProjectViewModel : BaseViewModel
             {
                 universalBracketRecord.Quantity = universalBracketQuantity;
 
-                AdditionalPurposesChanges = true;
+                selectedStand.AdditionalPurposesChanges = true;
             }
         }
     }
@@ -1777,7 +1827,7 @@ public class ProjectViewModel : BaseViewModel
         {
             mainPipeRecord.Quantity = selectedStand.FramesInStand.Sum(frame => frame.Width) / 1000.0f;
 
-            CurrentProjectModel.SelectedStand.DrainagePurposesChanges = true;
+            selectedStand.DrainagePurposesChanges = true;
         }
     }
 
@@ -1808,7 +1858,7 @@ public class ProjectViewModel : BaseViewModel
             cableInputsQuantity = sensorsQuantity * cableInputsPerSensor;
             cableInputsRecord.Quantity = cableInputsQuantity;
 
-            CurrentProjectModel.SelectedStand.ElectricalPurposesChanges = true;
+            selectedStand.ElectricalPurposesChanges = true;
         }
 
         //сигнальный кабель
@@ -1833,7 +1883,7 @@ public class ProjectViewModel : BaseViewModel
 
             signalCableRecord.Quantity = signalCabelQuantity;
 
-            CurrentProjectModel.SelectedStand.ElectricalPurposesChanges = true;
+            selectedStand.ElectricalPurposesChanges = true;
         }
 
         //кабель 4 мм
@@ -1851,7 +1901,7 @@ public class ProjectViewModel : BaseViewModel
         {
             metalHoseRecord.Quantity = signalCabelQuantity;
 
-            CurrentProjectModel.SelectedStand.ElectricalPurposesChanges = true;
+            selectedStand.ElectricalPurposesChanges = true;
         }
     }
 

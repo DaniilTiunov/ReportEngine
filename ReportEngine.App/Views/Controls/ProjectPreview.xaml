@@ -271,10 +271,11 @@
                     <ListView.ContextMenu>
                         <ContextMenu>
                             <MenuItem Command="{Binding ProjectCommandProvider.OpenObvSettingsWindowCommand}" Header="Создать обвязку" />
-                            <Separator />
                             <MenuItem Command="{Binding ProjectCommandProvider.FillStandFieldsFromObvyazkaCommand}" Header="Редактировать обвязку" />
                             <Separator />
                             <MenuItem Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}" Header="Удалить обвязку из стенда" />
+                            <Separator />
+                            <MenuItem Command="{Binding ProjectCommandProvider.RenumerateObvInStandCommand}" Header="Пронумеровать обвязки заново" />
                         </ContextMenu>
                     </ListView.ContextMenu>
                 </ListView>

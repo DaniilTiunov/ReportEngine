@@ -101,7 +101,7 @@ public static class ProjectCommandsInitializer
             new AsyncRelayCommand(vm.OnUpdateDrainageComponentInStandCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.SaveObvCommand =
-            new RelayCommand(vm.OnSaveObvCommandExecuted, vm.CanAllCommandsExecute);
+            new RelayCommand(vm.OnAddObvCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.FillStandFieldsFromObvyazkaCommand =
             new RelayCommand(vm.OnEditObvSettingsCommandExecuted, vm.CanAllCommandsExecute);
@@ -164,7 +164,10 @@ public static class ProjectCommandsInitializer
             new RelayCommand(vm.OnAdditionalTestCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.SaveAllChangesInComponentsCommand =
-            new AsyncRelayCommand(vm.OnSaveAllChangesInComponentsCommandExecuted, vm.CanAllCommandsExecute);
+            new RelayCommand(vm.OnSaveAllChangesInComponentsCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.RenumerateObvInStandCommand =
+            new RelayCommand(vm.OnRenumerateObvInStandAsyncCommandExecuted, vm.CanAllCommandsExecute);
     }
 
     public static void InitializeGenericCommands(ProjectViewModel vm)
