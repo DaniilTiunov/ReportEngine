@@ -4,6 +4,13 @@ namespace ReportEngine.Shared.Config.JsonHelpers;
 
 public class JsonHandler
 {
+    public static string GetAtomicConnectionString(string jsonFilePath)
+    {
+        var json = File.ReadAllText(jsonFilePath);
+        var appSettings = JsonSerializer.Deserialize<AppSettings>(json);
+        return appSettings.AtomicConnectionString.AtomicDefaultConnection;
+    }
+
     public static string GetConnectionString(string jsonFilePath)
     {
         var json = File.ReadAllText(jsonFilePath);
