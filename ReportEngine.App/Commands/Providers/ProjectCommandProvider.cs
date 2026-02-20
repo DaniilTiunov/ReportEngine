@@ -69,9 +69,4 @@ public class ProjectCommandProvider
     public ICommand SaveAllChangesInComponentsCommand {  get; set; }
 
     public ICommand RenumerateObvInStandCommand { get; set; }
-
-    public ICommand Bind(ICommand command, Action<object> execute, Func<object, bool> canExecute = null)
-    {
-        return new RelayCommand(execute, canExecute);
-    }
 }

@@ -8,7 +8,6 @@ namespace ReportEngine.AtomicDomain.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-
         public int Number { get; set; } //№п/п
         public string? Description { get; set; } //Обозначение КД
     }

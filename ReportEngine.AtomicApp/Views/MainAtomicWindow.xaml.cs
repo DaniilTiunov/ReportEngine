@@ -1,18 +1,26 @@
 ﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
+using ReportEngine.AtomicApp.ViewModels;
 
 namespace ReportEngine.AtomicApp.Views
 {
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public readonly AtomicProjectViewModel _projectViewModel;
+
+        public MainWindow(AtomicProjectViewModel projectViewModel)
         {
+
             StandardTheme(null, null);
 
             MainWindow_StartUpState();
 
             InitializeComponent();
+
+            _projectViewModel = projectViewModel;
+
+            DataContext = _projectViewModel;
 
 
             StateChanged += MainWindow_StateChanges;

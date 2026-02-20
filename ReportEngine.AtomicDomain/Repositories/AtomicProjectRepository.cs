@@ -5,12 +5,18 @@ using ReportEngine.AtomicDomain.Entities;
 
 namespace ReportEngine.AtomicDomain.Repositories
 {
-    public class ProjectRepository
+    public class AtomicProjectRepository
     {
         private readonly AtomicAppContext _context;
-        public ProjectRepository(AtomicAppContext context)
+        public AtomicProjectRepository(AtomicAppContext context)
         {
             _context = context;
+        }
+
+        public async Task AddNewProject(Project project)
+        {
+            await _context.AddAsync(project);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Project?> GetProjectAsync(Expression<Func<Project, bool>> predicate)

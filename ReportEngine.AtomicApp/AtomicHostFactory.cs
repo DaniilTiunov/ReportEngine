@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ReportEngine.AtomicApp.ViewModels;
 using ReportEngine.AtomicApp.Views;
 using ReportEngine.AtomicDomain.Database.Context;
 using ReportEngine.AtomicDomain.Repositories;
@@ -19,6 +20,7 @@ namespace ReportEngine.AtomicApp
                     ConfigureViews(services);
                     ConfigureServices(services);
                     ConfigureRepositories(services);
+                    ConfigureViewModel(services);
 
                     services.AddSingleton<App>();
                     services.AddSingleton<MainWindow>();
@@ -28,18 +30,23 @@ namespace ReportEngine.AtomicApp
 
         private static void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<ProjectService>();
+            services.AddScoped<AtomicProjectService>();
         }
 
         private static void ConfigureRepositories(IServiceCollection services)
         {
-            services.AddScoped<ProjectRepository>();
+            services.AddScoped<AtomicProjectRepository>();
         }
 
         private static void ConfigureDatabase(IServiceCollection services, string connString)
         {
             services.AddDbContext<AtomicAppContext>(options =>
                 options.UseNpgsql(connString));
+        }
+
+        private static void ConfigureViewModel(IServiceCollection services)
+        {
+            services.AddScoped<AtomicProjectViewModel>();
         }
 
         private static void ConfigureViews(IServiceCollection services)
