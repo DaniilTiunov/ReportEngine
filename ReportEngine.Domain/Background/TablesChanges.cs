@@ -11,6 +11,8 @@ namespace ReportEngine.Domain.Background
         public int? EquipId { get; set; }
         public string? OldName { get; set; }
         public string? NewName { get; set; }
+        public float? OldCost { get; set; }
+        public float? NewCost { get; set; }
         public bool? Processed { get; set; }
         public DateTimeOffset? ChangedAt { get; set; }
     }
