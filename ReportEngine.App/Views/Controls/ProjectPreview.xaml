@@ -90,11 +90,11 @@
                             <GridViewColumn
                                 Width="100"
                                 DisplayMemberBinding="{Binding Width}"
-                                Header="Ширина" />
+                                Header="Ширина, мм" />
                             <GridViewColumn
                                 Width="100"
                                 DisplayMemberBinding="{Binding Weight}"
-                                Header="Масса" />
+                                Header="Масса, кг" />
                             <GridViewColumn
                                 Width="100"
                                 DisplayMemberBinding="{Binding StandSummCost}"
