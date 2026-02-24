@@ -618,17 +618,17 @@ public class ProjectViewModel : BaseViewModel
 
             var stand = CurrentProjectModel.SelectedStand;
 
-            // ВСЕГДА новый объект
-            var tmp = new ObvyazkaInStand();
-
-            tmp.ImageName = SelectedObvyazka.ImageName;
+            var tmp = new ObvyazkaInStand
+            {
+                ImageName = SelectedObvyazka.ImageName
+            };
 
             stand.MaterialLineCount = SelectedObvyazka.LineLength;
             stand.ArmatureCount = SelectedObvyazka.ZraCount;
             stand.TreeSocketMaterialCount = SelectedObvyazka.TreeSocket;
             stand.KMCHCount = SelectedObvyazka.KMCHCount;
 
-            CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand = tmp;
+            stand.SelectedObvyazkaInStand = tmp;
         });
     }
 
@@ -937,16 +937,13 @@ public class ProjectViewModel : BaseViewModel
             if (Guard.ExitIfNull("Не был выбран стенд", _notificationService, selectedStand))
                 return;
 
-            if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka))
-                return;
-
             //var isCorrectSensorsData = _uiValidatorService.ValidateSensorsQuantityInNewObv(this);
 
             //if (!isCorrectSensorsData)
             //    return;
 
 
-            await _projectService.UpdateObvInStandAsync(CurrentProjectModel, SelectedObvyazka);
+            await _projectService.UpdateObvInStandAsync(CurrentProjectModel);
 
             OnObvyazkiInStandChanged();
             OnPropertyChanged(nameof(CurrentProjectModel.SelectedStand.NewAdditionalEquip.Purposes));

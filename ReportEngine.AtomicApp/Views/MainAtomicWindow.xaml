@@ -198,8 +198,72 @@
                 <MenuItem Header="Справка" />
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAuthWindowCommand}" Header="Авторизация" />
             </Menu>
-            <Grid />
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
+                <!--  Ввод нового проекта  -->
+                <StackPanel
+                    Grid.Row="0"
+                    Margin="0,0,0,10"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        Margin="0,0,5,0"
+                        VerticalAlignment="Center"
+                        Text="Название:" />
+                    <TextBox
+                        Width="150"
+                        Margin="0,0,10,0"
+                        Text="{Binding CurrentProject.Number}" />
+                    <TextBlock
+                        Margin="0,0,5,0"
+                        VerticalAlignment="Center"
+                        Text="Описание:" />
+                    <TextBox
+                        Width="250"
+                        Margin="0,0,10,0"
+                        Text="{Binding CurrentProject.Description}" />
+                    <Button
+                        Width="100"
+                        Command="{Binding CommandProvider.AddNewProjectAsyncCommand}"
+                        Content="Добавить" />
+                </StackPanel>
+
+                <!--  Кнопка загрузки всех проектов  -->
+                <Button
+                    Grid.Row="2"
+                    Width="150"
+                    Margin="0,0,0,10"
+                    Command="{Binding CommandProvider.GetProjectAsyncCommand}"
+                    Content="Загрузить все проекты" />
+
+                <ContentControl x:Name="MainContent" Grid.Row="1">
+                    <DataGrid
+                        Grid.Row="2"
+                        AutoGenerateColumns="False"
+                        CanUserAddRows="False"
+                        IsReadOnly="True"
+                        ItemsSource="{Binding AllProjects}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
+                                Width="50"
+                                Binding="{Binding Id}"
+                                Header="ID" />
+                            <DataGridTextColumn
+                                Width="*"
+                                Binding="{Binding Name}"
+                                Header="Название" />
+                            <DataGridTextColumn
+                                Width="2*"
+                                Binding="{Binding Description}"
+                                Header="Описание" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ContentControl>
+            </Grid>
         </DockPanel>
     </Border>
 </Window>

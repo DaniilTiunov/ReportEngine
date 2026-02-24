@@ -307,7 +307,7 @@ public class ProjectService : IProjectService
         await _projectRepository.DeleteObvFromStandAsync(standId, obvyazkaInStandId);
     }
 
-    public async Task UpdateObvInStandAsync(ProjectModel projectModel, Obvyazka selectedObvyazka)
+    public async Task UpdateObvInStandAsync(ProjectModel projectModel)
     {
         if (Guard.ExitIfNull("Сначала создайте проект!", _notificationService, projectModel))
             return;
@@ -351,19 +351,6 @@ public class ProjectService : IProjectService
         obv.ThirdSensorMarkPlus = stand.ThirdSensorMarkPlus;
         obv.ThirdSensorMarkMinus = stand.ThirdSensorMarkMinus;
         obv.ThirdSensorDescription = stand.ThirdSensorDescription;
-
-        obv.LineLength = selectedObvyazka.LineLength;
-        obv.ZraCount = selectedObvyazka.ZraCount;
-        obv.Sensor = selectedObvyazka.Sensor;
-        obv.SensorType = selectedObvyazka.SensorType;
-        obv.Clamp = selectedObvyazka.Clamp;
-        obv.WidthOnFrame = selectedObvyazka.WidthOnFrame;
-        obv.OtherLineCount = selectedObvyazka.OtherLineCount;
-        obv.Weight = selectedObvyazka.Weight;
-        obv.TreeSocketCount = selectedObvyazka.TreeSocket;
-        obv.KMCHCount = selectedObvyazka.KMCHCount;
-        obv.HumanCost = selectedObvyazka.HumanCost;
-        obv.ImageName = selectedObvyazka.ImageName;
 
         await UpdateObvyazka(projectModel, projectModel.SelectedStand.SelectedObvyazkaInStand);
 

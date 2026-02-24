@@ -92,7 +92,7 @@
                                         <TreeViewItem
                                             Margin="0,3,0,3"
                                             Foreground="{DynamicResource PrimaryForeground}"
-                                            Header="Переформировать комплектущие"
+                                            Header="Перерасчёт"
                                             Tag="UpdateAllProps" />
                                         <TreeViewItem
                                             Margin="0,3,0,3"

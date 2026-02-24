@@ -234,11 +234,6 @@ public class DialogService : IDialogService
 
         projectViewModel.CurrentStandModel.SelectedObvyazkaInStand = new();
 
-        //projectViewModel.CurrentStandModel.MaterialLine = "";
-        //projectViewModel.CurrentStandModel.Armature = "";
-        //projectViewModel.CurrentStandModel.KMCH = "";
-        //projectViewModel.CurrentStandModel.TreeSocket = "";
-
         window.ShowDialog();
     }
 
