@@ -21,6 +21,7 @@ namespace ReportEngine.Domain.Entities
         public float? Quantity { get; set; }
         public float? CostPerUnit { get; set; }
         public string? Measure { get; set; }
+        public float? Weight { get; set; }
         public int? ExportDays { get; set; }
     }
 }

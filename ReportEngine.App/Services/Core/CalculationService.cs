@@ -27,10 +27,15 @@ public class CalculationService : ICalculationService
     {
         await LoadSettingsCost();
 
-        await CalculateStandsCountAsync(project);
+        CalculateStandsCountAsync(project);
 
         foreach (var stand in project.Stands)
+        {
+            CalculateStandsWidthAsync(stand);
+            CalculateStandsWeightAsync(stand);
+
             stand.StandSummCost = CalculateStandEquipCost(stand);
+        }
 
         var standsCost = project.Stands.Sum(stand => stand.StandSummCost);
         var galvanizedCost = CalculateGalvanizedCost(project);
@@ -43,9 +48,29 @@ public class CalculationService : ICalculationService
         await _projectService.UpdateStandEntity(project);
     }
 
-    private async Task CalculateStandsCountAsync(ProjectModel project)
+    private void CalculateStandsCountAsync(ProjectModel project)
     {
         project.StandCount = project.Stands.Count;
+    }
+
+    private void CalculateStandsWeightAsync(StandModel standModel)
+    {
+        standModel.Weight = 0;
+
+        standModel.Weight += standModel.FramesInStand.Sum(fr => fr.Weight);
+
+        standModel.Weight += standModel.AllElectricalPurposesInStand.Sum(ec => ec.Weight) ?? 0.0f;
+
+        standModel.Weight += standModel.AllAdditionalEquipPurposesInStand.Sum(ec => ec.Weight) ?? 0.0f;
+
+        standModel.Weight += standModel.ObvyazkaAdditionalComponents.Sum(ac => ac.Weight) ?? 0.0f;
+
+        standModel.Weight += standModel.ObvyazkiInStand.Sum(ec => ec.Weight) ?? 0.0f;
+    }
+
+    private void CalculateStandsWidthAsync(StandModel standModel)
+    {
+        standModel.Width = standModel.FramesInStand.Sum(fr  => fr.Width);
     }
 
     private decimal CalculateStandEquipCost(StandModel standModel)

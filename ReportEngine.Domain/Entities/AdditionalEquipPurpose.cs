@@ -11,6 +11,8 @@ public class AdditionalEquipPurpose : IPurposeEntity
     public string? Material { get; set; }
     public float? Quantity { get; set; }
     public float? CostPerUnit { get; set; }
+
+    public float? Weight { get; set; }
     public string? Measure { get; set; }
     public int? ExportDays { get; set; }
     public bool? IsAutoCalculationEnabled { get; set; } = true;
