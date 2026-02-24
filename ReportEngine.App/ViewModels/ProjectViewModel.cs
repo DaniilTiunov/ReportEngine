@@ -1302,8 +1302,6 @@ public class ProjectViewModel : BaseViewModel
 
         UpdateNewStandNN();
         OnStandsInProjectChanged();
-
-        _notificationService.ShowInfo("Стенд удалён");
     }
 
     private async Task CreateNewProjectCardAsync()
@@ -1542,7 +1540,7 @@ public class ProjectViewModel : BaseViewModel
             }
         }
 
-        _dialogService.RunWithProgressDialogAsync(() =>
+        await _dialogService.RunWithProgressDialogAsync(() =>
                 _reportService.GenerateReportAsync(typeGenerator, CurrentProjectModel.CurrentProjectId));
 
 

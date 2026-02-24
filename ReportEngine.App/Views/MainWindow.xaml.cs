@@ -186,6 +186,27 @@ public partial class MainWindow : Window //Это так называемый "C
         Application.Current.Shutdown();
     }
 
+    private void OpenLauncher(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var localPath = AppDomain.CurrentDomain.BaseDirectory;
+            var updaterPath = Path.Combine(localPath, "ReportEngine.Launcher.exe");
+
+            if (!File.Exists(updaterPath))
+            {
+                MessageBox.Show("Лаунчер не найден!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            Process.Start(updaterPath);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Ошибка запуска: {ex.Message}");
+        }
+    }
+
     private void AutoUpdate(object sender, RoutedEventArgs e)
     {
         try

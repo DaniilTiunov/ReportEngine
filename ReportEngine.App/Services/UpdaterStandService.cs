@@ -27,24 +27,15 @@ namespace ReportEngine.App.Services
 
             foreach (var stand in project.Stands)
             {
-                var stringProps = stand.GetType().GetProperties()
-                    .Where(p => p.CanRead && p.CanWrite && p.PropertyType == typeof(string));
-
                 foreach (var change in changes)
                 {
-                    foreach (var prop in stringProps)
-                    {
-                        var value = (string?)prop.GetValue(stand);
+                    ApplyChangesToObject(stand, change);
 
-                        if (!string.IsNullOrEmpty(value) &&
-                            value.Contains(change.OldName))
-                        {
-                            prop.SetValue(
-                                stand,
-                                value.Replace(change.OldName, change.NewName)
-                            );
-                        }
-                    }
+                    ApplyChangesToCollection(stand.AllAdditionalEquipPurposesInStand, change);
+                    ApplyChangesToCollection(stand.ObvyazkaAdditionalComponents, change);
+                    ApplyChangesToCollection(stand.AllElectricalPurposesInStand, change);
+                    ApplyChangesToCollection(stand.AllDrainagePurposesInStand, change);
+                    ApplyChangesToCollection(stand.ObvyazkiInStand, change);
 
                     change.Processed = true;
                 }
@@ -54,10 +45,60 @@ namespace ReportEngine.App.Services
 
             await _projectService.UpdateStandEntity(project);
             await _standService.LoadObvyazkiInStandsAsync(project.Stands);
+            await _standService.LoadStandsDataAsync(project.Stands);
+            await _standService.LoadPurposesInStands(project.Stands);
 
             await _context.SaveChangesAsync();
 
             _notificationService.ShowInfo("Данные комплектующих обновлены!");
+        }
+
+        private void ApplyChangesToCollection<T>(IEnumerable<T> collection, TablesChanges change)
+        {
+            if (collection == null)
+                return;
+
+            foreach (var item in collection)
+            {
+                ApplyChangesToObject(item!, change);
+            }
+        }
+
+        private void ApplyChangesToObject(object target, TablesChanges change)
+        {
+            var properties = target.GetType()
+                .GetProperties()
+                .Where(p => p.CanRead && p.CanWrite);
+
+            foreach (var prop in properties)
+            {
+                // 🔹 Обработка string
+                if (prop.PropertyType == typeof(string))
+                {
+                    var value = (string?)prop.GetValue(target);
+
+                    if (!string.IsNullOrEmpty(value) &&
+                        value.Contains(change.OldName))
+                    {
+                        prop.SetValue(target,
+                            value.Replace(change.OldName!, change.NewName));
+                    }
+                }
+
+                // 🔹 Обработка стоимости (float)
+                if (prop.PropertyType == typeof(float) ||
+                    prop.PropertyType == typeof(float?))
+                {
+                    var value = prop.GetValue(target);
+
+                    if (value is float floatValue &&
+                        change.OldCost.HasValue &&
+                        floatValue == change.OldCost.Value)
+                    {
+                        prop.SetValue(target, change.NewCost);
+                    }
+                }
+            }
         }
 
         public async Task SyncStandPropertiesToObvyazkiAsync(StandModel stand)
@@ -76,7 +117,7 @@ namespace ReportEngine.App.Services
         public async Task<List<TablesChanges>> GetUnprocessedChangesAsync(ProjectModel project)
         {
             return await _context.TablesChanges
-                .Where(c => !c.Processed == false)
+                .Where(c => c.Processed == false)
                 .ToListAsync();
         }
     }

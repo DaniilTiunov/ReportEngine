@@ -14,7 +14,7 @@ public class CalculationService : ICalculationService
 
     public CalculationService(IProjectService projectService)
     {
-        _projectService = projectService;;
+        _projectService = projectService;
     }
 
     private async Task LoadSettingsCost()
@@ -63,6 +63,8 @@ public class CalculationService : ICalculationService
 
         standModel.Weight += standModel.AllAdditionalEquipPurposesInStand.Sum(ec => ec.Weight) ?? 0.0f;
 
+        standModel.Weight += standModel.AllDrainagePurposesInStand.Sum(dp => dp.Weight) ?? 0.0f;
+
         standModel.Weight += standModel.ObvyazkaAdditionalComponents.Sum(ac => ac.Weight) ?? 0.0f;
 
         standModel.Weight += standModel.ObvyazkiInStand.Sum(ec => ec.Weight) ?? 0.0f;
@@ -77,8 +79,7 @@ public class CalculationService : ICalculationService
     {
         decimal cost = 0;
 
-        cost += standModel.AdditionalEquipsInStand
-            .SelectMany(e => e.Purposes)
+        cost += standModel.AllElectricalPurposesInStand
             .Sum(p => (decimal)(p.CostPerUnit ?? 0) * (decimal)(p.Quantity ?? 0));
 
         cost += standModel.FramesInStand
@@ -87,12 +88,10 @@ public class CalculationService : ICalculationService
                 ? (c.Count ?? 0) * (decimal)(c.CostComponent ?? 0)
                 : (decimal)(c.Length ?? 0) * (decimal)(c.CostComponent ?? 0));
 
-        cost += standModel.ElectricalComponentsInStand
-            .SelectMany(e => e.Purposes)
+        cost += standModel.AllAdditionalEquipPurposesInStand
             .Sum(p => (decimal)(p.CostPerUnit ?? 0) * (decimal)(p.Quantity ?? 0));
 
-        cost += standModel.DrainagesInStand
-            .SelectMany(d => d.Purposes)
+        cost += standModel.AllDrainagePurposesInStand
             .Sum(p => (decimal)(p.CostPerUnit ?? 0) * (decimal)(p.Quantity ?? 0));
 
         return cost;

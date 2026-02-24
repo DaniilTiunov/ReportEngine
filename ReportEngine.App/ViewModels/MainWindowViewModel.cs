@@ -106,7 +106,7 @@ public class MainWindowViewModel : BaseViewModel
         {
             var projectViewModel = _serviceProvider.GetRequiredService<ProjectViewModel>();
 
-            _dialogService.RunWithProgressDialogAsync(async () =>
+            await _dialogService.RunWithProgressDialogAsync(async () =>
             {
                 await projectViewModel.LoadProjectInfoAsync(MainWindowModel.SelectedProject.Id);
                 _navigation.ShowContent<TreeProjectView>();

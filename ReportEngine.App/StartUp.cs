@@ -24,15 +24,11 @@ public static class StartUp
 
             var app = host.Services.GetRequiredService<App>();
 
-            //var equipListener = host.Services.GetRequiredService<EquipChangesListener>();
-
-            //equipListener.LoadCurrentDataAsync().GetAwaiter().GetResult();
-
             var mainWindow = host.Services.GetRequiredService<MainWindow>();
+
             app.MainWindow = mainWindow;
 
             mainWindow.Show();
-
             app.Run();
         }
         catch (Exception ex)
@@ -56,3 +52,7 @@ public static class StartUp
         Thread.CurrentThread.CurrentUICulture = culture;
     }
 }
+
+//var equipListener = host.Services.GetRequiredService<EquipChangesListener>();
+
+//equipListener.LoadCurrentDataAsync().GetAwaiter().GetResult();

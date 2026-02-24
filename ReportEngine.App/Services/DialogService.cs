@@ -329,7 +329,7 @@ public class DialogService : IDialogService
         }
     }
 
-    public async void RunWithProgressDialogAsync(Func<Task> action)
+    public async Task RunWithProgressDialogAsync(Func<Task> action)
     {
         var progressDialog = new ProgressDialog();
         var owner = Application.Current.MainWindow;
