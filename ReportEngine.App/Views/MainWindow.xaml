@@ -215,7 +215,10 @@
                     <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllDrainagesCommand}" Header="Дренажи" />
                 </MenuItem>
                 <MenuItem Header="Инструменты">
+                    <MenuItem Click="OpenLauncher" Header="Открыть лаунчер" />
+                    <Separator />
                     <MenuItem Click="ShowCalculator" Header="Калькулятор" />
+                    <Separator />
                     <MenuItem Click="ShowNotepad" Header="Блокнот" />
                 </MenuItem>
                 <MenuItem Header="Справка">

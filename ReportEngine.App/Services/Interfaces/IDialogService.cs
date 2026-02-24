@@ -35,5 +35,5 @@ public interface IDialogService
 
     void RunWithProgressDialog(Action action);
 
-    void RunWithProgressDialogAsync(Func<Task> action);
+    Task RunWithProgressDialogAsync(Func<Task> action);
 }

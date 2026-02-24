@@ -141,7 +141,7 @@ public class ProjectService : IProjectService
 
             // Копируем всегда с исходного стенда, а не с предыдущей копии
 
-            _dialogService.RunWithProgressDialogAsync(async () =>
+            await _dialogService.RunWithProgressDialogAsync(async () =>
             {
                 for (var i = 1; i <= count; i++)
                 {

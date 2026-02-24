@@ -14,7 +14,7 @@ public class CalculationService : ICalculationService
 
     public CalculationService(IProjectService projectService)
     {
-        _projectService = projectService;;
+        _projectService = projectService;
     }
 
     private async Task LoadSettingsCost()
