@@ -27,10 +27,23 @@ namespace ReportEngine.AtomicServices.Services
             return projectEntity.Adapt<AtomicProjectModel>();
 
         }
+
         public async Task<IEnumerable<AtomicProjectModel>> GetAllProjectsAsync()
         {
             var projectEntities = await _projectRepository.GetAllProjectsAsync();
             return projectEntities.Adapt<IEnumerable<AtomicProjectModel>>();
+        }
+
+        public async Task DeleteProjectByIdAsync(AtomicProjectModel projectModel)
+        {
+            await _projectRepository.DeleteProjectAsync(pr => pr.Id == projectModel.Id);
+        }
+
+        public async Task UpdateAllProjects(IEnumerable<AtomicProjectModel> projectModels)
+        {
+            var projectEntities = projectModels.Adapt<IEnumerable<Project>>();
+
+            await _projectRepository.UpdateAllProjectsAsync(projectEntities);
         }
     }    
 }

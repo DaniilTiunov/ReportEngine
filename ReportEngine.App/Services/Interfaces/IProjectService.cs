@@ -22,7 +22,7 @@ public interface IProjectService
 
     Task DeleteObvFromStandAsync(int standId, int obvyazkaInStandId);
 
-    Task UpdateObvInStandAsync(ProjectModel projectModel, Obvyazka selectedObvyazka);
+    Task UpdateObvInStandAsync(ProjectModel projectModel);
 
     Task DeleteFrameFromStandAsync(ProjectModel projectModel);
 

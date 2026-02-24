@@ -234,34 +234,35 @@
 
                 <!--  Кнопка загрузки всех проектов  -->
                 <Button
-                    Grid.Row="1"
+                    Grid.Row="2"
                     Width="150"
                     Margin="0,0,0,10"
                     Command="{Binding CommandProvider.GetProjectAsyncCommand}"
                     Content="Загрузить все проекты" />
 
-                <!--  DataGrid  -->
-                <DataGrid
-                    Grid.Row="2"
-                    AutoGenerateColumns="False"
-                    CanUserAddRows="False"
-                    IsReadOnly="True"
-                    ItemsSource="{Binding AllProjects}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn
-                            Width="50"
-                            Binding="{Binding Id}"
-                            Header="ID" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Name}"
-                            Header="Название" />
-                        <DataGridTextColumn
-                            Width="2*"
-                            Binding="{Binding Description}"
-                            Header="Описание" />
-                    </DataGrid.Columns>
-                </DataGrid>
+                <ContentControl x:Name="MainContent" Grid.Row="1">
+                    <DataGrid
+                        Grid.Row="2"
+                        AutoGenerateColumns="False"
+                        CanUserAddRows="False"
+                        IsReadOnly="True"
+                        ItemsSource="{Binding AllProjects}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
+                                Width="50"
+                                Binding="{Binding Id}"
+                                Header="ID" />
+                            <DataGridTextColumn
+                                Width="*"
+                                Binding="{Binding Name}"
+                                Header="Название" />
+                            <DataGridTextColumn
+                                Width="2*"
+                                Binding="{Binding Description}"
+                                Header="Описание" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ContentControl>
             </Grid>
         </DockPanel>
     </Border>

@@ -23,7 +23,7 @@ namespace ReportEngine.AtomicApp.Extensions
         }
 
         /// <summary>
-        /// Нужно заменить все элементы, но не менять объект коллекции, т.е. обновить UI коллкцию
+        /// Нужно заменить все элементы, но не менять объект коллекции, т.е. обновить UI коллекцию
         /// </summary>
         public static void ReplaceWith<T>(this ObservableCollection<T> collection, IEnumerable<T> items)
         {
