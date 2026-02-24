@@ -89,12 +89,16 @@
                                 Header="Тип крепления" />
                             <GridViewColumn
                                 Width="100"
-                                DisplayMemberBinding="{Binding ObvyazkaName}"
-                                Header="Тип обвязки" />
+                                DisplayMemberBinding="{Binding Width}"
+                                Header="Ширина" />
+                            <GridViewColumn
+                                Width="100"
+                                DisplayMemberBinding="{Binding Weight}"
+                                Header="Масса" />
                             <GridViewColumn
                                 Width="100"
                                 DisplayMemberBinding="{Binding StandSummCost}"
-                                Header="Стоимость стенда" />
+                                Header="Сум.стоимость" />
                         </GridView>
                     </ListView.View>
                     <ListView.ContextMenu>
