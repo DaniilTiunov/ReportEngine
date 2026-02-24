@@ -1427,6 +1427,7 @@ public class ProjectViewModel : BaseViewModel
                     dp.CostPerUnit = selected.Cost;
                     dp.Measure = selected.Measure;
                     dp.ExportDays = selected.ExportDays;
+                    dp.Weight = selected.Weight;
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewDrainage.Purposes);
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand
                         .AllDrainagePurposesInStand);
@@ -1439,6 +1440,7 @@ public class ProjectViewModel : BaseViewModel
                     ap.CostPerUnit = selected.Cost;
                     ap.Measure = selected.Measure;
                     ap.ExportDays = selected.ExportDays;
+                    ap.Weight = selected.Weight;
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewAdditionalEquip.Purposes);
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand
                         .AllAdditionalEquipPurposesInStand);
@@ -1451,6 +1453,7 @@ public class ProjectViewModel : BaseViewModel
                     ep.CostPerUnit = selected.Cost;
                     ep.Measure = selected.Measure;
                     ep.ExportDays = selected.ExportDays;
+                    ep.Weight = selected.Weight;
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentStandModel.NewElectricalComponent.Purposes);
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand
                         .AllElectricalPurposesInStand);
@@ -1462,6 +1465,7 @@ public class ProjectViewModel : BaseViewModel
                     obv.Material = selected.Name;
                     obv.CostPerUnit = selected.Cost;
                     obv.Measure = selected.Measure;
+                    obv.Weight = selected.Weight;
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand.ObvyazkaAdditionalComponents);
                     return;
 

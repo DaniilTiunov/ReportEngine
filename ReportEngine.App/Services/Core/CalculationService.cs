@@ -30,7 +30,12 @@ public class CalculationService : ICalculationService
         await CalculateStandsCountAsync(project);
 
         foreach (var stand in project.Stands)
+        {
+            await CalculateStandsWidthAsync(stand);
+            await CalculateStandsWeightAsync(stand);
+
             stand.StandSummCost = CalculateStandEquipCost(stand);
+        }
 
         var standsCost = project.Stands.Sum(stand => stand.StandSummCost);
         var galvanizedCost = CalculateGalvanizedCost(project);
@@ -46,6 +51,19 @@ public class CalculationService : ICalculationService
     private async Task CalculateStandsCountAsync(ProjectModel project)
     {
         project.StandCount = project.Stands.Count;
+    }
+
+    private async Task CalculateStandsWeightAsync(StandModel standModel)
+    {
+        standModel.Weight = 0;
+
+        standModel.Weight += standModel.FramesInStand.Sum(fr => fr.Weight);
+
+    }
+
+    private async Task CalculateStandsWidthAsync(StandModel standModel)
+    {
+        standModel.Width = standModel.FramesInStand.Sum(fr  => fr.Width);
     }
 
     private decimal CalculateStandEquipCost(StandModel standModel)
