@@ -277,7 +277,8 @@ public static class ExcelReportHelper
         var sensorsHolders = stands
             .SelectMany(stand => stand.StandAdditionalEquips)
             .SelectMany(equip => equip.AdditionalEquip.Purposes)
-            .Where(purpose => purpose.Purpose.Contains("Кронштейн")) //сомнительная хрень, хз что брать за источник информации
+            .Where(purpose => purpose.Purpose != null)
+            .Where(purpose => purpose.Purpose.Contains("Кронштейн")) //сомнительно, хз что брать за источник информации
             .GroupBy(purpose => purpose.Material)
             .Select(group => new
             {
