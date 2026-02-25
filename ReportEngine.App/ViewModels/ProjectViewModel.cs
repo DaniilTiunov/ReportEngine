@@ -196,6 +196,8 @@ public class ProjectViewModel : BaseViewModel
     }
     public async void OnAdditionalTestCommandExecuted(object e)
     {
+        CurrentProjectModel.SelectedStand.AdditionalPurposesChanges = true;
+
         await _additionalEquipService.CreateEquipsFromObvyzkaAsync(CurrentProjectModel);
     }
 

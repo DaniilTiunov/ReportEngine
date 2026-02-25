@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Windows.Controls;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ReportEngine.AtomicApp.Services;
 using ReportEngine.AtomicApp.ViewModels;
 using ReportEngine.AtomicApp.Views;
 using ReportEngine.AtomicDomain.Database.Context;
@@ -52,6 +54,15 @@ namespace ReportEngine.AtomicApp
         private static void ConfigureViews(IServiceCollection services)
         {
             services.AddSingleton<MainWindow>();
+            services.AddSingleton(provider =>
+            {
+                var navService = provider.GetRequiredService<NavigationService>();
+                var viewModel = provider.GetRequiredService<AtomicMainWindowViewModel>();
+                var mainWindow = new MainWindow(viewModel, provider);
+
+                navService.InitializeContentHost(mainWindow.FindName("MainContentControl") as ContentControl);
+                return mainWindow;
+            });
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using ReportEngine.AtomicApp.ViewModels;
@@ -7,9 +8,12 @@ namespace ReportEngine.AtomicApp.Views
 {
     public partial class MainWindow : Window
     {
-        public readonly AtomicProjectViewModel _projectViewModel;
+        public readonly AtomicMainWindowViewModel _mainWindowViewModel;
+        public readonly IServiceProvider _serviceProvider;
 
-        public MainWindow(AtomicProjectViewModel projectViewModel)
+        public MainWindow(
+            AtomicMainWindowViewModel mainWindowViewModel,
+            IServiceProvider serviceProvider)
         {
 
             StandardTheme(null, null);
@@ -18,9 +22,10 @@ namespace ReportEngine.AtomicApp.Views
 
             InitializeComponent();
 
-            _projectViewModel = projectViewModel;
+            _mainWindowViewModel = mainWindowViewModel;
+            _serviceProvider = serviceProvider;
 
-            DataContext = _projectViewModel;
+            DataContext = _mainWindowViewModel;
 
 
             StateChanged += MainWindow_StateChanges;
@@ -72,6 +77,27 @@ namespace ReportEngine.AtomicApp.Views
             }
 
             mergedDicts.Add(themeDict);
+        }
+
+        private void OpenLauncher(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var localPath = AppDomain.CurrentDomain.BaseDirectory;
+                var updaterPath = Path.Combine(localPath, "ReportEngine.Launcher.exe");
+
+                if (!File.Exists(updaterPath))
+                {
+                    MessageBox.Show("Лаунчер не найден!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                Process.Start(updaterPath);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка запуска: {ex.Message}");
+            }
         }
 
         private void MainWindow_StateChanges(object? sender, EventArgs e)
