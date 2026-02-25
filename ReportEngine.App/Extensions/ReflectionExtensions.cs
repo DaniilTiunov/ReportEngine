@@ -2,7 +2,7 @@
 {
     public static class ReflectionExtensions
     {
-        public static object? GetPropertyValue(object obj, string propertyName)
+        public static object? GetPropertyValue(this object obj, string propertyName)
         {
             if (obj == null)
                 throw new NullReferenceException();
@@ -12,7 +12,7 @@
             return property?.GetValue(obj);
         }
 
-        public static void SetPropertyValue(object obj, string propertyName, object value)
+        public static void SetPropertyValue(this object obj, string propertyName, object value)
         {
             if(obj == null)
                 throw new NullReferenceException();

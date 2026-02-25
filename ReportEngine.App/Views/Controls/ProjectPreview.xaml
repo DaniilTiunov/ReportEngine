@@ -408,6 +408,8 @@
                             SnapsToDevicePixels="True">
                             <Image
                                 x:Name="StandDrawingImage"
+                                MaxWidth="1000"
+                                MaxHeight="800"
                                 Focusable="True"
                                 Source="{Binding CurrentProjectModel.SelectedStand.ImageData, Converter={StaticResource ByteArrayImageConverter}}"
                                 Stretch="Uniform" />
