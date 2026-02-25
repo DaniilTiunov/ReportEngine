@@ -116,7 +116,9 @@ public class CalculationService : ICalculationService
         float totalHumanCost = 0;
         var stands = projectModel.Stands.Count;
 
-        var checkCost = HumanCostSettingsModel.TimeForCheckStand * stands + HumanCostSettingsModel.TimeForAllChecks;
+        var checkCost = HumanCostSettingsModel.TimeForCheckStand * stands
+            + HumanCostSettingsModel.TimeForAllChecks
+            + HumanCostSettingsModel.TimeForFinalWork;
 
         totalHumanCost = checkCost.ToFloat();
 

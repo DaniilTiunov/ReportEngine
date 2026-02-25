@@ -16,7 +16,9 @@ using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.ElectricSockets;
+using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Domain.Entities.Pipes;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
@@ -44,6 +46,7 @@ public class ProjectViewModel : BaseViewModel
     private readonly AdditionalEquipService _additionalEquipService;
     private readonly SemaphoreSlim _updateUiLock = new(1, 1);
     private readonly UIValidatorService _uiValidatorService;
+    private readonly GenericRepository _genericRepository;
 
     public ProjectViewModel(
         IProjectInfoRepository projectRepository,
@@ -57,8 +60,10 @@ public class ProjectViewModel : BaseViewModel
         ContainerService containerService,
         UpdaterStandService updaterStandService,
         AdditionalEquipService additionalEquipService,
-        UIValidatorService uiValidatorService)
+        UIValidatorService uiValidatorService,
+        GenericRepository genericRepository)
     {
+        _genericRepository = genericRepository;
         _projectRepository = projectRepository;
         _dialogService = dialogService;
         _notificationService = notificationService;
@@ -205,13 +210,17 @@ public class ProjectViewModel : BaseViewModel
     {
         await FrameSettings.LoadFrameDataFromIniAsync();
 
+        var materialOne = await _genericRepository.GetAsync<Other>(x => x.Name == FrameSettings.MaterialOne);
+        var materialTwo = await _genericRepository.GetAsync<Other>(x => x.Name == FrameSettings.MaterialTwo);
+
+
         var items = new List<AdditionalEquipPurpose>
         {
             new()
             {
                 Material = FrameSettings.MaterialOne,
                 Quantity = (float)FrameSettings.CountMaterialOne,
-                CostPerUnit = 0,
+                CostPerUnit = materialOne.Cost,
                 Measure = "шт",
                 FormedAdditionalEquipId = CurrentProjectModel.SelectedStand.AdditionalEquipsInStand.FirstOrDefault().Id
             },
@@ -219,7 +228,7 @@ public class ProjectViewModel : BaseViewModel
             {
                 Material = FrameSettings.MaterialTwo,
                 Quantity = (float)FrameSettings.CountMaterialTwo,
-                CostPerUnit = 0,
+                CostPerUnit = materialTwo.Cost,
                 Measure = "шт",
                 FormedAdditionalEquipId = CurrentProjectModel.SelectedStand.AdditionalEquipsInStand.FirstOrDefault().Id
             }
