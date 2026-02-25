@@ -377,18 +377,21 @@ public static class ExcelReportHelper
             .Except(othersParts)
             .ToList();
 
-        return new PartsStandsData(
-            pipesList,
-            armaturesList,
-            treeList,
-            kmchList,
-            drainageParts,
-            framesList,
-            sensorsHolders,
-            electricalParts,
-            othersParts,
-            supplies
-        );
+
+        return new PartsStandsData
+        {
+            PipesList = pipesList,
+            ArmaturesList = armaturesList,
+            TreeList = treeList,
+            KmchList = kmchList,
+            DrainageParts = drainageParts,
+            FramesList = framesList,
+            SensorsHolders = sensorsHolders,
+            ElectricalParts = electricalParts,
+            OthersParts = othersParts,
+            Supplies = supplies
+        };
+
     }
 
     //создаем инфу о трудозатратах
@@ -537,16 +540,23 @@ public static class ExcelReportHelper
                 (commonHumanCost * humanCostSettings?.CommonCheckStand) != null)
         };
 
-        return new LaborStandsData(
-              frameProductionRecord,
-              obvProductionRecord,
-              collectorProductionRecord,
-              qualityTestRecord,
-              sandblastingRecord,
-              paintingRecord,
-              electricRecord,
-              commonCheckRecord);
+
+        return new LaborStandsData
+        {
+            frameProduction = frameProductionRecord,
+            obvProduction = obvProductionRecord,
+            collectorProduction = collectorProductionRecord,
+            qualityTests = qualityTestRecord,
+            sandblasting = sandblastingRecord,
+            paintingWorks = paintingRecord,
+            electricalWorks = electricRecord,
+            commonStandCheck = commonCheckRecord
+        };
+
+
+
     }
+
 
     //создаем инфу о упаковке
     public static List<EquipmentRecord> GenerateContainersData(IEnumerable<ContainerBatch> containerBatches)

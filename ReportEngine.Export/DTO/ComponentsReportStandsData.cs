@@ -16,29 +16,32 @@ public struct SensorRecordData
     }
 }
 
-public record PartsStandsData(
-    List<EquipmentRecord> PipesList,
-    List<EquipmentRecord> ArmaturesList,
-    List<EquipmentRecord> TreeList,
-    List<EquipmentRecord> KmchList,
-    List<EquipmentRecord> DrainageParts,
-    List<EquipmentRecord> FramesList,
-    List<EquipmentRecord> SensorsHolders,
-    List<EquipmentRecord> ElectricalParts,
-    List<EquipmentRecord> OthersParts,
-    List<EquipmentRecord> Supplies
-);
+public struct PartsStandsData
+{
+    public List<EquipmentRecord> PipesList { get; set; }
+    public List<EquipmentRecord> ArmaturesList { get; set; }
+    public List<EquipmentRecord> TreeList { get; set; }
+    public List<EquipmentRecord> KmchList { get; set; }
+    public List<EquipmentRecord> DrainageParts { get; set; }
+    public List<EquipmentRecord> FramesList { get; set; }
+    public List<EquipmentRecord> SensorsHolders { get; set; }
+    public List<EquipmentRecord> ElectricalParts { get; set; }
+    public List<EquipmentRecord> OthersParts { get; set; }
+    public List<EquipmentRecord> Supplies { get; set; }
+}
 
-public record LaborStandsData(
-    EquipmentRecord frameProduction,
-    EquipmentRecord obvProduction,
-    EquipmentRecord collectorProduction,
-    EquipmentRecord qualityTests,
-    EquipmentRecord sandblasting,
-    EquipmentRecord paintingWorks,
-    EquipmentRecord electricalWorks,
-    EquipmentRecord commonStandCheck
- );
+
+public struct LaborStandsData
+{
+    public EquipmentRecord frameProduction { get; set; }
+    public EquipmentRecord obvProduction { get; set; }
+    public EquipmentRecord collectorProduction { get; set; }
+    public EquipmentRecord qualityTests { get; set; }
+    public EquipmentRecord sandblasting { get; set; }
+    public EquipmentRecord paintingWorks { get; set; }
+    public EquipmentRecord electricalWorks { get; set; }
+    public EquipmentRecord commonStandCheck { get; set; }
+}
 
 public struct EquipmentRecord
 {
