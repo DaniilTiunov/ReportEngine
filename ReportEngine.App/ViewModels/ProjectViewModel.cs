@@ -612,7 +612,7 @@ public class ProjectViewModel : BaseViewModel
     {
         ExceptionHelper.SafeExecute(() =>
         {
-            SelectedObvyazka = _dialogService.ShowObvyazkaDialog();
+            SelectedObvyazka = _dialogService.ShowObvyazkaDialog(true);
 
             //если не выбрали - просто выходим
             if (SelectedObvyazka == null)

@@ -11,7 +11,7 @@ public interface IDialogService
     T? ShowEquipDialog<T>()
         where T : class, IBaseEquip, new();
 
-    Obvyazka? ShowObvyazkaDialog();
+    Obvyazka? ShowObvyazkaDialog(bool dialogMode);
 
     IBaseEquip? ShowAllSortamentsDialog();
 
