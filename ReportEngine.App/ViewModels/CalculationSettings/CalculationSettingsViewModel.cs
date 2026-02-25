@@ -44,29 +44,27 @@ public class CalculationSettingsViewModel : BaseViewModel
 
         if (p is string propertyName && !string.IsNullOrWhiteSpace(propertyName))
         {
-            var nameProp = StandSettings.GetType().GetProperty(propertyName);
-
-            if (nameProp != null && nameProp.CanWrite)
-            {
-                nameProp.SetValue(StandSettings, selected.Name);
-            }
-            else
-            {
-                _notificationService.ShowError($"Свойство '{propertyName}' не найдено.");
-            }
-
-            var measurePropertyName = propertyName + "Measure";
-            var measureProp = StandSettings.GetType().GetProperty(measurePropertyName);
-
-            if (measureProp != null && measureProp.CanWrite)
-            {
-                measureProp.SetValue(StandSettings, selected.Measure);
-            }
-            else
-            {
-                Debug.WriteLine($"Свойство '{measurePropertyName}' не найдено.");
-            }
+            ApplySelectedItem(StandSettings, selected, propertyName);
+            ApplySelectedItem(FrameSettings, selected, propertyName);
         }
+    }
+
+    private void ApplySelectedItem(object settings, object selected, string propertyName)
+    {
+        if (selected == null || settings == null)
+            return;
+
+        var type = settings.GetType();
+
+        var nameProp = type.GetProperty(propertyName);
+        if (nameProp != null && nameProp.CanWrite)
+            nameProp.SetValue(settings, selected.GetType().GetProperty("Name")?.GetValue(selected));
+
+        var measurePropertyName = propertyName + "Measure";
+        var measureProp = type.GetProperty(measurePropertyName);
+
+        if (measureProp != null && measureProp.CanWrite)
+            measureProp.SetValue(settings, selected.GetType().GetProperty("Measure")?.GetValue(selected));
     }
 
     public async void OnSaveSettingsCommandExecuted(object p)

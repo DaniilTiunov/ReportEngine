@@ -181,7 +181,7 @@ public class HostFactory
         services.AddScoped<SubjectViewModel>();
         services.AddScoped<RenumeratorViewModel>();
         services.AddScoped<StandCopyViewModel>();
-
+        services.AddScoped<GenericRepository>();
         services.AddScoped(typeof(GenericEquipViewModel<>));
     }
 

@@ -1,4 +1,5 @@
-﻿using ReportEngine.App.Model;
+﻿using ReportEngine.App.Extensions;
+using ReportEngine.App.Model;
 using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
@@ -42,7 +43,7 @@ public class CalculationService : ICalculationService
 
         project.Cost = standsCost + galvanizedCost;
 
-        project.HumanCost = project.Stands.Sum(ObvHumanCostCalculation);
+        project.HumanCost = project.Stands.Sum(ObvHumanCostCalculation) + CalculateOtherHumanCost(project);
 
         await _projectService.UpdateProjectAsync(project);
         await _projectService.UpdateStandEntity(project);
@@ -108,5 +109,19 @@ public class CalculationService : ICalculationService
     private float ObvHumanCostCalculation(StandModel stand)
     {
         return stand.ObvyazkiInStand.Sum(obv => obv.HumanCost ?? 0f);
+    }
+
+    private float CalculateOtherHumanCost(ProjectModel projectModel)
+    {
+        float totalHumanCost = 0;
+        var stands = projectModel.Stands.Count;
+
+        var checkCost = HumanCostSettingsModel.TimeForCheckStand * stands
+            + HumanCostSettingsModel.TimeForAllChecks
+            + HumanCostSettingsModel.TimeForFinalWork;
+
+        totalHumanCost = checkCost.ToFloat();
+
+        return totalHumanCost;
     }
 }

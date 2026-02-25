@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.Display;
 using ReportEngine.App.Model.StandsModel;
@@ -58,7 +59,7 @@ public class DialogService : IDialogService
         }
     }
 
-    public Obvyazka? ShowObvyazkaDialog()
+    public Obvyazka? ShowObvyazkaDialog(bool dialogMode)
     {
         try
         {
@@ -68,6 +69,13 @@ public class DialogService : IDialogService
             obvyazkaViewModel.SelectionHandler = obv => selectedObvyazka = obv;
 
             var window = new ObvyazkiView(obvyazkaViewModel);
+
+            if (dialogMode)
+            {
+                window.CreateObvPanel.Visibility = Visibility.Collapsed;
+                window.PanelColumn.Width = new GridLength(0);
+                window.Width = 1000;
+            }
 
             window.ShowDialog();
             return selectedObvyazka;

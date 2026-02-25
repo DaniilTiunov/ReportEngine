@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.ComponentModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -7,14 +8,12 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using ReportEngine.App.ViewModels;
+using ReportEngine.App.Views.Windows.Dialog;
 
 namespace ReportEngine.App.Views.Controls;
 
 public partial class ProjectPreview : UserControl
 {
-
-    // TODO: Нужен фикс
-
     private bool _allowEdit;
 
     private readonly ProjectViewModel _projectViewModel;
@@ -25,7 +24,11 @@ public partial class ProjectPreview : UserControl
         DataContext = projectViewModel;
         _projectViewModel = projectViewModel;
 
-        CommandBindings.Add(new CommandBinding(ApplicationCommands.Paste, OnPasteExecuted, OnPasteCanExecute));
+        CommandBindings.Add(
+            new CommandBinding(
+                ApplicationCommands.Paste,
+                OnPasteExecuted,
+                OnPasteCanExecute));
 
         Loaded += async (_, __) => await InitializeDataAndRecalculateAsync(_projectViewModel);
 
@@ -34,12 +37,23 @@ public partial class ProjectPreview : UserControl
 
     private async Task InitializeDataAndRecalculateAsync(ProjectViewModel projectViewModel)
     {
-        await InitializeDataAsync(projectViewModel);
+        var progress = new ProgressDialog();
 
-        projectViewModel.OnObvyazkiInStandChanged();
-        projectViewModel.OnFramesInStandChanged();
-        projectViewModel.UpdateNewStandNN();
-        projectViewModel.OnStandsInProjectChanged();
+        progress.Show();
+
+        try
+        {
+            await InitializeDataAsync(projectViewModel);
+
+            projectViewModel.OnObvyazkiInStandChanged();
+            projectViewModel.OnFramesInStandChanged();
+            projectViewModel.UpdateNewStandNN();
+            projectViewModel.OnStandsInProjectChanged();
+        }
+        finally
+        {
+            progress.Close();
+        }
     }
 
     private async Task InitializeDataAsync(ProjectViewModel projectViewModel)
@@ -50,20 +64,6 @@ public partial class ProjectPreview : UserControl
         await projectViewModel.LoadPurposesInStandsAsync();
     }
 
-    // Защита от повторного вызова
-    private async void OnLoaded(object sender, RoutedEventArgs e)
-    {
-        Loaded -= OnLoaded;
-
-        try
-        {
-            await InitializeDataAsync(_projectViewModel);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(ex.Message);
-        }
-    }
     // Защита от автоповтора F5
     private async void StandObvView_PreviewKeyDown(object sender, KeyEventArgs e)
     {
