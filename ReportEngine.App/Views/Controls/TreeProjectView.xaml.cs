@@ -26,7 +26,7 @@ public partial class TreeProjectView : UserControl, IDisposable
                 { "CalculateProject", () => _projectViewModel.OnCalculateProjectCommandExecuted(null) },
                 { "UpdateAllProps", () => _projectViewModel.OnUpdateStandsAfterEquipsCommandExecuted(null) },
                 { "SummaryReport", () => _projectViewModel.OnCreateSummaryReportCommandExecuted(null) },
-                { "ComponentsList", () => _projectViewModel.OnCreateSummaryReportCommandExecuted(null) },
+                { "ComponentsList", () => _projectViewModel.OnComponentsListReportCommandExecuted(null) },
                 { "NamePlates", () => _projectViewModel.OnCreateNameplatesReportCommandExecuted(null) },
                 { "MarksReport", () => _projectViewModel.OnCreateMarksReportCommandExecuted(null) },
                 { "ProductionList", () => _projectViewModel.OnCreateProductionReportCommandExecuted(null) },
