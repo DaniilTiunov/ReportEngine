@@ -10,6 +10,7 @@ using ReportEngine.Shared.Config.IniHeleprs;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Reflection;
+using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -124,7 +125,7 @@ public class SummaryReportGenerator : IReportGenerator
 
         ws.Cell($"E{row}").Value = record.CostPerUnit.Value?.ToString();
 
-        ws.Cell($"F{row}").Value = record.CommonCost.Value?.ToString();
+        ws.Cell($"F{row}").Value = record.CommonCost.Value?.Ceiling().ToString();
 
         //if (!record.ExportDays.IsValid)
         //{

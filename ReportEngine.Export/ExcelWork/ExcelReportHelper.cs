@@ -3,6 +3,7 @@ using ReportEngine.Export.DTO;
 using ReportEngine.Shared.Config.IniHelpers;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
+using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.Export.ExcelWork;
 
@@ -19,6 +20,7 @@ public static class ExcelReportHelper
     }
 
     public static string CommonErrorString => "Ошибка получения/формирования данных.";
+
 
     //костыль для формирования списка датчиков обвязки
     public static List<SensorRecordData> CreateSensorsListFromObvyazka(ObvyazkaInStand obv)
@@ -72,6 +74,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.FirstOrDefault().price,
                 exportDays = group.FirstOrDefault().exportDays
             })
+            .Where(group => group.quantity != 0.0)
             .Select(group => new EquipmentRecord
             {
                 ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
@@ -110,6 +113,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.First().price,
                 exportDays = group.First().exportDays
             })
+            .Where(group => group.quantity != 0.0)
             .Select(group => new EquipmentRecord
             {
                 ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
@@ -148,6 +152,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.First().price,
                 exportDays = group.First().exportDays
             })
+           .Where(group => group.quantity != 0.0)
            .Select(group => new EquipmentRecord
            {
                ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
@@ -185,6 +190,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.First().price,
                 exportDays = group.First().exportDays
             })
+           .Where(group => group.quantity != 0.0)
            .Select(group => new EquipmentRecord
            {
                ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
@@ -216,6 +222,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.First().CostPerUnit,
                 exportDays = group.First().ExportDays
             })
+           .Where(group => group.quantity != 0.0)
            .Select(group => new EquipmentRecord
            {
                ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
@@ -255,6 +262,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.First().costPerUnit,
                 exportDays = group.First().exportDays
             })
+           .Where(group => group.quantity != 0.0)
            .Select(group => new EquipmentRecord
            {
                ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
@@ -288,6 +296,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.First().CostPerUnit,
                 exportDays = group.First().ExportDays
             })
+            .Where(group => group.quantity != 0.0)
             .Select(group => new EquipmentRecord
             {
                 ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
@@ -319,6 +328,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.First().CostPerUnit,
                 exportDays = group.First().ExportDays
             })
+           .Where(group => group.quantity != 0.0)
            .Select(group => new EquipmentRecord
            {
                ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
@@ -350,6 +360,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.First().CostPerUnit,
                 exportDays = group.First().ExportDays
             })
+            .Where(group => group.quantity != 0.0)
            .Select(group => new EquipmentRecord
            {
                ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
@@ -396,12 +407,15 @@ public static class ExcelReportHelper
 
     //создаем инфу о трудозатратах
     public static LaborStandsData GenerateLaborData(IEnumerable<Stand> stands)
-    {
+    { 
+
         var frameSettings = CalculationSettingsManager.Load<FrameSettings, FrameSettingsData>();
         var electicalSettings = CalculationSettingsManager.Load<ElectricalSettings, ElectricalSettingsData>();
         var humanCostSettings = CalculationSettingsManager.Load<HumanCostSettings, HumanCostSettingsData>();
         var standSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
         var sandblastSettings = CalculationSettingsManager.Load<SandBlastSettings, SandBlastSettingsData>();
+
+
 
         //трудозатраты на изготовление
         var frameProductionHumanCostSum = stands
@@ -419,6 +433,8 @@ public static class ExcelReportHelper
                 (float?)(frameProductionHumanCostSum * frameSettings?.FrameProduction),
                 (frameProductionHumanCostSum * frameSettings?.FrameProduction) != null)
         };
+
+
 
         //трудозатраты на обвязки
         var allObvHumanCosts = stands
@@ -438,6 +454,8 @@ public static class ExcelReportHelper
             obvProductionRecord.Quantity.Value * obvProductionRecord.CostPerUnit.Value,
             (obvProductionRecord.Quantity.Value * obvProductionRecord.CostPerUnit.Value) != null && obvProductionRecord.Quantity.IsValid);
 
+
+
         //трудозатраты на коллектор
         var collectorProductionHumanCostSum = stands
             .Select(_ => humanCostSettings?.TimeForCollectorBoil)
@@ -455,10 +473,13 @@ public static class ExcelReportHelper
                 (collectorProductionHumanCostSum * humanCostSettings?.CollectorProduction) != null)
         };
 
+
+
         //трудозатраты на испытания
         var testsHumanCostSum = stands
               .Select(_ => humanCostSettings?.TimeForCheckStand)
               .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
+  
 
         var qualityTestRecord = new EquipmentRecord
         {
@@ -471,6 +492,8 @@ public static class ExcelReportHelper
                 (float?)(testsHumanCostSum * humanCostSettings?.Tests),
                 (testsHumanCostSum * humanCostSettings?.Tests) != null)
         };
+
+
 
         //трудозатраты на пескоструйные работы
         var sandBlastingHumanCostSum = stands
@@ -489,11 +512,13 @@ public static class ExcelReportHelper
                 (sandBlastingHumanCostSum * sandblastSettings?.SandBlastWork) != null)
         };
 
+
+
         //трудозатраты на покраску
         var paintingHumanCostSum = stands
           .Select(_ => (frameSettings?.TimeForPaintFrame + frameSettings?.TimeForPaintObv))
           .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
-
+        
         var paintingRecord = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
