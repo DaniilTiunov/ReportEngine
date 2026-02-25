@@ -1,11 +1,15 @@
-﻿using System.Diagnostics;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.DTO;
+using ReportEngine.Export.DTO.JsonObjects;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
+using System.Diagnostics;
+using System.Drawing.Drawing2D;
+using System.Reflection;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -35,11 +39,19 @@ public class SummaryReportGenerator : IReportGenerator
             {
                 var ws = wb.Worksheets.Add($"{standNumber}");
 
+
+
                 CreateStandTableHeader(ws, stand, XLAlignmentHorizontalValues.Center);
                 FillStandTable(ws, stand);
 
+                ws.Columns().Style.Alignment.WrapText = false;
+                ws.Rows().Style.Alignment.WrapText = false;
+
                 ws.Columns().AdjustToContents();
                 ws.Rows().AdjustToContents();
+
+                ws.Columns("A").Width = 40; //ширина столбца "Срок поставки комплектующих"
+
 
                 standNumber++;
             }
@@ -50,20 +62,43 @@ public class SummaryReportGenerator : IReportGenerator
             CreateCommonListTableHeader(summarySheet, project);
             await FillCommonListTable(summarySheet, project);
 
+            summarySheet.Columns().Style.Alignment.WrapText = false;
+            summarySheet.Rows().Style.Alignment.WrapText = false;
+
+            summarySheet.Columns().AdjustToContents();
+            summarySheet.Rows().AdjustToContents();
+
+
             //заполняем калькуляцию
             var calculationSheet = wb.Worksheets.Add("Калькуляция");
 
             CreateCalcullationTableHeader(calculationSheet, project);
             await FillCalculationTable(calculationSheet, project);
 
+            //костыль с фиксированной шириной столбцов
+
+            calculationSheet.Columns("A").Width = 25; //ширина столбца "Примечание"
+            calculationSheet.Columns("B").Width = 40; //ширина столбца "Срок поставки комплектующих"
+            calculationSheet.Columns("C").Width = 10; //ширина столбца "№ п/п"
+            calculationSheet.Columns("D").Width = 30; //ширина столбца "Наименование стенда"
+            calculationSheet.Columns("E").Width = 30; //ширина столбца "Код-KKS"
+            calculationSheet.Columns("F").Width = 10; //ширина столбца "Ед. изм"
+            calculationSheet.Columns("G").Width = 10; //ширина столбца "Кол-во"
+            calculationSheet.Columns("H").Width = 15; //ширина столбца "Масса, кг"
+            calculationSheet.Columns("I").Width = 25; //ширина столбца "Ширина стенда"
+            calculationSheet.Columns("J").Width = 25; //ширина столбца "Цена за единицу"
+            calculationSheet.Columns("K").Width = 20; //ширина столбца "Стоимость"
+
+
+
             //применяем оформление ко всему документу
             foreach (var ws in wb.Worksheets)
             {
                 ws.Cells().Style.Font.FontName = "Times New Roman";
-                ws.Cells().Style.Alignment.WrapText = true;
-                ws.Columns().AdjustToContents();
-                ws.Rows().AdjustToContents();
             }
+
+
+
 
             var savePath = SettingsManager.GetReportDirectory();
             var fileName = ExcelReportHelper.CreateReportName("Сводная_ведомость", "xlsx");
@@ -196,6 +231,7 @@ public class SummaryReportGenerator : IReportGenerator
     }
 
     //создает заголовок листа калькуляции
+
     private void CreateCalcullationTableHeader(IXLWorksheet ws, ProjectInfo project)
     {
         var headerRange = ws.Range("A1:K6");
@@ -355,6 +391,36 @@ public class SummaryReportGenerator : IReportGenerator
         var containerBatches = _containerRepository.GetAllByProjectIdAsync(project.Id);
 
         var generatedPartsData = ExcelReportHelper.GeneratePartsData(project.Stands);
+
+        //принудительно обнуляем сроки поставки, они там не нужны (вроде)
+        foreach(var property in generatedPartsData.GetType().GetProperties())
+        {
+            var propertyValue = property.GetValue(generatedPartsData);
+            var recordList = propertyValue as List<EquipmentRecord>;
+
+            if (recordList != null)
+            {
+                var tempList = new List<EquipmentRecord>(recordList);
+                recordList.Clear();
+                foreach (var part in tempList)
+                {
+                   
+                    var sraka = new EquipmentRecord
+                    {
+                        Name = part.Name,
+                        Quantity = part.Quantity,
+                        Unit = part.Unit,
+                        CostPerUnit = part.CostPerUnit,
+                        CommonCost = part.CommonCost,
+                        ExportDays = new ValidatedField<int?>(null, false)
+                    };
+
+                    recordList.Add(sraka);
+                }
+            }
+            ;
+        }
+
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
         activeRow = FillSubtableData(activeRow, generatedPartsData.PipesList, ws);
