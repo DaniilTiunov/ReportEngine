@@ -125,7 +125,7 @@ public class SummaryReportGenerator : IReportGenerator
 
         ws.Cell($"E{row}").Value = record.CostPerUnit.Value?.ToString();
 
-        ws.Cell($"F{row}").Value = record.CommonCost.Value?.Ceiling().ToString();
+        ws.Cell($"F{row}").Value = record.CommonCost.Value.Ceiling().ToString();
 
         //if (!record.ExportDays.IsValid)
         //{
@@ -511,11 +511,11 @@ public class SummaryReportGenerator : IReportGenerator
                 var kks = group.FirstOrDefault().KKSCode;
                 var unit = "шт.";
                 var quantity = group.Count();
-                var weight = group.FirstOrDefault().Weight;
+                var weight = group.FirstOrDefault().Weight.Round(1);
                 var width = group.FirstOrDefault().Width;
-                var cost = group.FirstOrDefault().StandSummCost;
+                var cost = (float) group.FirstOrDefault().StandSummCost;
 
-                var commonCost = quantity * cost;
+                var commonCost = (quantity * cost).Ceiling(); ;
 
                 return new
                 {
