@@ -239,6 +239,7 @@ public class ProductionReportGenerator : IReportGenerator
             ws.Cell($"A{currentRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
             ws.Cell($"B{currentRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             ws.Cell($"C{currentRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            ws.Cell($"D{currentRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
             currentRow++;
         }
@@ -256,6 +257,7 @@ public class ProductionReportGenerator : IReportGenerator
         ws.Cell($"A{row}").Value = record.Name.Value?.ToString();
         ws.Cell($"B{row}").Value = record.Unit.Value?.ToString();
         ws.Cell($"C{row}").Value = record.Quantity.Value?.ToString();
+        ws.Cell($"D{row}").Value = record.Quantity.Value?.ToString();
 
         //if (!record.Name.IsValid)
         //{
