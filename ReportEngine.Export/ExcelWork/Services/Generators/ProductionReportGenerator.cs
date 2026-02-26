@@ -44,7 +44,7 @@ public class ProductionReportGenerator : IReportGenerator
 
             var savePath = SettingsManager.GetReportDirectory();
 
-            var fileName = ExcelReportHelper.CreateReportName("Производство", "xlsx");
+            var fileName = ExcelReportHelper.CreateReportName("Отчет по производству", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
 
             Debug.WriteLine("Отчёт сохранён: " + fullSavePath);

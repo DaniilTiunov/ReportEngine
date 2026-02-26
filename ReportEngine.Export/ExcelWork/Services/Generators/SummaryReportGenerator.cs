@@ -99,7 +99,7 @@ public class SummaryReportGenerator : IReportGenerator
 
 
             var savePath = SettingsManager.GetReportDirectory();
-            var fileName = ExcelReportHelper.CreateReportName("Сводная_ведомость", "xlsx");
+            var fileName = ExcelReportHelper.CreateReportName("Сводная ведомость", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
 
             Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
