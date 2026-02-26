@@ -20,5 +20,12 @@ namespace ReportEngine.Domain.Repositories
             return await _context.Set<T>()
                 .FirstOrDefaultAsync(predicate);
         }
+
+        public async Task<List<T>> GetAllAsync<T>(Func<IQueryable<T>, IQueryable<T>> query)
+            where T : class
+        {
+            return await query(_context.Set<T>().AsNoTracking())
+                .ToListAsync();
+        }
     }
 }
