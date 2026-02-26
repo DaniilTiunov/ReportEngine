@@ -149,6 +149,7 @@ public class HostFactory
         services.AddScoped<ContainerService>();
         services.AddScoped<AdditionalEquipService>();
         services.AddScoped<UIValidatorService>();
+        services.AddScoped<InitializeService>();
     }
 
     private static void ConfigureReportsServices(IServiceCollection services)

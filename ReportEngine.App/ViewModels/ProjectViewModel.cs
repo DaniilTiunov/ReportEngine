@@ -47,6 +47,7 @@ public class ProjectViewModel : BaseViewModel
     private readonly SemaphoreSlim _updateUiLock = new(1, 1);
     private readonly UIValidatorService _uiValidatorService;
     private readonly GenericRepository _genericRepository;
+    private readonly InitializeService _initializeService;
 
     public ProjectViewModel(
         IProjectInfoRepository projectRepository,
@@ -61,7 +62,8 @@ public class ProjectViewModel : BaseViewModel
         UpdaterStandService updaterStandService,
         AdditionalEquipService additionalEquipService,
         UIValidatorService uiValidatorService,
-        GenericRepository genericRepository)
+        GenericRepository genericRepository,
+        InitializeService initializeService)
     {
         _genericRepository = genericRepository;
         _projectRepository = projectRepository;
@@ -76,6 +78,7 @@ public class ProjectViewModel : BaseViewModel
         _updaterStandService = updaterStandService;
         _additionalEquipService = additionalEquipService;
         _uiValidatorService = uiValidatorService;
+        _initializeService = initializeService;
 
         NewStand = new StandModel { Number = 1 };
 
@@ -83,6 +86,7 @@ public class ProjectViewModel : BaseViewModel
         InitializeTime();
         InitializeGenericCommands();
         InitializeStandsData();
+        
     }
     public FrameSettingsModel FrameSettings { get; set; } = new();
     public ObservableCollection<FormedFrame> AllAvailableFrames { get; set; } = new();
@@ -1221,7 +1225,7 @@ public class ProjectViewModel : BaseViewModel
 
     private async Task CreateDefaultPurposesAsync(StandModel newStandModel)
     {
-        await newStandModel.InitializeDefaultPurposes();
+        await _initializeService.InitializeStandDefaultPurposes(newStandModel);
 
         newStandModel.NewElectricalComponent.Purposes = CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand.ToList();
         newStandModel.NewDrainage.Purposes = CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand.ToList();
