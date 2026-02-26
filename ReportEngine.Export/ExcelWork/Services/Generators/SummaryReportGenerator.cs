@@ -40,8 +40,6 @@ public class SummaryReportGenerator : IReportGenerator
             {
                 var ws = wb.Worksheets.Add($"{standNumber}");
 
-
-
                 CreateStandTableHeader(ws, stand, XLAlignmentHorizontalValues.Center);
                 FillStandTable(ws, stand);
 
@@ -51,7 +49,18 @@ public class SummaryReportGenerator : IReportGenerator
                 ws.Columns().AdjustToContents();
                 ws.Rows().AdjustToContents();
 
-                ws.Columns("A").Width = 40; //ширина столбца "Срок поставки комплектующих"
+                //костылек для норм отображения
+                var exportDaysRange = ws.Range("A2:A3");
+
+                exportDaysRange.Style.Alignment.WrapText = true;
+
+                foreach (var row in exportDaysRange.Rows())
+                {
+                    row.WorksheetRow().Height = 30;
+                }
+
+                ws.Columns("A").Width = 18; //ширина столбца "Срок поставки комплектующих"
+
 
 
                 standNumber++;
@@ -78,17 +87,7 @@ public class SummaryReportGenerator : IReportGenerator
 
             //костыль с фиксированной шириной столбцов
 
-            calculationSheet.Columns("A").Width = 25; //ширина столбца "Примечание"
-            calculationSheet.Columns("B").Width = 40; //ширина столбца "Срок поставки комплектующих"
-            calculationSheet.Columns("C").Width = 10; //ширина столбца "№ п/п"
-            calculationSheet.Columns("D").Width = 30; //ширина столбца "Наименование стенда"
-            calculationSheet.Columns("E").Width = 30; //ширина столбца "Код-KKS"
-            calculationSheet.Columns("F").Width = 10; //ширина столбца "Ед. изм"
-            calculationSheet.Columns("G").Width = 10; //ширина столбца "Кол-во"
-            calculationSheet.Columns("H").Width = 15; //ширина столбца "Масса, кг"
-            calculationSheet.Columns("I").Width = 25; //ширина столбца "Ширина стенда"
-            calculationSheet.Columns("J").Width = 25; //ширина столбца "Цена за единицу"
-            calculationSheet.Columns("K").Width = 20; //ширина столбца "Стоимость"
+
 
 
 
@@ -180,7 +179,8 @@ public class SummaryReportGenerator : IReportGenerator
         var headerRange = ws.Range("A1:F3");
 
         var exportDaysRange = ws.Range("A2:A3").Merge();
-        exportDaysRange.Value = "Срок поставки комплектующих, дней";
+        exportDaysRange.Value = "Срок\nпоставки\nкомплектующих,\nдней";
+
 
         var kksCodeRange = ws.Range("C1:F1").Merge();
         kksCodeRange.Value = $"Код KKS:{stand.KKSCode}";
@@ -199,6 +199,9 @@ public class SummaryReportGenerator : IReportGenerator
         headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
         headerRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Medium);
         headerRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
+
+
+        
     }
 
     //создает заголовок сводной ведомости
@@ -242,7 +245,14 @@ public class SummaryReportGenerator : IReportGenerator
         descriptionRange.Value = "Примечание";
 
         var deliveryTimeRange = ws.Range("B3:B6").Merge();
-        deliveryTimeRange.Value = "Срок поставки комплектующих, дней";
+        deliveryTimeRange.Value = "Срок\nпоставки\nкомплектующих,\nдней";
+
+        deliveryTimeRange.Style.Alignment.WrapText = true;
+
+        foreach (var row in deliveryTimeRange.Rows())
+        {
+            row.WorksheetRow().Height = 20;
+        }
 
         var devicesListRange = ws.Range("C3:K4").Merge();
         devicesListRange.Value = "Перечень оборудования, планируемого к поставке";
@@ -283,7 +293,23 @@ public class SummaryReportGenerator : IReportGenerator
         customerCompanyRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
         customerCompanyRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Medium);
 
+
         headerRange.Style.Font.SetBold();
+
+
+        ws.Columns("A").Width = 25; //ширина столбца "Примечание"
+        ws.Columns("B").Width = 20; //ширина столбца "Срок поставки комплектующих"
+        ws.Columns("C").Width = 10; //ширина столбца "№ п/п"
+        ws.Columns("D").Width = 30; //ширина столбца "Наименование стенда"
+        ws.Columns("E").Width = 30; //ширина столбца "Код-KKS"
+        ws.Columns("F").Width = 10; //ширина столбца "Ед. изм"
+        ws.Columns("G").Width = 10; //ширина столбца "Кол-во"
+        ws.Columns("H").Width = 15; //ширина столбца "Масса, кг"
+        ws.Columns("I").Width = 25; //ширина столбца "Ширина стенда"
+        ws.Columns("J").Width = 25; //ширина столбца "Цена за единицу"
+        ws.Columns("K").Width = 20; //ширина столбца "Стоимость"
+
+
     }
 
     #endregion Заголовки

@@ -64,11 +64,13 @@ namespace ReportEngine.App.Services.Core
             var bracketUniversal = await _genericRepository.GetAsync<SensorBrace>(x => x.Name == settings.BracketUniversal);
             var bracketDif = await _genericRepository.GetAsync<SensorBrace>(x => x.Name == settings.BracketForDif);
             var bracketAbs = await _genericRepository.GetAsync<SensorBrace>(x => x.Name == settings.BracketForAbs);
+            var steelChannel = await _genericRepository.GetAsync<AdditionalEquipPurpose>(x=> x.Material ==  settings.SteelChannel);
+            var clamp = await _genericRepository.GetAsync<AdditionalEquipPurpose>(x => x.Material == settings.Clamp);
 
             stand.AllAdditionalEquipPurposesInStand = new ObservableCollection<AdditionalEquipPurpose>
             {
-                new() { Purpose = "Швеллер", Material = settings.SteelChannel, Measure = settings.SteelChannelMeasure },
-                new() { Purpose = "Хомуты" , Material = settings.Clamp, Measure = settings.ClampMeasure},
+                new() { Purpose = "Швеллер", Material = settings.SteelChannel, Measure = steelChannel?.Measure, CostPerUnit = steelChannel?.CostPerUnit },
+                new() { Purpose = "Хомуты" , Material = settings.Clamp, Measure = clamp?.Measure, CostPerUnit = clamp?.CostPerUnit},
                 new() { Purpose = "Шильдик", Material = settings.NamePlate, Quantity = nameplatesPerStand, Measure = settings.NamePlateMeasure},
                 new() { Purpose = "Табличка", Material = settings.NameTable, Measure = settings.NameTableMeasure},
                 new() { Purpose = "Кронштейн универсальный",Material = settings.BracketUniversal, Measure = bracketUniversal?.Measure,CostPerUnit = bracketUniversal?.Cost},
