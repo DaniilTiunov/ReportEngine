@@ -98,7 +98,7 @@ public class NameplatesReportGenerator : IReportGenerator
             var standNameplateText = "Стенд датчиков КИПиА\n";
             standNameplateText += $"{stand.KKSCode}\n";
             standNameplateText += $"{stand.SerialNumber}\n";
-            standNameplateText += $"Дата: {DateTime.Now.ToString("MM.yyyy")}";
+            standNameplateText += $"Дата: {project.OutOfProduction.ToString("MM.yyyy")}";
 
             //формируем текста табличек
             var standTablesStrings = stand.ObvyazkiInStand
