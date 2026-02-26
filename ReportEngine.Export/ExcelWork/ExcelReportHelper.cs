@@ -11,7 +11,7 @@ public static class ExcelReportHelper
 {
     public static string CreateReportName(string prefix, string fileExtension)
     {
-        return prefix + "___" + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + "." + fileExtension;
+        return prefix + " " + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + "." + fileExtension;
     }
 
     public static float? TryToParseFloat(string str)
@@ -69,10 +69,10 @@ public static class ExcelReportHelper
             .Select(group => new
             {
                 name = group.Key,
-                unit = group.FirstOrDefault().units,
+                unit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.units))?.units,
                 quantity = group.Sum(pipe => pipe.length),
-                costPerUnit = group.FirstOrDefault().price,
-                exportDays = group.FirstOrDefault().exportDays
+                costPerUnit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.price))?.price,
+                exportDays = group.FirstOrDefault(group => group.exportDays.HasValue)?.exportDays
             })
             .Where(group => group.quantity != 0.0)
             .Select(group => new EquipmentRecord
@@ -81,7 +81,7 @@ public static class ExcelReportHelper
                 Name = new ValidatedField<string?>(group.name, group.name != null),
                 Unit = new ValidatedField<string?>(group.unit, group.unit != null),
                 Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
-                CostPerUnit = new ValidatedField<float?>(ExcelReportHelper.TryToParseFloat(group.costPerUnit), group.costPerUnit != null),
+                CostPerUnit = new ValidatedField<float?>(TryToParseFloat(group.costPerUnit ?? ""), group.costPerUnit != null),
             })
             .Select(record =>
             {
@@ -108,10 +108,10 @@ public static class ExcelReportHelper
             .Select(group => new
             {
                 name = group.Key,
-                unit = group.First().units,
+                unit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.units))?.units,
                 quantity = group.Sum(arm => arm.quantity),
-                costPerUnit = group.First().price,
-                exportDays = group.First().exportDays
+                costPerUnit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.price))?.price,
+                exportDays = group.FirstOrDefault(group => group.exportDays.HasValue)?.exportDays
             })
             .Where(group => group.quantity != 0.0)
             .Select(group => new EquipmentRecord
@@ -120,7 +120,7 @@ public static class ExcelReportHelper
                 Name = new ValidatedField<string?>(group.name, group.name != null),
                 Unit = new ValidatedField<string?>(group.unit, group.unit != null),
                 Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
-                CostPerUnit = new ValidatedField<float?>(ExcelReportHelper.TryToParseFloat(group.costPerUnit), group.costPerUnit != null),
+                CostPerUnit = new ValidatedField<float?>(TryToParseFloat(group.costPerUnit ?? ""), group.costPerUnit != null),
             })
             .Select(record =>
             {
@@ -147,10 +147,10 @@ public static class ExcelReportHelper
             .Select(group => new
             {
                 name = group.Key,
-                unit = group.First().units,
+                unit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.units))?.units,
                 quantity = group.Sum(tree => tree.quantity),
-                costPerUnit = group.First().price,
-                exportDays = group.First().exportDays
+                costPerUnit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.price))?.price,
+                exportDays = group.FirstOrDefault(group => group.exportDays.HasValue)?.exportDays
             })
            .Where(group => group.quantity != 0.0)
            .Select(group => new EquipmentRecord
@@ -159,7 +159,7 @@ public static class ExcelReportHelper
                Name = new ValidatedField<string?>(group.name, group.name != null),
                Unit = new ValidatedField<string?>(group.unit, group.unit != null),
                Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
-               CostPerUnit = new ValidatedField<float?>(ExcelReportHelper.TryToParseFloat(group.costPerUnit), group.costPerUnit != null),
+               CostPerUnit = new ValidatedField<float?>(TryToParseFloat(group.costPerUnit ?? ""), group.costPerUnit != null),
            })
             .Select(record =>
             {
@@ -185,10 +185,10 @@ public static class ExcelReportHelper
             .Select(group => new
             {
                 name = group.Key,
-                unit = group.First().units,
-                quantity = group.Sum(tree => tree.quantity),
-                costPerUnit = group.First().price,
-                exportDays = group.First().exportDays
+                unit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.units))?.units,
+                quantity = group.Sum(groupElement => groupElement.quantity),
+                costPerUnit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.price))?.price,
+                exportDays = group.FirstOrDefault(group => group.exportDays.HasValue)?.exportDays
             })
            .Where(group => group.quantity != 0.0)
            .Select(group => new EquipmentRecord
@@ -197,7 +197,7 @@ public static class ExcelReportHelper
                Name = new ValidatedField<string?>(group.name, group.name != null),
                Unit = new ValidatedField<string?>(group.unit, group.unit != null),
                Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
-               CostPerUnit = new ValidatedField<float?>(ExcelReportHelper.TryToParseFloat(group.costPerUnit), group.costPerUnit != null),
+               CostPerUnit = new ValidatedField<float?>(TryToParseFloat(group.costPerUnit ?? "")  , group.costPerUnit != null),
            })
             .Select(record =>
             {
@@ -217,10 +217,10 @@ public static class ExcelReportHelper
             .Select(group => new
             {
                 name = group.Key,
-                unit = group.First().Measure,
+                unit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.Measure))?.Measure,
                 quantity = group.Sum(groupElement => groupElement.Quantity),
-                costPerUnit = group.First().CostPerUnit,
-                exportDays = group.First().ExportDays
+                costPerUnit = group.FirstOrDefault(group => group.CostPerUnit.HasValue)?.CostPerUnit,
+                exportDays = group.FirstOrDefault(group => group.ExportDays.HasValue)?.ExportDays
             })
            .Where(group => group.quantity != 0.0)
            .Select(group => new EquipmentRecord
@@ -257,10 +257,10 @@ public static class ExcelReportHelper
             .Select(group => new
             {
                 name = group.Key,
-                unit = group.First().unit,
+                unit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.unit))?.unit,
                 quantity = group.Sum(frameComp => frameComp.quantity),
-                costPerUnit = group.First().costPerUnit,
-                exportDays = group.First().exportDays
+                costPerUnit = group.FirstOrDefault(group => group.costPerUnit.HasValue)?.costPerUnit,
+                exportDays = group.FirstOrDefault(group => group.exportDays.HasValue)?.exportDays
             })
            .Where(group => group.quantity != 0.0)
            .Select(group => new EquipmentRecord
@@ -291,10 +291,10 @@ public static class ExcelReportHelper
             .Select(group => new
             {
                 name = group.Key,
-                unit = group.First().Measure,
+                unit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.Measure))?.Measure,
                 quantity = group.Sum(groupElement => groupElement.Quantity),
-                costPerUnit = group.First().CostPerUnit,
-                exportDays = group.First().ExportDays
+                costPerUnit = group.FirstOrDefault(group => group.CostPerUnit.HasValue)?.CostPerUnit,
+                exportDays = group.FirstOrDefault(group => group.ExportDays.HasValue)?.ExportDays
             })
             .Where(group => group.quantity != 0.0)
             .Select(group => new EquipmentRecord
@@ -323,10 +323,10 @@ public static class ExcelReportHelper
             .Select(group => new
             {
                 name = group.Key,
-                unit = group.First().Measure,
+                unit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.Measure))?.Measure,
                 quantity = group.Sum(item => item.Quantity),
-                costPerUnit = group.First().CostPerUnit,
-                exportDays = group.First().ExportDays
+                costPerUnit = group.FirstOrDefault(group => group.CostPerUnit.HasValue)?.CostPerUnit,
+                exportDays = group.FirstOrDefault(group => group.ExportDays.HasValue)?.ExportDays
             })
            .Where(group => group.quantity != 0.0)
            .Select(group => new EquipmentRecord
@@ -355,12 +355,12 @@ public static class ExcelReportHelper
             .Select(group => new
             {
                 name = group.Key,
-                unit = group.First().Measure,
+                unit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.Measure))?.Measure,
                 quantity = group.Sum(item => item.Quantity),
-                costPerUnit = group.First().CostPerUnit,
-                exportDays = group.First().ExportDays
+                costPerUnit = group.FirstOrDefault(group => group.CostPerUnit.HasValue)?.CostPerUnit,
+                exportDays = group.FirstOrDefault(group => group.ExportDays.HasValue)?.ExportDays
             })
-            .Where(group => group.quantity != 0.0)
+           .Where(group => group.quantity != 0.0)
            .Select(group => new EquipmentRecord
            {
                ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),

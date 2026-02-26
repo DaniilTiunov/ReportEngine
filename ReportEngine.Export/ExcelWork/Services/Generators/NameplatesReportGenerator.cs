@@ -39,7 +39,7 @@ public class NameplatesReportGenerator : IReportGenerator
             ws.Cells().Style.Alignment.WrapText = true;
 
             var savePath = SettingsManager.GetReportDirectory();
-            var fileName = ExcelReportHelper.CreateReportName("Ведомость_шильдиков_табличек", "xlsx");
+            var fileName = ExcelReportHelper.CreateReportName("Ведомость шильдиков и табличек", "xlsx");
 
             var fullSavePath = Path.Combine(savePath, fileName);
 
@@ -98,7 +98,7 @@ public class NameplatesReportGenerator : IReportGenerator
             var standNameplateText = "Стенд датчиков КИПиА\n";
             standNameplateText += $"{stand.KKSCode}\n";
             standNameplateText += $"{stand.SerialNumber}\n";
-            standNameplateText += $"Дата: {DateTime.Now.ToString("MM.yyyy")}";
+            standNameplateText += $"Дата: {project.OutOfProduction.ToString("MM.yyyy")}";
 
             //формируем текста табличек
             var standTablesStrings = stand.ObvyazkiInStand

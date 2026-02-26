@@ -47,6 +47,7 @@ public class ProjectViewModel : BaseViewModel
     private readonly SemaphoreSlim _updateUiLock = new(1, 1);
     private readonly UIValidatorService _uiValidatorService;
     private readonly GenericRepository _genericRepository;
+    private readonly InitializeService _initializeService;
 
     public ProjectViewModel(
         IProjectInfoRepository projectRepository,
@@ -61,7 +62,8 @@ public class ProjectViewModel : BaseViewModel
         UpdaterStandService updaterStandService,
         AdditionalEquipService additionalEquipService,
         UIValidatorService uiValidatorService,
-        GenericRepository genericRepository)
+        GenericRepository genericRepository,
+        InitializeService initializeService)
     {
         _genericRepository = genericRepository;
         _projectRepository = projectRepository;
@@ -76,6 +78,7 @@ public class ProjectViewModel : BaseViewModel
         _updaterStandService = updaterStandService;
         _additionalEquipService = additionalEquipService;
         _uiValidatorService = uiValidatorService;
+        _initializeService = initializeService;
 
         NewStand = new StandModel { Number = 1 };
 
@@ -83,6 +86,7 @@ public class ProjectViewModel : BaseViewModel
         InitializeTime();
         InitializeGenericCommands();
         InitializeStandsData();
+        
     }
     public FrameSettingsModel FrameSettings { get; set; } = new();
     public ObservableCollection<FormedFrame> AllAvailableFrames { get; set; } = new();
@@ -505,16 +509,30 @@ public class ProjectViewModel : BaseViewModel
         if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka))
             return;
 
-        //var isCorrectSensorsData = _uiValidatorService.(this);
+
+
+        var correctNN = _uiValidatorService.ValidateCorrectObvNN(selectedStand.NN);
+
+        if (!correctNN)
+            return;
+
+        var freeNN = _uiValidatorService.ValidateFreeObvNN(this,selectedStand.NN, false);
+
+        if (!freeNN)
+            return;
+
+
+        //var isCorrectSensorsData = _uiValidatorService.ValidateSensorsQuantityInNewObv(this);
 
         //if (!isCorrectSensorsData)
-        //    return;
+         //   return;
 
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await AddObvToStandAsync();
             await LoadObvyazkiAsync(); // Перезагрузить данные из БД
 
+            UpdateNewObvNN();
             OnObvyazkiInStandChanged();
         });
 
@@ -948,10 +966,20 @@ public class ProjectViewModel : BaseViewModel
             if (Guard.ExitIfNull("Не был выбран стенд", _notificationService, selectedStand))
                 return;
 
-            //var isCorrectSensorsData = _uiValidatorService.ValidateSensorsQuantityInNewObv(this);
+            var correctNN = _uiValidatorService.ValidateCorrectObvNN(selectedStand.NN);
 
-            //if (!isCorrectSensorsData)
-            //    return;
+            if (!correctNN)
+                return;
+
+            var freeNN = _uiValidatorService.ValidateFreeObvNN(this, selectedStand.NN, true);
+
+            if (!freeNN)
+                return;
+
+           // var isCorrectSensorsData = _uiValidatorService.ValidateSensorsQuantityInNewObv(this);
+
+           // if (!isCorrectSensorsData)
+           //   return;
 
 
             await _projectService.UpdateObvInStandAsync(CurrentProjectModel);
@@ -1221,7 +1249,7 @@ public class ProjectViewModel : BaseViewModel
 
     private async Task CreateDefaultPurposesAsync(StandModel newStandModel)
     {
-        await newStandModel.InitializeDefaultPurposes();
+        await _initializeService.InitializeStandDefaultPurposes(newStandModel);
 
         newStandModel.NewElectricalComponent.Purposes = CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand.ToList();
         newStandModel.NewDrainage.Purposes = CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand.ToList();
@@ -1574,7 +1602,7 @@ public class ProjectViewModel : BaseViewModel
         if (selectedStand == null)
             return;
 
-        UpdateNewObvNN();
+        
         UpdateTablesQuantity();
         UpdateClampsQuantity();
         UpdateBracketsQuantity();
