@@ -658,11 +658,17 @@
                         <Grid Margin="0">
                             <Grid.ColumnDefinitions>
                                 <!--  Поле чертежа: растягивается  -->
-                                <ColumnDefinition Width="*" MinWidth="100" />
+                                <ColumnDefinition
+                                    Width="350"
+                                    MinWidth="350"
+                                    MaxWidth="810" />
                                 <!--  Полоска GridSplitter  -->
                                 <ColumnDefinition Width="6" />
                                 <!--  Правая панель: содержит картинку обвязки + информацию, сворачивается целиком  -->
-                                <ColumnDefinition Width="Auto" MinWidth="0" />
+                                <ColumnDefinition
+                                    Width="*"
+                                    MinWidth="250"
+                                    MaxWidth="600" />
                             </Grid.ColumnDefinitions>
 
                             <!--  Stand drawing  -->
@@ -712,6 +718,7 @@
                                     Height="220"
                                     Margin="10,0,10,0"
                                     Padding="4"
+                                    HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
                                     Background="{DynamicResource SecondaryColor}"
                                     BorderBrush="{DynamicResource PrimaryForeground}"
