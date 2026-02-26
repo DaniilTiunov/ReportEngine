@@ -509,16 +509,30 @@ public class ProjectViewModel : BaseViewModel
         if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka))
             return;
 
-        //var isCorrectSensorsData = _uiValidatorService.(this);
+
+
+        var correctNN = _uiValidatorService.ValidateCorrectObvNN(selectedStand.NN);
+
+        if (!correctNN)
+            return;
+
+        var freeNN = _uiValidatorService.ValidateFreeObvNN(this,selectedStand.NN, false);
+
+        if (!freeNN)
+            return;
+
+
+        //var isCorrectSensorsData = _uiValidatorService.ValidateSensorsQuantityInNewObv(this);
 
         //if (!isCorrectSensorsData)
-        //    return;
+         //   return;
 
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await AddObvToStandAsync();
             await LoadObvyazkiAsync(); // Перезагрузить данные из БД
 
+            UpdateNewObvNN();
             OnObvyazkiInStandChanged();
         });
 
@@ -952,10 +966,20 @@ public class ProjectViewModel : BaseViewModel
             if (Guard.ExitIfNull("Не был выбран стенд", _notificationService, selectedStand))
                 return;
 
-            //var isCorrectSensorsData = _uiValidatorService.ValidateSensorsQuantityInNewObv(this);
+            var correctNN = _uiValidatorService.ValidateCorrectObvNN(selectedStand.NN);
 
-            //if (!isCorrectSensorsData)
-            //    return;
+            if (!correctNN)
+                return;
+
+            var freeNN = _uiValidatorService.ValidateFreeObvNN(this, selectedStand.NN, true);
+
+            if (!freeNN)
+                return;
+
+           // var isCorrectSensorsData = _uiValidatorService.ValidateSensorsQuantityInNewObv(this);
+
+           // if (!isCorrectSensorsData)
+           //   return;
 
 
             await _projectService.UpdateObvInStandAsync(CurrentProjectModel);
@@ -1578,7 +1602,7 @@ public class ProjectViewModel : BaseViewModel
         if (selectedStand == null)
             return;
 
-        UpdateNewObvNN();
+        
         UpdateTablesQuantity();
         UpdateClampsQuantity();
         UpdateBracketsQuantity();

@@ -145,6 +145,23 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Height="25"
+                                Margin="5,5,5,5"
+                                VerticalAlignment="Top"
+                                Text="№ обвязки:" />
+                            <TextBox
+                                x:Name="ObvImg"
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Width="50"
+                                Margin="5,5,5,5"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Text="{Binding CurrentProjectModel.SelectedStand.NN}" />
+
+                            <TextBlock
                                 Grid.Row="1"
                                 Grid.Column="1"
                                 Margin="5"
