@@ -10,6 +10,7 @@ using ReportEngine.Shared.Config.IniHeleprs;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Reflection;
+using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -98,8 +99,6 @@ public class SummaryReportGenerator : IReportGenerator
             }
 
 
-
-
             var savePath = SettingsManager.GetReportDirectory();
             var fileName = ExcelReportHelper.CreateReportName("Сводная_ведомость", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
@@ -120,11 +119,11 @@ public class SummaryReportGenerator : IReportGenerator
 
         ws.Cell($"C{row}").Value = record.Unit.Value?.ToString();
 
-        ws.Cell($"D{row}").Value = record.Quantity.Value?.ToString();
+        ws.Cell($"D{row}").Value = record.Quantity.Value?.Round(1).ToString();
 
         ws.Cell($"E{row}").Value = record.CostPerUnit.Value?.ToString();
 
-        ws.Cell($"F{row}").Value = record.CommonCost.Value?.ToString();
+        ws.Cell($"F{row}").Value = record.CommonCost.Value.Ceiling().ToString();
 
         //if (!record.ExportDays.IsValid)
         //{
@@ -510,11 +509,11 @@ public class SummaryReportGenerator : IReportGenerator
                 var kks = group.FirstOrDefault().KKSCode;
                 var unit = "шт.";
                 var quantity = group.Count();
-                var weight = group.FirstOrDefault().Weight;
+                var weight = group.FirstOrDefault().Weight.RoundUp(1);
                 var width = group.FirstOrDefault().Width;
-                var cost = group.FirstOrDefault().StandSummCost;
+                var cost = (float) group.FirstOrDefault().StandSummCost;
 
-                var commonCost = quantity * cost;
+                var commonCost = (quantity * cost).Ceiling();
 
                 return new
                 {
@@ -534,34 +533,34 @@ public class SummaryReportGenerator : IReportGenerator
 
         foreach (var stand in standsRecords)
         {
-            ws.Cell($"B{activeRow}").Value = stand.exportDays;
+            ws.Cell($"B{activeRow}").Value = stand.exportDays.ToString(); ;
             ws.Cell($"B{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-            ws.Cell($"C{activeRow}").Value = standNumber;
+            ws.Cell($"C{activeRow}").Value = standNumber.ToString(); ;
             ws.Cell($"C{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
 
-            ws.Cell($"D{activeRow}").Value = stand.name;
+            ws.Cell($"D{activeRow}").Value = stand.name?.ToString(); ;
             ws.Cell($"D{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
 
-            ws.Cell($"E{activeRow}").Value = stand.kks;
+            ws.Cell($"E{activeRow}").Value = stand.kks?.ToString(); ;
             ws.Cell($"E{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
 
-            ws.Cell($"F{activeRow}").Value = stand.unit;
+            ws.Cell($"F{activeRow}").Value = stand.unit.ToString(); ;
             ws.Cell($"F{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-            ws.Cell($"G{activeRow}").Value = stand.quantity;
+            ws.Cell($"G{activeRow}").Value = stand.quantity.ToString(); ;
             ws.Cell($"G{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-            ws.Cell($"H{activeRow}").Value = stand.weight;
+            ws.Cell($"H{activeRow}").Value = stand.weight.ToString();
             ws.Cell($"H{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-            ws.Cell($"I{activeRow}").Value = stand.width;
+            ws.Cell($"I{activeRow}").Value = stand.width.ToString(); ;
             ws.Cell($"I{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-            ws.Cell($"J{activeRow}").Value = stand.cost;
+            ws.Cell($"J{activeRow}").Value = stand.cost.ToString(); ;
             ws.Cell($"J{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
 
-            ws.Cell($"K{activeRow}").Value = stand.commonCost;
+            ws.Cell($"K{activeRow}").Value = stand.commonCost.ToString();
             ws.Cell($"K{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
 
             standNumber++;
