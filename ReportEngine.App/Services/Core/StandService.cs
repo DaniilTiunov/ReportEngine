@@ -15,6 +15,7 @@ namespace ReportEngine.App.Services.Core;
 
 public class StandService : IStandService
 {
+    private readonly IContainerRepository _containerRepository;
     private readonly IFormedAdditionalEquipsRepository _formedAdditionalEquipsRepository;
     private readonly IFormedDrainagesRepository _formedDrainagesRepository;
     private readonly IFormedElectricalRepository _formedElectricalRepository;
@@ -35,6 +36,7 @@ public class StandService : IStandService
         INotificationService notificationService,
         IFormedAdditionalEquipsRepository formedAdditionalEquipsRepository,
         IFormedElectricalRepository formedElectricalRepository,
+        IContainerRepository containerRepository,
         ObvyazkaInStandRepository obvyazkaInStandRepository,
         IPurposesRepository<AdditionalEquipPurpose> additionalPurposesRepository,
         IPurposesRepository<ElectricalPurpose> electricalPurposesRepository,
@@ -48,6 +50,7 @@ public class StandService : IStandService
         _notificationService = notificationService;
         _formedAdditionalEquipsRepository = formedAdditionalEquipsRepository;
         _formedElectricalRepository = formedElectricalRepository;
+        _containerRepository = containerRepository;
         _additionalPurposesRepository = additionalPurposesRepository;
         _electricalPurposesRepository = electricalPurposesRepository;
         _drainagesPurposesRepository = drainagesPurposesRepository;

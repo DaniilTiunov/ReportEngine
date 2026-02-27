@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using ClosedXML.Excel;
+using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
@@ -9,12 +10,14 @@ namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
 public class ContainerReportGenerator : IReportGenerator
 {
+    private readonly IContainerRepository _containerRepository;
     private readonly IProjectInfoRepository _projectInfoRepository;
 
-    public ContainerReportGenerator(
-        IProjectInfoRepository projectInfoRepository)
+    public ContainerReportGenerator(IProjectInfoRepository projectInfoRepository,
+        IContainerRepository containerRepository)
     {
         _projectInfoRepository = projectInfoRepository;
+        _containerRepository = containerRepository;
     }
 
     public ReportType Type => ReportType.ContainerReport;
@@ -28,6 +31,7 @@ public class ContainerReportGenerator : IReportGenerator
             var ws = wb.Worksheets.Add("MainSheet");
 
             CreateWorksheetTableHeader(ws);
+            await FillWorksheetTable(ws, project);
 
             ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
@@ -63,5 +67,70 @@ public class ContainerReportGenerator : IReportGenerator
         headerRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Medium);
 
         headerRange.Style.Font.SetBold();
+    }
+
+    private async Task FillWorksheetTable(IXLWorksheet ws, ProjectInfo project)
+    {
+        //создаем объекты всех контейнеров
+        var containerBatches = await _containerRepository.GetAllByProjectIdAsync(project.Id);
+
+        var containers = containerBatches
+            .SelectMany(batch => batch.Containers)
+            .Where(container => container.Stands.Any())
+            .Select(container => new
+            {
+                containerInstance = container,
+                containerContent = container.Stands
+            });
+
+        // выводим в таблицу
+
+        var containerStartRow = 2;
+        var standActiveRow = containerStartRow;
+
+        var containerNumber = 1;
+
+        foreach (var container in containers)
+        {
+            var placeInContainerNumber = 1;
+
+            //сначала выводим все стенды
+
+            foreach (var stand in container.containerContent)
+            {
+                var placeInContainerString = $"{containerNumber}.{placeInContainerNumber}";
+
+                ws.Cell($"B{standActiveRow}").Value = placeInContainerString;
+                ws.Cell($"C{standActiveRow}").Value = stand.Design ?? "";
+                ws.Cell($"D{standActiveRow}").Value = stand.SerialNumber ?? "";
+                ws.Cell($"E{standActiveRow}").Value = stand.KKSCode ?? "";
+                ws.Cell($"F{standActiveRow}").Value = "1"; //TODO: пока костыль
+                ws.Cell($"G{standActiveRow}").Value = stand.StandFrames.FirstOrDefault()?.Frame.Width;
+
+                standActiveRow++;
+                placeInContainerNumber++;
+            }
+
+            //вычисляем где закончили выводиться стенды
+            //заполняем инфу о таре
+            var containerEndRow = standActiveRow - 1;
+
+            var containerNumberRange = ws.Range($"A{containerStartRow}:A{containerEndRow}").Merge();
+            containerNumberRange.Value = containerNumber;
+
+            var commonContainerWeight = (container.containerInstance.ContainerWeight ?? 0f) +
+                                        container.containerInstance.StandsWeight;
+
+            var containerWeightRange = ws.Range($"H{containerStartRow}:H{containerEndRow}").Merge();
+            containerWeightRange.Value = commonContainerWeight;
+
+            var containerPackRange = ws.Range($"I{containerStartRow}:I{containerEndRow}").Merge();
+            containerPackRange.Value = container.containerInstance.Name;
+
+            containerNumber++;
+
+            containerStartRow = containerEndRow + 1;
+            standActiveRow = containerStartRow;
+        }
     }
 }

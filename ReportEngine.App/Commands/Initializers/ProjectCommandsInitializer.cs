@@ -109,6 +109,27 @@ public static class ProjectCommandsInitializer
         vm.ProjectCommandProvider.UpdateObvInStandCommand =
             new RelayCommand(vm.OnUpdateObvInStandCommandExecuted, vm.CanAllCommandsExecute);
 
+        vm.ProjectCommandProvider.CreateContainerBatchCommand =
+            new RelayCommand(vm.OnCreateContainerStandCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.RefreshBatchesCommand =
+            new RelayCommand(vm.OnRefreshBatchesCommandCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.AddContainerToBatchCommand =
+            new RelayCommand(vm.OnAddContainerToBatchCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.DeleteContainerCommand =
+            new RelayCommand(vm.OnDeleteContainerCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.DeleteBatchCommand =
+            new RelayCommand(vm.OnDeleteBatchCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.AddStandToContainerCommand =
+            new RelayCommand(vm.OnAddStandToContainerCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.RemoveStandFromContainerCommand =
+            new RelayCommand(vm.OnRemoveStandFromContainerCommandExecuted, vm.CanAllCommandsExecute);
+
         vm.ProjectCommandProvider.ShowCompanyDialogCommand =
             new RelayCommand(vm.OnShowCompanyDialogExecuted, vm.CanAllCommandsExecute);
 

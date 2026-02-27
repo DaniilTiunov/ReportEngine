@@ -1,11 +1,15 @@
-﻿using System.Diagnostics;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.DTO;
+using ReportEngine.Export.DTO.JsonObjects;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
+using System.Diagnostics;
+using System.Drawing.Drawing2D;
+using System.Reflection;
 using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
@@ -13,10 +17,12 @@ namespace ReportEngine.Export.ExcelWork.Services.Generators;
 public class SummaryReportGenerator : IReportGenerator
 {
     private readonly IProjectInfoRepository _projectInfoRepository;
+    private readonly IContainerRepository _containerRepository;
 
-    public SummaryReportGenerator(IProjectInfoRepository projectInfoRepository)
+    public SummaryReportGenerator(IProjectInfoRepository projectInfoRepository, IContainerRepository containerRepository)
     {
         _projectInfoRepository = projectInfoRepository;
+        _containerRepository = containerRepository;
     }
 
     public ReportType Type => ReportType.SummaryReport;
@@ -80,6 +86,11 @@ public class SummaryReportGenerator : IReportGenerator
             await FillCalculationTable(calculationSheet, project);
 
             //костыль с фиксированной шириной столбцов
+
+
+
+
+
             //применяем оформление ко всему документу
             foreach (var ws in wb.Worksheets)
             {
@@ -190,7 +201,7 @@ public class SummaryReportGenerator : IReportGenerator
         headerRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
 
 
-
+        
     }
 
     //создает заголовок сводной ведомости
@@ -402,10 +413,12 @@ public class SummaryReportGenerator : IReportGenerator
     {
         var activeRow = 4;
 
+        var containerBatches = _containerRepository.GetAllByProjectIdAsync(project.Id);
+
         var generatedPartsData = ExcelReportHelper.GeneratePartsData(project.Stands);
 
         //принудительно обнуляем сроки поставки, они там не нужны (вроде)
-        foreach (var property in generatedPartsData.GetType().GetProperties())
+        foreach(var property in generatedPartsData.GetType().GetProperties())
         {
             var propertyValue = property.GetValue(generatedPartsData);
             var recordList = propertyValue as List<EquipmentRecord>;
@@ -416,7 +429,7 @@ public class SummaryReportGenerator : IReportGenerator
                 recordList.Clear();
                 foreach (var part in tempList)
                 {
-
+                   
                     var sraka = new EquipmentRecord
                     {
                         Name = part.Name,
@@ -493,11 +506,13 @@ public class SummaryReportGenerator : IReportGenerator
         allData.AddRange(allLaborsList);
 
         activeRow = CreateUsualTotalRecord(activeRow, "Итого по комплектующим и трудозатратам:", allData, ws);
+        var containersData = ExcelReportHelper.GenerateContainersData(await containerBatches);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Упаковка", ws);
-        //activeRow = FillSubtableData(activeRow, ws);
-        //activeRow = CreateUsualTotalRecord(activeRow, "Итого по упаковке:", ws);
+        activeRow = FillSubtableData(activeRow, containersData, ws);
+        activeRow = CreateUsualTotalRecord(activeRow, "Итого по упаковке:", containersData, ws);
 
+        allData.AddRange(containersData);
         activeRow = CreateUsualTotalRecord(activeRow, "Итого по проекту:", allData, ws);
     }
 
@@ -505,6 +520,8 @@ public class SummaryReportGenerator : IReportGenerator
     private async Task FillCalculationTable(IXLWorksheet ws, ProjectInfo project)
     {
         var activeRow = 7;
+
+        var containerBatches = _containerRepository.GetAllByProjectIdAsync(project.Id);
 
         var standsRecords = project.Stands
             .GroupBy(stand => stand.Design)
@@ -520,7 +537,7 @@ public class SummaryReportGenerator : IReportGenerator
                 var quantity = group.Count();
                 var weight = group.FirstOrDefault().Weight.RoundUp(1);
                 var width = group.FirstOrDefault().Width;
-                var cost = (float)group.FirstOrDefault().StandSummCost;
+                var cost = (float) group.FirstOrDefault().StandSummCost;
 
                 var commonCost = (quantity * cost).Ceiling();
 
@@ -604,8 +621,8 @@ public class SummaryReportGenerator : IReportGenerator
 
         activeRow++;
 
-       // var containers = ExcelReportHelper.GenerateContainersData(await containerBatches);
-        //var containerPrice = containers.Sum(container => container.CommonCost.Value);
+        var containers = ExcelReportHelper.GenerateContainersData(await containerBatches);
+        var containerPrice = containers.Sum(container => container.CommonCost.Value);
 
         var containerPriceLabelRange = ws.Range($"C{activeRow}:J{activeRow}").Merge();
         containerPriceLabelRange.Value = $"Стоимость упаковки на сумму, без НДС, руб.";
@@ -613,13 +630,13 @@ public class SummaryReportGenerator : IReportGenerator
         containerPriceLabelRange.Style.Font.SetBold();
 
         var containerPriceValueCell = ws.Cell($"K{activeRow}");
-        //containerPriceValueCell.Value = containerPrice;
+        containerPriceValueCell.Value = containerPrice;
         containerPriceValueCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
         containerPriceValueCell.Style.Font.SetBold();
 
         activeRow++;
 
-        //var totalPrice = (float)standsPrice + transportPrice + containerPrice;
+        var totalPrice = (float)standsPrice + transportPrice + containerPrice;
 
         var totalLabelRange = ws.Range($"C{activeRow}:J{activeRow}").Merge();
         totalLabelRange.Value = $"Итого, руб.";
@@ -627,7 +644,7 @@ public class SummaryReportGenerator : IReportGenerator
         totalLabelRange.Style.Font.SetBold();
 
         var totalValueCell = ws.Cell($"K{activeRow}"); ;
-        //totalValueCell.Value = totalPrice;
+        totalValueCell.Value = totalPrice;
         totalValueCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
         totalValueCell.Style.Font.SetBold();
     }

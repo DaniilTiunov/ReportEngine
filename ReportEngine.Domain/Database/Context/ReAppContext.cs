@@ -76,6 +76,8 @@ public class ReAppContext : DbContext
     public DbSet<Company> Companies { get; set; }
     public DbSet<Subject> Subjects { get; set; }
     public DbSet<Stand> Stands { get; set; }
+    public DbSet<ContainerStand> ContainersStand { get; set; } // Ящики с стендами
+    public DbSet<ContainerBatch> ContainersBatch { get; set; } // Ящики с стендами
 
     public DbSet<TablesChanges> TablesChanges { get; set; }
 }
