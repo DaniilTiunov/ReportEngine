@@ -11,13 +11,10 @@ namespace ReportEngine.Export.ExcelWork.Services.Generators;
 public class FinPlanReportGenerator : IReportGenerator
 {
     private readonly IProjectInfoRepository _projectInfoRepository;
-    private readonly IContainerRepository _containerRepository;
 
-    public FinPlanReportGenerator(IProjectInfoRepository projectInfoRepository,
-                                    IContainerRepository containerRepository)
+    public FinPlanReportGenerator(IProjectInfoRepository projectInfoRepository)
     {
         _projectInfoRepository = projectInfoRepository;
-        _containerRepository = containerRepository;
     }
 
     public ReportType Type => ReportType.FinPlanReport;
@@ -59,11 +56,11 @@ public class FinPlanReportGenerator : IReportGenerator
                 switch (ws.Name)
                 {
                     case sellCostWorksheetName:
-                        CreateSellcostRentTable(ws, project, activeRow, totalRange, summaryRange);
+                        //CreateSellcostRentTable(ws, project, activeRow, totalRange, summaryRange);
                         break;
 
                     case extraChargeWorksheetName:
-                        CreateExtraChargeRentTable(ws, project, activeRow, totalRange, summaryRange);
+                        //CreateExtraChargeRentTable(ws, project, activeRow, totalRange, summaryRange);
                         break;
 
                     default:
@@ -165,7 +162,7 @@ public class FinPlanReportGenerator : IReportGenerator
     //заполняет таблицу себестоимости
     private async Task<(int, IXLRange, IXLRange)> CreateSelfcostTable(IXLWorksheet ws, ProjectInfo project, int startRow)
     {
-        var containerBatches = _containerRepository.GetAllByProjectIdAsync(project.Id);
+        var containerBatches = 0;
 
         var activeRow = startRow;
 
@@ -183,8 +180,8 @@ public class FinPlanReportGenerator : IReportGenerator
 
         activeRow++;
 
-        var containers = ExcelReportHelper.GenerateContainersData(await containerBatches);
-        var containersTotalCost = ExcelReportHelper.GenerateTotalRecord(containers);
+        //var containers = ExcelReportHelper.GenerateContainersData(await containerBatches);
+        //var containersTotalCost = ExcelReportHelper.GenerateTotalRecord(containers);
 
         var containersCostRecord = new EquipmentRecord
         {
@@ -193,7 +190,7 @@ public class FinPlanReportGenerator : IReportGenerator
             Unit = new ValidatedField<string?>("руб. без НДС", true),
             Quantity = new ValidatedField<float?>(null, true),
             CostPerUnit = new ValidatedField<float?>(null, true),
-            CommonCost = new ValidatedField<float?>(containersTotalCost.CommonCost.Value, true)
+            //CommonCost = new ValidatedField<float?>(containersTotalCost.CommonCost.Value, true)
         };
 
         var containersValueRange = PasteRecord(activeRow, containersCostRecord, ws);

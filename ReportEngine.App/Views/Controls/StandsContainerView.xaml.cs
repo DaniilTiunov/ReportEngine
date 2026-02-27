@@ -17,12 +17,5 @@ public partial class StandsContainerView : UserControl
 
         InitializeComponent();
         DataContext = projectViewModel;
-
-        Loaded += StandsContainerView_Loaded;
-    }
-
-    private void StandsContainerView_Loaded(object sender, RoutedEventArgs e)
-    {
-        _projectViewModel.LoadContainersInfoAsync();
     }
 }

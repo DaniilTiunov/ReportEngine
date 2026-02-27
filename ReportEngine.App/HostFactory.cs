@@ -88,7 +88,6 @@ public class HostFactory
         services.AddScoped<IFormedDrainagesRepository, FormedDrainagesRepository>();
         services.AddScoped<IFormedAdditionalEquipsRepository, FormedAdditionalEquipsRepository>();
         services.AddScoped<IFormedElectricalRepository, FormedElectricalRepository>();
-        services.AddScoped<IContainerRepository, ContainerRepository>();
         services.AddScoped<ObvyazkaInStandRepository>();
         services.AddScoped<IPurposesRepository<AdditionalEquipPurpose>, FormedAdditionalEquipsRepository>();
         services.AddScoped<IPurposesRepository<ElectricalPurpose>, FormedElectricalRepository>();

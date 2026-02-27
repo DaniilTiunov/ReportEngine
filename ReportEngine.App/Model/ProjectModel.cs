@@ -73,24 +73,11 @@ public class ProjectModel : BaseViewModel
 
     private bool _isGalvanized; //Оцинковка
 
-    private ObservableCollection<ContainerStand> _containerStandsInSelectedBatch = new();
-    private ObservableCollection<Stand> _standsInSelectedContainer = new();
-
-    //
     private float? _humanCost; //Трудозатраты
 
     private string _manager;
 
     private StandModel? _stand;
-
-    private ObservableCollection<ContainerStand> _containerStandsInProject = new();
-    private ObservableCollection<ContainerBatch> _containerBathInProject = new();
-
-    private ContainerStand? _containerStand;
-    private ContainerBatch? _containerBatch;
-
-    private ContainerStand? _selectedContainerStand;
-    private ContainerBatch? _selectedContainerBatch;
 
     #endregion Приватные поля
 
@@ -226,82 +213,10 @@ public class ProjectModel : BaseViewModel
         set => Set(ref _isGalvanized, value);
     } //Оцинковка
 
-    // Упаковка
-    public ObservableCollection<ContainerStand> ContainerStandsInProject
-    {
-        get => _containerStandsInProject;
-        set => Set(ref _containerStandsInProject, value);
-    } // Упаковки
-
-    public ObservableCollection<ContainerBatch> ContainerBatchesInProject
-    {
-        get => _containerBathInProject;
-        set => Set(ref _containerBathInProject, value);
-    } // Партии
-
     public ObservableCollection<StandModel> StandsInContainer
     {
         get => _standsInContainer;
         set => Set(ref _standsInContainer, value);
-    }
-
-    public ContainerStand? ContainerStand
-    {
-        get => _containerStand;
-        set => Set(ref _containerStand, value);
-    } // Упаковка
-
-    public ContainerBatch? ContainerBatch
-    {
-        get => _containerBatch;
-        set => Set(ref _containerBatch, value);
-    } // Партия
-
-    public ContainerStand? SelectedContainerStand
-    {
-        get => _selectedContainerStand;
-        set
-        {
-            if (Set(ref _selectedContainerStand, value))
-            {
-                StandsInSelectedContainer = value != null
-                    ? new ObservableCollection<Stand>(value.Stands)
-                    : new ObservableCollection<Stand>();
-                OnPropertyChanged(nameof(StandsInSelectedContainer));
-            }
-        }
-    } // Выбранная упаковка
-
-    public ContainerBatch? SelectedContainerBatch
-    {
-        get => _selectedContainerBatch;
-        set
-        {
-            if (Set(ref _selectedContainerBatch, value))
-            {
-                ContainerStandsInSelectedBatch = value != null
-                    ? new ObservableCollection<ContainerStand>(value.Containers)
-                    : new ObservableCollection<ContainerStand>();
-                OnPropertyChanged(nameof(ContainerStandsInSelectedBatch));
-                // Обновить StandsInSelectedContainer тоже, если нужно
-                if (SelectedContainerStand != null)
-                    StandsInSelectedContainer = new ObservableCollection<Stand>(SelectedContainerStand.Stands);
-                else
-                    StandsInSelectedContainer = new ObservableCollection<Stand>();
-            }
-        }
-    } // Выбранная партия
-
-    public ObservableCollection<ContainerStand> ContainerStandsInSelectedBatch
-    {
-        get => _containerStandsInSelectedBatch;
-        set => Set(ref _containerStandsInSelectedBatch, value);
-    }
-
-    public ObservableCollection<Stand> StandsInSelectedContainer
-    {
-        get => _standsInSelectedContainer;
-        set => Set(ref _standsInSelectedContainer, value);
     }
 
     private Stand? _selectedStandInContainer;
