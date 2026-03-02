@@ -32,9 +32,7 @@ namespace ReportEngine.App.ViewModels;
 public class ProjectViewModel : BaseViewModel
 {
     private readonly ICalculationService _calculationService;
-    private readonly IBaseRepository<Company> _companyRepository;
     private readonly UpdaterStandService _updaterStandService;
-    private readonly IContainerRepository _containerRepository;
     private readonly ContainerService _containerService;
     private readonly IDialogService _dialogService;
     private readonly INotificationService _notificationService;
@@ -86,7 +84,7 @@ public class ProjectViewModel : BaseViewModel
         InitializeTime();
         InitializeGenericCommands();
         InitializeStandsData();
-        
+
     }
     public FrameSettingsModel FrameSettings { get; set; } = new();
     public ObservableCollection<FormedFrame> AllAvailableFrames { get; set; } = new();
@@ -516,7 +514,7 @@ public class ProjectViewModel : BaseViewModel
         if (!correctNN)
             return;
 
-        var freeNN = _uiValidatorService.ValidateFreeObvNN(this,selectedStand.NN, false);
+        var freeNN = _uiValidatorService.ValidateFreeObvNN(this, selectedStand.NN, false);
 
         if (!freeNN)
             return;
@@ -525,7 +523,7 @@ public class ProjectViewModel : BaseViewModel
         //var isCorrectSensorsData = _uiValidatorService.ValidateSensorsQuantityInNewObv(this);
 
         //if (!isCorrectSensorsData)
-         //   return;
+        //   return;
 
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
@@ -976,10 +974,10 @@ public class ProjectViewModel : BaseViewModel
             if (!freeNN)
                 return;
 
-           // var isCorrectSensorsData = _uiValidatorService.ValidateSensorsQuantityInNewObv(this);
+            // var isCorrectSensorsData = _uiValidatorService.ValidateSensorsQuantityInNewObv(this);
 
-           // if (!isCorrectSensorsData)
-           //   return;
+            // if (!isCorrectSensorsData)
+            //   return;
 
 
             await _projectService.UpdateObvInStandAsync(CurrentProjectModel);
@@ -998,12 +996,14 @@ public class ProjectViewModel : BaseViewModel
 
     public async void OnDeleteBatchCommandExecuted(object obj)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () => _containerService.DeleteBanchAsync(CurrentProjectModel));
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+            await _containerService.DeleteBatchAsync(CurrentProjectModel));
     }
 
     public async void OnRefreshBatchesCommandCommandExecuted(object obj)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () => _containerService.LoadBatchesAsync(CurrentProjectModel));
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+            await _containerService.LoadBatchesAsync(CurrentProjectModel));
     }
 
     public async void OnAddContainerToBatchCommandExecuted(object obj)
@@ -1015,19 +1015,25 @@ public class ProjectViewModel : BaseViewModel
     public async void OnDeleteContainerCommandExecuted(object obj)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
-            _containerService.RemoveContainerFromBatchAsync(CurrentProjectModel));
+           await _containerService.RemoveContainerFromBatchAsync(CurrentProjectModel));
+    }
+
+    public async Task OnUpdateSelectedContainerExecuted(object obj)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+            await _containerService.UpdateSelectedContainerAsync(CurrentProjectModel));
     }
 
     public async void OnAddStandToContainerCommandExecuted(object obj)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
-            _containerService.AddStandToContainerAsync(CurrentProjectModel));
+           await _containerService.AddStandToContainerAsync(CurrentProjectModel));
     }
 
     public async void OnRemoveStandFromContainerCommandExecuted(object obj)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
-            _containerService.RemoveStandFromContainerAsync(CurrentProjectModel));
+           await _containerService.RemoveStandFromContainerAsync(CurrentProjectModel));
     }
 
     public void ResetProject()
@@ -1507,8 +1513,18 @@ public class ProjectViewModel : BaseViewModel
                     return;
 
                 case ContainerStand cs:
+                    if (selected is Container c)
+                    {
+                        cs.Name = c.Name;
+                        cs.ContainerCost = c.Cost;
+                        cs.ContainerWeight = c.Weight;
+                        CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.ContainerStandsInSelectedBatch);
+                        return;
+                    }
+
                     cs.Name = selected.Name;
                     cs.ContainerCost = selected.Cost;
+                    cs.ContainerWeight = selected.Weight;
                     CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.ContainerStandsInSelectedBatch);
                     return;
             }
@@ -1602,7 +1618,7 @@ public class ProjectViewModel : BaseViewModel
         if (selectedStand == null)
             return;
 
-        
+
         UpdateTablesQuantity();
         UpdateClampsQuantity();
         UpdateBracketsQuantity();
