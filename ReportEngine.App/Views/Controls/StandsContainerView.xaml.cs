@@ -27,9 +27,9 @@ public partial class StandsContainerView : UserControl
         Loaded += StandsContainerView_Loaded;
     }
 
-    private void StandsContainerView_Loaded(object sender, RoutedEventArgs e)
+    private async void StandsContainerView_Loaded(object sender, RoutedEventArgs e)
     {
-        _projectViewModel.LoadContainersInfoAsync();
+        await _projectViewModel.LoadContainersInfoAsync();
     }
 
     private void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)

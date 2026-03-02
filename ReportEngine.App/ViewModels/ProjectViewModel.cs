@@ -1513,6 +1513,15 @@ public class ProjectViewModel : BaseViewModel
                     return;
 
                 case ContainerStand cs:
+                    if (selected is Container c)
+                    {
+                        cs.Name = c.Name;
+                        cs.ContainerCost = c.Cost;
+                        cs.ContainerWeight = c.Weight;
+                        CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.ContainerStandsInSelectedBatch);
+                        return;
+                    }
+
                     cs.Name = selected.Name;
                     cs.ContainerCost = selected.Cost;
                     cs.ContainerWeight = selected.Weight;
