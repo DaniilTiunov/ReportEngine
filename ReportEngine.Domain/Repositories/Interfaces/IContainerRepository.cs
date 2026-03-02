@@ -17,4 +17,6 @@ public interface IContainerRepository : IBaseRepository<ContainerBatch>
     Task RemoveStandFromContainerAsync(int containerId, int standId);
 
     Task DeleteContainerAsync(int containerId);
+
+    Task UpdateContainerAsync(ContainerStand container);
 }

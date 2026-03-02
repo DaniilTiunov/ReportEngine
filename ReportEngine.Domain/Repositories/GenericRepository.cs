@@ -1,6 +1,9 @@
 ﻿using System.Linq.Expressions;
+using System.Xml.Linq;
 using Microsoft.EntityFrameworkCore;
 using ReportEngine.Domain.Database.Context;
+using ReportEngine.Domain.Entities.BaseEntities;
+using ReportEngine.Domain.Entities.BaseEntities.Interface;
 
 namespace ReportEngine.Domain.Repositories
 {

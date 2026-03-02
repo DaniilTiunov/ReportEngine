@@ -121,6 +121,9 @@ public static class ProjectCommandsInitializer
         vm.ProjectCommandProvider.DeleteContainerCommand =
             new RelayCommand(vm.OnDeleteContainerCommandExecuted, vm.CanAllCommandsExecute);
 
+        vm.ProjectCommandProvider.UpdateContainerCommand =
+            new AsyncRelayCommand(vm.OnUpdateSelectedContainerExecuted, vm.CanAllCommandsExecute);
+
         vm.ProjectCommandProvider.DeleteBatchCommand =
             new RelayCommand(vm.OnDeleteBatchCommandExecuted, vm.CanAllCommandsExecute);
 

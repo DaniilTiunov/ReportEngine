@@ -3,6 +3,7 @@ using ReportEngine.App.Model;
 using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.App.Services.Core;
 
@@ -12,6 +13,7 @@ public class CalculationService : ICalculationService
 
     public StandSettingsModel DefaultStandSettings { get; set; } = new();
     public HumanCostSettingsModel HumanCostSettingsModel { get; set; } = new();
+    public FrameSettingsModel FrameSettingsModel { get; set; } = new();
 
     public CalculationService(IProjectService projectService)
     {
@@ -22,6 +24,7 @@ public class CalculationService : ICalculationService
     {
         await DefaultStandSettings.LoadStandsSettingsDataAsync();
         await HumanCostSettingsModel.LoadHumanCostDataFromIniAsync();
+        await FrameSettingsModel.LoadFrameDataFromIniAsync();
     }
 
     public async Task CalculateProjectAsync(ProjectModel project)
@@ -43,8 +46,8 @@ public class CalculationService : ICalculationService
 
         project.Cost = standsCost + galvanizedCost;
 
-        project.HumanCost = project.Stands.Sum(ObvHumanCostCalculation) + CalculateOtherHumanCost(project);
-
+        project.HumanCost = (project.Stands.Sum(ObvHumanCostCalculation) + CalculateOtherHumanCost(project)).Round(2);
+        
         await _projectService.UpdateProjectAsync(project);
         await _projectService.UpdateStandEntity(project);
     }
@@ -73,7 +76,7 @@ public class CalculationService : ICalculationService
 
     private void CalculateStandsWidthAsync(StandModel standModel)
     {
-        standModel.Width = standModel.FramesInStand.Sum(fr  => fr.Width);
+        standModel.Width = standModel.FramesInStand.Sum(fr => fr.Width);
     }
 
     private decimal CalculateStandEquipCost(StandModel standModel)
@@ -108,19 +111,34 @@ public class CalculationService : ICalculationService
 
     private float ObvHumanCostCalculation(StandModel stand)
     {
-        return stand.ObvyazkiInStand.Sum(obv => obv.HumanCost ?? 0f);
+        return (float)Math.Round(stand.ObvyazkiInStand.Sum(obv => obv.HumanCost ?? 0f),2);
     }
 
     private float CalculateOtherHumanCost(ProjectModel projectModel)
     {
         float totalHumanCost = 0;
-        var stands = projectModel.Stands.Count;
 
-        var checkCost = HumanCostSettingsModel.TimeForCheckStand * stands
+        var standsCount = projectModel.Stands.Count;
+        var framesCount = projectModel.Stands.Sum(s => s.FramesInStand.Count);
+        var obvyazkiCount = projectModel.Stands.Sum(s => s.ObvyazkiInStand.Count);
+
+        var humanStandsCost = (HumanCostSettingsModel.TimeForCheckStand
+            + HumanCostSettingsModel.TimeForOneDrill
+            + HumanCostSettingsModel.TimeForMontageOneInput
+            + HumanCostSettingsModel.TimeForDrillOneBus
+            + HumanCostSettingsModel.TimeForCollectorBoil
+            + HumanCostSettingsModel.TimeForPrepareAllEquipment) * standsCount
             + HumanCostSettingsModel.TimeForAllChecks
-            + HumanCostSettingsModel.TimeForFinalWork;
+            + HumanCostSettingsModel.TimeForFinalWork
+            + HumanCostSettingsModel.TimeForOthersOperations;
 
-        totalHumanCost = checkCost.ToFloat();
+        var humanFrameCost = (FrameSettingsModel.TimeForPaintFrame
+            + FrameSettingsModel.TimeForPrepareFrame
+            + FrameSettingsModel.TimeForProductionFrame
+            + FrameSettingsModel.TimeForAssemblyWork) * framesCount +
+            (FrameSettingsModel.TimeForPaintObv * obvyazkiCount);
+
+        totalHumanCost = humanStandsCost.ToFloat() + humanFrameCost.ToFloat();
 
         return totalHumanCost;
     }

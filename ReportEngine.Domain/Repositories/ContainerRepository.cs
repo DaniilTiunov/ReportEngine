@@ -107,6 +107,12 @@ public class ContainerRepository : IContainerRepository
             .ToListAsync();
     }
 
+    public async Task UpdateContainerAsync(ContainerStand container)
+    {
+        _context.Update(container);
+        await _context.SaveChangesAsync();
+    }
+
     public async Task AddContainerToBatchAsync(int batchId, ContainerStand container)
     {
         var batch = await _context.ContainersBatch
@@ -197,79 +203,31 @@ public class ContainerRepository : IContainerRepository
 
     public async Task AddStandToContainerAsync(int containerId, int standId)
     {
-        var container = await _context.ContainersStand
-            .Include(c => c.Stands)
-            .FirstOrDefaultAsync(c => c.Id == containerId);
-        if (container == null) throw new ArgumentException($"Container with ID {containerId} not found.");
+        var stand = await _context.Stands
+            .FirstOrDefaultAsync(s => s.Id == standId);
 
-        var stand = await _context.Stands.FirstOrDefaultAsync(s => s.Id == standId);
-        if (stand == null) throw new ArgumentException($"Stand with ID {standId} not found.");
+        if (stand == null)
+            throw new ArgumentException($"Stand with ID {standId} not found.");
 
-        // Защита от двойной привязки
+        // защита от повторной привязки
         if (stand.ContainerStandId == containerId)
             return;
 
-        // Привязываем
+        // просто меняем FK
         stand.ContainerStandId = containerId;
-        _context.Stands.Update(stand);
-
-        // Обновляем контейнерные данные
-        if (!container.Stands.Any(s => s.Id == standId))
-            container.Stands.Add(stand);
-
-        container.StandsCount = container.Stands.Count;
-        container.StandsWeight = container.Stands.Sum(s => s.Weight);
-
-        // Обновляем родительскую партию (если есть)
-        if (container.ContainerBatchId.HasValue)
-        {
-            var batch = await _context.ContainersBatch
-                .Include(b => b.Containers)
-                .ThenInclude(c => c.Stands)
-                .FirstOrDefaultAsync(b => b.Id == container.ContainerBatchId.Value);
-
-            if (batch != null)
-            {
-                batch.ContainersCount = batch.Containers.Count;
-                batch.StandsCount = batch.Containers.Sum(c => c.StandsCount);
-            }
-        }
 
         await _context.SaveChangesAsync();
     }
 
     public async Task RemoveStandFromContainerAsync(int containerId, int standId)
     {
-        var container = await _context.ContainersStand
-            .Include(c => c.Stands)
-            .FirstOrDefaultAsync(c => c.Id == containerId);
-        if (container == null) throw new ArgumentException($"Container with ID {containerId} not found.");
+        var stand = await _context.Stands
+            .FirstOrDefaultAsync(s => s.Id == standId);
 
-        var stand = container.Stands.FirstOrDefault(s => s.Id == standId);
-        if (stand == null) return;
+        if (stand == null)
+            return;
 
-        // Отвязка стенда
         stand.ContainerStandId = null;
-        _context.Stands.Update(stand);
-
-        container.Stands.Remove(stand);
-        container.StandsCount = container.Stands.Count;
-        container.StandsWeight = container.Stands.Sum(s => s.Weight);
-
-        // Обновляем родительскую партию (если есть)
-        if (container.ContainerBatchId.HasValue)
-        {
-            var batch = await _context.ContainersBatch
-                .Include(b => b.Containers)
-                .ThenInclude(c => c.Stands)
-                .FirstOrDefaultAsync(b => b.Id == container.ContainerBatchId.Value);
-
-            if (batch != null)
-            {
-                batch.ContainersCount = batch.Containers.Count;
-                batch.StandsCount = batch.Containers.Sum(c => c.StandsCount);
-            }
-        }
 
         await _context.SaveChangesAsync();
     }

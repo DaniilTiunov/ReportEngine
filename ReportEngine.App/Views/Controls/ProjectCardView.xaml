@@ -8,8 +8,8 @@
 
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="333*" />
-            <ColumnDefinition Width="59*" />
+            <ColumnDefinition MinWidth="950" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <ScrollViewer
@@ -277,7 +277,7 @@
                         <TextBlock
                             Grid.Row="2"
                             Margin="5"
-                            Text="Кол-во стендов:" />
+                            Text="Кол-во стендов (шт.):" />
 
                         <TextBox
                             Grid.Row="2"
@@ -289,7 +289,7 @@
                         <TextBlock
                             Grid.Row="3"
                             Margin="5"
-                            Text="Стоимость:" />
+                            Text="Стоимость (руб.):" />
 
                         <TextBox
                             Grid.Row="3"
@@ -301,7 +301,7 @@
                         <TextBlock
                             Grid.Row="4"
                             Margin="5"
-                            Text="Трудозатраты:" />
+                            Text="Трудозатраты (чел/час):" />
 
                         <TextBox
                             Grid.Row="4"
