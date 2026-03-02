@@ -30,35 +30,35 @@ public class StandSettings : IIniSettings<StandSettingsData>
         return new StandSettingsData
         {
             SteelChannel = standData["StandsSettings"]["steelChannel"],
-            SteelChannelMeasure = standData["StandsSettings"]["steelChannelMeasure"],
+            SteelChannelEntityName = standData["StandsSettings"]["steelChannelEntityName"],
             NamePlate = standData["StandsSettings"]["namePlate"],
-            NamePlateMeasure = standData["StandsSettings"]["namePlateMeasure"],
+            NamePlateEntityName = standData["StandsSettings"]["namePlateEntityName"],
             NameTable = standData["StandsSettings"]["nameTable"],
-            NameTableMeasure = standData["StandsSettings"]["nameTableMeasure"],
+            NameTableEntityName = standData["StandsSettings"]["nameTableEntityName"],
             FrameGalvanizing = standData["StandsSettings"]["frameGalvanizing"],
             Bracket = standData["StandsSettings"]["bracket"],
-            BracketMeasure = standData["StandsSettings"]["bracketMeasure"],
+            BracketEntityName = standData["StandsSettings"]["bracketEntityName"],
             BracketForDif = standData["StandsSettings"]["bracketForDif"],
-            BracketForDifMeasure = standData["StandsSettings"]["bracketForDifMeasure"],
+            BracketForDifEntityName = standData["StandsSettings"]["bracketForDifEntityName"],
             BracketForAbs = standData["StandsSettings"]["bracketForAbs"],
-            BracketForAbsMeasure = standData["StandsSettings"]["bracketForAbsMeasure"],
+            BracketForAbsEntityName = standData["StandsSettings"]["bracketForAbsEntityName"],
             BracketUniversal = standData["StandsSettings"]["bracketUniversal"],
-            BracketUniversalMeasure = standData["StandsSettings"]["bracketUniversalMeasure"],
+            BracketUniversalEntityName = standData["StandsSettings"]["bracketUniversalEntityName"],
             CabelSixMm = standData["StandsSettings"]["cabelSixMm"],
-            CabelSixMmMeasure = standData["StandsSettings"]["cabelSixMmMeasure"],
+            CabelSixMmEntityName = standData["StandsSettings"]["cabelSixMmEntityName"],
             CabelFourMm = standData["StandsSettings"]["cabelFourMm"],
-            CabelFourMmMeasure = standData["StandsSettings"]["cabelFourMmMeasure"],
+            CabelFourMmEntityName = standData["StandsSettings"]["cabelFourMmEntityName"],
             SignalCable = standData["StandsSettings"]["signalCable"],
-            SignalCableMeasure = standData["StandsSettings"]["signalCableMeasure"],
+            SignalCableEntityName = standData["StandsSettings"]["signalCableEntityName"],
             SeniorEngineer = standData["StandsSettings"]["seniorEngineer"],
             ResponsibleForAccept = standData["StandsSettings"]["responsibleForAccept"],
             SecondLevelSpecialist = standData["StandsSettings"]["secondLevelSpecialist"],
             OSiL = standData["StandsSettings"]["OSiL"],
             SensorCountOnFrame = Parse(standData["StandsSettings"]["sensorCountOnFrame"]),
             Clamp = standData["StandsSettings"]["clamp"],
-            ClampMeasure = standData["StandsSettings"]["clampMeasure"],
+            ClampEntityName = standData["StandsSettings"]["clampEntityName"],
             Terminal = standData["StandsSettings"]["terminal"],
-            TerminalMeasure = standData["StandsSettings"]["terminalMeasure"]
+            TerminalEntityName = standData["StandsSettings"]["terminalEntityName"]
         };
     }
 
@@ -73,34 +73,34 @@ public class StandSettings : IIniSettings<StandSettingsData>
         }
 
         standData["StandsSettings"]["steelChannel"] = settingsData.SteelChannel;
-        standData["StandsSettings"]["steelChannelMeasure"] = settingsData.SteelChannelMeasure;
+        standData["StandsSettings"]["steelChannelEntityName"] = settingsData.SteelChannelEntityName;
         standData["StandsSettings"]["namePlate"] = settingsData.NamePlate;
-        standData["StandsSettings"]["namePlateMeasure"] = settingsData.NamePlateMeasure;
+        standData["StandsSettings"]["namePlateEntityName"] = settingsData.NamePlateEntityName;
         standData["StandsSettings"]["nameTable"] = settingsData.NameTable;
-        standData["StandsSettings"]["nameTableMeasure"] = settingsData.NameTableMeasure;
+        standData["StandsSettings"]["nameTableEntityName"] = settingsData.NameTableEntityName;
         standData["StandsSettings"]["frameGalvanizing"] = settingsData.FrameGalvanizing;
         standData["StandsSettings"]["bracket"] = settingsData.Bracket;
-        standData["StandsSettings"]["bracketMeasure"] = settingsData.BracketMeasure;
+        standData["StandsSettings"]["bracketEntityName"] = settingsData.BracketEntityName;
         standData["StandsSettings"]["bracketForDif"] = settingsData.BracketForDif;
-        standData["StandsSettings"]["bracketForDifMeasure"] = settingsData.BracketForDifMeasure;
+        standData["StandsSettings"]["bracketForDifEntityName"] = settingsData.BracketForDifEntityName;
         standData["StandsSettings"]["bracketForAbs"] = settingsData.BracketForAbs;
-        standData["StandsSettings"]["bracketForAbsMeasure"] = settingsData.BracketForAbsMeasure;
+        standData["StandsSettings"]["bracketForAbsEntityName"] = settingsData.BracketForAbsEntityName;
         standData["StandsSettings"]["bracketUniversal"] = settingsData.BracketUniversal;
-        standData["StandsSettings"]["bracketUniversalMeasure"] = settingsData.BracketUniversalMeasure;
+        standData["StandsSettings"]["bracketUniversalEntityName"] = settingsData.BracketUniversalEntityName;
         standData["StandsSettings"]["cabelSixMm"] = settingsData.CabelSixMm;
-        standData["StandsSettings"]["cabelSixMmMeasure"] = settingsData.CabelSixMmMeasure;
+        standData["StandsSettings"]["cabelSixMmEntityName"] = settingsData.CabelSixMmEntityName;
         standData["StandsSettings"]["cabelFourMm"] = settingsData.CabelFourMm;
-        standData["StandsSettings"]["cabelFourMmMeasure"] = settingsData.CabelFourMmMeasure;
+        standData["StandsSettings"]["cabelFourMmEntityName"] = settingsData.CabelFourMmEntityName;
         standData["StandsSettings"]["signalCable"] = settingsData.SignalCable;
-        standData["StandsSettings"]["signalCableMeasure"] = settingsData.SignalCableMeasure;
+        standData["StandsSettings"]["signalCableEntityName"] = settingsData.SignalCableEntityName;
         standData["StandsSettings"]["seniorEngineer"] = settingsData.SeniorEngineer;
         standData["StandsSettings"]["responsibleForAccept"] = settingsData.ResponsibleForAccept;
         standData["StandsSettings"]["secondLevelSpecialist"] = settingsData.SecondLevelSpecialist;
         standData["StandsSettings"]["OSiL"] = settingsData.OSiL;
         standData["StandsSettings"]["sensorCountOnFrame"] = F(settingsData.SensorCountOnFrame ?? 0.0);
         standData["StandsSettings"]["clamp"] = settingsData.Clamp;
-        standData["StandsSettings"]["clampMeasure"] = settingsData.ClampMeasure;
+        standData["StandsSettings"]["clampEntityName"] = settingsData.ClampEntityName;
         standData["StandsSettings"]["terminal"] = settingsData.Terminal;
-        standData["StandsSettings"]["terminalMeasure"] = settingsData.TerminalMeasure;
+        standData["StandsSettings"]["terminalEntityName"] = settingsData.TerminalEntityName;
     }
 }

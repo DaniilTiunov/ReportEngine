@@ -1738,9 +1738,6 @@ public class ProjectViewModel : BaseViewModel
     //обновляем кол-во хомутов
     public void UpdateClampsQuantity()
     {
-
-        var standsSettings = StandSettings;
-
         var selectedStand = CurrentProjectModel.SelectedStand;
 
         if (selectedStand == null)
@@ -1787,8 +1784,6 @@ public class ProjectViewModel : BaseViewModel
     //обновляем кол-во кронштейнов
     public void UpdateBracketsQuantity()
     {
-        var standsSettings = StandSettings;
-
         var selectedStand = CurrentProjectModel.SelectedStand;
 
         if (selectedStand == null)
@@ -1895,7 +1890,6 @@ public class ProjectViewModel : BaseViewModel
         }
 
         //сигнальный кабель
-        var standsSettings = StandSettings;
 
         var signalCableRecord = electricComponents.FirstOrDefault(purpose => purpose.Purpose == "Сигнальный кабель");
 

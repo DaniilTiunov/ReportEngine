@@ -1,51 +1,30 @@
 ﻿using BenchmarkDotNet.Running;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
+using ReportEngine.Domain.Database.Context;
+using ReportEngine.Domain.Repositories;
 
 namespace ReportEngine.Benchmarks
 {
     public class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            var listOfA = new List<TypeA>
-            {
-                new TypeA("AA", 1),
-                new TypeA("AA", 2)
-            };
 
-            var listOfB = listOfA.Adapt<List<TypeB>>();
+            var optionsBuilder = new DbContextOptionsBuilder<ReAppContext>();
+            optionsBuilder.UseNpgsql(
+                "Host=172.16.0.210;Port=5432;Database=reportengine;Username=postgres;Password=postgres");
 
-            foreach (var b in listOfB)
+            ReAppContext reAppContext = new ReAppContext(optionsBuilder.Options);
+
+            using (reAppContext)
             {
-                Console.WriteLine(b.ToString());
-                Console.WriteLine(b.Name);
+                var zhopa = new GenericRepository(reAppContext);
+                
+                Console.WriteLine("АГААА");
             }
+           
         }
     }
 
-    public class TypeA
-    {
-        public int Id { get; set; }
-
-        public string Name { get; set; }
-
-        public TypeA(string Name, int Id)
-        {
-            this.Name = Name;
-            this.Id = Id;
-        }
-    }
-
-    public class TypeB
-    {
-        public int Id { get; set; }
-
-        public string Name { get; set; }
-
-        public TypeB(string Name, int Id)
-        {
-            this.Name = Name;
-            this.Id = Id;
-        }
-    }
 }
