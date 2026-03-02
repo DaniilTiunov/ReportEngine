@@ -59,7 +59,7 @@ namespace ReportEngine.App.ViewModels.Utils
             else if (selectedObv != null)
             {
                 isAlreadyExist = obvCollection
-                    .Where(obv => obv.Id != selectedObv.Id)
+                    .Where(obv => obv != selectedObv)
                     .Any(obv => obv.NN == newObvNN);
             }
 

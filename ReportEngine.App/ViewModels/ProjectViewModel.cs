@@ -963,7 +963,7 @@ public class ProjectViewModel : BaseViewModel
         {
             var selectedStand = CurrentProjectModel?.SelectedStand;
 
-            if (Guard.ExitIfNull("Не был выбран стенд", _notificationService, selectedStand))
+            if(selectedStand == null)
                 return;
 
             var correctNN = _uiValidatorService.ValidateCorrectObvNN(selectedStand.NN);
