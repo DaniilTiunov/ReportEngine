@@ -14,6 +14,7 @@ using ReportEngine.App.ViewModels.Utils;
 using ReportEngine.App.Views;
 using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Settings;
+using ReportEngine.App.Views.Settings.SettingsControls;
 using ReportEngine.App.Views.Utils;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.App.Views.Windows.Dialog;
@@ -221,5 +222,7 @@ public class HostFactory
         services.AddTransient<StandsSettingsView>();
         services.AddTransient<ProgressDialog>();
         services.AddTransient<NotifyWindow>();
+        services.AddTransient<CommonSettings>();
+        services.AddTransient<ConnectionSettings>();
     }
 }

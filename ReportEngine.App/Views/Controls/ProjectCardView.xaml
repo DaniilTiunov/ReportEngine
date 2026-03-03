@@ -14,11 +14,12 @@
 
         <ScrollViewer
             Grid.ColumnSpan="2"
+            VerticalAlignment="Stretch"
             HorizontalScrollBarVisibility="Disabled"
             VerticalScrollBarVisibility="Auto">
 
             <Grid
-                Margin="20"
+                Margin="0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch">
 
@@ -432,5 +433,4 @@
             </Grid>
         </ScrollViewer>
     </Grid>
-
 </UserControl>

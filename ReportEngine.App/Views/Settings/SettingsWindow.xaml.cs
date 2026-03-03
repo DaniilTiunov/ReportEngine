@@ -1,6 +1,5 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
-using ReportEngine.App.AppHelpers;
+using System.Windows.Input;
 using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Views;
@@ -10,69 +9,50 @@ namespace ReportEngine.App.Views;
 /// </summary>
 public partial class SettingsWindow : Window
 {
+    private readonly SettingsViewModel _viewModel;
     public SettingsWindow(SettingsViewModel viewModel)
     {
         InitializeComponent();
         DataContext = viewModel;
+        _viewModel = viewModel;
 
-        Loaded += (_, __) => { InitializeSettings(viewModel); };
+        Loaded += (s, e) => _viewModel.LoadSettings();
     }
 
-    private void InitializeSettings(SettingsViewModel viewModel)
+    private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        viewModel.LoadSettings();
-        ShowPanel("GeneralSettings");
+        if (e.ClickCount == 2)
+            MaxRestoreButton_Click(sender, e);
+        else
+            DragMove();
     }
 
-    private void SettingsCategories_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void MinimizeButton_Click(object sender, RoutedEventArgs e)
     {
-        var item = SettingsCategories.SelectedItem as ListBoxItem;
-        var tag = item?.Tag?.ToString() ?? "GeneralSettings";
-
-        ShowPanel(tag);
+        WindowState = WindowState.Minimized;
     }
 
-    private void ShowPanel(string tag)
+    private void MaxRestoreButton_Click(object sender, RoutedEventArgs e)
     {
-        ExceptionHelper.SafeExecute(() =>
+        var area = SystemParameters.WorkArea;
+        if (Width != area.Width || Height != area.Height || Left != area.Left || Top != area.Top)
         {
-            if (GeneralSettingsPanel == null || ConnectionSettingsPanel == null)
-                return;
+            Left = area.Left;
+            Top = area.Top;
+            Width = area.Width;
+            Height = area.Height;
+        }
+        else
+        {
+            Width = 1100;
+            Height = 450;
+            Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
+            Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
+        }
+    }
 
-            GeneralSettingsPanel.Visibility = Visibility.Collapsed;
-            ConnectionSettingsPanel.Visibility = Visibility.Collapsed;
-            DesignSettingsPanel.Visibility = Visibility.Collapsed;
-            OtherSettingsPanel.Visibility = Visibility.Collapsed;
-
-            switch (tag)
-            {
-                case "GeneralSettings":
-                case "Основные":
-                    GeneralSettingsPanel.Visibility = Visibility.Visible;
-                    SettingsTitle.Text = "Основные настройки";
-                    break;
-
-                case "ConnectionSettings":
-                case "Подключение":
-                    ConnectionSettingsPanel.Visibility = Visibility.Visible;
-                    SettingsTitle.Text = "Настройки подключения";
-                    break;
-
-                case "DesignSettings":
-                    DesignSettingsPanel.Visibility = Visibility.Visible;
-                    SettingsTitle.Text = "Оформление";
-                    break;
-
-                case "OtherSettings":
-                    OtherSettingsPanel.Visibility = Visibility.Visible;
-                    SettingsTitle.Text = "Другое";
-                    break;
-
-                default:
-                    GeneralSettingsPanel.Visibility = Visibility.Visible;
-                    SettingsTitle.Text = "Настройки";
-                    break;
-            }
-        });
+    private void CloseButton_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
     }
 }
