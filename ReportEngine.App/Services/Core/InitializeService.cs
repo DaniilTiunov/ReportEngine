@@ -70,25 +70,25 @@ namespace ReportEngine.App.Services.Core
 
 
             var bracketUniversalEntityType = _genericRepository.GetEntityTypeByName(settings.BracketUniversalEntityName ?? "") ?? typeof(SensorBrace);
-            var bracketUniversal = await _genericRepository.GetByNameAsync(bracketUniversalEntityType, settings.BracketUniversal);
+            var bracketUniversal = await _genericRepository.GetByNameAsync(bracketUniversalEntityType, "Name", settings.BracketUniversal);
 
             var bracketDifEntityType = _genericRepository.GetEntityTypeByName(settings.BracketForDifEntityName ?? "") ?? typeof(SensorBrace);
-            var bracketDif = await _genericRepository.GetByNameAsync(bracketDifEntityType, settings.BracketForDif);
+            var bracketDif = await _genericRepository.GetByNameAsync(bracketDifEntityType, "Name", settings.BracketForDif);
 
             var bracketAbsEntityType = _genericRepository.GetEntityTypeByName(settings.BracketForAbsEntityName ?? "") ?? typeof(SensorBrace);
-            var bracketAbs = await _genericRepository.GetByNameAsync(bracketAbsEntityType, settings.BracketForAbs);
+            var bracketAbs = await _genericRepository.GetByNameAsync(bracketAbsEntityType, "Name", settings.BracketForAbs);
 
             var steelChannelEntityType = _genericRepository.GetEntityTypeByName(settings.SteelChannelEntityName ?? "") ?? typeof(FrameRoll);
-            var steelChannel = await _genericRepository.GetByNameAsync(steelChannelEntityType, settings.SteelChannel);
+            var steelChannel = await _genericRepository.GetByNameAsync(steelChannelEntityType, "Name", settings.SteelChannel);
 
             var clampEntityType = _genericRepository.GetEntityTypeByName(settings.ClampEntityName ?? "") ?? typeof(Other);
-            var clamp = await _genericRepository.GetByNameAsync(clampEntityType, settings.Clamp);
+            var clamp = await _genericRepository.GetByNameAsync(clampEntityType, "Name", settings.Clamp);
 
             var nameTableEntityType = _genericRepository.GetEntityTypeByName(settings.NameTableEntityName ?? "") ?? typeof(Other);
-            var nameTable = await _genericRepository.GetByNameAsync(nameTableEntityType, settings.NameTable);
+            var nameTable = await _genericRepository.GetByNameAsync(nameTableEntityType, "Name", settings.NameTable);
 
             var namePlateEntityType = _genericRepository.GetEntityTypeByName(settings.NamePlate ?? "") ?? typeof(Other);
-            var namePlate = await _genericRepository.GetByNameAsync(namePlateEntityType, settings.NamePlate);
+            var namePlate = await _genericRepository.GetByNameAsync(namePlateEntityType, "Name", settings.NamePlate);
 
 
             stand.AllAdditionalEquipPurposesInStand = new ObservableCollection<AdditionalEquipPurpose>
@@ -110,16 +110,16 @@ namespace ReportEngine.App.Services.Core
 
 
             var signalCableEntityType = _genericRepository.GetEntityTypeByName(settings.SignalCableEntityName ?? "") ?? typeof(CabelProduction);
-            var signalCable = await _genericRepository.GetByNameAsync(signalCableEntityType, settings.SignalCable);
+            var signalCable = await _genericRepository.GetByNameAsync(signalCableEntityType,"Name", settings.SignalCable);
 
             var cableSixMmEntityType = _genericRepository.GetEntityTypeByName(settings.CabelSixMmEntityName ?? "") ?? typeof(CabelProduction);
-            var cableSixMm = await _genericRepository.GetByNameAsync(cableSixMmEntityType, settings.CabelSixMm);
+            var cableSixMm = await _genericRepository.GetByNameAsync(cableSixMmEntityType, "Name", settings.CabelSixMm);
 
             var cableFourMmEntityType = _genericRepository.GetEntityTypeByName(settings.CabelFourMmEntityName ?? "") ?? typeof(CabelProduction);
-            var cableFourMm = await _genericRepository.GetByNameAsync(cableFourMmEntityType, settings.CabelFourMm);
+            var cableFourMm = await _genericRepository.GetByNameAsync(cableFourMmEntityType, "Name", settings.CabelFourMm);
 
             var terminalEntityType = _genericRepository.GetEntityTypeByName(settings.TerminalEntityName ?? "") ?? typeof(CabelProduction);
-            var terminal = await _genericRepository.GetByNameAsync(terminalEntityType, settings.Terminal);
+            var terminal = await _genericRepository.GetByNameAsync(terminalEntityType, "Name", settings.Terminal);
 
             stand.AllElectricalPurposesInStand = new ObservableCollection<ElectricalPurpose>
             {

@@ -125,12 +125,10 @@ namespace ReportEngine.Domain.Repositories
 
 
 
-        public async Task<IBaseEquip?> GetByNameAsync(Type entityType, object value)
+        public async Task<IBaseEquip?> GetByNameAsync(Type entityType,string propertyName, object value)
         {
             if (value == null)
                 return null;
-
-            const string propertyName = "Name";
 
             var predicate = CreateEqualsExpression(entityType, propertyName, value);
 
