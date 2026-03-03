@@ -183,13 +183,17 @@ public class ProjectViewModel : BaseViewModel
             var totalWidth = _projectService.GetSummWidthObvyzaka(CurrentProjectModel);
             _notificationService.ShowInfo("Рекомендуемая рама: Рама с длиной " + totalWidth);
 
+            if (CurrentProjectModel.SelectedStand == null)
+            {
+                _notificationService.ShowError("Стенд не выбран!");
+                return;
+            }
+
             var selectedFrame = _dialogService.ShowFrameDialog();
 
-            if (Guard.ExitIfNull("Рама или стенд не выбраны!",
-                           _notificationService,
-                           selectedFrame,
-                           CurrentProjectModel.SelectedStand))
+            if (selectedFrame == null)
                 return;
+
 
             await _standService.AddFrameToStandAsync(CurrentProjectModel.SelectedStand.Id, selectedFrame.Id);
 
