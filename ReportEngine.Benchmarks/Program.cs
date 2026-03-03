@@ -19,12 +19,8 @@ namespace ReportEngine.Benchmarks
 
             using (reAppContext)
             {
-                var zhopa = new GenericRepository(reAppContext);
-                
-                Console.WriteLine("АГААА");
-            }
-           
+
+            };
         }
     }
-
 }

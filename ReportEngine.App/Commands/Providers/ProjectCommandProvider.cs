@@ -49,6 +49,7 @@ public class ProjectCommandProvider
     public ICommand RefreshBatchesCommand { get; set; }
     public ICommand AddContainerToBatchCommand { get; set; }
     public ICommand DeleteContainerCommand { get; set; }
+    public ICommand UpdateContainerCommand { get; set; }
     public ICommand DeleteBatchCommand { get; set; }
     public ICommand AddStandToContainerCommand { get; set; }
     public ICommand RemoveStandFromContainerCommand { get; set; }

@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Model;
-using ReportEngine.App.ModelWrappers;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
@@ -21,7 +20,7 @@ public class ContainerService
 
     public async Task CreateBatchAsync(ProjectModel projectModel)
     {
-        if (projectModel == null || projectModel.CurrentProjectId == 0)
+        if (projectModel?.CurrentProjectId == 0)
         {
             _notificationService.ShowInfo("Сначала выберите проект!");
             return;
@@ -29,61 +28,172 @@ public class ContainerService
 
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            var existing = projectModel.ContainerBatchesInProject ?? new ObservableCollection<ContainerBatch>();
-            var nextOrder = existing.Any() ? existing.Max(b => b.BatchOrder) + 1 : 1;
+            var existing = await _containerRepository
+                .GetAllByProjectIdAsync(projectModel.CurrentProjectId);
+
+            var nextOrder = existing.Any()
+                ? existing.Max(b => b.BatchOrder) + 1
+                : 1;
 
             var batch = new ContainerBatch
             {
                 ProjectInfoId = projectModel.CurrentProjectId,
                 Name = $"Партия {nextOrder}",
-                BatchOrder = nextOrder,
-                ContainersCount = 0,
-                StandsCount = 0
+                BatchOrder = nextOrder
             };
 
             await _containerRepository.AddAsync(batch);
 
-            if (!projectModel.ContainerBatchesInProject.Any(b => b.Id == batch.Id))
-                projectModel.ContainerBatchesInProject.Add(batch);
+            await LoadAllData(projectModel);
 
-            projectModel.SelectedContainerBatch = batch;
-
-            _notificationService.ShowInfo("Упаковка проекта добавлена");
+            _notificationService.ShowInfo("Партия создана");
         });
     }
 
-    public async Task DeleteBanchAsync(ProjectModel projectModel)
+    public async Task DeleteBatchAsync(ProjectModel projectModel)
     {
-        if (projectModel == null || projectModel.SelectedContainerBatch == null)
+        if (projectModel?.SelectedContainerBatch == null)
         {
-            _notificationService.ShowInfo("Выберите упаковку проекта!");
+            _notificationService.ShowInfo("Выберите партию!");
             return;
         }
 
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            var batchToDelete = projectModel.SelectedContainerBatch;
+            await _containerRepository
+                .DeleteByIdAsync(projectModel.SelectedContainerBatch.Id);
 
-            await _containerRepository.DeleteByIdAsync(batchToDelete.Id);
+            await LoadAllData(projectModel);
 
-            projectModel.ContainerBatchesInProject.Remove(batchToDelete);
-
-            // Если удаляли выбранную партию — очищаем список упаковок для выбранной партии
-            if (projectModel.SelectedContainerBatch?.Id == batchToDelete.Id)
-            {
-                projectModel.SelectedContainerBatch = null;
-                projectModel.ContainerStandsInSelectedBatch?.Clear();
-            }
-
-            // Также удаляем все упаковки этой партии из общей коллекции
-            var toRemove = projectModel.ContainerStandsInProject
-                .Where(c => c.ContainerBatchId == batchToDelete.Id)
-                .ToList();
-            foreach (var c in toRemove)
-                projectModel.ContainerStandsInProject.Remove(c);
+            projectModel.SelectedContainerBatch = null;
 
             _notificationService.ShowInfo("Партия удалена");
         });
+    }
+
+    public async Task AddContainerToBatchAsync(ProjectModel projectModel)
+    {
+        if (projectModel?.SelectedContainerBatch == null ||
+            projectModel.SelectedContainerStand == null)
+        {
+            _notificationService.ShowInfo("Выберите партию и тару!");
+            return;
+        }
+
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+
+            await _containerRepository.AddContainerToBatchAsync(
+                projectModel.SelectedContainerBatch.Id,
+                projectModel.SelectedContainerStand);
+
+            await RecalculateBatchAsync(projectModel.SelectedContainerBatch);
+
+            await LoadAllData(projectModel);
+
+            _notificationService.ShowInfo("Тара добавлена");
+        });
+    }
+
+    public async Task RemoveContainerFromBatchAsync(ProjectModel projectModel)
+    {
+        if (projectModel?.SelectedContainerBatch == null ||
+            projectModel.SelectedContainerStand == null)
+        {
+            _notificationService.ShowInfo("Выберите тару!");
+            return;
+        }
+
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await _containerRepository.RemoveContainerFromBatchAsync(
+                projectModel.SelectedContainerBatch.Id,
+                projectModel.SelectedContainerStand.Id);
+
+            await RecalculateBatchAsync(projectModel.SelectedContainerBatch);
+
+            await LoadAllData(projectModel);
+
+            _notificationService.ShowInfo("Тара удалена");
+        });
+    }
+
+    public async Task UpdateSelectedContainerAsync(ProjectModel projectModel)
+    {
+        var container = projectModel.SelectedContainerBatch;
+
+        if (container == null)
+        {
+            _notificationService.ShowError("Не выбран ящик");
+            return;
+        }
+
+        await _containerRepository.UpdateAsync(container);
+    }
+
+    public async Task AddStandToContainerAsync(ProjectModel projectModel)
+    {
+        if (projectModel?.SelectedContainerStand == null ||
+            projectModel.SelectedStandInProject == null)
+        {
+            _notificationService.ShowInfo("Выберите тару и стенд!");
+            return;
+        }
+
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await _containerRepository.AddStandToContainerAsync(
+                projectModel.SelectedContainerStand.Id,
+                projectModel.SelectedStandInProject.Id);
+
+            await RecalculateBatchAsync(projectModel.SelectedContainerBatch);
+
+            await LoadAllData(projectModel);
+
+            _notificationService.ShowInfo("Стенд добавлен");
+        });
+    }
+
+    public async Task RemoveStandFromContainerAsync(ProjectModel projectModel)
+    {
+        if (projectModel?.SelectedContainerStand == null ||
+            projectModel.SelectedStandInContainer == null)
+        {
+            _notificationService.ShowInfo("Выберите стенд!");
+            return;
+        }
+
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await _containerRepository.RemoveStandFromContainerAsync(
+                projectModel.SelectedContainerStand.Id,
+                projectModel.SelectedStandInContainer.Id);
+
+            await RecalculateBatchAsync(projectModel.SelectedContainerBatch);
+
+            await LoadAllData(projectModel);
+
+            _notificationService.ShowInfo("Стенд удалён");
+        });
+    }
+
+    private async Task RecalculateBatchAsync(ContainerBatch batch)
+    {
+        foreach (var container in batch.Containers)
+        {
+            RecalculateContainer(container);
+        }
+
+        batch.ContainersCount = batch.Containers.Count;
+        batch.StandsCount = batch.Containers.Sum(c => c.StandsCount);
+
+        await _containerRepository.UpdateAsync(batch);
+    }
+
+    private void RecalculateContainer(ContainerStand container)
+    {
+        container.StandsCount = container.Stands?.Count ?? 0;
+        container.StandsWeight = container.Stands?.Sum(s => s.Weight) ?? 0;
     }
 
     public async Task LoadBatchesAsync(ProjectModel projectModel)
@@ -107,155 +217,7 @@ public class ContainerService
             foreach (var b in batches)
                 projectModel.ContainerBatchesInProject.Add(b);
 
-            // Обновим упаковки тоже (полная загрузка)
             await LoadAllData(projectModel);
-        });
-    }
-
-    public async Task AddContainerToBatchAsync(ProjectModel projectModel)
-    {
-        if (projectModel == null || projectModel.SelectedContainerBatch == null)
-        {
-            _notificationService.ShowInfo("Выберите упаковку проекта!");
-            return;
-        }
-
-        var batch = projectModel.SelectedContainerBatch;
-        var containerToAdd = projectModel.SelectedContainerStand;
-
-        // Привязываем к партии
-        containerToAdd.ContainerBatchId = batch.Id;
-
-        await _containerRepository.AddContainerToBatchAsync(batch.Id, containerToAdd);
-
-        // Инициализация коллекций, если нужно
-        if (batch.Containers == null) batch.Containers = new List<ContainerStand>();
-        batch.Containers.Add(containerToAdd);
-
-        if (projectModel.ContainerStandsInProject == null)
-            projectModel.ContainerStandsInProject = new ObservableCollection<ContainerStand>();
-        if (!projectModel.ContainerStandsInProject.Any(c => c.Id == containerToAdd.Id))
-            projectModel.ContainerStandsInProject.Add(containerToAdd);
-
-        batch.ContainersCount = batch.Containers.Count;
-        batch.StandsCount = batch.Containers.Sum(c => c.Stands?.Count ?? 0);
-
-        // Оповещаем UI что список контейнеров для выбранной партии изменился
-        projectModel.OnPropertyChanged(nameof(projectModel.ContainerStandsInSelectedBatch));
-        projectModel.OnPropertyChanged(nameof(projectModel.ContainerBatchesInProject));
-
-        _notificationService.ShowInfo("Добавлено!");
-    }
-
-    public async Task RemoveContainerFromBatchAsync(ProjectModel projectModel)
-    {
-        if (projectModel == null || projectModel.SelectedContainerBatch == null ||
-            projectModel.SelectedContainerStand == null)
-        {
-            _notificationService.ShowInfo("Выберите партию и упаковку для удаления!");
-            return;
-        }
-
-        await ExceptionHelper.SafeExecuteAsync(async () =>
-        {
-            var batch = projectModel.SelectedContainerBatch;
-            var containerToRemove = projectModel.SelectedContainerStand;
-
-            await _containerRepository.RemoveContainerFromBatchAsync(batch.Id, containerToRemove.Id);
-
-            // Удаляем из коллекций
-            batch.Containers?.Remove(containerToRemove);
-
-            var inProject = projectModel.ContainerStandsInProject?.FirstOrDefault(c => c.Id == containerToRemove.Id);
-            if (inProject != null)
-                projectModel.ContainerStandsInProject.Remove(inProject);
-
-            // Обновляем счётчики
-            batch.ContainersCount = batch.Containers?.Count ?? 0;
-            batch.StandsCount = batch.Containers?.Sum(c => c.Stands?.Count ?? 0) ?? 0;
-
-            // Если удаляли выбранную упаковку — сбросим её
-            if (projectModel.SelectedContainerStand?.Id == containerToRemove.Id)
-            {
-                projectModel.SelectedContainerStand = null;
-                projectModel.StandsInContainer?.Clear();
-            }
-
-            projectModel.OnPropertyChanged(nameof(projectModel.ContainerStandsInSelectedBatch));
-            projectModel.OnPropertyChanged(nameof(projectModel.ContainerBatchesInProject));
-
-            _notificationService.ShowInfo("Упаковка удалена");
-        });
-    }
-
-    public async Task AddStandToContainerAsync(ProjectModel projectModel)
-    {
-        if (projectModel.SelectedContainerStand == null) _notificationService.ShowInfo("Выберите упаковку");
-
-        var selectedStandModel = projectModel.SelectedStandInProject;
-        if (selectedStandModel == null)
-        {
-            _notificationService.ShowInfo("Выберите стенд для добавления");
-            return;
-        }
-
-        await ExceptionHelper.SafeExecuteAsync(async () =>
-        {
-            var container = projectModel.SelectedContainerStand;
-
-            await _containerRepository.AddStandToContainerAsync(container.Id, selectedStandModel.Id);
-
-            projectModel.StandsInSelectedContainer.Add(StandDataConverter.ConvertToStandEntity(selectedStandModel));
-
-            projectModel.OnPropertyChanged(nameof(projectModel.ContainerStandsInSelectedBatch));
-            projectModel.OnPropertyChanged(nameof(projectModel.StandsInSelectedContainer));
-
-            _notificationService.ShowInfo("Стенд добавлен!");
-        });
-    }
-
-    public async Task RemoveStandFromContainerAsync(ProjectModel projectModel)
-    {
-        if (projectModel.SelectedContainerStand == null)
-        {
-            _notificationService.ShowInfo("Выберите упаковку");
-            return;
-        }
-
-        var selectedStandModel = projectModel.SelectedStandInContainer;
-        if (selectedStandModel == null)
-        {
-            _notificationService.ShowInfo("Выберите стенд для удаления");
-            return;
-        }
-
-        await ExceptionHelper.SafeExecuteAsync(async () =>
-        {
-            var container = projectModel.SelectedContainerStand;
-
-            // Найти Stand по Id из StandModel
-            var standToRemove = container.Stands?.FirstOrDefault(s => s.Id == selectedStandModel.Id);
-            if (standToRemove == null)
-            {
-                _notificationService.ShowInfo("Стенд не найден в упаковке");
-                return;
-            }
-
-            await _containerRepository.RemoveStandFromContainerAsync(container.Id, standToRemove.Id);
-
-            // Удалить из коллекции контейнера
-            container.Stands.Remove(standToRemove);
-
-            // Удалить из коллекции VM
-            projectModel.StandsInSelectedContainer.Remove(standToRemove);
-
-            // Сбросить выбранный стенд
-            projectModel.SelectedStand = null;
-
-            projectModel.OnPropertyChanged(nameof(projectModel.ContainerStandsInSelectedBatch));
-            projectModel.OnPropertyChanged(nameof(projectModel.StandsInSelectedContainer));
-
-            _notificationService.ShowInfo("Стенд удалён!");
         });
     }
 
@@ -263,46 +225,38 @@ public class ContainerService
     {
         if (projectModel == null) return;
 
-        await ExceptionHelper.SafeExecuteAsync(async () =>
-        {
-            projectModel.ContainerBatchesInProject.Clear();
+        var selectedBatchId = projectModel.SelectedContainerBatch?.Id;
+        var selectedContainerId = projectModel.SelectedContainerStand?.Id;
 
-            var batchesInProject = await _containerRepository.GetAllByProjectIdAsync(projectModel.CurrentProjectId);
+        var batches = await _containerRepository
+            .GetAllByProjectIdAsync(projectModel.CurrentProjectId);
 
-            // наполняем партии
-            foreach (var batch in batchesInProject)
-                projectModel.ContainerBatchesInProject.Add(batch);
+        projectModel.ContainerBatchesInProject.Clear();
 
-            // собираем все контейнеры в общую коллекцию
-            var allContainers = batchesInProject
-                .SelectMany(b => b.Containers ?? Enumerable.Empty<ContainerStand>())
-                .ToList();
+        foreach (var batch in batches)
+            projectModel.ContainerBatchesInProject.Add(batch);
 
-            var allStands = allContainers
-                .SelectMany(s => s.Stands ?? Enumerable.Empty<Stand>())
-                .ToList();
+        // Восстановление выбора партии
+        projectModel.SelectedContainerBatch =
+            projectModel.ContainerBatchesInProject
+                .FirstOrDefault(b => b.Id == selectedBatchId);
 
-            projectModel.ContainerStandsInProject = new ObservableCollection<ContainerStand>(allContainers);
+        // Собираем контейнеры
+        var containers = batches
+            .SelectMany(b => b.Containers ?? Enumerable.Empty<ContainerStand>())
+            .ToList();
 
-            // если ранее была выбрана партия — попробуем восстановить ссылку на неё из загруженных данных
-            if (projectModel.SelectedContainerBatch != null)
-            {
-                var selected =
-                    projectModel.ContainerBatchesInProject.FirstOrDefault(b =>
-                        b.Id == projectModel.SelectedContainerBatch.Id);
-                projectModel.SelectedContainerBatch = selected;
-            }
+        projectModel.ContainerStandsInProject.Clear();
 
-            if (projectModel.SelectedContainerStand != null)
-            {
-                var selectedContainer =
-                    projectModel.ContainerStandsInProject.FirstOrDefault(c =>
-                        c.Id == projectModel.SelectedContainerStand.Id);
-                projectModel.SelectedContainerStand = selectedContainer;
-            }
+        foreach (var container in containers)
+            projectModel.ContainerStandsInProject.Add(container);
 
-            projectModel.OnPropertyChanged(nameof(projectModel.ContainerStandsInSelectedBatch));
-            projectModel.OnPropertyChanged(nameof(projectModel.StandsInSelectedContainer));
-        });
+        // Восстановление выбора контейнера
+        projectModel.SelectedContainerStand =
+            projectModel.ContainerStandsInProject
+                .FirstOrDefault(c => c.Id == selectedContainerId);
+
+        projectModel.OnPropertyChanged(nameof(projectModel.ContainerStandsInSelectedBatch));
+        projectModel.OnPropertyChanged(nameof(projectModel.StandsInSelectedContainer));
     }
 }
