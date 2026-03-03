@@ -181,13 +181,17 @@ public class ProjectViewModel : BaseViewModel
             var totalWidth = _projectService.GetSummWidthObvyzaka(CurrentProjectModel);
             _notificationService.ShowInfo("Рекомендуемая рама: Рама с длиной " + totalWidth);
 
+            if (CurrentProjectModel.SelectedStand == null)
+            {
+                _notificationService.ShowError("Стенд не выбран!");
+                return;
+            }
+
             var selectedFrame = _dialogService.ShowFrameDialog();
 
-            if (Guard.ExitIfNull("Рама или стенд не выбраны!",
-                           _notificationService,
-                           selectedFrame,
-                           CurrentProjectModel.SelectedStand))
+            if (selectedFrame == null)
                 return;
+
 
             await _standService.AddFrameToStandAsync(CurrentProjectModel.SelectedStand.Id, selectedFrame.Id);
 
@@ -961,7 +965,7 @@ public class ProjectViewModel : BaseViewModel
         {
             var selectedStand = CurrentProjectModel?.SelectedStand;
 
-            if (Guard.ExitIfNull("Не был выбран стенд", _notificationService, selectedStand))
+            if(selectedStand == null)
                 return;
 
             var correctNN = _uiValidatorService.ValidateCorrectObvNN(selectedStand.NN);
@@ -1754,9 +1758,6 @@ public class ProjectViewModel : BaseViewModel
     //обновляем кол-во хомутов
     public void UpdateClampsQuantity()
     {
-
-        var standsSettings = StandSettings;
-
         var selectedStand = CurrentProjectModel.SelectedStand;
 
         if (selectedStand == null)
@@ -1803,8 +1804,6 @@ public class ProjectViewModel : BaseViewModel
     //обновляем кол-во кронштейнов
     public void UpdateBracketsQuantity()
     {
-        var standsSettings = StandSettings;
-
         var selectedStand = CurrentProjectModel.SelectedStand;
 
         if (selectedStand == null)
@@ -1911,7 +1910,6 @@ public class ProjectViewModel : BaseViewModel
         }
 
         //сигнальный кабель
-        var standsSettings = StandSettings;
 
         var signalCableRecord = electricComponents.FirstOrDefault(purpose => purpose.Purpose == "Сигнальный кабель");
 

@@ -8,7 +8,7 @@ namespace ReportEngine.Benchmarks
 {
     public class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
 
             var optionsBuilder = new DbContextOptionsBuilder<ReAppContext>();

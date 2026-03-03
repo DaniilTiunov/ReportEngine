@@ -3,6 +3,7 @@ using System.Windows.Input;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.Domain.Entities.BaseEntities.Interface;
 
 namespace ReportEngine.App.ViewModels.CalculationSettings;
 
@@ -44,6 +45,7 @@ public class CalculationSettingsViewModel : BaseViewModel
 
         if (p is string propertyName && !string.IsNullOrWhiteSpace(propertyName))
         {
+            //????
             ApplySelectedItem(StandSettings, selected, propertyName);
             ApplySelectedItem(FrameSettings, selected, propertyName);
         }
@@ -54,17 +56,25 @@ public class CalculationSettingsViewModel : BaseViewModel
         if (selected == null || settings == null)
             return;
 
-        var type = settings.GetType();
+        var selectedEquip = selected as IBaseEquip;
 
-        var nameProp = type.GetProperty(propertyName);
+        if (selectedEquip == null)
+            return;
+
+        //вытаскиваем свойство с соответствующим именем из настроек
+        var nameProp = settings.GetType().GetProperty(propertyName);
+
+        //заполняем это свойство в настройках из переданного объекта (поле Name)
         if (nameProp != null && nameProp.CanWrite)
-            nameProp.SetValue(settings, selected.GetType().GetProperty("Name")?.GetValue(selected));
+            nameProp.SetValue(settings, selectedEquip.Name);
 
-        var measurePropertyName = propertyName + "Measure";
-        var measureProp = type.GetProperty(measurePropertyName);
+        //вытаскиваем свойство с соответствующим именем и постфиксом из настроек
+        var entityPropertyName = propertyName + "EntityName";
+        var entityNameProp = settings.GetType().GetProperty(entityPropertyName);
 
-        if (measureProp != null && measureProp.CanWrite)
-            measureProp.SetValue(settings, selected.GetType().GetProperty("Measure")?.GetValue(selected));
+        //заполняем это свойство в настройках из переданного объекта (имя типа под интерфейсом)
+        if (entityNameProp != null && entityNameProp.CanWrite)
+            entityNameProp.SetValue(settings, selectedEquip.GetType().Name);
     }
 
     public async void OnSaveSettingsCommandExecuted(object p)

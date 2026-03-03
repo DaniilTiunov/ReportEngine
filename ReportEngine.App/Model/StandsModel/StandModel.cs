@@ -780,35 +780,36 @@ public class StandModel : BaseViewModel
     public void InitializeAdditionalEquip()
     {
         const float nameplatesPerStand = 1.0f;
-
-        AllAdditionalEquipPurposesInStand = new ObservableCollection<AdditionalEquipPurpose>
-            {
-                new() { Purpose = "Шильдик", Material = DefaultStandSettings.NamePlate, Quantity = nameplatesPerStand, Measure = DefaultStandSettings.NamePlateMeasure},
-                new() { Purpose = "Швеллер", Material = DefaultStandSettings.SteelChannel, Measure = DefaultStandSettings.SteelChannelMeasure },
-                new() { Purpose = "Хомуты" , Material = DefaultStandSettings.Clamp, Measure = DefaultStandSettings.ClampMeasure},
-                new() { Purpose = "Табличка", Material = DefaultStandSettings.NameTable, Measure = DefaultStandSettings.NameTableMeasure},
-                new() { Purpose = "Кронштейн универсальный",Material = DefaultStandSettings.BracketUniversal, Measure = DefaultStandSettings.BracketUniversalMeasure},
-                new() { Purpose = "Кронштейн перепадчика",Material = DefaultStandSettings.BracketForDif, Measure = DefaultStandSettings.BracketForDifMeasure},
-                new() { Purpose = "Кронштейн абсолютника", Material = DefaultStandSettings.BracketForAbs, Measure = DefaultStandSettings.BracketForAbsMeasure}
-            };
+        
+        //AllAdditionalEquipPurposesInStand = new ObservableCollection<AdditionalEquipPurpose>
+        //    {
+        //        new() { Purpose = "Шильдик", Material = DefaultStandSettings.NamePlate, Quantity = nameplatesPerStand, Measure = DefaultStandSettings.NamePlateMeasure},
+        //        new() { Purpose = "Швеллер", Material = DefaultStandSettings.SteelChannel, Measure = DefaultStandSettings.SteelChannelMeasure },
+        //        new() { Purpose = "Хомуты" , Material = DefaultStandSettings.Clamp, Measure = DefaultStandSettings.ClampMeasure},
+        //        new() { Purpose = "Табличка", Material = DefaultStandSettings.NameTable, Measure = DefaultStandSettings.NameTableMeasure},
+        //        new() { Purpose = "Кронштейн универсальный",Material = DefaultStandSettings.BracketUniversal, Measure = DefaultStandSettings.BracketUniversalMeasure},
+        //        new() { Purpose = "Кронштейн перепадчика",Material = DefaultStandSettings.BracketForDif, Measure = DefaultStandSettings.BracketForDifMeasure},
+        //        new() { Purpose = "Кронштейн абсолютника", Material = DefaultStandSettings.BracketForAbs, Measure = DefaultStandSettings.BracketForAbsMeasure}
+        //    };
     }
 
     public void InitializeElectricalComponent()
     {
         float? usualConnectionBoxQuantity = 1.0f;
         float? usualCablesQuantity = 2.0f;
+      
 
-        AllElectricalPurposesInStand = new ObservableCollection<ElectricalPurpose>
-            {
-                new() { Purpose = "Клеммная коробка" ,Quantity = usualConnectionBoxQuantity, Measure = "шт"},
-                new() { Purpose = "Кабельные вводы" , Quantity = 1, Measure = "шт"},
-                new() { Purpose = "Сигнальный кабель", Material = DefaultStandSettings.SignalCable, Quantity = usualCablesQuantity , Measure = DefaultStandSettings.SignalCableMeasure},
-                new() { Purpose = "Металлорукав" , Quantity = usualCablesQuantity, Measure = "м"},
-                new() { Purpose = "Кабель 6мм", Material = DefaultStandSettings.CabelSixMm, Quantity = (float?) DefaultStandSettings.SensorCountOnFrame , Measure = DefaultStandSettings.CabelSixMmMeasure},
-                new() { Purpose = "Кабель 4мм", Material = DefaultStandSettings.CabelFourMm, Quantity = usualCablesQuantity, Measure = DefaultStandSettings.CabelFourMmMeasure },
-                new() { Purpose = "Кронштейн коробки" },
-                new() { Purpose = "Клемма", Material = DefaultStandSettings.Terminal, Measure = DefaultStandSettings.TerminalMeasure }
-            };
+        //AllElectricalPurposesInStand = new ObservableCollection<ElectricalPurpose>
+        //    {
+        //        new() { Purpose = "Клеммная коробка" ,Quantity = usualConnectionBoxQuantity, Measure = "шт"},
+        //        new() { Purpose = "Кабельные вводы" , Quantity = 1, Measure = "шт"},
+        //        new() { Purpose = "Сигнальный кабель", Material = DefaultStandSettings.SignalCable, Quantity = usualCablesQuantity , Measure = DefaultStandSettings.SignalCableMeasure},
+        //        new() { Purpose = "Металлорукав" , Quantity = usualCablesQuantity, Measure = "м"},
+        //        new() { Purpose = "Кабель 6мм", Material = DefaultStandSettings.CabelSixMm, Quantity = (float?) DefaultStandSettings.SensorCountOnFrame , Measure = DefaultStandSettings.CabelSixMmMeasure},
+        //        new() { Purpose = "Кабель 4мм", Material = DefaultStandSettings.CabelFourMm, Quantity = usualCablesQuantity, Measure = DefaultStandSettings.CabelFourMmMeasure },
+        //        new() { Purpose = "Кронштейн коробки" },
+        //        new() { Purpose = "Клемма", Material = DefaultStandSettings.Terminal, Measure = DefaultStandSettings.TerminalMeasure }
+        //    };
     }
 
 

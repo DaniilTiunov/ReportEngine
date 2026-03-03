@@ -407,13 +407,16 @@ public static class ExcelReportHelper
 
     //создаем инфу о трудозатратах
     public static LaborStandsData GenerateLaborData(IEnumerable<Stand> stands)
-    { 
+    {
+        //грузим сразу все
+        var allSettings = CalculationSettingsManager.LoadAllSettings();
 
-        var frameSettings = CalculationSettingsManager.Load<FrameSettings, FrameSettingsData>();
-        var electicalSettings = CalculationSettingsManager.Load<ElectricalSettings, ElectricalSettingsData>();
-        var humanCostSettings = CalculationSettingsManager.Load<HumanCostSettings, HumanCostSettingsData>();
-        var standSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
-        var sandblastSettings = CalculationSettingsManager.Load<SandBlastSettings, SandBlastSettingsData>();
+        //вытаскиваем нужные
+        var frameSettings = allSettings.FrameSettings;
+        var electicalSettings = allSettings.ElectricalSettings;
+        var humanCostSettings = allSettings.HumanCostSettings;
+        var standSettings = allSettings.StandSettings;
+        var sandblastSettings = allSettings.SandBlastSettings;
 
 
 
