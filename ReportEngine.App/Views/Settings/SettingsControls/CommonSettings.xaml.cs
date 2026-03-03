@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Windows.Interop;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Views.Settings.SettingsControls
@@ -21,10 +11,31 @@ namespace ReportEngine.App.Views.Settings.SettingsControls
     /// </summary>
     public partial class CommonSettings : UserControl
     {
+        private readonly SettingsViewModel _viewModel;
+
         public CommonSettings(SettingsViewModel settingsViewModel)
         {
             InitializeComponent();
-            DataContext = settingsViewModel;
+            _viewModel = settingsViewModel;
+            DataContext = _viewModel;
+        }
+
+        public void GetNewDirectory(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(this);
+            var owner = new WindowInteropHelper(window).Handle;
+
+            var dialog = new CommonOpenFileDialog
+            {
+                IsFolderPicker = true,
+                AddToMostRecentlyUsedList = true,
+                InitialDirectory = _viewModel.SaveReportDirPath,
+                Title = "Выберите папку для сохранения",
+            };
+
+            _viewModel.SaveReportDirPath = dialog.ShowDialog(owner) == CommonFileDialogResult.Ok
+                ? dialog.FileName
+                : _viewModel.SaveReportDirPath;
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
@@ -10,13 +10,10 @@ using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Frame;
 using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Domain.Entities.Pipes;
-using System.Linq.Expressions;
 
 namespace ReportEngine.Domain.Repositories
 {
     public class GenericRepository
-
-
     {
         private readonly ReAppContext _context;
         private readonly Dictionary<string, Type> _entityNameTypePairs;
@@ -31,7 +28,6 @@ namespace ReportEngine.Domain.Repositories
             _handlers = new Dictionary<Type, Func<Expression, Task<IBaseEquip?>>>();
             InitializeHandlers();
         }
-
 
         private void InitializeEntityPairs()
         {
@@ -97,7 +93,6 @@ namespace ReportEngine.Domain.Repositories
 
         }
 
-
         public async Task<T?> GetAsync<T>(
             Expression<Func<T, bool>> predicate)
             where T : class
@@ -113,9 +108,6 @@ namespace ReportEngine.Domain.Repositories
                 .ToListAsync();
         }
 
-
-
-
         public Type? GetEntityTypeByName(string name)
         {
             Type? resultType = null;
@@ -123,9 +115,7 @@ namespace ReportEngine.Domain.Repositories
             return _entityNameTypePairs.TryGetValue(name, out resultType) ? resultType : null;
         }
 
-
-
-        public async Task<IBaseEquip?> GetByNameAsync(Type entityType,string propertyName, object value)
+        public async Task<IBaseEquip?> GetByNameAsync(Type entityType, string propertyName, object value)
         {
             if (value == null)
                 return null;
@@ -140,9 +130,7 @@ namespace ReportEngine.Domain.Repositories
             return null;
         }
 
-
-
-         private LambdaExpression CreateEqualsExpression(Type entityType, string propertyName, object value)
+        private LambdaExpression CreateEqualsExpression(Type entityType, string propertyName, object value)
         {
             var parameter = Expression.Parameter(entityType, "x");
             var property = Expression.Property(parameter, propertyName);
@@ -151,9 +139,5 @@ namespace ReportEngine.Domain.Repositories
 
             return Expression.Lambda(equals, parameter);
         }
-
-
-
-
     }
 }

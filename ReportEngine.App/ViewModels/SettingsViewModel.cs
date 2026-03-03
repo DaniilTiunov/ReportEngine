@@ -2,12 +2,14 @@
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Npgsql;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.Views;
 using ReportEngine.App.Views.Settings.SettingsControls;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
@@ -34,7 +36,7 @@ public class SettingsViewModel : BaseViewModel
         IServiceProvider serviceProvider)
     {
         ApplySettingsCommand = new RelayCommand(ExecuteSaveCommand, _ => true);
-        OpenDialog = new RelayCommand(ExecuteOpenDialog, _ => true);
+        //OpenDialog = new RelayCommand(ExecuteOpenDialog, _ => true);
 
         LoadSettings();
 
@@ -114,10 +116,10 @@ public class SettingsViewModel : BaseViewModel
         ExceptionHelper.SafeExecute(SaveSettings);
     }
 
-    public void ExecuteOpenDialog(object p)
-    {
-        ExceptionHelper.SafeExecute(() => { SaveReportDirPath = GetNewDirectory(); });
-    }
+    //public void ExecuteOpenDialog(object p)
+    //{
+    //    ExceptionHelper.SafeExecute(() => { SaveReportDirPath = GetNewDirectory(); });
+    //}
 
     private void Navigate()
     {
@@ -197,18 +199,5 @@ public class SettingsViewModel : BaseViewModel
         {
             _notificationService.ShowInfo("Настройки сохранены.");
         }
-    }
-
-    public string GetNewDirectory()
-    {
-        var dialog = new CommonOpenFileDialog();
-        dialog.IsFolderPicker = true;
-        dialog.AddToMostRecentlyUsedList = true;
-        dialog.Title = "Выберите папку для сохранения";
-
-        if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
-            return dialog.FileName;
-
-        return null;
     }
 }

@@ -12,6 +12,7 @@
     FontSize="14"
     Foreground="{DynamicResource PrimaryForeground}"
     ResizeMode="CanResize"
+    Topmost="True"
     WindowStyle="None"
     mc:Ignorable="d">
 

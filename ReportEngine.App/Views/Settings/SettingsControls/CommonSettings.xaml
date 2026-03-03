@@ -58,7 +58,7 @@
                     Grid.Column="2"
                     Width="40"
                     Height="34"
-                    Command="{Binding OpenDialog}"
+                    Click="GetNewDirectory"
                     Content="..." />
             </Grid>
         </Grid>
