@@ -27,8 +27,6 @@ namespace ReportEngine.App.Services.Core
             _genericRepository = genericRepository;
         }
 
-
-
         public async Task InitializeStandDefaultPurposes(StandModel standForInitialize)
         {
             var defaultSettings = new StandSettingsModel();
@@ -68,7 +66,6 @@ namespace ReportEngine.App.Services.Core
         {
             const float nameplatesPerStand = 1.0f;
 
-
             var bracketUniversalEntityType = _genericRepository.GetEntityTypeByName(settings.BracketUniversalEntityName ?? "") ?? typeof(SensorBrace);
             var bracketUniversal = await _genericRepository.GetByNameAsync(bracketUniversalEntityType, "Name", settings.BracketUniversal);
 
@@ -107,7 +104,6 @@ namespace ReportEngine.App.Services.Core
         {
             float? usualConnectionBoxQuantity = 1.0f;
             float? usualCablesQuantity = 2.0f;
-
 
             var signalCableEntityType = _genericRepository.GetEntityTypeByName(settings.SignalCableEntityName ?? "") ?? typeof(CabelProduction);
             var signalCable = await _genericRepository.GetByNameAsync(signalCableEntityType,"Name", settings.SignalCable);

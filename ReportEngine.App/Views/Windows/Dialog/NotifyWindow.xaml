@@ -12,6 +12,7 @@
     Foreground="{DynamicResource PrimaryForeground}"
     ResizeMode="NoResize"
     SizeToContent="Height"
+    Topmost="True"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d">

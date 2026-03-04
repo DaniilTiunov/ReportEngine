@@ -131,6 +131,8 @@
         <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.2" />
         <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
         <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+        <PackageReference Include="Syncfusion.SfSpreadsheet.WPF" Version="32.2.8" />
+        <PackageReference Include="unvell.ReoGridWPF.dll" Version="3.3.0" />
         <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
         <PackageReference Include="WPF-UI" Version="4.0.3" />
     </ItemGroup>

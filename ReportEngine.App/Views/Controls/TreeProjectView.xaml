@@ -35,6 +35,7 @@
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="0.25*" />
+                                    <RowDefinition Height="0.25*" />
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
 
@@ -46,7 +47,10 @@
                                     FontSize="14"
                                     Foreground="{DynamicResource PrimaryForeground}"
                                     MouseDoubleClick="OpenCurrentView">
-                                    <TreeViewItem Header="Проект" IsExpanded="True">
+                                    <TreeViewItem
+                                        Foreground="{DynamicResource PrimaryForeground}"
+                                        Header="Проект"
+                                        IsExpanded="True">
                                         <TreeViewItem
                                             x:Name="ProjectCard"
                                             Margin="0,3,0,3"
@@ -67,22 +71,25 @@
                                                 Foreground="{DynamicResource PrimaryForeground}"
                                                 Header="Формирование упаковки"
                                                 Tag="StandsContainer" />
+                                            <TreeViewItem
+                                                Margin="0,3,0,3"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Header="Предпросмотр документов"
+                                                Tag="DockViewer" />
                                         </TreeViewItem>
                                     </TreeViewItem>
                                 </TreeView>
 
-                                <!--  Второе дерево  -->
                                 <TreeView
-                                    x:Name="ReportTree"
+                                    x:Name="CalculateTree"
                                     Grid.Row="1"
                                     Grid.Column="1"
-                                    MinHeight="500"
                                     FontSize="14"
                                     Foreground="{DynamicResource PrimaryForeground}"
-                                    MouseDoubleClick="ReportTree_MouseDoubleClick">
+                                    MouseDoubleClick="CalculateTree_MouseDoubleClick">
                                     <TreeViewItem
                                         Foreground="{DynamicResource PrimaryForeground}"
-                                        Header="Создание отчётов и расчёт"
+                                        Header="Расчёт проекта"
                                         IsExpanded="True">
                                         <TreeViewItem
                                             Margin="0,3,0,3"
@@ -94,6 +101,21 @@
                                             Foreground="{DynamicResource PrimaryForeground}"
                                             Header="Перерасчёт"
                                             Tag="UpdateAllProps" />
+                                    </TreeViewItem>
+                                </TreeView>
+
+                                <!--  Третье дерево  -->
+                                <TreeView
+                                    x:Name="ReportTree"
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    FontSize="14"
+                                    Foreground="{DynamicResource PrimaryForeground}"
+                                    MouseDoubleClick="ReportTree_MouseDoubleClick">
+                                    <TreeViewItem
+                                        Foreground="{DynamicResource PrimaryForeground}"
+                                        Header="Создание отчётов"
+                                        IsExpanded="True">
                                         <TreeViewItem
                                             Margin="0,3,0,3"
                                             Foreground="{DynamicResource PrimaryForeground}"
