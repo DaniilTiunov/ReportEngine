@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Shared.Config.DebugConsol;
@@ -114,17 +115,19 @@ public partial class TreeProjectView : UserControl, IDisposable
         try
         {
             if (string.IsNullOrEmpty(tag))
-                return null;
+                return null;   
 
             return tag switch
             {
-                "ProjectCard" => new ProjectCardView(_projectViewModel),
-                "Stand" => new StandView(_projectViewModel),
-                "StandObv" => new StandObvView(_projectViewModel),
-                "FrameDrainages" => new FrameDrainagesView(_projectViewModel),
-                "ProjectPreview" => new ProjectPreview(_projectViewModel),
-                "StandsContainer" => new StandsContainerView(_projectViewModel)
+                "ProjectCard" => ApplyAnimation(new ProjectCardView(_projectViewModel)),
+                //"Stand" => ApplyAnimation(new StandView(_projectViewModel)),
+                //"StandObv" => ApplyAnimation(new StandObvView(_projectViewModel)),
+                //"FrameDrainages" => ApplyAnimation(new FrameDrainagesView(_projectViewModel)),
+                "ProjectPreview" => ApplyAnimation(new ProjectPreview(_projectViewModel)),
+                "StandsContainer" => ApplyAnimation(new StandsContainerView(_projectViewModel)),
+                "DockViewer" => new DockViewerView()
             };
+
         }
         catch (Exception ex)
         {
@@ -205,6 +208,53 @@ public partial class TreeProjectView : UserControl, IDisposable
                 action();
             }
         }
+    }
+
+    private UserControl ApplyAnimation(UserControl control)
+    {
+        control.Opacity = 0;
+        control.RenderTransform = new TranslateTransform(0, 20);
+
+        control.Dispatcher.BeginInvoke(new Action(() =>
+        {
+            var storyboard = new Storyboard();
+
+            var fadeAnimation = new DoubleAnimation
+            {
+                From = 0,
+                To = 1,
+                Duration = TimeSpan.FromMilliseconds(250),
+                EasingFunction = new QuadraticEase
+                {
+                    EasingMode = EasingMode.EaseOut
+                }
+            };
+
+            Storyboard.SetTarget(fadeAnimation, control);
+            Storyboard.SetTargetProperty(fadeAnimation, new PropertyPath("Opacity"));
+
+            var slideAnimation = new DoubleAnimation
+            {
+                From = 20,
+                To = 0,
+                Duration = TimeSpan.FromMilliseconds(250),
+                EasingFunction = new QuadraticEase
+                {
+                    EasingMode = EasingMode.EaseOut
+                }
+            };
+
+            Storyboard.SetTarget(slideAnimation, control);
+            Storyboard.SetTargetProperty(slideAnimation,
+                new PropertyPath("(UIElement.RenderTransform).(TranslateTransform.Y)"));
+
+            storyboard.Children.Add(fadeAnimation);
+            storyboard.Children.Add(slideAnimation);
+
+            storyboard.Begin();
+        }), System.Windows.Threading.DispatcherPriority.Loaded);
+
+        return control;
     }
 
     ~TreeProjectView()

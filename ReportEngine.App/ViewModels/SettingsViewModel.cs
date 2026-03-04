@@ -2,14 +2,11 @@
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Interop;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using Npgsql;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Services.Interfaces;
-using ReportEngine.App.Views;
 using ReportEngine.App.Views.Settings.SettingsControls;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
@@ -36,7 +33,6 @@ public class SettingsViewModel : BaseViewModel
         IServiceProvider serviceProvider)
     {
         ApplySettingsCommand = new RelayCommand(ExecuteSaveCommand, _ => true);
-        //OpenDialog = new RelayCommand(ExecuteOpenDialog, _ => true);
 
         LoadSettings();
 
@@ -109,17 +105,11 @@ public class SettingsViewModel : BaseViewModel
     }
 
     public ICommand ApplySettingsCommand { get; set; }
-    public ICommand OpenDialog { get; set; }
 
     public void ExecuteSaveCommand(object p)
     {
         ExceptionHelper.SafeExecute(SaveSettings);
     }
-
-    //public void ExecuteOpenDialog(object p)
-    //{
-    //    ExceptionHelper.SafeExecute(() => { SaveReportDirPath = GetNewDirectory(); });
-    //}
 
     private void Navigate()
     {

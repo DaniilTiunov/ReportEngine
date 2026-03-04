@@ -67,6 +67,11 @@
                                                 Foreground="{DynamicResource PrimaryForeground}"
                                                 Header="Формирование упаковки"
                                                 Tag="StandsContainer" />
+                                            <TreeViewItem
+                                                Margin="0,3,0,3"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Header="Просмотр документов"
+                                                Tag="DockViewer" />
                                         </TreeViewItem>
                                     </TreeViewItem>
                                 </TreeView>

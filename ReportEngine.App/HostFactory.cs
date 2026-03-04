@@ -224,5 +224,6 @@ public class HostFactory
         services.AddTransient<NotifyWindow>();
         services.AddTransient<CommonSettings>();
         services.AddTransient<ConnectionSettings>();
+        services.AddTransient<DockViewerView>();
     }
 }
