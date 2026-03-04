@@ -12,6 +12,9 @@ namespace ReportEngine.App.Views.Controls;
 public partial class TreeProjectView : UserControl, IDisposable
 {
     private readonly Dictionary<string, Action> _tagActionMap;
+    private readonly Dictionary<string, Action> _tagCalculateMap;
+
+
 
     private readonly ProjectViewModel _projectViewModel;
     private bool _disposed;
@@ -23,19 +26,22 @@ public partial class TreeProjectView : UserControl, IDisposable
         DataContext = projectViewModel;
 
         _tagActionMap = new Dictionary<string, Action>
-            {
-                { "CalculateProject", () => _projectViewModel.OnCalculateProjectCommandExecuted(null) },
-                { "UpdateAllProps", () => _projectViewModel.OnUpdateStandsAfterEquipsCommandExecuted(null) },
-                { "SummaryReport", () => _projectViewModel.OnCreateSummaryReportCommandExecuted(null) },
-                { "ComponentsList", () => _projectViewModel.OnComponentsListReportCommandExecuted(null) },
-                { "NamePlates", () => _projectViewModel.OnCreateNameplatesReportCommandExecuted(null) },
-                { "MarksReport", () => _projectViewModel.OnCreateMarksReportCommandExecuted(null) },
-                { "ProductionList", () => _projectViewModel.OnCreateProductionReportCommandExecuted(null) },
-                { "FinPlan", () => _projectViewModel.OnCreateFinplanReportCommandExecuted(null) },
-                { "ContainersReport", () => _projectViewModel.OnCreateContainerReportCommandExecuted(null) },
-                { "Passport", () => _projectViewModel.OnCreatePassportReportCommandExecuted(null) },
-                { "TechCards", () => _projectViewModel.OnCreateTechnologicalCardsCommandExecute(null) }
-            };
+        {
+            { "SummaryReport", () => _projectViewModel.OnCreateSummaryReportCommandExecuted(null) },
+            { "ComponentsList", () => _projectViewModel.OnComponentsListReportCommandExecuted(null) },
+            { "NamePlates", () => _projectViewModel.OnCreateNameplatesReportCommandExecuted(null) },
+            { "MarksReport", () => _projectViewModel.OnCreateMarksReportCommandExecuted(null) },
+            { "ProductionList", () => _projectViewModel.OnCreateProductionReportCommandExecuted(null) },
+            { "FinPlan", () => _projectViewModel.OnCreateFinplanReportCommandExecuted(null) },
+            { "ContainersReport", () => _projectViewModel.OnCreateContainerReportCommandExecuted(null) },
+            { "Passport", () => _projectViewModel.OnCreatePassportReportCommandExecuted(null) },
+            { "TechCards", () => _projectViewModel.OnCreateTechnologicalCardsCommandExecute(null) }
+        };
+        _tagCalculateMap = new Dictionary<string, Action>
+        {
+            { "CalculateProject", () => _projectViewModel.OnCalculateProjectCommandExecuted(null) },
+            { "UpdateAllProps", () => _projectViewModel.OnUpdateStandsAfterEquipsCommandExecuted(null) },
+        };
     }
 
     public void Dispose()
@@ -115,7 +121,7 @@ public partial class TreeProjectView : UserControl, IDisposable
         try
         {
             if (string.IsNullOrEmpty(tag))
-                return null;   
+                return null;
 
             return tag switch
             {
@@ -125,7 +131,7 @@ public partial class TreeProjectView : UserControl, IDisposable
                 //"FrameDrainages" => ApplyAnimation(new FrameDrainagesView(_projectViewModel)),
                 "ProjectPreview" => ApplyAnimation(new ProjectPreview(_projectViewModel)),
                 "StandsContainer" => ApplyAnimation(new StandsContainerView(_projectViewModel)),
-                "DockViewer" => new DockViewerView()
+                "DockViewer" => ApplyAnimation(new DockViewerView(new DockViewerViewModel()))
             };
 
         }
@@ -204,6 +210,17 @@ public partial class TreeProjectView : UserControl, IDisposable
         if (ReportTree.SelectedItem is TreeViewItem treeViewItem && treeViewItem.Tag is string tag)
         {
             if (_tagActionMap.TryGetValue(tag, out var action))
+            {
+                action();
+            }
+        }
+    }
+
+    private async void CalculateTree_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (CalculateTree.SelectedItem is TreeViewItem treeViewItem && treeViewItem.Tag is string tag)
+        {
+            if (_tagCalculateMap.TryGetValue(tag, out var action))
             {
                 action();
             }

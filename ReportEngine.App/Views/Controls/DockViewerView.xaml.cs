@@ -2,6 +2,8 @@
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
+using ReportEngine.App.ViewModels;
+using ReportEngine.App.Views.Windows.Dialog;
 
 namespace ReportEngine.App.Views.Controls
 {
@@ -10,25 +12,17 @@ namespace ReportEngine.App.Views.Controls
     /// </summary>
     public partial class DockViewerView : UserControl
     {
-        private string _currentFilePath;
+        private DockViewerViewModel _viewModel;
 
-        public DockViewerView()
+        public DockViewerView(DockViewerViewModel viewModel)
         {
             InitializeComponent();
-        }
+            _viewModel = viewModel;
 
-        private void OpenButton_Click(object sender, RoutedEventArgs e)
-        {
-            var dialog = new OpenFileDialog
-            {
-                Filter = "Excel Files (*.xlsx)|*.xlsx"
-            };
+            DataContext = _viewModel;
 
-            if (dialog.ShowDialog() == true)
-            {
-                _currentFilePath = dialog.FileName;
-                OpenFile(_currentFilePath);
-            }
+            _viewModel.OnFileOpenRequested += OpenFile;
+            _viewModel.OnFileSaveRequested += SaveFile;
         }
 
         private void OpenFile(string path)
@@ -36,32 +30,6 @@ namespace ReportEngine.App.Views.Controls
             using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
                 MainSreadSheet.Open(stream);
-            }
-        }
-
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (string.IsNullOrEmpty(_currentFilePath))
-            {
-                SaveAs();
-            }
-            else
-            {
-                SaveFile(_currentFilePath);
-            }
-        }
-
-        private void SaveAs()
-        {
-            var dialog = new SaveFileDialog
-            {
-                Filter = "Excel Files (*.xlsx)|*.xlsx"
-            };
-
-            if (dialog.ShowDialog() == true)
-            {
-                _currentFilePath = dialog.FileName;
-                SaveFile(_currentFilePath);
             }
         }
 

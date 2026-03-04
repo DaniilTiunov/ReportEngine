@@ -9,28 +9,44 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <DockPanel>
 
-        <Spreadsheet:SfSpreadsheet x:Name="MainSreadSheet" Grid.Row="0" />
+        <!--  Верхняя панель  -->
+        <Border
+            Padding="8"
+            Background="{DynamicResource SecondaryColor}"
+            DockPanel.Dock="Top">
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal">
 
-            <Button
-                Height="40"
+                <Button
+                    Width="120"
+                    Margin="4"
+                    Command="{Binding OpenCommand}"
+                    Content="📂 Открыть" />
+
+                <Button
+                    Width="120"
+                    Margin="4"
+                    Command="{Binding SaveCommand}"
+                    Content="💾 Сохранить" />
+
+            </StackPanel>
+        </Border>
+
+        <!--  Нижний статусбар  -->
+        <StatusBar DockPanel.Dock="Bottom">
+            <TextBlock Text="Готово" />
+        </StatusBar>
+
+        <!--  Основная область  -->
+        <Grid Background="{DynamicResource PrimaryColor}">
+            <Spreadsheet:SfSpreadsheet
+                x:Name="MainSreadSheet"
                 Margin="5"
-                Click="OpenButton_Click"
-                Content="Открыть"
-                FontSize="16" />
-            <Button
-                Height="40"
-                Margin="5"
-                Click="SaveButton_Click"
-                Content="Сохранить"
-                FontSize="16" />
-        </StackPanel>
-    </Grid>
+                Background="{DynamicResource PrimaryColor}"
+                BorderBrush="{DynamicResource SecondaryColor}" />
+        </Grid>
+
+    </DockPanel>
 </UserControl>

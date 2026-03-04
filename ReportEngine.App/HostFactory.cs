@@ -185,6 +185,7 @@ public class HostFactory
         services.AddScoped<StandCopyViewModel>();
         services.AddScoped<GenericRepository>();
         services.AddScoped(typeof(GenericEquipViewModel<>));
+        services.AddScoped<DockViewerViewModel>();
     }
 
     private static void ConfigureViews(IServiceCollection services)
