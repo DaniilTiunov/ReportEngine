@@ -366,7 +366,7 @@ public static class ExcelReportHelper
                Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
                CostPerUnit = new ValidatedField<float?>(group.costPerUnit, group.costPerUnit.HasValue),
            })
-            .Select(record =>
+           .Select(record =>
             {
                 record.CommonCost = new ValidatedField<float?>(
                    record.Quantity.Value * record.CostPerUnit.Value,
@@ -374,17 +374,24 @@ public static class ExcelReportHelper
 
                 return record;
             })
-            .Except(sensorsHolders);
+            .Except(sensorsHolders)
+            .ToList();
 
-        var othersParts = additionalParts
+
+
+        var othersParts = new List<EquipmentRecord?>(additionalParts
             .Where(part => part.Name.Value != null)
-            .Where(part => part.Name.Value.Contains("Шильдик") || part.Name.Value.Contains("Табличка")) //тоже сомнительно
-            .ToList();
+            .Where(part => part.Name.Value.Contains("Шильдик") || part.Name.Value.Contains("Табличка")))
+            .ToList(); // сомнительно, но окэй
+   
 
-        var supplies = additionalParts
+        
+
+        var supplies =
+            additionalParts
             .Except(othersParts)
-            .ToList();
-
+            .ToList(); 
+        
 
         return new PartsStandsData
         {
@@ -609,14 +616,14 @@ public static class ExcelReportHelper
 
         return new LaborStandsData
         {
-            frameProduction = frameProductionRecord,
-            obvProduction = obvProductionRecord,
-            collectorProduction = collectorProductionRecord,
-            qualityTests = qualityTestRecord,
-            sandblasting = sandblastingRecord,
-            paintingWorks = paintingRecord,
-            electricalWorks = electricRecord,
-            commonStandCheck = commonCheckRecord
+            FrameProduction = frameProductionRecord,
+            ObvProduction = obvProductionRecord,
+            CollectorProduction = collectorProductionRecord,
+            QualityTests = qualityTestRecord,
+            Sandblasting = sandblastingRecord,
+            PaintingWorks = paintingRecord,
+            ElectricalWorks = electricRecord,
+            CommonStandCheck = commonCheckRecord
         };
 
 

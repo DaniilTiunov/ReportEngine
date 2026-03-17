@@ -1,11 +1,11 @@
 ﻿namespace ReportEngine.Export.DTO;
 
-public struct SensorRecordData
+public class SensorRecordData
 {
-    public string SensorKKS;
-    public string SensorDescription;
-    public string SensorMarkPlus;
-    public string SensorMarkMinus;
+    public string? SensorKKS;
+    public string? SensorDescription;
+    public string? SensorMarkPlus;
+    public string? SensorMarkMinus;
 
     public SensorRecordData(string sensorKKS, string sensorDescription, string sensorMarkPlus, string sensorMarkMinus)
     {
@@ -18,49 +18,49 @@ public struct SensorRecordData
 
 public class PartsStandsData
 {
-    public List<EquipmentRecord?>? PipesList { get; set; }
-    public List<EquipmentRecord?>? ArmaturesList { get; set; }
-    public List<EquipmentRecord?>? TreeList { get; set; }
-    public List<EquipmentRecord?>? KmchList { get; set; }
-    public List<EquipmentRecord?>? DrainageParts { get; set; }
-    public List<EquipmentRecord?>? FramesList { get; set; }
-    public List<EquipmentRecord?>? SensorsHolders { get; set; }
-    public List<EquipmentRecord?>? ElectricalParts { get; set; }
-    public List<EquipmentRecord?>? OthersParts { get; set; }
-    public List<EquipmentRecord?>? Supplies { get; set; }
+    public List<EquipmentRecord?> PipesList { get; set; } = new List<EquipmentRecord?>();
+    public List<EquipmentRecord?> ArmaturesList { get; set; } = new List<EquipmentRecord?>();
+    public List<EquipmentRecord?>TreeList { get; set; } = new List<EquipmentRecord?>();
+    public List<EquipmentRecord?> KmchList { get; set; } = new List<EquipmentRecord?>();
+    public List<EquipmentRecord?> DrainageParts { get; set; } = new List<EquipmentRecord?>();
+    public List<EquipmentRecord?> FramesList { get; set; } = new List<EquipmentRecord?>();
+    public List<EquipmentRecord?> SensorsHolders { get; set; } = new List<EquipmentRecord?>();
+    public List<EquipmentRecord?> ElectricalParts { get; set; } = new List<EquipmentRecord?>();
+    public List<EquipmentRecord?> OthersParts { get; set; } = new List<EquipmentRecord?>();
+    public List<EquipmentRecord?> Supplies { get; set; } = new List<EquipmentRecord?>();
 }
 
 
 public class LaborStandsData
 {
-    public EquipmentRecord? frameProduction { get; set; }
-    public EquipmentRecord? obvProduction { get; set; }
-    public EquipmentRecord? collectorProduction { get; set; }
-    public EquipmentRecord? qualityTests { get; set; }
-    public EquipmentRecord? sandblasting { get; set; }
-    public EquipmentRecord? paintingWorks { get; set; }
-    public EquipmentRecord? electricalWorks { get; set; }
-    public EquipmentRecord? commonStandCheck { get; set; }
+    public EquipmentRecord? FrameProduction { get; set; }
+    public EquipmentRecord? ObvProduction { get; set; }
+    public EquipmentRecord? CollectorProduction { get; set; }
+    public EquipmentRecord? QualityTests { get; set; }
+    public EquipmentRecord? Sandblasting { get; set; }
+    public EquipmentRecord? PaintingWorks { get; set; }
+    public EquipmentRecord? ElectricalWorks { get; set; }
+    public EquipmentRecord? CommonStandCheck { get; set; }
 }
 
 public class EquipmentRecord
 {
-    public ValidatedField<int?>? ExportDays { get; set; }
-    public ValidatedField<string?>? Name { get; set; }
-    public ValidatedField<string?>? Unit { get; set; }
-    public ValidatedField<float?>? Quantity { get; set; }
-    public ValidatedField<float?>? CostPerUnit { get; set; }
-    public ValidatedField<float?>? CommonCost { get; set; }
+    public ValidatedField<int?> ExportDays { get; set; }
+    public ValidatedField<string?> Name { get; set; }
+    public ValidatedField<string?> Unit { get; set; }
+    public ValidatedField<float?> Quantity { get; set; }
+    public ValidatedField<float?> CostPerUnit { get; set; }
+    public ValidatedField<float?> CommonCost { get; set; }
 }
 
 public class StandInfoData
 {
-    public ValidatedField<string?>? Name { get; set; }
-    public ValidatedField<string?>? KKS { get; set; }
-    public ValidatedField<string?>? SerialNumber { get; set; }
+    public ValidatedField<string?> Name { get; set; }
+    public ValidatedField<string?> KKS { get; set; }
+    public ValidatedField<string?> SerialNumber { get; set; }
 }
 
-public class ValidatedField<T>
+public struct ValidatedField<T>
 {
     public T Value { get; set; }
     public bool IsValid { get; set; }
