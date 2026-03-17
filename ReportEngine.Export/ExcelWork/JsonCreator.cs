@@ -124,9 +124,9 @@ namespace ReportEngine.Export.ExcelWork
         {
             return new PartRecordJsonObject
             {
-                Name = record?.Name?.Value,
-                Unit = record?.Unit?.Value,
-                Quantity = record?.Quantity?.Value
+                Name = record?.Name.Value,
+                Unit = record?.Unit.Value,
+                Quantity = record?.Quantity.Value
             };
         }
 

@@ -483,7 +483,7 @@ public class SummaryReportGenerator : IReportGenerator
                 foreach (var part in tempList)
                 {
 
-                    var sraka = new EquipmentRecord
+                    var record = new EquipmentRecord
                     {
                         Name = part.Name,
                         Quantity = part.Quantity,
@@ -493,7 +493,7 @@ public class SummaryReportGenerator : IReportGenerator
                         ExportDays = new ValidatedField<int?>(null, false)
                     };
 
-                    recordList.Add(sraka);
+                    recordList.Add(record);
                 }
             }
             ;
