@@ -1,9 +1,6 @@
 ﻿using ReportEngine.Domain.Entities;
 using ReportEngine.Export.DTO;
 using ReportEngine.Shared.Config.IniHelpers;
-using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
-using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
-using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.Export.ExcelWork;
 
@@ -197,7 +194,7 @@ public static class ExcelReportHelper
                Name = new ValidatedField<string?>(group.name, group.name != null),
                Unit = new ValidatedField<string?>(group.unit, group.unit != null),
                Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
-               CostPerUnit = new ValidatedField<float?>(TryToParseFloat(group.costPerUnit ?? "")  , group.costPerUnit != null),
+               CostPerUnit = new ValidatedField<float?>(TryToParseFloat(group.costPerUnit ?? ""), group.costPerUnit != null),
            })
             .Select(record =>
             {
@@ -467,9 +464,9 @@ public static class ExcelReportHelper
         //кол-во отверстий в коллекторе = сумма дренажных линий в каждой обвязке стенда + 1
 
 
-        
 
-        
+
+
         //отфильтровываем стенды где есть коллектор
         var standsWithCollector = stands
             .Where(stand =>
@@ -478,30 +475,39 @@ public static class ExcelReportHelper
                 return standDrainagesPurposes.Any(drainagePurpose => drainagePurpose.Purpose == "Основная труба" && !string.IsNullOrEmpty(drainagePurpose.Material));
             });
 
+        var standsWithCollectorExists = standsWithCollector.Any();
+
         //если такие есть - считаем трудозатраты для них
-        double? collectorProductionHumanCostSum = 0;
-        
-        if (standsWithCollector.Any())
+        double? collectorProductionHumanCostSum = null;
+
+        if (standsWithCollectorExists)
         {
-            collectorProductionHumanCostSum =  standsWithCollector
+            collectorProductionHumanCostSum = standsWithCollector
             .Select(stand => stand.ObvyazkiInStand.Sum(obv => obv.OtherLineCount) + 1)
             .Select(standHolesCount => humanCostSettings?.TimeForOneDrill * standHolesCount)
             .Select(drillHumanCost => drillHumanCost + humanCostSettings?.TimeForCollectorBoil)
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
         }
-            
 
-        var collectorProductionRecord = new EquipmentRecord
-        {
-            ExportDays = new ValidatedField<int?>(null, true),
-            Name = new ValidatedField<string?>("Изготовление коллектора", true),
-            Unit = new ValidatedField<string?>("чел/час", true),
-            Quantity = new ValidatedField<float?>((float?)collectorProductionHumanCostSum, collectorProductionHumanCostSum.HasValue),
-            CostPerUnit = new ValidatedField<float?>((float?)humanCostSettings?.CollectorProduction, (humanCostSettings?.CollectorProduction != null)),
-            CommonCost = new ValidatedField<float?>(
-                (float?)(collectorProductionHumanCostSum * humanCostSettings?.CollectorProduction),
-                (collectorProductionHumanCostSum * humanCostSettings?.CollectorProduction) != null)
-        };
+        EquipmentRecord? collectorProductionRecord = standsWithCollectorExists ?
+            new EquipmentRecord
+            {
+                ExportDays = new ValidatedField<int?>(null, true),
+
+                Name = new ValidatedField<string?>("Изготовление коллектора", true),
+
+                Unit = new ValidatedField<string?>("чел/час", true),
+
+                Quantity = new ValidatedField<float?>((float?)collectorProductionHumanCostSum,
+                                                        collectorProductionHumanCostSum.HasValue),
+
+                CostPerUnit = new ValidatedField<float?>((float?)humanCostSettings?.CollectorProduction,
+                                                    (humanCostSettings?.CollectorProduction != null)),
+
+                CommonCost = new ValidatedField<float?>((float?)(collectorProductionHumanCostSum * humanCostSettings?.CollectorProduction),
+                                                            (collectorProductionHumanCostSum * humanCostSettings?.CollectorProduction) != null)
+            }
+            : null;
 
 
 
@@ -510,7 +516,7 @@ public static class ExcelReportHelper
         var testsHumanCostSum = stands
               .Select(stand => humanCostSettings?.TimeForAllChecks * stand.ObvyazkiInStand.Count)
               .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
-  
+
 
         var qualityTestRecord = new EquipmentRecord
         {
@@ -551,7 +557,7 @@ public static class ExcelReportHelper
         var paintingHumanCostSum = stands
           .Select(_ => (frameSettings?.TimeForPaintFrame + frameSettings?.TimeForPaintObv))
           .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
-        
+
         var paintingRecord = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
