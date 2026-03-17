@@ -171,6 +171,37 @@ public static class ProjectCommandsInitializer
 
         vm.ProjectCommandProvider.RenumerateObvInStandCommand =
             new RelayCommand(vm.OnRenumerateObvInStandAsyncCommandExecuted, vm.CanAllCommandsExecute);
+
+
+
+
+        vm.ProjectCommandProvider.SelectedSummaryReportCommand =
+            new RelayCommand(vm.OnCreateSelectedSummaryReportCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.SelectedComponentReportCommand =
+            new RelayCommand(vm.OnSelectedComponentsListReportCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.SelectedNamePlatesReportCommand =
+            new RelayCommand(vm.OnCreateSelectedNameplatesReportCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.SelectedMarksReportCommand =
+            new RelayCommand(vm.OnSelectedCreateMarksReportCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.SelectedContainerReportCommand =
+            new RelayCommand(vm.OnSelectedCreateContainerReportCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.SelectedProductionReportCommand =
+            new RelayCommand(vm.OnCreateSelectedProductionReportCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.SelectedFinPlaneReportCommand =
+            new RelayCommand(vm.OnCreateSelectedFinplanReportCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.SelectedPassportReportCommand =
+            new RelayCommand(vm.OnCreateSelectedPassportReportCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.SelectedTechnoCardsReportCommand =
+            new RelayCommand(vm.OnCreateSelectedTechnologicalCardsCommandExecute, vm.CanAllCommandsExecute);
+
     }
 
     public static void InitializeGenericCommands(ProjectViewModel vm)

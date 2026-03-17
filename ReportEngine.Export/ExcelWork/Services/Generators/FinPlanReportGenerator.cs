@@ -86,6 +86,70 @@ public class FinPlanReportGenerator : IReportGenerator
         }
     }
 
+    public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
+    {
+        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+
+        using (var wb = new XLWorkbook())
+        {
+            const string sellCostWorksheetName = "Стоимость продажи";
+            const string extraChargeWorksheetName = "Наценка";
+
+            wb.Worksheets.Add(sellCostWorksheetName);
+            wb.Worksheets.Add(extraChargeWorksheetName);
+
+            var activeRow = 1;
+
+            foreach (var ws in wb.Worksheets)
+            {
+                activeRow = 1;
+
+                activeRow = CreateHeader(activeRow, "Финансовый план СТЕНДЫ", ws);
+                activeRow++;
+
+                //заполняем информацию о проекте
+                activeRow = CreateProjectInformationTable(ws, project, activeRow);
+                activeRow++;
+
+                //заполняем таблицу себестоимости
+                activeRow = CreateHeader(activeRow, "Себестоимость", ws);
+                (activeRow, var totalRange, var summaryRange) = await CreateSelfcostTable(ws, project, activeRow);
+
+                activeRow += 2;
+
+                //заполняем таблицу рентабельности
+                activeRow = CreateHeader(activeRow, "Стоимость продажи и рентабельность", ws);
+
+                switch (ws.Name)
+                {
+                    case sellCostWorksheetName:
+                        CreateSellcostRentTable(ws, project, activeRow, totalRange, summaryRange);
+                        break;
+
+                    case extraChargeWorksheetName:
+                        CreateExtraChargeRentTable(ws, project, activeRow, totalRange, summaryRange);
+                        break;
+
+                    default:
+                        break;
+                }
+
+                ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+                ws.Cells().Style.Alignment.WrapText = true;
+                ws.Columns().AdjustToContents();
+            }
+
+            var savePath = SettingsManager.GetReportDirectory();
+
+            var fileName = ExcelReportHelper.CreateReportName("Финплан", "xlsx");
+            var fullSavePath = Path.Combine(savePath, fileName);
+
+            wb.SaveAs(fullSavePath);
+        }
+    }
+
     #region Вспомогательные
 
     private IXLRange PasteRecord(int row, EquipmentRecord record, IXLWorksheet ws)
