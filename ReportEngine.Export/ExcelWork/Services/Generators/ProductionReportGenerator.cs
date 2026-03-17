@@ -52,6 +52,38 @@ public class ProductionReportGenerator : IReportGenerator
         }
     }
 
+    public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
+    {
+        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+
+        using (var wb = new XLWorkbook())
+        {
+            var ws = wb.Worksheets.Add("Ведомость");
+
+            var activeRow = CreateCommonHeader(ws, project);
+
+            activeRow = CreateStandTableHeader(ws, project, activeRow);
+            activeRow = FillStandsTable(ws, project, activeRow);
+
+            activeRow = CreateEquipmentTableHeader(ws, project, activeRow);
+            activeRow = FillEquipmentTable(ws, project, activeRow);
+
+            ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+            ws.Cells().Style.Alignment.WrapText = true;
+            ws.Columns().AdjustToContents();
+
+            var savePath = SettingsManager.GetReportDirectory();
+
+            var fileName = ExcelReportHelper.CreateReportName("Отчет по производству", "xlsx");
+            var fullSavePath = Path.Combine(savePath, fileName);
+
+            Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
+            wb.SaveAs(fullSavePath);
+        }
+    }
+
     #region Заголовки
 
     //создание общего заголовка

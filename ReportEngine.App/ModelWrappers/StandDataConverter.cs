@@ -61,28 +61,33 @@ public static class StandDataConverter
             StandAdditionalEquips = model.AdditionalEquipsInStand
                 .Select(equip => new StandAdditionalEquip
                 {
-                    AdditionalEquipId = equip.Id
+                    AdditionalEquipId = equip.Id,
+                    AdditionalEquip = equip is FormedAdditionalEquip fae ? fae : null
                 })
                 .ToList(),
 
             StandElectricalComponent = model.ElectricalComponentsInStand
                 .Select(equip => new StandElectricalComponent
                 {
-                    ElectricalComponentId = equip.Id
+                    ElectricalComponentId = equip.Id,
+                    ElectricalComponent = equip is FormedElectricalComponent fe ? fe : null
                 })
                 .ToList(),
 
             StandDrainages = model.DrainagesInStand
                 .Select(equip => new StandDrainage
                 {
-                    DrainageId = equip.Id
+                    DrainageId = equip.Id,
+                    Drainage = equip is FormedDrainage fd ? fd : null
                 }).ToList(),
 
             StandFrames = model.FramesInStand
                 .Select(equip => new StandFrame
                 {
-                    FrameId = equip.Id
-                }).ToList()
+                    FrameId = equip.Id,
+                    Frame = equip is FormedFrame fd ? fd : null
+
+                }).ToList()          
         };
     }
 }

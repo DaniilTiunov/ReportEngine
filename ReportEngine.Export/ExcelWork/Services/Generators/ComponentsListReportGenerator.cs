@@ -64,6 +64,49 @@ public class ComponentListReportGenerator : IReportGenerator
         }
     }
 
+    public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
+    {
+        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+
+        using (var wb = new XLWorkbook())
+        {
+            var standNumber = 1;
+
+            //заполняем листы по стендам
+            foreach (var stand in selectedStands)
+            {
+                var ws = wb.Worksheets.Add($"{standNumber}");
+
+                CreateStandTableHeader(ws, stand);
+                FillStandTable(ws, stand);
+
+                standNumber++;
+            }
+
+            //заполняем сводную ведомость
+            var lastSheet = wb.Worksheets.Add("Сводная заявка");
+
+            CreateCommonListTableHeader(lastSheet, project);
+            FillCommonListTable(lastSheet, project);
+
+            //применяем оформление ко всему документу
+            foreach (var ws in wb.Worksheets)
+            {
+                ws.Cells().Style.Font.FontName = "Times New Roman";
+                ws.Cells().Style.Alignment.WrapText = true;
+                ws.Columns().AdjustToContents();
+                ws.Rows().AdjustToContents();
+            }
+
+            var savePath = SettingsManager.GetReportDirectory();
+            var fileName = ExcelReportHelper.CreateReportName("Ведомость комплектующих", "xlsx");
+            var fullSavePath = Path.Combine(savePath, fileName);
+
+            Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
+            wb.SaveAs(fullSavePath);
+        }
+    }
+
     #region Вспомогательные
 
     //валидация и вывод в таблицу

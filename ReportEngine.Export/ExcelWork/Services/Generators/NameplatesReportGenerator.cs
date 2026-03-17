@@ -48,6 +48,35 @@ public class NameplatesReportGenerator : IReportGenerator
         }
     }
 
+    public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
+    {
+        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+
+        using (var wb = new XLWorkbook())
+        {
+            wb.Worksheets.ToList().ForEach(ws => ws.Delete());
+
+            var ws = wb.Worksheets.Add("Лист1");
+
+            var maxTablesQuantity = FillWorksheetTable(ws, project);
+            CreateWorksheetTableHeader(ws, maxTablesQuantity);
+
+            ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+            ws.Columns().AdjustToContents();
+            ws.Cells().Style.Alignment.WrapText = true;
+
+            var savePath = SettingsManager.GetReportDirectory();
+            var fileName = ExcelReportHelper.CreateReportName("Ведомость шильдиков и табличек", "xlsx");
+
+            var fullSavePath = Path.Combine(savePath, fileName);
+
+            Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
+            wb.SaveAs(fullSavePath);
+        }
+    }
+
     private void CreateWorksheetTableHeader(IXLWorksheet ws, int maxTablesQuantity)
     {
         const int headerRow = 1;

@@ -23,7 +23,7 @@ public class ProjectCommandProvider
     public ICommand CalculateProjectCommand { get; set; }
     public ICommand CreateComponentsListReportCommand { get; set; }
     public ICommand CreateSummaryReportCommand { get; set; }
-    public ICommand OpenAllSortamentsDialogCommand { get; set; } // Новая команда для открытия окна ассортиментов
+    public ICommand OpenAllSortamentsDialogCommand { get; set; }
     public ICommand DeleteSelectedStandCommand { get; set; }
     public ICommand CreateMarkReportCommand { get; set; }
     public ICommand CreateMarkReportAsyncCommand { get; set; }
@@ -65,9 +65,18 @@ public class ProjectCommandProvider
     public ICommand FillObvFieldsTiEditCommand { get; set; }
     public ICommand DeleteAdditionalEquipFromObvCommand {  get; set; }
     public ICommand UpdateAdditionalEquipFromObvCommand { get; set; }
-
     public ICommand AdditionalTestCommand { get; set;  }
     public ICommand SaveAllChangesInComponentsCommand {  get; set; }
-
     public ICommand RenumerateObvInStandCommand { get; set; }
+
+    // Команды по отчтам выбранных стендов
+    public ICommand SelectedSummaryReportCommand { get; set; }
+    public ICommand SelectedComponentReportCommand { get; set; }
+    public ICommand SelectedMarksReportCommand { get; set; }
+    public ICommand SelectedNamePlatesReportCommand { get; set; }
+    public ICommand SelectedContainerReportCommand { get; set; }
+    public ICommand SelectedProductionReportCommand { get; set; }
+    public ICommand SelectedFinPlaneReportCommand { get; set; }
+    public ICommand SelectedPassportReportCommand { get; set; }
+    public ICommand SelectedTechnoCardsReportCommand { get; set; }
 }
