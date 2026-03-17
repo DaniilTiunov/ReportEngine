@@ -10,9 +10,16 @@ namespace ReportEngine.Export.ExcelWork
     public static class JsonCreator
     {
         //создание JSON объекта проекта
-        public static ProjectJsonObject CreateProjectJson(ProjectInfo project)
+        public static ProjectJsonObject CreateProjectJson(ProjectInfo project, List<Stand>? selectedStands = null)
         {
             var standSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
+
+            var sourceData = project.Stands;
+
+            if(selectedStands != null)
+            {
+                sourceData = selectedStands;
+            }
 
             return new ProjectJsonObject
             {
@@ -40,7 +47,7 @@ namespace ReportEngine.Export.ExcelWork
                 IsGalvanized = project.IsGalvanized,
                 HumanCost = project.HumanCost,
                 Manager = project.Manager,
-                Stands = project.Stands.Select(stand => CreateStandJson(stand)).ToList()
+                Stands = sourceData.Select(CreateStandJson).ToList()
             };
         }
 
