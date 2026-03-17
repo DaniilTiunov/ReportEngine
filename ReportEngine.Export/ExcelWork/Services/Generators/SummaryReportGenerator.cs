@@ -110,19 +110,20 @@ public class SummaryReportGenerator : IReportGenerator
     #region Вспомогательные
 
     //валидация и вывод в таблицу
-    private void PasteRecord(int row, EquipmentRecord record, IXLWorksheet ws)
-    {
-        ws.Cell($"A{row}").Value = record.ExportDays.Value?.ToString();
+    private void PasteRecord(int row, EquipmentRecord? record, IXLWorksheet ws)
+    {  
 
-        ws.Cell($"B{row}").Value = record.Name.Value?.ToString();
+        ws.Cell($"A{row}").Value = record?.ExportDays.Value?.ToString();
 
-        ws.Cell($"C{row}").Value = record.Unit.Value?.ToString();
+        ws.Cell($"B{row}").Value = record?.Name.Value?.ToString();
 
-        ws.Cell($"D{row}").Value = record.Quantity.Value?.Round(1).ToString();
+        ws.Cell($"C{row}").Value = record?.Unit.Value?.ToString();
 
-        ws.Cell($"E{row}").Value = record.CostPerUnit.Value?.ToString();
+        ws.Cell($"D{row}").Value = record?.Quantity.Value?.Round(2).ToString();
 
-        ws.Cell($"F{row}").Value = record.CommonCost.Value.Ceiling().ToString();
+        ws.Cell($"E{row}").Value = record?.CostPerUnit.Value?.ToString();
+
+        ws.Cell($"F{row}").Value = record?.CommonCost.Value.Ceiling().ToString();
 
         //if (!record.ExportDays.IsValid)
         //{
@@ -317,12 +318,15 @@ public class SummaryReportGenerator : IReportGenerator
     #region Заполнители
 
     //Заполняет подтаблицу и возвращает следующую строку
-    private int FillSubtableData(int startRow, List<EquipmentRecord> items, IXLWorksheet ws)
+    private int FillSubtableData(int startRow, List<EquipmentRecord?> items, IXLWorksheet ws)
     {
         var currentRow = startRow;
 
         foreach (var item in items)
         {
+            if (item == null)
+                continue;
+
             PasteRecord(currentRow, item, ws);
 
             ws.Cell($"A{currentRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
