@@ -87,7 +87,7 @@ public class ComponentListReportGenerator : IReportGenerator
             var lastSheet = wb.Worksheets.Add("Сводная заявка");
 
             CreateCommonListTableHeader(lastSheet, project);
-            FillCommonListTable(lastSheet, project);
+            FillCommonListTable(lastSheet, project, selectedStands);
 
             //применяем оформление ко всему документу
             foreach (var ws in wb.Worksheets)
@@ -238,9 +238,14 @@ public class ComponentListReportGenerator : IReportGenerator
     }
 
     //создание сводной ведомости
-    private void FillCommonListTable(IXLWorksheet ws, ProjectInfo project)
+    private void FillCommonListTable(IXLWorksheet ws, ProjectInfo project, List<Stand>? selectedStands = null)
     {
         var generatedData = ExcelReportHelper.GeneratePartsData(project.Stands);
+
+        if(selectedStands != null)
+        {
+            generatedData = ExcelReportHelper.GeneratePartsData(selectedStands);
+        }
 
         var activeRow = 4;
 

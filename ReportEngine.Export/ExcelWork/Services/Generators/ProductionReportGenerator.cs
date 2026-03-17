@@ -63,10 +63,10 @@ public class ProductionReportGenerator : IReportGenerator
             var activeRow = CreateCommonHeader(ws, project);
 
             activeRow = CreateStandTableHeader(ws, project, activeRow);
-            activeRow = FillStandsTable(ws, project, activeRow);
+            activeRow = FillStandsTable(ws, project, activeRow, selectedStands);
 
             activeRow = CreateEquipmentTableHeader(ws, project, activeRow);
-            activeRow = FillEquipmentTable(ws, project, activeRow);
+            activeRow = FillEquipmentTable(ws, project, activeRow, selectedStands);
 
             ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
@@ -183,12 +183,19 @@ public class ProductionReportGenerator : IReportGenerator
     #region Заполнители
 
     //создание таблицы стендов
-    private int FillStandsTable(IXLWorksheet ws, ProjectInfo project, int startRow)
+    private int FillStandsTable(IXLWorksheet ws, ProjectInfo project, int startRow, List<Stand>? selectedStands = null)
     {
         var activeRow = startRow;
 
+        var sourceData = project.Stands;
+
+        if(selectedStands != null)
+        {
+            sourceData = selectedStands;
+        }
+
         //выводим стенды
-        var standsRecords = project.Stands.Select(stand => new StandInfoData
+        var standsRecords = sourceData.Select(stand => new StandInfoData
         {
             Name = new ValidatedField<string?>(stand.Design, true),
             KKS = new ValidatedField<string?>(stand.KKSCode, true),
@@ -222,11 +229,18 @@ public class ProductionReportGenerator : IReportGenerator
     }
 
     //создание сводной ведомости комплектующих
-    private int FillEquipmentTable(IXLWorksheet ws, ProjectInfo project, int startRow)
+    private int FillEquipmentTable(IXLWorksheet ws, ProjectInfo project, int startRow, List<Stand>? selectedStands = null)
     {
         var activeRow = startRow;
 
-        var generatedData = ExcelReportHelper.GeneratePartsData(project.Stands);
+        var sourceData = project.Stands;
+
+        if(selectedStands != null)
+        {
+            sourceData = selectedStands;
+        }
+
+        var generatedData = ExcelReportHelper.GeneratePartsData(sourceData);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
         activeRow = FillSubtableData(activeRow, generatedData.PipesList, ws);
