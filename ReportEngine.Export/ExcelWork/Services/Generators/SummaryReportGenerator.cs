@@ -118,7 +118,7 @@ public class SummaryReportGenerator : IReportGenerator
 
         ws.Cell($"C{row}").Value = record.Unit.Value?.ToString();
 
-        ws.Cell($"D{row}").Value = record.Quantity.Value?.Round(1).ToString();
+        ws.Cell($"D{row}").Value = record.Quantity.Value?.Round(2).ToString();
 
         ws.Cell($"E{row}").Value = record.CostPerUnit.Value?.ToString();
 

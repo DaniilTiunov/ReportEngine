@@ -420,9 +420,10 @@ public static class ExcelReportHelper
 
 
 
-        //трудозатраты на изготовление
+        //трудозатраты на изготовление рам
+        //константа из настроек * кол-во рам
         var frameProductionHumanCostSum = stands
-            .Select(_ => frameSettings?.TimeForProductionFrame)
+            .Select(stand => frameSettings?.TimeForProductionFrame * stand.StandFrames.Count)
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
         var frameProductionRecord = new EquipmentRecord
@@ -459,10 +460,36 @@ public static class ExcelReportHelper
 
 
 
+
+
         //трудозатраты на коллектор
-        var collectorProductionHumanCostSum = stands
-            .Select(_ => humanCostSettings?.TimeForCollectorBoil)
+        //=кол-во отверстий в коллекторе * трудозатраты на коллектор + трудозатраты
+        //кол-во отверстий в коллекторе = сумма дренажных линий в каждой обвязке стенда + 1
+
+
+        
+
+        
+        //отфильтровываем стенды где есть коллектор
+        var standsWithCollector = stands
+            .Where(stand =>
+            {
+                var standDrainagesPurposes = stand.StandDrainages.SelectMany(drainage => drainage.Drainage.Purposes);
+                return standDrainagesPurposes.Any(drainagePurpose => drainagePurpose.Purpose == "Основная труба" && !string.IsNullOrEmpty(drainagePurpose.Material));
+            });
+
+        //если такие есть - считаем трудозатраты для них
+        double? collectorProductionHumanCostSum = 0;
+        
+        if (standsWithCollector.Any())
+        {
+            collectorProductionHumanCostSum =  standsWithCollector
+            .Select(stand => stand.ObvyazkiInStand.Sum(obv => obv.OtherLineCount) + 1)
+            .Select(standHolesCount => humanCostSettings?.TimeForOneDrill * standHolesCount)
+            .Select(drillHumanCost => drillHumanCost + humanCostSettings?.TimeForCollectorBoil)
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
+        }
+            
 
         var collectorProductionRecord = new EquipmentRecord
         {
@@ -479,8 +506,9 @@ public static class ExcelReportHelper
 
 
         //трудозатраты на испытания
+        //время проведения всех испытаний * кол-во обвязок
         var testsHumanCostSum = stands
-              .Select(_ => humanCostSettings?.TimeForCheckStand)
+              .Select(stand => humanCostSettings?.TimeForAllChecks * stand.ObvyazkiInStand.Count)
               .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
   
 
@@ -499,6 +527,7 @@ public static class ExcelReportHelper
 
 
         //трудозатраты на пескоструйные работы
+        //везде константа из настроек
         var sandBlastingHumanCostSum = stands
             .Select(_ => sandblastSettings.TimeSandBlastWork)
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
@@ -518,6 +547,7 @@ public static class ExcelReportHelper
 
 
         //трудозатраты на покраску
+        //???
         var paintingHumanCostSum = stands
           .Select(_ => (frameSettings?.TimeForPaintFrame + frameSettings?.TimeForPaintObv))
           .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
@@ -535,6 +565,7 @@ public static class ExcelReportHelper
         };
 
         //трудозатраты на электромонтаж
+        //???
         var electricHumanCost = stands
             .Select(_ => electicalSettings?.TimeMontageCable + electicalSettings?.TimeMontageWire)
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
@@ -552,8 +583,9 @@ public static class ExcelReportHelper
         };
 
         //трудозатраты на общую проверку стенда
-        var commonHumanCost = stands
-            .Select(_ => humanCostSettings?.TimeForCheckStand)
+        //везде константа из настроек
+        var commonCheckHumanCost = stands
+            .Select(_ => humanCostSettings?.TimeForFinalWork)
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
         var commonCheckRecord = new EquipmentRecord
@@ -561,11 +593,11 @@ public static class ExcelReportHelper
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Общая проверка стенда", true),
             Unit = new ValidatedField<string?>("чел/час", true),
-            Quantity = new ValidatedField<float?>((float?)commonHumanCost, commonHumanCost.HasValue),
+            Quantity = new ValidatedField<float?>((float?)commonCheckHumanCost, commonCheckHumanCost.HasValue),
             CostPerUnit = new ValidatedField<float?>((float?)humanCostSettings?.CommonCheckStand, (humanCostSettings?.CommonCheckStand != null)),
             CommonCost = new ValidatedField<float?>(
-                (float?)(commonHumanCost * humanCostSettings?.CommonCheckStand),
-                (commonHumanCost * humanCostSettings?.CommonCheckStand) != null)
+                (float?)(commonCheckHumanCost * humanCostSettings?.CommonCheckStand),
+                (commonCheckHumanCost * humanCostSettings?.CommonCheckStand) != null)
         };
 
 
