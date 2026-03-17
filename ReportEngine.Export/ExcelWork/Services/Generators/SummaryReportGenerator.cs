@@ -129,7 +129,7 @@ public class SummaryReportGenerator : IReportGenerator
             // Сводная ведомость
             var summarySheet = wb.Worksheets.Add("Сводная заявка");
             CreateCommonListTableHeader(summarySheet, project);
-            await FillCommonListTable(summarySheet, project);
+            await FillCommonListTable(summarySheet, project, selectedStands);
 
             summarySheet.Columns().Style.Alignment.WrapText = false;
             summarySheet.Rows().Style.Alignment.WrapText = false;
@@ -139,7 +139,7 @@ public class SummaryReportGenerator : IReportGenerator
             // Калькуляция
             var calculationSheet = wb.Worksheets.Add("Калькуляция");
             CreateCalcullationTableHeader(calculationSheet, project);
-            await FillCalculationTable(calculationSheet, project);
+            await FillCalculationTable(calculationSheet, project, selectedStands);
 
             // Применяем оформление ко всему документу
             foreach (var ws in wb.Worksheets)
@@ -462,13 +462,18 @@ public class SummaryReportGenerator : IReportGenerator
     }
 
     //заполняет сводную ведомость
-    private async Task FillCommonListTable(IXLWorksheet ws, ProjectInfo project)
+    private async Task FillCommonListTable(IXLWorksheet ws, ProjectInfo project, List<Stand>? selectedStands = null)
     {
         var activeRow = 4;
 
         var containerBatches = _containerRepository.GetAllByProjectIdAsync(project.Id);
 
         var generatedPartsData = ExcelReportHelper.GeneratePartsData(project.Stands);
+
+        if(selectedStands != null)
+        {
+            generatedPartsData = ExcelReportHelper.GeneratePartsData(selectedStands);
+        }
 
         //принудительно обнуляем сроки поставки, они там не нужны (вроде)
         foreach (var property in generatedPartsData.GetType().GetProperties())
@@ -496,9 +501,7 @@ public class SummaryReportGenerator : IReportGenerator
                     recordList.Add(sraka);
                 }
             }
-            ;
         }
-
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
         activeRow = FillSubtableData(activeRow, generatedPartsData.PipesList, ws);
@@ -570,13 +573,20 @@ public class SummaryReportGenerator : IReportGenerator
     }
 
     //заполняет лист калькуляции
-    private async Task FillCalculationTable(IXLWorksheet ws, ProjectInfo project)
+    private async Task FillCalculationTable(IXLWorksheet ws, ProjectInfo project, List<Stand>? selectedStands = null)
     {
         var activeRow = 7;
 
         var containerBatches = _containerRepository.GetAllByProjectIdAsync(project.Id);
 
-        var standsRecords = project.Stands
+        var sourceStands = project.Stands;
+
+        if(selectedStands != null)
+        {
+            sourceStands = selectedStands;
+        }
+
+        var standsRecords = sourceStands
             .GroupBy(stand => stand.Design)
             .Select(group =>
             {

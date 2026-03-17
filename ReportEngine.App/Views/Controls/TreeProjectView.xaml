@@ -114,7 +114,7 @@
                                     MouseDoubleClick="ReportTree_MouseDoubleClick">
                                     <TreeViewItem
                                         Foreground="{DynamicResource PrimaryForeground}"
-                                        Header="Создание отчётов"
+                                        Header="Создание отчётов для проекта"
                                         IsExpanded="True">
                                         <TreeViewItem
                                             Margin="0,3,0,3"

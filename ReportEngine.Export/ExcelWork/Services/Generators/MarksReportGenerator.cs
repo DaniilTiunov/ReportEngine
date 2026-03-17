@@ -55,7 +55,7 @@ public class MarksReportGenerator : IReportGenerator
             var ws = wb.Worksheets.Add("Проект");
 
             CreateWorksheetTableHeader(ws);
-            FillWorksheetTable(ws, project);
+            FillWorksheetTable(ws, project, selectedStands);
 
             ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
@@ -88,10 +88,16 @@ public class MarksReportGenerator : IReportGenerator
         headerRange.Style.Font.SetBold();
     }
 
-    private void FillWorksheetTable(IXLWorksheet ws, ProjectInfo project)
+    private void FillWorksheetTable(IXLWorksheet ws, ProjectInfo project, List<Stand>? selectedStands = null)
     {
-        //формируем все необходимые записи
-        var allRecords = project.Stands
+        var sourceData = project.Stands;
+
+        if(selectedStands != null)
+        {
+            sourceData = selectedStands;
+        }
+
+        var allRecords = sourceData
             .SelectMany(
                 stand => stand.ObvyazkiInStand,
                 (stand, obv) => new

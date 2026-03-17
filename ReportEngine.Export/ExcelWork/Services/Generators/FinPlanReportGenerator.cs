@@ -13,8 +13,9 @@ public class FinPlanReportGenerator : IReportGenerator
     private readonly IProjectInfoRepository _projectInfoRepository;
     private readonly IContainerRepository _containerRepository;
 
-    public FinPlanReportGenerator(IProjectInfoRepository projectInfoRepository,
-                                    IContainerRepository containerRepository)
+    public FinPlanReportGenerator(
+        IProjectInfoRepository projectInfoRepository,
+        IContainerRepository containerRepository)
     {
         _projectInfoRepository = projectInfoRepository;
         _containerRepository = containerRepository;
@@ -113,7 +114,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
                 //заполняем таблицу себестоимости
                 activeRow = CreateHeader(activeRow, "Себестоимость", ws);
-                (activeRow, var totalRange, var summaryRange) = await CreateSelfcostTable(ws, project, activeRow);
+                (activeRow, var totalRange, var summaryRange) = await CreateSelfcostTable(ws, project, activeRow, selectedStands);
 
                 activeRow += 2;
 
@@ -227,7 +228,11 @@ public class FinPlanReportGenerator : IReportGenerator
     }
 
     //заполняет таблицу себестоимости
-    private async Task<(int, IXLRange, IXLRange)> CreateSelfcostTable(IXLWorksheet ws, ProjectInfo project, int startRow)
+    private async Task<(int, IXLRange, IXLRange)> CreateSelfcostTable(
+        IXLWorksheet ws,
+        ProjectInfo project,
+        int startRow,
+        List<Stand>? selectedStands = null)
     {
         var containerBatches = _containerRepository.GetAllByProjectIdAsync(project.Id);
 
@@ -235,7 +240,14 @@ public class FinPlanReportGenerator : IReportGenerator
 
         var sumCellList = new List<IXLRange>();
 
-        var generatedEquipmentsData = ExcelReportHelper.GeneratePartsData(project.Stands);
+        var sourceData = project.Stands;
+
+        if(selectedStands != null)
+        {
+            sourceData = selectedStands;
+        }
+
+        var generatedEquipmentsData = ExcelReportHelper.GeneratePartsData(sourceData);
         var equipmentRecords = ExcelReportHelper.GenerateAllPartsCollection(generatedEquipmentsData);
         var equipmentTotalCostRecord = ExcelReportHelper.GenerateTotalRecord(equipmentRecords);
 
@@ -268,7 +280,7 @@ public class FinPlanReportGenerator : IReportGenerator
         PasteSeparatorRow(activeRow, ws);
         activeRow++;
 
-        var generatedLaborData = ExcelReportHelper.GenerateLaborData(project.Stands);
+        var generatedLaborData = ExcelReportHelper.GenerateLaborData(sourceData);
         var laborRecords = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);
         var laborTotalCostRecord = ExcelReportHelper.GenerateTotalRecord(laborRecords);
 
@@ -415,7 +427,12 @@ public class FinPlanReportGenerator : IReportGenerator
     }
 
     //заполняет таблицу стоимости продаж для листа "Стоимость продажи"
-    private int CreateSellcostRentTable(IXLWorksheet ws, ProjectInfo project, int startRow, IXLRange totalRange, IXLRange summaryRange)
+    private int CreateSellcostRentTable(
+        IXLWorksheet ws,
+        ProjectInfo project,
+        int startRow,
+        IXLRange totalRange,
+        IXLRange summaryRange)
     {
         var activeRow = startRow;
 

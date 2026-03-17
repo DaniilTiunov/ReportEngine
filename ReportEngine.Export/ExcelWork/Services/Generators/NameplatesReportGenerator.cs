@@ -58,7 +58,7 @@ public class NameplatesReportGenerator : IReportGenerator
 
             var ws = wb.Worksheets.Add("Лист1");
 
-            var maxTablesQuantity = FillWorksheetTable(ws, project);
+            var maxTablesQuantity = FillWorksheetTable(ws, project, selectedStands);
             CreateWorksheetTableHeader(ws, maxTablesQuantity);
 
             ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
@@ -110,9 +110,14 @@ public class NameplatesReportGenerator : IReportGenerator
         tablesHeaderArea.Value = tablesHeaderContent;
     }
 
-    private int FillWorksheetTable(IXLWorksheet ws, ProjectInfo project)
+    private int FillWorksheetTable(IXLWorksheet ws, ProjectInfo project, List<Stand>? selectedStands = null)
     {
         var stands = project.Stands;
+
+        if(selectedStands != null)
+        {
+            stands = selectedStands;
+        }
 
         var maxTables = 0;
 
