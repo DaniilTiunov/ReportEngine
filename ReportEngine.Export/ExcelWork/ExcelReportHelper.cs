@@ -609,14 +609,14 @@ public static class ExcelReportHelper
 
         return new LaborStandsData
         {
-            frameProduction = frameProductionRecord,
-            obvProduction = obvProductionRecord,
-            collectorProduction = collectorProductionRecord,
-            qualityTests = qualityTestRecord,
-            sandblasting = sandblastingRecord,
-            paintingWorks = paintingRecord,
-            electricalWorks = electricRecord,
-            commonStandCheck = commonCheckRecord
+            FrameProduction = frameProductionRecord,
+            ObvProduction = obvProductionRecord,
+            CollectorProduction = collectorProductionRecord,
+            QualityTests = qualityTestRecord,
+            Sandblasting = sandblastingRecord,
+            PaintingWorks = paintingRecord,
+            ElectricalWorks = electricRecord,
+            CommonStandCheck = commonCheckRecord
         };
 
 

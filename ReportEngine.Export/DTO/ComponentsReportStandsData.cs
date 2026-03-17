@@ -1,6 +1,6 @@
 ﻿namespace ReportEngine.Export.DTO;
 
-public struct SensorRecordData
+public class SensorRecordData
 {
     public string SensorKKS;
     public string SensorDescription;
@@ -33,14 +33,14 @@ public class PartsStandsData
 
 public class LaborStandsData
 {
-    public EquipmentRecord? frameProduction { get; set; }
-    public EquipmentRecord? obvProduction { get; set; }
-    public EquipmentRecord? collectorProduction { get; set; }
-    public EquipmentRecord? qualityTests { get; set; }
-    public EquipmentRecord? sandblasting { get; set; }
-    public EquipmentRecord? paintingWorks { get; set; }
-    public EquipmentRecord? electricalWorks { get; set; }
-    public EquipmentRecord? commonStandCheck { get; set; }
+    public EquipmentRecord? FrameProduction { get; set; }
+    public EquipmentRecord? ObvProduction { get; set; }
+    public EquipmentRecord? CollectorProduction { get; set; }
+    public EquipmentRecord? QualityTests { get; set; }
+    public EquipmentRecord? Sandblasting { get; set; }
+    public EquipmentRecord? PaintingWorks { get; set; }
+    public EquipmentRecord? ElectricalWorks { get; set; }
+    public EquipmentRecord? CommonStandCheck { get; set; }
 }
 
 public class EquipmentRecord
