@@ -129,7 +129,7 @@
                                     <Separator />
                                     <MenuItem Command="{Binding ProjectCommandProvider.SelectedComponentReportCommand}" Header="Ведомость комплектующих" />
                                     <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedNamePlatesReportCommand}" Header="шильдики и таблички" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedNamePlatesReportCommand}" Header="Шильдики и таблички" />
                                     <Separator />
                                     <MenuItem Command="{Binding ProjectCommandProvider.SelectedMarksReportCommand}" Header="Маркировка" />
                                     <Separator />
@@ -141,7 +141,7 @@
                                     <Separator />
                                     <MenuItem Command="{Binding ProjectCommandProvider.SelectedPassportReportCommand}" Header="Паспорт" />
                                     <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedTechnoCardsReportCommand}" Header="Техн. карты" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedTechnoCardsReportCommand}" Header="Технологические карты" />
                                 </MenuItem>
 
                             </ContextMenu>
