@@ -16,18 +16,18 @@ public struct SensorRecordData
     }
 }
 
-public struct PartsStandsData
+public class PartsStandsData
 {
-    public List<EquipmentRecord?> PipesList { get; set; }
-    public List<EquipmentRecord?> ArmaturesList { get; set; }
-    public List<EquipmentRecord?> TreeList { get; set; }
-    public List<EquipmentRecord?> KmchList { get; set; }
-    public List<EquipmentRecord?> DrainageParts { get; set; }
-    public List<EquipmentRecord?> FramesList { get; set; }
-    public List<EquipmentRecord?> SensorsHolders { get; set; }
-    public List<EquipmentRecord?> ElectricalParts { get; set; }
-    public List<EquipmentRecord?> OthersParts { get; set; }
-    public List<EquipmentRecord?> Supplies { get; set; }
+    public List<EquipmentRecord?>? PipesList { get; set; }
+    public List<EquipmentRecord?>? ArmaturesList { get; set; }
+    public List<EquipmentRecord?>? TreeList { get; set; }
+    public List<EquipmentRecord?>? KmchList { get; set; }
+    public List<EquipmentRecord?>? DrainageParts { get; set; }
+    public List<EquipmentRecord?>? FramesList { get; set; }
+    public List<EquipmentRecord?>? SensorsHolders { get; set; }
+    public List<EquipmentRecord?>? ElectricalParts { get; set; }
+    public List<EquipmentRecord?>? OthersParts { get; set; }
+    public List<EquipmentRecord?>? Supplies { get; set; }
 }
 
 
