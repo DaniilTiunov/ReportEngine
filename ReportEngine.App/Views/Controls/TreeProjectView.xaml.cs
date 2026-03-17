@@ -14,8 +14,6 @@ public partial class TreeProjectView : UserControl, IDisposable
     private readonly Dictionary<string, Action> _tagActionMap;
     private readonly Dictionary<string, Action> _tagCalculateMap;
 
-
-
     private readonly ProjectViewModel _projectViewModel;
     private bool _disposed;
 

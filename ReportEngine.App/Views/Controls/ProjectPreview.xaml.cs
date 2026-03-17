@@ -7,6 +7,8 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ReportEngine.App.AppHelpers;
+using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.Views.Windows.Dialog;
 
@@ -171,6 +173,8 @@ public partial class ProjectPreview : UserControl
     private void StandsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         _projectViewModel.OnSelectedStandChanged();
+
+        StandsListHelper.GetSelectedStands(StandsList.SelectedItems.Cast<StandModel>());
     }
 
     private void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)

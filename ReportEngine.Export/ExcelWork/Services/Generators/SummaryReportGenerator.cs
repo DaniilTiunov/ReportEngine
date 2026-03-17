@@ -1,4 +1,7 @@
-﻿using ClosedXML.Excel;
+﻿using System.Diagnostics;
+using System.Drawing.Drawing2D;
+using System.Reflection;
+using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
@@ -7,9 +10,6 @@ using ReportEngine.Export.DTO.JsonObjects;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
-using System.Diagnostics;
-using System.Drawing.Drawing2D;
-using System.Reflection;
 using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
@@ -35,7 +35,6 @@ public class SummaryReportGenerator : IReportGenerator
         {
             var standNumber = 1;
 
-            //заполняем листы по стендам
             foreach (var stand in project.Stands)
             {
                 var ws = wb.Worksheets.Add($"{standNumber}");
@@ -49,9 +48,8 @@ public class SummaryReportGenerator : IReportGenerator
                 ws.Columns().AdjustToContents();
                 ws.Rows().AdjustToContents();
 
-                //костылек для норм отображения
+                // Костылёк для нормального отображения
                 var exportDaysRange = ws.Range("A2:A3");
-
                 exportDaysRange.Style.Alignment.WrapText = true;
 
                 foreach (var row in exportDaysRange.Rows())
@@ -59,44 +57,95 @@ public class SummaryReportGenerator : IReportGenerator
                     row.WorksheetRow().Height = 30;
                 }
 
-                ws.Columns("A").Width = 18; //ширина столбца "Срок поставки комплектующих"
-
-
+                ws.Columns("A").Width = 18; // ширина столбца "Срок поставки комплектующих"
 
                 standNumber++;
             }
 
-            //заполняем сводную ведомость
+            // Сводная ведомость
             var summarySheet = wb.Worksheets.Add("Сводная заявка");
-
             CreateCommonListTableHeader(summarySheet, project);
             await FillCommonListTable(summarySheet, project);
 
             summarySheet.Columns().Style.Alignment.WrapText = false;
             summarySheet.Rows().Style.Alignment.WrapText = false;
-
             summarySheet.Columns().AdjustToContents();
             summarySheet.Rows().AdjustToContents();
 
-
-            //заполняем калькуляцию
+            // Калькуляция
             var calculationSheet = wb.Worksheets.Add("Калькуляция");
-
             CreateCalcullationTableHeader(calculationSheet, project);
             await FillCalculationTable(calculationSheet, project);
 
-            //костыль с фиксированной шириной столбцов
-
-
-
-
-
-            //применяем оформление ко всему документу
+            // Применяем оформление ко всему документу
             foreach (var ws in wb.Worksheets)
             {
                 ws.Cells().Style.Font.FontName = "Times New Roman";
             }
 
+            var savePath = SettingsManager.GetReportDirectory();
+            var fileName = ExcelReportHelper.CreateReportName("Сводная ведомость", "xlsx");
+            var fullSavePath = Path.Combine(savePath, fileName);
+
+            Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
+            wb.SaveAs(fullSavePath);
+        }
+    }
+    public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
+    {
+        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+
+        using (var wb = new XLWorkbook())
+        {
+            var standNumber = 1;
+
+            foreach (var stand in selectedStands)
+            {
+                var ws = wb.Worksheets.Add($"{standNumber}");
+
+                CreateStandTableHeader(ws, stand, XLAlignmentHorizontalValues.Center);
+                FillStandTable(ws, stand);
+
+                ws.Columns().Style.Alignment.WrapText = false;
+                ws.Rows().Style.Alignment.WrapText = false;
+
+                ws.Columns().AdjustToContents();
+                ws.Rows().AdjustToContents();
+
+                // Костылёк для нормального отображения
+                var exportDaysRange = ws.Range("A2:A3");
+                exportDaysRange.Style.Alignment.WrapText = true;
+
+                foreach (var row in exportDaysRange.Rows())
+                {
+                    row.WorksheetRow().Height = 30;
+                }
+
+                ws.Columns("A").Width = 18; // ширина столбца "Срок поставки комплектующих"
+
+                standNumber++;
+            }
+
+            // Сводная ведомость
+            var summarySheet = wb.Worksheets.Add("Сводная заявка");
+            CreateCommonListTableHeader(summarySheet, project);
+            await FillCommonListTable(summarySheet, project);
+
+            summarySheet.Columns().Style.Alignment.WrapText = false;
+            summarySheet.Rows().Style.Alignment.WrapText = false;
+            summarySheet.Columns().AdjustToContents();
+            summarySheet.Rows().AdjustToContents();
+
+            // Калькуляция
+            var calculationSheet = wb.Worksheets.Add("Калькуляция");
+            CreateCalcullationTableHeader(calculationSheet, project);
+            await FillCalculationTable(calculationSheet, project);
+
+            // Применяем оформление ко всему документу
+            foreach (var ws in wb.Worksheets)
+            {
+                ws.Cells().Style.Font.FontName = "Times New Roman";
+            }
 
             var savePath = SettingsManager.GetReportDirectory();
             var fileName = ExcelReportHelper.CreateReportName("Сводная ведомость", "xlsx");
@@ -201,7 +250,7 @@ public class SummaryReportGenerator : IReportGenerator
         headerRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
 
 
-        
+
     }
 
     //создает заголовок сводной ведомости
@@ -418,7 +467,7 @@ public class SummaryReportGenerator : IReportGenerator
         var generatedPartsData = ExcelReportHelper.GeneratePartsData(project.Stands);
 
         //принудительно обнуляем сроки поставки, они там не нужны (вроде)
-        foreach(var property in generatedPartsData.GetType().GetProperties())
+        foreach (var property in generatedPartsData.GetType().GetProperties())
         {
             var propertyValue = property.GetValue(generatedPartsData);
             var recordList = propertyValue as List<EquipmentRecord>;
@@ -429,7 +478,7 @@ public class SummaryReportGenerator : IReportGenerator
                 recordList.Clear();
                 foreach (var part in tempList)
                 {
-                   
+
                     var sraka = new EquipmentRecord
                     {
                         Name = part.Name,
@@ -537,7 +586,7 @@ public class SummaryReportGenerator : IReportGenerator
                 var quantity = group.Count();
                 var weight = group.FirstOrDefault().Weight.RoundUp(1);
                 var width = group.FirstOrDefault().Width;
-                var cost = (float) group.FirstOrDefault().StandSummCost;
+                var cost = (float)group.FirstOrDefault().StandSummCost;
 
                 var commonCost = (quantity * cost).Ceiling();
 

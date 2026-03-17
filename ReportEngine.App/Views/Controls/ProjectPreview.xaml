@@ -70,12 +70,14 @@
                         </TextBlock>
                     </GroupBox.Header>
                     <ListView
+                        x:Name="StandsList"
                         MaxHeight="300"
                         FontSize="15"
                         ItemsSource="{Binding CurrentProjectModel.Stands}"
                         MouseDoubleClick="StandListView_MouseDoubleClick"
                         SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}"
-                        SelectionChanged="StandsList_SelectionChanged">
+                        SelectionChanged="StandsList_SelectionChanged"
+                        SelectionMode="Extended">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn
@@ -121,6 +123,27 @@
                                 <MenuItem Command="{Binding ProjectCommandProvider.CopyStandsCommand}" Header="Создать копию на основе прототипа" />
                                 <Separator />
                                 <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}" Header="Удалить стенд из проекта" />
+                                <Separator />
+                                <MenuItem Header="Создать отчет по выбранным">
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedSummaryReportCommand}" Header="Сводная ведомость" />
+                                    <Separator />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedComponentReportCommand}" Header="Ведомость комплектующих" />
+                                    <Separator />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedNamePlatesReportCommand}" Header="шильдики и таблички" />
+                                    <Separator />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedMarksReportCommand}" Header="Маркировка" />
+                                    <Separator />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedContainerReportCommand}" Header="Тара" />
+                                    <Separator />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedProductionReportCommand}" Header="Производство" />
+                                    <Separator />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedFinPlaneReportCommand}" Header="Фин. план" />
+                                    <Separator />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedPassportReportCommand}" Header="Паспорт" />
+                                    <Separator />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedTechnoCardsReportCommand}" Header="Техн. карты" />
+                                </MenuItem>
+
                             </ContextMenu>
                         </ListView.ContextMenu>
                     </ListView>
