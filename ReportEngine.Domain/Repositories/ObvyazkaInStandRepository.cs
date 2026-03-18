@@ -12,9 +12,12 @@ namespace ReportEngine.Domain.Repositories
             _context = context;
         }
 
-        public async Task AddObvyazkaPurposesAsync()
+        public async Task<IEnumerable<ObvyazkaInStand>> GetObvyazkiFromStandAsync(int standId)
         {
-
+            return await _context.Set<ObvyazkaInStand>()
+                .AsNoTracking()
+                .Where(p=> p.StandId == standId)
+                .ToListAsync();
         }
 
         public async Task DeleteObvyazkaPurposesAsync(int id)
