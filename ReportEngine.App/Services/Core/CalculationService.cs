@@ -31,12 +31,12 @@ public class CalculationService : ICalculationService
     {
         await LoadSettingsCost();
 
-        CalculateStandsCountAsync(project);
+        CalculateStandsCount(project);
 
         foreach (var stand in project.Stands)
         {
-            CalculateStandsWidthAsync(stand);
-            CalculateStandsWeightAsync(stand);
+            CalculateStandsWidth(stand);
+            CalculateStandsWeight(stand);
 
             stand.StandSummCost = CalculateStandEquipCost(stand);
         }
@@ -52,12 +52,12 @@ public class CalculationService : ICalculationService
         await _projectService.UpdateStandEntity(project);
     }
 
-    private void CalculateStandsCountAsync(ProjectModel project)
+    private void CalculateStandsCount(ProjectModel project)
     {
         project.StandCount = project.Stands.Count;
     }
 
-    private void CalculateStandsWeightAsync(StandModel standModel)
+    private void CalculateStandsWeight(StandModel standModel)
     {
         standModel.Weight = 0;
 
@@ -74,7 +74,7 @@ public class CalculationService : ICalculationService
         standModel.Weight += standModel.ObvyazkiInStand.Sum(ec => ec.Weight) ?? 0.0f;
     }
 
-    private void CalculateStandsWidthAsync(StandModel standModel)
+    private void CalculateStandsWidth(StandModel standModel)
     {
         standModel.Width = standModel.FramesInStand.Sum(fr => fr.Width);
     }
@@ -97,6 +97,16 @@ public class CalculationService : ICalculationService
 
         cost += standModel.AllDrainagePurposesInStand
             .Sum(p => (decimal)(p.CostPerUnit ?? 0) * (decimal)(p.Quantity ?? 0));
+
+        cost += standModel.ObvyazkaAdditionalComponents
+            .Sum(p => (decimal)(p.CostPerUnit ?? 0) * (decimal)(p.Quantity ?? 0));
+
+        cost += standModel.ObvyazkiInStand
+            .Sum(p =>
+            Convert.ToDecimal(p.ArmatureCostPerUnit) * Convert.ToDecimal(p.ArmatureCount) +
+            Convert.ToDecimal(p.KMCHCostPerUnit) * Convert.ToDecimal(p.KMCHCount) +
+            Convert.ToDecimal(p.TreeSocketMaterialCostPerUnit) * Convert.ToDecimal(p.TreeSocketCount) +
+            Convert.ToDecimal(p.MaterialLineCostPerUnit) * Convert.ToDecimal(p.MaterialLineCount));
 
         return cost;
     }

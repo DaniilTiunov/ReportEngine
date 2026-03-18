@@ -4,22 +4,33 @@ using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Background;
 using ReportEngine.Domain.Database.Context;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.App.Services
 {
-    public class UpdaterStandService(
-        ReAppContext context,
-        IProjectService projectService,
-        IStandService standService,
-        IProjectInfoRepository projectRepository,
-        INotificationService notificationService)
+    public class UpdaterStandService
     {
-        private readonly ReAppContext _context = context;
-        private readonly IProjectService _projectService = projectService;
-        private readonly IStandService _standService = standService;
-        private readonly IProjectInfoRepository _projectRepository = projectRepository;
-        private readonly INotificationService _notificationService = notificationService;
+        private readonly ReAppContext _context;
+        private readonly IProjectService _projectService;
+        private readonly IStandService _standService;
+        private readonly IProjectInfoRepository _projectRepository;
+        private readonly INotificationService _notificationService;
+
+        public UpdaterStandService(
+            ReAppContext context,
+            IProjectService projectService,
+            IStandService standService,
+            IProjectInfoRepository projectRepository,
+            INotificationService notificationService,
+            ObvyazkaInStandRepository obvyazkaRepository)
+        {
+            _context = context;
+            _projectService = projectService;
+            _standService = standService;
+            _projectRepository = projectRepository;
+            _notificationService = notificationService;
+        }
 
         public async Task ApplyChangesAndSaveAsync(ProjectModel project)
         {
@@ -39,8 +50,6 @@ namespace ReportEngine.App.Services
 
                     change.Processed = true;
                 }
-
-                await SyncStandPropertiesToObvyazkiAsync(stand);
             }
 
             await _projectService.UpdateStandEntity(project);
@@ -72,25 +81,36 @@ namespace ReportEngine.App.Services
 
             foreach (var prop in properties)
             {
+                var value = prop.GetValue(target);
+
                 // 🔹 Обработка string
                 if (prop.PropertyType == typeof(string))
                 {
-                    var value = (string?)prop.GetValue(target);
+                    var stringValue = value as string;
 
-                    if (!string.IsNullOrEmpty(value) &&
-                        value.Contains(change.OldName))
+                    if (string.IsNullOrEmpty(stringValue))
+                        continue;
+
+                    if (!string.IsNullOrEmpty(change.OldName) &&
+                        stringValue.Contains(change.OldName))
                     {
-                        prop.SetValue(target,
-                            value.Replace(change.OldName!, change.NewName));
+                        stringValue = stringValue.Replace(change.OldName, change.NewName);
                     }
+
+                    if (change.OldCost.HasValue &&
+                        decimal.TryParse(stringValue, out var parsedValue) &&
+                        parsedValue == (decimal)change.OldCost.Value)
+                    {
+                        stringValue = change.NewCost?.ToString();
+                    }
+
+                    prop.SetValue(target, stringValue);
                 }
 
-                // 🔹 Обработка стоимости (float)
+                // 🔹 Обработка float
                 if (prop.PropertyType == typeof(float) ||
                     prop.PropertyType == typeof(float?))
                 {
-                    var value = prop.GetValue(target);
-
                     if (value is float floatValue &&
                         change.OldCost.HasValue &&
                         floatValue == change.OldCost.Value)
@@ -103,6 +123,7 @@ namespace ReportEngine.App.Services
 
         public async Task SyncStandPropertiesToObvyazkiAsync(StandModel stand)
         {
+
             foreach (var obvyazka in stand.ObvyazkiInStand)
             {
                 obvyazka.MaterialLine = stand.MaterialLine;
