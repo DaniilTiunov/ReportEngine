@@ -1,4 +1,5 @@
-﻿using ReportEngine.Domain.Entities;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using ReportEngine.Domain.Entities;
 using ReportEngine.Export.DTO;
 using ReportEngine.Shared.Config.IniHelpers;
 
@@ -62,7 +63,7 @@ public static class ExcelReportHelper
                 price = obv.MaterialLineCostPerUnit,
                 exportDays = obv.MaterialLineExportDays
             })
-            .GroupBy(pipe => pipe.name)
+            .GroupBy(pipe => pipe.name)        
             .Select(group => new
             {
                 name = group.Key,
@@ -71,7 +72,8 @@ public static class ExcelReportHelper
                 costPerUnit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.price))?.price,
                 exportDays = group.FirstOrDefault(group => group.exportDays.HasValue)?.exportDays
             })
-            .Where(group => group.quantity != 0.0)
+            .Where(group => !string.IsNullOrEmpty(group.name))
+            .Where(group => group.quantity != 0.0)           
             .Select(group => new EquipmentRecord
             {
                 ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
@@ -110,6 +112,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.price))?.price,
                 exportDays = group.FirstOrDefault(group => group.exportDays.HasValue)?.exportDays
             })
+            .Where(group => !string.IsNullOrEmpty(group.name))
             .Where(group => group.quantity != 0.0)
             .Select(group => new EquipmentRecord
             {
@@ -149,6 +152,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.price))?.price,
                 exportDays = group.FirstOrDefault(group => group.exportDays.HasValue)?.exportDays
             })
+           .Where(group => !string.IsNullOrEmpty(group.name))
            .Where(group => group.quantity != 0.0)
            .Select(group => new EquipmentRecord
            {
@@ -187,6 +191,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.price))?.price,
                 exportDays = group.FirstOrDefault(group => group.exportDays.HasValue)?.exportDays
             })
+           .Where(group => !string.IsNullOrEmpty(group.name))
            .Where(group => group.quantity != 0.0)
            .Select(group => new EquipmentRecord
            {
@@ -219,6 +224,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.FirstOrDefault(group => group.CostPerUnit.HasValue)?.CostPerUnit,
                 exportDays = group.FirstOrDefault(group => group.ExportDays.HasValue)?.ExportDays
             })
+           .Where(group => !string.IsNullOrEmpty(group.name))
            .Where(group => group.quantity != 0.0)
            .Select(group => new EquipmentRecord
            {
@@ -242,13 +248,26 @@ public static class ExcelReportHelper
         var framesList = stands
             .SelectMany(stand => stand.StandFrames)
             .SelectMany(fr => fr.Frame.Components)
-            .Select(comp => new
-            {
-                name = comp.ComponentName,
-                unit = comp.Measure,
-                quantity = comp.Count,
-                costPerUnit = comp.CostComponent,
-                exportDays = comp.ExportDays
+            .Select(comp => {
+                float count = 0.0f;
+
+                //костыль с количеством
+                if (comp.Count.HasValue && comp.Count.Value != 0) {
+                    count = comp.Count.Value;
+                }    
+                else if (comp.Length.HasValue && comp.Length.Value != 0)
+                {
+                    count = comp.Length.Value;
+                }
+                    
+                return new
+                {
+                    name = comp.ComponentName,
+                    unit = comp.Measure,
+                    costPerUnit = comp.CostComponent,
+                    exportDays = comp.ExportDays,
+                    quantity = count,
+                };
             })
             .GroupBy(frameComp => frameComp.name)
             .Select(group => new
@@ -259,6 +278,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.FirstOrDefault(group => group.costPerUnit.HasValue)?.costPerUnit,
                 exportDays = group.FirstOrDefault(group => group.exportDays.HasValue)?.exportDays
             })
+           .Where(group => !string.IsNullOrEmpty(group.name))
            .Where(group => group.quantity != 0.0)
            .Select(group => new EquipmentRecord
            {
@@ -278,12 +298,18 @@ public static class ExcelReportHelper
             })
             .ToList();
 
+
         //формирование списка кронштейнов
         var sensorsHolders = stands
             .SelectMany(stand => stand.StandAdditionalEquips)
             .SelectMany(equip => equip.AdditionalEquip.Purposes)
-            .Where(purpose => purpose.Purpose != null)
-            .Where(purpose => purpose.Purpose.Contains("Кронштейн")) //сомнительно, хз что брать за источник информации
+            .Where(purpose =>
+            {
+                //сомнительно, хз что брать за источник информации
+                var purposeContainsTemplate = purpose.Purpose?.Contains("Кронштейн") ?? false;
+                var materialContainsTemplate = purpose.Material?.Contains("Кронштейн") ?? false;
+                return purposeContainsTemplate || materialContainsTemplate;
+            })
             .GroupBy(purpose => purpose.Material)
             .Select(group => new
             {
@@ -293,6 +319,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.FirstOrDefault(group => group.CostPerUnit.HasValue)?.CostPerUnit,
                 exportDays = group.FirstOrDefault(group => group.ExportDays.HasValue)?.ExportDays
             })
+            .Where(group => !string.IsNullOrEmpty(group.name))
             .Where(group => group.quantity != 0.0)
             .Select(group => new EquipmentRecord
             {
@@ -325,6 +352,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.FirstOrDefault(group => group.CostPerUnit.HasValue)?.CostPerUnit,
                 exportDays = group.FirstOrDefault(group => group.ExportDays.HasValue)?.ExportDays
             })
+           .Where(group => !string.IsNullOrEmpty(group.name))
            .Where(group => group.quantity != 0.0)
            .Select(group => new EquipmentRecord
            {
@@ -344,7 +372,7 @@ public static class ExcelReportHelper
             })
             .ToList();
 
-        //формирование списка дополнительного оборудования
+        //формирование списка дополнительного комплектующих
         var additionalParts = stands
             .SelectMany(stand => stand.StandAdditionalEquips)
             .SelectMany(equip => equip.AdditionalEquip.Purposes)
@@ -357,6 +385,7 @@ public static class ExcelReportHelper
                 costPerUnit = group.FirstOrDefault(group => group.CostPerUnit.HasValue)?.CostPerUnit,
                 exportDays = group.FirstOrDefault(group => group.ExportDays.HasValue)?.ExportDays
             })
+           .Where(group => !string.IsNullOrEmpty(group.name))
            .Where(group => group.quantity != 0.0)
            .Select(group => new EquipmentRecord
            {
@@ -373,25 +402,75 @@ public static class ExcelReportHelper
                    (record.Quantity.Value * record.CostPerUnit.Value) != null);
 
                 return record;
-            })
-            .Except(sensorsHolders)
+            });
+           
+  
+
+
+        //в прочие материалы кладем только шильдики и таблички из доп комплектующих
+        var othersParts = additionalParts
+            .Where(record => (record.Name.Value?.Contains("Табличка") ?? false) || (record.Name.Value?.Contains("Шильдик") ?? false))
             .ToList();
 
 
+       //расходные материалы - то осталось из доп комплектующих, за исключением прочих материалов и кронштейнов
+       var supplies = additionalParts
+            .ExceptBy(othersParts.Select(p=>p.Name),part => part.Name)
+            .ExceptBy(sensorsHolders.Select(h=>h.Name),holder=>holder.Name);
 
-        var othersParts = new List<EquipmentRecord?>(additionalParts
-            .Where(part => part.Name.Value != null)
-            .Where(part => part.Name.Value.Contains("Шильдик") || part.Name.Value.Contains("Табличка")))
-            .ToList(); // сомнительно, но окэй
-   
 
+        //из расходных материалов также сносим дубликаты существующих позиций 
+        //соединяем все списки комплектующих, по которым нужно проверить, в один
+        var allCollectionToCheck = pipesList
+            .Union(armaturesList)
+            .Union(treeList)
+            .Union(kmchList)
+            .Union(drainageParts)
+            .Union(framesList)
+            .Union(sensorsHolders)
+            .Union(electricalParts);
+
+
+        //проверяем, есть ли в расходных материалах комплектующие, которые уже есть в списках выше
+        var duplicateRecords = supplies
+            .IntersectBy(allCollectionToCheck.Select(part => part.Name),supply=>supply.Name);
         
 
-        var supplies =
-            additionalParts
-            .Except(othersParts)
-            .ToList(); 
-        
+        //если дубликаты найдены - 
+        if (duplicateRecords.Any())
+        {
+            //соотносим позицию в расходных материалах с найденным дубликатом
+            var tempRecords = supplies.Join(
+                allCollectionToCheck,
+                supply => supply.Name,
+                part => part.Name,
+                (supply, part) => new
+                {
+                    Supply = supply,
+                    duplicatePart = part
+                });
+
+            //для каждой существующей позиции обновляем кол-во и общую стоимость
+            foreach (var record in tempRecords)
+            {
+                var prevInfo = record.duplicatePart;
+
+                record.duplicatePart.Quantity = new ValidatedField<float?>(
+                    prevInfo.Quantity.Value + record.Supply.Quantity.Value, 
+                    prevInfo.Quantity.IsValid);
+
+                record.duplicatePart.CommonCost = new ValidatedField<float?>(
+                    record.duplicatePart.Quantity.Value * record.duplicatePart.CostPerUnit.Value,
+                    prevInfo.CommonCost.IsValid);
+            }
+
+            //исключаем из расходных материалов существующие позиции
+            supplies = supplies.ExceptBy(duplicateRecords.Select(r=>r.Name),supply=>supply.Name);
+        }
+
+        //формируем окончательный список расходных материалов
+        var suppliesList = supplies.ToList();
+
 
         return new PartsStandsData
         {
@@ -404,7 +483,7 @@ public static class ExcelReportHelper
             SensorsHolders = sensorsHolders,
             ElectricalParts = electricalParts,
             OthersParts = othersParts,
-            Supplies = supplies
+            Supplies = suppliesList
         };
 
     }
