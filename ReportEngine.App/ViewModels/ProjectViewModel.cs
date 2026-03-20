@@ -596,6 +596,7 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             await _updaterStandService.ApplyChangesAndSaveAsync(CurrentProjectModel);
+            await _calculationService.CalculateProjectAsync(CurrentProjectModel);
         });
     }
 
