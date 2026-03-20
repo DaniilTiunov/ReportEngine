@@ -173,7 +173,7 @@
                                     FontWeight="Bold"
                                     Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(нет данных)'}" />
                             </TextBlock>
-                            <TextBlock Grid.Column="1" MinWidth="250" />
+                            <TextBlock Grid.Column="1" MinWidth="200" />
                             <TextBlock Grid.Column="2" HorizontalAlignment="Right">
                                 <Run FontSize="16" Text="Общее количество датчиков в стенде - " />
                                 <Run
