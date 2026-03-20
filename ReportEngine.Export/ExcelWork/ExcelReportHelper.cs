@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Bibliography;
-using ReportEngine.Domain.Entities;
+﻿using ReportEngine.Domain.Entities;
 using ReportEngine.Export.DTO;
 using ReportEngine.Shared.Config.IniHelpers;
 
@@ -63,7 +62,7 @@ public static class ExcelReportHelper
                 price = obv.MaterialLineCostPerUnit,
                 exportDays = obv.MaterialLineExportDays
             })
-            .GroupBy(pipe => pipe.name)        
+            .GroupBy(pipe => pipe.name)
             .Select(group => new
             {
                 name = group.Key,
@@ -73,7 +72,7 @@ public static class ExcelReportHelper
                 exportDays = group.FirstOrDefault(group => group.exportDays.HasValue)?.exportDays
             })
             .Where(group => !string.IsNullOrEmpty(group.name))
-            .Where(group => group.quantity != 0.0)           
+            .Where(group => group.quantity != 0.0)
             .Select(group => new EquipmentRecord
             {
                 ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
@@ -248,18 +247,20 @@ public static class ExcelReportHelper
         var framesList = stands
             .SelectMany(stand => stand.StandFrames)
             .SelectMany(fr => fr.Frame.Components)
-            .Select(comp => {
+            .Select(comp =>
+            {
                 float count = 0.0f;
 
                 //костыль с количеством
-                if (comp.Count.HasValue && comp.Count.Value != 0) {
+                if (comp.Count.HasValue && comp.Count.Value != 0)
+                {
                     count = comp.Count.Value;
-                }    
+                }
                 else if (comp.Length.HasValue && comp.Length.Value != 0)
                 {
                     count = comp.Length.Value;
                 }
-                    
+
                 return new
                 {
                     name = comp.ComponentName,
@@ -403,8 +404,8 @@ public static class ExcelReportHelper
 
                 return record;
             });
-           
-  
+
+
 
 
         //в прочие материалы кладем только шильдики и таблички из доп комплектующих
@@ -413,10 +414,10 @@ public static class ExcelReportHelper
             .ToList();
 
 
-       //расходные материалы - то осталось из доп комплектующих, за исключением прочих материалов и кронштейнов
-       var supplies = additionalParts
-            .ExceptBy(othersParts.Select(p=>p.Name),part => part.Name)
-            .ExceptBy(sensorsHolders.Select(h=>h.Name),holder=>holder.Name);
+        //расходные материалы - то осталось из доп комплектующих, за исключением прочих материалов и кронштейнов
+        var supplies = additionalParts
+             .ExceptBy(othersParts.Select(p => p.Name), part => part.Name)
+             .ExceptBy(sensorsHolders.Select(h => h.Name), holder => holder.Name);
 
 
         //из расходных материалов также сносим дубликаты существующих позиций 
@@ -433,8 +434,8 @@ public static class ExcelReportHelper
 
         //проверяем, есть ли в расходных материалах комплектующие, которые уже есть в списках выше
         var duplicateRecords = supplies
-            .IntersectBy(allCollectionToCheck.Select(part => part.Name),supply=>supply.Name);
-        
+            .IntersectBy(allCollectionToCheck.Select(part => part.Name), supply => supply.Name);
+
 
         //если дубликаты найдены - 
         if (duplicateRecords.Any())
@@ -456,7 +457,7 @@ public static class ExcelReportHelper
                 var prevInfo = record.duplicatePart;
 
                 record.duplicatePart.Quantity = new ValidatedField<float?>(
-                    prevInfo.Quantity.Value + record.Supply.Quantity.Value, 
+                    prevInfo.Quantity.Value + record.Supply.Quantity.Value,
                     prevInfo.Quantity.IsValid);
 
                 record.duplicatePart.CommonCost = new ValidatedField<float?>(
@@ -465,7 +466,7 @@ public static class ExcelReportHelper
             }
 
             //исключаем из расходных материалов существующие позиции
-            supplies = supplies.ExceptBy(duplicateRecords.Select(r=>r.Name),supply=>supply.Name);
+            supplies = supplies.ExceptBy(duplicateRecords.Select(r => r.Name), supply => supply.Name);
         }
 
         //формируем окончательный список расходных материалов
@@ -641,7 +642,15 @@ public static class ExcelReportHelper
         //трудозатраты на покраску
         //???
         var paintingHumanCostSum = stands
-          .Select(_ => (frameSettings?.TimeForPaintFrame + frameSettings?.TimeForPaintObv))
+          .Select(stand =>
+          {
+              var obvTimeCost = frameSettings?.TimeForPaintObv * stand.ObvyazkiInStand.Count;
+
+              return obvTimeCost +
+              frameSettings?.TimeForPaintFrame +
+              humanCostSettings?.TimeForPrepareAllEquipment +
+              humanCostSettings?.TimeForOthersOperations;
+          })
           .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
         var paintingRecord = new EquipmentRecord
@@ -659,7 +668,63 @@ public static class ExcelReportHelper
         //трудозатраты на электромонтаж
         //???
         var electricHumanCost = stands
-            .Select(_ => electicalSettings?.TimeMontageCable + electicalSettings?.TimeMontageWire)
+            .Select(stand =>
+            {
+                
+                var cableInputsQuantity = stand.StandElectricalComponent
+                .SelectMany(equip => equip.ElectricalComponent.Purposes)
+                .Where(purpose => purpose.Purpose == "Кабельные вводы")
+                .Sum(record => record.Quantity);
+
+                //затраты на кабельные ввода
+                var cableInputsTimeCost = cableInputsQuantity * humanCostSettings?.TimeForMontageOneInput;
+           
+
+
+                var electricSensorsQuantity = stand.ObvyazkiInStand
+                .Sum(obv =>
+                {
+                    var isElectricSensor = (string? typeOfSensor) => !string.IsNullOrEmpty(typeOfSensor) && typeOfSensor != "Манометр";
+
+                    int sensorsQuantity = 0;
+
+                    if (isElectricSensor(obv.FirstSensorType))
+                        sensorsQuantity++;
+
+                    if (isElectricSensor(obv.SecondSensorType))
+                        sensorsQuantity++;
+
+                    if (isElectricSensor(obv.ThirdSensorType))
+                        sensorsQuantity++;
+
+                    return sensorsQuantity;
+                });
+
+                //затраты на монтаж кабеля и провода 4мм до датчиков
+                var sensorsTimeCost = (electricSensorsQuantity * electicalSettings?.TimeMontageCable) +
+                (electricSensorsQuantity * electicalSettings?.TimeMontageWire) +
+                (electricSensorsQuantity * humanCostSettings?.TimeForDrillOneBus);
+
+
+
+                const int holesInBus = 2;
+                const int holesInFrame = 2;
+
+                //затраты на крепление шины к раме
+                var busBracingTimeCost = (holesInBus * humanCostSettings?.TimeForDrillOneBus) +
+                (holesInFrame * humanCostSettings?.TimeForOneDrill);
+
+
+                var framesQuantity = stand.StandFrames.Count;
+
+                //затраты на монтаж провода 6мм
+                var groundingTimeCost = electicalSettings?.TimeMontageWire * framesQuantity;
+
+                return cableInputsTimeCost +
+                sensorsTimeCost +
+                busBracingTimeCost +
+                groundingTimeCost;
+            })
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
         var electricRecord = new EquipmentRecord
