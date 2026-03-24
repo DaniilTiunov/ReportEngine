@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using ReportEngine.App.Extensions;
-using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
@@ -48,7 +47,7 @@ namespace ReportEngine.App.ViewModels
 
         public async Task GetAllProjectsAsync()
         {
-            var projects = await _projectRepository.GetAllAsync();
+            var projects = await _projectRepository.GetAllWithSandsAsync();
 
             AllProjects = projects.ToObservable();
 

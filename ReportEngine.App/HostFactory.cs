@@ -151,6 +151,7 @@ public class HostFactory
         services.AddScoped<AdditionalEquipService>();
         services.AddScoped<UIValidatorService>();
         services.AddScoped<InitializeService>();
+        services.AddScoped<EntityStandClonerService>();
     }
 
     private static void ConfigureReportsServices(IServiceCollection services)
