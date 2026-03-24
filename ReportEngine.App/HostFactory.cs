@@ -151,6 +151,7 @@ public class HostFactory
         services.AddScoped<AdditionalEquipService>();
         services.AddScoped<UIValidatorService>();
         services.AddScoped<InitializeService>();
+        services.AddScoped<EntityStandClonerService>();
     }
 
     private static void ConfigureReportsServices(IServiceCollection services)
@@ -186,6 +187,7 @@ public class HostFactory
         services.AddScoped<GenericRepository>();
         services.AddScoped(typeof(GenericEquipViewModel<>));
         services.AddScoped<DockViewerViewModel>();
+        services.AddScoped<AllStandsViewModel>();
     }
 
     private static void ConfigureViews(IServiceCollection services)
@@ -226,5 +228,6 @@ public class HostFactory
         services.AddTransient<CommonSettings>();
         services.AddTransient<ConnectionSettings>();
         services.AddTransient<DockViewerView>();
+        services.AddTransient<AllStandsView>();
     }
 }

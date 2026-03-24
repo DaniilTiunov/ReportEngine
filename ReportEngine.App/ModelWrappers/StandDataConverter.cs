@@ -1,4 +1,5 @@
-﻿using ReportEngine.App.Model.StandsModel;
+﻿using System.Collections.ObjectModel;
+using ReportEngine.App.Model.StandsModel;
 using ReportEngine.Domain.Entities;
 
 namespace ReportEngine.App.ModelWrappers;
@@ -28,7 +29,27 @@ public static class StandDataConverter
             TreeSocket = stand.TreeSocket,
             KMCH = stand.KMCH,
             ImageData = stand.ImageData,
-            ImageType = stand.ImageType
+            ImageType = stand.ImageType,
+            AdditionalEquipsInStand = new ObservableCollection<FormedAdditionalEquip>(
+                stand.StandAdditionalEquips
+                        .Where(e => e.AdditionalEquip != null)
+                        .Select(e => new FormedAdditionalEquip
+                        {
+                            Id = e.AdditionalEquip.Id,
+                            Name = e.AdditionalEquip.Name,
+
+                            Purposes = new ObservableCollection<AdditionalEquipPurpose>(
+                                e.AdditionalEquip.Purposes.Select(p => new AdditionalEquipPurpose
+                                {
+                                    Purpose = p.Purpose,
+                                    Material = p.Material,
+                                    Quantity = p.Quantity,
+                                    Measure = p.Measure,
+                                    CostPerUnit = p.CostPerUnit,
+                                    ExportDays = p.ExportDays
+                                })
+                            )
+                        }))
         };
     }
 

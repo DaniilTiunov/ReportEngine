@@ -14,6 +14,7 @@ using ReportEngine.App.Views.Windows;
 using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
+using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.App.Services;
 
@@ -22,15 +23,18 @@ public class DialogService : IDialogService
     private readonly IServiceProvider _serviceProvider;
     private readonly IStandService _standService;
     private readonly INotificationService _notificationService;
+    private readonly IProjectInfoRepository _projectInfoRepository;
 
     public DialogService(
         IServiceProvider serviceProvider,
         IStandService standService,
-        INotificationService notificationService)
+        INotificationService notificationService,
+        IProjectInfoRepository projectInfoRepository)
     {
         _serviceProvider = serviceProvider;
         _standService = standService;
         _notificationService = notificationService;
+        _projectInfoRepository = projectInfoRepository;
     }
 
     public T? ShowEquipDialog<T>()
@@ -352,5 +356,20 @@ public class DialogService : IDialogService
         {
             progressDialog.Close();
         }
+    }
+
+    public Stand ShowSelectStandDialog()
+    {
+        var vm = new AllStandsViewModel(_projectInfoRepository);
+        var view = new AllStandsView(vm);
+
+        view.DataContext = vm;
+
+        var result = view.ShowDialog();
+
+        if (result == true)
+            return vm.SelectedResult;
+
+        return null;
     }
 }

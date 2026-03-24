@@ -3,6 +3,7 @@ using ReportEngine.App.Views;
 using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Settings;
 using ReportEngine.App.Views.Windows;
+using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.Braces;
 using ReportEngine.Domain.Entities.Drainage;
@@ -71,6 +72,9 @@ public static class MainWindowCommandsInitializer
 
         vm.MainWindowCommandProvider.RecalculateProjectCommand =
             new RelayCommand(vm.OnRecalculateProjectCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.MainWindowCommandProvider.OpenAllStandsCommand =
+            new RelayCommand(vm.OpenOthersWindowCommandExecuted<AllStandsView>, vm.CanAllCommandsExecute);
     }
 
     public static void InitializeGenericCommands(MainWindowViewModel vm)

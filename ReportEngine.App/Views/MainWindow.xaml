@@ -215,6 +215,7 @@
                     <Separator />
                     <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllDrainagesCommand}" Header="Дренажи" />
                 </MenuItem>
+                <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllStandsCommand}" Header="Стенды" />
                 <MenuItem Header="Инструменты">
                     <MenuItem Click="OpenLauncher" Header="Открыть лаунчер" />
                     <Separator />

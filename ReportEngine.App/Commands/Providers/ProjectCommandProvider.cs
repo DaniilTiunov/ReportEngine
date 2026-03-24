@@ -79,4 +79,5 @@ public class ProjectCommandProvider
     public ICommand SelectedFinPlaneReportCommand { get; set; }
     public ICommand SelectedPassportReportCommand { get; set; }
     public ICommand SelectedTechnoCardsReportCommand { get; set; }
+    public ICommand OnAddStandFromAllStandsCommand {  get; set; }
 }

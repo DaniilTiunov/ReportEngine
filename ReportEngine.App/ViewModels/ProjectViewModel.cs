@@ -46,6 +46,7 @@ public class ProjectViewModel : BaseViewModel
     private readonly UIValidatorService _uiValidatorService;
     private readonly GenericRepository _genericRepository;
     private readonly InitializeService _initializeService;
+    private readonly EntityStandClonerService _entityStandCloner;
 
     public ProjectViewModel(
         IProjectInfoRepository projectRepository,
@@ -61,7 +62,8 @@ public class ProjectViewModel : BaseViewModel
         AdditionalEquipService additionalEquipService,
         UIValidatorService uiValidatorService,
         GenericRepository genericRepository,
-        InitializeService initializeService)
+        InitializeService initializeService,
+        EntityStandClonerService entityStandCloner)
     {
         _genericRepository = genericRepository;
         _projectRepository = projectRepository;
@@ -77,6 +79,7 @@ public class ProjectViewModel : BaseViewModel
         _additionalEquipService = additionalEquipService;
         _uiValidatorService = uiValidatorService;
         _initializeService = initializeService;
+        _entityStandCloner = entityStandCloner;
 
         NewStand = new StandModel { Number = 1 };
 
@@ -869,6 +872,24 @@ public class ProjectViewModel : BaseViewModel
             OnPropertyChanged(nameof(stand.AdditionalPurposesChanges));
 
             _notificationService.ShowInfo("Все доп. комплектующие сохранены");
+        });
+    }
+
+
+    public async void OnAddStandFromAllStandsCommandExecuted(object obj)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            var selectedStandEntity = _dialogService.ShowSelectStandDialog();
+
+            var newStand = await _entityStandCloner.CloneStandEntity(selectedStandEntity, CurrentProjectModel.CurrentProjectId);
+
+            await _projectRepository.AddStandAsync(CurrentProjectModel.CurrentProjectId, newStand);
+
+            _notificationService.ShowInfo("Стенд успешно добалвен!");
+
+            await LoadAllAvaileDataAsync();
+
         });
     }
 
