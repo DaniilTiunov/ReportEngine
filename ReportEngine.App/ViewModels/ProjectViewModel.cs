@@ -872,6 +872,12 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
+
+    public async void OnAddStandFromAllStandsCommandExecuted(object obj)
+    {
+
+    }
+
     public async Task OnDeleteDrainageComponentFromStandCommandExecuted(object obj)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>

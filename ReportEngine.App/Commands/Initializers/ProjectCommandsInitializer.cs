@@ -172,7 +172,8 @@ public static class ProjectCommandsInitializer
         vm.ProjectCommandProvider.RenumerateObvInStandCommand =
             new RelayCommand(vm.OnRenumerateObvInStandAsyncCommandExecuted, vm.CanAllCommandsExecute);
 
-
+        vm.ProjectCommandProvider.OnAddStandFromAllStandsCommand =
+            new RelayCommand(vm.OnAddStandFromAllStandsCommandExecuted, vm.CanAllCommandsExecute);
 
 
         vm.ProjectCommandProvider.SelectedSummaryReportCommand =

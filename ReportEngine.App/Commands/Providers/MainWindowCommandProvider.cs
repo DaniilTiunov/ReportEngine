@@ -21,4 +21,5 @@ public class MainWindowCommandProvider
     public ICommand OpenCalculationSettingsWindow { get; set; }
     public ICommand RecalculateProjectCommand { get; set; }
     public ICommand OpenAllSubjectsCommand { get; set; }
+    public ICommand OpenAllStandsCommand { get; set; }
 }

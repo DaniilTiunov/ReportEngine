@@ -118,6 +118,7 @@
                             <ContextMenu>
                                 <MenuItem Command="{Binding ProjectCommandProvider.OpenCreateNewStandCommand}" Header="Создать стенд" />
                                 <MenuItem Command="{Binding ProjectCommandProvider.OpenEditStandCommand}" Header="Редактировать стенд" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.OnAddStandFromAllStandsCommand}" Header="Добавить стенд из других проектов" />
                                 <Separator />
                                 <MenuItem Command="{Binding ProjectCommandProvider.RenumerateStandsCommand}" Header="Пронумеровать стенды..." />
                                 <MenuItem Command="{Binding ProjectCommandProvider.CopyStandsCommand}" Header="Создать копию на основе прототипа" />
