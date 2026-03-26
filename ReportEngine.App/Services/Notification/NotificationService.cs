@@ -3,7 +3,7 @@ using ReportEngine.App.Enums;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Views.Windows.Dialog;
 
-namespace ReportEngine.App.Services;
+namespace ReportEngine.App.Services.Notification;
 
 public class NotificationService : INotificationService
 {

@@ -5,7 +5,7 @@ using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 
-namespace ReportEngine.App.Services;
+namespace ReportEngine.App.Services.Navigation;
 
 public class NavigationService
 {

@@ -7,7 +7,7 @@ using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 
-namespace ReportEngine.App.Services
+namespace ReportEngine.App.Services.Calculation
 {
     public class UpdaterStandService
     {

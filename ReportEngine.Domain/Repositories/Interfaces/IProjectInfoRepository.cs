@@ -6,6 +6,7 @@ public interface IProjectInfoRepository : IBaseRepository<ProjectInfo>
 {
     Task<Stand> AddStandAsync(int projectId, Stand stand);
 
+    Task<IEnumerable<Stand>> GetProjectWithStandsAsync(int projectId);
     Task<IEnumerable<ProjectInfo>> GetAllWithSandsAsync();
 
     Task<IEnumerable<Stand>> AddStandsGroupAsync(int projectId, IEnumerable<Stand> stands);

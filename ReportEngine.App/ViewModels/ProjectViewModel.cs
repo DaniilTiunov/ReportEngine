@@ -8,6 +8,8 @@ using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
 using ReportEngine.App.Services;
+using ReportEngine.App.Services.Calculation;
+using ReportEngine.App.Services.Cloners;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.ViewModels.Utils;
@@ -875,21 +877,19 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-
     public async void OnAddStandFromAllStandsCommandExecuted(object obj)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             var selectedStandEntity = _dialogService.ShowSelectStandDialog();
 
-            var newStand = await _entityStandCloner.CloneStandEntity(selectedStandEntity, CurrentProjectModel.CurrentProjectId);
+            var newStand = await _entityStandCloner.CloneStandEntity(selectedStandEntity);
 
             await _projectRepository.AddStandAsync(CurrentProjectModel.CurrentProjectId, newStand);
 
-            _notificationService.ShowInfo("Стенд успешно добалвен!");
+            await LoadProjectInfoAsync(CurrentProjectModel.CurrentProjectId);
 
-            await LoadAllAvaileDataAsync();
-
+            _notificationService.ShowInfo("Стенд успешно добавлен!");
         });
     }
 

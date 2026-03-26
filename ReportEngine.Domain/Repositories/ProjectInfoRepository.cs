@@ -20,6 +20,15 @@ public class ProjectInfoRepository : IProjectInfoRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task<IEnumerable<Stand>> GetProjectWithStandsAsync(int projectId)
+    {
+        return await _context.Set<ProjectInfo>()
+            .AsNoTracking()
+            .Where(p => p.Id == projectId)
+            .SelectMany(p => p.Stands)
+            .ToListAsync();
+    }
+
     public async Task<IEnumerable<ProjectInfo>> GetAllAsync()
     {
         return await _context.Set<ProjectInfo>()

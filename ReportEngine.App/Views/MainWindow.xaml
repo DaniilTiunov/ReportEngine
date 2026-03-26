@@ -388,6 +388,7 @@
                         <DataGrid.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Command="{Binding MainWindowCommandProvider.EditProjectCommand}" Header="Редактировать проект" />
+                                <MenuItem Command="{Binding MainWindowCommandProvider.CopySelectedProjectCommand}" Header="Копировать проект" />
                                 <MenuItem Command="{Binding MainWindowCommandProvider.RecalculateProjectCommand}" Header="Переформировать" />
                                 <MenuItem
                                     Command="{Binding MainWindowCommandProvider.DeleteSelectedProjectCommand}"
