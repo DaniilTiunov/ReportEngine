@@ -1,7 +1,8 @@
-﻿using ReportEngine.Domain.Entities;
+﻿using ReportEngine.App.ViewModels;
+using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 
-namespace ReportEngine.App.Services
+namespace ReportEngine.App.Services.Cloners
 {
     public class EntityStandClonerService
     {
@@ -40,7 +41,7 @@ namespace ReportEngine.App.Services
                 StandAdditionalEquips = CloneAdditionalEquips(standComponents.StandAdditionalEquips),
                 StandDrainages = CloneDrainages(standComponents.StandDrainages),
                 StandElectricalComponent = CloneElectricalComponents(standComponents.StandElectricalComponent),
-                //ObvyazkiInStand = CloneObvyazki(standComponents.ObvyazkiInStand)
+                ObvyazkiInStand = CloneObvyazki(standComponents.ObvyazkiInStand)
             };
 
             return newStand;
@@ -145,21 +146,66 @@ namespace ReportEngine.App.Services
             return obvyazki.Select(obv => new ObvyazkaInStand
                 {
                     Id = 0,
-                    Armature = obv.Armature,
-                    Clamp = obv.Clamp,
-                    
                     ObvyazkaId = obv.ObvyazkaId,
-                    Obvyazka = null,
+                    Obvyazka = obv.Obvyazka,
+                    ObvyazkaName = obv.ObvyazkaName,
+                    MaterialLine = obv.MaterialLine,
+                    MaterialLineCount = obv.MaterialLineCount,
+                    MaterialLineMeasure = obv.MaterialLineMeasure,
+                    MaterialLineCostPerUnit = obv.MaterialLineCostPerUnit,
+                    MaterialLineExportDays = obv.MaterialLineExportDays,
+                    TreeSocket = obv.TreeSocket,
+                    TreeSocketMaterialCount = obv.TreeSocketMaterialCount,
+                    TreeSocketMaterialMeasure = obv.TreeSocketMaterialMeasure,
+                    TreeSocketMaterialCostPerUnit = obv.TreeSocketMaterialCostPerUnit,
+                    TreeSocketExportDays = obv.TreeSocketExportDays,
+                    KMCH = obv.KMCH,
+                    KMCHCount = obv.KMCHCount,
+                    KMCHMeasure = obv.KMCHMeasure,
+                    KMCHCostPerUnit = obv.KMCHCostPerUnit,
+                    KMCHExportDays = obv.KMCHExportDays,
+                    Armature = obv.Armature,
+                    ArmatureCount = obv.ArmatureCount,
+                    ArmatureMeasure = obv.ArmatureMeasure,
+                    ArmatureCostPerUnit = obv.ArmatureCostPerUnit,
+                    ArmatureExportDays = obv.ArmatureExportDays,
+                    NN = obv.NN,
+                    LineLength = obv.LineLength,
+                    ZraCount = obv.ZraCount,
+                    TreeSocketCount = obv.TreeSocketCount,
+                    Sensor = obv.Sensor,
+                    SensorType = obv.SensorType,
+                    Clamp = obv.Clamp,
+                    WidthOnFrame = obv.WidthOnFrame,
+                    OtherLineCount = obv.OtherLineCount,
+                    Weight = obv.Weight,
+                    HumanCost = obv.HumanCost,
+                    ImageName = obv.ImageName,
+                    FirstSensorType = obv.FirstSensorType,
+                    FirstSensorKKS = obv.FirstSensorKKS,
+                    FirstSensorMarkPlus = obv.FirstSensorMarkPlus,
+                    FirstSensorMarkMinus = obv.FirstSensorMarkMinus,
+                    FirstSensorDescription = obv.FirstSensorDescription,
+                    SecondSensorType = obv.SecondSensorType,
+                    SecondSensorKKS = obv.SecondSensorKKS,
+                    SecondSensorMarkPlus = obv.SecondSensorMarkPlus,
+                    SecondSensorMarkMinus = obv.SecondSensorMarkMinus,
+                    SecondSensorDescription = obv.SecondSensorDescription,
+                    ThirdSensorType = obv.ThirdSensorType,
+                    ThirdSensorKKS = obv.ThirdSensorKKS,
+                    ThirdSensorMarkPlus = obv.ThirdSensorMarkPlus,
+                    ThirdSensorMarkMinus = obv.ThirdSensorMarkMinus,
+                    ThirdSensorDescription = obv.ThirdSensorDescription,
                     AdditionalComponents = obv.AdditionalComponents
-                .Select(ac => new ObvyazkaAdditionalEquipPurpose
-                {
-                    Id = 0,
-                    Material = ac.Material,
-                    Quantity = ac.Quantity,
-                    Measure = ac.Measure,
-                    CostPerUnit = ac.CostPerUnit,
-                    ExportDays = ac.ExportDays
-                }).ToList()
+                        .Select(ac => new ObvyazkaAdditionalEquipPurpose
+                        {
+                            Id = 0,
+                            Material = ac.Material,
+                            Quantity = ac.Quantity,
+                            Measure = ac.Measure,
+                            CostPerUnit = ac.CostPerUnit,
+                            ExportDays = ac.ExportDays
+                        }).ToList()
             }).ToList();
         }
     }

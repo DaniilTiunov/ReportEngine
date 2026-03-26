@@ -4,8 +4,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ReportEngine.App.Services;
+using ReportEngine.App.Services.Calculation;
+using ReportEngine.App.Services.Cloners;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.Services.Navigation;
+using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.CalculationSettings;
 using ReportEngine.App.ViewModels.Contacts;
@@ -138,7 +142,6 @@ public class HostFactory
     private static void ConfigureApplicationServices(IServiceCollection services)
     {
         services.AddSingleton<UpdaterStandService>();
-        services.AddSingleton<EquipChangesListener>();
         services.AddSingleton<GenericEquipWindowFactory>();
         services.AddSingleton<NavigationService>();
         services.AddSingleton<IDialogService, DialogService>();

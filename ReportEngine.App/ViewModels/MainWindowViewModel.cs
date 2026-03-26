@@ -11,6 +11,7 @@ using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.Services.Navigation;
 using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Database.Context;

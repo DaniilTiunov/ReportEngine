@@ -5,7 +5,7 @@ using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Shared.Helpers;
 
-namespace ReportEngine.App.Services.Core;
+namespace ReportEngine.App.Services.Calculation;
 
 public class CalculationService : ICalculationService
 {

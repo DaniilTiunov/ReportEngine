@@ -16,7 +16,7 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Repositories.Interfaces;
 
-namespace ReportEngine.App.Services;
+namespace ReportEngine.App.Services.Navigation;
 
 public class DialogService : IDialogService
 {
