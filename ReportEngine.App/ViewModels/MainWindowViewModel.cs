@@ -9,6 +9,7 @@ using ReportEngine.App.Commands.Providers;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services;
+using ReportEngine.App.Services.Cloners;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Services.Navigation;
@@ -30,6 +31,7 @@ public class MainWindowViewModel : BaseViewModel
     private readonly IServiceProvider _serviceProvider;
     private readonly IProjectService _projectService;
     private readonly IDialogService _dialogService;
+    private readonly EntityProjectClonerService _entityProjectClonerService;
 
     #region Конструктор
 
@@ -40,7 +42,8 @@ public class MainWindowViewModel : BaseViewModel
         ICalculationService calculationService,
         INotificationService notificationService,
         IProjectService projectService,
-        IDialogService dialogService)
+        IDialogService dialogService,
+        EntityProjectClonerService entityProjectClonerService)
     {
         _notificationService = notificationService;
         _calculationService = calculationService;
@@ -49,6 +52,7 @@ public class MainWindowViewModel : BaseViewModel
         _navigation = navigation;
         _projectService = projectService;
         _dialogService = dialogService;
+        _entityProjectClonerService = entityProjectClonerService;
 
         InitializeMainWindowCommands();
         InitializeGenericEquipCommands();
@@ -112,6 +116,14 @@ public class MainWindowViewModel : BaseViewModel
                 await projectViewModel.LoadProjectInfoAsync(MainWindowModel.SelectedProject.Id);
                 _navigation.ShowContent<TreeProjectView>();
             });
+        });
+    }
+
+    public async void OnCopyProjectCommandexecuted(object e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            await _entityProjectClonerService.CloneProjectEntity(MainWindowModel.SelectedProject);
         });
     }
 

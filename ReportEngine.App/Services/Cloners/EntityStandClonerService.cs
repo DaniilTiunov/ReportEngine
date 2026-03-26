@@ -13,13 +13,12 @@ namespace ReportEngine.App.Services.Cloners
             _projectRepository = projectRepository;
         }
 
-        public async Task<Stand> CloneStandEntity(Stand sourceStand, int projectId)
+        public async Task<Stand> CloneStandEntity(Stand sourceStand)
         {
             var standComponents = await GetAllStandsDataAsync(sourceStand);
 
-            var newStand = new Stand
+            return new Stand
             {
-                ProjectInfoId = projectId,
                 KKSCode = standComponents.KKSCode,
                 Design = standComponents.Design,
                 BraceType = standComponents.BraceType,
@@ -43,8 +42,6 @@ namespace ReportEngine.App.Services.Cloners
                 StandElectricalComponent = CloneElectricalComponents(standComponents.StandElectricalComponent),
                 ObvyazkiInStand = CloneObvyazki(standComponents.ObvyazkiInStand)
             };
-
-            return newStand;
         }
 
         public async Task<Stand> GetAllStandsDataAsync(Stand sourceStand)

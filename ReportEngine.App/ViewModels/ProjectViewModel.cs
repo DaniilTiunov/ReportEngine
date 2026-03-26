@@ -877,14 +877,13 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-
     public async void OnAddStandFromAllStandsCommandExecuted(object obj)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
             var selectedStandEntity = _dialogService.ShowSelectStandDialog();
 
-            var newStand = await _entityStandCloner.CloneStandEntity(selectedStandEntity, CurrentProjectModel.CurrentProjectId);
+            var newStand = await _entityStandCloner.CloneStandEntity(selectedStandEntity);
 
             await _projectRepository.AddStandAsync(CurrentProjectModel.CurrentProjectId, newStand);
 
