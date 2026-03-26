@@ -7,7 +7,6 @@ using ReportEngine.App.Model;
 using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
-using ReportEngine.App.Services;
 using ReportEngine.App.Services.Calculation;
 using ReportEngine.App.Services.Cloners;
 using ReportEngine.App.Services.Core;
@@ -883,11 +882,16 @@ public class ProjectViewModel : BaseViewModel
         {
             var selectedStandEntity = _dialogService.ShowSelectStandDialog();
 
-            var newStand = await _entityStandCloner.CloneStandEntity(selectedStandEntity);
+            await _dialogService.RunWithProgressDialogAsync(async () =>
+            {
+                var newStand = await _entityStandCloner.CloneStandEntity(selectedStandEntity);
 
-            await _projectRepository.AddStandAsync(CurrentProjectModel.CurrentProjectId, newStand);
+                await _projectRepository.AddStandAsync(CurrentProjectModel.CurrentProjectId, newStand);
 
-            await LoadProjectInfoAsync(CurrentProjectModel.CurrentProjectId);
+                CurrentProjectModel.Stands.Add(StandDataConverter.ConvertToStandModel(newStand));
+
+                await LoadStandsDataAsync();
+            });
 
             _notificationService.ShowInfo("Стенд успешно добавлен!");
         });
@@ -1729,7 +1733,7 @@ public class ProjectViewModel : BaseViewModel
 
     #endregion Методы расчёта и создания отчётности
 
-        #region Обновление UI
+    #region Обновление UI
     public void OnObvyazkiInStandChanged()
     {
         Debug.WriteLine("Обвязки поменялись");
