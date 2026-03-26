@@ -119,11 +119,18 @@ public class MainWindowViewModel : BaseViewModel
         });
     }
 
-    public async void OnCopyProjectCommandexecuted(object e)
+    public async void OnCopyProjectCommandExecuted(object e)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-            await _entityProjectClonerService.CloneProjectEntity(MainWindowModel.SelectedProject);
+            await _dialogService.RunWithProgressDialogAsync(async () =>
+            {
+                var newProject = MainWindowModel.SelectedProject;
+
+                await _entityProjectClonerService.CloneProjectEntity(newProject);
+
+                MainWindowModel.AllProjects.Add(newProject);
+            });
         });
     }
 
@@ -144,7 +151,7 @@ public class MainWindowViewModel : BaseViewModel
             //{
             //    _navigation.CloseContent();
             //}
-            
+
             _navigation.CloseContent();
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
             mainWindow.MainContentControl.Content = mainWindow.MainGrid;

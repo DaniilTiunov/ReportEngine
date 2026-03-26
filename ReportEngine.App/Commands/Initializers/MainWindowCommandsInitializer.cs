@@ -77,7 +77,7 @@ public static class MainWindowCommandsInitializer
             new RelayCommand(vm.OpenOthersWindowCommandExecuted<AllStandsView>, vm.CanAllCommandsExecute);
 
         vm.MainWindowCommandProvider.CopySelectedProjectCommand =
-            new RelayCommand(vm.OnCopyProjectCommandexecuted, vm.CanAllCommandsExecute);
+            new RelayCommand(vm.OnCopyProjectCommandExecuted, vm.CanAllCommandsExecute);
     }
 
     public static void InitializeGenericCommands(MainWindowViewModel vm)

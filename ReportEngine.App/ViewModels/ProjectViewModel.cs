@@ -7,7 +7,6 @@ using ReportEngine.App.Model;
 using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
-using ReportEngine.App.Services;
 using ReportEngine.App.Services.Calculation;
 using ReportEngine.App.Services.Cloners;
 using ReportEngine.App.Services.Core;
@@ -488,6 +487,21 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(DeleteStandFromProject);
     }
 
+    public async void OnDeleteSelectedStandsCommandExecuted(object? e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            foreach (var stand in StandsListHelper.SelectedStands)
+            {
+                await _projectService.DeleteStandAsync(CurrentProjectModel.CurrentProjectId, stand.Id);
+            }
+
+            await _projectDataLoaderService.LoadAllProjectStandsAsync(CurrentProjectModel.CurrentProjectId, this);
+
+            _notificationService.ShowInfo($"Стенды удалены из проекта!");
+        });
+    }
+
     public async void OnSaveChangesCommandExecuted(object? e)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -883,11 +897,16 @@ public class ProjectViewModel : BaseViewModel
         {
             var selectedStandEntity = _dialogService.ShowSelectStandDialog();
 
-            var newStand = await _entityStandCloner.CloneStandEntity(selectedStandEntity);
+            await _dialogService.RunWithProgressDialogAsync(async () =>
+            {
+                var newStand = await _entityStandCloner.CloneStandEntity(selectedStandEntity);
 
-            await _projectRepository.AddStandAsync(CurrentProjectModel.CurrentProjectId, newStand);
+                await _projectRepository.AddStandAsync(CurrentProjectModel.CurrentProjectId, newStand);
 
-            await LoadProjectInfoAsync(CurrentProjectModel.CurrentProjectId);
+                CurrentProjectModel.Stands.Add(StandDataConverter.ConvertToStandModel(newStand));
+
+                await LoadStandsDataAsync();
+            });
 
             _notificationService.ShowInfo("Стенд успешно добавлен!");
         });
@@ -1424,6 +1443,8 @@ public class ProjectViewModel : BaseViewModel
         await _projectService.DeleteStandAsync(CurrentProjectModel.CurrentProjectId, selected.Id);
         CurrentProjectModel.Stands.Remove(selected);
 
+        _notificationService.ShowInfo($"Стенд удалён из проекта");
+
         UpdateNewStandNN();
         OnStandsInProjectChanged();
     }
@@ -1729,7 +1750,7 @@ public class ProjectViewModel : BaseViewModel
 
     #endregion Методы расчёта и создания отчётности
 
-        #region Обновление UI
+    #region Обновление UI
     public void OnObvyazkiInStandChanged()
     {
         Debug.WriteLine("Обвязки поменялись");

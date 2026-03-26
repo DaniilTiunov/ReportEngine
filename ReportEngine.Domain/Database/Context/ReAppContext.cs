@@ -80,4 +80,6 @@ public class ReAppContext : DbContext
     public DbSet<ContainerBatch> ContainersBatch { get; set; } // Ящики с стендами
 
     public DbSet<TablesChanges> TablesChanges { get; set; }
+
+    public DbSet<CalculationParameter> CalculationParameters { get; set; }
 }
