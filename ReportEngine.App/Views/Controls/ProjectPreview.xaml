@@ -16,12 +16,12 @@
         <converters:ByteArrayImageConverter x:Key="ByteArrayImageConverter" />
     </UserControl.Resources>
 
-    <!--<UserControl.InputBindings>
+    <UserControl.InputBindings>
         <KeyBinding
-            Key="F5"
-            Command="{Binding ProjectCommandProvider.UpdateUICommand}"
+            Key="Delete"
+            Command="{Binding ProjectCommandProvider.DeleteSelectedStandsCommand}"
             CommandParameter="{x:Null}" />
-    </UserControl.InputBindings>-->
+    </UserControl.InputBindings>
 
     <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
         <!--  Главный грид  -->

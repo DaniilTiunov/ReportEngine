@@ -487,6 +487,21 @@ public class ProjectViewModel : BaseViewModel
         await ExceptionHelper.SafeExecuteAsync(DeleteStandFromProject);
     }
 
+    public async void OnDeleteSelectedStandsCommandExecuted(object? e)
+    {
+        await ExceptionHelper.SafeExecuteAsync(async () =>
+        {
+            foreach (var stand in StandsListHelper.SelectedStands)
+            {
+                await _projectService.DeleteStandAsync(CurrentProjectModel.CurrentProjectId, stand.Id);
+            }
+
+            await _projectDataLoaderService.LoadAllProjectStandsAsync(CurrentProjectModel.CurrentProjectId, this);
+
+            _notificationService.ShowInfo($"Стенды удалены из проекта!");
+        });
+    }
+
     public async void OnSaveChangesCommandExecuted(object? e)
     {
         await ExceptionHelper.SafeExecuteAsync(async () =>
@@ -1427,6 +1442,8 @@ public class ProjectViewModel : BaseViewModel
 
         await _projectService.DeleteStandAsync(CurrentProjectModel.CurrentProjectId, selected.Id);
         CurrentProjectModel.Stands.Remove(selected);
+
+        _notificationService.ShowInfo($"Стенд удалён из проекта");
 
         UpdateNewStandNN();
         OnStandsInProjectChanged();

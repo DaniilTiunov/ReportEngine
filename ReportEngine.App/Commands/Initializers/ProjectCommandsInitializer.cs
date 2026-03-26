@@ -203,6 +203,9 @@ public static class ProjectCommandsInitializer
         vm.ProjectCommandProvider.SelectedTechnoCardsReportCommand =
             new RelayCommand(vm.OnCreateSelectedTechnologicalCardsCommandExecute, vm.CanAllCommandsExecute);
 
+        vm.ProjectCommandProvider.DeleteSelectedStandsCommand =
+            new RelayCommand(vm.OnDeleteSelectedStandsCommandExecuted, vm.CanAllCommandsExecute);
+
     }
 
     public static void InitializeGenericCommands(ProjectViewModel vm)

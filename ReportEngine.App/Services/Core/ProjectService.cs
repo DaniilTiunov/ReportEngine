@@ -4,11 +4,13 @@ using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Enums;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Shared.Helpers;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
 namespace ReportEngine.App.Services.Core;
 
@@ -180,6 +182,8 @@ public class ProjectService : IProjectService
             TreeSocket = sourceStand.TreeSocket,
             Weight = sourceStand.Weight,
             Width = sourceStand.Width,
+            ImageData = sourceStand.ImageData,
+            ImageType = sourceStand.ImageType,
             DesignStand = sourceStand.DesignStand,
             ObvyazkiInStand = new ObservableCollection<ObvyazkaInStand>(
                 sourceStand.ObvyazkiInStand.Select(obv =>
@@ -245,7 +249,16 @@ public class ProjectService : IProjectService
     public async Task DeleteStandAsync(int projectId, int standId)
     {
         await _projectRepository.DeleteStandAsync(projectId, standId);
-        _notificationService.ShowInfo($"Стенд удалён из проекта");
+    }
+
+    public async Task DeleteStandsAsync(int projectId, List<Stand> stands)
+    {
+        foreach(var stand in stands)
+        {
+            await _projectRepository.DeleteStandAsync(projectId, stand.Id);
+        }
+
+        _notificationService.ShowInfo($"Стенды удалены из проекта");
     }
 
     public async Task AddStandToProjectAsync(int projectId, StandModel standModel)
