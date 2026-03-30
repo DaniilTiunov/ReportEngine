@@ -42,7 +42,8 @@
                     Grid.ColumnSpan="2"
                     BeginningEdit="DataGrid_BeginningEdit"
                     CanUserAddRows="True"
-                    ItemsSource="{Binding CalculationParameters}"
+                    SelectedItem="{Binding SelectedEquipment}"
+                    ItemsSource="{Binding EquipmentsParameters}"
                     LoadingRow="DataGrid_LoadingRow"
                     MouseDoubleClick="DataGrid_MouseDoubleClick">
                     <DataGrid.Columns>
