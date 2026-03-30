@@ -7,7 +7,6 @@ using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.Frame;
-using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.App.ViewModels.FormedEquips;
@@ -129,7 +128,7 @@ public class FormedFrameViewModel : BaseViewModel
         var addedFrame = await _formedFrameRepository.GetByIdAsync(newFrame.Id);
         FormedFrameModel.AllFrames.Add(addedFrame);
 
-        if(FormedFrameModel.Disassembled == true)
+        if (FormedFrameModel.Disassembled == true)
         {
             var defaultFirstComponent = new FrameComponent
             {
@@ -141,7 +140,7 @@ public class FormedFrameViewModel : BaseViewModel
                 Length = 0,
                 ComponentType = nameof(FrameDetail),
                 ComponentName = FrameSettings.MaterialOne,
-                Count = (int)FrameSettings.CountMaterialOne,
+                Count = (int)FrameSettings.CountMaterialOne
             };
             var defaultSecondComponent = new FrameComponent
             {
@@ -153,7 +152,7 @@ public class FormedFrameViewModel : BaseViewModel
                 Length = 0,
                 ComponentType = nameof(FrameDetail),
                 ComponentName = FrameSettings.MaterialTwo,
-                Count = (int)FrameSettings.CountMaterialTwo,
+                Count = (int)FrameSettings.CountMaterialTwo
             };
 
             await _formedFrameRepository.AddComponentAsync(defaultFirstComponent);

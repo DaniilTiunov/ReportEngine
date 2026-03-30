@@ -23,7 +23,7 @@ public class ReportService : IReportService
 
         await generator.GenerateAsync(projectId);
     }
-        
+
     public async Task GenerateReportAsync(ReportType generatorType, int projectId, List<Stand>? selectedStands = null)
     {
         var generator = _generators.FirstOrDefault(generator => generator.Type == generatorType);

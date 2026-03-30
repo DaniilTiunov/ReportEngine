@@ -78,6 +78,9 @@ public static class MainWindowCommandsInitializer
 
         vm.MainWindowCommandProvider.CopySelectedProjectCommand =
             new RelayCommand(vm.OnCopyProjectCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.MainWindowCommandProvider.OpenCalculationParametersCommand =
+            new RelayCommand(vm.OnOpenCalculationParametersCommandExecuted, vm.CanAllCommandsExecute);
     }
 
     public static void InitializeGenericCommands(MainWindowViewModel vm)

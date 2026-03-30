@@ -5,7 +5,6 @@ namespace ReportEngine.Domain.Entities;
 
 public class DrainagePurpose : IPurposeEntity
 {
-    [Key] public int Id { get; set; }
     public string? Purpose { get; set; } // Например, "Клапан", "Труба"
     public string? Material { get; set; } // Просто текстовое поле для материала
     public float? Quantity { get; set; } // Количество
@@ -19,4 +18,5 @@ public class DrainagePurpose : IPurposeEntity
     public int FormedDrainageId { get; set; }
 
     public virtual FormedDrainage FormedDrainage { get; set; }
+    [Key] public int Id { get; set; }
 }

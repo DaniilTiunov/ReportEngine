@@ -1,7 +1,5 @@
 ﻿using ReportEngine.App.Model.StandsModel;
 using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Entities.BaseEntities.Interface;
-using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.App.Services.Interfaces;
 
@@ -29,9 +27,11 @@ public interface IStandService
 
     Task AddCustomDrainageAsync(int standId, List<DrainagePurpose> drainagePurposes, FormedDrainage customDrainage);
 
-    Task AddCustomElectricalComponentAsync(int standId, List<ElectricalPurpose> electricalPurpose, FormedElectricalComponent customElectrical);
+    Task AddCustomElectricalComponentAsync(int standId, List<ElectricalPurpose> electricalPurpose,
+        FormedElectricalComponent customElectrical);
 
-    Task AddCustomAdditionalEquipAsync(int standId, List<AdditionalEquipPurpose> additionalEquipPurposes, FormedAdditionalEquip customEquip);
+    Task AddCustomAdditionalEquipAsync(int standId, List<AdditionalEquipPurpose> additionalEquipPurposes,
+        FormedAdditionalEquip customEquip);
 
     Task LoadPurposesInStands(IEnumerable<StandModel> stands);
 

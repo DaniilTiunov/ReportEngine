@@ -11,21 +11,14 @@ public class CalculationService : ICalculationService
 {
     private readonly IProjectService _projectService;
 
-    public StandSettingsModel DefaultStandSettings { get; set; } = new();
-    public HumanCostSettingsModel HumanCostSettingsModel { get; set; } = new();
-    public FrameSettingsModel FrameSettingsModel { get; set; } = new();
-
     public CalculationService(IProjectService projectService)
     {
         _projectService = projectService;
     }
 
-    private async Task LoadSettingsCost()
-    {
-        await DefaultStandSettings.LoadStandsSettingsDataAsync();
-        await HumanCostSettingsModel.LoadHumanCostDataFromIniAsync();
-        await FrameSettingsModel.LoadFrameDataFromIniAsync();
-    }
+    public StandSettingsModel DefaultStandSettings { get; set; } = new();
+    public HumanCostSettingsModel HumanCostSettingsModel { get; set; } = new();
+    public FrameSettingsModel FrameSettingsModel { get; set; } = new();
 
     public async Task CalculateProjectAsync(ProjectModel project)
     {
@@ -47,9 +40,16 @@ public class CalculationService : ICalculationService
         project.Cost = standsCost + galvanizedCost;
 
         project.HumanCost = (project.Stands.Sum(ObvHumanCostCalculation) + CalculateOtherHumanCost(project)).Round(2);
-        
+
         await _projectService.UpdateProjectAsync(project);
         await _projectService.UpdateStandEntity(project);
+    }
+
+    private async Task LoadSettingsCost()
+    {
+        await DefaultStandSettings.LoadStandsSettingsDataAsync();
+        await HumanCostSettingsModel.LoadHumanCostDataFromIniAsync();
+        await FrameSettingsModel.LoadFrameDataFromIniAsync();
     }
 
     private void CalculateStandsCount(ProjectModel project)
@@ -103,10 +103,10 @@ public class CalculationService : ICalculationService
 
         cost += standModel.ObvyazkiInStand
             .Sum(p =>
-            Convert.ToDecimal(p.ArmatureCostPerUnit) * Convert.ToDecimal(p.ArmatureCount) +
-            Convert.ToDecimal(p.KMCHCostPerUnit) * Convert.ToDecimal(p.KMCHCount) +
-            Convert.ToDecimal(p.TreeSocketMaterialCostPerUnit) * Convert.ToDecimal(p.TreeSocketCount) +
-            Convert.ToDecimal(p.MaterialLineCostPerUnit) * Convert.ToDecimal(p.MaterialLineCount));
+                Convert.ToDecimal(p.ArmatureCostPerUnit) * Convert.ToDecimal(p.ArmatureCount) +
+                Convert.ToDecimal(p.KMCHCostPerUnit) * Convert.ToDecimal(p.KMCHCount) +
+                Convert.ToDecimal(p.TreeSocketMaterialCostPerUnit) * Convert.ToDecimal(p.TreeSocketCount) +
+                Convert.ToDecimal(p.MaterialLineCostPerUnit) * Convert.ToDecimal(p.MaterialLineCount));
 
         return cost;
     }
@@ -121,7 +121,7 @@ public class CalculationService : ICalculationService
 
     private float ObvHumanCostCalculation(StandModel stand)
     {
-        return (float)Math.Round(stand.ObvyazkiInStand.Sum(obv => obv.HumanCost ?? 0f),2);
+        return (float)Math.Round(stand.ObvyazkiInStand.Sum(obv => obv.HumanCost ?? 0f), 2);
     }
 
     private float CalculateOtherHumanCost(ProjectModel projectModel)
@@ -133,20 +133,20 @@ public class CalculationService : ICalculationService
         var obvyazkiCount = projectModel.Stands.Sum(s => s.ObvyazkiInStand.Count);
 
         var humanStandsCost = (HumanCostSettingsModel.TimeForCheckStand
-            + HumanCostSettingsModel.TimeForOneDrill
-            + HumanCostSettingsModel.TimeForMontageOneInput
-            + HumanCostSettingsModel.TimeForDrillOneBus
-            + HumanCostSettingsModel.TimeForCollectorBoil
-            + HumanCostSettingsModel.TimeForPrepareAllEquipment) * standsCount
-            + HumanCostSettingsModel.TimeForAllChecks
-            + HumanCostSettingsModel.TimeForFinalWork
-            + HumanCostSettingsModel.TimeForOthersOperations;
+                               + HumanCostSettingsModel.TimeForOneDrill
+                               + HumanCostSettingsModel.TimeForMontageOneInput
+                               + HumanCostSettingsModel.TimeForDrillOneBus
+                               + HumanCostSettingsModel.TimeForCollectorBoil
+                               + HumanCostSettingsModel.TimeForPrepareAllEquipment) * standsCount
+                              + HumanCostSettingsModel.TimeForAllChecks
+                              + HumanCostSettingsModel.TimeForFinalWork
+                              + HumanCostSettingsModel.TimeForOthersOperations;
 
         var humanFrameCost = (FrameSettingsModel.TimeForPaintFrame
-            + FrameSettingsModel.TimeForPrepareFrame
-            + FrameSettingsModel.TimeForProductionFrame
-            + FrameSettingsModel.TimeForAssemblyWork) * framesCount +
-            (FrameSettingsModel.TimeForPaintObv * obvyazkiCount);
+                              + FrameSettingsModel.TimeForPrepareFrame
+                              + FrameSettingsModel.TimeForProductionFrame
+                              + FrameSettingsModel.TimeForAssemblyWork) * framesCount +
+                             FrameSettingsModel.TimeForPaintObv * obvyazkiCount;
 
         totalHumanCost = humanStandsCost.ToFloat() + humanFrameCost.ToFloat();
 

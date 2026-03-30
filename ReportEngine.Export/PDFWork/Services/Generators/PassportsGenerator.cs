@@ -39,11 +39,11 @@ public class PassportsGenerator : IReportGenerator
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
             WriteIndented = true
         };
-        string jsonObject = JsonSerializer.Serialize(dataObject, options);
+        var jsonObject = JsonSerializer.Serialize(dataObject, options);
         var jsonSavePath = DirectoryHelper.GetJsonSavePath();
         File.WriteAllText(jsonSavePath, jsonObject, Encoding.UTF8);
 
-        ProcessStartInfo startInfo = new ProcessStartInfo();
+        var startInfo = new ProcessStartInfo();
         startInfo.FileName = exeFilePath;
         startInfo.Arguments = $"--script passport --jsonPath \"{jsonSavePath}\" --outputFilePath \"{fullSavePath}\"";
         startInfo.UseShellExecute = false;
@@ -51,11 +51,11 @@ public class PassportsGenerator : IReportGenerator
         startInfo.RedirectStandardError = true;
         startInfo.CreateNoWindow = true;
 
-        using (Process process = Process.Start(startInfo))
+        using (var process = Process.Start(startInfo))
         {
-            string scriptOutput = "";
+            var scriptOutput = "";
 
-            using (StreamReader reader = process.StandardOutput)
+            using (var reader = process.StandardOutput)
             {
                 scriptOutput = reader.ReadToEnd();
             }
@@ -64,7 +64,7 @@ public class PassportsGenerator : IReportGenerator
 
             var result = JsonSerializer.Deserialize<PythonScriptResult>(scriptOutput);
 
-            string outputMessage = "";
+            var outputMessage = "";
             if (!result.Success)
             {
                 outputMessage = "Возникло исключение в Python скрипте\n";
@@ -74,10 +74,8 @@ public class PassportsGenerator : IReportGenerator
                 outputMessage += $"Трассировка: {result.Error.Traceback}\n";
                 throw new Exception(outputMessage);
             }
-            else
-            {
-                outputMessage = "Python скрипт выполнен успешно";
-            }
+
+            outputMessage = "Python скрипт выполнен успешно";
 
             Debug.WriteLine(outputMessage);
         }
@@ -98,11 +96,11 @@ public class PassportsGenerator : IReportGenerator
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
             WriteIndented = true
         };
-        string jsonObject = JsonSerializer.Serialize(dataObject, options);
+        var jsonObject = JsonSerializer.Serialize(dataObject, options);
         var jsonSavePath = DirectoryHelper.GetJsonSavePath();
         File.WriteAllText(jsonSavePath, jsonObject, Encoding.UTF8);
 
-        ProcessStartInfo startInfo = new ProcessStartInfo();
+        var startInfo = new ProcessStartInfo();
         startInfo.FileName = exeFilePath;
         startInfo.Arguments = $"--script passport --jsonPath \"{jsonSavePath}\" --outputFilePath \"{fullSavePath}\"";
         startInfo.UseShellExecute = false;
@@ -110,11 +108,11 @@ public class PassportsGenerator : IReportGenerator
         startInfo.RedirectStandardError = true;
         startInfo.CreateNoWindow = true;
 
-        using (Process process = Process.Start(startInfo))
+        using (var process = Process.Start(startInfo))
         {
-            string scriptOutput = "";
+            var scriptOutput = "";
 
-            using (StreamReader reader = process.StandardOutput)
+            using (var reader = process.StandardOutput)
             {
                 scriptOutput = reader.ReadToEnd();
             }
@@ -123,7 +121,7 @@ public class PassportsGenerator : IReportGenerator
 
             var result = JsonSerializer.Deserialize<PythonScriptResult>(scriptOutput);
 
-            string outputMessage = "";
+            var outputMessage = "";
             if (!result.Success)
             {
                 outputMessage = "Возникло исключение в Python скрипте\n";
@@ -133,10 +131,8 @@ public class PassportsGenerator : IReportGenerator
                 outputMessage += $"Трассировка: {result.Error.Traceback}\n";
                 throw new Exception(outputMessage);
             }
-            else
-            {
-                outputMessage = "Python скрипт выполнен успешно";
-            }
+
+            outputMessage = "Python скрипт выполнен успешно";
 
             Debug.WriteLine(outputMessage);
         }

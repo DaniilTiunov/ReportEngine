@@ -116,33 +116,51 @@
                         </ListView.View>
                         <ListView.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding ProjectCommandProvider.OpenCreateNewStandCommand}" Header="Создать стенд" />
-                                <MenuItem Command="{Binding ProjectCommandProvider.OpenEditStandCommand}" Header="Редактировать стенд" />
-                                <MenuItem Command="{Binding ProjectCommandProvider.OnAddStandFromAllStandsCommand}" Header="Добавить стенд из других проектов" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.OpenCreateNewStandCommand}"
+                                          Header="Создать стенд" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.OpenEditStandCommand}"
+                                          Header="Редактировать стенд" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.OnAddStandFromAllStandsCommand}"
+                                          Header="Добавить стенд из других проектов" />
                                 <Separator />
-                                <MenuItem Command="{Binding ProjectCommandProvider.RenumerateStandsCommand}" Header="Пронумеровать стенды..." />
-                                <MenuItem Command="{Binding ProjectCommandProvider.CopyStandsCommand}" Header="Создать копию на основе прототипа" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.RenumerateStandsCommand}"
+                                          Header="Пронумеровать стенды..." />
+                                <MenuItem Command="{Binding ProjectCommandProvider.CopyStandsCommand}"
+                                          Header="Создать копию на основе прототипа" />
                                 <Separator />
-                                <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}" Header="Удалить стенд из проекта" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}"
+                                          Header="Удалить стенд из проекта" />
                                 <Separator />
                                 <MenuItem Header="Создать отчет по выбранным">
-                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedSummaryReportCommand}" Header="Сводная ведомость" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedSummaryReportCommand}"
+                                              Header="Сводная ведомость" />
                                     <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedComponentReportCommand}" Header="Ведомость комплектующих" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedComponentReportCommand}"
+                                              Header="Ведомость комплектующих" />
                                     <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedNamePlatesReportCommand}" Header="Шильдики и таблички" />
+                                    <MenuItem
+                                        Command="{Binding ProjectCommandProvider.SelectedNamePlatesReportCommand}"
+                                        Header="Шильдики и таблички" />
                                     <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedMarksReportCommand}" Header="Маркировка" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedMarksReportCommand}"
+                                              Header="Маркировка" />
                                     <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedContainerReportCommand}" Header="Тара" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedContainerReportCommand}"
+                                              Header="Тара" />
                                     <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedProductionReportCommand}" Header="Производство" />
+                                    <MenuItem
+                                        Command="{Binding ProjectCommandProvider.SelectedProductionReportCommand}"
+                                        Header="Производство" />
                                     <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedFinPlaneReportCommand}" Header="Фин. план" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedFinPlaneReportCommand}"
+                                              Header="Фин. план" />
                                     <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedPassportReportCommand}" Header="Паспорт" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedPassportReportCommand}"
+                                              Header="Паспорт" />
                                     <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedTechnoCardsReportCommand}" Header="Технологические карты" />
+                                    <MenuItem
+                                        Command="{Binding ProjectCommandProvider.SelectedTechnoCardsReportCommand}"
+                                        Header="Технологические карты" />
                                 </MenuItem>
 
                             </ContextMenu>
@@ -234,12 +252,16 @@
 
                         <ListView.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding ProjectCommandProvider.OpenObvSettingsWindowCommand}" Header="Создать обвязку" />
-                                <MenuItem Command="{Binding ProjectCommandProvider.FillStandFieldsFromObvyazkaCommand}" Header="Редактировать обвязку" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.OpenObvSettingsWindowCommand}"
+                                          Header="Создать обвязку" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.FillStandFieldsFromObvyazkaCommand}"
+                                          Header="Редактировать обвязку" />
                                 <Separator />
-                                <MenuItem Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}" Header="Удалить обвязку из стенда" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}"
+                                          Header="Удалить обвязку из стенда" />
                                 <Separator />
-                                <MenuItem Command="{Binding ProjectCommandProvider.RenumerateObvInStandCommand}" Header="Пронумеровать обвязки заново" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.RenumerateObvInStandCommand}"
+                                          Header="Пронумеровать обвязки заново" />
                             </ContextMenu>
                         </ListView.ContextMenu>
                     </ListView>
@@ -272,7 +294,9 @@
                         <DataGrid.RowStyle>
                             <Style TargetType="DataGridRow">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding DataContext.CurrentProjectModel.SelectedStand.ElectricalPurposesChanges, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                    <DataTrigger
+                                        Binding="{Binding DataContext.CurrentProjectModel.SelectedStand.ElectricalPurposesChanges, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        Value="True">
                                         <Setter Property="Background" Value="{DynamicResource UnsafeDetails}" />
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -321,9 +345,13 @@
                         </DataGrid.Columns>
                         <DataGrid.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding ProjectCommandProvider.UpdateElectricalComponentInStandCommand}" Header="Сохранить изменения" />
+                                <MenuItem
+                                    Command="{Binding ProjectCommandProvider.UpdateElectricalComponentInStandCommand}"
+                                    Header="Сохранить изменения" />
                                 <Separator />
-                                <MenuItem Command="{Binding ProjectCommandProvider.DeleteElectricalComponentFromStandCommand}" Header="Удалить" />
+                                <MenuItem
+                                    Command="{Binding ProjectCommandProvider.DeleteElectricalComponentFromStandCommand}"
+                                    Header="Удалить" />
                             </ContextMenu>
                         </DataGrid.ContextMenu>
                     </DataGrid>
@@ -356,7 +384,9 @@
                         <DataGrid.RowStyle>
                             <Style TargetType="DataGridRow">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding DataContext.CurrentProjectModel.SelectedStand.AdditionalPurposesChanges, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                    <DataTrigger
+                                        Binding="{Binding DataContext.CurrentProjectModel.SelectedStand.AdditionalPurposesChanges, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        Value="True">
                                         <Setter Property="Background" Value="{DynamicResource UnsafeDetails}" />
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -396,9 +426,13 @@
                         </DataGrid.Columns>
                         <DataGrid.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding ProjectCommandProvider.UpdateAdditionalComponentInStandCommand}" Header="Сохранить изменения" />
+                                <MenuItem
+                                    Command="{Binding ProjectCommandProvider.UpdateAdditionalComponentInStandCommand}"
+                                    Header="Сохранить изменения" />
                                 <Separator />
-                                <MenuItem Command="{Binding ProjectCommandProvider.DeleteAdditionalComponentFromStandCommand}" Header="Удалить" />
+                                <MenuItem
+                                    Command="{Binding ProjectCommandProvider.DeleteAdditionalComponentFromStandCommand}"
+                                    Header="Удалить" />
                             </ContextMenu>
                         </DataGrid.ContextMenu>
                     </DataGrid>
@@ -431,7 +465,9 @@
                         <DataGrid.RowStyle>
                             <Style TargetType="DataGridRow">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding DataContext.CurrentProjectModel.SelectedStand.DrainagePurposesChanges, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                    <DataTrigger
+                                        Binding="{Binding DataContext.CurrentProjectModel.SelectedStand.DrainagePurposesChanges, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        Value="True">
                                         <Setter Property="Background" Value="{DynamicResource UnsafeDetails}" />
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -471,9 +507,13 @@
                         </DataGrid.Columns>
                         <DataGrid.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding ProjectCommandProvider.UpdateDrainageComponentInStandCommand}" Header="Сохранить изменения" />
+                                <MenuItem
+                                    Command="{Binding ProjectCommandProvider.UpdateDrainageComponentInStandCommand}"
+                                    Header="Сохранить изменения" />
                                 <Separator />
-                                <MenuItem Command="{Binding ProjectCommandProvider.DeleteDrainageComponentFromStandCommand}" Header="Удалить" />
+                                <MenuItem
+                                    Command="{Binding ProjectCommandProvider.DeleteDrainageComponentFromStandCommand}"
+                                    Header="Удалить" />
                             </ContextMenu>
                         </DataGrid.ContextMenu>
                     </DataGrid>
@@ -564,7 +604,8 @@
                             </ListView.View>
                             <ListView.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Command="{Binding ProjectCommandProvider.RemoveFrameStandCommand}" Header="Удалить раму" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.RemoveFrameStandCommand}"
+                                              Header="Удалить раму" />
                                 </ContextMenu>
                             </ListView.ContextMenu>
                         </ListView>
@@ -638,7 +679,8 @@
                         </ListView.View>
                         <ListView.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}" Header="Скопировать в выбранный стенд" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}"
+                                          Header="Скопировать в выбранный стенд" />
                             </ContextMenu>
                         </ListView.ContextMenu>
                     </ListView>

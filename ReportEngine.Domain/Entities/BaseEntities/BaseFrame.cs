@@ -9,6 +9,7 @@ public class BaseFrame : IBaseEquip
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
+
     public int? ExportDays { get; set; }
     public string? Measure { get; set; }
     public float? Cost { get; set; }

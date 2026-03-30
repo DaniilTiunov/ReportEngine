@@ -19,14 +19,14 @@ public class SettingsViewModel : BaseViewModel
     private readonly INotificationService _notificationService;
     private readonly IServiceProvider _serviceProvider;
     private string _connectionString;
-    private string _savereportPath;
     private object _currentView;
+    private string _dbName;
+    private string _dbPassword;
+    private string _dbUser;
+    private string _savereportPath;
     private string? _selectedSetting;
     private string _serverAddress;
     private int _serverPort;
-    private string _dbName;
-    private string _dbUser;
-    private string _dbPassword;
 
     public SettingsViewModel(
         INotificationService notificationService,
@@ -140,10 +140,10 @@ public class SettingsViewModel : BaseViewModel
     }
 
     public string BuildConnectionString(string host,
-                                        int port,
-                                        string database,
-                                        string username,
-                                        string password)
+        int port,
+        string database,
+        string username,
+        string password)
     {
         var builder = new NpgsqlConnectionStringBuilder
         {

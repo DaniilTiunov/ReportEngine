@@ -662,7 +662,10 @@
                                 Grid.Row="0"
                                 Grid.Column="5"
                                 Grid.ColumnSpan="2"
-                                Margin="5,15,140,10"><Run Text="Время п" /><Run Language="ru-ru" Text="роизводства" /><Run Text=" 1" /><Run Language="ru-ru" Text=" рамы" /><Run Text=":&#xA;рамы: " /></TextBlock>
+                                Margin="5,15,140,10">
+                                <Run Text="Время п" /><Run Language="ru-ru" Text="роизводства" /><Run Text=" 1" />
+                                <Run Language="ru-ru" Text=" рамы" /><Run Text=":&#xA;рамы: " />
+                            </TextBlock>
                             <TextBox
                                 Grid.Row="0"
                                 Grid.Column="6"
@@ -712,7 +715,9 @@
                                 Grid.Column="3"
                                 Grid.ColumnSpan="3"
                                 Margin="5,5,140,6"
-                                FontWeight="Bold"><Run Text="Разб" /><Run Language="ru-ru" Text="о" /><Run Text="рные рамы " /></TextBlock>
+                                FontWeight="Bold">
+                                <Run Text="Разб" /><Run Language="ru-ru" Text="о" /><Run Text="рные рамы " />
+                            </TextBlock>
 
                             <TextBlock
                                 Grid.Row="3"

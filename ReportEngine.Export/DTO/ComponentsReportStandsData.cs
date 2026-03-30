@@ -2,10 +2,10 @@
 
 public class SensorRecordData
 {
-    public string? SensorKKS;
     public string? SensorDescription;
-    public string? SensorMarkPlus;
+    public string? SensorKKS;
     public string? SensorMarkMinus;
+    public string? SensorMarkPlus;
 
     public SensorRecordData(string sensorKKS, string sensorDescription, string sensorMarkPlus, string sensorMarkMinus)
     {
@@ -18,18 +18,17 @@ public class SensorRecordData
 
 public class PartsStandsData
 {
-    public List<EquipmentRecord?> PipesList { get; set; } = new List<EquipmentRecord?>();
-    public List<EquipmentRecord?> ArmaturesList { get; set; } = new List<EquipmentRecord?>();
-    public List<EquipmentRecord?>TreeList { get; set; } = new List<EquipmentRecord?>();
-    public List<EquipmentRecord?> KmchList { get; set; } = new List<EquipmentRecord?>();
-    public List<EquipmentRecord?> DrainageParts { get; set; } = new List<EquipmentRecord?>();
-    public List<EquipmentRecord?> FramesList { get; set; } = new List<EquipmentRecord?>();
-    public List<EquipmentRecord?> SensorsHolders { get; set; } = new List<EquipmentRecord?>();
-    public List<EquipmentRecord?> ElectricalParts { get; set; } = new List<EquipmentRecord?>();
-    public List<EquipmentRecord?> OthersParts { get; set; } = new List<EquipmentRecord?>();
-    public List<EquipmentRecord?> Supplies { get; set; } = new List<EquipmentRecord?>();
+    public List<EquipmentRecord?> PipesList { get; set; } = new();
+    public List<EquipmentRecord?> ArmaturesList { get; set; } = new();
+    public List<EquipmentRecord?> TreeList { get; set; } = new();
+    public List<EquipmentRecord?> KmchList { get; set; } = new();
+    public List<EquipmentRecord?> DrainageParts { get; set; } = new();
+    public List<EquipmentRecord?> FramesList { get; set; } = new();
+    public List<EquipmentRecord?> SensorsHolders { get; set; } = new();
+    public List<EquipmentRecord?> ElectricalParts { get; set; } = new();
+    public List<EquipmentRecord?> OthersParts { get; set; } = new();
+    public List<EquipmentRecord?> Supplies { get; set; } = new();
 }
-
 
 public class LaborStandsData
 {

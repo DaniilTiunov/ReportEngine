@@ -189,17 +189,14 @@ public class ProductionReportGenerator : IReportGenerator
 
         var sourceData = project.Stands;
 
-        if(selectedStands != null)
-        {
-            sourceData = selectedStands;
-        }
+        if (selectedStands != null) sourceData = selectedStands;
 
         //выводим стенды
         var standsRecords = sourceData.Select(stand => new StandInfoData
         {
             Name = new ValidatedField<string?>(stand.Design, true),
             KKS = new ValidatedField<string?>(stand.KKSCode, true),
-            SerialNumber = new ValidatedField<string?>(stand.SerialNumber, true),
+            SerialNumber = new ValidatedField<string?>(stand.SerialNumber, true)
         });
 
         foreach (var standRecord in standsRecords)
@@ -229,16 +226,14 @@ public class ProductionReportGenerator : IReportGenerator
     }
 
     //создание сводной ведомости комплектующих
-    private int FillEquipmentTable(IXLWorksheet ws, ProjectInfo project, int startRow, List<Stand>? selectedStands = null)
+    private int FillEquipmentTable(IXLWorksheet ws, ProjectInfo project, int startRow,
+        List<Stand>? selectedStands = null)
     {
         var activeRow = startRow;
 
         var sourceData = project.Stands;
 
-        if(selectedStands != null)
-        {
-            sourceData = selectedStands;
-        }
+        if (selectedStands != null) sourceData = selectedStands;
 
         var generatedData = ExcelReportHelper.GeneratePartsData(sourceData);
 
@@ -300,8 +295,8 @@ public class ProductionReportGenerator : IReportGenerator
     //валидация и вывод в таблицу
     private void PastePartRecord(int row, EquipmentRecord record, IXLWorksheet ws)
     {
-        ws.Cell($"A{row}").Value = record.Name.Value?.ToString();
-        ws.Cell($"B{row}").Value = record.Unit.Value?.ToString();
+        ws.Cell($"A{row}").Value = record.Name.Value;
+        ws.Cell($"B{row}").Value = record.Unit.Value;
         ws.Cell($"C{row}").Value = record.Quantity.Value?.ToString();
         ws.Cell($"D{row}").Value = record.Quantity.Value?.ToString();
 
@@ -324,9 +319,9 @@ public class ProductionReportGenerator : IReportGenerator
     //валидация и вывод в таблицу
     private void PasteStandRecord(int row, StandInfoData record, IXLWorksheet ws)
     {
-        ws.Cell($"A{row}").Value = record.Name.Value?.ToString();
-        ws.Range($"B{row}:C{row}").Merge().FirstCell().Value = record.KKS.Value?.ToString();
-        ws.Cell($"D{row}").Value = record.SerialNumber.Value?.ToString();
+        ws.Cell($"A{row}").Value = record.Name.Value;
+        ws.Range($"B{row}:C{row}").Merge().FirstCell().Value = record.KKS.Value;
+        ws.Cell($"D{row}").Value = record.SerialNumber.Value;
 
         //if (!record.Name.IsValid)
         //{

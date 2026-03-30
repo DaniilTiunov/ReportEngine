@@ -40,8 +40,8 @@ public class ProjectInfoRepository : IProjectInfoRepository
     {
         return await _context.Set<ProjectInfo>()
             .Include(p => p.Stands)
-                .ThenInclude(s => s.StandAdditionalEquips)
-                    .ThenInclude(sae => sae.AdditionalEquip.Purposes)
+            .ThenInclude(s => s.StandAdditionalEquips)
+            .ThenInclude(sae => sae.AdditionalEquip.Purposes)
             .AsNoTracking()
             .ToListAsync();
     }
@@ -92,17 +92,17 @@ public class ProjectInfoRepository : IProjectInfoRepository
 
         var additionalFormedEquips = await _context.Set<FormedAdditionalEquip>()
             .Where(fe => _context.Set<StandAdditionalEquip>()
-            .Any(sae => sae.StandId == standId && sae.AdditionalEquipId == fe.Id))
+                .Any(sae => sae.StandId == standId && sae.AdditionalEquipId == fe.Id))
             .ToListAsync();
 
         var electricalFormedEquips = await _context.Set<FormedElectricalComponent>()
             .Where(fe => _context.Set<StandElectricalComponent>()
-            .Any(sae => sae.StandId == standId && sae.ElectricalComponentId == fe.Id))
+                .Any(sae => sae.StandId == standId && sae.ElectricalComponentId == fe.Id))
             .ToListAsync();
 
         var drainagesFormedEquips = await _context.Set<FormedDrainage>()
             .Where(fe => _context.Set<StandDrainage>()
-            .Any(sae => sae.StandId == standId && sae.DrainageId == fe.Id))
+                .Any(sae => sae.StandId == standId && sae.DrainageId == fe.Id))
             .ToListAsync();
 
         _context.RemoveRange(additionalFormedEquips);
@@ -126,16 +126,13 @@ public class ProjectInfoRepository : IProjectInfoRepository
     public async Task<IEnumerable<Stand>> AddStandsGroupAsync(int projectId, IEnumerable<Stand> stands)
     {
         var project = await _context.Projects
-          .Include(p => p.Stands)
-          .FirstOrDefaultAsync(p => p.Id == projectId);
+            .Include(p => p.Stands)
+            .FirstOrDefaultAsync(p => p.Id == projectId);
 
         if (project == null)
             throw new ArgumentException($"Проект с ID: {projectId} не найден.");
 
-        foreach (var stand in stands)
-        {
-            stand.ProjectInfoId = projectId;
-        }
+        foreach (var stand in stands) stand.ProjectInfoId = projectId;
 
         _context.Stands.AddRange(stands);
 
@@ -181,12 +178,8 @@ public class ProjectInfoRepository : IProjectInfoRepository
             .ToDictionaryAsync(stand => stand.Id);
 
         foreach (var stand in stands)
-        {
             if (existingStands.TryGetValue(stand.Id, out var existingStand))
-            {
                 _context.Entry(existingStand).CurrentValues.SetValues(stand);
-            }
-        }
 
         await _context.SaveChangesAsync();
     }

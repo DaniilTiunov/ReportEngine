@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-using ReportEngine.Domain.Entities;
+﻿using ReportEngine.Domain.Entities;
 
 namespace ReportEngine.App.ModelWrappers;
 
@@ -63,21 +61,20 @@ public static class ObvyzkaModelWrapper
             ThirdSensorDescription = source.ThirdSensorDescription,
 
             AdditionalComponents = source.AdditionalComponents?
-            .Select(comp =>
-            {
-                return new ObvyazkaAdditionalEquipPurpose()
+                .Select(comp =>
                 {
-                    Id = 0,
-                    Purpose = comp.Purpose,
-                    Material = comp.Material,
-                    Quantity = comp.Quantity,
-                    CostPerUnit = comp.CostPerUnit,
-                    Measure = comp.Measure,
-                    ExportDays = comp.ExportDays
-                };
-            })
-            .ToList()
-
+                    return new ObvyazkaAdditionalEquipPurpose
+                    {
+                        Id = 0,
+                        Purpose = comp.Purpose,
+                        Material = comp.Material,
+                        Quantity = comp.Quantity,
+                        CostPerUnit = comp.CostPerUnit,
+                        Measure = comp.Measure,
+                        ExportDays = comp.ExportDays
+                    };
+                })
+                .ToList()
         };
     }
 }

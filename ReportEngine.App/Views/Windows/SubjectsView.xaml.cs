@@ -13,9 +13,8 @@ namespace ReportEngine.App.Views.Windows;
 /// </summary>
 public partial class SubjectsView : Window
 {
-    private ICollectionView _subjectsView;
-
     private readonly bool _isDialog;
+    private ICollectionView _subjectsView;
 
     public SubjectsView(SubjectViewModel viewModel, bool isDialog = false)
     {

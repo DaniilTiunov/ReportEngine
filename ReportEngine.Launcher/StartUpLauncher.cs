@@ -1,21 +1,20 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.Launcher.Views;
 
-namespace ReportEngine.Launcher
+namespace ReportEngine.Launcher;
+
+public static class StartUpLauncher
 {
-    public static class StartUpLauncher
+    [STAThread]
+    public static void Main()
     {
-        [STAThread]
-        public static void Main()
-        {
-            var host = HostFactoryLauncher.BuildHost();
+        var host = HostFactoryLauncher.BuildHost();
 
-            var app = host.Services.GetService<App>();
-            var mainWindow = host.Services.GetService<MainWindow>();
+        var app = host.Services.GetService<App>();
+        var mainWindow = host.Services.GetService<MainWindow>();
 
 
-            mainWindow.Show();
-            app.Run();
-        }
+        mainWindow.Show();
+        app.Run();
     }
 }

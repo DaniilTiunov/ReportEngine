@@ -9,8 +9,8 @@ namespace ReportEngine.App.Services.Core;
 
 public class ProjectDataLoaderSerive : IProjectDataLoaderService
 {
-    private readonly IStandService _standService;
     private readonly IProjectInfoRepository _projectInfoRepository;
+    private readonly IStandService _standService;
 
     public ProjectDataLoaderSerive(IStandService standService, IProjectInfoRepository projectInfoRepository)
     {

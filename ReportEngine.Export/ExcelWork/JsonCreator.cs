@@ -5,155 +5,151 @@ using ReportEngine.Shared.Config.IniHelpers;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
 
-namespace ReportEngine.Export.ExcelWork
+namespace ReportEngine.Export.ExcelWork;
+
+public static class JsonCreator
 {
-    public static class JsonCreator
+    //создание JSON объекта проекта
+    public static ProjectJsonObject CreateProjectJson(ProjectInfo project, List<Stand>? selectedStands = null)
     {
-        //создание JSON объекта проекта
-        public static ProjectJsonObject CreateProjectJson(ProjectInfo project, List<Stand>? selectedStands = null)
+        var standSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
+
+        var sourceData = project.Stands;
+
+        if (selectedStands != null) sourceData = selectedStands;
+
+        return new ProjectJsonObject
         {
-            var standSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
+            SeniorEngineer = standSettings.SeniorEngineer,
+            ResponsibleForAccept = standSettings.ResponsibleForAccept,
+            SecondLevelSpecialist = standSettings.SecondLevelSpecialist,
+            OSiL = standSettings.OSiL,
 
-            var sourceData = project.Stands;
+            Number = project.Number,
+            Id = project.Id,
+            Description = project.Description,
+            CreationDate = project.CreationDate,
+            Company = project.Company,
+            Object = project.Object,
+            StandCount = project.StandCount,
+            Cost = project.Cost,
+            Status = project.Status,
+            StartDate = project.StartDate,
+            OutOfProduction = project.OutOfProduction,
+            EndDate = project.EndDate,
+            OrderCustomer = project.OrderCustomer,
+            RequestProduction = project.RequestProduction,
+            MarkPlus = project.MarkPlus,
+            MarkMinus = project.MarkMinus,
+            IsGalvanized = project.IsGalvanized,
+            HumanCost = project.HumanCost,
+            Manager = project.Manager,
+            Stands = sourceData.Select(CreateStandJson).ToList()
+        };
+    }
 
-            if(selectedStands != null)
+    // создание JSON объекта стенда
+    private static StandJsonObject CreateStandJson(Stand stand)
+    {
+        var framesInfos = stand.StandFrames
+            .Select(frame => new
             {
-                sourceData = selectedStands;
-            }
-
-            return new ProjectJsonObject
+                frame.Frame.Width,
+                DocName = frame.Frame.Designe,
+                frame.Frame.Height,
+                frame.Frame.Depth
+            })
+            .GroupBy(frame => frame.DocName)
+            .Select(group => new FrameRecordJsonObject
             {
-                SeniorEngineer = standSettings.SeniorEngineer,
-                ResponsibleForAccept = standSettings.ResponsibleForAccept,
-                SecondLevelSpecialist = standSettings.SecondLevelSpecialist,
-                OSiL = standSettings.OSiL,
+                Width = group.FirstOrDefault().Width,
+                Height = group.FirstOrDefault().Height,
+                Depth = group.FirstOrDefault().Depth,
+                DocName = group.FirstOrDefault().DocName,
+                Quantity = group.Count()
+            });
 
-                Number = project.Number,
-                Id = project.Id,
-                Description = project.Description,
-                CreationDate = project.CreationDate,
-                Company = project.Company,
-                Object = project.Object,
-                StandCount = project.StandCount,
-                Cost = project.Cost,
-                Status = project.Status,
-                StartDate = project.StartDate,
-                OutOfProduction = project.OutOfProduction,
-                EndDate = project.EndDate,
-                OrderCustomer = project.OrderCustomer,
-                RequestProduction = project.RequestProduction,
-                MarkPlus = project.MarkPlus,
-                MarkMinus = project.MarkMinus,
-                IsGalvanized = project.IsGalvanized,
-                HumanCost = project.HumanCost,
-                Manager = project.Manager,
-                Stands = sourceData.Select(CreateStandJson).ToList()
-            };
-        }
+        var parts = ExcelReportHelper.GeneratePartsData(new List<Stand> { stand });
 
-        // создание JSON объекта стенда
-        private static StandJsonObject CreateStandJson(Stand stand)
+        var framesParts = parts.FramesList.Select(record => RecordToJson(record));
+
+        var drainageParts = parts.DrainageParts.Select(record => RecordToJson(record));
+
+        var electricalParts = parts.ElectricalParts.Select(record => RecordToJson(record));
+
+        var mountPartsRecords = new List<EquipmentRecord>();
+
+        mountPartsRecords.AddRange(parts.PipesList);
+        mountPartsRecords.AddRange(parts.ArmaturesList);
+        mountPartsRecords.AddRange(parts.TreeList);
+        mountPartsRecords.AddRange(parts.KmchList);
+        mountPartsRecords.AddRange(parts.SensorsHolders);
+        mountPartsRecords.AddRange(parts.OthersParts);
+
+        var mountParts = mountPartsRecords.Select(record => RecordToJson(record));
+
+        var impulseLines = stand.ObvyazkiInStand
+            .SelectMany(obv => ExcelReportHelper.CreateSensorsListFromObvyazka(obv))
+            .Select(record => SensorToJson(record));
+
+        return new StandJsonObject
         {
-            var framesInfos = stand.StandFrames
-                .Select(frame => new
-                {
-                    Width = frame.Frame.Width,
-                    DocName = frame.Frame.Designe,
-                    Height = frame.Frame.Height,
-                    Depth = frame.Frame.Depth
-                })
-                .GroupBy(frame => frame.DocName)
-                .Select(group => new FrameRecordJsonObject
-                {
-                    Width = group.FirstOrDefault().Width,
-                    Height = group.FirstOrDefault().Height,
-                    Depth = group.FirstOrDefault().Depth,
-                    DocName = group.FirstOrDefault().DocName,
-                    Quantity = group.Count()
-                });
+            Number = stand.Number,
+            KKSCode = stand.KKSCode,
+            Designation = stand.Design,
+            Devices = stand.Devices,
+            BraceType = stand.BraceType,
+            Width = stand.Width,
+            SerialNumber = stand.SerialNumber,
+            Weight = stand.Weight,
+            StandSummCost = stand.StandSummCost,
+            ObvyazkaType = stand.ObvyazkaType,
+            NN = stand.NN,
+            MaterialLine = stand.MaterialLine,
+            Armature = stand.Armature,
+            TreeSocket = stand.TreeSocket,
+            KMCH = stand.KMCH,
+            Description = stand.DesigneStand,
+            Comments = stand.Comments,
+            ContainerStandId = stand.ContainerStandId,
+            ImageData = stand.ImageData,
+            ImageType = stand.ImageType,
+            Frames = framesInfos.ToList(),
+            FrameParts = framesParts.ToList(),
+            DrainageParts = drainageParts.ToList(),
+            ElectricParts = electricalParts.ToList(),
+            MountParts = mountParts.ToList(),
+            ImpulseLines = impulseLines.ToList()
+        };
+    }
 
-            var parts = ExcelReportHelper.GeneratePartsData(new List<Stand> { stand });
-
-            var framesParts = parts.FramesList.Select(record => RecordToJson(record));
-
-            var drainageParts = parts.DrainageParts.Select(record => RecordToJson(record));
-
-            var electricalParts = parts.ElectricalParts.Select(record => RecordToJson(record));
-
-            var mountPartsRecords = new List<EquipmentRecord>();
-
-            mountPartsRecords.AddRange(parts.PipesList);
-            mountPartsRecords.AddRange(parts.ArmaturesList);
-            mountPartsRecords.AddRange(parts.TreeList);
-            mountPartsRecords.AddRange(parts.KmchList);
-            mountPartsRecords.AddRange(parts.SensorsHolders);
-            mountPartsRecords.AddRange(parts.OthersParts);
-
-            var mountParts = mountPartsRecords.Select(record => RecordToJson(record));
-
-            var impulseLines = stand.ObvyazkiInStand
-                .SelectMany(obv => ExcelReportHelper.CreateSensorsListFromObvyazka(obv))
-                .Select(record => SensorToJson(record));
-
-            return new StandJsonObject
-            {
-                Number = stand.Number,
-                KKSCode = stand.KKSCode,
-                Designation = stand.Design,
-                Devices = stand.Devices,
-                BraceType = stand.BraceType,
-                Width = stand.Width,
-                SerialNumber = stand.SerialNumber,
-                Weight = stand.Weight,
-                StandSummCost = stand.StandSummCost,
-                ObvyazkaType = stand.ObvyazkaType,
-                NN = stand.NN,
-                MaterialLine = stand.MaterialLine,
-                Armature = stand.Armature,
-                TreeSocket = stand.TreeSocket,
-                KMCH = stand.KMCH,
-                Description = stand.DesigneStand,
-                Comments = stand.Comments,
-                ContainerStandId = stand.ContainerStandId,
-                ImageData = stand.ImageData,
-                ImageType = stand.ImageType,
-                Frames = framesInfos.ToList(),
-                FrameParts = framesParts.ToList(),
-                DrainageParts = drainageParts.ToList(),
-                ElectricParts = electricalParts.ToList(),
-                MountParts = mountParts.ToList(),
-                ImpulseLines = impulseLines.ToList()
-            };
-        }
-
-        //конвертация записи детали в JSON объект
-        public static PartRecordJsonObject RecordToJson(EquipmentRecord record)
+    //конвертация записи детали в JSON объект
+    public static PartRecordJsonObject RecordToJson(EquipmentRecord record)
+    {
+        return new PartRecordJsonObject
         {
-            return new PartRecordJsonObject
-            {
-                Name = record?.Name.Value,
-                Unit = record?.Unit.Value,
-                Quantity = record?.Quantity.Value
-            };
-        }
+            Name = record?.Name.Value,
+            Unit = record?.Unit.Value,
+            Quantity = record?.Quantity.Value
+        };
+    }
 
-        //конвертация записи датчика в JSON объект
-        public static ImpulseLineRecordJsonObject SensorToJson(SensorRecordData record)
+    //конвертация записи датчика в JSON объект
+    public static ImpulseLineRecordJsonObject SensorToJson(SensorRecordData record)
+    {
+        var wiresInfo = new List<WireRecord>
         {
-            var wiresInfo = new List<WireRecord>()
-            {
-                new WireRecord("+",$"{record.SensorMarkPlus}","Коробка КС-1","1"),
-                new WireRecord("-",$"{record.SensorMarkMinus}","Коробка КС-1","2"),
-                new WireRecord("Экран","","Коробка КС-1","3")
-            };
+            new("+", $"{record.SensorMarkPlus}", "Коробка КС-1", "1"),
+            new("-", $"{record.SensorMarkMinus}", "Коробка КС-1", "2"),
+            new("Экран", "", "Коробка КС-1", "3")
+        };
 
-            return new ImpulseLineRecordJsonObject
-            {
-                Name = record.SensorDescription,
-                CodeKKS = record.SensorKKS,
-                Wires = wiresInfo,
-                Annotation = ""
-            };
-        }
+        return new ImpulseLineRecordJsonObject
+        {
+            Name = record.SensorDescription,
+            CodeKKS = record.SensorKKS,
+            Wires = wiresInfo,
+            Annotation = ""
+        };
     }
 }

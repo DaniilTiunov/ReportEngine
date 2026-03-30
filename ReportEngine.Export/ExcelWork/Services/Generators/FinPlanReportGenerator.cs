@@ -10,8 +10,8 @@ namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
 public class FinPlanReportGenerator : IReportGenerator
 {
-    private readonly IProjectInfoRepository _projectInfoRepository;
     private readonly IContainerRepository _containerRepository;
+    private readonly IProjectInfoRepository _projectInfoRepository;
 
     public FinPlanReportGenerator(
         IProjectInfoRepository projectInfoRepository,
@@ -66,9 +66,6 @@ public class FinPlanReportGenerator : IReportGenerator
                     case extraChargeWorksheetName:
                         CreateExtraChargeRentTable(ws, project, activeRow, totalRange, summaryRange);
                         break;
-
-                    default:
-                        break;
                 }
 
                 ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
@@ -114,7 +111,8 @@ public class FinPlanReportGenerator : IReportGenerator
 
                 //заполняем таблицу себестоимости
                 activeRow = CreateHeader(activeRow, "Себестоимость", ws);
-                (activeRow, var totalRange, var summaryRange) = await CreateSelfcostTable(ws, project, activeRow, selectedStands);
+                (activeRow, var totalRange, var summaryRange) =
+                    await CreateSelfcostTable(ws, project, activeRow, selectedStands);
 
                 activeRow += 2;
 
@@ -129,9 +127,6 @@ public class FinPlanReportGenerator : IReportGenerator
 
                     case extraChargeWorksheetName:
                         CreateExtraChargeRentTable(ws, project, activeRow, totalRange, summaryRange);
-                        break;
-
-                    default:
                         break;
                 }
 
@@ -216,7 +211,8 @@ public class FinPlanReportGenerator : IReportGenerator
             nameRange.Style.Font.SetBold();
             nameRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
-            var valueRange = ws.Range($"D{activeRow}:I{activeRow}").Merge(); ;
+            var valueRange = ws.Range($"D{activeRow}:I{activeRow}").Merge();
+            ;
             valueRange.Value = record.Value;
 
             valueRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);
@@ -242,10 +238,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
         var sourceData = project.Stands;
 
-        if(selectedStands != null)
-        {
-            sourceData = selectedStands;
-        }
+        if (selectedStands != null) sourceData = selectedStands;
 
         var generatedEquipmentsData = ExcelReportHelper.GeneratePartsData(sourceData);
         var equipmentRecords = ExcelReportHelper.GenerateAllPartsCollection(generatedEquipmentsData);
@@ -339,7 +332,8 @@ public class FinPlanReportGenerator : IReportGenerator
         var transportAndPrepareWork = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
-            Name = new ValidatedField<string?>("Транспортно-заготовительные работы (1% от стоимости оборудования)", true),
+            Name = new ValidatedField<string?>("Транспортно-заготовительные работы (1% от стоимости оборудования)",
+                true),
             Unit = new ValidatedField<string?>("руб. без НДС", true),
             Quantity = new ValidatedField<float?>(null, true),
             CostPerUnit = new ValidatedField<float?>(null, true),
@@ -366,7 +360,7 @@ public class FinPlanReportGenerator : IReportGenerator
         var summaryRange = PasteRecord(activeRow, summaryPlannedCostRecord, ws);
 
         var cellsAdresses = sumCellList.Select(range => range.FirstCell().Address.ToString());
-        string summaryFormulaString = "=" + String.Join("+", cellsAdresses);
+        var summaryFormulaString = "=" + string.Join("+", cellsAdresses);
         summaryRange.FirstCell().FormulaA1 = summaryFormulaString;
 
         activeRow++;
@@ -399,7 +393,8 @@ public class FinPlanReportGenerator : IReportGenerator
         var unexpectedExpensesPercentAddress = unexpectedExpensesPercentRange.FirstCell().Address.ToString();
         var summarySelfcostAddress = summaryRange.FirstCell().Address.ToString();
 
-        unexpectedExpensesRange.FirstCell().FormulaA1 = $"={summarySelfcostAddress}*({unexpectedExpensesPercentAddress}/100.0)";
+        unexpectedExpensesRange.FirstCell().FormulaA1 =
+            $"={summarySelfcostAddress}*({unexpectedExpensesPercentAddress}/100.0)";
         activeRow++;
 
         var totalRecord = new EquipmentRecord
@@ -439,7 +434,7 @@ public class FinPlanReportGenerator : IReportGenerator
         var totalCostAddress = totalRange.FirstCell().Address;
         var summaryCostAddress = summaryRange.FirstCell().Address;
 
-        var sellCostRecord = new EquipmentRecord()
+        var sellCostRecord = new EquipmentRecord
         {
             Name = new ValidatedField<string?>("Стоимость продажи", true),
             Unit = new ValidatedField<string?>("руб. без НДС", true),
@@ -450,7 +445,7 @@ public class FinPlanReportGenerator : IReportGenerator
         var sellCostAddress = sellCostRange.FirstCell().Address;
         activeRow++;
 
-        var marginalIncomeRecord = new EquipmentRecord()
+        var marginalIncomeRecord = new EquipmentRecord
         {
             Name = new ValidatedField<string?>("Маржинальный доход", true),
             Unit = new ValidatedField<string?>("руб.", true),
@@ -462,7 +457,7 @@ public class FinPlanReportGenerator : IReportGenerator
         marginalIncomeRange.FirstCell().FormulaA1 = $"={sellCostAddress}-{totalCostAddress}";
         activeRow++;
 
-        var extraChargeRecord = new EquipmentRecord()
+        var extraChargeRecord = new EquipmentRecord
         {
             Name = new ValidatedField<string?>("Наценка", true),
             Unit = new ValidatedField<string?>("%", true),
@@ -471,10 +466,11 @@ public class FinPlanReportGenerator : IReportGenerator
 
         var extraChargeRange = PasteRecord(activeRow, extraChargeRecord, ws);
 
-        extraChargeRange.FirstCell().FormulaA1 = $"=IF({sellCostAddress}>=0.01,{marhinalIncomingAddress}/{summaryCostAddress},0)";
+        extraChargeRange.FirstCell().FormulaA1 =
+            $"=IF({sellCostAddress}>=0.01,{marhinalIncomingAddress}/{summaryCostAddress},0)";
         activeRow++;
 
-        var expectedProfit = new EquipmentRecord()
+        var expectedProfit = new EquipmentRecord
         {
             Name = new ValidatedField<string?>("Ожидаемая рентабельность", true),
             Unit = new ValidatedField<string?>("%", true),
@@ -482,7 +478,8 @@ public class FinPlanReportGenerator : IReportGenerator
         };
 
         var expectedProfitRange = PasteRecord(activeRow, expectedProfit, ws);
-        expectedProfitRange.FirstCell().FormulaA1 = $"=IF({sellCostAddress}>=0.01,{marhinalIncomingAddress}/{sellCostAddress},0)";
+        expectedProfitRange.FirstCell().FormulaA1 =
+            $"=IF({sellCostAddress}>=0.01,{marhinalIncomingAddress}/{sellCostAddress},0)";
         activeRow++;
 
         var tableRange = ws.Range($"A{startRow}:I{activeRow - 1}");
@@ -493,14 +490,15 @@ public class FinPlanReportGenerator : IReportGenerator
     }
 
     //заполняет таблицу стоиомости продаж для листа "Наценка"
-    private int CreateExtraChargeRentTable(IXLWorksheet ws, ProjectInfo project, int startRow, IXLRange totalRange, IXLRange summaryRange)
+    private int CreateExtraChargeRentTable(IXLWorksheet ws, ProjectInfo project, int startRow, IXLRange totalRange,
+        IXLRange summaryRange)
     {
         var activeRow = startRow;
 
         var totalCostAddress = totalRange.FirstCell().Address;
         var summaryCostAddress = summaryRange.FirstCell().Address;
 
-        var sellCostRecord = new EquipmentRecord()
+        var sellCostRecord = new EquipmentRecord
         {
             Name = new ValidatedField<string?>("Стоимость продажи", true),
             Unit = new ValidatedField<string?>("руб. без НДС", true),
@@ -511,7 +509,7 @@ public class FinPlanReportGenerator : IReportGenerator
         var sellCostAddress = sellCostRange.FirstCell().Address;
         activeRow++;
 
-        var marginalIncomeRecord = new EquipmentRecord()
+        var marginalIncomeRecord = new EquipmentRecord
         {
             Name = new ValidatedField<string?>("Маржинальный доход", true),
             Unit = new ValidatedField<string?>("руб.", true),
@@ -522,7 +520,7 @@ public class FinPlanReportGenerator : IReportGenerator
         var marhinalIncomingAddress = marginalIncomeRange.FirstCell().Address;
         activeRow++;
 
-        var extraChargeRecord = new EquipmentRecord()
+        var extraChargeRecord = new EquipmentRecord
         {
             Name = new ValidatedField<string?>("Наценка", true),
             Unit = new ValidatedField<string?>("%", true),
@@ -533,7 +531,7 @@ public class FinPlanReportGenerator : IReportGenerator
         var extraChargeAddress = extraChargeRange.FirstCell().Address;
         activeRow++;
 
-        var expectedProfit = new EquipmentRecord()
+        var expectedProfit = new EquipmentRecord
         {
             Name = new ValidatedField<string?>("Ожидаемая рентабельность", true),
             Unit = new ValidatedField<string?>("%", true),
@@ -546,7 +544,8 @@ public class FinPlanReportGenerator : IReportGenerator
         //вставляем формулы после всех записей
         sellCostRange.FirstCell().FormulaA1 = $"={totalCostAddress} * (1 + {extraChargeAddress})";
         marginalIncomeRange.FirstCell().FormulaA1 = $"={sellCostAddress}-{totalCostAddress}";
-        expectedProfitRange.FirstCell().FormulaA1 = $"=IF({sellCostAddress}>=0.01,{marhinalIncomingAddress}/{sellCostAddress},0)";
+        expectedProfitRange.FirstCell().FormulaA1 =
+            $"=IF({sellCostAddress}>=0.01,{marhinalIncomingAddress}/{sellCostAddress},0)";
 
         var tableRange = ws.Range($"A{startRow}:I{activeRow - 1}");
         tableRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);

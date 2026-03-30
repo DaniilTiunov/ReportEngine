@@ -92,10 +92,7 @@ public class MarksReportGenerator : IReportGenerator
     {
         var sourceData = project.Stands;
 
-        if(selectedStands != null)
-        {
-            sourceData = selectedStands;
-        }
+        if (selectedStands != null) sourceData = selectedStands;
 
         var allRecords = sourceData
             .SelectMany(

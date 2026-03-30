@@ -63,10 +63,10 @@ public class ProjectCommandProvider
     public ICommand OpenCreateNewStandCommand { get; set; }
     public ICommand OpenEditStandCommand { get; set; }
     public ICommand FillObvFieldsTiEditCommand { get; set; }
-    public ICommand DeleteAdditionalEquipFromObvCommand {  get; set; }
+    public ICommand DeleteAdditionalEquipFromObvCommand { get; set; }
     public ICommand UpdateAdditionalEquipFromObvCommand { get; set; }
-    public ICommand AdditionalTestCommand { get; set;  }
-    public ICommand SaveAllChangesInComponentsCommand {  get; set; }
+    public ICommand AdditionalTestCommand { get; set; }
+    public ICommand SaveAllChangesInComponentsCommand { get; set; }
     public ICommand RenumerateObvInStandCommand { get; set; }
 
     // Команды по отчтам выбранных стендов
@@ -79,6 +79,6 @@ public class ProjectCommandProvider
     public ICommand SelectedFinPlaneReportCommand { get; set; }
     public ICommand SelectedPassportReportCommand { get; set; }
     public ICommand SelectedTechnoCardsReportCommand { get; set; }
-    public ICommand OnAddStandFromAllStandsCommand {  get; set; }
-    public ICommand DeleteSelectedStandsCommand {  get; set; }
+    public ICommand OnAddStandFromAllStandsCommand { get; set; }
+    public ICommand DeleteSelectedStandsCommand { get; set; }
 }
