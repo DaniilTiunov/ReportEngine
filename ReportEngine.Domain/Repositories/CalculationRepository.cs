@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities.CalculationParameters;
-using System.ComponentModel.DataAnnotations;
 
 namespace ReportEngine.Domain.Repositories;
 
@@ -118,6 +117,9 @@ public class CalculationRepository
         await _context.SaveChangesAsync();
     }
 
+        //связываем с группой
+        parameter.ParameterGroupId = existingGroup.Id;
+        parameter.CalculationParameterGroup = existingGroup;
 
     public async Task DeleteParameterFromGroup(CalculationParameter parameter, CalculationParameterType groupType)
     {
@@ -125,6 +127,8 @@ public class CalculationRepository
             .Set<CalculationParameterGroup>()
             .FirstOrDefaultAsync(group => group.SettingsType == groupType);
 
+        await _context.SaveChangesAsync();
+    }
 
         if (existingGroup == null)
         {
