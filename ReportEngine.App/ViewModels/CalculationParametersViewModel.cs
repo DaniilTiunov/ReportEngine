@@ -2,10 +2,12 @@
 using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.Commands;
+using ReportEngine.App.Services.Calculation;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Views.Settings.CalculationParameters.Controls;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
+using ReportEngine.Domain.Entities.CalculationParameters;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -13,19 +15,24 @@ public class CalculationParametersViewModel : BaseViewModel
 {
     private readonly IDialogService _dialogService;
     private readonly IServiceProvider _serviceProvider;
-    private ObservableCollection<CalculationParameter> _calculationParameters = new();
+    private readonly ParameterGroupService _parameterGroupService;
+    private ObservableCollection<CalculationParameter> _equipmentsParameters = new();
 
     private object _currentView;
     private string? _selectedSetting;
     private ObservableCollection<CalculationParameter> _standParameters = new();
+    private CalculationParameter _selectedEquipment;
 
     public CalculationParametersViewModel(
         IServiceProvider serviceProvider,
-        IDialogService dialogService)
+        IDialogService dialogService,
+        ParameterGroupService parameterGroupService)
     {
         _serviceProvider = serviceProvider;
         _dialogService = dialogService;
+        _parameterGroupService = parameterGroupService;
 
+        LoadParametersData();
         InitializeCommands();
     }
 
@@ -45,10 +52,16 @@ public class CalculationParametersViewModel : BaseViewModel
         }
     }
 
-    public ObservableCollection<CalculationParameter> CalculationParameters
+    public CalculationParameter SelectedEquipment
     {
-        get => _calculationParameters;
-        set => Set(ref _calculationParameters, value);
+        get => _selectedEquipment;
+        set => Set(ref _selectedEquipment, value);
+    }
+
+    public ObservableCollection<CalculationParameter> EquipmentsParameters
+    {
+        get => _equipmentsParameters;
+        set => Set(ref _equipmentsParameters, value);
     }
 
     public ObservableCollection<CalculationParameter> StandsParameters
@@ -70,6 +83,11 @@ public class CalculationParametersViewModel : BaseViewModel
     public IBaseEquip SelectedEquip { get; set; }
 
     public ICommand GetSelectedEquipCommand { get; set; }
+
+    private async void LoadParametersData()
+    {
+        EquipmentsParameters = await _parameterGroupService.GetParametersAsync(CalculationParameterType.Equipments);
+    }
 
     private void InitializeCommands()
     {

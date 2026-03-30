@@ -158,6 +158,7 @@ public class HostFactory
         services.AddScoped<InitializeService>();
         services.AddScoped<EntityStandClonerService>();
         services.AddScoped<EntityProjectClonerService>();
+        services.AddScoped<ParameterGroupService>();
     }
 
     private static void ConfigureReportsServices(IServiceCollection services)
