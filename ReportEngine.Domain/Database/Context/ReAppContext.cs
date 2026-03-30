@@ -3,6 +3,7 @@ using ReportEngine.Domain.Background;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.Braces;
+using ReportEngine.Domain.Entities.CalculationParameters;
 using ReportEngine.Domain.Entities.Drainage;
 using ReportEngine.Domain.Entities.ElectricComponents;
 using ReportEngine.Domain.Entities.ElectricSockets;
@@ -82,4 +83,6 @@ public class ReAppContext : DbContext
     public DbSet<TablesChanges> TablesChanges { get; set; }
 
     public DbSet<CalculationParameter> CalculationParameters { get; set; }
+
+    public DbSet<CalculationParameterGroup> CalculationParametersGroup { get; set; } 
 }

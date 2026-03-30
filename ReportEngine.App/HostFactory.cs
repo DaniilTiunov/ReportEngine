@@ -98,7 +98,7 @@ public class HostFactory
         services.AddScoped<IPurposesRepository<AdditionalEquipPurpose>, FormedAdditionalEquipsRepository>();
         services.AddScoped<IPurposesRepository<ElectricalPurpose>, FormedElectricalRepository>();
         services.AddScoped<IPurposesRepository<DrainagePurpose>, FormedDrainagesRepository>();
-
+        services.AddScoped<CalculationRepository>();
     }
 
     private static void ConfigureGenericRepositories(IServiceCollection services)
