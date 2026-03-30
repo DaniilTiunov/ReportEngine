@@ -1,4 +1,6 @@
-﻿namespace ReportEngine.Domain.Entities;
+﻿using ReportEngine.Domain.Entities.BaseEntities.Interface;
+
+namespace ReportEngine.Domain.Entities.CalculationParameters;
 
 public class CalculationParameter
 {
@@ -8,11 +10,17 @@ public class CalculationParameter
     public string? Name { get; set; } = null!;
 
     // Значение параметра, храним как decimal для числовых данных
-    public float? Value { get; set; }
+    public string? Value { get; set; }
 
     // Тип единицы измерения, например "чел/ч", "шт", "руб"
     public string? Unit { get; set; } = null!;
 
     // Дополнительно: описание
     public string? Description { get; set; }
+
+    
+    //группа параметра 
+    public int ParameterGroupId { get; set; } 
+
+    public CalculationParameterGroup CalculationParameterGroup { get; set; }
 }

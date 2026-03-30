@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ReportEngine.Domain.Database.Context;
@@ -11,9 +12,11 @@ using ReportEngine.Domain.Database.Context;
 namespace ReportEngine.Domain.Migrations
 {
     [DbContext(typeof(ReAppContext))]
-    partial class ReAppContextModelSnapshot : ModelSnapshot
+    [Migration("20260327062136_stringValueParameter")]
+    partial class stringValueParameter
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -313,7 +316,7 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CalculationParameterGroupId")
+                    b.Property<int?>("CalculationParameterGroupId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Description")
@@ -321,9 +324,6 @@ namespace ReportEngine.Domain.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
-
-                    b.Property<int>("ParameterGroupId")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Unit")
                         .HasColumnType("text");
@@ -1859,13 +1859,9 @@ namespace ReportEngine.Domain.Migrations
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.CalculationParameters.CalculationParameter", b =>
                 {
-                    b.HasOne("ReportEngine.Domain.Entities.CalculationParameters.CalculationParameterGroup", "CalculationParameterGroup")
+                    b.HasOne("ReportEngine.Domain.Entities.CalculationParameters.CalculationParameterGroup", null)
                         .WithMany("Parameters")
-                        .HasForeignKey("CalculationParameterGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CalculationParameterGroup");
+                        .HasForeignKey("CalculationParameterGroupId");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.ContainerBatch", b =>
