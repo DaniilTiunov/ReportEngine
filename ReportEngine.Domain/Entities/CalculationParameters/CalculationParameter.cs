@@ -1,4 +1,5 @@
 ﻿using ReportEngine.Domain.Entities.BaseEntities.Interface;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReportEngine.Domain.Entities.CalculationParameters;
 
@@ -20,7 +21,7 @@ public class CalculationParameter
 
     
     //группа параметра 
-    public int ParameterGroupId { get; set; } 
+    public int ParameterGroupId { get; set; }
 
-    public CalculationParameterGroup CalculationParameterGroup { get; set; }
+    [ForeignKey("ParameterGroupId")] public virtual CalculationParameterGroup CalculationParameterGroup { get; set; }
 }

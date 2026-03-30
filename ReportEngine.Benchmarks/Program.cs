@@ -15,15 +15,11 @@ public class Program
     private static async Task Main(string[] args)
     {
 
-
-        static async Task Main(string[] args)
-        {
-
             var optionsBuilder = new DbContextOptionsBuilder<ReAppContext>();
             optionsBuilder.UseNpgsql(
-                "Host=172.16.0.210;Port=5432;Database=reportengine;Username=postgres;Password=postgres");
+                "Host=172.16.10.230;Port=5432;Database=reportengine;Username=postgres;Password=postgres");
 
-        var reAppContext = new ReAppContext(optionsBuilder.Options);
+            var reAppContext = new ReAppContext(optionsBuilder.Options);
 
             using (reAppContext)
             {
@@ -33,50 +29,33 @@ public class Program
                 {
                     new CalculationParameter()
                     {
-                        Name = "Ведущий инженер",
-                        Value = "С.А. Кокшаров",
-                        Unit = null,
-                        Description = "Ведущий инженер"
+                        Name = "Стоимость пескоструйных работ",
+                        Value = "900",
+                        Unit = "руб/ч",
+                        Description = "Стоимость пескоструйных работ"
                     },
                     new CalculationParameter()
                     {
-                        Name = "Ответственный за приёмку",
-                        Value = "Д.А. Ефремов",
-                        Unit = null,
-                        Description = "Ответственный за приёмку"
+                        Name = "Время пескоструйных работ",
+                        Value = "1.2",
+                        Unit = "чел*ч",
+                        Description = "Время пескоструйных работ"
                     },
-                    new CalculationParameter()
-                    {
-                        Name = "Специалист 2 уровня",
-                        Value = "Д.А. Ефремов",
-                        Unit = null,
-                        Description = "Специалист 2 уровня"
-                    },
-                    new CalculationParameter()
-                    {
-                        Name = "Представитель Осил",
-                        Value = "М.Е. Радченко",
-                        Unit = null,
-                        Description = "Представитель Осил",                      
-                    },
+ 
                 };
 
 
-                var group = new CalculationParameterGroup()
-                {
-                    SettingsType = CalculationParameterType.StandCost
-                };
 
                 foreach (var parameter in newParameters)
                 {
 
-                   await rep.AddParameterToGroup(parameter, group);
+                   await rep.AddParameterToGroup(parameter, CalculationParameterType.SandBlastCost);
                 }
 
             }
             ;
         }
 
-        ;
-    }
+        
 }
+

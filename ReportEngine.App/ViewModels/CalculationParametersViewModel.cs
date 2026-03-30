@@ -5,9 +5,11 @@ using ReportEngine.App.Commands;
 using ReportEngine.App.Services.Calculation;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Views.Settings.CalculationParameters.Controls;
-using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.CalculationParameters;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.CalculationParameters;
+
+
 
 namespace ReportEngine.App.ViewModels;
 
