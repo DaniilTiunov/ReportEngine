@@ -155,7 +155,8 @@
                                     SelectedItem="{Binding FormedFrameModel.SelectedComponentInFrame}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Binding="{Binding Component.Name}" Header="Наименование" />
-                                        <DataGridTextColumn Binding="{Binding CostComponent, StringFormat={}{0:N2}}" Header="Цена за ед." />
+                                        <DataGridTextColumn Binding="{Binding CostComponent, StringFormat={}{0:N2}}"
+                                                            Header="Цена за ед." />
                                         <DataGridTextColumn Binding="{Binding Measure}" Header="Ед. изм." />
 
                                         <!--  Кол-во и Длина в одном столбце  -->
@@ -163,7 +164,8 @@
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="{Binding Converter={StaticResource FrameComponentsCountConverter}}" />
+                                                        <TextBlock
+                                                            Text="{Binding Converter={StaticResource FrameComponentsCountConverter}}" />
                                                     </StackPanel>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -172,11 +174,13 @@
                                             <DataGridTemplateColumn.CellEditingTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBox Width="50" Text="{Binding Count, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                        <TextBox Width="50"
+                                                                 Text="{Binding Count, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                                                         <TextBlock Margin="5,0" Text=" / " />
 
-                                                        <TextBox Width="70" Text="{Binding Length, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                        <TextBox Width="70"
+                                                                 Text="{Binding Length, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                     </StackPanel>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellEditingTemplate>
@@ -480,7 +484,8 @@
                                         VerticalAlignment="Center"
                                         Foreground="{DynamicResource PrimaryForeground}"
                                         Text="Кол-во:" />
-                                    <TextBox Width="60" Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBox Width="60"
+                                             Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
                                 <Button
                                     Margin="5"
@@ -511,7 +516,8 @@
                                         VerticalAlignment="Center"
                                         Foreground="{DynamicResource PrimaryForeground}"
                                         Text="Кол-во:" />
-                                    <TextBox Width="60" Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBox Width="60"
+                                             Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
                                 <Button
                                     Margin="5"
@@ -543,7 +549,8 @@
                                             VerticalAlignment="Center"
                                             Foreground="{DynamicResource PrimaryForeground}"
                                             Text="Кол-во:" />
-                                        <TextBox Width="60" Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBox Width="60"
+                                                 Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                     </StackPanel>
                                 </StackPanel>
                                 <Button

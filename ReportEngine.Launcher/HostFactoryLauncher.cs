@@ -2,19 +2,18 @@
 using Microsoft.Extensions.Hosting;
 using ReportEngine.Launcher.Views;
 
-namespace ReportEngine.Launcher
+namespace ReportEngine.Launcher;
+
+public class HostFactoryLauncher
 {
-    public class HostFactoryLauncher
+    public static IHost BuildHost()
     {
-        public static IHost BuildHost()
-        {
-            return Host.CreateDefaultBuilder()
-                .ConfigureServices((hostContext, services) =>
-                {
-                    services.AddSingleton<App>();
-                    services.AddSingleton<MainWindow>();
-                })
-                .Build();
-        }
+        return Host.CreateDefaultBuilder()
+            .ConfigureServices((hostContext, services) =>
+            {
+                services.AddSingleton<App>();
+                services.AddSingleton<MainWindow>();
+            })
+            .Build();
     }
 }

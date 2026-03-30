@@ -4,16 +4,15 @@ using ReportEngine.Shared.Config.IniHelpers;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
 
-namespace ReportEngine.Benchmarks
+namespace ReportEngine.Benchmarks;
+
+[MemoryDiagnoser]
+[SimpleJob(RuntimeMoniker.Net48)]
+public class IniReaderBenchmarkss
 {
-    [MemoryDiagnoser]
-    [SimpleJob(RuntimeMoniker.Net48)]
-    public class IniReaderBenchmarkss
+    [Benchmark]
+    public void LoadSettings()
     {
-        [Benchmark]
-        public void LoadSettings()
-        {
-            CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
-        }
+        CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
     }
 }

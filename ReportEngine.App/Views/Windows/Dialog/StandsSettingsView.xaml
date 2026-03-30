@@ -340,10 +340,13 @@
                         </ListView.View>
                         <ListView.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding ProjectCommandProvider.CopyStandsCommand}" Header="Создать копию на основе прототипа" />
-                                <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}" Header="Удалить стенд из проекта" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.CopyStandsCommand}"
+                                          Header="Создать копию на основе прототипа" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}"
+                                          Header="Удалить стенд из проекта" />
                                 <Separator />
-                                <MenuItem Command="{Binding ProjectCommandProvider.RenumerateStandsCommand}" Header="Пронумеровать стенды..." />
+                                <MenuItem Command="{Binding ProjectCommandProvider.RenumerateStandsCommand}"
+                                          Header="Пронумеровать стенды..." />
                             </ContextMenu>
                         </ListView.ContextMenu>
                     </ListView>

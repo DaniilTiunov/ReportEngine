@@ -477,12 +477,14 @@
                                     Width="100"
                                     DisplayMemberBinding="{Binding Sensor}"
                                     Header="Тип датчика" />
-                                <GridViewColumn DisplayMemberBinding="{Binding StandSummCost}" Header="Стоимость стенда" />
+                                <GridViewColumn DisplayMemberBinding="{Binding StandSummCost}"
+                                                Header="Стоимость стенда" />
                             </GridView>
                         </ListView.View>
                         <ListView.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}" Header="Удалить" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}"
+                                          Header="Удалить" />
                             </ContextMenu>
                         </ListView.ContextMenu>
                     </ListView>

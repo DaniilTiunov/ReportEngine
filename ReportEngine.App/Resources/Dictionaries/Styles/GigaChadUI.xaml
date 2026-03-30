@@ -5,7 +5,8 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign2.Defaults.xaml" />
+        <ResourceDictionary
+            Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign2.Defaults.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#373A6B" />
@@ -611,7 +612,8 @@
                                             HorizontalScrollBarVisibility="Auto"
                                             SnapsToDevicePixels="True"
                                             VerticalScrollBarVisibility="Auto">
-                                            <ItemsPresenter x:Name="ItemsPresenter" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                            <ItemsPresenter x:Name="ItemsPresenter"
+                                                            KeyboardNavigation.DirectionalNavigation="Contained" />
                                         </ScrollViewer>
                                     </Border>
                                 </Grid>

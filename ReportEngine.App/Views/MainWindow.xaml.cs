@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Media.Animation;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
@@ -22,10 +21,9 @@ namespace ReportEngine.App;
 /// </summary>
 public partial class MainWindow : Window //Это так называемый "Code Behind" файл для MainWindow.xaml
 {
-    private ICollectionView _projectsView;
-
     private readonly MainWindowViewModel _mainViewModel;
     private readonly IServiceProvider _serviceProvider;
+    private ICollectionView _projectsView;
 
     public MainWindow(
         MainWindowViewModel mainViewModel,
@@ -58,7 +56,6 @@ public partial class MainWindow : Window //Это так называемый "C
 
             _projectsView = CollectionViewSource.GetDefaultView(_mainViewModel.MainWindowModel.AllProjects);
             MainDataGrid.ItemsSource = _projectsView;
-
         });
     }
 
@@ -128,14 +125,12 @@ public partial class MainWindow : Window //Это так называемый "C
         var themeDict = Application.LoadComponent(uri) as ResourceDictionary;
 
         var mergedDicts = Application.Current.Resources.MergedDictionaries;
-        for (int i = 0; i < mergedDicts.Count; i++)
-        {
+        for (var i = 0; i < mergedDicts.Count; i++)
             if (mergedDicts[i].Source != null && mergedDicts[i].Source.OriginalString.Contains("ColorThemes"))
             {
                 mergedDicts[i] = themeDict;
                 return;
             }
-        }
 
         mergedDicts.Add(themeDict);
     }
@@ -259,10 +254,11 @@ public partial class MainWindow : Window //Это так называемый "C
             {
                 if (obj is ProjectInfo prj)
                 {
-                    bool companyMatch = !string.IsNullOrEmpty(prj.Company) && prj.Company.ToLower().Contains(query);
-                    bool objectMatch = !string.IsNullOrEmpty(prj.Object) && prj.Object.ToLower().Contains(query);
+                    var companyMatch = !string.IsNullOrEmpty(prj.Company) && prj.Company.ToLower().Contains(query);
+                    var objectMatch = !string.IsNullOrEmpty(prj.Object) && prj.Object.ToLower().Contains(query);
                     return companyMatch || objectMatch;
                 }
+
                 return false;
             };
 

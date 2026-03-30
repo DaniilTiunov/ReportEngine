@@ -6,6 +6,8 @@ namespace ReportEngine.Export.ExcelWork;
 
 public static class ExcelReportHelper
 {
+    public static string CommonErrorString => "Ошибка получения/формирования данных.";
+
     public static string CreateReportName(string prefix, string fileExtension)
     {
         return prefix + " " + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + "." + fileExtension;
@@ -13,10 +15,8 @@ public static class ExcelReportHelper
 
     public static float? TryToParseFloat(string str)
     {
-        return float.TryParse(str, out float parseResult) ? parseResult : null;
+        return float.TryParse(str, out var parseResult) ? parseResult : null;
     }
-
-    public static string CommonErrorString => "Ошибка получения/формирования данных.";
 
 
     //костыль для формирования списка датчиков обвязки
@@ -69,7 +69,7 @@ public static class ExcelReportHelper
                 unit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.units))?.units,
                 quantity = group.Sum(pipe => pipe.length),
                 costPerUnit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.price))?.price,
-                exportDays = group.FirstOrDefault(group => group.exportDays.HasValue)?.exportDays
+                group.FirstOrDefault(group => group.exportDays.HasValue)?.exportDays
             })
             .Where(group => !string.IsNullOrEmpty(group.name))
             .Where(group => group.quantity != 0.0)
@@ -79,13 +79,14 @@ public static class ExcelReportHelper
                 Name = new ValidatedField<string?>(group.name, group.name != null),
                 Unit = new ValidatedField<string?>(group.unit, group.unit != null),
                 Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
-                CostPerUnit = new ValidatedField<float?>(TryToParseFloat(group.costPerUnit ?? ""), group.costPerUnit != null),
+                CostPerUnit =
+                    new ValidatedField<float?>(TryToParseFloat(group.costPerUnit ?? ""), group.costPerUnit != null)
             })
             .Select(record =>
             {
                 record.CommonCost = new ValidatedField<float?>(
-                   record.Quantity.Value * record.CostPerUnit.Value,
-                   (record.Quantity.Value * record.CostPerUnit.Value) != null);
+                    record.Quantity.Value * record.CostPerUnit.Value,
+                    record.Quantity.Value * record.CostPerUnit.Value != null);
 
                 return record;
             })
@@ -109,7 +110,7 @@ public static class ExcelReportHelper
                 unit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.units))?.units,
                 quantity = group.Sum(arm => arm.quantity),
                 costPerUnit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.price))?.price,
-                exportDays = group.FirstOrDefault(group => group.exportDays.HasValue)?.exportDays
+                group.FirstOrDefault(group => group.exportDays.HasValue)?.exportDays
             })
             .Where(group => !string.IsNullOrEmpty(group.name))
             .Where(group => group.quantity != 0.0)
@@ -119,13 +120,14 @@ public static class ExcelReportHelper
                 Name = new ValidatedField<string?>(group.name, group.name != null),
                 Unit = new ValidatedField<string?>(group.unit, group.unit != null),
                 Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
-                CostPerUnit = new ValidatedField<float?>(TryToParseFloat(group.costPerUnit ?? ""), group.costPerUnit != null),
+                CostPerUnit =
+                    new ValidatedField<float?>(TryToParseFloat(group.costPerUnit ?? ""), group.costPerUnit != null)
             })
             .Select(record =>
             {
                 record.CommonCost = new ValidatedField<float?>(
-                   record.Quantity.Value * record.CostPerUnit.Value,
-                   (record.Quantity.Value * record.CostPerUnit.Value) != null);
+                    record.Quantity.Value * record.CostPerUnit.Value,
+                    record.Quantity.Value * record.CostPerUnit.Value != null);
 
                 return record;
             })
@@ -149,23 +151,24 @@ public static class ExcelReportHelper
                 unit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.units))?.units,
                 quantity = group.Sum(tree => tree.quantity),
                 costPerUnit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.price))?.price,
-                exportDays = group.FirstOrDefault(group => group.exportDays.HasValue)?.exportDays
+                group.FirstOrDefault(group => group.exportDays.HasValue)?.exportDays
             })
-           .Where(group => !string.IsNullOrEmpty(group.name))
-           .Where(group => group.quantity != 0.0)
-           .Select(group => new EquipmentRecord
-           {
-               ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
-               Name = new ValidatedField<string?>(group.name, group.name != null),
-               Unit = new ValidatedField<string?>(group.unit, group.unit != null),
-               Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
-               CostPerUnit = new ValidatedField<float?>(TryToParseFloat(group.costPerUnit ?? ""), group.costPerUnit != null),
-           })
+            .Where(group => !string.IsNullOrEmpty(group.name))
+            .Where(group => group.quantity != 0.0)
+            .Select(group => new EquipmentRecord
+            {
+                ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
+                Name = new ValidatedField<string?>(group.name, group.name != null),
+                Unit = new ValidatedField<string?>(group.unit, group.unit != null),
+                Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
+                CostPerUnit =
+                    new ValidatedField<float?>(TryToParseFloat(group.costPerUnit ?? ""), group.costPerUnit != null)
+            })
             .Select(record =>
             {
                 record.CommonCost = new ValidatedField<float?>(
-                   record.Quantity.Value * record.CostPerUnit.Value,
-                   (record.Quantity.Value * record.CostPerUnit.Value) != null);
+                    record.Quantity.Value * record.CostPerUnit.Value,
+                    record.Quantity.Value * record.CostPerUnit.Value != null);
 
                 return record;
             })
@@ -188,23 +191,24 @@ public static class ExcelReportHelper
                 unit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.units))?.units,
                 quantity = group.Sum(groupElement => groupElement.quantity),
                 costPerUnit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.price))?.price,
-                exportDays = group.FirstOrDefault(group => group.exportDays.HasValue)?.exportDays
+                group.FirstOrDefault(group => group.exportDays.HasValue)?.exportDays
             })
-           .Where(group => !string.IsNullOrEmpty(group.name))
-           .Where(group => group.quantity != 0.0)
-           .Select(group => new EquipmentRecord
-           {
-               ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
-               Name = new ValidatedField<string?>(group.name, group.name != null),
-               Unit = new ValidatedField<string?>(group.unit, group.unit != null),
-               Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
-               CostPerUnit = new ValidatedField<float?>(TryToParseFloat(group.costPerUnit ?? ""), group.costPerUnit != null),
-           })
+            .Where(group => !string.IsNullOrEmpty(group.name))
+            .Where(group => group.quantity != 0.0)
+            .Select(group => new EquipmentRecord
+            {
+                ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
+                Name = new ValidatedField<string?>(group.name, group.name != null),
+                Unit = new ValidatedField<string?>(group.unit, group.unit != null),
+                Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
+                CostPerUnit =
+                    new ValidatedField<float?>(TryToParseFloat(group.costPerUnit ?? ""), group.costPerUnit != null)
+            })
             .Select(record =>
             {
                 record.CommonCost = new ValidatedField<float?>(
-                   record.Quantity.Value * record.CostPerUnit.Value,
-                   (record.Quantity.Value * record.CostPerUnit.Value) != null);
+                    record.Quantity.Value * record.CostPerUnit.Value,
+                    record.Quantity.Value * record.CostPerUnit.Value != null);
 
                 return record;
             })
@@ -223,21 +227,21 @@ public static class ExcelReportHelper
                 costPerUnit = group.FirstOrDefault(group => group.CostPerUnit.HasValue)?.CostPerUnit,
                 exportDays = group.FirstOrDefault(group => group.ExportDays.HasValue)?.ExportDays
             })
-           .Where(group => !string.IsNullOrEmpty(group.name))
-           .Where(group => group.quantity != 0.0)
-           .Select(group => new EquipmentRecord
-           {
-               ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
-               Name = new ValidatedField<string?>(group.name, group.name != null),
-               Unit = new ValidatedField<string?>(group.unit, group.unit != null),
-               Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
-               CostPerUnit = new ValidatedField<float?>(group.costPerUnit, group.costPerUnit.HasValue),
-           })
+            .Where(group => !string.IsNullOrEmpty(group.name))
+            .Where(group => group.quantity != 0.0)
+            .Select(group => new EquipmentRecord
+            {
+                ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
+                Name = new ValidatedField<string?>(group.name, group.name != null),
+                Unit = new ValidatedField<string?>(group.unit, group.unit != null),
+                Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
+                CostPerUnit = new ValidatedField<float?>(group.costPerUnit, group.costPerUnit.HasValue)
+            })
             .Select(record =>
             {
                 record.CommonCost = new ValidatedField<float?>(
-                   record.Quantity.Value * record.CostPerUnit.Value,
-                   (record.Quantity.Value * record.CostPerUnit.Value) != null);
+                    record.Quantity.Value * record.CostPerUnit.Value,
+                    record.Quantity.Value * record.CostPerUnit.Value != null);
 
                 return record;
             })
@@ -249,17 +253,12 @@ public static class ExcelReportHelper
             .SelectMany(fr => fr.Frame.Components)
             .Select(comp =>
             {
-                float count = 0.0f;
+                var count = 0.0f;
 
                 //костыль с количеством
                 if (comp.Count.HasValue && comp.Count.Value != 0)
-                {
                     count = comp.Count.Value;
-                }
-                else if (comp.Length.HasValue && comp.Length.Value != 0)
-                {
-                    count = comp.Length.Value;
-                }
+                else if (comp.Length.HasValue && comp.Length.Value != 0) count = comp.Length.Value;
 
                 return new
                 {
@@ -267,33 +266,33 @@ public static class ExcelReportHelper
                     unit = comp.Measure,
                     costPerUnit = comp.CostComponent,
                     exportDays = comp.ExportDays,
-                    quantity = count,
+                    quantity = count
                 };
             })
             .GroupBy(frameComp => frameComp.name)
             .Select(group => new
             {
                 name = group.Key,
-                unit = group.FirstOrDefault(group => !string.IsNullOrEmpty(group.unit))?.unit,
+                group.FirstOrDefault(group => !string.IsNullOrEmpty(group.unit))?.unit,
                 quantity = group.Sum(frameComp => frameComp.quantity),
-                costPerUnit = group.FirstOrDefault(group => group.costPerUnit.HasValue)?.costPerUnit,
-                exportDays = group.FirstOrDefault(group => group.exportDays.HasValue)?.exportDays
+                group.FirstOrDefault(group => group.costPerUnit.HasValue)?.costPerUnit,
+                group.FirstOrDefault(group => group.exportDays.HasValue)?.exportDays
             })
-           .Where(group => !string.IsNullOrEmpty(group.name))
-           .Where(group => group.quantity != 0.0)
-           .Select(group => new EquipmentRecord
-           {
-               ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
-               Name = new ValidatedField<string?>(group.name, group.name != null),
-               Unit = new ValidatedField<string?>(group.unit, group.unit != null),
-               Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
-               CostPerUnit = new ValidatedField<float?>(group.costPerUnit, group.costPerUnit.HasValue),
-           })
+            .Where(group => !string.IsNullOrEmpty(group.name))
+            .Where(group => group.quantity != 0.0)
+            .Select(group => new EquipmentRecord
+            {
+                ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
+                Name = new ValidatedField<string?>(group.name, group.name != null),
+                Unit = new ValidatedField<string?>(group.unit, group.unit != null),
+                Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
+                CostPerUnit = new ValidatedField<float?>(group.costPerUnit, group.costPerUnit.HasValue)
+            })
             .Select(record =>
             {
                 record.CommonCost = new ValidatedField<float?>(
-                   record.Quantity.Value * record.CostPerUnit.Value,
-                   (record.Quantity.Value * record.CostPerUnit.Value) != null);
+                    record.Quantity.Value * record.CostPerUnit.Value,
+                    record.Quantity.Value * record.CostPerUnit.Value != null);
 
                 return record;
             })
@@ -328,13 +327,13 @@ public static class ExcelReportHelper
                 Name = new ValidatedField<string?>(group.name, group.name != null),
                 Unit = new ValidatedField<string?>(group.unit, group.unit != null),
                 Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
-                CostPerUnit = new ValidatedField<float?>(group.costPerUnit, group.costPerUnit.HasValue),
+                CostPerUnit = new ValidatedField<float?>(group.costPerUnit, group.costPerUnit.HasValue)
             })
             .Select(record =>
             {
                 record.CommonCost = new ValidatedField<float?>(
-                   record.Quantity.Value * record.CostPerUnit.Value,
-                   (record.Quantity.Value * record.CostPerUnit.Value) != null);
+                    record.Quantity.Value * record.CostPerUnit.Value,
+                    record.Quantity.Value * record.CostPerUnit.Value != null);
 
                 return record;
             })
@@ -353,21 +352,21 @@ public static class ExcelReportHelper
                 costPerUnit = group.FirstOrDefault(group => group.CostPerUnit.HasValue)?.CostPerUnit,
                 exportDays = group.FirstOrDefault(group => group.ExportDays.HasValue)?.ExportDays
             })
-           .Where(group => !string.IsNullOrEmpty(group.name))
-           .Where(group => group.quantity != 0.0)
-           .Select(group => new EquipmentRecord
-           {
-               ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
-               Name = new ValidatedField<string?>(group.name, group.name != null),
-               Unit = new ValidatedField<string?>(group.unit, group.unit != null),
-               Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
-               CostPerUnit = new ValidatedField<float?>(group.costPerUnit, group.costPerUnit.HasValue),
-           })
+            .Where(group => !string.IsNullOrEmpty(group.name))
+            .Where(group => group.quantity != 0.0)
+            .Select(group => new EquipmentRecord
+            {
+                ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
+                Name = new ValidatedField<string?>(group.name, group.name != null),
+                Unit = new ValidatedField<string?>(group.unit, group.unit != null),
+                Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
+                CostPerUnit = new ValidatedField<float?>(group.costPerUnit, group.costPerUnit.HasValue)
+            })
             .Select(record =>
             {
                 record.CommonCost = new ValidatedField<float?>(
-                   record.Quantity.Value * record.CostPerUnit.Value,
-                   (record.Quantity.Value * record.CostPerUnit.Value) != null);
+                    record.Quantity.Value * record.CostPerUnit.Value,
+                    record.Quantity.Value * record.CostPerUnit.Value != null);
 
                 return record;
             })
@@ -386,38 +385,37 @@ public static class ExcelReportHelper
                 costPerUnit = group.FirstOrDefault(group => group.CostPerUnit.HasValue)?.CostPerUnit,
                 exportDays = group.FirstOrDefault(group => group.ExportDays.HasValue)?.ExportDays
             })
-           .Where(group => !string.IsNullOrEmpty(group.name))
-           .Where(group => group.quantity != 0.0)
-           .Select(group => new EquipmentRecord
-           {
-               ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
-               Name = new ValidatedField<string?>(group.name, group.name != null),
-               Unit = new ValidatedField<string?>(group.unit, group.unit != null),
-               Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
-               CostPerUnit = new ValidatedField<float?>(group.costPerUnit, group.costPerUnit.HasValue),
-           })
-           .Select(record =>
+            .Where(group => !string.IsNullOrEmpty(group.name))
+            .Where(group => group.quantity != 0.0)
+            .Select(group => new EquipmentRecord
+            {
+                ExportDays = new ValidatedField<int?>(group.exportDays, group.exportDays.HasValue),
+                Name = new ValidatedField<string?>(group.name, group.name != null),
+                Unit = new ValidatedField<string?>(group.unit, group.unit != null),
+                Quantity = new ValidatedField<float?>(group.quantity, group.quantity != null),
+                CostPerUnit = new ValidatedField<float?>(group.costPerUnit, group.costPerUnit.HasValue)
+            })
+            .Select(record =>
             {
                 record.CommonCost = new ValidatedField<float?>(
-                   record.Quantity.Value * record.CostPerUnit.Value,
-                   (record.Quantity.Value * record.CostPerUnit.Value) != null);
+                    record.Quantity.Value * record.CostPerUnit.Value,
+                    record.Quantity.Value * record.CostPerUnit.Value != null);
 
                 return record;
             });
 
 
-
-
         //в прочие материалы кладем только шильдики и таблички из доп комплектующих
         var othersParts = additionalParts
-            .Where(record => (record.Name.Value?.Contains("Табличка") ?? false) || (record.Name.Value?.Contains("Шильдик") ?? false))
+            .Where(record => (record.Name.Value?.Contains("Табличка") ?? false) ||
+                             (record.Name.Value?.Contains("Шильдик") ?? false))
             .ToList();
 
 
         //расходные материалы - то осталось из доп комплектующих, за исключением прочих материалов и кронштейнов
         var supplies = additionalParts
-             .ExceptBy(othersParts.Select(p => p.Name), part => part.Name)
-             .ExceptBy(sensorsHolders.Select(h => h.Name), holder => holder.Name);
+            .ExceptBy(othersParts.Select(p => p.Name), part => part.Name)
+            .ExceptBy(sensorsHolders.Select(h => h.Name), holder => holder.Name);
 
 
         //из расходных материалов также сносим дубликаты существующих позиций 
@@ -486,7 +484,6 @@ public static class ExcelReportHelper
             OthersParts = othersParts,
             Supplies = suppliesList
         };
-
     }
 
     //создаем инфу о трудозатратах
@@ -503,7 +500,6 @@ public static class ExcelReportHelper
         var sandblastSettings = allSettings.SandBlastSettings;
 
 
-
         //трудозатраты на изготовление рам
         //константа из настроек * кол-во рам
         var frameProductionHumanCostSum = stands
@@ -515,13 +511,14 @@ public static class ExcelReportHelper
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Изготовление рам", true),
             Unit = new ValidatedField<string?>("чел/час", true),
-            Quantity = new ValidatedField<float?>((float?)frameProductionHumanCostSum, frameProductionHumanCostSum.HasValue),
-            CostPerUnit = new ValidatedField<float?>((float?)frameSettings?.FrameProduction, (frameSettings?.FrameProduction != null)),
+            Quantity = new ValidatedField<float?>((float?)frameProductionHumanCostSum,
+                frameProductionHumanCostSum.HasValue),
+            CostPerUnit = new ValidatedField<float?>((float?)frameSettings?.FrameProduction,
+                frameSettings?.FrameProduction != null),
             CommonCost = new ValidatedField<float?>(
                 (float?)(frameProductionHumanCostSum * frameSettings?.FrameProduction),
-                (frameProductionHumanCostSum * frameSettings?.FrameProduction) != null)
+                frameProductionHumanCostSum * frameSettings?.FrameProduction != null)
         };
-
 
 
         //трудозатраты на обвязки
@@ -535,15 +532,14 @@ public static class ExcelReportHelper
             Name = new ValidatedField<string?>("Изготовление обвязок", true),
             Unit = new ValidatedField<string?>("чел/час", true),
             Quantity = new ValidatedField<float?>(allObvHumanCosts.Sum(), allObvHumanCosts.All(cost => cost.HasValue)),
-            CostPerUnit = new ValidatedField<float?>((float?)humanCostSettings?.ObvzyakaProduction, (humanCostSettings?.ObvzyakaProduction != null))
+            CostPerUnit = new ValidatedField<float?>((float?)humanCostSettings?.ObvzyakaProduction,
+                humanCostSettings?.ObvzyakaProduction != null)
         };
 
         obvProductionRecord.CommonCost = new ValidatedField<float?>(
             obvProductionRecord.Quantity.Value * obvProductionRecord.CostPerUnit.Value,
-            (obvProductionRecord.Quantity.Value * obvProductionRecord.CostPerUnit.Value) != null && obvProductionRecord.Quantity.IsValid);
-
-
-
+            obvProductionRecord.Quantity.Value * obvProductionRecord.CostPerUnit.Value != null &&
+            obvProductionRecord.Quantity.IsValid);
 
 
         //трудозатраты на коллектор
@@ -551,15 +547,13 @@ public static class ExcelReportHelper
         //кол-во отверстий в коллекторе = сумма дренажных линий в каждой обвязке стенда + 1
 
 
-
-
-
         //отфильтровываем стенды где есть коллектор
         var standsWithCollector = stands
             .Where(stand =>
             {
                 var standDrainagesPurposes = stand.StandDrainages.SelectMany(drainage => drainage.Drainage.Purposes);
-                return standDrainagesPurposes.Any(drainagePurpose => drainagePurpose.Purpose == "Основная труба" && !string.IsNullOrEmpty(drainagePurpose.Material));
+                return standDrainagesPurposes.Any(drainagePurpose =>
+                    drainagePurpose.Purpose == "Основная труба" && !string.IsNullOrEmpty(drainagePurpose.Material));
             });
 
         var standsWithCollectorExists = standsWithCollector.Any();
@@ -568,16 +562,14 @@ public static class ExcelReportHelper
         double? collectorProductionHumanCostSum = null;
 
         if (standsWithCollectorExists)
-        {
             collectorProductionHumanCostSum = standsWithCollector
-            .Select(stand => stand.ObvyazkiInStand.Sum(obv => obv.OtherLineCount) + 1)
-            .Select(standHolesCount => humanCostSettings?.TimeForOneDrill * standHolesCount)
-            .Select(drillHumanCost => drillHumanCost + humanCostSettings?.TimeForCollectorBoil)
-            .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
-        }
+                .Select(stand => stand.ObvyazkiInStand.Sum(obv => obv.OtherLineCount) + 1)
+                .Select(standHolesCount => humanCostSettings?.TimeForOneDrill * standHolesCount)
+                .Select(drillHumanCost => drillHumanCost + humanCostSettings?.TimeForCollectorBoil)
+                .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
-        EquipmentRecord? collectorProductionRecord = standsWithCollectorExists ?
-            new EquipmentRecord
+        var collectorProductionRecord = standsWithCollectorExists
+            ? new EquipmentRecord
             {
                 ExportDays = new ValidatedField<int?>(null, true),
 
@@ -586,23 +578,23 @@ public static class ExcelReportHelper
                 Unit = new ValidatedField<string?>("чел/час", true),
 
                 Quantity = new ValidatedField<float?>((float?)collectorProductionHumanCostSum,
-                                                        collectorProductionHumanCostSum.HasValue),
+                    collectorProductionHumanCostSum.HasValue),
 
                 CostPerUnit = new ValidatedField<float?>((float?)humanCostSettings?.CollectorProduction,
-                                                    (humanCostSettings?.CollectorProduction != null)),
+                    humanCostSettings?.CollectorProduction != null),
 
-                CommonCost = new ValidatedField<float?>((float?)(collectorProductionHumanCostSum * humanCostSettings?.CollectorProduction),
-                                                            (collectorProductionHumanCostSum * humanCostSettings?.CollectorProduction) != null)
+                CommonCost = new ValidatedField<float?>(
+                    (float?)(collectorProductionHumanCostSum * humanCostSettings?.CollectorProduction),
+                    collectorProductionHumanCostSum * humanCostSettings?.CollectorProduction != null)
             }
             : null;
-
 
 
         //трудозатраты на испытания
         //время проведения всех испытаний * кол-во обвязок
         var testsHumanCostSum = stands
-              .Select(stand => humanCostSettings?.TimeForAllChecks * stand.ObvyazkiInStand.Count)
-              .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
+            .Select(stand => humanCostSettings?.TimeForAllChecks * stand.ObvyazkiInStand.Count)
+            .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
 
         var qualityTestRecord = new EquipmentRecord
@@ -611,12 +603,12 @@ public static class ExcelReportHelper
             Name = new ValidatedField<string?>("Испытание на прочность и герметичность", true),
             Unit = new ValidatedField<string?>("чел/час", true),
             Quantity = new ValidatedField<float?>((float?)testsHumanCostSum, testsHumanCostSum.HasValue),
-            CostPerUnit = new ValidatedField<float?>((float?)humanCostSettings?.Tests, (humanCostSettings?.Tests != null)),
+            CostPerUnit =
+                new ValidatedField<float?>((float?)humanCostSettings?.Tests, humanCostSettings?.Tests != null),
             CommonCost = new ValidatedField<float?>(
                 (float?)(testsHumanCostSum * humanCostSettings?.Tests),
-                (testsHumanCostSum * humanCostSettings?.Tests) != null)
+                testsHumanCostSum * humanCostSettings?.Tests != null)
         };
-
 
 
         //трудозатраты на пескоструйные работы
@@ -631,27 +623,27 @@ public static class ExcelReportHelper
             Name = new ValidatedField<string?>("Пескоструйные работы", true),
             Unit = new ValidatedField<string?>("чел/час", true),
             Quantity = new ValidatedField<float?>((float?)sandBlastingHumanCostSum, sandBlastingHumanCostSum != null),
-            CostPerUnit = new ValidatedField<float?>((float?)sandblastSettings?.SandBlastWork, (sandblastSettings?.SandBlastWork != null)),
+            CostPerUnit = new ValidatedField<float?>((float?)sandblastSettings?.SandBlastWork,
+                sandblastSettings?.SandBlastWork != null),
             CommonCost = new ValidatedField<float?>(
                 (float?)(sandBlastingHumanCostSum * sandblastSettings?.SandBlastWork),
-                (sandBlastingHumanCostSum * sandblastSettings?.SandBlastWork) != null)
+                sandBlastingHumanCostSum * sandblastSettings?.SandBlastWork != null)
         };
-
 
 
         //трудозатраты на покраску
         //???
         var paintingHumanCostSum = stands
-          .Select(stand =>
-          {
-              var obvTimeCost = frameSettings?.TimeForPaintObv * stand.ObvyazkiInStand.Count;
+            .Select(stand =>
+            {
+                var obvTimeCost = frameSettings?.TimeForPaintObv * stand.ObvyazkiInStand.Count;
 
-              return obvTimeCost +
-              frameSettings?.TimeForPaintFrame +
-              humanCostSettings?.TimeForPrepareAllEquipment +
-              humanCostSettings?.TimeForOthersOperations;
-          })
-          .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
+                return obvTimeCost +
+                       frameSettings?.TimeForPaintFrame +
+                       humanCostSettings?.TimeForPrepareAllEquipment +
+                       humanCostSettings?.TimeForOthersOperations;
+            })
+            .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
         var paintingRecord = new EquipmentRecord
         {
@@ -659,10 +651,10 @@ public static class ExcelReportHelper
             Name = new ValidatedField<string?>("Покраска", true),
             Unit = new ValidatedField<string?>("чел/час", true),
             Quantity = new ValidatedField<float?>((float?)paintingHumanCostSum, paintingHumanCostSum.HasValue),
-            CostPerUnit = new ValidatedField<float?>((float?)frameSettings?.Painting, (frameSettings?.Painting != null)),
+            CostPerUnit = new ValidatedField<float?>((float?)frameSettings?.Painting, frameSettings?.Painting != null),
             CommonCost = new ValidatedField<float?>(
                 (float?)(paintingHumanCostSum * frameSettings?.Painting),
-                (paintingHumanCostSum * frameSettings?.Painting) != null)
+                paintingHumanCostSum * frameSettings?.Painting != null)
         };
 
         //трудозатраты на электромонтаж
@@ -670,49 +662,47 @@ public static class ExcelReportHelper
         var electricHumanCost = stands
             .Select(stand =>
             {
-                
                 var cableInputsQuantity = stand.StandElectricalComponent
-                .SelectMany(equip => equip.ElectricalComponent.Purposes)
-                .Where(purpose => purpose.Purpose == "Кабельные вводы")
-                .Sum(record => record.Quantity);
+                    .SelectMany(equip => equip.ElectricalComponent.Purposes)
+                    .Where(purpose => purpose.Purpose == "Кабельные вводы")
+                    .Sum(record => record.Quantity);
 
                 //затраты на кабельные ввода
                 var cableInputsTimeCost = cableInputsQuantity * humanCostSettings?.TimeForMontageOneInput;
-           
 
 
                 var electricSensorsQuantity = stand.ObvyazkiInStand
-                .Sum(obv =>
-                {
-                    var isElectricSensor = (string? typeOfSensor) => !string.IsNullOrEmpty(typeOfSensor) && typeOfSensor != "Манометр";
+                    .Sum(obv =>
+                    {
+                        var isElectricSensor = (string? typeOfSensor) =>
+                            !string.IsNullOrEmpty(typeOfSensor) && typeOfSensor != "Манометр";
 
-                    int sensorsQuantity = 0;
+                        var sensorsQuantity = 0;
 
-                    if (isElectricSensor(obv.FirstSensorType))
-                        sensorsQuantity++;
+                        if (isElectricSensor(obv.FirstSensorType))
+                            sensorsQuantity++;
 
-                    if (isElectricSensor(obv.SecondSensorType))
-                        sensorsQuantity++;
+                        if (isElectricSensor(obv.SecondSensorType))
+                            sensorsQuantity++;
 
-                    if (isElectricSensor(obv.ThirdSensorType))
-                        sensorsQuantity++;
+                        if (isElectricSensor(obv.ThirdSensorType))
+                            sensorsQuantity++;
 
-                    return sensorsQuantity;
-                });
+                        return sensorsQuantity;
+                    });
 
                 //затраты на монтаж кабеля и провода 4мм до датчиков
-                var sensorsTimeCost = (electricSensorsQuantity * electicalSettings?.TimeMontageCable) +
-                (electricSensorsQuantity * electicalSettings?.TimeMontageWire) +
-                (electricSensorsQuantity * humanCostSettings?.TimeForDrillOneBus);
-
+                var sensorsTimeCost = electricSensorsQuantity * electicalSettings?.TimeMontageCable +
+                                      electricSensorsQuantity * electicalSettings?.TimeMontageWire +
+                                      electricSensorsQuantity * humanCostSettings?.TimeForDrillOneBus;
 
 
                 const int holesInBus = 2;
                 const int holesInFrame = 2;
 
                 //затраты на крепление шины к раме
-                var busBracingTimeCost = (holesInBus * humanCostSettings?.TimeForDrillOneBus) +
-                (holesInFrame * humanCostSettings?.TimeForOneDrill);
+                var busBracingTimeCost = holesInBus * humanCostSettings?.TimeForDrillOneBus +
+                                         holesInFrame * humanCostSettings?.TimeForOneDrill;
 
 
                 var framesQuantity = stand.StandFrames.Count;
@@ -721,9 +711,9 @@ public static class ExcelReportHelper
                 var groundingTimeCost = electicalSettings?.TimeMontageWire * framesQuantity;
 
                 return cableInputsTimeCost +
-                sensorsTimeCost +
-                busBracingTimeCost +
-                groundingTimeCost;
+                       sensorsTimeCost +
+                       busBracingTimeCost +
+                       groundingTimeCost;
             })
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
@@ -733,10 +723,11 @@ public static class ExcelReportHelper
             Name = new ValidatedField<string?>("Электромонтаж", true),
             Unit = new ValidatedField<string?>("чел/час", true),
             Quantity = new ValidatedField<float?>((float?)electricHumanCost, electricHumanCost.HasValue),
-            CostPerUnit = new ValidatedField<float?>((float?)electicalSettings?.ElectricalMontage, (electicalSettings?.ElectricalMontage != null)),
+            CostPerUnit = new ValidatedField<float?>((float?)electicalSettings?.ElectricalMontage,
+                electicalSettings?.ElectricalMontage != null),
             CommonCost = new ValidatedField<float?>(
                 (float?)(electricHumanCost * electicalSettings?.ElectricalMontage),
-                (electricHumanCost * electicalSettings?.ElectricalMontage) != null)
+                electricHumanCost * electicalSettings?.ElectricalMontage != null)
         };
 
         //трудозатраты на общую проверку стенда
@@ -751,10 +742,11 @@ public static class ExcelReportHelper
             Name = new ValidatedField<string?>("Общая проверка стенда", true),
             Unit = new ValidatedField<string?>("чел/час", true),
             Quantity = new ValidatedField<float?>((float?)commonCheckHumanCost, commonCheckHumanCost.HasValue),
-            CostPerUnit = new ValidatedField<float?>((float?)humanCostSettings?.CommonCheckStand, (humanCostSettings?.CommonCheckStand != null)),
+            CostPerUnit = new ValidatedField<float?>((float?)humanCostSettings?.CommonCheckStand,
+                humanCostSettings?.CommonCheckStand != null),
             CommonCost = new ValidatedField<float?>(
                 (float?)(commonCheckHumanCost * humanCostSettings?.CommonCheckStand),
-                (commonCheckHumanCost * humanCostSettings?.CommonCheckStand) != null)
+                commonCheckHumanCost * humanCostSettings?.CommonCheckStand != null)
         };
 
 
@@ -769,9 +761,6 @@ public static class ExcelReportHelper
             ElectricalWorks = electricRecord,
             CommonStandCheck = commonCheckRecord
         };
-
-
-
     }
 
 
@@ -787,15 +776,15 @@ public static class ExcelReportHelper
                 Name = new ValidatedField<string?>(group.FirstOrDefault().Name, group.FirstOrDefault().Name != null),
                 Unit = new ValidatedField<string?>(null, true),
                 Quantity = new ValidatedField<float?>(group.Count(), true),
-                CostPerUnit = new ValidatedField<float?>(group.FirstOrDefault().ContainerCost, group.FirstOrDefault().ContainerCost.HasValue),
+                CostPerUnit = new ValidatedField<float?>(group.FirstOrDefault().ContainerCost,
+                    group.FirstOrDefault().ContainerCost.HasValue)
             })
             .Select(record =>
             {
                 record.CommonCost = new ValidatedField<float?>(record.Quantity.Value * record.CostPerUnit.Value,
-                                                              (record.Quantity.Value * record.CostPerUnit.Value) != null);
+                    record.Quantity.Value * record.CostPerUnit.Value != null);
                 return record;
-            }).
-            ToList();
+            }).ToList();
 
         return containers;
     }
@@ -830,8 +819,8 @@ public static class ExcelReportHelper
                 costField.All(field => field.IsValid)),
 
             CommonCost = new ValidatedField<float?>(
-                 commonCostsFields.Sum(field => field.Value),
-                 commonCostsFields.All(field => field.IsValid)),
+                commonCostsFields.Sum(field => field.Value),
+                commonCostsFields.All(field => field.IsValid)),
 
             Name = new ValidatedField<string?>(null, true),
             Unit = new ValidatedField<string?>(null, true)
@@ -850,10 +839,7 @@ public static class ExcelReportHelper
             var propertyValue = property.GetValue(partsData);
             var recordList = propertyValue as List<EquipmentRecord>;
 
-            if (recordList != null)
-            {
-                allPartsList.AddRange(recordList);
-            }
+            if (recordList != null) allPartsList.AddRange(recordList);
         }
 
         return allPartsList;
@@ -870,10 +856,7 @@ public static class ExcelReportHelper
         {
             var propertyValue = property.GetValue(partsData);
 
-            if (propertyValue is EquipmentRecord recordList)
-            {
-                allPartsList.Add(recordList);
-            }
+            if (propertyValue is EquipmentRecord recordList) allPartsList.Add(recordList);
         }
 
         return allPartsList;

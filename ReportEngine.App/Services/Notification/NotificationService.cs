@@ -11,7 +11,7 @@ public class NotificationService : INotificationService
     {
         var window = new NotifyWindow(message, NotificationType.Error, "Ошибка")
         {
-            Owner = Application.Current.MainWindow,
+            Owner = Application.Current.MainWindow
         };
         window.ShowDialog();
     }
@@ -29,9 +29,9 @@ public class NotificationService : INotificationService
     {
         var window = new NotifyWindow(message, NotificationType.Confirmation, title)
         {
-            Owner = Application.Current.MainWindow,
+            Owner = Application.Current.MainWindow
         };
-        bool? result = window.ShowDialog();
+        var result = window.ShowDialog();
         return result == true;
     }
 }

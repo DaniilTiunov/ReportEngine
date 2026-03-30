@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Services.Interfaces;
@@ -9,8 +8,8 @@ namespace ReportEngine.App.ViewModels.CalculationSettings;
 
 public class CalculationSettingsViewModel : BaseViewModel
 {
-    private readonly INotificationService _notificationService;
     private readonly IDialogService _dialogService;
+    private readonly INotificationService _notificationService;
 
     public CalculationSettingsViewModel(
         INotificationService notificationService,

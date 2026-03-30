@@ -9,11 +9,10 @@ namespace ReportEngine.App.Views.Windows;
 
 public partial class AllSortamentsView : Window
 {
-    private ICollectionView _equipView;
+    private readonly bool _isDialog;
 
     private readonly AllSortamentsViewModel _viewModel;
-
-    private readonly bool _isDialog;
+    private ICollectionView _equipView;
 
     public AllSortamentsView(AllSortamentsViewModel viewModel, bool isDialog = false)
     {

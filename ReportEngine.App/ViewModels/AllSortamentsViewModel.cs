@@ -45,12 +45,12 @@ public class AllSortamentsViewModel : BaseViewModel
         { "Тара", typeof(Container) }
     };
 
+    // Словарь текущих задач загрузки по ключу группы — предотвращает параллельный доступ
+    private readonly ConcurrentDictionary<string, Task> _loadingTasks = new();
+
     private readonly IServiceProvider _serviceProvider;
 
     private IBaseEquip _selectedEquip;
-
-    // Словарь текущих задач загрузки по ключу группы — предотвращает параллельный доступ
-    private readonly ConcurrentDictionary<string, Task> _loadingTasks = new();
 
     public AllSortamentsViewModel(IServiceProvider serviceProvider)
     {
@@ -120,7 +120,7 @@ public class AllSortamentsViewModel : BaseViewModel
             var column = new DataGridTextColumn
             {
                 Header = GenericEquipMapper.GetColumnName(property.Name),
-                Binding = new Binding(property.Name),
+                Binding = new Binding(property.Name)
             };
 
             if (property.Name == "Name")

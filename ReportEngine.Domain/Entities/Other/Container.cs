@@ -6,10 +6,10 @@ namespace ReportEngine.Domain.Entities.Other;
 
 public class Container : IBaseEquip
 {
-    public float? Weight { get; set; }
     public float? Height { get; set; }
     public float? Width { get; set; }
     public float? Depth { get; set; }
+    public float? Weight { get; set; }
     public int? ExportDays { get; set; }
     public string? Measure { get; set; }
     public float? Cost { get; set; }

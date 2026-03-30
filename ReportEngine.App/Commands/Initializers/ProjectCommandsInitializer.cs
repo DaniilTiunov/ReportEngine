@@ -205,7 +205,6 @@ public static class ProjectCommandsInitializer
 
         vm.ProjectCommandProvider.DeleteSelectedStandsCommand =
             new RelayCommand(vm.OnDeleteSelectedStandsCommandExecuted, vm.CanAllCommandsExecute);
-
     }
 
     public static void InitializeGenericCommands(ProjectViewModel vm)

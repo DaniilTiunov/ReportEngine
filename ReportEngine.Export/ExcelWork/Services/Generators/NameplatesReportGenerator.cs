@@ -114,10 +114,7 @@ public class NameplatesReportGenerator : IReportGenerator
     {
         var stands = project.Stands;
 
-        if(selectedStands != null)
-        {
-            stands = selectedStands;
-        }
+        if (selectedStands != null) stands = selectedStands;
 
         var maxTables = 0;
 

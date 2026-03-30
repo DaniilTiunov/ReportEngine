@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:ReportEngine.AtomicApp"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="АтомСтенды КИПиА"
     Background="{DynamicResource PrimaryColor}"
@@ -24,7 +23,6 @@
 
     <Window.Resources>
         <ResourceDictionary>
-            <Image x:Key="refresh-button.png" Source="/Resources/Images/refresh-button.png" />
         </ResourceDictionary>
     </Window.Resources>
 
@@ -100,15 +98,19 @@
                 FontFamily="Bahnschrift"
                 FontSize="14">
                 <MenuItem Header="Проект">
-                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenTreeViewCommand}" Header="Создать новый проект" />
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenTreeViewCommand}"
+                              Header="Создать новый проект" />
                     <Separator />
-                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenMainWindowCommand}" Header="На главный экран" />
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenMainWindowCommand}"
+                              Header="На главный экран" />
                 </MenuItem>
 
                 <MenuItem Header="Настройки">
-                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenSettingsWindow}" Header="Настройки приложения" />
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenSettingsWindow}"
+                              Header="Настройки приложения" />
                     <Separator />
-                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenCalculationSettingsWindow}" Header="Настройки расчета" />
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenCalculationSettingsWindow}"
+                              Header="Настройки расчета" />
                 </MenuItem>
 
                 <MenuItem Header="Вид" Tag="ThemeItemChanger">
@@ -169,7 +171,6 @@
 
                 <ContentControl x:Name="MainContentControl" Grid.Row="1">
                     <DataGrid
-                        Grid.Row="2"
                         AutoGenerateColumns="False"
                         CanUserAddRows="False"
                         IsReadOnly="True"

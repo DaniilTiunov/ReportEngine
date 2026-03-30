@@ -94,10 +94,7 @@ public partial class FormedDrainagesView : Window
 
         _allowEdit = true;
 
-        if (grid.CurrentCell != null)
-        {
-            grid.BeginEdit();
-        }
+        if (grid.CurrentCell != null) grid.BeginEdit();
 
         _allowEdit = false;
     }

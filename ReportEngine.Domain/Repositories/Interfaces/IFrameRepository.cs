@@ -10,5 +10,4 @@ public interface IFrameRepository : IBaseRepository<FormedFrame>
     Task RemoveComponentAsync(int frameId, IBaseEquip component);
 
     Task AddComponentAsync(FrameComponent component);
-
 }

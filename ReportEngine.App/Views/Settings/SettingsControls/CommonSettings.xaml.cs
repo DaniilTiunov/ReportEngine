@@ -4,38 +4,37 @@ using System.Windows.Interop;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using ReportEngine.App.ViewModels;
 
-namespace ReportEngine.App.Views.Settings.SettingsControls
+namespace ReportEngine.App.Views.Settings.SettingsControls;
+
+/// <summary>
+///     Логика взаимодействия для CommonSettings.xaml
+/// </summary>
+public partial class CommonSettings : UserControl
 {
-    /// <summary>
-    /// Логика взаимодействия для CommonSettings.xaml
-    /// </summary>
-    public partial class CommonSettings : UserControl
+    private readonly SettingsViewModel _viewModel;
+
+    public CommonSettings(SettingsViewModel settingsViewModel)
     {
-        private readonly SettingsViewModel _viewModel;
+        InitializeComponent();
+        _viewModel = settingsViewModel;
+        DataContext = _viewModel;
+    }
 
-        public CommonSettings(SettingsViewModel settingsViewModel)
+    public void GetNewDirectory(object sender, RoutedEventArgs e)
+    {
+        var window = Window.GetWindow(this);
+        var owner = new WindowInteropHelper(window).Handle;
+
+        var dialog = new CommonOpenFileDialog
         {
-            InitializeComponent();
-            _viewModel = settingsViewModel;
-            DataContext = _viewModel;
-        }
+            IsFolderPicker = true,
+            AddToMostRecentlyUsedList = true,
+            InitialDirectory = _viewModel.SaveReportDirPath,
+            Title = "Выберите папку для сохранения"
+        };
 
-        public void GetNewDirectory(object sender, RoutedEventArgs e)
-        {
-            var window = Window.GetWindow(this);
-            var owner = new WindowInteropHelper(window).Handle;
-
-            var dialog = new CommonOpenFileDialog
-            {
-                IsFolderPicker = true,
-                AddToMostRecentlyUsedList = true,
-                InitialDirectory = _viewModel.SaveReportDirPath,
-                Title = "Выберите папку для сохранения",
-            };
-
-            _viewModel.SaveReportDirPath = dialog.ShowDialog(owner) == CommonFileDialogResult.Ok
-                ? dialog.FileName
-                : _viewModel.SaveReportDirPath;
-        }
+        _viewModel.SaveReportDirPath = dialog.ShowDialog(owner) == CommonFileDialogResult.Ok
+            ? dialog.FileName
+            : _viewModel.SaveReportDirPath;
     }
 }

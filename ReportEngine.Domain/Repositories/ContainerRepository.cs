@@ -55,15 +55,10 @@ public class ContainerRepository : IContainerRepository
         var existingContainers = existing.Containers.ToDictionary(c => c.Id);
 
         foreach (var existingContainer in existing.Containers.ToList())
-        {
             if (!incomingContainers.ContainsKey(existingContainer.Id))
-            {
                 existing.Containers.Remove(existingContainer);
-            }
-        }
 
         foreach (var container in entity.Containers)
-        {
             if (container.Id == 0)
             {
                 // Новый
@@ -74,7 +69,6 @@ public class ContainerRepository : IContainerRepository
             {
                 _context.Entry(tracked).CurrentValues.SetValues(container);
             }
-        }
 
         await _context.SaveChangesAsync();
     }

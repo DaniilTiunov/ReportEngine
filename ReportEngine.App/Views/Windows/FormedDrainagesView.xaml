@@ -124,7 +124,8 @@
                                 SelectedItem="{Binding FormedDrainagesModel.SelectedFormedDrainage, Mode=TwoWay}">
                                 <DataGrid.RowStyle>
                                     <Style TargetType="DataGridRow">
-                                        <Setter Property="Visibility" Value="{Binding Name, Converter={StaticResource DrainagesVisibilityConverter}}" />
+                                        <Setter Property="Visibility"
+                                                Value="{Binding Name, Converter={StaticResource DrainagesVisibilityConverter}}" />
                                     </Style>
                                 </DataGrid.RowStyle>
                                 <DataGrid.Columns>
@@ -145,9 +146,15 @@
                                         MouseDoubleClick="DataGrid_MouseDoubleClick"
                                         SelectedItem="{Binding FormedDrainagesModel.SelectedPurpose, Mode=TwoWay}">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Назначение" />
-                                            <DataGridTextColumn Binding="{Binding Material, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Материал" />
-                                            <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Длина (м)" />
+                                            <DataGridTextColumn
+                                                Binding="{Binding Purpose, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                Header="Назначение" />
+                                            <DataGridTextColumn
+                                                Binding="{Binding Material, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                Header="Материал" />
+                                            <DataGridTextColumn
+                                                Binding="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                Header="Длина (м)" />
                                         </DataGrid.Columns>
                                     </DataGrid>
                                     <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">

@@ -3,52 +3,53 @@ using ReportEngine.AtomicApp.Commands.Initializers;
 using ReportEngine.AtomicApp.Commands.Providers;
 using ReportEngine.AtomicApp.Extensions;
 using ReportEngine.AtomicApp.ViewModels.Abstracts;
-using ReportEngine.AtomicDomain.Entities;
 using ReportEngine.AtomicServices.Models;
 using ReportEngine.AtomicServices.Services;
 
-namespace ReportEngine.AtomicApp.ViewModels
+namespace ReportEngine.AtomicApp.ViewModels;
+
+public class AtomicProjectViewModel : BaseViewModel
 {
-    public class AtomicProjectViewModel : BaseViewModel
+    private readonly AtomicProjectService _projectService;
+
+    private AtomicProjectModel _currentProject = new();
+
+    public AtomicProjectViewModel(AtomicProjectService projectService)
     {
-        private readonly AtomicProjectService _projectService;
+        _projectService = projectService;
 
-        public AtomicProjectViewModel(AtomicProjectService projectService)
-        {
-            _projectService = projectService;
+        InitializeCommands();
+    }
 
-            InitializeCommands();
-        }
+    public ProjectCommandProvider CommandProvider { get; set; } = new();
 
-        public ProjectCommandProvider CommandProvider { get; set; } = new();
+    public AtomicProjectModel CurrentProject
+    {
+        get => _currentProject;
+        set => Set(ref _currentProject, value);
+    }
 
-        private AtomicProjectModel _currentProject = new ();
+    public ObservableCollection<AtomicProjectModel> AllProjects { get; set; } = new();
 
-        public AtomicProjectModel CurrentProject
-        {
-            get => _currentProject;
-            set => Set(ref _currentProject, value);
-        } 
+    public void InitializeCommands()
+    {
+        ProjectCommandsInitializer.InitializeCommands(this);
+    }
 
-        public ObservableCollection<AtomicProjectModel> AllProjects { get; set; } = new();
+    public bool CommandsCanExecute(object obj)
+    {
+        return true;
+    }
 
-        public void InitializeCommands()
-        {
-            ProjectCommandsInitializer.InitializeCommands(this);
-        }
+    public async Task OnAddNewProjectCommandExecuted(object obj)
+    {
+        await _projectService.AddNewProjectAsync(CurrentProject);
+    }
 
-        public bool CommandsCanExecute(object obj) => true;
+    public async Task OnGetProjectCommandExecuted(object obj)
+    {
+        var allProjects = await _projectService.GetAllProjectsAsync();
 
-        public async Task OnAddNewProjectCommandExecuted(object obj)
-        {
-            await _projectService.AddNewProjectAsync(CurrentProject);
-        }
-
-        public async Task OnGetProjectCommandExecuted(object obj)
-        {
-            var allProjects = await _projectService.GetAllProjectsAsync();
-
-            AllProjects.ReplaceWith(allProjects);
-        }
+        AllProjects.ReplaceWith(allProjects);
     }
 }
