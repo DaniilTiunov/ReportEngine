@@ -4,8 +4,10 @@ using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Views.Settings.CalculationParameters.Controls;
-using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.CalculationParameters;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
+
+
 
 namespace ReportEngine.App.ViewModels;
 

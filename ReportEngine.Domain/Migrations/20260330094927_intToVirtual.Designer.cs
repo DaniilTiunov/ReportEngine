@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ReportEngine.Domain.Database.Context;
@@ -11,9 +12,11 @@ using ReportEngine.Domain.Database.Context;
 namespace ReportEngine.Domain.Migrations
 {
     [DbContext(typeof(ReAppContext))]
-    partial class ReAppContextModelSnapshot : ModelSnapshot
+    [Migration("20260330094927_intToVirtual")]
+    partial class intToVirtual
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -313,6 +316,9 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CalculationParameterGroupId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
@@ -330,7 +336,7 @@ namespace ReportEngine.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ParameterGroupId");
+                    b.HasIndex("CalculationParameterGroupId");
 
                     b.ToTable("CalculationParameters");
                 });
@@ -1858,7 +1864,7 @@ namespace ReportEngine.Domain.Migrations
                 {
                     b.HasOne("ReportEngine.Domain.Entities.CalculationParameters.CalculationParameterGroup", "CalculationParameterGroup")
                         .WithMany("Parameters")
-                        .HasForeignKey("ParameterGroupId")
+                        .HasForeignKey("CalculationParameterGroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
