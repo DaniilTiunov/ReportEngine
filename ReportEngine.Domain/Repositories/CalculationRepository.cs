@@ -95,7 +95,6 @@ public class CalculationRepository
         parameter.ParameterGroupId = existingGroup.Id;
         existingGroup.Parameters.Add(parameter);
 
-
         await _context.SaveChangesAsync();
     }
 
@@ -112,23 +111,18 @@ public class CalculationRepository
             throw new ArgumentException("Группы указанного типа не существует");
         }
 
-
         _context.Set<CalculationParameterGroup>().Update(existingGroup);
         await _context.SaveChangesAsync();
     }
 
-        //связываем с группой
-        parameter.ParameterGroupId = existingGroup.Id;
-        parameter.CalculationParameterGroup = existingGroup;
+
 
     public async Task DeleteParameterFromGroup(CalculationParameter parameter, CalculationParameterType groupType)
     {
         var existingGroup = await _context
-            .Set<CalculationParameterGroup>()
-            .FirstOrDefaultAsync(group => group.SettingsType == groupType);
+                   .Set<CalculationParameterGroup>()
+                   .FirstOrDefaultAsync(group => group.SettingsType == groupType);
 
-        await _context.SaveChangesAsync();
-    }
 
         if (existingGroup == null)
         {
