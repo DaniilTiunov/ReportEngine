@@ -5,10 +5,14 @@ using Microsoft.EntityFrameworkCore;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities.CalculationParameters;
 using ReportEngine.Domain.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using ReportEngine.Domain.Database.Context;
 
-namespace ReportEngine.Benchmarks
+namespace ReportEngine.Benchmarks;
+
+public class Program
 {
-    public class Program
+    private static async Task Main(string[] args)
     {
 
 
@@ -19,7 +23,7 @@ namespace ReportEngine.Benchmarks
             optionsBuilder.UseNpgsql(
                 "Host=172.16.0.210;Port=5432;Database=reportengine;Username=postgres;Password=postgres");
 
-            ReAppContext reAppContext = new ReAppContext(optionsBuilder.Options);
+        var reAppContext = new ReAppContext(optionsBuilder.Options);
 
             using (reAppContext)
             {
@@ -72,5 +76,7 @@ namespace ReportEngine.Benchmarks
             }
             ;
         }
+
+        ;
     }
 }

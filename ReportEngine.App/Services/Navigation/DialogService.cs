@@ -1,7 +1,5 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
-using ReportEngine.App.Display;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.ViewModels;
@@ -20,10 +18,10 @@ namespace ReportEngine.App.Services.Navigation;
 
 public class DialogService : IDialogService
 {
-    private readonly IServiceProvider _serviceProvider;
-    private readonly IStandService _standService;
     private readonly INotificationService _notificationService;
     private readonly IProjectInfoRepository _projectInfoRepository;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly IStandService _standService;
 
     public DialogService(
         IServiceProvider serviceProvider,
@@ -187,7 +185,7 @@ public class DialogService : IDialogService
 
     public RenumerationInfo ShowRenumerateDialog()
     {
-        var resultData = new RenumerationInfo()
+        var resultData = new RenumerationInfo
         {
             FromNumber = -1,
             ToNumber = -1,
@@ -203,7 +201,7 @@ public class DialogService : IDialogService
             var viewModel = _serviceProvider.GetRequiredService<RenumeratorViewModel>();
             var window = new RenumerateView(viewModel);
 
-            viewModel.ResultHandler = (info) => { resultData = info; };
+            viewModel.ResultHandler = info => { resultData = info; };
 
             window.ShowDialog();
 
@@ -218,14 +216,14 @@ public class DialogService : IDialogService
 
     public int ShowStandCopyDialog()
     {
-        int resultCopyCount = 0;
+        var resultCopyCount = 0;
 
         try
         {
             var viewModel = _serviceProvider.GetRequiredService<StandCopyViewModel>();
             var window = new StandCopyView(viewModel);
 
-            viewModel.ResultHandler = (copyCount) => { resultCopyCount = copyCount; };
+            viewModel.ResultHandler = copyCount => { resultCopyCount = copyCount; };
 
             window.ShowDialog();
 
@@ -244,7 +242,7 @@ public class DialogService : IDialogService
 
         window.DataContext = projectViewModel;
 
-        projectViewModel.CurrentStandModel.SelectedObvyazkaInStand = new();
+        projectViewModel.CurrentStandModel.SelectedObvyazkaInStand = new ObvyazkaInStand();
 
         window.ShowDialog();
     }
@@ -272,8 +270,8 @@ public class DialogService : IDialogService
 
             if (!editMode)
             {
-                window.CreateStandButton.Visibility = System.Windows.Visibility.Visible;
-                window.EditStandbutton.Visibility = System.Windows.Visibility.Hidden;
+                window.CreateStandButton.Visibility = Visibility.Visible;
+                window.EditStandbutton.Visibility = Visibility.Hidden;
             }
 
             projectViewModel.CurrentProjectModel.SelectedStand = null;
@@ -308,12 +306,12 @@ public class DialogService : IDialogService
 
             if (editMode)
             {
-                window.CreateStandButton.Visibility = System.Windows.Visibility.Hidden;
-                window.EditStandbutton.Visibility = System.Windows.Visibility.Visible;
+                window.CreateStandButton.Visibility = Visibility.Hidden;
+                window.EditStandbutton.Visibility = Visibility.Visible;
             }
 
             projectViewModel.CurrentProjectModel.SelectedStand = standModel;
-            projectViewModel.OnFillStandFieldsFromSelectedStandCommandExecuted(new());
+            projectViewModel.OnFillStandFieldsFromSelectedStandCommandExecuted(new object());
 
 
             window.ShowDialog();

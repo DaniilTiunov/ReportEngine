@@ -1,44 +1,40 @@
 ﻿using System.IO;
-using System.Windows;
 using System.Windows.Controls;
-using Microsoft.Win32;
 using ReportEngine.App.ViewModels;
-using ReportEngine.App.Views.Windows.Dialog;
 
-namespace ReportEngine.App.Views.Controls
+namespace ReportEngine.App.Views.Controls;
+
+/// <summary>
+///     Логика взаимодействия для DockViewerView.xaml
+/// </summary>
+public partial class DockViewerView : UserControl
 {
-    /// <summary>
-    /// Логика взаимодействия для DockViewerView.xaml
-    /// </summary>
-    public partial class DockViewerView : UserControl
+    private readonly DockViewerViewModel _viewModel;
+
+    public DockViewerView(DockViewerViewModel viewModel)
     {
-        private DockViewerViewModel _viewModel;
+        InitializeComponent();
+        _viewModel = viewModel;
 
-        public DockViewerView(DockViewerViewModel viewModel)
+        DataContext = _viewModel;
+
+        _viewModel.OnFileOpenRequested += OpenFile;
+        _viewModel.OnFileSaveRequested += SaveFile;
+    }
+
+    private void OpenFile(string path)
+    {
+        using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
         {
-            InitializeComponent();
-            _viewModel = viewModel;
-
-            DataContext = _viewModel;
-
-            _viewModel.OnFileOpenRequested += OpenFile;
-            _viewModel.OnFileSaveRequested += SaveFile;
+            MainSreadSheet.Open(stream);
         }
+    }
 
-        private void OpenFile(string path)
+    private void SaveFile(string path)
+    {
+        using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))
         {
-            using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
-            {
-                MainSreadSheet.Open(stream);
-            }
-        }
-
-        private void SaveFile(string path)
-        {
-            using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))
-            {
-                MainSreadSheet.SaveAs(stream);
-            }
+            MainSreadSheet.SaveAs(stream);
         }
     }
 }

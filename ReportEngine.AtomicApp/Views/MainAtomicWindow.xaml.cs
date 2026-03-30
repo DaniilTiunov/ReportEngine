@@ -4,152 +4,148 @@ using System.Windows;
 using System.Windows.Input;
 using ReportEngine.AtomicApp.ViewModels;
 
-namespace ReportEngine.AtomicApp.Views
+namespace ReportEngine.AtomicApp.Views;
+
+public partial class MainWindow : Window
 {
-    public partial class MainWindow : Window
+    public readonly AtomicMainWindowViewModel _mainWindowViewModel;
+    public readonly IServiceProvider _serviceProvider;
+
+    public MainWindow(
+        AtomicMainWindowViewModel mainWindowViewModel,
+        IServiceProvider serviceProvider)
     {
-        public readonly AtomicMainWindowViewModel _mainWindowViewModel;
-        public readonly IServiceProvider _serviceProvider;
+        StandardTheme(null, null);
 
-        public MainWindow(
-            AtomicMainWindowViewModel mainWindowViewModel,
-            IServiceProvider serviceProvider)
-        {
+        MainWindow_StartUpState();
 
-            StandardTheme(null, null);
+        InitializeComponent();
 
-            MainWindow_StartUpState();
+        _mainWindowViewModel = mainWindowViewModel;
+        _serviceProvider = serviceProvider;
 
-            InitializeComponent();
-
-            _mainWindowViewModel = mainWindowViewModel;
-            _serviceProvider = serviceProvider;
-
-            DataContext = _mainWindowViewModel;
+        DataContext = _mainWindowViewModel;
 
 
-            StateChanged += MainWindow_StateChanges;
-        }
+        StateChanged += MainWindow_StateChanges;
+    }
 
-        private void ShowCalculator(object sender, RoutedEventArgs e)
-        {
-            Process.Start("calc.exe");
-        }
+    private void ShowCalculator(object sender, RoutedEventArgs e)
+    {
+        Process.Start("calc.exe");
+    }
 
-        private void ShowNotepad(object sender, RoutedEventArgs e)
-        {
-            Process.Start("notepad.exe");
-        }
+    private void ShowNotepad(object sender, RoutedEventArgs e)
+    {
+        Process.Start("notepad.exe");
+    }
 
-        private void ChangeDarkTheme(object sender, RoutedEventArgs e)
-        {
-            ChangesTheme("/Resources/Dictionaries/ColorThemes/DarkTheme.xaml");
-        }
+    private void ChangeDarkTheme(object sender, RoutedEventArgs e)
+    {
+        ChangesTheme("/Resources/Dictionaries/ColorThemes/DarkTheme.xaml");
+    }
 
-        private void StandardTheme(object sender, RoutedEventArgs e)
-        {
-            ChangesTheme("/Resources/Dictionaries/ColorThemes/LightTheme.xaml");
-        }
+    private void StandardTheme(object sender, RoutedEventArgs e)
+    {
+        ChangesTheme("/Resources/Dictionaries/ColorThemes/LightTheme.xaml");
+    }
 
-        private void MangoParadiseTheme(object sender, RoutedEventArgs e)
-        {
-            ChangesTheme("/Resources/Dictionaries/ColorThemes/MangoParadiseTheme.xaml");
-        }
+    private void MangoParadiseTheme(object sender, RoutedEventArgs e)
+    {
+        ChangesTheme("/Resources/Dictionaries/ColorThemes/MangoParadiseTheme.xaml");
+    }
 
-        private void BubbleGumTheme(object sender, RoutedEventArgs e)
-        {
-            ChangesTheme("/Resources/Dictionaries/ColorThemes/BubbleGumTheme.xaml");
-        }
+    private void BubbleGumTheme(object sender, RoutedEventArgs e)
+    {
+        ChangesTheme("/Resources/Dictionaries/ColorThemes/BubbleGumTheme.xaml");
+    }
 
-        private void ChangesTheme(string dictPath)
-        {
-            var uri = new Uri(dictPath, UriKind.Relative);
-            var themeDict = Application.LoadComponent(uri) as ResourceDictionary;
+    private void ChangesTheme(string dictPath)
+    {
+        var uri = new Uri(dictPath, UriKind.Relative);
+        var themeDict = Application.LoadComponent(uri) as ResourceDictionary;
 
-            var mergedDicts = Application.Current.Resources.MergedDictionaries;
-            for (int i = 0; i < mergedDicts.Count; i++)
+        var mergedDicts = Application.Current.Resources.MergedDictionaries;
+        for (var i = 0; i < mergedDicts.Count; i++)
+            if (mergedDicts[i].Source != null && mergedDicts[i].Source.OriginalString.Contains("ColorThemes"))
             {
-                if (mergedDicts[i].Source != null && mergedDicts[i].Source.OriginalString.Contains("ColorThemes"))
-                {
-                    mergedDicts[i] = themeDict;
-                    return;
-                }
+                mergedDicts[i] = themeDict;
+                return;
             }
 
-            mergedDicts.Add(themeDict);
-        }
+        mergedDicts.Add(themeDict);
+    }
 
-        private void OpenLauncher(object sender, RoutedEventArgs e)
+    private void OpenLauncher(object sender, RoutedEventArgs e)
+    {
+        try
         {
-            try
+            var localPath = AppDomain.CurrentDomain.BaseDirectory;
+            var updaterPath = Path.Combine(localPath, "ReportEngine.Launcher.exe");
+
+            if (!File.Exists(updaterPath))
             {
-                var localPath = AppDomain.CurrentDomain.BaseDirectory;
-                var updaterPath = Path.Combine(localPath, "ReportEngine.Launcher.exe");
-
-                if (!File.Exists(updaterPath))
-                {
-                    MessageBox.Show("Лаунчер не найден!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-
-                Process.Start(updaterPath);
+                MessageBox.Show("Лаунчер не найден!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка запуска: {ex.Message}");
-            }
-        }
 
-        private void MainWindow_StateChanges(object? sender, EventArgs e)
-        {
-            if (WindowState == WindowState.Maximized)
-                WindowState = WindowState.Normal;
+            Process.Start(updaterPath);
         }
-
-        private void MainWindow_StartUpState()
+        catch (Exception ex)
         {
-            var area = SystemParameters.WorkArea;
+            MessageBox.Show($"Ошибка запуска: {ex.Message}");
+        }
+    }
+
+    private void MainWindow_StateChanges(object? sender, EventArgs e)
+    {
+        if (WindowState == WindowState.Maximized)
+            WindowState = WindowState.Normal;
+    }
+
+    private void MainWindow_StartUpState()
+    {
+        var area = SystemParameters.WorkArea;
+        Left = area.Left;
+        Top = area.Top;
+        Width = area.Width;
+        Height = area.Height;
+    }
+
+    private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ClickCount == 2)
+            MaxRestoreButton_Click(sender, e);
+        else
+            DragMove();
+    }
+
+    private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState.Minimized;
+    }
+
+    private void MaxRestoreButton_Click(object sender, RoutedEventArgs e)
+    {
+        var area = SystemParameters.WorkArea;
+        if (Width != area.Width || Height != area.Height || Left != area.Left || Top != area.Top)
+        {
             Left = area.Left;
             Top = area.Top;
             Width = area.Width;
             Height = area.Height;
         }
-
-        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        else
         {
-            if (e.ClickCount == 2)
-                MaxRestoreButton_Click(sender, e);
-            else
-                DragMove();
+            Width = 1280;
+            Height = 800;
+            Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
+            Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
         }
+    }
 
-        private void MinimizeButton_Click(object sender, RoutedEventArgs e)
-        {
-            WindowState = WindowState.Minimized;
-        }
-
-        private void MaxRestoreButton_Click(object sender, RoutedEventArgs e)
-        {
-            var area = SystemParameters.WorkArea;
-            if (Width != area.Width || Height != area.Height || Left != area.Left || Top != area.Top)
-            {
-                Left = area.Left;
-                Top = area.Top;
-                Width = area.Width;
-                Height = area.Height;
-            }
-            else
-            {
-                Width = 1280;
-                Height = 800;
-                Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
-                Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
-            }
-        }
-
-        private void CloseButton_Click(object sender, RoutedEventArgs e)
-        {
-            Application.Current.Shutdown();
-        }
+    private void CloseButton_Click(object sender, RoutedEventArgs e)
+    {
+        Application.Current.Shutdown();
     }
 }

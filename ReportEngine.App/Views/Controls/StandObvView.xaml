@@ -31,7 +31,7 @@
         <!--  Основная форма (слева)  -->
 
         <ScrollViewer Grid.Column="0" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
-            <Grid Grid.Column="0" Margin="0,0,10,0">
+            <Grid Margin="0,0,10,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -268,7 +268,6 @@
                     Header="Обвязки">
                     <StackPanel>
                         <GroupBox
-                            Grid.Row="1"
                             Margin="0,0,0,10"
                             Padding="8">
                             <GroupBox.Header>
@@ -586,7 +585,8 @@
                             <GroupBox.Header>
                                 <TextBlock>
                                     <Run FontSize="16" Text="Дополнительные компоненты обвязки — " />
-                                    <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
+                                    <Run FontWeight="Bold"
+                                         Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
                                 </TextBlock>
                             </GroupBox.Header>
                             <StackPanel>
@@ -596,7 +596,8 @@
                                     CanUserAddRows="True"
                                     ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkaAdditionalComponents}">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Назначение" />
+                                        <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}"
+                                                            Header="Назначение" />
                                         <DataGridTextColumn
                                             Width="*"
                                             Binding="{Binding Material, Mode=TwoWay}"
@@ -855,13 +856,15 @@
                         <GroupBox.Header>
                             <TextBlock>
                                 <Run FontSize="16" Text="Дренажи и крепления по стенду — " />
-                                <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
+                                <Run FontWeight="Bold"
+                                     Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
                             </TextBlock>
                         </GroupBox.Header>
                         <TabControl>
                             <TabItem Header="Собрать дренаж">
                                 <StackPanel>
-                                    <TextBox Margin="5" Text="{Binding CurrentStandModel.NewDrainage.Name, Mode=TwoWay}" />
+                                    <TextBox Margin="5"
+                                             Text="{Binding CurrentStandModel.NewDrainage.Name, Mode=TwoWay}" />
                                     <DataGrid
                                         Margin="5"
                                         AutoGenerateColumns="False"
@@ -871,13 +874,16 @@
                                         MouseDoubleClick="DataGrid_MouseDoubleClick"
                                         SelectionMode="Single">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}" Header="Назначение" />
+                                            <DataGridTextColumn Binding="{Binding Purpose, Mode=TwoWay}"
+                                                                Header="Назначение" />
                                             <DataGridTextColumn
                                                 Width="*"
                                                 Binding="{Binding Material, Mode=TwoWay}"
                                                 Header="Материал" />
-                                            <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay}" Header="Кол-во" />
-                                            <DataGridTextColumn Binding="{Binding Measure, Mode=TwoWay}" Header="Ед.изм" />
+                                            <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay}"
+                                                                Header="Кол-во" />
+                                            <DataGridTextColumn Binding="{Binding Measure, Mode=TwoWay}"
+                                                                Header="Ед.изм" />
                                             <DataGridTemplateColumn Header="Действия">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
@@ -908,7 +914,8 @@
                                         SelectedItem="{Binding CurrentStandModel.SelectedDrainage}">
                                         <DataGrid.RowStyle>
                                             <Style TargetType="DataGridRow">
-                                                <Setter Property="Visibility" Value="{Binding Name, Converter={StaticResource DrainagesVisibilityConverter}}" />
+                                                <Setter Property="Visibility"
+                                                        Value="{Binding Name, Converter={StaticResource DrainagesVisibilityConverter}}" />
                                             </Style>
                                         </DataGrid.RowStyle>
 
@@ -925,10 +932,14 @@
                                                     ItemsSource="{Binding Purposes}"
                                                     MouseDoubleClick="DataGrid_MouseDoubleClick">
                                                     <DataGrid.Columns>
-                                                        <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
-                                                        <DataGridTextColumn Binding="{Binding Material}" Header="Материал" />
-                                                        <DataGridTextColumn Binding="{Binding Quantity}" Header="Кол-во" />
-                                                        <DataGridTextColumn Binding="{Binding Measure}" Header="Ед. изм." />
+                                                        <DataGridTextColumn Binding="{Binding Purpose}"
+                                                                            Header="Назначение" />
+                                                        <DataGridTextColumn Binding="{Binding Material}"
+                                                                            Header="Материал" />
+                                                        <DataGridTextColumn Binding="{Binding Quantity}"
+                                                                            Header="Кол-во" />
+                                                        <DataGridTextColumn Binding="{Binding Measure}"
+                                                                            Header="Ед. изм." />
                                                     </DataGrid.Columns>
                                                 </DataGrid>
                                             </DataTemplate>
@@ -956,7 +967,8 @@
                         <GroupBox.Header>
                             <TextBlock>
                                 <Run FontSize="16" Text="Дополнительные комплектующие по стенду — " />
-                                <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
+                                <Run FontWeight="Bold"
+                                     Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
                             </TextBlock>
                         </GroupBox.Header>
                         <StackPanel>
@@ -1013,7 +1025,8 @@
                         <GroupBox.Header>
                             <TextBlock>
                                 <Run FontSize="16" Text="Электрические компоненты по стенду — " />
-                                <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
+                                <Run FontWeight="Bold"
+                                     Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
                             </TextBlock>
                         </GroupBox.Header>
                         <StackPanel>
@@ -1059,7 +1072,6 @@
         <ScrollViewer Grid.Column="1" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
 
             <Border
-                Grid.Column="1"
                 Margin="0,0,0,0"
                 BorderBrush="#DDDDDD"
                 BorderThickness="1">
@@ -1107,10 +1119,13 @@
                             </ListView.View>
                             <ListView.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Command="{Binding ProjectCommandProvider.CopyStandsCommand}" Header="Создать копию на основе прототипа" />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}" Header="Удалить стенд из проекта" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.CopyStandsCommand}"
+                                              Header="Создать копию на основе прототипа" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}"
+                                              Header="Удалить стенд из проекта" />
                                     <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.RenumerateStandsCommand}" Header="Пронумеровать стенды..." />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.RenumerateStandsCommand}"
+                                              Header="Пронумеровать стенды..." />
                                 </ContextMenu>
                             </ListView.ContextMenu>
                         </ListView>
@@ -1135,7 +1150,8 @@
                                 SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedFrame}">
                                 <DataGrid.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Command="{Binding ProjectCommandProvider.RemoveFrameStandCommand}" Header="Удалить выбранную раму из стенда" />
+                                        <MenuItem Command="{Binding ProjectCommandProvider.RemoveFrameStandCommand}"
+                                                  Header="Удалить выбранную раму из стенда" />
                                     </ContextMenu>
                                 </DataGrid.ContextMenu>
                                 <DataGrid.Columns>
@@ -1180,7 +1196,6 @@
 
                     <Expander Grid.Row="2" Header="Все обвязки в проекте">
                         <GroupBox
-                            Grid.Row="2"
                             MinHeight="250"
                             Margin="5"
                             Padding="5">
@@ -1205,7 +1220,9 @@
                                 </DataGrid.Columns>
                                 <DataGrid.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}" Header="Скопировать в выбранный стенд" />
+                                        <MenuItem
+                                            Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}"
+                                            Header="Скопировать в выбранный стенд" />
                                     </ContextMenu>
                                 </DataGrid.ContextMenu>
                             </DataGrid>
@@ -1260,9 +1277,12 @@
                             </ListView.View>
                             <ListView.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Command="{Binding ProjectCommandProvider.FillStandFieldsFromObvyazkaCommand}" Header="Редактировать обвязку" />
+                                    <MenuItem
+                                        Command="{Binding ProjectCommandProvider.FillStandFieldsFromObvyazkaCommand}"
+                                        Header="Редактировать обвязку" />
                                     <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}" Header="Удалить обвязку из стенда" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}"
+                                              Header="Удалить обвязку из стенда" />
                                 </ContextMenu>
                             </ListView.ContextMenu>
                         </ListView>
@@ -1275,7 +1295,8 @@
                         <GroupBox.Header>
                             <TextBlock>
                                 <Run FontSize="16" Text="Комплектующие стенда — " />
-                                <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
+                                <Run FontWeight="Bold"
+                                     Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
                             </TextBlock>
                         </GroupBox.Header>
                         <StackPanel>
@@ -1283,7 +1304,8 @@
                                 <GroupBox.Header>
                                     <TextBlock>
                                         <Run FontSize="16" Text="Дренажные комплектующие в стенде — " />
-                                        <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
+                                        <Run FontWeight="Bold"
+                                             Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
                                     </TextBlock>
                                 </GroupBox.Header>
                                 <DataGrid
@@ -1304,9 +1326,13 @@
                                     </DataGrid.Columns>
                                     <DataGrid.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem Command="{Binding ProjectCommandProvider.UpdateDrainageComponentInStandCommand}" Header="Сохранить изменения" />
+                                            <MenuItem
+                                                Command="{Binding ProjectCommandProvider.UpdateDrainageComponentInStandCommand}"
+                                                Header="Сохранить изменения" />
                                             <Separator />
-                                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteDrainageComponentFromStandCommand}" Header="Удалить" />
+                                            <MenuItem
+                                                Command="{Binding ProjectCommandProvider.DeleteDrainageComponentFromStandCommand}"
+                                                Header="Удалить" />
                                         </ContextMenu>
                                     </DataGrid.ContextMenu>
                                 </DataGrid>
@@ -1316,7 +1342,8 @@
                                 <GroupBox.Header>
                                     <TextBlock>
                                         <Run FontSize="16" Text="Доп. комплектующие в стенде — " />
-                                        <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
+                                        <Run FontWeight="Bold"
+                                             Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
                                     </TextBlock>
                                 </GroupBox.Header>
 
@@ -1338,9 +1365,13 @@
                                     </DataGrid.Columns>
                                     <DataGrid.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem Command="{Binding ProjectCommandProvider.UpdateAdditionalComponentInStandCommand}" Header="Сохранить изменения" />
+                                            <MenuItem
+                                                Command="{Binding ProjectCommandProvider.UpdateAdditionalComponentInStandCommand}"
+                                                Header="Сохранить изменения" />
                                             <Separator />
-                                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteAdditionalComponentFromStandCommand}" Header="Удалить" />
+                                            <MenuItem
+                                                Command="{Binding ProjectCommandProvider.DeleteAdditionalComponentFromStandCommand}"
+                                                Header="Удалить" />
                                         </ContextMenu>
                                     </DataGrid.ContextMenu>
                                 </DataGrid>
@@ -1350,7 +1381,8 @@
                                 <GroupBox.Header>
                                     <TextBlock>
                                         <Run FontSize="16" Text="Электрические компоненты в стенде — " />
-                                        <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
+                                        <Run FontWeight="Bold"
+                                             Text="{Binding CurrentProjectModel.SelectedStand.Design, TargetNullValue='(нет данных)'}" />
                                     </TextBlock>
                                 </GroupBox.Header>
 
@@ -1373,9 +1405,13 @@
                                     </DataGrid.Columns>
                                     <DataGrid.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem Command="{Binding ProjectCommandProvider.UpdateElectricalComponentInStandCommand}" Header="Сохранить изменения" />
+                                            <MenuItem
+                                                Command="{Binding ProjectCommandProvider.UpdateElectricalComponentInStandCommand}"
+                                                Header="Сохранить изменения" />
                                             <Separator />
-                                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteElectricalComponentFromStandCommand}" Header="Удалить" />
+                                            <MenuItem
+                                                Command="{Binding ProjectCommandProvider.DeleteElectricalComponentFromStandCommand}"
+                                                Header="Удалить" />
                                         </ContextMenu>
                                     </DataGrid.ContextMenu>
                                 </DataGrid>

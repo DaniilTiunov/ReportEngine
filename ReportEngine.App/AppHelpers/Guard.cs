@@ -1,21 +1,18 @@
 ﻿using ReportEngine.App.Services.Interfaces;
 
-namespace ReportEngine.App.AppHelpers
+namespace ReportEngine.App.AppHelpers;
+
+public static class Guard
 {
-    public static class Guard
+    public static bool ExitIfNull(string message, INotificationService notify, params object?[] values)
     {
-        public static bool ExitIfNull(string message, INotificationService notify, params object?[] values)
-        {
-            foreach (var value in values)
+        foreach (var value in values)
+            if (value is null)
             {
-                if (value is null)
-                {
-                    notify.ShowError(message);
-                    return true;
-                }
+                notify.ShowError(message);
+                return true;
             }
 
-            return false;
-        }
+        return false;
     }
 }

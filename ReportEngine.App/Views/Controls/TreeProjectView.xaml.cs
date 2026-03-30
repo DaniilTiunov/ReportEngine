@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Threading;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Shared.Config.DebugConsol;
@@ -11,10 +12,9 @@ namespace ReportEngine.App.Views.Controls;
 
 public partial class TreeProjectView : UserControl, IDisposable
 {
+    private readonly ProjectViewModel _projectViewModel;
     private readonly Dictionary<string, Action> _tagActionMap;
     private readonly Dictionary<string, Action> _tagCalculateMap;
-
-    private readonly ProjectViewModel _projectViewModel;
     private bool _disposed;
 
     public TreeProjectView(ProjectViewModel projectViewModel)
@@ -38,7 +38,7 @@ public partial class TreeProjectView : UserControl, IDisposable
         _tagCalculateMap = new Dictionary<string, Action>
         {
             { "CalculateProject", () => _projectViewModel.OnCalculateProjectCommandExecuted(null) },
-            { "UpdateAllProps", () => _projectViewModel.OnUpdateStandsAfterEquipsCommandExecuted(null) },
+            { "UpdateAllProps", () => _projectViewModel.OnUpdateStandsAfterEquipsCommandExecuted(null) }
         };
     }
 
@@ -131,7 +131,6 @@ public partial class TreeProjectView : UserControl, IDisposable
                 "StandsContainer" => ApplyAnimation(new StandsContainerView(_projectViewModel)),
                 "DockViewer" => ApplyAnimation(new DockViewerView(new DockViewerViewModel()))
             };
-
         }
         catch (Exception ex)
         {
@@ -182,7 +181,6 @@ public partial class TreeProjectView : UserControl, IDisposable
             return false;
 
         foreach (var item in MainTabControl.Items.OfType<TabItem>())
-        {
             if (item.Tag is string existingTag && !string.IsNullOrEmpty(existingTag))
             {
                 if (string.Equals(existingTag, tag, StringComparison.Ordinal))
@@ -199,30 +197,22 @@ public partial class TreeProjectView : UserControl, IDisposable
                     return true;
                 }
             }
-        }
+
         return false;
     }
 
     private async void ReportTree_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
         if (ReportTree.SelectedItem is TreeViewItem treeViewItem && treeViewItem.Tag is string tag)
-        {
             if (_tagActionMap.TryGetValue(tag, out var action))
-            {
                 action();
-            }
-        }
     }
 
     private async void CalculateTree_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
         if (CalculateTree.SelectedItem is TreeViewItem treeViewItem && treeViewItem.Tag is string tag)
-        {
             if (_tagCalculateMap.TryGetValue(tag, out var action))
-            {
                 action();
-            }
-        }
     }
 
     private UserControl ApplyAnimation(UserControl control)
@@ -267,7 +257,7 @@ public partial class TreeProjectView : UserControl, IDisposable
             storyboard.Children.Add(slideAnimation);
 
             storyboard.Begin();
-        }), System.Windows.Threading.DispatcherPriority.Loaded);
+        }), DispatcherPriority.Loaded);
 
         return control;
     }

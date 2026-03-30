@@ -57,13 +57,17 @@
                             SelectedItem="{Binding CurrentProjectModel.SelectedContainerBatch}">
                             <DataGrid.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Command="{Binding ProjectCommandProvider.CreateContainerBatchCommand}" Header="Добавить партию" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.CreateContainerBatchCommand}"
+                                              Header="Добавить партию" />
                                     <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.UpdateContainerCommand}" Header="Сохранить изменения" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.UpdateContainerCommand}"
+                                              Header="Сохранить изменения" />
                                     <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.RefreshBatchesCommand}" Header="Обновить список" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.RefreshBatchesCommand}"
+                                              Header="Обновить список" />
                                     <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.DeleteBatchCommand}" Header="Удалить упаковку проекта" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.DeleteBatchCommand}"
+                                              Header="Удалить упаковку проекта" />
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
                             <DataGrid.Columns>
@@ -114,11 +118,14 @@
                             SelectedItem="{Binding CurrentProjectModel.SelectedContainerStand}">
                             <DataGrid.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Command="{Binding ProjectCommandProvider.AddContainerToBatchCommand}" Header="Добавить упаковку в партию" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.AddContainerToBatchCommand}"
+                                              Header="Добавить упаковку в партию" />
                                     <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.UpdateContainerCommand}" Header="Сохранить изменения" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.UpdateContainerCommand}"
+                                              Header="Сохранить изменения" />
                                     <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.DeleteContainerCommand}" Header="Удалить упаковку" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.DeleteContainerCommand}"
+                                              Header="Удалить упаковку" />
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
                             <DataGrid.Columns>
@@ -192,7 +199,8 @@
                         SelectedItem="{Binding CurrentProjectModel.SelectedStandInProject}">
                         <DataGrid.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding ProjectCommandProvider.AddStandToContainerCommand}" Header="Добавить выбранный стенд в контейнер" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.AddStandToContainerCommand}"
+                                          Header="Добавить выбранный стенд в контейнер" />
                             </ContextMenu>
                         </DataGrid.ContextMenu>
 
@@ -229,7 +237,8 @@
                         SelectedItem="{Binding CurrentProjectModel.SelectedStandInContainer}">
                         <DataGrid.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding ProjectCommandProvider.RemoveStandFromContainerCommand}" Header="Удалить стенд из упаковки" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.RemoveStandFromContainerCommand}"
+                                          Header="Удалить стенд из упаковки" />
                             </ContextMenu>
                         </DataGrid.ContextMenu>
                         <DataGrid.Columns>

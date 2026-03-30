@@ -1,9 +1,8 @@
-﻿namespace ReportEngine.Export.DTO.JsonObjects
+﻿namespace ReportEngine.Export.DTO.JsonObjects;
+
+public class PartRecordJsonObject
 {
-    public class PartRecordJsonObject
-    {
-        public string? Name { get; set; }
-        public string? Unit { get; set; }
-        public float? Quantity { get; set; }
-    }
+    public string? Name { get; set; }
+    public string? Unit { get; set; }
+    public float? Quantity { get; set; }
 }

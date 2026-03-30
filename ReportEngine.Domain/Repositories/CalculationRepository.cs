@@ -3,22 +3,23 @@ using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities.CalculationParameters;
 using System.ComponentModel.Design;
 
-namespace ReportEngine.Domain.Repositories
-{
-    public class CalculationRepository
-    {
-        private readonly ReAppContext _context;
-        public CalculationRepository(ReAppContext context)
-        {
-            _context = context;
-        }
+namespace ReportEngine.Domain.Repositories;
 
-        public async Task<IEnumerable<CalculationParameter>> GetAllParametersAsync()
-        {
-            return await _context.Set<CalculationParameter>()
-                .AsNoTracking()
-                .ToListAsync();
-        }
+public class CalculationRepository
+{
+    private readonly ReAppContext _context;
+
+    public CalculationRepository(ReAppContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<IEnumerable<CalculationParameter>> GetAllParametersAsync()
+    {
+        return await _context.Set<CalculationParameter>()
+            .AsNoTracking()
+            .ToListAsync();
+    }
 
         public async Task<IEnumerable<CalculationParameterGroup>> GetAllGroupsAsync()
         {

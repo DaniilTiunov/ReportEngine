@@ -1,19 +1,17 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using ControlzEx.Standard;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Commands.Providers;
 using ReportEngine.App.Model;
-using ReportEngine.App.Model.StandsModel;
-using ReportEngine.App.Services;
 using ReportEngine.App.Services.Cloners;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Services.Navigation;
 using ReportEngine.App.Views.Controls;
+using ReportEngine.App.Views.Settings.CalculationParameters;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
@@ -25,13 +23,13 @@ namespace ReportEngine.App.ViewModels;
 public class MainWindowViewModel : BaseViewModel
 {
     private readonly ICalculationService _calculationService;
+    private readonly IDialogService _dialogService;
+    private readonly EntityProjectClonerService _entityProjectClonerService;
     private readonly NavigationService _navigation;
     private readonly INotificationService _notificationService;
     private readonly IProjectInfoRepository _projectRepository;
-    private readonly IServiceProvider _serviceProvider;
     private readonly IProjectService _projectService;
-    private readonly IDialogService _dialogService;
-    private readonly EntityProjectClonerService _entityProjectClonerService;
+    private readonly IServiceProvider _serviceProvider;
 
     #region Конструктор
 
@@ -165,14 +163,10 @@ public class MainWindowViewModel : BaseViewModel
         if (stands.Count == 0 || stands == null)
             return false;
 
-        if (stands.Any(s => s.ElectricalPurposesChanges || s.DrainagePurposesChanges == true)) //s.AdditionalPurposesChanges
-        {
+        if (stands.Any(s => s.ElectricalPurposesChanges || s.DrainagePurposesChanges)) //s.AdditionalPurposesChanges
             return true;
-        }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     public void OpenOthersWindowCommandExecuted<T>(object e)
@@ -185,6 +179,11 @@ public class MainWindowViewModel : BaseViewModel
         where T : Window
     {
         ExceptionHelper.SafeExecute(_navigation.ShowWindow<AuthWindow>);
+    }
+
+    public void OnOpenCalculationParametersCommandExecuted(object e)
+    {
+        ExceptionHelper.SafeExecute(() => _navigation.ShowWindow<CalculationParametersWindow>());
     }
 
     public void OpenAnotherControlsCommandExecuted<T>(object e)
@@ -242,10 +241,7 @@ public class MainWindowViewModel : BaseViewModel
         var projects = await _projectRepository.GetAllAsync();
 
         MainWindowModel.AllProjects.Clear();
-        foreach (var project in projects)
-        {
-            MainWindowModel.AllProjects.Add(project);
-        }
+        foreach (var project in projects) MainWindowModel.AllProjects.Add(project);
     }
 
     public async Task DeleteSelectedProjectAsync()

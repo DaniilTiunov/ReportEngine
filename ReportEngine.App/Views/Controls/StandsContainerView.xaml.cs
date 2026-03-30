@@ -4,6 +4,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Views.Controls;
@@ -13,9 +14,8 @@ namespace ReportEngine.App.Views.Controls;
 /// </summary>
 public partial class StandsContainerView : UserControl
 {
-    private bool _allowEdit;
-
     private readonly ProjectViewModel _projectViewModel;
+    private bool _allowEdit;
 
     public StandsContainerView(ProjectViewModel projectViewModel)
     {
@@ -47,9 +47,9 @@ public partial class StandsContainerView : UserControl
             if (presenter == null)
                 return;
 
-            int columnCount = dataGrid.Columns.Count;
+            var columnCount = dataGrid.Columns.Count;
 
-            for (int i = 0; i < columnCount; i++)
+            for (var i = 0; i < columnCount; i++)
             {
                 var cell = (DataGridCell)presenter.ItemContainerGenerator.ContainerFromIndex(i);
                 if (cell == null)
@@ -74,12 +74,12 @@ public partial class StandsContainerView : UserControl
                     cell.Visibility = Visibility.Collapsed;
                 }
             }
-        }), System.Windows.Threading.DispatcherPriority.Loaded);
+        }), DispatcherPriority.Loaded);
     }
 
     private static T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
     {
-        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+        for (var i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
         {
             var child = VisualTreeHelper.GetChild(obj, i);
 
@@ -90,6 +90,7 @@ public partial class StandsContainerView : UserControl
             if (childOfChild != null)
                 return childOfChild;
         }
+
         return null;
     }
 
@@ -106,10 +107,7 @@ public partial class StandsContainerView : UserControl
 
         _allowEdit = true;
 
-        if (grid.CurrentCell != null)
-        {
-            grid.BeginEdit();
-        }
+        if (grid.CurrentCell != null) grid.BeginEdit();
 
         _allowEdit = false;
     }

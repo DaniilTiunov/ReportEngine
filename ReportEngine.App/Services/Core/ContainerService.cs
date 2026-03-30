@@ -82,7 +82,6 @@ public class ContainerService
 
         await ExceptionHelper.SafeExecuteAsync(async () =>
         {
-
             await _containerRepository.AddContainerToBatchAsync(
                 projectModel.SelectedContainerBatch.Id,
                 projectModel.SelectedContainerStand);
@@ -179,10 +178,7 @@ public class ContainerService
 
     private async Task RecalculateBatchAsync(ContainerBatch batch)
     {
-        foreach (var container in batch.Containers)
-        {
-            RecalculateContainer(container);
-        }
+        foreach (var container in batch.Containers) RecalculateContainer(container);
 
         batch.ContainersCount = batch.Containers.Count;
         batch.StandsCount = batch.Containers.Sum(c => c.StandsCount);

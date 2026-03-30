@@ -32,24 +32,24 @@ public static class StandDataConverter
             ImageType = stand.ImageType,
             AdditionalEquipsInStand = new ObservableCollection<FormedAdditionalEquip>(
                 stand.StandAdditionalEquips
-                        .Where(e => e.AdditionalEquip != null)
-                        .Select(e => new FormedAdditionalEquip
-                        {
-                            Id = e.AdditionalEquip.Id,
-                            Name = e.AdditionalEquip.Name,
+                    .Where(e => e.AdditionalEquip != null)
+                    .Select(e => new FormedAdditionalEquip
+                    {
+                        Id = e.AdditionalEquip.Id,
+                        Name = e.AdditionalEquip.Name,
 
-                            Purposes = new ObservableCollection<AdditionalEquipPurpose>(
-                                e.AdditionalEquip.Purposes.Select(p => new AdditionalEquipPurpose
-                                {
-                                    Purpose = p.Purpose,
-                                    Material = p.Material,
-                                    Quantity = p.Quantity,
-                                    Measure = p.Measure,
-                                    CostPerUnit = p.CostPerUnit,
-                                    ExportDays = p.ExportDays
-                                })
-                            )
-                        }))
+                        Purposes = new ObservableCollection<AdditionalEquipPurpose>(
+                            e.AdditionalEquip.Purposes.Select(p => new AdditionalEquipPurpose
+                            {
+                                Purpose = p.Purpose,
+                                Material = p.Material,
+                                Quantity = p.Quantity,
+                                Measure = p.Measure,
+                                CostPerUnit = p.CostPerUnit,
+                                ExportDays = p.ExportDays
+                            })
+                        )
+                    }))
         };
     }
 
@@ -107,8 +107,7 @@ public static class StandDataConverter
                 {
                     FrameId = equip.Id,
                     Frame = equip is FormedFrame fd ? fd : null
-
-                }).ToList()          
+                }).ToList()
         };
     }
 }

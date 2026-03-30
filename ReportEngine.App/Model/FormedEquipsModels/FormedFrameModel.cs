@@ -12,6 +12,7 @@ public class FormedFrameModel : BaseViewModel
 {
     private ObservableCollection<FormedFrame> _allFrames = new();
     private string? _componentLength;
+    private bool? _disassembled = false;
 
     private ObservableCollection<DisplayedComponent>
         _displayedComponents = new(); //Коллекция для отображения комплектующих в UI
@@ -23,7 +24,6 @@ public class FormedFrameModel : BaseViewModel
     private IBaseEquip _selectedComponentForAdd;
     private DisplayedComponent _selectedComponentInFrame;
     private FormedFrame _selectedFrame = new(); //Свойства для выбранного элемента на UI
-    private bool? _disassembled = false;
 
     public FormedFrameModel()
     {
@@ -91,10 +91,7 @@ public class FormedFrameModel : BaseViewModel
     public bool? Disassembled
     {
         get => _disassembled;
-        set
-        {
-            Set(ref _disassembled, value);
-        }
+        set => Set(ref _disassembled, value);
     }
 
     public string? ComponentLength
@@ -138,7 +135,7 @@ public class FormedFrameModel : BaseViewModel
                     Component = component,
                     Count = frameComponent.Count ?? 0,
                     CostComponent = frameComponent.CostComponent,
-                    Measure = frameComponent.Measure,
+                    Measure = frameComponent.Measure
                 };
 
                 var isMeter = (component as BaseFrame)?.Measure == "м" || frameComponent.Measure == "м";

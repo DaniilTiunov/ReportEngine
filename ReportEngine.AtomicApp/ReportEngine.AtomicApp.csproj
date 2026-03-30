@@ -1,242 +1,242 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UseWPF>true</UseWPF>
-    <ApplicationIcon>Resources\Icons\atomic_icon.ico</ApplicationIcon>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UseWPF>true</UseWPF>
+        <ApplicationIcon>Resources\Icons\atomic_icon.ico</ApplicationIcon>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Resources\Icons\atom-editor.ico" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="Resources\Icons\atom-editor.ico"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Noto\NotoSans-Bold.ttf" Link="Resources\Noto\NotoSans-Bold.ttf">
-      <Private>False</Private>
-      <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
-      <NuGetItemType>Content</NuGetItemType>
-      <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
-      <Pack>false</Pack>
-    </Content>
-    <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Noto\NotoSans-BoldItalic.ttf" Link="Resources\Noto\NotoSans-BoldItalic.ttf">
-      <Private>False</Private>
-      <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
-      <NuGetItemType>Content</NuGetItemType>
-      <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
-      <Pack>false</Pack>
-    </Content>
-    <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Noto\NotoSans-Italic.ttf" Link="Resources\Noto\NotoSans-Italic.ttf">
-      <Private>False</Private>
-      <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
-      <NuGetItemType>Content</NuGetItemType>
-      <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
-      <Pack>false</Pack>
-    </Content>
-    <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Noto\NotoSans-Regular.ttf" Link="Resources\Noto\NotoSans-Regular.ttf">
-      <Private>False</Private>
-      <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
-      <NuGetItemType>Content</NuGetItemType>
-      <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
-      <Pack>false</Pack>
-    </Content>
-    <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-Black.ttf" Link="Resources\Roboto\Roboto-Black.ttf">
-      <Private>False</Private>
-      <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
-      <NuGetItemType>Content</NuGetItemType>
-      <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
-      <Pack>false</Pack>
-    </Content>
-    <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-BlackItalic.ttf" Link="Resources\Roboto\Roboto-BlackItalic.ttf">
-      <Private>False</Private>
-      <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
-      <NuGetItemType>Content</NuGetItemType>
-      <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
-      <Pack>false</Pack>
-    </Content>
-    <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-Bold.ttf" Link="Resources\Roboto\Roboto-Bold.ttf">
-      <Private>False</Private>
-      <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
-      <NuGetItemType>Content</NuGetItemType>
-      <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
-      <Pack>false</Pack>
-    </Content>
-    <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-BoldItalic.ttf" Link="Resources\Roboto\Roboto-BoldItalic.ttf">
-      <Private>False</Private>
-      <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
-      <NuGetItemType>Content</NuGetItemType>
-      <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
-      <Pack>false</Pack>
-    </Content>
-    <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-Italic.ttf" Link="Resources\Roboto\Roboto-Italic.ttf">
-      <Private>False</Private>
-      <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
-      <NuGetItemType>Content</NuGetItemType>
-      <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
-      <Pack>false</Pack>
-    </Content>
-    <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-Light.ttf" Link="Resources\Roboto\Roboto-Light.ttf">
-      <Private>False</Private>
-      <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
-      <NuGetItemType>Content</NuGetItemType>
-      <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
-      <Pack>false</Pack>
-    </Content>
-    <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-LightItalic.ttf" Link="Resources\Roboto\Roboto-LightItalic.ttf">
-      <Private>False</Private>
-      <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
-      <NuGetItemType>Content</NuGetItemType>
-      <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
-      <Pack>false</Pack>
-    </Content>
-    <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-Medium.ttf" Link="Resources\Roboto\Roboto-Medium.ttf">
-      <Private>False</Private>
-      <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
-      <NuGetItemType>Content</NuGetItemType>
-      <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
-      <Pack>false</Pack>
-    </Content>
-    <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-MediumItalic.ttf" Link="Resources\Roboto\Roboto-MediumItalic.ttf">
-      <Private>False</Private>
-      <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
-      <NuGetItemType>Content</NuGetItemType>
-      <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
-      <Pack>false</Pack>
-    </Content>
-    <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-Regular.ttf" Link="Resources\Roboto\Roboto-Regular.ttf">
-      <Private>False</Private>
-      <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
-      <NuGetItemType>Content</NuGetItemType>
-      <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
-      <Pack>false</Pack>
-    </Content>
-    <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-Thin.ttf" Link="Resources\Roboto\Roboto-Thin.ttf">
-      <Private>False</Private>
-      <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
-      <NuGetItemType>Content</NuGetItemType>
-      <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
-      <Pack>false</Pack>
-    </Content>
-    <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-ThinItalic.ttf" Link="Resources\Roboto\Roboto-ThinItalic.ttf">
-      <Private>False</Private>
-      <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
-      <NuGetItemType>Content</NuGetItemType>
-      <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
-      <Pack>false</Pack>
-    </Content>
-    <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\RobotoCondensed-Bold.ttf" Link="Resources\Roboto\RobotoCondensed-Bold.ttf">
-      <Private>False</Private>
-      <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
-      <NuGetItemType>Content</NuGetItemType>
-      <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
-      <Pack>false</Pack>
-    </Content>
-    <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\RobotoCondensed-BoldItalic.ttf" Link="Resources\Roboto\RobotoCondensed-BoldItalic.ttf">
-      <Private>False</Private>
-      <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
-      <NuGetItemType>Content</NuGetItemType>
-      <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
-      <Pack>false</Pack>
-    </Content>
-    <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\RobotoCondensed-Italic.ttf" Link="Resources\Roboto\RobotoCondensed-Italic.ttf">
-      <Private>False</Private>
-      <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
-      <NuGetItemType>Content</NuGetItemType>
-      <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
-      <Pack>false</Pack>
-    </Content>
-    <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\RobotoCondensed-Light.ttf" Link="Resources\Roboto\RobotoCondensed-Light.ttf">
-      <Private>False</Private>
-      <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
-      <NuGetItemType>Content</NuGetItemType>
-      <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
-      <Pack>false</Pack>
-    </Content>
-    <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\RobotoCondensed-LightItalic.ttf" Link="Resources\Roboto\RobotoCondensed-LightItalic.ttf">
-      <Private>False</Private>
-      <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
-      <NuGetItemType>Content</NuGetItemType>
-      <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
-      <Pack>false</Pack>
-    </Content>
-    <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\RobotoCondensed-Regular.ttf" Link="Resources\Roboto\RobotoCondensed-Regular.ttf">
-      <Private>False</Private>
-      <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
-      <NuGetItemType>Content</NuGetItemType>
-      <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
-      <Pack>false</Pack>
-    </Content>
-    <Content Include="Resources\Icons\atom-editor.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Icons\atomic_icon.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Images\EAC.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Images\Etalon.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+    <ItemGroup>
+        <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Noto\NotoSans-Bold.ttf" Link="Resources\Noto\NotoSans-Bold.ttf">
+            <Private>False</Private>
+            <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
+            <NuGetItemType>Content</NuGetItemType>
+            <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
+            <Pack>false</Pack>
+        </Content>
+        <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Noto\NotoSans-BoldItalic.ttf" Link="Resources\Noto\NotoSans-BoldItalic.ttf">
+            <Private>False</Private>
+            <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
+            <NuGetItemType>Content</NuGetItemType>
+            <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
+            <Pack>false</Pack>
+        </Content>
+        <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Noto\NotoSans-Italic.ttf" Link="Resources\Noto\NotoSans-Italic.ttf">
+            <Private>False</Private>
+            <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
+            <NuGetItemType>Content</NuGetItemType>
+            <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
+            <Pack>false</Pack>
+        </Content>
+        <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Noto\NotoSans-Regular.ttf" Link="Resources\Noto\NotoSans-Regular.ttf">
+            <Private>False</Private>
+            <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
+            <NuGetItemType>Content</NuGetItemType>
+            <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
+            <Pack>false</Pack>
+        </Content>
+        <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-Black.ttf" Link="Resources\Roboto\Roboto-Black.ttf">
+            <Private>False</Private>
+            <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
+            <NuGetItemType>Content</NuGetItemType>
+            <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
+            <Pack>false</Pack>
+        </Content>
+        <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-BlackItalic.ttf" Link="Resources\Roboto\Roboto-BlackItalic.ttf">
+            <Private>False</Private>
+            <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
+            <NuGetItemType>Content</NuGetItemType>
+            <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
+            <Pack>false</Pack>
+        </Content>
+        <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-Bold.ttf" Link="Resources\Roboto\Roboto-Bold.ttf">
+            <Private>False</Private>
+            <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
+            <NuGetItemType>Content</NuGetItemType>
+            <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
+            <Pack>false</Pack>
+        </Content>
+        <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-BoldItalic.ttf" Link="Resources\Roboto\Roboto-BoldItalic.ttf">
+            <Private>False</Private>
+            <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
+            <NuGetItemType>Content</NuGetItemType>
+            <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
+            <Pack>false</Pack>
+        </Content>
+        <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-Italic.ttf" Link="Resources\Roboto\Roboto-Italic.ttf">
+            <Private>False</Private>
+            <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
+            <NuGetItemType>Content</NuGetItemType>
+            <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
+            <Pack>false</Pack>
+        </Content>
+        <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-Light.ttf" Link="Resources\Roboto\Roboto-Light.ttf">
+            <Private>False</Private>
+            <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
+            <NuGetItemType>Content</NuGetItemType>
+            <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
+            <Pack>false</Pack>
+        </Content>
+        <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-LightItalic.ttf" Link="Resources\Roboto\Roboto-LightItalic.ttf">
+            <Private>False</Private>
+            <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
+            <NuGetItemType>Content</NuGetItemType>
+            <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
+            <Pack>false</Pack>
+        </Content>
+        <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-Medium.ttf" Link="Resources\Roboto\Roboto-Medium.ttf">
+            <Private>False</Private>
+            <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
+            <NuGetItemType>Content</NuGetItemType>
+            <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
+            <Pack>false</Pack>
+        </Content>
+        <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-MediumItalic.ttf" Link="Resources\Roboto\Roboto-MediumItalic.ttf">
+            <Private>False</Private>
+            <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
+            <NuGetItemType>Content</NuGetItemType>
+            <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
+            <Pack>false</Pack>
+        </Content>
+        <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-Regular.ttf" Link="Resources\Roboto\Roboto-Regular.ttf">
+            <Private>False</Private>
+            <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
+            <NuGetItemType>Content</NuGetItemType>
+            <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
+            <Pack>false</Pack>
+        </Content>
+        <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-Thin.ttf" Link="Resources\Roboto\Roboto-Thin.ttf">
+            <Private>False</Private>
+            <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
+            <NuGetItemType>Content</NuGetItemType>
+            <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
+            <Pack>false</Pack>
+        </Content>
+        <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-ThinItalic.ttf" Link="Resources\Roboto\Roboto-ThinItalic.ttf">
+            <Private>False</Private>
+            <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
+            <NuGetItemType>Content</NuGetItemType>
+            <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
+            <Pack>false</Pack>
+        </Content>
+        <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\RobotoCondensed-Bold.ttf" Link="Resources\Roboto\RobotoCondensed-Bold.ttf">
+            <Private>False</Private>
+            <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
+            <NuGetItemType>Content</NuGetItemType>
+            <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
+            <Pack>false</Pack>
+        </Content>
+        <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\RobotoCondensed-BoldItalic.ttf" Link="Resources\Roboto\RobotoCondensed-BoldItalic.ttf">
+            <Private>False</Private>
+            <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
+            <NuGetItemType>Content</NuGetItemType>
+            <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
+            <Pack>false</Pack>
+        </Content>
+        <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\RobotoCondensed-Italic.ttf" Link="Resources\Roboto\RobotoCondensed-Italic.ttf">
+            <Private>False</Private>
+            <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
+            <NuGetItemType>Content</NuGetItemType>
+            <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
+            <Pack>false</Pack>
+        </Content>
+        <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\RobotoCondensed-Light.ttf" Link="Resources\Roboto\RobotoCondensed-Light.ttf">
+            <Private>False</Private>
+            <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
+            <NuGetItemType>Content</NuGetItemType>
+            <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
+            <Pack>false</Pack>
+        </Content>
+        <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\RobotoCondensed-LightItalic.ttf" Link="Resources\Roboto\RobotoCondensed-LightItalic.ttf">
+            <Private>False</Private>
+            <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
+            <NuGetItemType>Content</NuGetItemType>
+            <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
+            <Pack>false</Pack>
+        </Content>
+        <Content Include="..\..\..\..\Users\pr-constr38\.nuget\packages\materialdesignthemes\5.3.0\contentFiles\any\net8.0-windows7.0\Resources\Roboto\RobotoCondensed-Regular.ttf" Link="Resources\Roboto\RobotoCondensed-Regular.ttf">
+            <Private>False</Private>
+            <NuGetPackageVersion>5.3.0</NuGetPackageVersion>
+            <NuGetItemType>Content</NuGetItemType>
+            <NuGetPackageId>MaterialDesignThemes</NuGetPackageId>
+            <Pack>false</Pack>
+        </Content>
+        <Content Include="Resources\Icons\atom-editor.ico">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\Icons\atomic_icon.ico">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\Images\EAC.jpg">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\Images\Etalon.jpg">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="MaterialDesignColors" Version="5.3.0" />
-    <PackageReference Include="MaterialDesignThemes" Version="5.3.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.10">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.10" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="MaterialDesignColors" Version="5.3.0"/>
+        <PackageReference Include="MaterialDesignThemes" Version="5.3.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.10">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.10"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Resources\Noto\" />
-    <Folder Include="Resources\Roboto\" />
-  </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Resources\Noto\"/>
+        <Folder Include="Resources\Roboto\"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ReportEngine.AtomicServices\ReportEngine.AtomicServices.csproj" />
-    <ProjectReference Include="..\ReportEngine.Shared\ReportEngine.Shared.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\ReportEngine.AtomicServices\ReportEngine.AtomicServices.csproj"/>
+        <ProjectReference Include="..\ReportEngine.Shared\ReportEngine.Shared.csproj"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Resource Include="Resources\Icons\IconConfirm.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Icons\IconInfo.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Icons\Icon_Error.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\refresh-button.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-  </ItemGroup>
+    <ItemGroup>
+        <Resource Include="Resources\Icons\IconConfirm.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Resources\Icons\IconInfo.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Resources\Icons\Icon_Error.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Resources\Images\logo.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Resources\Images\refresh-button.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Resource>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Page Update="Resources\Dictionaries\ColorThemes\BubbleGumTheme.xaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Page>
-    <Page Update="Resources\Dictionaries\ColorThemes\DarkTheme.xaml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Page>
-    <Page Update="Resources\Dictionaries\ColorThemes\LightTheme.xaml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Page>
-    <Page Update="Resources\Dictionaries\ColorThemes\MangoParadiseTheme.xaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Page>
-    <Page Update="Resources\Dictionaries\Styles\GigaChadUI.xaml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Page>
-  </ItemGroup>
+    <ItemGroup>
+        <Page Update="Resources\Dictionaries\ColorThemes\BubbleGumTheme.xaml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Page>
+        <Page Update="Resources\Dictionaries\ColorThemes\DarkTheme.xaml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Page>
+        <Page Update="Resources\Dictionaries\ColorThemes\LightTheme.xaml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Page>
+        <Page Update="Resources\Dictionaries\ColorThemes\MangoParadiseTheme.xaml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Page>
+        <Page Update="Resources\Dictionaries\Styles\GigaChadUI.xaml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Page>
+    </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="xcopy /Y /E /I &quot;$(TargetDir)*&quot; &quot;\\S32fs.gk-etalon.local\GrandVera1\00 ОКП АСУ\01 Группа разработки ПО\Тиунов\Приложение Стенды КИП&quot;" />

@@ -44,10 +44,7 @@ public class GenericEquipWindowFactory
 
         window.Closed += (s, e) => scope.Dispose();
 
-        if (isDialog)
-        {
-            window.GenericEquipDataGrid.IsReadOnly = true;
-        }
+        if (isDialog) window.GenericEquipDataGrid.IsReadOnly = true;
         return window;
     }
 

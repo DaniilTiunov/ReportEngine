@@ -1,8 +1,7 @@
 ﻿using System.Windows;
 
-namespace ReportEngine.AtomicApp
+namespace ReportEngine.AtomicApp;
+
+public class App : Application
 {
-    public class App : Application
-    {
-    }
 }

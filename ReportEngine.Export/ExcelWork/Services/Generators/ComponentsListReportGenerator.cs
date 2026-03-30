@@ -6,7 +6,6 @@ using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
-using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -112,14 +111,14 @@ public class ComponentListReportGenerator : IReportGenerator
     //валидация и вывод в таблицу
     private void PasteRecord(int row, EquipmentRecord record, IXLWorksheet ws)
     {
-        ws.Cell($"B{row}").Value = record.Name.Value?.ToString();
+        ws.Cell($"B{row}").Value = record.Name.Value;
 
         //if (!record.Name.IsValid)
         //{
         //    ws.Cell($"B{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
         //}
 
-        ws.Cell($"C{row}").Value = record.Unit.Value?.ToString();
+        ws.Cell($"C{row}").Value = record.Unit.Value;
 
         //if (!record.Unit.IsValid)
         //{
@@ -242,10 +241,7 @@ public class ComponentListReportGenerator : IReportGenerator
     {
         var generatedData = ExcelReportHelper.GeneratePartsData(project.Stands);
 
-        if(selectedStands != null)
-        {
-            generatedData = ExcelReportHelper.GeneratePartsData(selectedStands);
-        }
+        if (selectedStands != null) generatedData = ExcelReportHelper.GeneratePartsData(selectedStands);
 
         var activeRow = 4;
 

@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.IO;
+﻿using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -7,6 +6,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ViewModels;
@@ -16,9 +16,8 @@ namespace ReportEngine.App.Views.Controls;
 
 public partial class ProjectPreview : UserControl
 {
-    private bool _allowEdit;
-
     private readonly ProjectViewModel _projectViewModel;
+    private bool _allowEdit;
 
     public ProjectPreview(ProjectViewModel projectViewModel)
     {
@@ -162,10 +161,7 @@ public partial class ProjectPreview : UserControl
 
         _allowEdit = true;
 
-        if (grid.CurrentCell != null)
-        {
-            grid.BeginEdit();
-        }
+        if (grid.CurrentCell != null) grid.BeginEdit();
 
         _allowEdit = false;
     }
@@ -192,9 +188,9 @@ public partial class ProjectPreview : UserControl
             if (presenter == null)
                 return;
 
-            int columnCount = dataGrid.Columns.Count;
+            var columnCount = dataGrid.Columns.Count;
 
-            for (int i = 0; i < columnCount; i++)
+            for (var i = 0; i < columnCount; i++)
             {
                 var cell = (DataGridCell)presenter.ItemContainerGenerator.ContainerFromIndex(i);
                 if (cell == null)
@@ -219,12 +215,12 @@ public partial class ProjectPreview : UserControl
                     cell.Visibility = Visibility.Collapsed;
                 }
             }
-        }), System.Windows.Threading.DispatcherPriority.Loaded);
+        }), DispatcherPriority.Loaded);
     }
 
     private static T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
     {
-        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+        for (var i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
         {
             var child = VisualTreeHelper.GetChild(obj, i);
 
@@ -235,6 +231,7 @@ public partial class ProjectPreview : UserControl
             if (childOfChild != null)
                 return childOfChild;
         }
+
         return null;
     }
 

@@ -1,31 +1,29 @@
-﻿namespace ReportEngine.AtomicApp.Commands.BaseCommands.AsyncCommands
+﻿namespace ReportEngine.AtomicApp.Commands.BaseCommands.AsyncCommands;
+
+public class AsyncRelayCommand : AsyncBaseCommand
 {
-    public class AsyncRelayCommand : AsyncBaseCommand
+    private readonly Func<object, bool> _canExecute;
+    private readonly Func<object, Task> _executeAsync;
+
+    public AsyncRelayCommand(Func<object, Task> executeAsync, Func<object, bool>? canExecute = null)
     {
-        private readonly Func<object, bool> _canExecute;
-        private readonly Func<object, Task> _executeAsync;
+        _executeAsync = executeAsync ?? throw new ArgumentNullException(nameof(executeAsync));
+        _canExecute = canExecute;
+    }
 
-        public AsyncRelayCommand(Func<object, Task> executeAsync, Func<object, bool>? canExecute = null)
+    public override bool CanExecute(object parameter)
+    {
+        return _canExecute?.Invoke(parameter) ?? true;
+    }
+
+    public override async Task ExecuteAsync(object parameter)
+    {
+        try
         {
-            _executeAsync = executeAsync ?? throw new ArgumentNullException(nameof(executeAsync));
-            _canExecute = canExecute;
+            await _executeAsync(parameter);
         }
-
-        public override bool CanExecute(object parameter)
+        catch (Exception ex)
         {
-            return _canExecute?.Invoke(parameter) ?? true;
-        }
-
-        public override async Task ExecuteAsync(object parameter)
-        {
-            try
-            {
-                await _executeAsync(parameter);
-            }
-            catch (Exception ex)
-            {
-
-            }
         }
     }
 }

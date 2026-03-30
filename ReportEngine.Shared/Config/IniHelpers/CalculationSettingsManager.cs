@@ -1,5 +1,4 @@
 ﻿using IniParser;
-using ReportEngine.Domain.Entities;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs.CalculationSettings.Interfaces;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
@@ -17,12 +16,12 @@ public static class CalculationSettingsManager
     {
         var ini = _parser.ReadFile(_iniFile);
 
-        return new AllSettingsData 
-        { 
-            ElectricalSettings = ElectricalSettings.ReadFromIni(ini), 
-            FrameSettings = FrameSettings.ReadFromIni(ini), 
+        return new AllSettingsData
+        {
+            ElectricalSettings = ElectricalSettings.ReadFromIni(ini),
+            FrameSettings = FrameSettings.ReadFromIni(ini),
             HumanCostSettings = HumanCostSettings.ReadFromIni(ini),
-            SandBlastSettings = SandBlastSettings.ReadFromIni(ini), 
+            SandBlastSettings = SandBlastSettings.ReadFromIni(ini),
             StandSettings = StandSettings.ReadFromIni(ini)
         };
     }

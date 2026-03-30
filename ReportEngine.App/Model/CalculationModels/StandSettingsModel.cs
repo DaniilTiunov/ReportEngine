@@ -11,11 +11,11 @@ public class StandSettingsModel : BaseViewModel
     private string? _bracket;
     private string? _bracketEntityName;
 
-    private string? _bracketForDif;
-    private string? _bracketForDifEntityName;
-
     private string? _bracketForAbs;
     private string? _bracketForAbsEntityName;
+
+    private string? _bracketForDif;
+    private string? _bracketForDifEntityName;
 
     private string? _bracketUniversal;
     private string? _bracketUniversalEntityName;
@@ -26,7 +26,8 @@ public class StandSettingsModel : BaseViewModel
     private string? _cabelSixMm;
     private string? _cabelSixMmEntityName;
 
-    private double? _sensorCountOnFrame;
+    private string? _clamp;
+    private string? _clampEntityName;
 
     private string? _frameGalvanizing;
 
@@ -41,14 +42,13 @@ public class StandSettingsModel : BaseViewModel
     private string? _secondLevelSpecialist;
     private string? _seniorEngineer;
 
+    private double? _sensorCountOnFrame;
+
     private string? _signalCable;
     private string? _signalCableEntityName;
 
     private string? _steelChannel;
     private string? _steelChannelEntityName;
-
-    private string? _clamp;
-    private string? _clampEntityName;
 
     private string? _terminal;
     private string? _terminalEntityName;
@@ -248,5 +248,4 @@ public class StandSettingsModel : BaseViewModel
         var iniData = this.Adapt<StandSettingsData>();
         await CalculationSettingsManager.SaveAsync<StandSettings, StandSettingsData>(iniData);
     }
-
 }

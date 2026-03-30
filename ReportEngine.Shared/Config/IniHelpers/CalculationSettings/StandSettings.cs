@@ -18,6 +18,7 @@ public class StandSettings : IIniSettings<StandSettingsData>
         if (standData == null)
             return new StandSettingsData();
         ;
+
         double Parse(string? s)
         {
             if (string.IsNullOrWhiteSpace(s))

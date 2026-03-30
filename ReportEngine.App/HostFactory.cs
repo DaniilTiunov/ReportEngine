@@ -18,6 +18,8 @@ using ReportEngine.App.ViewModels.Utils;
 using ReportEngine.App.Views;
 using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Settings;
+using ReportEngine.App.Views.Settings.CalculationParameters;
+using ReportEngine.App.Views.Settings.CalculationParameters.Controls;
 using ReportEngine.App.Views.Settings.SettingsControls;
 using ReportEngine.App.Views.Utils;
 using ReportEngine.App.Views.Windows;
@@ -47,7 +49,7 @@ public class HostFactory
     public static IHost BuildHost(string connString)
     {
         return Host.CreateDefaultBuilder()
-            .UseSerilog(Log.Logger, dispose: true)
+            .UseSerilog(Log.Logger, true)
             .ConfigureServices((hostContext, services) =>
             {
                 // Регистрация контекста БД
@@ -68,10 +70,10 @@ public class HostFactory
                 services.AddSingleton<App>();
             })
             .ConfigureLogging(logging =>
-             {
-                 logging.ClearProviders();
-                 logging.SetMinimumLevel(LogLevel.Information);
-             })
+            {
+                logging.ClearProviders();
+                logging.SetMinimumLevel(LogLevel.Information);
+            })
             .Build();
     }
 
@@ -192,6 +194,7 @@ public class HostFactory
         services.AddScoped(typeof(GenericEquipViewModel<>));
         services.AddScoped<DockViewerViewModel>();
         services.AddScoped<AllStandsViewModel>();
+        services.AddScoped<CalculationParametersViewModel>();
     }
 
     private static void ConfigureViews(IServiceCollection services)
@@ -233,5 +236,13 @@ public class HostFactory
         services.AddTransient<ConnectionSettings>();
         services.AddTransient<DockViewerView>();
         services.AddTransient<AllStandsView>();
+
+        services.AddTransient<CalculationParametersWindow>();
+        services.AddTransient<ComponentsView>();
+        services.AddTransient<StandParametersView>();
+        services.AddTransient<HumanCostView>();
+        services.AddTransient<FrameParametersView>();
+        services.AddTransient<SandBlastView>();
+        services.AddTransient<ElectricCostView>();
     }
 }

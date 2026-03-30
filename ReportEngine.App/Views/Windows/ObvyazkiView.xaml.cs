@@ -88,6 +88,7 @@ public partial class ObvyazkiView : Window
                 return parent;
             child = VisualTreeHelper.GetParent(child);
         }
+
         return null;
     }
 }

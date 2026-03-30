@@ -2,36 +2,33 @@
 using ReportEngine.App.ModelWrappers;
 using ReportEngine.Domain.Entities;
 
-namespace ReportEngine.App.AppHelpers
+namespace ReportEngine.App.AppHelpers;
+
+public static class StandsListHelper
 {
-    public static class StandsListHelper
+    public static List<Stand> SelectedStands { get; set; } = new();
+
+    public static List<Stand> ReturnSelectedStands(IEnumerable<StandModel> standsModels)
     {
-        public static List<Stand> SelectedStands {  get; set; } = new();
+        var standsEntities = new List<Stand>();
 
-        public static List<Stand> ReturnSelectedStands(IEnumerable<StandModel> standsModels)
+        foreach (var standModel in standsModels)
         {
-            var standsEntities = new List<Stand>();
+            var standEntity = StandDataConverter.ConvertToStandEntity(standModel);
 
-            foreach (var standModel in standsModels)
-            {
-                var standEntity = StandDataConverter.ConvertToStandEntity(standModel);
-
-                standsEntities.Add(standEntity);
-            }
-            
-            return standsEntities;
+            standsEntities.Add(standEntity);
         }
 
-        public static void GetSelectedStands(IEnumerable<StandModel> standsModels)
-        {
-            SelectedStands.Clear();
+        return standsEntities;
+    }
 
-            foreach (var standModel in standsModels)
-            {
-                SelectedStands.Add(StandDataConverter.ConvertToStandEntity(standModel));
-            }
+    public static void GetSelectedStands(IEnumerable<StandModel> standsModels)
+    {
+        SelectedStands.Clear();
 
-            var popa = SelectedStands;
-        }
+        foreach (var standModel in standsModels)
+            SelectedStands.Add(StandDataConverter.ConvertToStandEntity(standModel));
+
+        var popa = SelectedStands;
     }
 }
