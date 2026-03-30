@@ -26,7 +26,7 @@ public class CalculationRepository
            .AsNoTracking()
            .Include(group => group.Parameters)
            .FirstOrDefaultAsync(group => group.SettingsType == type);
-        
+
     }
 
 
@@ -77,7 +77,7 @@ public class CalculationRepository
 
         _context.Set<CalculationParameterGroup>().Remove(existingGroup);
         await _context.SaveChangesAsync();
- 
+
     }
 
 
@@ -99,22 +99,40 @@ public class CalculationRepository
     }
 
 
-    public async Task UpdateParametersInGroup(CalculationParameterType groupType)
+    public async Task UpdateParametersInGroup(
+        CalculationParameterType groupType,
+        IEnumerable<CalculationParameter> updatedParameters)
     {
         var existingGroup = await _context
             .Set<CalculationParameterGroup>()
-            .AsNoTracking()
+            .Include(group => group.Parameters)
             .FirstOrDefaultAsync(group => group.SettingsType == groupType);
 
         if (existingGroup == null)
-        {
             throw new ArgumentException("Группы указанного типа не существует");
+
+        foreach (var updatedParam in updatedParameters)
+        {
+            var existingParam = existingGroup.Parameters
+                .FirstOrDefault(x => x.Id == updatedParam.Id);
+
+            if (existingParam == null)
+            {
+                // новый параметр
+                existingGroup.Parameters.Add(updatedParam);
+            }
+            else
+            {
+                // обновление существующего
+                existingParam.Name = updatedParam.Name;
+                existingParam.Value = updatedParam.Value;
+                existingParam.Unit = updatedParam.Unit;
+                existingParam.Description = updatedParam.Description;
+            }
         }
 
-        _context.Set<CalculationParameterGroup>().Update(existingGroup);
         await _context.SaveChangesAsync();
     }
-
 
 
     public async Task DeleteParameterFromGroup(CalculationParameter parameter, CalculationParameterType groupType)

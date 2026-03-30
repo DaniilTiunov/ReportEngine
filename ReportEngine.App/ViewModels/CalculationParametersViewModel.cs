@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
+using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Services.Calculation;
 using ReportEngine.App.Services.Interfaces;
@@ -18,12 +19,16 @@ public class CalculationParametersViewModel : BaseViewModel
     private readonly IDialogService _dialogService;
     private readonly IServiceProvider _serviceProvider;
     private readonly ParameterGroupService _parameterGroupService;
-    private ObservableCollection<CalculationParameter> _equipmentsParameters = new();
-
-    private object _currentView;
     private string? _selectedSetting;
+    private object _currentView;
+    private CalculationParameter _selectedEquipment = new();
+
+    private ObservableCollection<CalculationParameter> _equipmentsParameters = new();
     private ObservableCollection<CalculationParameter> _standParameters = new();
-    private CalculationParameter _selectedEquipment;
+    private ObservableCollection<CalculationParameter> _frameCost = new();
+    private ObservableCollection<CalculationParameter> _humanCost = new();
+    private ObservableCollection<CalculationParameter> _sandBlasCost = new();
+    private ObservableCollection<CalculationParameter> _electricCost = new();
 
     public CalculationParametersViewModel(
         IServiceProvider serviceProvider,
@@ -72,6 +77,30 @@ public class CalculationParametersViewModel : BaseViewModel
         set => Set(ref _standParameters, value);
     }
 
+    public ObservableCollection<CalculationParameter> HumanCost
+    {
+        get => _humanCost;
+        set => Set(ref _humanCost, value);
+    }
+
+    public ObservableCollection<CalculationParameter> FrameCost
+    {
+        get => _frameCost;
+        set => Set(ref _frameCost, value);
+    }
+
+    public ObservableCollection<CalculationParameter> SandBlastCost
+    {
+        get => _sandBlasCost;
+        set => Set(ref _sandBlasCost, value);
+    }
+
+    public ObservableCollection<CalculationParameter> ElectricCost
+    {
+        get => _electricCost;
+        set => Set(ref _electricCost, value);
+    }
+
     public ObservableCollection<string> SettingsItems { get; } = new()
     {
         "Комплектующие",
@@ -83,17 +112,28 @@ public class CalculationParametersViewModel : BaseViewModel
     };
 
     public IBaseEquip SelectedEquip { get; set; }
-
     public ICommand GetSelectedEquipCommand { get; set; }
+    public ICommand AddNewEquipParameterCommand { get; set; }
+    public ICommand UpdateEquipParameterCommand { get; set; }
+    public ICommand DeleteEquipParameterCommand { get; set; }
+
 
     private async void LoadParametersData()
     {
         EquipmentsParameters = await _parameterGroupService.GetParametersAsync(CalculationParameterType.Equipments);
+        StandsParameters = await _parameterGroupService.GetParametersAsync(CalculationParameterType.StandCost);
+        HumanCost = await  _parameterGroupService.GetParametersAsync(CalculationParameterType.HumanCost);
+        FrameCost = await _parameterGroupService.GetParametersAsync(CalculationParameterType.FrameCost);
+        SandBlastCost = await _parameterGroupService.GetParametersAsync(CalculationParameterType.SandBlastCost);
+        ElectricCost = await _parameterGroupService.GetParametersAsync(CalculationParameterType.ElectricCost);
     }
 
     private void InitializeCommands()
     {
         GetSelectedEquipCommand = new RelayCommand(GetSelectedEquipCommandExecuted, CanAllCommandsExecute);
+        AddNewEquipParameterCommand = new RelayCommand(AddNewEquipParameterCommandExecuted, CanAllCommandsExecute);
+        UpdateEquipParameterCommand = new RelayCommand(UpdateEquipParameterCommandExecuted, CanAllCommandsExecute);
+        DeleteEquipParameterCommand = new RelayCommand(DeleteEquipParameterCommandExecuted, CanAllCommandsExecute);
     }
 
     public bool CanAllCommandsExecute(object? e)
@@ -104,6 +144,26 @@ public class CalculationParametersViewModel : BaseViewModel
     public void GetSelectedEquipCommandExecuted(object? p)
     {
         SelectedEquip = _dialogService.ShowAllSortamentsDialog();
+
+        SelectedEquipment.Value = SelectedEquip.Name;
+
+        CollectionRefreshHelper.SafeRefreshCollection(EquipmentsParameters);
+    }
+
+    public async void AddNewEquipParameterCommandExecuted(object? p)
+    {
+        await _parameterGroupService.AddNewParameterAsync(SelectedEquipment, CalculationParameterType.Equipments);
+    }
+
+    public async void UpdateEquipParameterCommandExecuted(object? p)
+    {
+        await _parameterGroupService.UpdateGroupAsync(CalculationParameterType.Equipments, EquipmentsParameters);
+    }
+
+    public async void DeleteEquipParameterCommandExecuted(object? p)
+    {
+        await _parameterGroupService.RemoveParameterFromGroupAsync(SelectedEquipment, CalculationParameterType.Equipments);
+        EquipmentsParameters.Remove(SelectedEquipment);
     }
 
     private void Navigate()
