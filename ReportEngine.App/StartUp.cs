@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using Microsoft.Extensions.DependencyInjection;
+using ReportEngine.App.Store;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
 using ReportEngine.Shared.Config.Logger;
@@ -25,6 +26,10 @@ public static class StartUp
             var app = host.Services.GetRequiredService<App>();
 
             var mainWindow = host.Services.GetRequiredService<MainWindow>();
+
+            var parametersStore = host.Services.GetRequiredService<ParametersStore>();
+
+            parametersStore.LoadSettingsDataAsync();
 
             app.MainWindow = mainWindow;
 

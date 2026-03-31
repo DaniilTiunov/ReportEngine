@@ -160,6 +160,16 @@ public class CalculationRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task<List<CalculationParameter>> GetAllParametersInGroupAsync(
+        CalculationParameterType groupType)
+    {
+        return await _context.Set<CalculationParameterGroup>()
+            .AsNoTracking()
+            .Where(group => group.SettingsType == groupType)
+            .SelectMany(group => group.Parameters)
+            .ToListAsync();
+    }
+
     public async Task<Dictionary<string, CalculationParameter>> GetByKeysAsync(
         CalculationParameterType type,
         IEnumerable<string> keys)
@@ -171,6 +181,5 @@ public class CalculationRepository
                 keys.Contains(x.Key))
             .ToDictionaryAsync(x => x.Key);
     }
-
 }
 

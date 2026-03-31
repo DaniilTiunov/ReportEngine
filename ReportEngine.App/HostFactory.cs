@@ -10,6 +10,7 @@ using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Services.Navigation;
 using ReportEngine.App.Services.Notification;
+using ReportEngine.App.Store;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.CalculationSettings;
 using ReportEngine.App.ViewModels.Contacts;
@@ -159,6 +160,7 @@ public class HostFactory
         services.AddScoped<EntityStandClonerService>();
         services.AddScoped<EntityProjectClonerService>();
         services.AddScoped<ParameterGroupService>();
+        services.AddSingleton<ParametersStore>();
     }
 
     private static void ConfigureReportsServices(IServiceCollection services)
