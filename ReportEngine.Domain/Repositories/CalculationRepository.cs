@@ -26,7 +26,6 @@ public class CalculationRepository
            .AsNoTracking()
            .Include(group => group.Parameters)
            .FirstOrDefaultAsync(group => group.SettingsType == type);
-
     }
 
 
@@ -160,7 +159,17 @@ public class CalculationRepository
         await _context.SaveChangesAsync();
     }
 
-
+    public async Task<Dictionary<string, CalculationParameter>> GetByKeysAsync(
+        CalculationParameterType type,
+        IEnumerable<string> keys)
+    {
+        return await _context.Set<CalculationParameter>()
+            .AsNoTracking()
+            .Where(x =>
+                x.CalculationParameterGroup.SettingsType == type &&
+                keys.Contains(x.Key))
+            .ToDictionaryAsync(x => x.Key);
+    }
 
 }
 
