@@ -8,9 +8,9 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <Grid>
-        <Grid Margin="20">
+        <Grid Margin="5">
             <Border
-                Padding="25"
+                Padding="5"
                 Background="{DynamicResource PrimaryColor}"
                 BorderBrush="{DynamicResource SecondaryColor}"
                 BorderThickness="1"
@@ -45,8 +45,9 @@
                         LoadingRow="DataGrid_LoadingRow"
                         MouseDoubleClick="DataGrid_MouseDoubleClick">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Width="0.75*" Header="Должность" />
-                            <DataGridTextColumn Width="*" Header="Имя" />
+                            <DataGridTextColumn Width="0.75*" Header="Наименование" Binding="{Binding Name}"/>
+                            <DataGridTextColumn Width="Auto" Header="Значение" Binding="{Binding Value}"/>
+                            <DataGridTextColumn Width="0.75*" Header="Пояснение" Binding="{Binding Description}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>

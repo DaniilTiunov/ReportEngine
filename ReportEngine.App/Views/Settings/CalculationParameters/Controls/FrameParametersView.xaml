@@ -6,9 +6,9 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Grid Margin="20">
+        <Grid Margin="5">
             <Border
-                Padding="25"
+                Padding="5"
                 Background="{DynamicResource PrimaryColor}"
                 BorderBrush="{DynamicResource SecondaryColor}"
                 BorderThickness="1"
@@ -17,7 +17,6 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
@@ -34,46 +33,20 @@
                         FontSize="18"
                         FontWeight="SemiBold"
                         Text="Рамы" />
-
+                    
                     <DataGrid
                         Grid.Row="1"
                         Grid.ColumnSpan="2"
                         BeginningEdit="DataGrid_BeginningEdit"
                         CanUserAddRows="True"
-                        ItemsSource="{Binding StandsParameters}"
+                        ItemsSource="{Binding FrameCost}"
                         LoadingRow="DataGrid_LoadingRow"
                         MouseDoubleClick="DataGrid_MouseDoubleClick">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Width="0.75*" Header="Наименование" />
-                            <DataGridTextColumn Width="*" Header="Чел/часы" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-
-                    <DataGrid
-                        Grid.Row="2"
-                        Grid.ColumnSpan="2"
-                        BeginningEdit="DataGrid_BeginningEdit"
-                        CanUserAddRows="True"
-                        Margin="0,5,0,0"
-                        ItemsSource="{Binding CalculationParameters}"
-                        LoadingRow="DataGrid_LoadingRow"
-                        MouseDoubleClick="DataGrid_MouseDoubleClick">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Width="0.75*" Header="Наименование" />
-                            <DataGridTextColumn Width="*" Header="Комплектующее" />
-                            <DataGridTextColumn Width="*" Header="Кол-во" />
-                            <DataGridTemplateColumn Width="Auto" Header="Выбрать">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button
-                                            Margin="2,0,2,0"
-                                            Padding="5,0,5,0"
-                                            Command="{Binding DataContext.GetSelectedEquipCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="{Binding}"
-                                            Content="Выбрать" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Width="0.75*" Header="Наименование" Binding="{Binding Name}"/>
+                            <DataGridTextColumn Width="Auto" Header="Значение" Binding="{Binding Value}"/>
+                            <DataGridTextColumn Width="Auto" Header="Ед. изм" Binding="{Binding Unit}"/>
+                            <DataGridTextColumn Width="0.75*" Header="Пояснение" Binding="{Binding Description}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
