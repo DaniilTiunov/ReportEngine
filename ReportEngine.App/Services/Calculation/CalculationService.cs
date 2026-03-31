@@ -3,6 +3,7 @@ using ReportEngine.App.Model;
 using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.Store;
 using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.App.Services.Calculation;
@@ -10,10 +11,14 @@ namespace ReportEngine.App.Services.Calculation;
 public class CalculationService : ICalculationService
 {
     private readonly IProjectService _projectService;
+    private readonly ParametersStore _parametersStore;
 
-    public CalculationService(IProjectService projectService)
+    public CalculationService(
+        IProjectService projectService,
+        ParametersStore parametersStore)
     {
         _projectService = projectService;
+        _parametersStore = parametersStore;
     }
 
     public StandSettingsModel DefaultStandSettings { get; set; } = new();
