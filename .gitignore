@@ -378,3 +378,4 @@ Documentation.xml
 ReportEngine.Shared/Config/Logger/LoggerConfig.cs
 /ReportEngine.Shared/Config/Logger
 /ReportEngine.Shared/Config/Logger/LoggerConfig.cs
+/ReportEngine.Benchmarks/ReportEngine.Benchmarks.csproj
