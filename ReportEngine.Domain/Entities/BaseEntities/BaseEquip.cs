@@ -6,11 +6,6 @@ namespace ReportEngine.Domain.Entities.BaseEntities;
 
 public class BaseEquip : IBaseEquip
 {
-    public float? Height { get; set; }
-    public float? Width { get; set; }
-    public float? Depth { get; set; }
-    public string? Type { get; set; }
-
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
