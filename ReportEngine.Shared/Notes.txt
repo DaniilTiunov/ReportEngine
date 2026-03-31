@@ -1,0 +1,2 @@
+Add-Migration migrationName -Project ReportEngine.Domain -StartupProject ReportEngine.App (Выыбрать проект по умолчанию ReportEngine.Domain)
+Update-Database

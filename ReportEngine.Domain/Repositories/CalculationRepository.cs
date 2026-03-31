@@ -128,6 +128,7 @@ public class CalculationRepository
                 existingParam.Value = updatedParam.Value;
                 existingParam.Unit = updatedParam.Unit;
                 existingParam.Description = updatedParam.Description;
+                existingParam.Key = updatedParam.Key;
             }
         }
 
