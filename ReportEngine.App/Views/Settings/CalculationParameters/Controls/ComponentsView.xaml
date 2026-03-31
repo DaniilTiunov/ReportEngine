@@ -9,9 +9,9 @@
     FontSize="15"
     mc:Ignorable="d">
 
-    <Grid Margin="20">
+    <Grid Margin="5">
         <Border
-            Padding="25"
+            Padding="5"
             Background="{DynamicResource PrimaryColor}"
             BorderBrush="{DynamicResource SecondaryColor}"
             BorderThickness="1"

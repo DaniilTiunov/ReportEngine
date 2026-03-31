@@ -6,9 +6,9 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Grid Margin="20">
+        <Grid Margin="5">
             <Border
-                Padding="25"
+                Padding="5"
                 Background="{DynamicResource PrimaryColor}"
                 BorderBrush="{DynamicResource SecondaryColor}"
                 BorderThickness="1"
@@ -39,12 +39,14 @@
                         Grid.ColumnSpan="2"
                         BeginningEdit="DataGrid_BeginningEdit"
                         CanUserAddRows="True"
-                        ItemsSource="{Binding StandsParameters}"
+                        ItemsSource="{Binding ElectricCost}"
                         LoadingRow="DataGrid_LoadingRow"
                         MouseDoubleClick="DataGrid_MouseDoubleClick">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Width="0.75*" Header="Должность" />
-                            <DataGridTextColumn Width="*" Header="Имя" />
+                            <DataGridTextColumn Width="0.75*" Header="Наименование" Binding="{Binding Name}"/>
+                            <DataGridTextColumn Width="Auto" Header="Значение" Binding="{Binding Value}"/>
+                            <DataGridTextColumn Width="Auto" Header="Ед. изм" Binding="{Binding Unit}"/>
+                            <DataGridTextColumn Width="0.75*" Header="Пояснение" Binding="{Binding Description}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
