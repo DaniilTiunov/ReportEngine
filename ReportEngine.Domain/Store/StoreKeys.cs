@@ -1,4 +1,4 @@
-﻿namespace ReportEngine.App.Store;
+﻿namespace ReportEngine.Domain.Store;
 
 public static class StoreKeys
 {

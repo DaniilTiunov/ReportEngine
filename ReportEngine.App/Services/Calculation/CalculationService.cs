@@ -3,7 +3,7 @@ using ReportEngine.App.Model;
 using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
-using ReportEngine.App.Store;
+using ReportEngine.Domain.Store;
 using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.App.Services.Calculation;

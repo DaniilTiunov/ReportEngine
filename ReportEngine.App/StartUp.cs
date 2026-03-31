@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using Microsoft.Extensions.DependencyInjection;
-using ReportEngine.App.Store;
+using ReportEngine.Domain.Store;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
 using ReportEngine.Shared.Config.Logger;

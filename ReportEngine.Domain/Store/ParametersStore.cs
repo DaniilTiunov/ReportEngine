@@ -1,7 +1,7 @@
 ﻿using ReportEngine.Domain.Entities.CalculationParameters;
 using ReportEngine.Domain.Repositories;
 
-namespace ReportEngine.App.Store;
+namespace ReportEngine.Domain.Store;
 
 public class ParametersStore
 {
