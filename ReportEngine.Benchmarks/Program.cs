@@ -1,9 +1,4 @@
-﻿using BenchmarkDotNet.Running;
-using DocumentFormat.OpenXml.Wordprocessing;
-using Mapster;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using ReportEngine.Domain.Database.Context;
+﻿using Microsoft.EntityFrameworkCore;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities.CalculationParameters;
 using ReportEngine.Domain.Repositories;

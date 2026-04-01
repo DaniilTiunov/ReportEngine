@@ -20,6 +20,7 @@ public static class StoreKeys
     {
         "PipeworkFabCost",
         "ManifoldFabCost",
+        "ManifoldWeldTime",
         "TestBenchTestCost",
         "TestBenchInspectCost",
         "TestBenchGalvCost",
@@ -29,7 +30,7 @@ public static class StoreKeys
         "CollectorWeldTime",
         "AllTestsTime",
         "EquipmentPrepTime",
-        "BusHoleDrillTime",
+        "BusbarHoleDrillTime",
         "InputInstallTime",
         "OtherOpsTime"
     };
