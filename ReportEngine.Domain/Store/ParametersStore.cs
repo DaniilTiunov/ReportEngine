@@ -1,4 +1,7 @@
-﻿using ReportEngine.Domain.Entities.CalculationParameters;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using ReportEngine.Domain.DTO;
+using ReportEngine.Domain.Entities.BaseEntities.Interface;
+using ReportEngine.Domain.Entities.CalculationParameters;
 using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 using ReportEngine.Domain.Repositories;
 
@@ -10,6 +13,11 @@ public class ParametersStore
 
     private readonly Dictionary<CalculationParameterType, Dictionary<string, CalculationParameter>> _allSettings
         = new();
+
+    private readonly Dictionary<CalculationParameter, ParameterWithEquip?> _parameterEquipsPairs = new();
+
+
+
 
 
     public ParametersStore(CalculationRepository calculationRepository)
@@ -33,7 +41,32 @@ public class ParametersStore
             await _calculationRepository.GetByKeysAsync(CalculationParameterType.SandBlastCost, StoreKeys.SandBlastSettingsRequired);
         _allSettings[CalculationParameterType.Equipments] =
             await _calculationRepository.GetByKeysAsync(CalculationParameterType.Equipments, StoreKeys.EquipmentsSettingsRequired);
+
+
+
+        //сворачиваем все параметры в список
+        var allParameters = _allSettings
+            .SelectMany(groupDictionary => groupDictionary.Value)
+            .Select(keyParamPair => keyParamPair.Value)
+            .ToList();
+
+        foreach (var parameter in allParameters)
+        {
+            //если нет ссылки на внешний компонент - пропускаем
+            if (!parameter.EquipReferenceId.HasValue || !parameter.EquipReferenceType.HasValue)
+            {
+                _parameterEquipsPairs[parameter] = null;
+                continue;
+            }
+
+            //в противном случае запрашиваем инфу с базы
+            _parameterEquipsPairs[parameter] =
+                await _calculationRepository.GetParameterWithEquipAsync(parameter.Id, parameter.EquipReferenceId.Value, parameter.EquipReferenceType.Value);
+        }
+       // var test = await _calculationRepository.GetParameterWithEquipAsync(41, 16, EquipReferenceType.Others);
     }
+
+
 
     public CalculationParameter GetCurrentParameter(CalculationParameterType type, string key)
     {
@@ -44,6 +77,19 @@ public class ParametersStore
         throw new KeyNotFoundException
             ($"Ключ '{key}' или тип группы '{type}' не найдены.");
     }
+
+
+    public ParameterWithEquip? GetParameterEquip(CalculationParameter parameter)
+    {
+        if (_parameterEquipsPairs.TryGetValue(parameter,out var resultParameterEquip))
+            return resultParameterEquip;
+
+        throw new KeyNotFoundException
+            ($"Параметр '{parameter.Name}' не найден в словаре.");
+    }
+
+    public ParameterWithEquip? this[CalculationParameter parameter] 
+        => GetParameterEquip(parameter);
 
     public CalculationParameter this[CalculationParameterType type, string key]
         => GetCurrentParameter(type, key);
