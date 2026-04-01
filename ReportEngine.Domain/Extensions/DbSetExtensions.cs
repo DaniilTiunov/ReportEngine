@@ -8,7 +8,7 @@ public static class DbSetExtensions
 {
     public static IQueryable<IBaseEquip> SetTable(this DbContext context, EquipReferenceType type)
     {
-        var propertyName = type.ToString() + "s";
+        var propertyName = type.ToString();
         var property = context.GetType().GetProperty(propertyName);
         return property.GetValue(context) as IQueryable<IBaseEquip>;
     }
