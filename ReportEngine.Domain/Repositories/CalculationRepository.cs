@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities.CalculationParameters;
+using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 
 namespace ReportEngine.Domain.Repositories;
 

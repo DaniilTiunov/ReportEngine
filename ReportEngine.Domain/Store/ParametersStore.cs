@@ -1,4 +1,5 @@
 ﻿using ReportEngine.Domain.Entities.CalculationParameters;
+using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 using ReportEngine.Domain.Repositories;
 
 namespace ReportEngine.Domain.Store;

@@ -8,8 +8,7 @@ using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Views.Settings.CalculationParameters.Controls;
 using ReportEngine.Domain.Entities.CalculationParameters;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
-using ReportEngine.Domain.Entities.CalculationParameters;
-
+using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 
 
 namespace ReportEngine.App.ViewModels;

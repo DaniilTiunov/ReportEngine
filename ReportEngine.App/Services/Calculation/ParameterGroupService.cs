@@ -5,6 +5,7 @@ using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities.CalculationParameters;
+using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 using ReportEngine.Domain.Repositories;
 
 namespace ReportEngine.App.Services.Calculation;
