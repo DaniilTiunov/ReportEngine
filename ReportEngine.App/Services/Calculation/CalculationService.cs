@@ -1,8 +1,8 @@
 ﻿using ReportEngine.App.Extensions;
 using ReportEngine.App.Model;
-using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 using ReportEngine.Domain.Store;
 using ReportEngine.Shared.Helpers;
 
@@ -10,8 +10,8 @@ namespace ReportEngine.App.Services.Calculation;
 
 public class CalculationService : ICalculationService
 {
-    private readonly IProjectService _projectService;
     private readonly ParametersStore _parametersStore;
+    private readonly IProjectService _projectService;
 
     public CalculationService(
         IProjectService projectService,
@@ -21,14 +21,9 @@ public class CalculationService : ICalculationService
         _parametersStore = parametersStore;
     }
 
-    public StandSettingsModel DefaultStandSettings { get; set; } = new();
-    public HumanCostSettingsModel HumanCostSettingsModel { get; set; } = new();
-    public FrameSettingsModel FrameSettingsModel { get; set; } = new();
 
     public async Task CalculateProjectAsync(ProjectModel project)
     {
-        await LoadSettingsCost();
-
         CalculateStandsCount(project);
 
         foreach (var stand in project.Stands)
@@ -48,13 +43,6 @@ public class CalculationService : ICalculationService
 
         await _projectService.UpdateProjectAsync(project);
         await _projectService.UpdateStandEntity(project);
-    }
-
-    private async Task LoadSettingsCost()
-    {
-        await DefaultStandSettings.LoadStandsSettingsDataAsync();
-        await HumanCostSettingsModel.LoadHumanCostDataFromIniAsync();
-        await FrameSettingsModel.LoadFrameDataFromIniAsync();
     }
 
     private void CalculateStandsCount(ProjectModel project)
@@ -121,7 +109,8 @@ public class CalculationService : ICalculationService
         if (!projectModel.IsGalvanized)
             return 0;
 
-        return projectModel.StandCount * (decimal)HumanCostSettingsModel.GalvanizedStands;
+        return projectModel.StandCount *
+               _parametersStore[CalculationParameterType.HumanCost, "TestBenchGalvCost"].Value.ToDecimal();
     }
 
     private float ObvHumanCostCalculation(StandModel stand)
@@ -137,21 +126,25 @@ public class CalculationService : ICalculationService
         var framesCount = projectModel.Stands.Sum(s => s.FramesInStand.Count);
         var obvyazkiCount = projectModel.Stands.Sum(s => s.ObvyazkiInStand.Count);
 
-        var humanStandsCost = (HumanCostSettingsModel.TimeForCheckStand
-                               + HumanCostSettingsModel.TimeForOneDrill
-                               + HumanCostSettingsModel.TimeForMontageOneInput
-                               + HumanCostSettingsModel.TimeForDrillOneBus
-                               + HumanCostSettingsModel.TimeForCollectorBoil
-                               + HumanCostSettingsModel.TimeForPrepareAllEquipment) * standsCount
-                              + HumanCostSettingsModel.TimeForAllChecks
-                              + HumanCostSettingsModel.TimeForFinalWork
-                              + HumanCostSettingsModel.TimeForOthersOperations;
+        var humanStandsCost = (_parametersStore[CalculationParameterType.HumanCost, "StandInspectTime"].Value.ToDouble()
+                              + _parametersStore[CalculationParameterType.HumanCost, "HoleDrillTime"].Value.ToDouble()
+                              + _parametersStore[CalculationParameterType.HumanCost, "InputInstallTime"].Value
+                                  .ToDouble()
+                              + _parametersStore[CalculationParameterType.HumanCost, "BusbarHoleDrillTime"].Value
+                                  .ToDouble()
+                              + _parametersStore[CalculationParameterType.HumanCost, "ManifoldWeldTime"].Value
+                                  .ToDouble()
+                              + _parametersStore[CalculationParameterType.HumanCost, "EquipmentPrepTime"].Value
+                                  .ToDouble() * standsCount
+                              + _parametersStore[CalculationParameterType.HumanCost, "AllTestsTime"].Value.ToDouble()
+                              + _parametersStore[CalculationParameterType.HumanCost, "FinalWorkTime"].Value.ToDouble()
+                              + _parametersStore[CalculationParameterType.HumanCost, "OtherOpsTime"].Value.ToDouble());
 
-        var humanFrameCost = (FrameSettingsModel.TimeForPaintFrame
-                              + FrameSettingsModel.TimeForPrepareFrame
-                              + FrameSettingsModel.TimeForProductionFrame
-                              + FrameSettingsModel.TimeForAssemblyWork) * framesCount +
-                             FrameSettingsModel.TimeForPaintObv * obvyazkiCount;
+        var humanFrameCost = (_parametersStore[CalculationParameterType.FrameCost, "FramePaintTime"].Value.ToDouble()
+                              + _parametersStore[CalculationParameterType.FrameCost, "FramePrepTime"].Value.ToDouble()
+                              + _parametersStore[CalculationParameterType.FrameCost, "FrameProdTime"].Value.ToDouble()
+                              +_parametersStore[CalculationParameterType.FrameCost, "FrameFabCost"].Value.ToDouble()) * framesCount +
+                              (_parametersStore[CalculationParameterType.FrameCost, "PipeworkPaintTime"].Value.ToDouble() * obvyazkiCount);
 
         totalHumanCost = humanStandsCost.ToFloat() + humanFrameCost.ToFloat();
 
