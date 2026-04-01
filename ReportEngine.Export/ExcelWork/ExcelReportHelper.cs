@@ -1,6 +1,9 @@
 ﻿using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Shared.Config.IniHelpers;
+using ReportEngine.Domain.Entities.CalculationParameters;
+using System.Runtime.InteropServices;
 
 namespace ReportEngine.Export.ExcelWork;
 
@@ -13,7 +16,7 @@ public static class ExcelReportHelper
         return prefix + " " + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + "." + fileExtension;
     }
 
-    public static float? TryToParseFloat(string str)
+    public static float? TryToParseFloat(string? str)
     {
         return float.TryParse(str, out var parseResult) ? parseResult : null;
     }
@@ -487,8 +490,9 @@ public static class ExcelReportHelper
     }
 
     //создаем инфу о трудозатратах
-    public static LaborStandsData GenerateLaborData(IEnumerable<Stand> stands)
+    public static LaborStandsData GenerateLaborData(IEnumerable<Stand> stands,ParametersStore store)
     {
+
         //грузим сразу все
         var allSettings = CalculationSettingsManager.LoadAllSettings();
 
@@ -500,24 +504,29 @@ public static class ExcelReportHelper
         var sandblastSettings = allSettings.SandBlastSettings;
 
 
+        var frameProdTimeValue = store[CalculationParameterType.FrameCost, "FrameProdTime"].Value;
+        var frameProdTime = TryToParseFloat(frameProdTimeValue);
+
         //трудозатраты на изготовление рам
         //константа из настроек * кол-во рам
         var frameProductionHumanCostSum = stands
-            .Select(stand => frameSettings?.TimeForProductionFrame * stand.StandFrames.Count)
+            .Select(stand => frameProdTime * stand.StandFrames.Count)
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
+
+        var frameProdCostValue = store[CalculationParameterType.FrameCost, "FrameFabCost"].Value;
+        var frameProdCost = TryToParseFloat(frameProdCostValue);
 
         var frameProductionRecord = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Изготовление рам", true),
             Unit = new ValidatedField<string?>("чел/час", true),
-            Quantity = new ValidatedField<float?>((float?)frameProductionHumanCostSum,
+            Quantity = new ValidatedField<float?>(frameProductionHumanCostSum,
                 frameProductionHumanCostSum.HasValue),
-            CostPerUnit = new ValidatedField<float?>((float?)frameSettings?.FrameProduction,
-                frameSettings?.FrameProduction != null),
-            CommonCost = new ValidatedField<float?>(
-                (float?)(frameProductionHumanCostSum * frameSettings?.FrameProduction),
-                frameProductionHumanCostSum * frameSettings?.FrameProduction != null)
+            CostPerUnit = new ValidatedField<float?>(frameProdCost,
+                frameProdCost.HasValue),
+            CommonCost = new ValidatedField<float?>((frameProductionHumanCostSum * frameProdCost),
+                frameProductionHumanCostSum * frameProdCost != null)
         };
 
 
@@ -526,20 +535,22 @@ public static class ExcelReportHelper
             .SelectMany(stand => stand.ObvyazkiInStand)
             .Select(obv => obv.HumanCost);
 
+        var obvProdCostValue = store[CalculationParameterType.HumanCost, "PipeworkFabCost"].Value;
+        var obvProdCost = TryToParseFloat(obvProdCostValue);
+
+
         var obvProductionRecord = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Изготовление обвязок", true),
             Unit = new ValidatedField<string?>("чел/час", true),
             Quantity = new ValidatedField<float?>(allObvHumanCosts.Sum(), allObvHumanCosts.All(cost => cost.HasValue)),
-            CostPerUnit = new ValidatedField<float?>((float?)humanCostSettings?.ObvzyakaProduction,
-                humanCostSettings?.ObvzyakaProduction != null)
+            CostPerUnit = new ValidatedField<float?>(obvProdCost, obvProdCost.HasValue)
         };
 
         obvProductionRecord.CommonCost = new ValidatedField<float?>(
             obvProductionRecord.Quantity.Value * obvProductionRecord.CostPerUnit.Value,
-            obvProductionRecord.Quantity.Value * obvProductionRecord.CostPerUnit.Value != null &&
-            obvProductionRecord.Quantity.IsValid);
+            obvProductionRecord.Quantity.Value * obvProductionRecord.CostPerUnit.Value != null);
 
 
         //трудозатраты на коллектор
@@ -558,18 +569,32 @@ public static class ExcelReportHelper
 
         var standsWithCollectorExists = standsWithCollector.Any();
 
-        //если такие есть - считаем трудозатраты для них
-        double? collectorProductionHumanCostSum = null;
 
-        if (standsWithCollectorExists)
-            collectorProductionHumanCostSum = standsWithCollector
+        var oneDrillTimeValue = store[CalculationParameterType.HumanCost, "HoleDrillTime"].Value;
+        var oneDrillTime = TryToParseFloat(oneDrillTimeValue);
+
+        var collectorWeldTimeValue = store[CalculationParameterType.HumanCost, "ManifoldWeldTime"].Value;
+        var collectorWeldTime = TryToParseFloat(collectorWeldTimeValue);
+
+        var collectorProdCostValue = store[CalculationParameterType.HumanCost, "ManifoldFabCost"].Value;
+        var collectorProdCost = TryToParseFloat(collectorProdCostValue);
+
+        EquipmentRecord? collectorProductionRecord = null;
+
+        //если такие есть - считаем трудозатраты для них
+        if (standsWithCollectorExists) 
+        {      
+            float? collectorProdHumanCostSum = null;
+
+ 
+
+            collectorProdHumanCostSum = standsWithCollector
                 .Select(stand => stand.ObvyazkiInStand.Sum(obv => obv.OtherLineCount) + 1)
-                .Select(standHolesCount => humanCostSettings?.TimeForOneDrill * standHolesCount)
-                .Select(drillHumanCost => drillHumanCost + humanCostSettings?.TimeForCollectorBoil)
+                .Select(standHolesCount => oneDrillTime * standHolesCount)
+                .Select(drillHumanCost => drillHumanCost + collectorWeldTime)
                 .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
-        var collectorProductionRecord = standsWithCollectorExists
-            ? new EquipmentRecord
+            collectorProductionRecord = new EquipmentRecord
             {
                 ExportDays = new ValidatedField<int?>(null, true),
 
@@ -577,23 +602,28 @@ public static class ExcelReportHelper
 
                 Unit = new ValidatedField<string?>("чел/час", true),
 
-                Quantity = new ValidatedField<float?>((float?)collectorProductionHumanCostSum,
-                    collectorProductionHumanCostSum.HasValue),
+                Quantity = new ValidatedField<float?>(collectorProdHumanCostSum,
+                    collectorProdHumanCostSum.HasValue),
 
-                CostPerUnit = new ValidatedField<float?>((float?)humanCostSettings?.CollectorProduction,
-                    humanCostSettings?.CollectorProduction != null),
+                CostPerUnit = new ValidatedField<float?>(collectorProdCost,
+                    collectorProdCost.HasValue),
 
-                CommonCost = new ValidatedField<float?>(
-                    (float?)(collectorProductionHumanCostSum * humanCostSettings?.CollectorProduction),
-                    collectorProductionHumanCostSum * humanCostSettings?.CollectorProduction != null)
-            }
-            : null;
-
+                CommonCost = new ValidatedField<float?>((collectorProdHumanCostSum * collectorProdCost),
+                    collectorProdHumanCostSum * collectorProdCost != null)
+            };
+        }
 
         //трудозатраты на испытания
         //время проведения всех испытаний * кол-во обвязок
+
+        var allChecksTimeValue = store[CalculationParameterType.HumanCost, "AllTestsTime"].Value;
+        var allChecksTime = TryToParseFloat(allChecksTimeValue);
+
+        var testsCostValue = store[CalculationParameterType.HumanCost, "TestBenchTestCost"].Value;
+        var testsCost = TryToParseFloat(testsCostValue);
+
         var testsHumanCostSum = stands
-            .Select(stand => humanCostSettings?.TimeForAllChecks * stand.ObvyazkiInStand.Count)
+            .Select(stand => allChecksTime * stand.ObvyazkiInStand.Count)
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
 
@@ -602,46 +632,63 @@ public static class ExcelReportHelper
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Испытание на прочность и герметичность", true),
             Unit = new ValidatedField<string?>("чел/час", true),
-            Quantity = new ValidatedField<float?>((float?)testsHumanCostSum, testsHumanCostSum.HasValue),
-            CostPerUnit =
-                new ValidatedField<float?>((float?)humanCostSettings?.Tests, humanCostSettings?.Tests != null),
-            CommonCost = new ValidatedField<float?>(
-                (float?)(testsHumanCostSum * humanCostSettings?.Tests),
-                testsHumanCostSum * humanCostSettings?.Tests != null)
+            Quantity = new ValidatedField<float?>(testsHumanCostSum, testsHumanCostSum.HasValue),
+            CostPerUnit = new ValidatedField<float?>(testsCost, testsCost.HasValue),
+            CommonCost = new ValidatedField<float?>((testsHumanCostSum * testsCost),
+                testsHumanCostSum * testsCost != null)
         };
 
 
         //трудозатраты на пескоструйные работы
         //везде константа из настроек
-        var sandBlastingHumanCostSum = stands
-            .Select(_ => sandblastSettings.TimeSandBlastWork)
-            .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
+
+        var sandBlastCostValue = store[CalculationParameterType.SandBlastCost, "SandblastingCost"].Value;
+        var sandBlastCost = TryToParseFloat(sandBlastCostValue);
+
+        var sandBlastTimeValue = store[CalculationParameterType.SandBlastCost, "SandblastingTime"].Value;
+        var sandBlastTime = TryToParseFloat(sandBlastTimeValue);
+
+        var sandBlastingHumanCostSum = stands.Count() * sandBlastTime;
 
         var sandblastingRecord = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Пескоструйные работы", true),
             Unit = new ValidatedField<string?>("чел/час", true),
-            Quantity = new ValidatedField<float?>((float?)sandBlastingHumanCostSum, sandBlastingHumanCostSum != null),
-            CostPerUnit = new ValidatedField<float?>((float?)sandblastSettings?.SandBlastWork,
-                sandblastSettings?.SandBlastWork != null),
-            CommonCost = new ValidatedField<float?>(
-                (float?)(sandBlastingHumanCostSum * sandblastSettings?.SandBlastWork),
-                sandBlastingHumanCostSum * sandblastSettings?.SandBlastWork != null)
+            Quantity = new ValidatedField<float?>(sandBlastingHumanCostSum, sandBlastingHumanCostSum.HasValue),
+            CostPerUnit = new ValidatedField<float?>(sandBlastCost, sandBlastCost.HasValue),
+            CommonCost = new ValidatedField<float?>((sandBlastingHumanCostSum * sandBlastCost),
+                sandBlastingHumanCostSum * sandBlastCost != null)
         };
 
 
         //трудозатраты на покраску
         //???
+
+        var paintObvTimeValue = store[CalculationParameterType.FrameCost, "PipeworkPaintTime"].Value;
+        var paintObvTime = TryToParseFloat(paintObvTimeValue);
+
+        var paintFrameTimeValue = store[CalculationParameterType.FrameCost, "FramePaintTime"].Value;
+        var paintFrameTime = TryToParseFloat(paintFrameTimeValue);
+
+        var prepareAllEquipmentTimeValue = store[CalculationParameterType.HumanCost, "EquipmentPrepTime"].Value;
+        var prepareAllEquipmentTime = TryToParseFloat(prepareAllEquipmentTimeValue);
+
+        var othersOperationsTimeValue = store[CalculationParameterType.HumanCost, "OtherOpsTime"].Value;
+        var othersOperationsTime = TryToParseFloat(othersOperationsTimeValue);
+
+        var paintFrameCostValue = store[CalculationParameterType.FrameCost, "TestBenchPaintCost"].Value;
+        var paintFrameCost = TryToParseFloat(paintFrameCostValue);
+
         var paintingHumanCostSum = stands
             .Select(stand =>
             {
-                var obvTimeCost = frameSettings?.TimeForPaintObv * stand.ObvyazkiInStand.Count;
+                var obvTimeCost = paintObvTime * stand.ObvyazkiInStand.Count;
 
                 return obvTimeCost +
-                       frameSettings?.TimeForPaintFrame +
-                       humanCostSettings?.TimeForPrepareAllEquipment +
-                       humanCostSettings?.TimeForOthersOperations;
+                       paintFrameTime +
+                       prepareAllEquipmentTime +
+                       othersOperationsTime;
             })
             .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
 
@@ -650,15 +697,32 @@ public static class ExcelReportHelper
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Покраска", true),
             Unit = new ValidatedField<string?>("чел/час", true),
-            Quantity = new ValidatedField<float?>((float?)paintingHumanCostSum, paintingHumanCostSum.HasValue),
-            CostPerUnit = new ValidatedField<float?>((float?)frameSettings?.Painting, frameSettings?.Painting != null),
-            CommonCost = new ValidatedField<float?>(
-                (float?)(paintingHumanCostSum * frameSettings?.Painting),
-                paintingHumanCostSum * frameSettings?.Painting != null)
+            Quantity = new ValidatedField<float?>(paintingHumanCostSum, paintingHumanCostSum.HasValue),
+            CostPerUnit = new ValidatedField<float?>(paintFrameCost, paintFrameCost.HasValue),
+            CommonCost = new ValidatedField<float?>((paintingHumanCostSum * paintFrameCost),
+                paintingHumanCostSum * paintFrameCost != null)
         };
+
+
 
         //трудозатраты на электромонтаж
         //???
+
+        var oneInputMontageTimeValue = store[CalculationParameterType.HumanCost, "InputInstallTime"].Value;
+        var oneInputMontageTime = TryToParseFloat(oneInputMontageTimeValue);
+
+        var oneHoleBusDrillTimeValue = store[CalculationParameterType.HumanCost, "BusbarHoleDrillTime"].Value;
+        var oneHoleBusDrillTime = TryToParseFloat(oneHoleBusDrillTimeValue);
+
+        var oneWireMontageTimeValue = store[CalculationParameterType.ElectricCost, "WireInstallTime"].Value;
+        var oneWireMontageTime = TryToParseFloat(oneWireMontageTimeValue);
+
+        var oneCableMontageTimeValue = store[CalculationParameterType.ElectricCost, "CableInstallTime"].Value;
+        var oneCableMontageTime = TryToParseFloat(oneCableMontageTimeValue);
+
+        var electricMontageCostValue = store[CalculationParameterType.ElectricCost, "ElectricalInstallCost"].Value;
+        var electricMontageCost = TryToParseFloat(electricMontageCostValue);
+
         var electricHumanCost = stands
             .Select(stand =>
             {
@@ -668,7 +732,7 @@ public static class ExcelReportHelper
                     .Sum(record => record.Quantity);
 
                 //затраты на кабельные ввода
-                var cableInputsTimeCost = cableInputsQuantity * humanCostSettings?.TimeForMontageOneInput;
+                var cableInputsTimeCost = cableInputsQuantity * oneInputMontageTime;
 
 
                 var electricSensorsQuantity = stand.ObvyazkiInStand
@@ -692,23 +756,23 @@ public static class ExcelReportHelper
                     });
 
                 //затраты на монтаж кабеля и провода 4мм до датчиков
-                var sensorsTimeCost = electricSensorsQuantity * electicalSettings?.TimeMontageCable +
-                                      electricSensorsQuantity * electicalSettings?.TimeMontageWire +
-                                      electricSensorsQuantity * humanCostSettings?.TimeForDrillOneBus;
+                var sensorsTimeCost = electricSensorsQuantity * oneCableMontageTime +
+                                      electricSensorsQuantity * oneWireMontageTime +
+                                      electricSensorsQuantity * oneHoleBusDrillTime;
 
 
                 const int holesInBus = 2;
                 const int holesInFrame = 2;
 
                 //затраты на крепление шины к раме
-                var busBracingTimeCost = holesInBus * humanCostSettings?.TimeForDrillOneBus +
-                                         holesInFrame * humanCostSettings?.TimeForOneDrill;
+                var busBracingTimeCost = holesInBus * oneHoleBusDrillTime +
+                                         holesInFrame * oneDrillTime;
 
 
                 var framesQuantity = stand.StandFrames.Count;
 
                 //затраты на монтаж провода 6мм
-                var groundingTimeCost = electicalSettings?.TimeMontageWire * framesQuantity;
+                var groundingTimeCost = oneWireMontageTime * framesQuantity;
 
                 return cableInputsTimeCost +
                        sensorsTimeCost +
@@ -722,33 +786,37 @@ public static class ExcelReportHelper
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Электромонтаж", true),
             Unit = new ValidatedField<string?>("чел/час", true),
-            Quantity = new ValidatedField<float?>((float?)electricHumanCost, electricHumanCost.HasValue),
-            CostPerUnit = new ValidatedField<float?>((float?)electicalSettings?.ElectricalMontage,
-                electicalSettings?.ElectricalMontage != null),
-            CommonCost = new ValidatedField<float?>(
-                (float?)(electricHumanCost * electicalSettings?.ElectricalMontage),
-                electricHumanCost * electicalSettings?.ElectricalMontage != null)
+            Quantity = new ValidatedField<float?>(electricHumanCost, electricHumanCost.HasValue),
+            CostPerUnit = new ValidatedField<float?>(electricMontageCost, electricMontageCost.HasValue),
+            CommonCost = new ValidatedField<float?>(electricHumanCost * electricMontageCost, 
+                                                    electricHumanCost * electicalSettings?.ElectricalMontage != null)
         };
 
         //трудозатраты на общую проверку стенда
         //везде константа из настроек
-        var commonCheckHumanCost = stands
-            .Select(_ => humanCostSettings?.TimeForFinalWork)
-            .Aggregate((thisTimeCost, nextTimeCost) => thisTimeCost + nextTimeCost);
+
+
+        var commonCheckCostValue = store[CalculationParameterType.HumanCost, "TestBenchInspectCost"].Value;
+        var commonCheckCost = TryToParseFloat(commonCheckCostValue);
+
+
+        var finalWorksTimeValue = store[CalculationParameterType.HumanCost, "FinalWorkTime"].Value;
+        var finalWorksTime = TryToParseFloat(finalWorksTimeValue);
+
+        var commonCheckHumanCost = stands.Count() * finalWorksTime;
 
         var commonCheckRecord = new EquipmentRecord
         {
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Общая проверка стенда", true),
             Unit = new ValidatedField<string?>("чел/час", true),
-            Quantity = new ValidatedField<float?>((float?)commonCheckHumanCost, commonCheckHumanCost.HasValue),
-            CostPerUnit = new ValidatedField<float?>((float?)humanCostSettings?.CommonCheckStand,
-                humanCostSettings?.CommonCheckStand != null),
+            Quantity = new ValidatedField<float?>(commonCheckHumanCost, commonCheckHumanCost.HasValue),
+            CostPerUnit = new ValidatedField<float?>(commonCheckCost,
+                commonCheckCost.HasValue),
             CommonCost = new ValidatedField<float?>(
-                (float?)(commonCheckHumanCost * humanCostSettings?.CommonCheckStand),
+                (commonCheckHumanCost * commonCheckCost),
                 commonCheckHumanCost * humanCostSettings?.CommonCheckStand != null)
         };
-
 
         return new LaborStandsData
         {

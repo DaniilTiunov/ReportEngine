@@ -1,6 +1,7 @@
 ﻿using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
@@ -12,13 +13,16 @@ public class FinPlanReportGenerator : IReportGenerator
 {
     private readonly IContainerRepository _containerRepository;
     private readonly IProjectInfoRepository _projectInfoRepository;
+    private readonly ParametersStore _parametersStore;
 
     public FinPlanReportGenerator(
         IProjectInfoRepository projectInfoRepository,
-        IContainerRepository containerRepository)
+        IContainerRepository containerRepository,
+        ParametersStore parametersStore)
     {
         _projectInfoRepository = projectInfoRepository;
         _containerRepository = containerRepository;
+        _parametersStore = parametersStore;
     }
 
     public ReportType Type => ReportType.FinPlanReport;
@@ -273,7 +277,7 @@ public class FinPlanReportGenerator : IReportGenerator
         PasteSeparatorRow(activeRow, ws);
         activeRow++;
 
-        var generatedLaborData = ExcelReportHelper.GenerateLaborData(sourceData);
+        var generatedLaborData = ExcelReportHelper.GenerateLaborData(sourceData, _parametersStore);
         var laborRecords = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);
         var laborTotalCostRecord = ExcelReportHelper.GenerateTotalRecord(laborRecords);
 
