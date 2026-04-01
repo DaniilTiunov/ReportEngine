@@ -21,7 +21,6 @@ public class ReAppContext : DbContext
 
     //Сортаменты
     public DbSet<CarbonPipe> CarbonPipes { get; set; } //Сортамент труб Труба углеродистая сталь
-
     public DbSet<HeaterPipe> HeaterPipes { get; set; } //Труба нержавеющая сталь
     public DbSet<StainlessPipe> StainlessPipes { get; set; } //Труба жарапрочная сталь
     public DbSet<CarbonArmature> CarbonArmatures { get; set; } //Запорные арматуры Запорная арматура углеродистая сталь
@@ -84,5 +83,5 @@ public class ReAppContext : DbContext
 
     public DbSet<CalculationParameter> CalculationParameters { get; set; }
 
-    public DbSet<CalculationParameterGroup> CalculationParametersGroup { get; set; } 
+    public DbSet<CalculationParameterGroup> CalculationParametersGroup { get; set; }
 }

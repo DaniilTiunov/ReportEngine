@@ -34,7 +34,7 @@ public class ParametersStore
         _allSettings[CalculationParameterType.Equipments] =
             await _calculationRepository.GetByKeysAsync(CalculationParameterType.Equipments, StoreKeys.EquipmentsSettingsRequired);
 
-        var test = await _calculationRepository.GetParameterWithEquipAsync(41, 16, EquipReferenceType.Other);
+        var test = await _calculationRepository.GetParameterWithEquipAsync(41, 16, EquipReferenceType.Others);
     }
 
     public CalculationParameter GetCurrentParameter(CalculationParameterType type, string key)
