@@ -7,16 +7,19 @@ using ReportEngine.Domain.Entities.ElectricComponents;
 using ReportEngine.Domain.Entities.Frame;
 using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Domain.Repositories;
+using ReportEngine.Domain.Store;
 
 namespace ReportEngine.App.Services.Core;
 
 public class InitializeService
 {
     private readonly GenericRepository _genericRepository;
+    private readonly ParametersStore _parametersStore;
 
-    public InitializeService(GenericRepository genericRepository)
+    public InitializeService(GenericRepository genericRepository,ParametersStore parametersStore)
     {
         _genericRepository = genericRepository;
+        _parametersStore = parametersStore;
     }
 
     public async Task InitializeStandDefaultPurposes(StandModel standForInitialize)
@@ -56,6 +59,14 @@ public class InitializeService
     public async Task InitializeAdditionalEquip(StandModel stand, StandSettingsModel settings)
     {
         const float nameplatesPerStand = 1.0f;
+
+
+        
+        
+
+
+
+
 
         var bracketUniversalEntityType =
             _genericRepository.GetEntityTypeByName(settings.BracketUniversalEntityName ?? "") ?? typeof(SensorBrace);
