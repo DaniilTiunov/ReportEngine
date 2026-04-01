@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ReportEngine.Domain.Database.Context;
+using ReportEngine.Domain.DTO;
+using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.CalculationParameters;
 using ReportEngine.Domain.Entities.CalculationParameters.Enums;
+using ReportEngine.Domain.Extensions;
 
 namespace ReportEngine.Domain.Repositories;
 
@@ -181,6 +184,25 @@ public class CalculationRepository
                 x.CalculationParameterGroup.SettingsType == type &&
                 keys.Contains(x.Key))
             .ToDictionaryAsync(x => x.Key);
+    }
+
+    public async Task<ParameterWithEquip?> GetParameterWithEquipAsync(
+        int parameterId,
+        int equipmentId,
+        EquipReferenceType type)
+    {
+        var parameter =
+            await _context.CalculationParameters.FirstOrDefaultAsync(par => par.Id == parameterId);
+
+        var table = _context.SetTable(type);
+
+        var equipment = await table.FirstOrDefaultAsync(equip => equip.Id == equipmentId);
+
+        return new ParameterWithEquip
+        {
+            Parameter = parameter,
+            Equipment = equipment
+        };
     }
 }
 

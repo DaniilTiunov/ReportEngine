@@ -33,6 +33,8 @@ public class ParametersStore
             await _calculationRepository.GetByKeysAsync(CalculationParameterType.SandBlastCost, StoreKeys.SandBlastSettingsRequired);
         _allSettings[CalculationParameterType.Equipments] =
             await _calculationRepository.GetByKeysAsync(CalculationParameterType.Equipments, StoreKeys.EquipmentsSettingsRequired);
+
+        var test = await _calculationRepository.GetParameterWithEquipAsync(41, 16, EquipReferenceType.Other);
     }
 
     public CalculationParameter GetCurrentParameter(CalculationParameterType type, string key)
