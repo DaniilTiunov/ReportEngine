@@ -4,6 +4,7 @@ using ReportEngine.Export.DTO;
 using ReportEngine.Shared.Config.IniHelpers;
 using ReportEngine.Domain.Entities.CalculationParameters;
 using System.Runtime.InteropServices;
+using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 
 namespace ReportEngine.Export.ExcelWork;
 
@@ -421,7 +422,7 @@ public static class ExcelReportHelper
             .ExceptBy(sensorsHolders.Select(h => h.Name), holder => holder.Name);
 
 
-        //из расходных материалов также сносим дубликаты существующих позиций 
+        //из расходных материалов также сносим дубликаты существующих позиций
         //соединяем все списки комплектующих, по которым нужно проверить, в один
         var allCollectionToCheck = pipesList
             .Union(armaturesList)
@@ -438,7 +439,7 @@ public static class ExcelReportHelper
             .IntersectBy(allCollectionToCheck.Select(part => part.Name), supply => supply.Name);
 
 
-        //если дубликаты найдены - 
+        //если дубликаты найдены -
         if (duplicateRecords.Any())
         {
             //соотносим позицию в расходных материалах с найденным дубликатом
@@ -582,11 +583,11 @@ public static class ExcelReportHelper
         EquipmentRecord? collectorProductionRecord = null;
 
         //если такие есть - считаем трудозатраты для них
-        if (standsWithCollectorExists) 
-        {      
+        if (standsWithCollectorExists)
+        {
             float? collectorProdHumanCostSum = null;
 
- 
+
 
             collectorProdHumanCostSum = standsWithCollector
                 .Select(stand => stand.ObvyazkiInStand.Sum(obv => obv.OtherLineCount) + 1)
@@ -788,7 +789,7 @@ public static class ExcelReportHelper
             Unit = new ValidatedField<string?>("чел/час", true),
             Quantity = new ValidatedField<float?>(electricHumanCost, electricHumanCost.HasValue),
             CostPerUnit = new ValidatedField<float?>(electricMontageCost, electricMontageCost.HasValue),
-            CommonCost = new ValidatedField<float?>(electricHumanCost * electricMontageCost, 
+            CommonCost = new ValidatedField<float?>(electricHumanCost * electricMontageCost,
                                                     electricHumanCost * electicalSettings?.ElectricalMontage != null)
         };
 

@@ -132,6 +132,7 @@ public class CalculationRepository
                 existingParam.Unit = updatedParam.Unit;
                 existingParam.Description = updatedParam.Description;
                 existingParam.Key = updatedParam.Key;
+                existingParam.EquipReferenceId =  updatedParam.EquipReferenceId;
             }
         }
 
