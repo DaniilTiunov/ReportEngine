@@ -57,7 +57,3 @@ public static class StartUp
         Thread.CurrentThread.CurrentUICulture = culture;
     }
 }
-
-//var equipListener = host.Services.GetRequiredService<EquipChangesListener>();
-
-//equipListener.LoadCurrentDataAsync().GetAwaiter().GetResult();

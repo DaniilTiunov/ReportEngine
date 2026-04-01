@@ -1,6 +1,7 @@
 ﻿using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using System.ComponentModel.DataAnnotations.Schema;
+using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 
 namespace ReportEngine.Domain.Entities.CalculationParameters;
 
@@ -23,8 +24,13 @@ public class CalculationParameter
     //Описание параметра
     public string? Description { get; set; }
 
-    //группа параметра 
+    //группа параметра
     public int ParameterGroupId { get; set; }
 
-    [ForeignKey(nameof(ParameterGroupId))] public virtual CalculationParameterGroup CalculationParameterGroup { get; set; }
+    [ForeignKey(nameof(ParameterGroupId))]
+    public virtual CalculationParameterGroup CalculationParameterGroup { get; set; }
+
+    public int? EquipReferenceId { get; set; }
+
+    public EquipReferenceType? EquipReferenceType { get; set; }
 }

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 
 namespace ReportEngine.Domain.Entities.CalculationParameters
 {
