@@ -4,6 +4,8 @@ using ReportEngine.Export.DTO;
 using ReportEngine.Shared.Config.IniHelpers;
 using ReportEngine.Domain.Entities.CalculationParameters;
 using System.Runtime.InteropServices;
+using ReportEngine.Domain.Entities.CalculationParameters.Enums;
+
 
 namespace ReportEngine.Export.ExcelWork;
 
@@ -492,18 +494,6 @@ public static class ExcelReportHelper
     //создаем инфу о трудозатратах
     public static LaborStandsData GenerateLaborData(IEnumerable<Stand> stands,ParametersStore store)
     {
-
-        //грузим сразу все
-        var allSettings = CalculationSettingsManager.LoadAllSettings();
-
-        //вытаскиваем нужные
-        var frameSettings = allSettings.FrameSettings;
-        var electicalSettings = allSettings.ElectricalSettings;
-        var humanCostSettings = allSettings.HumanCostSettings;
-        var standSettings = allSettings.StandSettings;
-        var sandblastSettings = allSettings.SandBlastSettings;
-
-
         var frameProdTimeValue = store[CalculationParameterType.FrameCost, "FrameProdTime"].Value;
         var frameProdTime = TryToParseFloat(frameProdTimeValue);
 
@@ -789,7 +779,7 @@ public static class ExcelReportHelper
             Quantity = new ValidatedField<float?>(electricHumanCost, electricHumanCost.HasValue),
             CostPerUnit = new ValidatedField<float?>(electricMontageCost, electricMontageCost.HasValue),
             CommonCost = new ValidatedField<float?>(electricHumanCost * electricMontageCost, 
-                                                    electricHumanCost * electicalSettings?.ElectricalMontage != null)
+                                                    electricHumanCost * electricMontageCost != null)
         };
 
         //трудозатраты на общую проверку стенда
@@ -815,7 +805,7 @@ public static class ExcelReportHelper
                 commonCheckCost.HasValue),
             CommonCost = new ValidatedField<float?>(
                 (commonCheckHumanCost * commonCheckCost),
-                commonCheckHumanCost * humanCostSettings?.CommonCheckStand != null)
+                commonCheckHumanCost * commonCheckCost != null)
         };
 
         return new LaborStandsData
