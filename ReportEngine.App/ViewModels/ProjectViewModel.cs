@@ -3,6 +3,7 @@ using System.Diagnostics;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Commands.Providers;
+using ReportEngine.App.Extensions;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Model.StandsModel;
@@ -16,11 +17,13 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
+using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Domain.Store;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
@@ -37,7 +40,6 @@ public class ProjectViewModel : BaseViewModel
     private readonly ContainerService _containerService;
     private readonly IDialogService _dialogService;
     private readonly EntityStandClonerService _entityStandCloner;
-    private readonly GenericRepository _genericRepository;
     private readonly InitializeService _initializeService;
     private readonly INotificationService _notificationService;
     private readonly IProjectDataLoaderService _projectDataLoaderService;
@@ -47,7 +49,7 @@ public class ProjectViewModel : BaseViewModel
     private readonly IStandService _standService;
     private readonly UIValidatorService _uiValidatorService;
     private readonly UpdaterStandService _updaterStandService;
-    private readonly SemaphoreSlim _updateUiLock = new(1, 1);
+    private readonly ParametersStore _parametersStore;
 
     public ProjectViewModel(
         IProjectInfoRepository projectRepository,
@@ -62,11 +64,10 @@ public class ProjectViewModel : BaseViewModel
         UpdaterStandService updaterStandService,
         AdditionalEquipService additionalEquipService,
         UIValidatorService uiValidatorService,
-        GenericRepository genericRepository,
         InitializeService initializeService,
-        EntityStandClonerService entityStandCloner)
+        EntityStandClonerService entityStandCloner,
+        ParametersStore parametersStore)
     {
-        _genericRepository = genericRepository;
         _projectRepository = projectRepository;
         _dialogService = dialogService;
         _notificationService = notificationService;
@@ -81,7 +82,7 @@ public class ProjectViewModel : BaseViewModel
         _uiValidatorService = uiValidatorService;
         _initializeService = initializeService;
         _entityStandCloner = entityStandCloner;
-
+        _parametersStore = parametersStore;
         NewStand = new StandModel { Number = 1 };
 
         InitializeCommands();
@@ -89,7 +90,6 @@ public class ProjectViewModel : BaseViewModel
         InitializeGenericCommands();
     }
 
-    public FrameSettingsModel FrameSettings { get; set; } = new();
     public ObservableCollection<FormedFrame> AllAvailableFrames { get; set; } = new();
     public ObservableCollection<FormedDrainage> AllAvailableDrainages { get; set; } = new();
     public ObservableCollection<FormedElectricalComponent> AllAvailableElectricalComponents { get; set; } = new();
@@ -185,27 +185,26 @@ public class ProjectViewModel : BaseViewModel
 
     public async Task DisambledFrameUpdateAsync()
     {
-        await FrameSettings.LoadFrameDataFromIniAsync();
-
-        var materialOne = await _genericRepository.GetAsync<Other>(x => x.Name == FrameSettings.MaterialOne);
-        var materialTwo = await _genericRepository.GetAsync<Other>(x => x.Name == FrameSettings.MaterialTwo);
-
+        var materialFirstEquip = _parametersStore.GetParameterEquip(_parametersStore.GetCurrentParameter(CalculationParameterType.Equipments, "MaterialOne"));
+        var materialSecondEquip = _parametersStore.GetParameterEquip(_parametersStore.GetCurrentParameter(CalculationParameterType.Equipments, "MaterialTwo"));
+        var materialFirstQuantity= _parametersStore.GetParameterEquip(_parametersStore.GetCurrentParameter(CalculationParameterType.Equipments, "MaterialOneQuantity"));
+        var materialSecondQuantity = _parametersStore.GetParameterEquip(_parametersStore.GetCurrentParameter(CalculationParameterType.Equipments, "MaterialTwoQuantity"));
 
         var items = new List<AdditionalEquipPurpose>
         {
             new()
             {
-                Material = FrameSettings.MaterialOne,
-                Quantity = (float)FrameSettings.CountMaterialOne,
-                CostPerUnit = materialOne.Cost,
+                Material = materialFirstEquip.Parameter.Value,
+                Quantity = materialFirstQuantity.Parameter.Value.ToFloat(),
+                CostPerUnit = materialFirstEquip.Equipment.Cost,
                 Measure = "шт",
                 FormedAdditionalEquipId = CurrentProjectModel.SelectedStand.AdditionalEquipsInStand.FirstOrDefault().Id
             },
             new()
             {
-                Material = FrameSettings.MaterialTwo,
-                Quantity = (float)FrameSettings.CountMaterialTwo,
-                CostPerUnit = materialTwo.Cost,
+                Material = materialSecondEquip.Parameter.Value,
+                Quantity =  materialSecondQuantity.Parameter.Value.ToFloat(),
+                CostPerUnit = materialSecondEquip.Equipment.Cost,
                 Measure = "шт",
                 FormedAdditionalEquipId = CurrentProjectModel.SelectedStand.AdditionalEquipsInStand.FirstOrDefault().Id
             }

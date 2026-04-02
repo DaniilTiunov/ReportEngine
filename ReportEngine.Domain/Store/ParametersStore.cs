@@ -37,8 +37,6 @@ public class ParametersStore
         _allSettings[CalculationParameterType.Equipments] =
             await _calculationRepository.GetByKeysAsync(CalculationParameterType.Equipments, StoreKeys.EquipmentsSettingsRequired);
 
-
-
         //сворачиваем все параметры в список
         var allParameters = _allSettings
             .SelectMany(groupDictionary => groupDictionary.Value)
@@ -60,8 +58,6 @@ public class ParametersStore
         }      
     }
 
-
-
     public CalculationParameter GetCurrentParameter(CalculationParameterType type, string key)
     {
         if (_allSettings.TryGetValue(type, out var dict)
@@ -82,7 +78,7 @@ public class ParametersStore
             ($"Параметр '{parameter.Name}' не найден в словаре.");
     }
 
-    public ParameterWithEquip? this[CalculationParameter parameter] 
+    public ParameterWithEquip? this[CalculationParameter parameter]
         => GetParameterEquip(parameter);
 
     public CalculationParameter this[CalculationParameterType type, string key]

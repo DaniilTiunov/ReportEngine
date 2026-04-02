@@ -156,13 +156,13 @@
                             Width="110"
                             Height="36"
                             Margin="0,0,10,0"
-                            Command="{Binding ApplySettingsCommand}"
+                            Command="{Binding UpdateAllParametersCommand}"
                             Content="Сохранить" />
 
                         <Button
                             Width="110"
                             Height="36"
-                            Command="{Binding CloseCommand}"
+                            Click="CloseButton_Click"
                             Content="Отмена" />
                     </StackPanel>
                 </Grid>
