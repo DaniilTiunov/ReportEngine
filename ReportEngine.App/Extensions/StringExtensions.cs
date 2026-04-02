@@ -11,4 +11,9 @@ public static class StringExtensions
     {
         return Convert.ToDouble(value ?? string.Empty);
     }
+
+    public static float ToFloat(this string value)
+    {
+        return Convert.ToSingle(value ?? string.Empty);
+    }
 }

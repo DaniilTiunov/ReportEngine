@@ -16,10 +16,6 @@ public class ParametersStore
 
     private readonly Dictionary<CalculationParameter, ParameterWithEquip?> _parameterEquipsPairs = new();
 
-
-
-
-
     public ParametersStore(CalculationRepository calculationRepository)
     {
         _calculationRepository = calculationRepository;
@@ -42,8 +38,6 @@ public class ParametersStore
         _allSettings[CalculationParameterType.Equipments] =
             await _calculationRepository.GetByKeysAsync(CalculationParameterType.Equipments, StoreKeys.EquipmentsSettingsRequired);
 
-
-
         //сворачиваем все параметры в список
         var allParameters = _allSettings
             .SelectMany(groupDictionary => groupDictionary.Value)
@@ -63,10 +57,7 @@ public class ParametersStore
             _parameterEquipsPairs[parameter] =
                 await _calculationRepository.GetParameterWithEquipAsync(parameter.Id, parameter.EquipReferenceId.Value, parameter.EquipReferenceType.Value);
         }
-       // var test = await _calculationRepository.GetParameterWithEquipAsync(41, 16, EquipReferenceType.Others);
     }
-
-
 
     public CalculationParameter GetCurrentParameter(CalculationParameterType type, string key)
     {
@@ -88,7 +79,7 @@ public class ParametersStore
             ($"Параметр '{parameter.Name}' не найден в словаре.");
     }
 
-    public ParameterWithEquip? this[CalculationParameter parameter] 
+    public ParameterWithEquip? this[CalculationParameter parameter]
         => GetParameterEquip(parameter);
 
     public CalculationParameter this[CalculationParameterType type, string key]

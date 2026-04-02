@@ -9,5 +9,4 @@
         StandCost, // Стенды
         Equipments, // Комплектующие
     }
-
 }
