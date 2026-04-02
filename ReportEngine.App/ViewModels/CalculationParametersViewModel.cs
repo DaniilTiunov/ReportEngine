@@ -144,7 +144,12 @@ public class CalculationParametersViewModel : BaseViewModel
     {
         SelectedEquip = _dialogService.ShowAllSortamentsDialog();
 
+        if (SelectedEquip == null)
+            return;
+
         SelectedEquipment.Value = SelectedEquip.Name;
+        SelectedEquipment.EquipReferenceId = SelectedEquip.Id;
+        SelectedEquipment.EquipReferenceType = SelectedEquip.GetType().FullName;
 
         CollectionRefreshHelper.SafeRefreshCollection(EquipmentsParameters);
     }

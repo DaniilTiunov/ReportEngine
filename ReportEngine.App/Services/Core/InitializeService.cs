@@ -8,6 +8,8 @@ using ReportEngine.Domain.Entities.Frame;
 using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Store;
+using ReportEngine.Domain.Entities.CalculationParameters.Enums;
+using System.Runtime.InteropServices;
 
 namespace ReportEngine.App.Services.Core;
 

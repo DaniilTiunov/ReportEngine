@@ -32,5 +32,5 @@ public class CalculationParameter
 
     public int? EquipReferenceId { get; set; }
 
-    public EquipReferenceType? EquipReferenceType { get; set; }
+    public string? EquipReferenceType { get; set; }
 }

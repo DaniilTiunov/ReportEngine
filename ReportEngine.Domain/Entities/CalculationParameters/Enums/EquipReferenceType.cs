@@ -2,24 +2,24 @@
 
 public enum EquipReferenceType
 {
-    CarbonArmatures, // Таблица углеродистые трубы
-    HeaterArmatures, // Таблица жаропрочные трубы
-    StainlessArmatures, // Таблица нержавеющие трубы
-    BoxesBraces, // Таблицп крепление клеммных коробок
-    DrainageBraces, // Таблица Крепление дренажа
-    SensorsBraces, // Таблица Крепление датчиков
-    Drainages, // Таблица дренаж
-    CabelBoxes, // Таблица клемные коробки
-    CabelInputs, // Таблица клемные вводы
-    CabelProductions, // Таблица кабельная продукция
-    CabelProtections, // Таблица средства прокладки и защиты кабеля
-    Heaters, // Таблица обогрев
-    CarbonSockets, // Таблица тройники и КМЧ углеродистые
-    HeaterSockets, // Таблица тройники и КМЧ жаропрочные
-    StainlessSockets, // Таблица тройники и КМЧ нержавеющие
-    Containers, // Таблица упаковок
-    Others, // Таблица прочее
-    CarbonPipes, // Таблица трубы углеродистые
-    HeaterPipes, // Таблица трубы жаропрочные
-    StainlessPipes // Таблица трубы нержавеющие
+    CarbonArmature, // Таблица углеродистые трубы
+    HeaterArmature, // Таблица жаропрочные трубы
+    StainlessArmature, // Таблица нержавеющие трубы
+    BoxesBrace, // Таблицп крепление клеммных коробок
+    DrainageBrace, // Таблица Крепление дренажа
+    SensorBrace, // Таблица Крепление датчиков
+    Drainage, // Таблица дренаж
+    CabelBoxe, // Таблица клемные коробки
+    CabelInput, // Таблица клемные вводы
+    CabelProduction, // Таблица кабельная продукция
+    CabelProtection, // Таблица средства прокладки и защиты кабеля
+    Heater, // Таблица обогрев
+    CarbonSocket, // Таблица тройники и КМЧ углеродистые
+    HeaterSocket, // Таблица тройники и КМЧ жаропрочные
+    StainlessSocket, // Таблица тройники и КМЧ нержавеющие
+    Container, // Таблица упаковок
+    Other, // Таблица прочее
+    CarbonPipe, // Таблица трубы углеродистые
+    HeaterPipe, // Таблица трубы жаропрочные
+    StainlessPipe // Таблица трубы нержавеющие
 }
