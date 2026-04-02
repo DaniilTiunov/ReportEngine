@@ -194,7 +194,9 @@ public class CalculationRepository
                 existingParam.Unit = updatedParam.Unit;
                 existingParam.Description = updatedParam.Description;
                 existingParam.Key = updatedParam.Key;
-                existingParam.EquipReferenceId =  updatedParam.EquipReferenceId;
+                existingParam.EquipReferenceId = updatedParam.EquipReferenceId;
+                existingParam.EquipReferenceType = updatedParam.EquipReferenceType;
+
             }
         }
 
@@ -243,6 +245,50 @@ public class CalculationRepository
 
         existingGroup.Parameters.Remove(existingParameter);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<List<CalculationParameter>> GetAllParametersInGroupAsync(
+        CalculationParameterType groupType)
+    {
+        return await _context.Set<CalculationParameterGroup>()
+            .AsNoTracking()
+            .Where(group => group.SettingsType == groupType)
+            .SelectMany(group => group.Parameters)
+            .ToListAsync();
+    }
+
+    public async Task<Dictionary<string, CalculationParameter>> GetByKeysAsync(
+        CalculationParameterType type,
+        IEnumerable<string> keys)
+    {
+        return await _context.Set<CalculationParameter>()
+            .AsNoTracking()
+            .Where(x =>
+                x.CalculationParameterGroup.SettingsType == type &&
+                keys.Contains(x.Key))
+            .ToDictionaryAsync(x => x.Key);
+    }
+
+    public async Task<ParameterWithEquip?> GetParameterWithEquipAsync(
+        int parameterId,
+        int equipmentId,
+        string type)
+    {
+        var parameter =
+            await _context.CalculationParameters.FirstOrDefaultAsync(par => par.Id == parameterId);
+
+
+        var entityType = Type.GetType(type) ?? throw new ArgumentException($"Тип {type} не найден в сборке");
+
+        var table = _context.SetTable(entityType) ?? throw new ArgumentException($"Не удалось найти таблицу под тип {type}");
+
+        var equipment = await table.FirstOrDefaultAsync(equip => equip.Id == equipmentId);
+
+        return new ParameterWithEquip
+        {
+            Parameter = parameter,
+            Equipment = equipment
+        };
     }
 }
 

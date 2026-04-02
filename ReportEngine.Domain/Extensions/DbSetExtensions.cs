@@ -6,10 +6,11 @@ namespace ReportEngine.Domain.Extensions;
 
 public static class DbSetExtensions
 {
-    public static IQueryable<IBaseEquip> SetTable(this DbContext context, EquipReferenceType type)
+    public static IQueryable<IBaseEquip>? SetTable(this DbContext context, Type type)
     {
-        var propertyName = type.ToString();
-        var property = context.GetType().GetProperty(propertyName);
-        return property.GetValue(context) as IQueryable<IBaseEquip>;
+        var setMethod = context.GetType().GetMethod("Set",Type.EmptyTypes);
+        var genericMethod = setMethod?.MakeGenericMethod(type);
+        var setResult = genericMethod?.Invoke(context, null);
+        return setResult as IQueryable<IBaseEquip>;
     }
 }

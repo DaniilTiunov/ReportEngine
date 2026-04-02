@@ -11,8 +11,7 @@ public class ParametersStore
 {
     private readonly CalculationRepository _calculationRepository;
 
-    private readonly Dictionary<CalculationParameterType, Dictionary<string, CalculationParameter>> _allSettings
-        = new();
+    private readonly Dictionary<CalculationParameterType, Dictionary<string, CalculationParameter>> _allSettings = new();
 
     private readonly Dictionary<CalculationParameter, ParameterWithEquip?> _parameterEquipsPairs = new();
 
@@ -47,7 +46,7 @@ public class ParametersStore
         foreach (var parameter in allParameters)
         {
             //если нет ссылки на внешний компонент - пропускаем
-            if (!parameter.EquipReferenceId.HasValue || !parameter.EquipReferenceType.HasValue)
+            if (!parameter.EquipReferenceId.HasValue || string.IsNullOrEmpty(parameter.EquipReferenceType))
             {
                 _parameterEquipsPairs[parameter] = null;
                 continue;
@@ -55,8 +54,8 @@ public class ParametersStore
 
             //в противном случае запрашиваем инфу с базы
             _parameterEquipsPairs[parameter] =
-                await _calculationRepository.GetParameterWithEquipAsync(parameter.Id, parameter.EquipReferenceId.Value, parameter.EquipReferenceType.Value);
-        }
+                await _calculationRepository.GetParameterWithEquipAsync(parameter.Id, parameter.EquipReferenceId.Value, parameter.EquipReferenceType);
+        }      
     }
 
     public CalculationParameter GetCurrentParameter(CalculationParameterType type, string key)
