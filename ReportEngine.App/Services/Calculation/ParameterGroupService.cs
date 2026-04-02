@@ -37,6 +37,16 @@ public class ParameterGroupService
         _notificationService.ShowInfo("Параметры успешно обновлены!");
     }
 
+    public async Task UpdateAllparameters(List<CalculationParameter> updatedParameters)
+    {
+        if (updatedParameters == null)
+            throw new ArgumentNullException(nameof(updatedParameters));
+
+
+        await _calculationRepository.UpdateParametersAsync(updatedParameters);
+        _notificationService.ShowInfo("Все изменения сохранены!");
+    }
+
     public async Task AddNewParameterAsync(CalculationParameter parameter, CalculationParameterType parametersType)
     {
         await _calculationRepository.AddParameterToGroup(parameter, parametersType);

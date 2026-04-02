@@ -28,6 +28,7 @@ public class CalculationParametersViewModel : BaseViewModel
     private ObservableCollection<CalculationParameter> _humanCost = new();
     private ObservableCollection<CalculationParameter> _sandBlasCost = new();
     private ObservableCollection<CalculationParameter> _electricCost = new();
+    private ObservableCollection<CalculationParameter> _allParameters = new();
 
     public CalculationParametersViewModel(
         IServiceProvider serviceProvider,
@@ -100,6 +101,12 @@ public class CalculationParametersViewModel : BaseViewModel
         set => Set(ref _electricCost, value);
     }
 
+    public ObservableCollection<CalculationParameter> AllParameters
+    {
+        get => _allParameters;
+        set => Set(ref _allParameters, value);
+    }
+
     public ObservableCollection<string> SettingsItems { get; } = new()
     {
         "Комплектующие",
@@ -115,16 +122,19 @@ public class CalculationParametersViewModel : BaseViewModel
     public ICommand AddNewEquipParameterCommand { get; set; }
     public ICommand UpdateEquipParameterCommand { get; set; }
     public ICommand DeleteEquipParameterCommand { get; set; }
-
+    public ICommand UpdateAllParametersCommand { get; set; }
 
     private async void LoadParametersData()
     {
+        AllParameters.Clear();
         EquipmentsParameters = await _parameterGroupService.GetParametersAsync(CalculationParameterType.Equipments);
         StandsParameters = await _parameterGroupService.GetParametersAsync(CalculationParameterType.StandCost);
         HumanCost = await  _parameterGroupService.GetParametersAsync(CalculationParameterType.HumanCost);
         FrameCost = await _parameterGroupService.GetParametersAsync(CalculationParameterType.FrameCost);
         SandBlastCost = await _parameterGroupService.GetParametersAsync(CalculationParameterType.SandBlastCost);
         ElectricCost = await _parameterGroupService.GetParametersAsync(CalculationParameterType.ElectricCost);
+
+        ConcatAllParameters();
     }
 
     private void InitializeCommands()
@@ -132,7 +142,18 @@ public class CalculationParametersViewModel : BaseViewModel
         GetSelectedEquipCommand = new RelayCommand(GetSelectedEquipCommandExecuted, CanAllCommandsExecute);
         AddNewEquipParameterCommand = new RelayCommand(AddNewEquipParameterCommandExecuted, CanAllCommandsExecute);
         UpdateEquipParameterCommand = new RelayCommand(UpdateEquipParameterCommandExecuted, CanAllCommandsExecute);
+        UpdateAllParametersCommand =  new RelayCommand(UpdateAllParametersCommandExecuted, CanAllCommandsExecute);
         DeleteEquipParameterCommand = new RelayCommand(DeleteEquipParameterCommandExecuted, CanAllCommandsExecute);
+    }
+
+    private void ConcatAllParameters()
+    {
+        AllParameters = new ObservableCollection<CalculationParameter>(EquipmentsParameters
+            .Concat(StandsParameters)
+            .Concat(HumanCost)
+            .Concat(FrameCost)
+            .Concat(SandBlastCost)
+            .Concat(ElectricCost));
     }
 
     public bool CanAllCommandsExecute(object? e)
@@ -157,6 +178,11 @@ public class CalculationParametersViewModel : BaseViewModel
     public async void UpdateEquipParameterCommandExecuted(object? p)
     {
         await _parameterGroupService.UpdateGroupAsync(CalculationParameterType.Equipments, EquipmentsParameters);
+    }
+
+    public async void UpdateAllParametersCommandExecuted(object? p)
+    {
+        await _parameterGroupService.UpdateAllparameters(AllParameters.ToList());
     }
 
     public async void DeleteEquipParameterCommandExecuted(object? p)
