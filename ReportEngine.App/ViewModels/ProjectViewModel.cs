@@ -87,7 +87,6 @@ public class ProjectViewModel : BaseViewModel
         InitializeCommands();
         InitializeTime();
         InitializeGenericCommands();
-        InitializeStandsData();
     }
 
     public FrameSettingsModel FrameSettings { get; set; } = new();
@@ -101,7 +100,6 @@ public class ProjectViewModel : BaseViewModel
     public ProjectModel CurrentProjectModel { get; set; } = new();
     public ProjectCommandProvider ProjectCommandProvider { get; set; } = new();
     public MaterialLinesModel CurrentMaterials { get; set; } = new();
-    public StandSettingsData StandSettings { get; set; } = new();
     public int MaxObvNN => CurrentProjectModel?.SelectedStand?.ObvyazkiInStand.Max(obv => obv.NN) ?? 0;
 
     public int MaxStandNN =>
@@ -1124,11 +1122,6 @@ public class ProjectViewModel : BaseViewModel
     }
 
     #region Инициализация
-
-    public void InitializeStandsData()
-    {
-        StandSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
-    }
 
     public void InitializeTime()
     {
