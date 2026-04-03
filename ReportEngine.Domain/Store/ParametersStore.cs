@@ -55,7 +55,7 @@ public class ParametersStore
             //в противном случае запрашиваем инфу с базы
             _parameterEquipsPairs[parameter] =
                 await _calculationRepository.GetParameterWithEquipAsync(parameter.Id, parameter.EquipReferenceId.Value, parameter.EquipReferenceType);
-        }      
+        }
     }
 
     public CalculationParameter GetCurrentParameter(CalculationParameterType type, string key)
@@ -76,6 +76,15 @@ public class ParametersStore
 
         throw new KeyNotFoundException
             ($"Параметр '{parameter.Name}' не найден в словаре.");
+    }
+
+    public (CalculationParameter Parameter, ParameterWithEquip? Equip)
+        GetParameterData(CalculationParameterType type, string key)
+    {
+        var parameter = GetCurrentParameter(type, key);
+        var equip = GetParameterEquip(parameter);
+
+        return (parameter, equip);
     }
 
     public ParameterWithEquip? this[CalculationParameter parameter]
