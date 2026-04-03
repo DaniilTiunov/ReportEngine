@@ -75,10 +75,11 @@ public class CalculationRepository
         var parameter =
             await _context.CalculationParameters.FirstOrDefaultAsync(par => par.Id == parameterId);
 
+        var entityType = Type.GetType(type)
+                         ?? throw new ArgumentException($"Тип {type} не найден в сборке");
 
-        var entityType = Type.GetType(type) ?? throw new ArgumentException($"Тип {type} не найден в сборке");
-
-        var table = _context.SetTable(entityType) ?? throw new ArgumentException($"Не удалось найти таблицу под тип {type}");
+        var table = _context.SetTable(entityType)
+                    ?? throw new ArgumentException($"Не удалось найти таблицу под тип {type}");
 
         var equipment = await table.FirstOrDefaultAsync(equip => equip.Id == equipmentId);
 

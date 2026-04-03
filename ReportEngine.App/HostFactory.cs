@@ -239,7 +239,6 @@ public class HostFactory
         services.AddTransient<ConnectionSettings>();
         services.AddTransient<DockViewerView>();
         services.AddTransient<AllStandsView>();
-
         services.AddTransient<CalculationParametersWindow>();
         services.AddTransient<ComponentsView>();
         services.AddTransient<StandParametersView>();

@@ -29,11 +29,12 @@ public static class StartUp
 
             var parametersStore = host.Services.GetRequiredService<ParametersStore>();
 
-            parametersStore.LoadSettingsDataAsync();
+            parametersStore.LoadSettingsDataAsync().GetAwaiter().GetResult();
 
             app.MainWindow = mainWindow;
 
             mainWindow.Show();
+
             app.Run();
         }
         catch (Exception ex)
