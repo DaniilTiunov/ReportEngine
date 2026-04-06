@@ -40,11 +40,11 @@ public class CalculationService : ICalculationService
         project.Cost = standsCost + galvanizedCost;
 
         project.HumanCost = (project.Stands
-            .Sum(ObvHumanCostCalculation)
-            + CalculatePaintAndSandBlustHumanCost(project)
-            + ObvProdTime(project)
-            + ObvAllTest(project)
-            + CalculateFramesProductionHumanCost(project)).Round(2);
+                                 .Sum(ObvHumanCostCalculation)
+                             + CalculatePaintAndSandBlustHumanCost(project)
+                             + ObvProdTime(project)
+                             + ObvAllTest(project)
+                             + CalculateFramesProductionHumanCost(project)).Round(2);
 
         await _projectService.UpdateProjectAsync(project);
         await _projectService.UpdateStandEntity(project);
@@ -136,9 +136,9 @@ public class CalculationService : ICalculationService
 
         foreach (var group in groupedByType)
         {
-            int count = group.Count();
+            var count = group.Count();
 
-            string prodTimeKey = "";
+            var prodTimeKey = "";
 
             switch (group.Key)
             {
@@ -158,9 +158,9 @@ public class CalculationService : ICalculationService
                     continue;
             }
 
-            float tr = count *
-                       _parametersStore[CalculationParameterType.FrameCost, prodTimeKey]
-                           .Value.ToFloat();
+            var tr = count *
+                     _parametersStore[CalculationParameterType.FrameCost, prodTimeKey]
+                         .Value.ToFloat();
 
             humanCost += tr;
         }
@@ -170,13 +170,13 @@ public class CalculationService : ICalculationService
 
     private float? ObvProdTime(ProjectModel projectModel)
     {
-        float?  prodTime = 0;
+        float? prodTime = 0;
 
         var obvyazki = projectModel.Stands.SelectMany(stand => stand.ObvyazkiInStand);
 
         prodTime = (obvyazki.Sum(obv => obv.OtherLineCount) + 1) *
-                   _parametersStore[CalculationParameterType.HumanCost,"HoleDrillTime"].Value.ToFloat() +
-                   _parametersStore[CalculationParameterType.HumanCost,"ManifoldWeldTime"].Value.ToFloat();
+                   _parametersStore[CalculationParameterType.HumanCost, "HoleDrillTime"].Value.ToFloat() +
+                   _parametersStore[CalculationParameterType.HumanCost, "ManifoldWeldTime"].Value.ToFloat();
 
         return prodTime;
     }
@@ -187,7 +187,8 @@ public class CalculationService : ICalculationService
 
         var obvyazki = projectModel.Stands.SelectMany(stand => stand.ObvyazkiInStand);
 
-        allTest = obvyazki.Count() * _parametersStore[CalculationParameterType.HumanCost, "AllTestsTime"].Value.ToFloat();
+        allTest = obvyazki.Count() *
+                  _parametersStore[CalculationParameterType.HumanCost, "AllTestsTime"].Value.ToFloat();
 
         return allTest;
     }
@@ -201,9 +202,7 @@ public class CalculationService : ICalculationService
         var framesInStand = projectModel.Stands.SelectMany(stand => stand.FramesInStand);
 
         foreach (var frame in framesInStand)
-        {
             humanCost += CalculatePaintTime(framesCount, obvCount, frame.FrameType, projectModel.IsGalvanized);
-        }
 
         return humanCost;
     }
@@ -216,15 +215,16 @@ public class CalculationService : ICalculationService
             return 0;
 
         // Время покраски всех рам
-        float tcolr = frameCount * _parametersStore[CalculationParameterType.FrameCost, "FramePaintTime"].Value.ToFloat();
+        var tcolr = frameCount * _parametersStore[CalculationParameterType.FrameCost, "FramePaintTime"].Value.ToFloat();
         // Время покраски всех обвязок
-        float tcolob = obvCount * _parametersStore[CalculationParameterType.FrameCost,"PipeworkPaintTime"].Value.ToFloat();
+        var tcolob = obvCount *
+                     _parametersStore[CalculationParameterType.FrameCost, "PipeworkPaintTime"].Value.ToFloat();
         // Tprep = Nr * время подготовки 1 рамы
-        float tprep = frameCount * _parametersStore[CalculationParameterType.FrameCost,"FramePrepTime"].Value.ToFloat();
+        var tprep = frameCount * _parametersStore[CalculationParameterType.FrameCost, "FramePrepTime"].Value.ToFloat();
         // Tall = время подготовки всего оборудования
-        float tall = _parametersStore[CalculationParameterType.StandCost,"EquipmentPrepTime"].Value.ToFloat();
+        var tall = _parametersStore[CalculationParameterType.StandCost, "EquipmentPrepTime"].Value.ToFloat();
         // Tsand = фиксированное время пескоструя
-        float tsand = _parametersStore[CalculationParameterType.SandBlastCost,"SandblastingTime"].Value.ToFloat();
+        var tsand = _parametersStore[CalculationParameterType.SandBlastCost, "SandblastingTime"].Value.ToFloat();
         // Итоговое время:
         // покраска + подготовка + пескоструй
         return tcolr + tcolob + tprep + tall + tsand;

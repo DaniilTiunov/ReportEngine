@@ -8,8 +8,6 @@ using ReportEngine.Domain.Entities.Frame;
 using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Store;
-using ReportEngine.Domain.Entities.CalculationParameters.Enums;
-using System.Runtime.InteropServices;
 
 namespace ReportEngine.App.Services.Core;
 
@@ -18,7 +16,7 @@ public class InitializeService
     private readonly GenericRepository _genericRepository;
     private readonly ParametersStore _parametersStore;
 
-    public InitializeService(GenericRepository genericRepository,ParametersStore parametersStore)
+    public InitializeService(GenericRepository genericRepository, ParametersStore parametersStore)
     {
         _genericRepository = genericRepository;
         _parametersStore = parametersStore;
@@ -61,13 +59,6 @@ public class InitializeService
     public async Task InitializeAdditionalEquip(StandModel stand, StandSettingsModel settings)
     {
         const float nameplatesPerStand = 1.0f;
-
-
-        
-        
-
-
-
 
 
         var bracketUniversalEntityType =

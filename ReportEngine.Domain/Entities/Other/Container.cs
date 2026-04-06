@@ -9,6 +9,7 @@ public class Container : IBaseEquip
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
+
     public float? Weight { get; set; }
     public int? ExportDays { get; set; }
     public string? Measure { get; set; }

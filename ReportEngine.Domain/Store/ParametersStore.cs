@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using ReportEngine.Domain.DTO;
-using ReportEngine.Domain.Entities.BaseEntities.Interface;
+﻿using ReportEngine.Domain.DTO;
 using ReportEngine.Domain.Entities.CalculationParameters;
 using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 using ReportEngine.Domain.Repositories;
@@ -9,9 +7,10 @@ namespace ReportEngine.Domain.Store;
 
 public class ParametersStore
 {
-    private readonly CalculationRepository _calculationRepository;
+    private readonly Dictionary<CalculationParameterType, Dictionary<string, CalculationParameter>>
+        _allSettings = new();
 
-    private readonly Dictionary<CalculationParameterType, Dictionary<string, CalculationParameter>> _allSettings = new();
+    private readonly CalculationRepository _calculationRepository;
 
     private readonly Dictionary<CalculationParameter, ParameterWithEquip?> _parameterEquipsPairs = new();
 
@@ -20,22 +19,33 @@ public class ParametersStore
         _calculationRepository = calculationRepository;
     }
 
+    public ParameterWithEquip? this[CalculationParameter parameter]
+        => GetParameterEquip(parameter);
+
+    public CalculationParameter this[CalculationParameterType type, string key]
+        => GetCurrentParameter(type, key);
+
     public async Task LoadSettingsDataAsync()
     {
         _allSettings.Clear();
 
         _allSettings[CalculationParameterType.ElectricCost] =
-            await _calculationRepository.GetByKeysAsync(CalculationParameterType.ElectricCost, StoreKeys.ElectricRequired);
+            await _calculationRepository.GetByKeysAsync(CalculationParameterType.ElectricCost,
+                StoreKeys.ElectricRequired);
         _allSettings[CalculationParameterType.StandCost] =
             await _calculationRepository.GetByKeysAsync(CalculationParameterType.StandCost, StoreKeys.StandsRequired);
         _allSettings[CalculationParameterType.HumanCost] =
-            await _calculationRepository.GetByKeysAsync(CalculationParameterType.HumanCost, StoreKeys.HumanCostRequired);
+            await _calculationRepository.GetByKeysAsync(CalculationParameterType.HumanCost,
+                StoreKeys.HumanCostRequired);
         _allSettings[CalculationParameterType.FrameCost] =
-            await _calculationRepository.GetByKeysAsync(CalculationParameterType.FrameCost, StoreKeys.FramesSettingsRequired);
+            await _calculationRepository.GetByKeysAsync(CalculationParameterType.FrameCost,
+                StoreKeys.FramesSettingsRequired);
         _allSettings[CalculationParameterType.SandBlastCost] =
-            await _calculationRepository.GetByKeysAsync(CalculationParameterType.SandBlastCost, StoreKeys.SandBlastSettingsRequired);
+            await _calculationRepository.GetByKeysAsync(CalculationParameterType.SandBlastCost,
+                StoreKeys.SandBlastSettingsRequired);
         _allSettings[CalculationParameterType.Equipments] =
-            await _calculationRepository.GetByKeysAsync(CalculationParameterType.Equipments, StoreKeys.EquipmentsSettingsRequired);
+            await _calculationRepository.GetByKeysAsync(CalculationParameterType.Equipments,
+                StoreKeys.EquipmentsSettingsRequired);
 
         //сворачиваем все параметры в список
         var allParameters = _allSettings
@@ -54,7 +64,8 @@ public class ParametersStore
 
             //в противном случае запрашиваем инфу с базы
             _parameterEquipsPairs[parameter] =
-                await _calculationRepository.GetParameterWithEquipAsync(parameter.Id, parameter.EquipReferenceId.Value, parameter.EquipReferenceType);
+                await _calculationRepository.GetParameterWithEquipAsync(parameter.Id, parameter.EquipReferenceId.Value,
+                    parameter.EquipReferenceType);
         }
     }
 
@@ -71,7 +82,7 @@ public class ParametersStore
 
     public ParameterWithEquip? GetParameterEquip(CalculationParameter parameter)
     {
-        if (_parameterEquipsPairs.TryGetValue(parameter,out var resultParameterEquip))
+        if (_parameterEquipsPairs.TryGetValue(parameter, out var resultParameterEquip))
             return resultParameterEquip;
 
         throw new KeyNotFoundException
@@ -86,10 +97,4 @@ public class ParametersStore
 
         return (parameter, equip);
     }
-
-    public ParameterWithEquip? this[CalculationParameter parameter]
-        => GetParameterEquip(parameter);
-
-    public CalculationParameter this[CalculationParameterType type, string key]
-        => GetCurrentParameter(type, key);
 }

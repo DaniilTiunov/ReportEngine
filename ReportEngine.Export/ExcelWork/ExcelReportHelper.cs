@@ -1,11 +1,7 @@
 ﻿using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
-using ReportEngine.Shared.Config.IniHelpers;
-using ReportEngine.Domain.Entities.CalculationParameters;
-using System.Runtime.InteropServices;
-using ReportEngine.Domain.Entities.CalculationParameters.Enums;
-
 
 namespace ReportEngine.Export.ExcelWork;
 
@@ -492,7 +488,7 @@ public static class ExcelReportHelper
     }
 
     //создаем инфу о трудозатратах
-    public static LaborStandsData GenerateLaborData(IEnumerable<Stand> stands,ParametersStore store)
+    public static LaborStandsData GenerateLaborData(IEnumerable<Stand> stands, ParametersStore store)
     {
         var frameProdTimeValue = store[CalculationParameterType.FrameCost, "FrameProdTime"].Value;
         var frameProdTime = TryToParseFloat(frameProdTimeValue);
@@ -515,7 +511,7 @@ public static class ExcelReportHelper
                 frameProductionHumanCostSum.HasValue),
             CostPerUnit = new ValidatedField<float?>(frameProdCost,
                 frameProdCost.HasValue),
-            CommonCost = new ValidatedField<float?>((frameProductionHumanCostSum * frameProdCost),
+            CommonCost = new ValidatedField<float?>(frameProductionHumanCostSum * frameProdCost,
                 frameProductionHumanCostSum * frameProdCost != null)
         };
 
@@ -577,7 +573,6 @@ public static class ExcelReportHelper
             float? collectorProdHumanCostSum = null;
 
 
-
             collectorProdHumanCostSum = standsWithCollector
                 .Select(stand => stand.ObvyazkiInStand.Sum(obv => obv.OtherLineCount) + 1)
                 .Select(standHolesCount => oneDrillTime * standHolesCount)
@@ -598,7 +593,7 @@ public static class ExcelReportHelper
                 CostPerUnit = new ValidatedField<float?>(collectorProdCost,
                     collectorProdCost.HasValue),
 
-                CommonCost = new ValidatedField<float?>((collectorProdHumanCostSum * collectorProdCost),
+                CommonCost = new ValidatedField<float?>(collectorProdHumanCostSum * collectorProdCost,
                     collectorProdHumanCostSum * collectorProdCost != null)
             };
         }
@@ -624,7 +619,7 @@ public static class ExcelReportHelper
             Unit = new ValidatedField<string?>("чел/час", true),
             Quantity = new ValidatedField<float?>(testsHumanCostSum, testsHumanCostSum.HasValue),
             CostPerUnit = new ValidatedField<float?>(testsCost, testsCost.HasValue),
-            CommonCost = new ValidatedField<float?>((testsHumanCostSum * testsCost),
+            CommonCost = new ValidatedField<float?>(testsHumanCostSum * testsCost,
                 testsHumanCostSum * testsCost != null)
         };
 
@@ -647,7 +642,7 @@ public static class ExcelReportHelper
             Unit = new ValidatedField<string?>("чел/час", true),
             Quantity = new ValidatedField<float?>(sandBlastingHumanCostSum, sandBlastingHumanCostSum.HasValue),
             CostPerUnit = new ValidatedField<float?>(sandBlastCost, sandBlastCost.HasValue),
-            CommonCost = new ValidatedField<float?>((sandBlastingHumanCostSum * sandBlastCost),
+            CommonCost = new ValidatedField<float?>(sandBlastingHumanCostSum * sandBlastCost,
                 sandBlastingHumanCostSum * sandBlastCost != null)
         };
 
@@ -689,10 +684,9 @@ public static class ExcelReportHelper
             Unit = new ValidatedField<string?>("чел/час", true),
             Quantity = new ValidatedField<float?>(paintingHumanCostSum, paintingHumanCostSum.HasValue),
             CostPerUnit = new ValidatedField<float?>(paintFrameCost, paintFrameCost.HasValue),
-            CommonCost = new ValidatedField<float?>((paintingHumanCostSum * paintFrameCost),
+            CommonCost = new ValidatedField<float?>(paintingHumanCostSum * paintFrameCost,
                 paintingHumanCostSum * paintFrameCost != null)
         };
-
 
 
         //трудозатраты на электромонтаж
@@ -778,8 +772,8 @@ public static class ExcelReportHelper
             Unit = new ValidatedField<string?>("чел/час", true),
             Quantity = new ValidatedField<float?>(electricHumanCost, electricHumanCost.HasValue),
             CostPerUnit = new ValidatedField<float?>(electricMontageCost, electricMontageCost.HasValue),
-            CommonCost = new ValidatedField<float?>(electricHumanCost * electricMontageCost, 
-                                                    electricHumanCost * electricMontageCost != null)
+            CommonCost = new ValidatedField<float?>(electricHumanCost * electricMontageCost,
+                electricHumanCost * electricMontageCost != null)
         };
 
         //трудозатраты на общую проверку стенда
@@ -804,7 +798,7 @@ public static class ExcelReportHelper
             CostPerUnit = new ValidatedField<float?>(commonCheckCost,
                 commonCheckCost.HasValue),
             CommonCost = new ValidatedField<float?>(
-                (commonCheckHumanCost * commonCheckCost),
+                commonCheckHumanCost * commonCheckCost,
                 commonCheckHumanCost * commonCheckCost != null)
         };
 

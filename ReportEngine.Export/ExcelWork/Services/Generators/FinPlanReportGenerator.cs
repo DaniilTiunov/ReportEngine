@@ -12,8 +12,8 @@ namespace ReportEngine.Export.ExcelWork.Services.Generators;
 public class FinPlanReportGenerator : IReportGenerator
 {
     private readonly IContainerRepository _containerRepository;
-    private readonly IProjectInfoRepository _projectInfoRepository;
     private readonly ParametersStore _parametersStore;
+    private readonly IProjectInfoRepository _projectInfoRepository;
 
     public FinPlanReportGenerator(
         IProjectInfoRepository projectInfoRepository,

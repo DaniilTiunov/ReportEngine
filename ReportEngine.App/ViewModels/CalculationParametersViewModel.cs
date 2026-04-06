@@ -6,29 +6,28 @@ using ReportEngine.App.Commands;
 using ReportEngine.App.Services.Calculation;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Views.Settings.CalculationParameters.Controls;
-using ReportEngine.Domain.Entities.CalculationParameters;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
+using ReportEngine.Domain.Entities.CalculationParameters;
 using ReportEngine.Domain.Entities.CalculationParameters.Enums;
-
 
 namespace ReportEngine.App.ViewModels;
 
 public class CalculationParametersViewModel : BaseViewModel
 {
     private readonly IDialogService _dialogService;
-    private readonly IServiceProvider _serviceProvider;
     private readonly ParameterGroupService _parameterGroupService;
-    private string? _selectedSetting;
+    private readonly IServiceProvider _serviceProvider;
+    private ObservableCollection<CalculationParameter> _allParameters = new();
     private object _currentView;
-    private CalculationParameter _selectedEquipment = new();
+    private ObservableCollection<CalculationParameter> _electricCost = new();
 
     private ObservableCollection<CalculationParameter> _equipmentsParameters = new();
-    private ObservableCollection<CalculationParameter> _standParameters = new();
     private ObservableCollection<CalculationParameter> _frameCost = new();
     private ObservableCollection<CalculationParameter> _humanCost = new();
     private ObservableCollection<CalculationParameter> _sandBlasCost = new();
-    private ObservableCollection<CalculationParameter> _electricCost = new();
-    private ObservableCollection<CalculationParameter> _allParameters = new();
+    private CalculationParameter _selectedEquipment = new();
+    private string? _selectedSetting;
+    private ObservableCollection<CalculationParameter> _standParameters = new();
 
     public CalculationParametersViewModel(
         IServiceProvider serviceProvider,
@@ -129,7 +128,7 @@ public class CalculationParametersViewModel : BaseViewModel
         AllParameters.Clear();
         EquipmentsParameters = await _parameterGroupService.GetParametersAsync(CalculationParameterType.Equipments);
         StandsParameters = await _parameterGroupService.GetParametersAsync(CalculationParameterType.StandCost);
-        HumanCost = await  _parameterGroupService.GetParametersAsync(CalculationParameterType.HumanCost);
+        HumanCost = await _parameterGroupService.GetParametersAsync(CalculationParameterType.HumanCost);
         FrameCost = await _parameterGroupService.GetParametersAsync(CalculationParameterType.FrameCost);
         SandBlastCost = await _parameterGroupService.GetParametersAsync(CalculationParameterType.SandBlastCost);
         ElectricCost = await _parameterGroupService.GetParametersAsync(CalculationParameterType.ElectricCost);
@@ -142,7 +141,7 @@ public class CalculationParametersViewModel : BaseViewModel
         GetSelectedEquipCommand = new RelayCommand(GetSelectedEquipCommandExecuted, CanAllCommandsExecute);
         AddNewEquipParameterCommand = new RelayCommand(AddNewEquipParameterCommandExecuted, CanAllCommandsExecute);
         UpdateEquipParameterCommand = new RelayCommand(UpdateEquipParameterCommandExecuted, CanAllCommandsExecute);
-        UpdateAllParametersCommand =  new RelayCommand(UpdateAllParametersCommandExecuted, CanAllCommandsExecute);
+        UpdateAllParametersCommand = new RelayCommand(UpdateAllParametersCommandExecuted, CanAllCommandsExecute);
         DeleteEquipParameterCommand = new RelayCommand(DeleteEquipParameterCommandExecuted, CanAllCommandsExecute);
     }
 
@@ -192,7 +191,8 @@ public class CalculationParametersViewModel : BaseViewModel
 
     public async void DeleteEquipParameterCommandExecuted(object? p)
     {
-        await _parameterGroupService.RemoveParameterFromGroupAsync(SelectedEquipment, CalculationParameterType.Equipments);
+        await _parameterGroupService.RemoveParameterFromGroupAsync(SelectedEquipment,
+            CalculationParameterType.Equipments);
         EquipmentsParameters.Remove(SelectedEquipment);
     }
 

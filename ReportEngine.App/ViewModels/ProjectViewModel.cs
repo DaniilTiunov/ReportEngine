@@ -5,7 +5,6 @@ using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Commands.Providers;
 using ReportEngine.App.Extensions;
 using ReportEngine.App.Model;
-using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
 using ReportEngine.App.Services.Calculation;
@@ -21,15 +20,11 @@ using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Domain.Entities.Pipes;
-using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Store;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
-using ReportEngine.Shared.Config.IniHelpers;
-using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
-using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -42,6 +37,7 @@ public class ProjectViewModel : BaseViewModel
     private readonly EntityStandClonerService _entityStandCloner;
     private readonly InitializeService _initializeService;
     private readonly INotificationService _notificationService;
+    private readonly ParametersStore _parametersStore;
     private readonly IProjectDataLoaderService _projectDataLoaderService;
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IProjectService _projectService;
@@ -49,7 +45,6 @@ public class ProjectViewModel : BaseViewModel
     private readonly IStandService _standService;
     private readonly UIValidatorService _uiValidatorService;
     private readonly UpdaterStandService _updaterStandService;
-    private readonly ParametersStore _parametersStore;
 
     public ProjectViewModel(
         IProjectInfoRepository projectRepository,
@@ -185,10 +180,16 @@ public class ProjectViewModel : BaseViewModel
 
     public async Task DisambledFrameUpdateAsync()
     {
-        var materialFirstEquip = _parametersStore.GetParameterEquip(_parametersStore.GetCurrentParameter(CalculationParameterType.Equipments, "MaterialOne"));
-        var materialSecondEquip = _parametersStore.GetParameterEquip(_parametersStore.GetCurrentParameter(CalculationParameterType.Equipments, "MaterialTwo"));
-        var materialFirstQuantity= _parametersStore.GetParameterEquip(_parametersStore.GetCurrentParameter(CalculationParameterType.Equipments, "MaterialOneQuantity"));
-        var materialSecondQuantity = _parametersStore.GetParameterEquip(_parametersStore.GetCurrentParameter(CalculationParameterType.Equipments, "MaterialTwoQuantity"));
+        var materialFirstEquip =
+            _parametersStore.GetParameterEquip(
+                _parametersStore.GetCurrentParameter(CalculationParameterType.Equipments, "MaterialOne"));
+        var materialSecondEquip =
+            _parametersStore.GetParameterEquip(
+                _parametersStore.GetCurrentParameter(CalculationParameterType.Equipments, "MaterialTwo"));
+        var materialFirstQuantity = _parametersStore.GetParameterEquip(
+            _parametersStore.GetCurrentParameter(CalculationParameterType.Equipments, "MaterialOneQuantity"));
+        var materialSecondQuantity = _parametersStore.GetParameterEquip(
+            _parametersStore.GetCurrentParameter(CalculationParameterType.Equipments, "MaterialTwoQuantity"));
 
         var items = new List<AdditionalEquipPurpose>
         {
@@ -203,7 +204,7 @@ public class ProjectViewModel : BaseViewModel
             new()
             {
                 Material = materialSecondEquip.Parameter.Value,
-                Quantity =  materialSecondQuantity.Parameter.Value.ToFloat(),
+                Quantity = materialSecondQuantity.Parameter.Value.ToFloat(),
                 CostPerUnit = materialSecondEquip.Equipment.Cost,
                 Measure = "шт",
                 FormedAdditionalEquipId = CurrentProjectModel.SelectedStand.AdditionalEquipsInStand.FirstOrDefault().Id

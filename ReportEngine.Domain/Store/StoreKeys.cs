@@ -13,7 +13,7 @@ public static class StoreKeys
     {
         "ElectricalInstallCost",
         "WireInstallTime",
-        "CableInstallTime",
+        "CableInstallTime"
     };
 
     public static readonly string[] HumanCostRequired =
