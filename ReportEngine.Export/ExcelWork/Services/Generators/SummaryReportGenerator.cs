@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel;
+﻿using System.Diagnostics;
+using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Store;
@@ -7,15 +8,14 @@ using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
 using ReportEngine.Shared.Helpers;
-using System.Diagnostics;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
 public class SummaryReportGenerator : IReportGenerator
 {
     private readonly IContainerRepository _containerRepository;
-    private readonly IProjectInfoRepository _projectInfoRepository;
     private readonly ParametersStore _parametersStore;
+    private readonly IProjectInfoRepository _projectInfoRepository;
 
     public SummaryReportGenerator(IProjectInfoRepository projectInfoRepository,
         IContainerRepository containerRepository,
@@ -23,7 +23,7 @@ public class SummaryReportGenerator : IReportGenerator
     {
         _projectInfoRepository = projectInfoRepository;
         _containerRepository = containerRepository;
-        _parametersStore = parametersStore; 
+        _parametersStore = parametersStore;
     }
 
     public ReportType Type => ReportType.SummaryReport;

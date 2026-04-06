@@ -1,9 +1,6 @@
 ﻿using System.Collections.ObjectModel;
-using Mapster;
 using ReportEngine.App.Extensions;
-using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Services.Interfaces;
-using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities.CalculationParameters;
 using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 using ReportEngine.Domain.Repositories;
@@ -35,7 +32,8 @@ public class ParameterGroupService
         return entity.Parameters.ToObservable();
     }
 
-    public async Task UpdateGroupAsync(CalculationParameterType parametersType, IEnumerable<CalculationParameter> updatedParameters)
+    public async Task UpdateGroupAsync(CalculationParameterType parametersType,
+        IEnumerable<CalculationParameter> updatedParameters)
     {
         await _calculationRepository.UpdateParametersInGroup(parametersType, updatedParameters);
         _notificationService.ShowInfo("Параметры успешно обновлены!");

@@ -238,8 +238,8 @@
         </Page>
     </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /Y /E /I &quot;$(TargetDir)*&quot; &quot;\\S32fs.gk-etalon.local\GrandVera1\00 ОКП АСУ\01 Группа разработки ПО\Тиунов\Приложение Стенды КИП&quot;" />
-  </Target>
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Exec Command="xcopy /Y /E /I &quot;$(TargetDir)*&quot; &quot;\\S32fs.gk-etalon.local\GrandVera1\00 ОКП АСУ\01 Группа разработки ПО\Тиунов\Приложение Стенды КИП&quot;"/>
+    </Target>
 
 </Project>

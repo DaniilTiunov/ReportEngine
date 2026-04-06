@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.DTO;
-using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.CalculationParameters;
 using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 using ReportEngine.Domain.Extensions;
@@ -18,7 +17,7 @@ public class CalculationRepository
     }
 
     /// <summary>
-    /// Асинхронное получение всех групп вместе с параметрами
+    ///     Асинхронное получение всех групп вместе с параметрами
     /// </summary>
     /// <returns>Коллекция групп, включая параметры внутри</returns>
     public async Task<IEnumerable<CalculationParameterGroup>> GetAllGroupsAsync()
@@ -30,19 +29,19 @@ public class CalculationRepository
     }
 
     /// <summary>
-    /// Асинхронное получение группы по типу вместе с параметрами
+    ///     Асинхронное получение группы по типу вместе с параметрами
     /// </summary>
     /// <returns>Группа, включая параметры внутри</returns>
     public async Task<CalculationParameterGroup?> GetGroupByTypeAsync(CalculationParameterType type)
     {
         return await _context.Set<CalculationParameterGroup>()
-           .AsNoTracking()
-           .Include(group => group.Parameters)
-           .FirstOrDefaultAsync(group => group.SettingsType == type);
+            .AsNoTracking()
+            .Include(group => group.Parameters)
+            .FirstOrDefaultAsync(group => group.SettingsType == type);
     }
 
     /// <summary>
-    /// Асинхронное получение коллекции параметров по типу группы
+    ///     Асинхронное получение коллекции параметров по типу группы
     /// </summary>
     /// <returns>Коллекция параметров вместе с группой</returns>
     public async Task<List<CalculationParameter>> GetAllParametersInGroupAsync(
@@ -92,11 +91,11 @@ public class CalculationRepository
 
     public async Task<CalculationParameterGroup> AddGroupAsync(CalculationParameterGroup group)
     {
-        var newEntity = new CalculationParameterGroup()
+        var newEntity = new CalculationParameterGroup
         {
             Id = 0,
             Name = group.Name,
-            SettingsType = group.SettingsType,
+            SettingsType = group.SettingsType
         };
 
         var result = await _context.Set<CalculationParameterGroup>().AddAsync(newEntity);
@@ -110,10 +109,7 @@ public class CalculationRepository
             .FirstOrDefaultAsync(group => group.SettingsType == groupType);
 
 
-        if (existingGroup == null)
-        {
-            throw new ArgumentException("Группы указанного типа не существует");
-        }
+        if (existingGroup == null) throw new ArgumentException("Группы указанного типа не существует");
 
         parameter.ParameterGroupId = existingGroup.Id;
         existingGroup.Parameters.Add(parameter);
@@ -124,19 +120,15 @@ public class CalculationRepository
     public async Task UpdateGroupAsync(CalculationParameterGroup group)
     {
         var existingGroup = await _context
-              .Set<CalculationParameterGroup>()
-              .AsNoTracking()
-              .FirstOrDefaultAsync(gr => gr.SettingsType == group.SettingsType);
+            .Set<CalculationParameterGroup>()
+            .AsNoTracking()
+            .FirstOrDefaultAsync(gr => gr.SettingsType == group.SettingsType);
 
 
-        if (existingGroup == null)
-        {
-            throw new ArgumentException("Группы указанного типа не существует");
-        }
+        if (existingGroup == null) throw new ArgumentException("Группы указанного типа не существует");
 
         _context.Set<CalculationParameterGroup>().Update(existingGroup);
         await _context.SaveChangesAsync();
-
     }
 
     public async Task UpdateParametersAsync(List<CalculationParameter> uiParameters)
@@ -200,7 +192,6 @@ public class CalculationRepository
                 existingParam.Key = updatedParam.Key;
                 existingParam.EquipReferenceId = updatedParam.EquipReferenceId;
                 existingParam.EquipReferenceType = updatedParam.EquipReferenceType;
-
             }
         }
 
@@ -210,19 +201,15 @@ public class CalculationRepository
     public async Task DeleteGroupAsync(CalculationParameterGroup group)
     {
         var existingGroup = await _context
-              .Set<CalculationParameterGroup>()
-              .AsNoTracking()
-              .FirstOrDefaultAsync(gr => gr.SettingsType == group.SettingsType);
+            .Set<CalculationParameterGroup>()
+            .AsNoTracking()
+            .FirstOrDefaultAsync(gr => gr.SettingsType == group.SettingsType);
 
 
-        if (existingGroup == null)
-        {
-            throw new ArgumentException("Группы указанного типа не существует");
-        }
+        if (existingGroup == null) throw new ArgumentException("Группы указанного типа не существует");
 
         _context.Set<CalculationParameterGroup>().Remove(existingGroup);
         await _context.SaveChangesAsync();
-
     }
 
     public async Task DeleteParameterFromGroup(CalculationParameter parameter, CalculationParameterType groupType)
@@ -232,23 +219,16 @@ public class CalculationRepository
             .FirstOrDefaultAsync(group => group.SettingsType == groupType);
 
 
-        if (existingGroup == null)
-        {
-            throw new ArgumentException("Группы указанного типа не существует");
-        }
+        if (existingGroup == null) throw new ArgumentException("Группы указанного типа не существует");
 
         var existingParameter = await _context
             .Set<CalculationParameter>()
             .FirstOrDefaultAsync(param =>
                 param.Name == parameter.Name && param.ParameterGroupId == parameter.ParameterGroupId);
 
-        if (existingParameter == null)
-        {
-            throw new ArgumentException("Указанный параметр не существует внутри группы");
-        }
+        if (existingParameter == null) throw new ArgumentException("Указанный параметр не существует внутри группы");
 
         existingGroup.Parameters.Remove(existingParameter);
         await _context.SaveChangesAsync();
     }
 }
-

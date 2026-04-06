@@ -1,7 +1,4 @@
-﻿using ReportEngine.Domain.Entities.BaseEntities;
-using ReportEngine.Domain.Entities.BaseEntities.Interface;
-using System.ComponentModel.DataAnnotations.Schema;
-using ReportEngine.Domain.Entities.CalculationParameters.Enums;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReportEngine.Domain.Entities.CalculationParameters;
 
