@@ -60,70 +60,62 @@ public class InitializeService
     {
         const float nameplatesPerStand = 1.0f;
 
+        var bracketUniversalParameter =_parametersStore[CalculationParameterType.Equipments, "Clamps"];
+        var bracketUniversal = _parametersStore[bracketUniversalParameter]?.Equipment;
+        
+        var bracketDifParameter = _parametersStore[CalculationParameterType.Equipments, "DiffPressureBracket"];
+        var bracketDif = _parametersStore[bracketDifParameter]?.Equipment;
 
-        var bracketUniversalEntityType =
-            _genericRepository.GetEntityTypeByName(settings.BracketUniversalEntityName ?? "") ?? typeof(SensorBrace);
-        var bracketUniversal =
-            await _genericRepository.GetByNameAsync(bracketUniversalEntityType, "Name", settings.BracketUniversal);
+        var bracketAbsParameter = _parametersStore[CalculationParameterType.Equipments, "AbsPressureBracket"];
+        var bracketAbs = _parametersStore[bracketAbsParameter]?.Equipment;
 
-        var bracketDifEntityType = _genericRepository.GetEntityTypeByName(settings.BracketForDifEntityName ?? "") ??
-                                   typeof(SensorBrace);
-        var bracketDif = await _genericRepository.GetByNameAsync(bracketDifEntityType, "Name", settings.BracketForDif);
+        var steelChannelParameter = _parametersStore[CalculationParameterType.Equipments, "ChannelBar"];
+        var steelChannel = _parametersStore[steelChannelParameter]?.Equipment;
+ 
+        var clampParameter = _parametersStore[CalculationParameterType.Equipments, "Clamps"];
+        var clamp = _parametersStore[clampParameter]?.Equipment;
 
-        var bracketAbsEntityType = _genericRepository.GetEntityTypeByName(settings.BracketForAbsEntityName ?? "") ??
-                                   typeof(SensorBrace);
-        var bracketAbs = await _genericRepository.GetByNameAsync(bracketAbsEntityType, "Name", settings.BracketForAbs);
+        var nameTableParameter = _parametersStore[CalculationParameterType.Equipments, "LabelPlate"];
+        var nameTable = _parametersStore[nameTableParameter]?.Equipment;
 
-        var steelChannelEntityType = _genericRepository.GetEntityTypeByName(settings.SteelChannelEntityName ?? "") ??
-                                     typeof(FrameRoll);
-        var steelChannel =
-            await _genericRepository.GetByNameAsync(steelChannelEntityType, "Name", settings.SteelChannel);
-
-        var clampEntityType = _genericRepository.GetEntityTypeByName(settings.ClampEntityName ?? "") ?? typeof(Other);
-        var clamp = await _genericRepository.GetByNameAsync(clampEntityType, "Name", settings.Clamp);
-
-        var nameTableEntityType =
-            _genericRepository.GetEntityTypeByName(settings.NameTableEntityName ?? "") ?? typeof(Other);
-        var nameTable = await _genericRepository.GetByNameAsync(nameTableEntityType, "Name", settings.NameTable);
-
-        var namePlateEntityType = _genericRepository.GetEntityTypeByName(settings.NamePlate ?? "") ?? typeof(Other);
-        var namePlate = await _genericRepository.GetByNameAsync(namePlateEntityType, "Name", settings.NamePlate);
+        var namePlateParameter = _parametersStore[CalculationParameterType.Equipments, "Nameplate"];
+        var namePlate = _parametersStore[namePlateParameter]?.Equipment;
 
 
         stand.AllAdditionalEquipPurposesInStand = new ObservableCollection<AdditionalEquipPurpose>
         {
             new()
             {
-                Purpose = "Швеллер", Material = settings.SteelChannel, Measure = steelChannel?.Measure,
+                Purpose = "Швеллер", Material = steelChannel?.Name, Measure = steelChannel?.Measure,
                 CostPerUnit = steelChannel?.Cost
             },
             new()
             {
-                Purpose = "Хомуты", Material = settings.Clamp, Measure = clamp?.Measure, CostPerUnit = clamp?.Cost
+                Purpose = "Хомуты", Material =clamp?.Name, Measure = clamp?.Measure, CostPerUnit = clamp?.Cost
             },
             new()
             {
-                Purpose = "Шильдик", Material = settings.NamePlate, Quantity = nameplatesPerStand,
+                Purpose = "Шильдик", Material = namePlate?.Name, Quantity = nameplatesPerStand,
                 Measure = namePlate?.Measure, CostPerUnit = namePlate?.Cost
             },
             new()
             {
-                Purpose = "Табличка", Material = settings.NameTable, Measure = nameTable?.Measure,
+                Purpose = "Табличка", Material = nameTable?.Name, Measure = nameTable?.Measure,
                 CostPerUnit = nameTable?.Cost
             },
             new()
             {
-                Purpose = "Кронштейн универсальный", Material = settings.BracketUniversal,
+                Purpose = "Кронштейн универсальный", Material = bracketUniversal?.Name,
                 Measure = bracketUniversal?.Measure, CostPerUnit = bracketUniversal?.Cost
             },
             new()
             {
-                Purpose = "Кронштейн перепадчика", Material = settings.BracketForDif, Measure = bracketDif?.Measure,
+                Purpose = "Кронштейн перепадчика", Material = bracketDif?.Name, Measure = bracketDif?.Measure,
                 CostPerUnit = bracketDif?.Cost
             },
             new()
             {
-                Purpose = "Кронштейн абсолютника", Material = settings.BracketForAbs, Measure = bracketAbs?.Measure,
+                Purpose = "Кронштейн абсолютника", Material = bracketAbs?.Name, Measure = bracketAbs?.Measure,
                 CostPerUnit = bracketAbs?.Cost
             }
         };
@@ -134,21 +126,17 @@ public class InitializeService
         float? usualConnectionBoxQuantity = 1.0f;
         float? usualCablesQuantity = 2.0f;
 
-        var signalCableEntityType = _genericRepository.GetEntityTypeByName(settings.SignalCableEntityName ?? "") ??
-                                    typeof(CabelProduction);
-        var signalCable = await _genericRepository.GetByNameAsync(signalCableEntityType, "Name", settings.SignalCable);
+        var signalCableParameter = _parametersStore[CalculationParameterType.Equipments, "SignalCable"];
+        var signalCable = _parametersStore[signalCableParameter]?.Equipment;
 
-        var cableSixMmEntityType = _genericRepository.GetEntityTypeByName(settings.CabelSixMmEntityName ?? "") ??
-                                   typeof(CabelProduction);
-        var cableSixMm = await _genericRepository.GetByNameAsync(cableSixMmEntityType, "Name", settings.CabelSixMm);
+        var cableSixMmParameter = _parametersStore[CalculationParameterType.Equipments, "Cable6mm"];
+        var cableSixMm = _parametersStore[cableSixMmParameter]?.Equipment;
 
-        var cableFourMmEntityType = _genericRepository.GetEntityTypeByName(settings.CabelFourMmEntityName ?? "") ??
-                                    typeof(CabelProduction);
-        var cableFourMm = await _genericRepository.GetByNameAsync(cableFourMmEntityType, "Name", settings.CabelFourMm);
+        var cableFourMmParameter = _parametersStore[CalculationParameterType.Equipments, "Cable4mm"];
+        var cableFourMm = _parametersStore[cableFourMmParameter]?.Equipment;
 
-        var terminalEntityType = _genericRepository.GetEntityTypeByName(settings.TerminalEntityName ?? "") ??
-                                 typeof(CabelProduction);
-        var terminal = await _genericRepository.GetByNameAsync(terminalEntityType, "Name", settings.Terminal);
+        var terminalParameter = _parametersStore[CalculationParameterType.Equipments, "Terminal"];
+        var terminal = _parametersStore[terminalParameter]?.Equipment;
 
         stand.AllElectricalPurposesInStand = new ObservableCollection<ElectricalPurpose>
         {
@@ -156,24 +144,24 @@ public class InitializeService
             new() { Purpose = "Кабельные вводы", Quantity = 1, Measure = "шт" },
             new()
             {
-                Purpose = "Сигнальный кабель", Material = settings.SignalCable, Quantity = usualCablesQuantity,
+                Purpose = "Сигнальный кабель", Material = signalCable?.Name, Quantity = usualCablesQuantity,
                 Measure = signalCable?.Measure, CostPerUnit = signalCable?.Cost
             },
             new() { Purpose = "Металлорукав", Quantity = usualCablesQuantity, Measure = "м" },
             new()
             {
-                Purpose = "Кабель 6мм", Material = settings.CabelSixMm, Quantity = (float?)settings.SensorCountOnFrame,
+                Purpose = "Кабель 6мм", Material = cableSixMm?.Name, Quantity = (float?)settings.SensorCountOnFrame,
                 Measure = cableSixMm?.Measure, CostPerUnit = cableSixMm?.Cost
             },
             new()
             {
-                Purpose = "Кабель 4мм", Material = settings.CabelFourMm, Quantity = usualCablesQuantity,
+                Purpose = "Кабель 4мм", Material = cableFourMm?.Name, Quantity = usualCablesQuantity,
                 Measure = cableFourMm?.Measure, CostPerUnit = cableFourMm?.Cost
             },
             new() { Purpose = "Кронштейн коробки" },
             new()
             {
-                Purpose = "Клемма", Material = settings.Terminal, Measure = terminal?.Measure,
+                Purpose = "Клемма", Material = terminal?.Name, Measure = terminal?.Measure,
                 CostPerUnit = terminal?.Cost
             }
         };
