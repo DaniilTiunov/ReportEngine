@@ -7,6 +7,7 @@ using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities.CalculationParameters;
 using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 using ReportEngine.Domain.Repositories;
+using ReportEngine.Domain.Store;
 
 namespace ReportEngine.App.Services.Calculation;
 
@@ -14,11 +15,14 @@ public class ParameterGroupService
 {
     private readonly CalculationRepository _calculationRepository;
     private readonly INotificationService _notificationService;
+    private readonly ParametersStore _parametersStore;
 
     public ParameterGroupService(
         CalculationRepository calculationRepository,
-        INotificationService notificationService)
+        INotificationService notificationService,
+        ParametersStore parametersStore)
     {
+        _parametersStore = parametersStore;
         _calculationRepository = calculationRepository;
         _notificationService = notificationService;
     }
@@ -42,8 +46,9 @@ public class ParameterGroupService
         if (updatedParameters == null)
             throw new ArgumentNullException(nameof(updatedParameters));
 
-
         await _calculationRepository.UpdateParametersAsync(updatedParameters);
+        await _parametersStore.LoadSettingsDataAsync();
+
         _notificationService.ShowInfo("Все изменения сохранены!");
     }
 
