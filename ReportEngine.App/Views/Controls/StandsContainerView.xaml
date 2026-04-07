@@ -45,7 +45,7 @@
                     Grid.Column="0"
                     Margin="5"
                     Padding="5"
-                    Header="Упаковки проекта">
+                    Header="Партии упаковок">
                 <DockPanel LastChildFill="True">
                     <DataGrid
                             AutoGenerateColumns="False"
@@ -101,7 +101,7 @@
                     Padding="5">
                 <GroupBox.Header>
                     <TextBlock>
-                            <Run Text="Упаковка №" />
+                            <Run Text="Партия №" />
                             <Run
                                 FontSize="14"
                                 FontWeight="Bold"
@@ -190,6 +190,7 @@
                     Grid.Row="1"
                     Grid.Column="2"
                     Margin="5"
+                    Padding="5"
                     Header="Стенды проекта">
                 <DataGrid
                         AutoGenerateColumns="False"

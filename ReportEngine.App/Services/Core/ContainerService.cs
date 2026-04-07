@@ -73,10 +73,15 @@ public class ContainerService
 
     public async Task AddContainerToBatchAsync(ProjectModel projectModel)
     {
-        if (projectModel?.SelectedContainerBatch == null ||
-            projectModel.SelectedContainerStand == null)
+        if (projectModel?.SelectedContainerBatch == null)
         {
-            _notificationService.ShowInfo("Выберите партию и тару!");
+            _notificationService.ShowInfo("Выберите партию!");
+            return;
+        }
+
+        if (projectModel.SelectedContainerStand == null)
+        {
+            _notificationService.ShowInfo("Выберите тару!");
             return;
         }
 
@@ -86,7 +91,10 @@ public class ContainerService
                 projectModel.SelectedContainerBatch.Id,
                 projectModel.SelectedContainerStand);
 
-            await RecalculateBatchAsync(projectModel.SelectedContainerBatch);
+            var modifiedBatch = await _containerRepository.GetByIdWithContainersAsync(projectModel.SelectedContainerBatch.Id);
+
+
+            await RecalculateBatchAsync(modifiedBatch);
 
             await LoadAllData(projectModel);
 
@@ -96,8 +104,13 @@ public class ContainerService
 
     public async Task RemoveContainerFromBatchAsync(ProjectModel projectModel)
     {
-        if (projectModel?.SelectedContainerBatch == null ||
-            projectModel.SelectedContainerStand == null)
+        if (projectModel?.SelectedContainerBatch == null)
+        {
+            _notificationService.ShowInfo("Выберите партию!");
+            return;
+        }
+
+        if (projectModel.SelectedContainerStand == null)
         {
             _notificationService.ShowInfo("Выберите тару!");
             return;

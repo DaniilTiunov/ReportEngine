@@ -61,7 +61,7 @@
                             Width="Auto" />
                         <DataGridTextColumn
                             Binding="{Binding Description}"
-                            Header="Пояснение"
+                            Header="Комментарий"
                             Width="Auto" />
                         <DataGridTemplateColumn Header="Выбрать" Width="Auto">
                             <DataGridTemplateColumn.CellTemplate>

@@ -48,7 +48,7 @@ public class ContainerRepository : IContainerRepository
 
         if (existing == null)
             throw new Exception("Партия не найдена");
-
+      
         _context.Entry(existing).CurrentValues.SetValues(entity);
 
         var incomingContainers = entity.Containers.ToDictionary(c => c.Id);
