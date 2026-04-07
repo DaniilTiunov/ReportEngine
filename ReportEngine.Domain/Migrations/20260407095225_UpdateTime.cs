@@ -14,23 +14,23 @@ namespace ReportEngine.Domain.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "Timestamp",
                 table: "AuditEvents",
-                type: "timestamp with time zone",
+                type: "timestamp without time zone",
                 nullable: true,
-                oldClrType: typeof(DateOnly),
-                oldType: "date",
+                oldClrType: typeof(DateTime),
+                oldType: "timestamp with time zone",
                 oldNullable: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<DateOnly>(
+            migrationBuilder.AlterColumn<DateTime>(
                 name: "Timestamp",
                 table: "AuditEvents",
-                type: "date",
+                type: "timestamp without time zone",
                 nullable: true,
                 oldClrType: typeof(DateTime),
-                oldType: "timestamp with time zone",
+                oldType: "timestamp without time zone", // ⚡ правильно
                 oldNullable: true);
         }
     }
