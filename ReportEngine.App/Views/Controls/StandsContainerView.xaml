@@ -68,7 +68,7 @@
                                               Header="Обновить список" />
                                 <Separator />
                                 <MenuItem Command="{Binding ProjectCommandProvider.DeleteBatchCommand}"
-                                              Header="Удалить упаковку проекта" />
+                                              Header="Удалить партию" />
                             </ContextMenu>
                         </DataGrid.ContextMenu>
                         <DataGrid.Columns>
@@ -119,9 +119,6 @@
                             SelectedItem="{Binding CurrentProjectModel.SelectedContainerStand}">
                         <DataGrid.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding ProjectCommandProvider.AddContainerToBatchCommand}"
-                                              Header="Добавить упаковку в партию" />
-                                <Separator />
                                 <MenuItem Command="{Binding ProjectCommandProvider.UpdateContainerCommand}"
                                               Header="Сохранить изменения" />
                                 <Separator />

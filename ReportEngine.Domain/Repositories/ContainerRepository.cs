@@ -42,28 +42,29 @@ public class ContainerRepository : IContainerRepository
 
     public async Task UpdateAsync(ContainerBatch entity)
     {
-        var existing = await _context.Set<ContainerBatch>()
+        var existingEntity = await _context.Set<ContainerBatch>()
             .Include(b => b.Containers)
             .FirstOrDefaultAsync(b => b.Id == entity.Id);
 
-        if (existing == null)
+        if (existingEntity == null)
             throw new Exception("Партия не найдена");
-      
-        _context.Entry(existing).CurrentValues.SetValues(entity);
+
+        
+        _context.Entry(existingEntity).CurrentValues.SetValues(entity);
 
         var incomingContainers = entity.Containers.ToDictionary(c => c.Id);
-        var existingContainers = existing.Containers.ToDictionary(c => c.Id);
+        var existingContainers = existingEntity.Containers.ToDictionary(c => c.Id);
 
-        foreach (var existingContainer in existing.Containers.ToList())
+        foreach (var existingContainer in existingEntity.Containers.ToList())
             if (!incomingContainers.ContainsKey(existingContainer.Id))
-                existing.Containers.Remove(existingContainer);
+                existingEntity.Containers.Remove(existingContainer);
 
         foreach (var container in entity.Containers)
             if (container.Id == 0)
             {
                 // Новый
-                container.ContainerBatchId = existing.Id;
-                existing.Containers.Add(container);
+                container.ContainerBatchId = existingEntity.Id;
+                existingEntity.Containers.Add(container);
             }
             else if (existingContainers.TryGetValue(container.Id, out var tracked))
             {
@@ -129,6 +130,18 @@ public class ContainerRepository : IContainerRepository
             .AsNoTracking()
             .ToListAsync();
     }
+
+
+    public async Task<IEnumerable<ContainerBatch>> GetAllProjectBatchesInfoAsync(int projectId)
+    {
+        return await _context.ContainersBatch
+            .Include(b => b.Containers)
+            .ThenInclude(c => c.Stands)
+            .Where(b => b.ProjectInfoId == projectId)
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
 
     public async Task UpdateContainerAsync(ContainerStand container)
     {

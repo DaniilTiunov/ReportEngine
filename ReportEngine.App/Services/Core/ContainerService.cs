@@ -63,7 +63,12 @@ public class ContainerService
             await _containerRepository
                 .DeleteByIdAsync(projectModel.SelectedContainerBatch.Id);
 
-            await LoadAllData(projectModel);
+
+            await RecalculateAndUpdateAllBatches(projectModel);
+
+
+
+           await LoadAllData(projectModel);
 
             projectModel.SelectedContainerBatch = null;
 
@@ -91,10 +96,7 @@ public class ContainerService
                 projectModel.SelectedContainerBatch.Id,
                 projectModel.SelectedContainerStand);
 
-            var modifiedBatch = await _containerRepository.GetByIdWithContainersAsync(projectModel.SelectedContainerBatch.Id);
-
-
-            await RecalculateBatchAsync(modifiedBatch);
+            await RecalculateAndUpdateAllBatches(projectModel);
 
             await LoadAllData(projectModel);
 
@@ -122,7 +124,7 @@ public class ContainerService
                 projectModel.SelectedContainerBatch.Id,
                 projectModel.SelectedContainerStand.Id);
 
-            await RecalculateBatchAsync(projectModel.SelectedContainerBatch);
+            await RecalculateAndUpdateAllBatches(projectModel);
 
             await LoadAllData(projectModel);
 
@@ -140,7 +142,21 @@ public class ContainerService
             return;
         }
 
+        RecalculateBatch(container);
+
         await _containerRepository.UpdateAsync(container);
+    }
+
+    public async Task RecalculateAndUpdateAllBatches(ProjectModel projectModel)
+    {
+        var allBatches = await _containerRepository.GetAllProjectBatchesInfoAsync(projectModel.CurrentProjectId);
+
+        foreach (var batch in allBatches)
+        {
+            RecalculateBatch(batch);
+            await _containerRepository.UpdateAsync(batch);
+        }
+
     }
 
     public async Task AddStandToContainerAsync(ProjectModel projectModel)
@@ -158,7 +174,7 @@ public class ContainerService
                 projectModel.SelectedContainerStand.Id,
                 projectModel.SelectedStandInProject.Id);
 
-            await RecalculateBatchAsync(projectModel.SelectedContainerBatch);
+            await RecalculateAndUpdateAllBatches(projectModel);
 
             await LoadAllData(projectModel);
 
@@ -181,7 +197,7 @@ public class ContainerService
                 projectModel.SelectedContainerStand.Id,
                 projectModel.SelectedStandInContainer.Id);
 
-            await RecalculateBatchAsync(projectModel.SelectedContainerBatch);
+            await RecalculateAndUpdateAllBatches(projectModel);
 
             await LoadAllData(projectModel);
 
@@ -189,14 +205,13 @@ public class ContainerService
         });
     }
 
-    private async Task RecalculateBatchAsync(ContainerBatch batch)
+
+    private void RecalculateBatch(ContainerBatch batch)
     {
         foreach (var container in batch.Containers) RecalculateContainer(container);
 
         batch.ContainersCount = batch.Containers.Count;
         batch.StandsCount = batch.Containers.Sum(c => c.StandsCount);
-
-        await _containerRepository.UpdateAsync(batch);
     }
 
     private void RecalculateContainer(ContainerStand container)
