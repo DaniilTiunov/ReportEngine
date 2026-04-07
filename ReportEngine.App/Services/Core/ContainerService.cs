@@ -138,7 +138,7 @@ public class ContainerService
 
         if (container == null)
         {
-            _notificationService.ShowError("Не выбран ящик");
+            _notificationService.ShowError("Не выбрана упаковка");
             return;
         }
 
@@ -161,10 +161,15 @@ public class ContainerService
 
     public async Task AddStandToContainerAsync(ProjectModel projectModel)
     {
-        if (projectModel?.SelectedContainerStand == null ||
-            projectModel.SelectedStandInProject == null)
+        if (projectModel?.SelectedContainerStand == null)
         {
-            _notificationService.ShowInfo("Выберите тару и стенд!");
+            _notificationService.ShowInfo("Выберите тару!");
+            return;
+        }
+
+        if (projectModel?.SelectedStandInProject == null)
+        {
+            _notificationService.ShowInfo("Не выбран стенд!");
             return;
         }
 
@@ -184,10 +189,15 @@ public class ContainerService
 
     public async Task RemoveStandFromContainerAsync(ProjectModel projectModel)
     {
-        if (projectModel?.SelectedContainerStand == null ||
-            projectModel.SelectedStandInContainer == null)
+        if (projectModel?.SelectedContainerStand == null)
         {
-            _notificationService.ShowInfo("Выберите стенд!");
+            _notificationService.ShowInfo("Выберите тару!");
+            return;
+        }
+
+        if (projectModel?.SelectedStandInProject == null)
+        {
+            _notificationService.ShowInfo("Не выбран стенд!");
             return;
         }
 
