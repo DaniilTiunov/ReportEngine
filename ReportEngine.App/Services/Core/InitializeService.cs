@@ -3,6 +3,7 @@ using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Braces;
+using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 using ReportEngine.Domain.Entities.ElectricComponents;
 using ReportEngine.Domain.Entities.Frame;
 using ReportEngine.Domain.Entities.Other;
@@ -62,7 +63,7 @@ public class InitializeService
 
         var bracketUniversalParameter =_parametersStore[CalculationParameterType.Equipments, "Clamps"];
         var bracketUniversal = _parametersStore[bracketUniversalParameter]?.Equipment;
-        
+
         var bracketDifParameter = _parametersStore[CalculationParameterType.Equipments, "DiffPressureBracket"];
         var bracketDif = _parametersStore[bracketDifParameter]?.Equipment;
 
@@ -71,7 +72,7 @@ public class InitializeService
 
         var steelChannelParameter = _parametersStore[CalculationParameterType.Equipments, "ChannelBar"];
         var steelChannel = _parametersStore[steelChannelParameter]?.Equipment;
- 
+
         var clampParameter = _parametersStore[CalculationParameterType.Equipments, "Clamps"];
         var clamp = _parametersStore[clampParameter]?.Equipment;
 
