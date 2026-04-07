@@ -20,33 +20,34 @@
             CommandParameter="{x:Null}" />
     </UserControl.InputBindings>
 
-    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <ScrollViewer
-            Grid.Column="4"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch">
-            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="200" />
-                </Grid.ColumnDefinitions>
 
-                <GroupBox
+    <ScrollViewer
+            Margin="10"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+        Width="Auto">
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                
+            </Grid.ColumnDefinitions>
+
+            <GroupBox
                     Grid.Row="0"
                     Grid.Column="0"
                     Margin="5"
                     Padding="5"
-                    Header="Содание партии">
-                    <DockPanel LastChildFill="True">
-                        <DataGrid
+                    Header="Создание партии">
+                <DockPanel LastChildFill="True">
+                    <DataGrid
                             AutoGenerateColumns="False"
                             BeginningEdit="DataGrid_BeginningEdit"
                             CanUserAddRows="True"
@@ -55,60 +56,60 @@
                             ItemsSource="{Binding CurrentProjectModel.ContainerBatchesInProject}"
                             MouseDoubleClick="DataGrid_MouseDoubleClick"
                             SelectedItem="{Binding CurrentProjectModel.SelectedContainerBatch}">
-                            <DataGrid.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Command="{Binding ProjectCommandProvider.CreateContainerBatchCommand}"
+                        <DataGrid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding ProjectCommandProvider.CreateContainerBatchCommand}"
                                               Header="Добавить партию" />
-                                    <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.UpdateContainerCommand}"
+                                <Separator />
+                                <MenuItem Command="{Binding ProjectCommandProvider.UpdateContainerCommand}"
                                               Header="Сохранить изменения" />
-                                    <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.RefreshBatchesCommand}"
+                                <Separator />
+                                <MenuItem Command="{Binding ProjectCommandProvider.RefreshBatchesCommand}"
                                               Header="Обновить список" />
-                                    <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.DeleteBatchCommand}"
+                                <Separator />
+                                <MenuItem Command="{Binding ProjectCommandProvider.DeleteBatchCommand}"
                                               Header="Удалить упаковку проекта" />
-                                </ContextMenu>
-                            </DataGrid.ContextMenu>
-                            <DataGrid.Columns>
-                                <DataGridTextColumn
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
                                     Width="Auto"
                                     Binding="{Binding BatchOrder}"
                                     Header="№" />
-                                <DataGridTextColumn
+                            <DataGridTextColumn
                                     Width="*"
                                     Binding="{Binding Name}"
                                     Header="Имя" />
-                                <DataGridTextColumn
+                            <DataGridTextColumn
                                     Width="Auto"
                                     Binding="{Binding ContainersCount}"
                                     Header="Количество тары" />
-                                <DataGridTextColumn
+                            <DataGridTextColumn
                                     Width="Auto"
                                     Binding="{Binding StandsCount}"
                                     Header="Количество стендов" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </DockPanel>
-                </GroupBox>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </GroupBox>
 
-                <GroupBox
+            <GroupBox
                     Grid.Row="1"
                     Grid.Column="0"
                     MinHeight="300"
                     Margin="5"
                     Padding="5">
-                    <GroupBox.Header>
-                        <TextBlock>
+                <GroupBox.Header>
+                    <TextBlock>
                             <Run Text="Упаковка №" />
                             <Run
                                 FontSize="14"
                                 FontWeight="Bold"
                                 Text="{Binding CurrentProjectModel.SelectedContainerBatch.BatchOrder, TargetNullValue='(ошибка привязки)'}" />
-                        </TextBlock>
-                    </GroupBox.Header>
-                    <DockPanel LastChildFill="True">
-                        <DataGrid
+                    </TextBlock>
+                </GroupBox.Header>
+                <DockPanel LastChildFill="True">
+                    <DataGrid
                             BeginningEdit="DataGrid_BeginningEdit"
                             CanUserAddRows="True"
                             CanUserDeleteRows="True"
@@ -116,152 +117,151 @@
                             ItemsSource="{Binding CurrentProjectModel.ContainerStandsInSelectedBatch}"
                             MouseDoubleClick="DataGrid_MouseDoubleClick"
                             SelectedItem="{Binding CurrentProjectModel.SelectedContainerStand}">
-                            <DataGrid.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Command="{Binding ProjectCommandProvider.AddContainerToBatchCommand}"
+                        <DataGrid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding ProjectCommandProvider.AddContainerToBatchCommand}"
                                               Header="Добавить упаковку в партию" />
-                                    <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.UpdateContainerCommand}"
+                                <Separator />
+                                <MenuItem Command="{Binding ProjectCommandProvider.UpdateContainerCommand}"
                                               Header="Сохранить изменения" />
-                                    <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.DeleteContainerCommand}"
+                                <Separator />
+                                <MenuItem Command="{Binding ProjectCommandProvider.DeleteContainerCommand}"
                                               Header="Удалить упаковку" />
-                                </ContextMenu>
-                            </DataGrid.ContextMenu>
-                            <DataGrid.Columns>
-                                <DataGridTextColumn
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
                                     Width="*"
                                     Binding="{Binding Name}"
                                     Header="Тара" />
-                                <DataGridTextColumn
+                            <DataGridTextColumn
                                     Width="Auto"
                                     Binding="{Binding StandsCount}"
                                     Header="Количество стендов" />
-                                <DataGridTextColumn
+                            <DataGridTextColumn
                                     Width="Auto"
                                     Binding="{Binding StandsWeight}"
                                     Header="Масса стендов" />
-                                <DataGridTextColumn
+                            <DataGridTextColumn
                                     Width="Auto"
                                     Binding="{Binding ContainerWeight}"
                                     Header="Масса" />
-                                <DataGridTextColumn
+                            <DataGridTextColumn
                                     Width="Auto"
                                     Binding="{Binding ContainerCost}"
                                     Header="Стоимость" />
-                                <DataGridTemplateColumn Header="Выбрать">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Button
+                            <DataGridTemplateColumn Header="Выбрать">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button
                                                 Margin="2,0,2,0"
                                                 Padding="5,0,5,0"
                                                 Command="{Binding DataContext.ProjectCommandProvider.OpenAllSortamentsDialogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
                                                 Content="Выбрать" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </DockPanel>
-                </GroupBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </GroupBox>
 
-                <StackPanel
+            <StackPanel
                     Grid.Row="1"
                     Grid.RowSpan="2"
                     Grid.Column="1"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
 
-                    <Button
+                <Button
                         Width="120"
                         Margin="5"
                         Command="{Binding ProjectCommandProvider.AddStandToContainerCommand}"
                         Content="&lt;&lt;&lt; Добавить" />
 
-                    <Button
+                <Button
                         Width="120"
                         Margin="5"
                         Command="{Binding ProjectCommandProvider.RemoveStandFromContainerCommand}"
                         Content="Удалить &gt;&gt;&gt;" />
-                </StackPanel>
+            </StackPanel>
 
-                <GroupBox
+            <GroupBox
                     Grid.RowSpan="4"
                     Grid.Column="2"
                     Margin="5"
                     Header="Стенды проекта">
-                    <DataGrid
+                <DataGrid
                         AutoGenerateColumns="False"
                         CanUserAddRows="False"
                         IsReadOnly="True"
                         ItemsSource="{Binding CurrentProjectModel.Stands}"
                         SelectedItem="{Binding CurrentProjectModel.SelectedStandInProject}">
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Command="{Binding ProjectCommandProvider.AddStandToContainerCommand}"
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding ProjectCommandProvider.AddStandToContainerCommand}"
                                           Header="Добавить выбранный стенд в контейнер" />
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
 
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding KKSCode}" Header="KKS" />
-                            <DataGridTextColumn
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding KKSCode}" Header="KKS" />
+                        <DataGridTextColumn
                                 Width="140"
                                 Binding="{Binding SerialNumber}"
                                 Header="Серийный номер" />
-                            <DataGridTextColumn Binding="{Binding Weight}" Header="KKS" />
-                            <DataGridTextColumn
+                        <DataGridTextColumn Binding="{Binding Weight}" Header="KKS" />
+                        <DataGridTextColumn
                                 Width="80"
                                 Binding="{Binding Width}"
                                 Header="Ширина" />
-                            <DataGridTextColumn
+                        <DataGridTextColumn
                                 Width="80"
                                 Binding="{Binding Weight}"
                                 Header="Вес стенда" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </GroupBox>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
 
 
-                <GroupBox
+            <GroupBox
                     Grid.Row="3"
                     MinHeight="350"
                     Margin="5"
                     Header="Стенды внутри тары">
-                    <DataGrid
+                <DataGrid
                         Margin="4,24,4,4"
                         AutoGenerateColumns="False"
                         IsReadOnly="True"
                         ItemsSource="{Binding CurrentProjectModel.StandsInSelectedContainer}"
                         SelectedItem="{Binding CurrentProjectModel.SelectedStandInContainer}">
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Command="{Binding ProjectCommandProvider.RemoveStandFromContainerCommand}"
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding ProjectCommandProvider.RemoveStandFromContainerCommand}"
                                           Header="Удалить стенд из упаковки" />
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
-                        <DataGrid.Columns>
-                            <DataGridTextColumn
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn
                                 Width="*"
                                 Binding="{Binding KKSCode}"
                                 Header="KKS" />
-                            <DataGridTextColumn
+                        <DataGridTextColumn
                                 Width="200"
                                 Binding="{Binding SerialNumber}"
                                 Header="Серийный номер" />
-                            <DataGridTextColumn
+                        <DataGridTextColumn
                                 Width="100"
                                 Binding="{Binding Width}"
                                 Header="Ширина" />
-                            <DataGridTextColumn
+                        <DataGridTextColumn
                                 Width="100"
                                 Binding="{Binding Weight}"
                                 Header="Вес стенда" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </GroupBox>
-            </Grid>
-        </ScrollViewer>
-    </Grid>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+        </Grid>
+    </ScrollViewer>
 </UserControl>
