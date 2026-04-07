@@ -48,7 +48,7 @@
                     SelectedItem="{Binding SelectedEquipment}">
                     <DataGrid.Columns>
                         <DataGridTextColumn
-                            Binding="{Binding Name}"
+                            Binding="{Binding Name,  TargetNullValue=''}"
                             Header="Наименование"
                             Width="0.75*" />
                         <DataGridTextColumn
@@ -56,7 +56,7 @@
                             Header="Комплектующее"
                             Width="*" />
                         <DataGridTextColumn
-                            Binding="{Binding Unit}"
+                            Binding="{Binding Unit, TargetNullValue=''}"
                             Header="Ед. изм"
                             Width="Auto" />
                         <DataGridTextColumn
