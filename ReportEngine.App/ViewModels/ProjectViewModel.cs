@@ -1353,7 +1353,7 @@ public class ProjectViewModel : BaseViewModel
 
         await _auditService.LogEventAsync(
             _sessionService.CurrentUser.UserLogin,
-            $"Пользователь {_sessionService.CurrentUser.UserLogin} добавил стенд в проект",
+            $"Пользователь {_sessionService.CurrentUser.UserLogin} добавил стенд в проект {addedStandEntity.KKSCode}",
             $"Добавление стенда в проект, заказ покупателя:{CurrentProjectModel.OrderCustomer}");
     }
 
@@ -1458,7 +1458,7 @@ public class ProjectViewModel : BaseViewModel
 
         await _auditService.LogEventAsync(
             _sessionService.CurrentUser.UserLogin,
-            $"Пользователь {_sessionService.CurrentUser.UserLogin} удалил стенд из проекта",
+            $"Пользователь {_sessionService.CurrentUser.UserLogin} удалил стенд из проекта {selected.KKSCode}",
             $"Удаление стенда из проект, заказ покупателя:{CurrentProjectModel.OrderCustomer}");
     }
 

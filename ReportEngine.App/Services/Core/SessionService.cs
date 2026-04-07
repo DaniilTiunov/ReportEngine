@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Enums;
+using ReportEngine.Domain.Repositories;
+using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.App.Services.Core;
 
@@ -8,10 +10,16 @@ public class SessionService : INotifyPropertyChanged
 {
     private User? _currentUser;
     private readonly AuditService _auditService;
+    private readonly IUserRepository _userRepository;
 
-    public SessionService(AuditService auditService)
+    public SessionService(
+        AuditService auditService,
+        IUserRepository userRepository)
     {
         _auditService = auditService;
+        _userRepository = userRepository;
+
+        FirstStartSession();
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -25,6 +33,11 @@ public class SessionService : INotifyPropertyChanged
             OnPropertyChanged(nameof(CurrentUser));
             OnPropertyChanged(nameof(CurrentUser.UserLogin));
         }
+    }
+
+    public async void FirstStartSession()
+    {
+        _currentUser = await _userRepository.GetByUserLoginAsync("Гость");
     }
 
     public async void SignIn(User user)
@@ -51,5 +64,4 @@ public class SessionService : INotifyPropertyChanged
         PropertyChanged?.Invoke(this,
             new PropertyChangedEventArgs(propertyName));
     }
-
 }
