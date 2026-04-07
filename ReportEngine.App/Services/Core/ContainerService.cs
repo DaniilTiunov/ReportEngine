@@ -169,7 +169,7 @@ public class ContainerService
 
         if (projectModel?.SelectedStandInProject == null)
         {
-            _notificationService.ShowInfo("Не выбран стенд!");
+            _notificationService.ShowInfo("Выберите стенд!");
             return;
         }
 
@@ -191,13 +191,14 @@ public class ContainerService
     {
         if (projectModel?.SelectedContainerStand == null)
         {
-            _notificationService.ShowInfo("Выберите тару!");
+            _notificationService.ShowInfo("Выберите упаковку!");
             return;
         }
 
-        if (projectModel?.SelectedStandInProject == null)
+
+        if (projectModel?.SelectedStandInContainer == null)
         {
-            _notificationService.ShowInfo("Не выбран стенд!");
+            _notificationService.ShowInfo("Выберите стенд!");
             return;
         }
 
