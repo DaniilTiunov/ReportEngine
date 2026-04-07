@@ -55,7 +55,7 @@
                                 Width="Auto" />
                             <DataGridTextColumn
                                 Binding="{Binding Description}"
-                                Header="Пояснение"
+                                Header="Комментарий"
                                 Width="0.75*" />
                         </DataGrid.Columns>
                     </DataGrid>

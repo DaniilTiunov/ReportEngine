@@ -45,7 +45,7 @@
                     Grid.Column="0"
                     Margin="5"
                     Padding="5"
-                    Header="Упаковки проекта">
+                    Header="Партии упаковок проекта">
                 <DockPanel LastChildFill="True">
                     <DataGrid
                             AutoGenerateColumns="False"
@@ -68,7 +68,7 @@
                                               Header="Обновить список" />
                                 <Separator />
                                 <MenuItem Command="{Binding ProjectCommandProvider.DeleteBatchCommand}"
-                                              Header="Удалить упаковку проекта" />
+                                              Header="Удалить партию" />
                             </ContextMenu>
                         </DataGrid.ContextMenu>
                         <DataGrid.Columns>
@@ -101,7 +101,7 @@
                     Padding="5">
                 <GroupBox.Header>
                     <TextBlock>
-                            <Run Text="Упаковка №" />
+                            <Run Text="Партия упаковок №" />
                             <Run
                                 FontSize="14"
                                 FontWeight="Bold"
@@ -119,9 +119,6 @@
                             SelectedItem="{Binding CurrentProjectModel.SelectedContainerStand}">
                         <DataGrid.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding ProjectCommandProvider.AddContainerToBatchCommand}"
-                                              Header="Добавить упаковку в партию" />
-                                <Separator />
                                 <MenuItem Command="{Binding ProjectCommandProvider.UpdateContainerCommand}"
                                               Header="Сохранить изменения" />
                                 <Separator />
@@ -190,6 +187,7 @@
                     Grid.Row="1"
                     Grid.Column="2"
                     Margin="5"
+                    Padding="5"
                     Header="Стенды проекта">
                 <DataGrid
                         AutoGenerateColumns="False"
@@ -235,12 +233,6 @@
                         IsReadOnly="True"
                         ItemsSource="{Binding CurrentProjectModel.StandsInSelectedContainer}"
                         SelectedItem="{Binding CurrentProjectModel.SelectedStandInContainer}">
-                    <DataGrid.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Command="{Binding ProjectCommandProvider.RemoveStandFromContainerCommand}"
-                                          Header="Удалить стенд из упаковки" />
-                        </ContextMenu>
-                    </DataGrid.ContextMenu>
                     <DataGrid.Columns>
                         <DataGridTextColumn
                                 Width="*"
