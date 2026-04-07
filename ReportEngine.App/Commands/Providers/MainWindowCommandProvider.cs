@@ -24,4 +24,5 @@ public class MainWindowCommandProvider
     public ICommand OpenAllStandsCommand { get; set; }
     public ICommand CopySelectedProjectCommand { get; set; }
     public ICommand OpenCalculationParametersCommand { get; set; }
+    public ICommand OpenAuditContentCommand { get; set; }
 }

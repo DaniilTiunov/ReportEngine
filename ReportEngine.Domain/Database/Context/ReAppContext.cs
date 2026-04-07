@@ -43,45 +43,36 @@ public class ReAppContext : DbContext
     public DbSet<Heater> Heaters { get; set; } //Обогрев
     public DbSet<Other> Others { get; set; } //Прочие
     public DbSet<Container> Containers { get; set; } //Тара
-
     //Обвязки
     public DbSet<Obvyazka> Obvyazki { get; set; } //Обвязки
     public DbSet<ObvyazkaInStand> ObvyazkiInStands { get; set; } // Обвязки в стендах
     public DbSet<ObvyazkaAdditionalEquipPurpose> ObvyazkaAdditionalEquipPurpose { get; set; }
-
     //Сформированные рамы
     public DbSet<FormedFrame> FormedFrames { get; set; } //Сформированные рамы
     public DbSet<FrameComponent> FrameComponents { get; set; } //Компоненты рамы
     public DbSet<StandFrame> StandFrames { get; set; }
-
     //Сформированные дренажи
     public DbSet<FormedDrainage> FormedDrainages { get; set; }
     public DbSet<DrainagePurpose> DrainagePurposes { get; set; }
     public DbSet<StandDrainage> StandDrainages { get; set; }
-
     // Электрические компоненты
     public DbSet<FormedElectricalComponent> FormedElectricalComponents { get; set; }
     public DbSet<ElectricalPurpose> ElectricalPurposes { get; set; }
     public DbSet<StandElectricalComponent> StandElectricalComponents { get; set; }
-
     // Дополнительные комплектующие
     public DbSet<FormedAdditionalEquip> FormedAdditionalEquips { get; set; }
     public DbSet<AdditionalEquipPurpose> AdditionalEquipPurposes { get; set; }
     public DbSet<StandAdditionalEquip> StandAdditionalEquips { get; set; }
-
     //Остальные сущности
     public DbSet<ProjectInfo> Projects { get; set; }
-
     public DbSet<User> Users { get; set; }
     public DbSet<Company> Companies { get; set; }
     public DbSet<Subject> Subjects { get; set; }
     public DbSet<Stand> Stands { get; set; }
     public DbSet<ContainerStand> ContainersStand { get; set; } // Ящики с стендами
     public DbSet<ContainerBatch> ContainersBatch { get; set; } // Ящики с стендами
-
     public DbSet<TablesChanges> TablesChanges { get; set; }
-
     public DbSet<CalculationParameter> CalculationParameters { get; set; }
-
     public DbSet<CalculationParameterGroup> CalculationParametersGroup { get; set; }
+    public DbSet<AuditEvent> AuditEvents { get; set; }
 }

@@ -25,6 +25,8 @@ public class ProjectService : IProjectService
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IStandService _standService;
     private readonly IBaseRepository<Subject> _subjectRepository;
+    private readonly AuditService _auditService;
+    private readonly SessionService _sessionService;
 
     public ProjectService(
         IProjectInfoRepository projectRepository,
@@ -37,7 +39,9 @@ public class ProjectService : IProjectService
         IBaseRepository<Subject> subjectRepository,
         IFrameRepository frameRepository,
         IDialogService dialogService,
-        ObvyazkaInStandRepository obvyazkaInStandRepository)
+        ObvyazkaInStandRepository obvyazkaInStandRepository,
+        AuditService auditService,
+        SessionService sessionService)
     {
         _drainagesRepository = drainagesRepository;
         _additionalEquipsRepository = additionalEquipsRepository;
@@ -50,6 +54,8 @@ public class ProjectService : IProjectService
         _frameRepository = frameRepository;
         _dialogService = dialogService;
         _obvyazkaInStandRepository = obvyazkaInStandRepository;
+        _auditService = auditService;
+        _sessionService = sessionService;
     }
 
     public int GetStandsInProjectCount(ProjectModel projectModel)
@@ -124,6 +130,11 @@ public class ProjectService : IProjectService
         projectModel.CurrentProjectId = project.Id;
 
         _notificationService.ShowInfo("Новая карточка проекта создана!");
+
+        await _auditService.LogEventAsync(
+            _sessionService.CurrentUser.UserLogin,
+            $"Пользователь {_sessionService.CurrentUser.UserLogin} создал проект {project.OrderCustomer}",
+            "");
     }
 
     public async Task CopyStandsAsync(ProjectModel projectModel)
@@ -191,6 +202,11 @@ public class ProjectService : IProjectService
         };
 
         await _projectRepository.UpdateAsync(projectInfo);
+
+        await _auditService.LogEventAsync(
+            _sessionService.CurrentUser.UserLogin,
+            $"Пользователь {_sessionService.CurrentUser.UserLogin} создал обновил {projectInfo.OrderCustomer}",
+            "");
     }
 
     public async Task UpdateStandEntity(ProjectModel standModel)
@@ -202,11 +218,24 @@ public class ProjectService : IProjectService
     public async Task DeleteStandAsync(int projectId, int standId)
     {
         await _projectRepository.DeleteStandAsync(projectId, standId);
+
+        await _auditService.LogEventAsync(
+            _sessionService.CurrentUser.UserLogin,
+            $"Пользователь {_sessionService.CurrentUser.UserLogin} удалил стенд",
+            $"Проект с PK {projectId} стенд с PK {standId}");
     }
 
     public async Task DeleteStandsAsync(int projectId, List<Stand> stands)
     {
-        foreach (var stand in stands) await _projectRepository.DeleteStandAsync(projectId, stand.Id);
+        foreach (var stand in stands)
+        {
+            await _projectRepository.DeleteStandAsync(projectId, stand.Id);
+
+            await _auditService.LogEventAsync(
+                _sessionService.CurrentUser.UserLogin,
+                $"Пользователь {_sessionService.CurrentUser.UserLogin} удалил стенд",
+                $"Проект с PK {projectId} стенд {stand.KKSCode} {stand.Project.OrderCustomer}");
+        }
 
         _notificationService.ShowInfo("Стенды удалены из проекта");
     }
@@ -218,6 +247,11 @@ public class ProjectService : IProjectService
 
         standModel.Id = addedStand.Id;
         standModel.ProjectId = addedStand.ProjectInfoId;
+
+        await _auditService.LogEventAsync(
+            _sessionService.CurrentUser.UserLogin,
+            $"Пользователь {_sessionService.CurrentUser.UserLogin} добавил стенд",
+            $"Проект с PK {projectId} стенд {addedStand.KKSCode} {addedStand.Project.OrderCustomer}");
     }
 
     public async Task<ProjectModel> LoadProjectInfoAsync(int projectId)

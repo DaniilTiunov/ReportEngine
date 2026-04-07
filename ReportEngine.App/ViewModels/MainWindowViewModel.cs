@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
@@ -30,6 +31,7 @@ public class MainWindowViewModel : BaseViewModel
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IProjectService _projectService;
     private readonly IServiceProvider _serviceProvider;
+    private readonly SessionService _sessionService;
 
     #region Конструктор
 
@@ -41,7 +43,8 @@ public class MainWindowViewModel : BaseViewModel
         INotificationService notificationService,
         IProjectService projectService,
         IDialogService dialogService,
-        EntityProjectClonerService entityProjectClonerService)
+        EntityProjectClonerService entityProjectClonerService,
+        SessionService  sessionService)
     {
         _notificationService = notificationService;
         _calculationService = calculationService;
@@ -51,6 +54,9 @@ public class MainWindowViewModel : BaseViewModel
         _projectService = projectService;
         _dialogService = dialogService;
         _entityProjectClonerService = entityProjectClonerService;
+        _sessionService = sessionService;
+        _sessionService.PropertyChanged += SessionChanged;
+
 
         InitializeMainWindowCommands();
         InitializeGenericEquipCommands();
@@ -62,8 +68,17 @@ public class MainWindowViewModel : BaseViewModel
     public GenericEquipCommandProvider GenericEquipCommandProvider { get; set; } = new();
     public MainWindowCommandProvider MainWindowCommandProvider { get; set; } = new();
 
-    public User? CurrentUser => SessionService.CurrentUser;
-    public string? CurrentUserLogin => SessionService.CurrentUser?.UserLogin;
+    public User? CurrentUser => _sessionService.CurrentUser;
+    public string? CurrentUserLogin => _sessionService.CurrentUser.UserLogin;
+
+    private void SessionChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(SessionService.CurrentUser))
+        {
+            OnPropertyChanged(nameof(CurrentUser));
+            OnPropertyChanged(nameof(CurrentUserLogin));
+        }
+    }
 
     #region Дженерик команды
 
