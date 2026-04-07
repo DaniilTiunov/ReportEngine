@@ -69,7 +69,7 @@ public class MainWindowViewModel : BaseViewModel
     public MainWindowCommandProvider MainWindowCommandProvider { get; set; } = new();
 
     public User? CurrentUser => _sessionService.CurrentUser;
-    public string? CurrentUserLogin => _sessionService.CurrentUser.UserLogin;
+    public string? CurrentUserLogin => _sessionService.CurrentUser?.UserLogin;
 
     private void SessionChanged(object? sender, PropertyChangedEventArgs e)
     {
