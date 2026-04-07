@@ -22,6 +22,9 @@ public static class MainWindowCommandsInitializer
         if (vm == null)
             return;
 
+        vm.MainWindowCommandProvider.OpenAuditContentCommand =
+            new RelayCommand(vm.OpenAnotherControlsCommandExecuted<AuditEventsView>, vm.CanAllCommandsExecute);
+
         vm.MainWindowCommandProvider.OpenAuthWindowCommand =
             new RelayCommand(vm.OpenAuthWindowCommandExecuted<AuthWindow>, vm.CanAllCommandsExecute);
 

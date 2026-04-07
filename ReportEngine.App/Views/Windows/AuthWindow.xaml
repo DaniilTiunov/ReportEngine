@@ -1,21 +1,21 @@
 ﻿<Window
-    x:Class="ReportEngine.App.Views.Windows.AuthWindow"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converters="clr-namespace:ReportEngine.App.Display"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="Окно авторизации"
-    Width="600"
-    Height="350"
     Background="{DynamicResource PrimaryColor}"
     FontFamily="Bahnschrift"
     FontSize="14"
     Foreground="{DynamicResource PrimaryForeground}"
+    Height="350"
     ResizeMode="NoResize"
+    Title="Окно авторизации"
+    Width="600"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    x:Class="ReportEngine.App.Views.Windows.AuthWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:converters="clr-namespace:ReportEngine.App.Display"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <WindowChrome.WindowChrome>
         <WindowChrome
@@ -34,10 +34,10 @@
         <DockPanel>
             <!--  Заголовок окна  -->
             <Border
-                x:Name="WindowTitle"
-                Height="34"
                 Background="#2D2D30"
-                DockPanel.Dock="Top">
+                DockPanel.Dock="Top"
+                Height="34"
+                x:Name="WindowTitle">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -46,32 +46,32 @@
 
                     <StackPanel
                         Margin="10,0,0,0"
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal">
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
                         <Image
-                            Width="18"
                             Height="18"
                             Margin="0,0,8,0"
-                            Source="/Resources/Icons/estimate_cost_icon_213382.ico" />
+                            Source="/Resources/Icons/estimate_cost_icon_213382.ico"
+                            Width="18" />
                         <TextBlock
-                            VerticalAlignment="Center"
                             FontSize="14"
                             Foreground="White"
-                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
+                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}"
+                            VerticalAlignment="Center" />
                     </StackPanel>
 
                     <StackPanel
                         Grid.Column="1"
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal">
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
                         <Button
-                            x:Name="CloseButton"
-                            Width="40"
-                            Height="30"
-                            Margin="10,0,10,0"
                             Click="CloseButton_Click"
                             FontSize="16"
-                            ToolTip="Закрыть">
+                            Height="30"
+                            Margin="10,0,10,0"
+                            ToolTip="Закрыть"
+                            Width="40"
+                            x:Name="CloseButton">
                             ✕
                         </Button>
                     </StackPanel>
@@ -93,37 +93,26 @@
                     <TextBlock Margin="0,0,0,10" Text="Выберите пользователя:" />
 
                     <ComboBox
-                        x:Name="UserComboBox"
-                        Width="250"
                         DisplayMemberPath="UserLogin"
-                        ItemsSource="{Binding CurrentUser.AllUsers}"
-                        SelectedItem="{Binding CurrentUser.SelectedUser, Mode=TwoWay}" />
-
-                    <TextBlock
-                        Margin="0,10,0,0"
-                        Text="Админ-пароль:"
-                        Visibility="{Binding CurrentUser.SelectedUser.SystemRole, Converter={StaticResource AdminVisibilityConverter}}" />
-
-                    <PasswordBox
-                        x:Name="AdminPasswordBox"
+                        ItemsSource="{Binding AllUsers}"
+                        SelectedItem="{Binding SelectedUser, Mode=TwoWay}"
                         Width="250"
-                        Margin="0,0,0,15"
-                        PasswordChanged="AdminPasswordBox_OnPasswordChanged"
-                        Visibility="{Binding CurrentUser.SelectedUser.SystemRole, Converter={StaticResource AdminVisibilityConverter}}" />
+                        x:Name="UserComboBox" />
+
 
                     <StackPanel
-                        Margin="0,20,0,0"
                         HorizontalAlignment="Center"
+                        Margin="0,20,0,0"
                         Orientation="Horizontal">
                         <Button
-                            Width="120"
-                            Margin="0,0,10,0"
                             Command="{Binding LoginCommand}"
-                            Content="Войти" />
+                            Content="Войти"
+                            Margin="0,0,10,0"
+                            Width="120" />
                         <Button
-                            Width="120"
                             Command="{Binding ExitCommand}"
-                            Content="Выход" />
+                            Content="Выход"
+                            Width="120" />
                     </StackPanel>
                 </StackPanel>
             </Grid>

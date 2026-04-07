@@ -4,32 +4,52 @@ using ReportEngine.Domain.Enums;
 
 namespace ReportEngine.App.Services.Core;
 
-public static class SessionService
+public class SessionService : INotifyPropertyChanged
 {
-    private static User? _currentUser;
+    private User? _currentUser;
+    private readonly AuditService _auditService;
 
-    static SessionService()
+    public SessionService(AuditService auditService)
     {
-        _currentUser = new User { SystemRole = SystemRole.User };
+        _auditService = auditService;
     }
 
-    public static User? CurrentUser
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public User? CurrentUser
     {
         get => _currentUser;
-        set
+        private set
         {
-            if (_currentUser != value)
-            {
-                _currentUser = value;
-                OnPropertyChanged(nameof(CurrentUser));
-            }
+            _currentUser = value;
+            OnPropertyChanged(nameof(CurrentUser));
+            OnPropertyChanged(nameof(CurrentUser.UserLogin));
         }
     }
 
-    public static event PropertyChangedEventHandler? PropertyChanged;
-
-    private static void OnPropertyChanged(string propertyName)
+    public async void SignIn(User user)
     {
-        PropertyChanged?.Invoke(null, new PropertyChangedEventArgs(propertyName));
+        CurrentUser = user;
+        await _auditService.LogEventAsync(
+            CurrentUser.UserLogin,
+            "Выполнен вход в систему",
+            $"Пользователь {CurrentUser.UserLogin} вошёл в систему");
     }
+
+    public async void SignOut()
+    {
+        await _auditService.LogEventAsync(
+            CurrentUser.UserLogin,
+            "Выполнен выход в систему",
+            $"Пользователь {CurrentUser.UserLogin} вышёл из систему");
+
+        CurrentUser = null;
+    }
+
+    private void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this,
+            new PropertyChangedEventArgs(propertyName));
+    }
+
 }

@@ -160,7 +160,9 @@ public class HostFactory
         services.AddScoped<EntityStandClonerService>();
         services.AddScoped<EntityProjectClonerService>();
         services.AddScoped<ParameterGroupService>();
+        services.AddScoped<AuditService>();
         services.AddSingleton<ParametersStore>();
+        services.AddSingleton<SessionService>();
     }
 
     private static void ConfigureReportsServices(IServiceCollection services)
@@ -198,6 +200,7 @@ public class HostFactory
         services.AddScoped<DockViewerViewModel>();
         services.AddScoped<AllStandsViewModel>();
         services.AddScoped<CalculationParametersViewModel>();
+        services.AddScoped<AuditViewModel>();
     }
 
     private static void ConfigureViews(IServiceCollection services)
@@ -246,5 +249,6 @@ public class HostFactory
         services.AddTransient<FrameParametersView>();
         services.AddTransient<SandBlastView>();
         services.AddTransient<ElectricCostView>();
+        services.AddTransient<AuditEventsView>();
     }
 }
