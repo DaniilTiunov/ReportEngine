@@ -5,10 +5,15 @@
     mc:Ignorable="d"
     x:Class="ReportEngine.App.Views.Controls.AuditEventsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:converters="clr-namespace:ReportEngine.App.Display"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:ReportEngine.App.Views.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <converters:UtcToLocalConverter x:Key="UtcToLocalConverter" />
+    </UserControl.Resources>
+
     <DockPanel Margin="10">
 
         <!--  Фильтры  -->
@@ -45,7 +50,7 @@
             ItemsSource="{Binding AllEvents}">
             <DataGrid.Columns>
                 <DataGridTextColumn
-                    Binding="{Binding Timestamp, StringFormat=dd.MM.yyyy HH:mm:ss}"
+                    Binding="{Binding Timestamp, Converter={StaticResource UtcToLocalConverter}, StringFormat=dd.MM.yyyy HH:mm:ss}"
                     Header="Дата/Время"
                     Width="200" />
                 <DataGridTextColumn
@@ -55,7 +60,7 @@
                 <DataGridTextColumn
                     Binding="{Binding Action}"
                     Header="Действие"
-                    Width="300" />
+                    Width="*" />
                 <DataGridTextColumn
                     Binding="{Binding Details}"
                     Header="Детали"

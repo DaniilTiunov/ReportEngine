@@ -45,6 +45,8 @@ public class ProjectViewModel : BaseViewModel
     private readonly IStandService _standService;
     private readonly UIValidatorService _uiValidatorService;
     private readonly UpdaterStandService _updaterStandService;
+    private readonly SessionService _sessionService;
+    private readonly AuditService _auditService;
 
     public ProjectViewModel(
         IProjectInfoRepository projectRepository,
@@ -61,7 +63,9 @@ public class ProjectViewModel : BaseViewModel
         UIValidatorService uiValidatorService,
         InitializeService initializeService,
         EntityStandClonerService entityStandCloner,
-        ParametersStore parametersStore)
+        ParametersStore parametersStore,
+        AuditService auditService,
+        SessionService sessionService)
     {
         _projectRepository = projectRepository;
         _dialogService = dialogService;
@@ -78,6 +82,9 @@ public class ProjectViewModel : BaseViewModel
         _initializeService = initializeService;
         _entityStandCloner = entityStandCloner;
         _parametersStore = parametersStore;
+        _sessionService = sessionService;
+        _auditService = auditService;
+
         NewStand = new StandModel { Number = 1 };
 
         InitializeCommands();
@@ -402,6 +409,11 @@ public class ProjectViewModel : BaseViewModel
             await CreateNewProjectCardAsync();
             await _projectService.GetOrAddCompanyAsync(CurrentProjectModel.Company);
             await _projectService.GetOrAddSubjectAsync(CurrentProjectModel.Object, CurrentProjectModel.Company);
+
+            await _auditService.LogEventAsync(
+                _sessionService.CurrentUser.UserLogin,
+                $"Пользователь {_sessionService.CurrentUser.UserLogin} создал проект {CurrentProjectModel.OrderCustomer}",
+                $"Создание проекта, заказ покупателя: {CurrentProjectModel.OrderCustomer}");
         });
     }
 
@@ -1272,6 +1284,11 @@ public class ProjectViewModel : BaseViewModel
 
         await _projectService.UpdateProjectAsync(CurrentProjectModel);
 
+        await _auditService.LogEventAsync(
+            _sessionService.CurrentUser.UserLogin,
+            $"Пользователь {_sessionService.CurrentUser.UserLogin} сохранил изменения в проекте",
+            $"Сохранил изменения в проекте, заказ покупателя:{CurrentProjectModel.OrderCustomer}");
+
         _notificationService.ShowInfo("Изменения успешно сохранены!");
     }
 
@@ -1333,6 +1350,11 @@ public class ProjectViewModel : BaseViewModel
         OnStandsInProjectChanged();
 
         _notificationService.ShowInfo("Стенд успешно добавлен!");
+
+        await _auditService.LogEventAsync(
+            _sessionService.CurrentUser.UserLogin,
+            $"Пользователь {_sessionService.CurrentUser.UserLogin} добавил стенд в проект",
+            $"Добавление стенда в проект, заказ покупателя:{CurrentProjectModel.OrderCustomer}");
     }
 
     private async Task CreateDefaultPurposesAsync(StandModel newStandModel)
@@ -1433,6 +1455,11 @@ public class ProjectViewModel : BaseViewModel
 
         UpdateNewStandNN();
         OnStandsInProjectChanged();
+
+        await _auditService.LogEventAsync(
+            _sessionService.CurrentUser.UserLogin,
+            $"Пользователь {_sessionService.CurrentUser.UserLogin} удалил стенд из проекта",
+            $"Удаление стенда из проект, заказ покупателя:{CurrentProjectModel.OrderCustomer}");
     }
 
     private async Task CreateNewProjectCardAsync()
