@@ -87,7 +87,7 @@ public class HostFactory
     private static void ConfigureRepositories(IServiceCollection services)
     {
         // Обычные репозитории
-        services.AddScoped<IBaseRepository<User>, UserRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IBaseRepository<Company>, CompanyRepository>();
         services.AddScoped<IBaseRepository<Subject>, SubjectsRepository>();
         services.AddScoped<IProjectInfoRepository, ProjectInfoRepository>();

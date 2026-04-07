@@ -19,6 +19,9 @@ public class TranslateUserRole : IValueConverter
             case SystemRole.Manager:
                 return "Менеджер";
 
+            case SystemRole.Guest:
+                return "Гость";
+
             default:
                 return "Ошибка";
         }

@@ -11,11 +11,11 @@ namespace ReportEngine.App.ViewModels.Contacts;
 
 public class UsersViewModel : BaseViewModel
 {
-    private readonly IBaseRepository<User> _userRepository;
+    private readonly IUserRepository _userRepository;
 
     #region Конструктор
 
-    public UsersViewModel(IBaseRepository<User> userRepository)
+    public UsersViewModel(IUserRepository userRepository)
     {
         InitializeCommands();
 

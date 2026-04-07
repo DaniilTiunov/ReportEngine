@@ -32,6 +32,7 @@ public class MainWindowViewModel : BaseViewModel
     private readonly IProjectService _projectService;
     private readonly IServiceProvider _serviceProvider;
     private readonly SessionService _sessionService;
+    private readonly AuditService _auditService;
 
     #region Конструктор
 
@@ -44,7 +45,8 @@ public class MainWindowViewModel : BaseViewModel
         IProjectService projectService,
         IDialogService dialogService,
         EntityProjectClonerService entityProjectClonerService,
-        SessionService  sessionService)
+        SessionService  sessionService,
+        AuditService auditService)
     {
         _notificationService = notificationService;
         _calculationService = calculationService;
@@ -55,6 +57,7 @@ public class MainWindowViewModel : BaseViewModel
         _dialogService = dialogService;
         _entityProjectClonerService = entityProjectClonerService;
         _sessionService = sessionService;
+        _auditService = auditService;
         _sessionService.PropertyChanged += SessionChanged;
 
 
@@ -261,9 +264,21 @@ public class MainWindowViewModel : BaseViewModel
 
     public async Task DeleteSelectedProjectAsync()
     {
+        var result = _notificationService.ShowConfirmation("Вы уверены, что хотите удалить проект?");
+
+        if (!result)
+            return;
+
         var currentProject = MainWindowModel.SelectedProject;
         await _projectRepository.DeleteAsync(currentProject);
         await ShowAllProjectsAsync();
+
+        _notificationService.ShowInfo("Проект успешно удалён");
+
+        await _auditService.LogEventAsync(
+            _sessionService.CurrentUser.UserLogin,
+            $"Пользователь {_sessionService.CurrentUser.UserLogin} удалил проект {currentProject.OrderCustomer}",
+            $"Удаление проекта с заказом покупателя {currentProject.OrderCustomer}");
     }
 
     private async Task RecalculateProjectAsync()
