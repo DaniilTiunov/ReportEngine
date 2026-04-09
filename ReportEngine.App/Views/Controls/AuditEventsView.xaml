@@ -50,7 +50,7 @@
             ItemsSource="{Binding AllEvents}">
             <DataGrid.Columns>
                 <DataGridTextColumn
-                    Binding="{Binding Timestamp, Converter={StaticResource UtcToLocalConverter}, StringFormat=dd.MM.yyyy HH:mm:ss}"
+                    Binding="{Binding Timestamp, StringFormat=dd.MM.yyyy HH:mm:ss}"
                     Header="Дата/Время"
                     Width="200" />
                 <DataGridTextColumn

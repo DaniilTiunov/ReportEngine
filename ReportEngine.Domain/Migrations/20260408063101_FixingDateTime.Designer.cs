@@ -12,8 +12,8 @@ using ReportEngine.Domain.Database.Context;
 namespace ReportEngine.Domain.Migrations
 {
     [DbContext(typeof(ReAppContext))]
-    [Migration("20260126110238_KAPECBLIN2")]
-    partial class KAPECBLIN2
+    [Migration("20260408063101_FixingDateTime")]
+    partial class FixingDateTime
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,14 +33,20 @@ namespace ReportEngine.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("ChangedAt")
+                    b.Property<DateTimeOffset?>("ChangedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int?>("EquipId")
                         .HasColumnType("integer");
 
+                    b.Property<float?>("NewCost")
+                        .HasColumnType("real");
+
                     b.Property<string>("NewName")
                         .HasColumnType("text");
+
+                    b.Property<float?>("OldCost")
+                        .HasColumnType("real");
 
                     b.Property<string>("OldName")
                         .HasColumnType("text");
@@ -73,6 +79,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<int>("FormedAdditionalEquipId")
                         .HasColumnType("integer");
 
+                    b.Property<bool?>("IsAutoCalculationEnabled")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Material")
                         .HasColumnType("text");
 
@@ -83,6 +92,9 @@ namespace ReportEngine.Domain.Migrations
                         .HasColumnType("text");
 
                     b.Property<float?>("Quantity")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("Weight")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -103,14 +115,8 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<float?>("Depth")
-                        .HasColumnType("real");
-
                     b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
-
-                    b.Property<float?>("Height")
-                        .HasColumnType("real");
 
                     b.Property<string>("Measure")
                         .HasColumnType("text");
@@ -118,13 +124,7 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("text");
-
                     b.Property<float?>("Weight")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -143,14 +143,8 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<float?>("Depth")
-                        .HasColumnType("real");
-
                     b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
-
-                    b.Property<float?>("Height")
-                        .HasColumnType("real");
 
                     b.Property<string>("Measure")
                         .HasColumnType("text");
@@ -158,13 +152,7 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("text");
-
                     b.Property<float?>("Weight")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -183,14 +171,8 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<float?>("Depth")
-                        .HasColumnType("real");
-
                     b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
-
-                    b.Property<float?>("Height")
-                        .HasColumnType("real");
 
                     b.Property<string>("Measure")
                         .HasColumnType("text");
@@ -198,18 +180,37 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("text");
-
                     b.Property<float?>("Weight")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
 
                     b.ToTable("StainlessArmatures");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.AuditEvent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Details")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("Timestamp")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("UserSystemName")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AuditEvents");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.Braces.BoxesBrace", b =>
@@ -231,6 +232,9 @@ namespace ReportEngine.Domain.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
+
+                    b.Property<float?>("Weight")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
@@ -257,6 +261,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
+                    b.Property<float?>("Weight")
+                        .HasColumnType("real");
+
                     b.HasKey("Id");
 
                     b.ToTable("DrainageBraces");
@@ -282,9 +289,70 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
+                    b.Property<float?>("Weight")
+                        .HasColumnType("real");
+
                     b.HasKey("Id");
 
                     b.ToTable("SensorsBraces");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.CalculationParameters.CalculationParameter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("EquipReferenceId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("EquipReferenceType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Key")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<int>("ParameterGroupId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Unit")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParameterGroupId");
+
+                    b.ToTable("CalculationParameters");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.CalculationParameters.CalculationParameterGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<int>("SettingsType")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CalculationParametersGroup");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.Company", b =>
@@ -391,14 +459,8 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<float?>("Depth")
-                        .HasColumnType("real");
-
                     b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
-
-                    b.Property<float?>("Height")
-                        .HasColumnType("real");
 
                     b.Property<string>("Measure")
                         .HasColumnType("text");
@@ -406,13 +468,7 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("text");
-
                     b.Property<float?>("Weight")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -437,6 +493,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<int>("FormedDrainageId")
                         .HasColumnType("integer");
 
+                    b.Property<bool?>("IsAutoCalculationEnabled")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Material")
                         .HasColumnType("text");
 
@@ -447,6 +506,9 @@ namespace ReportEngine.Domain.Migrations
                         .HasColumnType("text");
 
                     b.Property<float?>("Quantity")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("Weight")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -485,6 +547,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
+                    b.Property<float?>("Weight")
+                        .HasColumnType("real");
+
                     b.HasKey("Id");
 
                     b.ToTable("CabelBoxes");
@@ -518,6 +583,9 @@ namespace ReportEngine.Domain.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
+
+                    b.Property<float?>("Weight")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
@@ -553,6 +621,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
+                    b.Property<float?>("Weight")
+                        .HasColumnType("real");
+
                     b.HasKey("Id");
 
                     b.ToTable("CabelProductions");
@@ -586,6 +657,9 @@ namespace ReportEngine.Domain.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
+
+                    b.Property<float?>("Weight")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
@@ -621,6 +695,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
+                    b.Property<float?>("Weight")
+                        .HasColumnType("real");
+
                     b.HasKey("Id");
 
                     b.ToTable("Heaters");
@@ -637,14 +714,8 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<float?>("Depth")
-                        .HasColumnType("real");
-
                     b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
-
-                    b.Property<float?>("Height")
-                        .HasColumnType("real");
 
                     b.Property<string>("Measure")
                         .HasColumnType("text");
@@ -652,13 +723,7 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("text");
-
                     b.Property<float?>("Weight")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -677,14 +742,8 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<float?>("Depth")
-                        .HasColumnType("real");
-
                     b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
-
-                    b.Property<float?>("Height")
-                        .HasColumnType("real");
 
                     b.Property<string>("Measure")
                         .HasColumnType("text");
@@ -692,13 +751,7 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("text");
-
                     b.Property<float?>("Weight")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -717,14 +770,8 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<float?>("Depth")
-                        .HasColumnType("real");
-
                     b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
-
-                    b.Property<float?>("Height")
-                        .HasColumnType("real");
 
                     b.Property<string>("Measure")
                         .HasColumnType("text");
@@ -732,13 +779,7 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("text");
-
                     b.Property<float?>("Weight")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -763,6 +804,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<int>("FormedElectricalComponentId")
                         .HasColumnType("integer");
 
+                    b.Property<bool?>("IsAutoCalculationEnabled")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Material")
                         .HasColumnType("text");
 
@@ -773,6 +817,9 @@ namespace ReportEngine.Domain.Migrations
                         .HasColumnType("text");
 
                     b.Property<float?>("Quantity")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("Weight")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -845,6 +892,9 @@ namespace ReportEngine.Domain.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool?>("Disassembled")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("FrameType")
                         .IsRequired()
                         .HasColumnType("text");
@@ -887,6 +937,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
+                    b.Property<float?>("Weight")
+                        .HasColumnType("real");
+
                     b.HasKey("Id");
 
                     b.ToTable("FrameDetails");
@@ -912,6 +965,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
+                    b.Property<float?>("Weight")
+                        .HasColumnType("real");
+
                     b.HasKey("Id");
 
                     b.ToTable("FrameRolls");
@@ -936,6 +992,9 @@ namespace ReportEngine.Domain.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
+
+                    b.Property<float?>("Weight")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
@@ -963,7 +1022,7 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float?>("CostComponent")
                         .HasColumnType("real");
 
-                    b.Property<int>("Count")
+                    b.Property<int?>("Count")
                         .HasColumnType("integer");
 
                     b.Property<int?>("ExportDays")
@@ -1066,6 +1125,9 @@ namespace ReportEngine.Domain.Migrations
                         .HasColumnType("text");
 
                     b.Property<float?>("Quantity")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("Weight")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -1253,14 +1315,8 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<float?>("Depth")
-                        .HasColumnType("real");
-
                     b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
-
-                    b.Property<float?>("Height")
-                        .HasColumnType("real");
 
                     b.Property<string>("Measure")
                         .HasColumnType("text");
@@ -1269,9 +1325,6 @@ namespace ReportEngine.Domain.Migrations
                         .HasColumnType("text");
 
                     b.Property<float?>("Weight")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -1290,14 +1343,8 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<float?>("Depth")
-                        .HasColumnType("real");
-
                     b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
-
-                    b.Property<float?>("Height")
-                        .HasColumnType("real");
 
                     b.Property<string>("Measure")
                         .HasColumnType("text");
@@ -1306,9 +1353,6 @@ namespace ReportEngine.Domain.Migrations
                         .HasColumnType("text");
 
                     b.Property<float?>("Weight")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -1327,14 +1371,8 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<float?>("Depth")
-                        .HasColumnType("real");
-
                     b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
-
-                    b.Property<float?>("Height")
-                        .HasColumnType("real");
 
                     b.Property<string>("Measure")
                         .HasColumnType("text");
@@ -1342,13 +1380,7 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("text");
-
                     b.Property<float?>("Weight")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -1367,14 +1399,8 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<float?>("Depth")
-                        .HasColumnType("real");
-
                     b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
-
-                    b.Property<float?>("Height")
-                        .HasColumnType("real");
 
                     b.Property<string>("Measure")
                         .HasColumnType("text");
@@ -1382,13 +1408,7 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("text");
-
                     b.Property<float?>("Weight")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -1407,14 +1427,8 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float?>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<float?>("Depth")
-                        .HasColumnType("real");
-
                     b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
-
-                    b.Property<float?>("Height")
-                        .HasColumnType("real");
 
                     b.Property<string>("Measure")
                         .HasColumnType("text");
@@ -1422,13 +1436,7 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("text");
-
                     b.Property<float?>("Weight")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -1745,6 +1753,17 @@ namespace ReportEngine.Domain.Migrations
                     b.Navigation("FormedAdditionalEquip");
                 });
 
+            modelBuilder.Entity("ReportEngine.Domain.Entities.CalculationParameters.CalculationParameter", b =>
+                {
+                    b.HasOne("ReportEngine.Domain.Entities.CalculationParameters.CalculationParameterGroup", "CalculationParameterGroup")
+                        .WithMany("Parameters")
+                        .HasForeignKey("ParameterGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CalculationParameterGroup");
+                });
+
             modelBuilder.Entity("ReportEngine.Domain.Entities.ContainerBatch", b =>
                 {
                     b.HasOne("ReportEngine.Domain.Entities.ProjectInfo", "Project")
@@ -1924,6 +1943,11 @@ namespace ReportEngine.Domain.Migrations
                     b.Navigation("Frame");
 
                     b.Navigation("Stand");
+                });
+
+            modelBuilder.Entity("ReportEngine.Domain.Entities.CalculationParameters.CalculationParameterGroup", b =>
+                {
+                    b.Navigation("Parameters");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.ContainerBatch", b =>

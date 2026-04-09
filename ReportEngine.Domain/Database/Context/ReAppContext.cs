@@ -75,4 +75,13 @@ public class ReAppContext : DbContext
     public DbSet<CalculationParameter> CalculationParameters { get; set; }
     public DbSet<CalculationParameterGroup> CalculationParametersGroup { get; set; }
     public DbSet<AuditEvent> AuditEvents { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<AuditEvent>()
+            .Property(x => x.Timestamp)
+            .HasColumnType("timestamp without time zone");
+    }
 }

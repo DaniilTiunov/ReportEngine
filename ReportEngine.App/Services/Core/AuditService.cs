@@ -23,7 +23,7 @@ public class AuditService
             var auditEvent = new AuditEvent
             {
                 Id = 0,
-                Timestamp = DateTime.UtcNow,
+                Timestamp = DateTime.Now,
                 UserSystemName = userSystemName,
                 Action = action,
                 Details = details

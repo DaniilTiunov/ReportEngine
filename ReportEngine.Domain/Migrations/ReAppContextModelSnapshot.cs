@@ -200,7 +200,7 @@ namespace ReportEngine.Domain.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("Timestamp")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("UserSystemName")
                         .HasColumnType("text");

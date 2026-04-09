@@ -12,8 +12,8 @@ using ReportEngine.Domain.Database.Context;
 namespace ReportEngine.Domain.Migrations
 {
     [DbContext(typeof(ReAppContext))]
-    [Migration("20260407092752_UpdateAudit")]
-    partial class UpdateAudit
+    [Migration("20260408055633_TryFixTime")]
+    partial class TryFixTime
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -186,31 +186,6 @@ namespace ReportEngine.Domain.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("StainlessArmatures");
-                });
-
-            modelBuilder.Entity("ReportEngine.Domain.Entities.AuditEvent", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Action")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Details")
-                        .HasColumnType("text");
-
-                    b.Property<DateOnly?>("Timestamp")
-                        .HasColumnType("date");
-
-                    b.Property<string>("UserSystemName")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AuditEvents");
                 });
 
             modelBuilder.Entity("ReportEngine.Domain.Entities.Braces.BoxesBrace", b =>

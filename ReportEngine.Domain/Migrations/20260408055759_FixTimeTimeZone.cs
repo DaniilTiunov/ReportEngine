@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -6,25 +7,25 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ReportEngine.Domain.Migrations
 {
     /// <inheritdoc />
-    public partial class AddedCalParametrs : Migration
+    public partial class FixTimeTimeZone : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "CalculationParameters",
+                name: "AuditEvents",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: true),
-                    Value = table.Column<float>(type: "real", nullable: true),
-                    Unit = table.Column<string>(type: "text", nullable: true),
-                    Description = table.Column<string>(type: "text", nullable: true)
+                    Timestamp = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    UserSystemName = table.Column<string>(type: "text", nullable: true),
+                    Action = table.Column<string>(type: "text", nullable: true),
+                    Details = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CalculationParameters", x => x.Id);
+                    table.PrimaryKey("PK_AuditEvents", x => x.Id);
                 });
         }
 
@@ -32,7 +33,7 @@ namespace ReportEngine.Domain.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CalculationParameters");
+                name: "AuditEvents");
         }
     }
 }
