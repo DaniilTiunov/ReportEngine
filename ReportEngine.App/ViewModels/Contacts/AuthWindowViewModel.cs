@@ -13,12 +13,12 @@ public class AuthWindowViewModel : BaseViewModel
 {
     private readonly INotificationService _notificationService;
     private readonly SessionService _sessionService;
-    private readonly IBaseRepository<User> _userRepository;
+    private readonly IUserRepository _userRepository;
     private ObservableCollection<User> _allUsers = new();
     private User _selectedUser = new();
 
     public AuthWindowViewModel(
-        IBaseRepository<User> userRepository,
+        IUserRepository userRepository,
         INotificationService notificationService,
         SessionService sessionService)
     {

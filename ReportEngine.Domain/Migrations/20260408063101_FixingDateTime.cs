@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ReportEngine.Domain.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateTime : Migration
+    public partial class FixingDateTime : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -27,10 +27,10 @@ namespace ReportEngine.Domain.Migrations
             migrationBuilder.AlterColumn<DateTime>(
                 name: "Timestamp",
                 table: "AuditEvents",
-                type: "timestamp without time zone",
+                type: "timestamp with time zone",
                 nullable: true,
                 oldClrType: typeof(DateTime),
-                oldType: "timestamp without time zone", // ⚡ правильно
+                oldType: "timestamp without time zone",
                 oldNullable: true);
         }
     }
