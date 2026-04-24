@@ -9,11 +9,11 @@ namespace ReportEngine.Domain.Repositories;
 
 public class CalculationRepository
 {
-    private readonly IDbContextFactory<ReAppContext> _contextFactory;
+    private readonly ReAppContext _context;
 
-    public CalculationRepository(IDbContextFactory<ReAppContext> contextFactory)
+    public CalculationRepository(ReAppContext context)
     {
-        _contextFactory = contextFactory;
+        _context = context;
     }
 
     /// <summary>
@@ -22,9 +22,7 @@ public class CalculationRepository
     /// <returns>Коллекция групп, включая параметры внутри</returns>
     public async Task<IEnumerable<CalculationParameterGroup>> GetAllGroupsAsync()
     {
-        await using var context = await _contextFactory.CreateDbContextAsync();
-
-        return await context.Set<CalculationParameterGroup>()
+        return await _context.Set<CalculationParameterGroup>()
             .AsNoTracking()
             .Include(group => group.Parameters)
             .ToListAsync();
@@ -36,9 +34,7 @@ public class CalculationRepository
     /// <returns>Группа, включая параметры внутри</returns>
     public async Task<CalculationParameterGroup?> GetGroupByTypeAsync(CalculationParameterType type)
     {
-        await using var context = await _contextFactory.CreateDbContextAsync();
-
-        return await context.Set<CalculationParameterGroup>()
+        return await _context.Set<CalculationParameterGroup>()
             .AsNoTracking()
             .Include(group => group.Parameters)
             .FirstOrDefaultAsync(group => group.SettingsType == type);
@@ -51,9 +47,7 @@ public class CalculationRepository
     public async Task<List<CalculationParameter>> GetAllParametersInGroupAsync(
         CalculationParameterType groupType)
     {
-        await using var context = await _contextFactory.CreateDbContextAsync();
-
-        return await context.Set<CalculationParameterGroup>()
+        return await _context.Set<CalculationParameterGroup>()
             .AsNoTracking()
             .Where(group => group.SettingsType == groupType)
             .SelectMany(group => group.Parameters)
@@ -64,9 +58,7 @@ public class CalculationRepository
         CalculationParameterType type,
         IEnumerable<string> keys)
     {
-        await using var context = await _contextFactory.CreateDbContextAsync();
-
-        return await context.Set<CalculationParameter>()
+        return await _context.Set<CalculationParameter>()
             .AsNoTracking()
             .Where(x =>
                 x.CalculationParameterGroup.SettingsType == type &&
@@ -79,15 +71,13 @@ public class CalculationRepository
         int equipmentId,
         string type)
     {
-        await using var context = await _contextFactory.CreateDbContextAsync();
-
         var parameter =
-            await context.CalculationParameters.FirstOrDefaultAsync(par => par.Id == parameterId);
+            await _context.CalculationParameters.FirstOrDefaultAsync(par => par.Id == parameterId);
 
         var entityType = Type.GetType(type)
                          ?? throw new ArgumentException($"Тип {type} не найден в сборке");
 
-        var table = context.SetTable(entityType)
+        var table = _context.SetTable(entityType)
                     ?? throw new ArgumentException($"Не удалось найти таблицу под тип {type}");
 
         var equipment = await table.FirstOrDefaultAsync(equip => equip.Id == equipmentId);
@@ -101,8 +91,6 @@ public class CalculationRepository
 
     public async Task<CalculationParameterGroup> AddGroupAsync(CalculationParameterGroup group)
     {
-        await using var context = await _contextFactory.CreateDbContextAsync();
-
         var newEntity = new CalculationParameterGroup
         {
             Id = 0,
@@ -110,18 +98,14 @@ public class CalculationRepository
             SettingsType = group.SettingsType
         };
 
-        var result = await context.Set<CalculationParameterGroup>().AddAsync(newEntity);
-        await context.SaveChangesAsync();
+        var result = await _context.Set<CalculationParameterGroup>().AddAsync(newEntity);
+        await _context.SaveChangesAsync();
         return result.Entity;
     }
 
     public async Task AddParameterToGroup(CalculationParameter parameter, CalculationParameterType groupType)
     {
-
-        await using var context = await _contextFactory.CreateDbContextAsync();
-
-
-        var existingGroup = await context.Set<CalculationParameterGroup>()
+        var existingGroup = await _context.Set<CalculationParameterGroup>()
             .FirstOrDefaultAsync(group => group.SettingsType == groupType);
 
 
@@ -130,15 +114,12 @@ public class CalculationRepository
         parameter.ParameterGroupId = existingGroup.Id;
         existingGroup.Parameters.Add(parameter);
 
-        await context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
     }
 
     public async Task UpdateGroupAsync(CalculationParameterGroup group)
     {
-        await using var context = await _contextFactory.CreateDbContextAsync();
-
-
-        var existingGroup = await context
+        var existingGroup = await _context
             .Set<CalculationParameterGroup>()
             .AsNoTracking()
             .FirstOrDefaultAsync(gr => gr.SettingsType == group.SettingsType);
@@ -146,18 +127,16 @@ public class CalculationRepository
 
         if (existingGroup == null) throw new ArgumentException("Группы указанного типа не существует");
 
-        context.Set<CalculationParameterGroup>().Update(existingGroup);
-        await context.SaveChangesAsync();
+        _context.Set<CalculationParameterGroup>().Update(existingGroup);
+        await _context.SaveChangesAsync();
     }
 
     public async Task UpdateParametersAsync(List<CalculationParameter> uiParameters)
     {
-        await using var context = await _contextFactory.CreateDbContextAsync();
-
         // Загружаем из БД только те параметры, которые пришли с UI
         var ids = uiParameters.Select(p => p.Id).ToList();
 
-        var dbParameters = await context.CalculationParameters
+        var dbParameters = await _context.CalculationParameters
             .Where(p => ids.Contains(p.Id))
             .ToListAsync();
 
@@ -178,17 +157,14 @@ public class CalculationRepository
             dbParam.EquipReferenceType = uiParam.EquipReferenceType;
         }
 
-        await context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
     }
 
     public async Task UpdateParametersInGroup(
         CalculationParameterType groupType,
         IEnumerable<CalculationParameter> updatedParameters)
     {
-
-        await using var context = await _contextFactory.CreateDbContextAsync();
-
-        var existingGroup = await context
+        var existingGroup = await _context
             .Set<CalculationParameterGroup>()
             .Include(group => group.Parameters)
             .FirstOrDefaultAsync(group => group.SettingsType == groupType);
@@ -219,14 +195,12 @@ public class CalculationRepository
             }
         }
 
-        await context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
     }
 
     public async Task DeleteGroupAsync(CalculationParameterGroup group)
     {
-        await using var context = await _contextFactory.CreateDbContextAsync();
-
-        var existingGroup = await context
+        var existingGroup = await _context
             .Set<CalculationParameterGroup>()
             .AsNoTracking()
             .FirstOrDefaultAsync(gr => gr.SettingsType == group.SettingsType);
@@ -234,22 +208,20 @@ public class CalculationRepository
 
         if (existingGroup == null) throw new ArgumentException("Группы указанного типа не существует");
 
-        context.Set<CalculationParameterGroup>().Remove(existingGroup);
-        await context.SaveChangesAsync();
+        _context.Set<CalculationParameterGroup>().Remove(existingGroup);
+        await _context.SaveChangesAsync();
     }
 
     public async Task DeleteParameterFromGroup(CalculationParameter parameter, CalculationParameterType groupType)
     {
-        await using var context = await _contextFactory.CreateDbContextAsync();
-
-        var existingGroup = await context
+        var existingGroup = await _context
             .Set<CalculationParameterGroup>()
             .FirstOrDefaultAsync(group => group.SettingsType == groupType);
 
 
         if (existingGroup == null) throw new ArgumentException("Группы указанного типа не существует");
 
-        var existingParameter = await context
+        var existingParameter = await _context
             .Set<CalculationParameter>()
             .FirstOrDefaultAsync(param =>
                 param.Name == parameter.Name && param.ParameterGroupId == parameter.ParameterGroupId);
@@ -257,6 +229,6 @@ public class CalculationRepository
         if (existingParameter == null) throw new ArgumentException("Указанный параметр не существует внутри группы");
 
         existingGroup.Parameters.Remove(existingParameter);
-        await context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
     }
 }
