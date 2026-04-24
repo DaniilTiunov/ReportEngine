@@ -807,15 +807,15 @@ public class ProjectViewModel : BaseViewModel
             if (Guard.ExitIfNull("Стенд не выбран!", _notificationService, stand))
                 return;
 
-            var purposes = stand.AllElectricalPurposesInStand.ToList();
-
-            foreach (var purpose in purposes)
+            foreach (var purpose in stand.AllElectricalPurposesInStand.ToList())
             {
                 if (purpose.Id == 0)
                 {
-                    var firstComponent = stand.ElectricalComponentsInStand.FirstOrDefault();
+                    var firstComponent = stand.AllElectricalPurposesInStand.FirstOrDefault();
+                    
                     if (firstComponent != null)
-                        purpose.FormedElectricalComponentId = firstComponent.Id;
+                        purpose.FormedElectricalComponentId = firstComponent.FormedElectricalComponentId;
+                    
                 }
 
                 await _standService.UpdateElectricalPurposeAsync(purpose);
@@ -852,9 +852,9 @@ public class ProjectViewModel : BaseViewModel
             {
                 if (purpose.Id == 0)
                 {
-                    var firstComponent = stand.AdditionalEquipsInStand.FirstOrDefault();
+                    var firstComponent = stand.AllAdditionalEquipPurposesInStand.FirstOrDefault();
                     if (firstComponent != null)
-                        purpose.FormedAdditionalEquipId = firstComponent.Id;
+                        purpose.FormedAdditionalEquipId = firstComponent.FormedAdditionalEquipId;
                 }
 
                 await _standService.UpdateAdditionalPurposeAsync(purpose);
@@ -914,9 +914,9 @@ public class ProjectViewModel : BaseViewModel
             {
                 if (purpose.Id == 0)
                 {
-                    var firstDrainage = stand.DrainagesInStand.FirstOrDefault();
+                    var firstDrainage = stand.AllDrainagePurposesInStand.FirstOrDefault();
                     if (firstDrainage != null)
-                        purpose.FormedDrainageId = firstDrainage.Id;
+                        purpose.FormedDrainageId = firstDrainage.FormedDrainageId;
                 }
 
                 await _standService.UpdateDrainagePurposeAsync(purpose);
