@@ -175,6 +175,7 @@ public class StandService : IStandService
         };
 
         await _formedElectricalRepository.AddAsync(entity);
+
         await _projectRepository.AddElectricalComponentToStandAsync(standId, entity.Id);
     }
 
@@ -343,7 +344,9 @@ public class StandService : IStandService
 
     public async Task UpdateElectricalPurposeAsync(ElectricalPurpose entity)
     {
-        if (entity == null) return;
+        if (entity == null)
+            return;
+
         await _formedElectricalRepository.UpdateAsync(entity);
     }
 
