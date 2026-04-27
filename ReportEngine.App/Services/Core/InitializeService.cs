@@ -62,7 +62,7 @@ public class InitializeService
     {
         const float nameplatesPerStand = 1.0f;
 
-        var bracketUniversalParameter =_parametersStore[CalculationParameterType.Equipments, "Clamps"];
+        var bracketUniversalParameter =_parametersStore[CalculationParameterType.Equipments, "UniversalBracket"];
         var bracketUniversal = _parametersStore[bracketUniversalParameter]?.Equipment;
 
         var bracketDifParameter = _parametersStore[CalculationParameterType.Equipments, "DiffPressureBracket"];

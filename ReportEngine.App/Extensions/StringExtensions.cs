@@ -1,4 +1,6 @@
-﻿namespace ReportEngine.App.Extensions;
+﻿using System.Globalization;
+
+namespace ReportEngine.App.Extensions;
 
 public static class StringExtensions
 {
@@ -14,6 +16,7 @@ public static class StringExtensions
 
     public static float ToFloat(this string value)
     {
-        return Convert.ToSingle(value ?? string.Empty);
+        return float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+
     }
 }

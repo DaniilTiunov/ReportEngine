@@ -277,7 +277,7 @@ public class FinPlanReportGenerator : IReportGenerator
         PasteSeparatorRow(activeRow, ws);
         activeRow++;
 
-        var generatedLaborData = ExcelReportHelper.GenerateLaborData(sourceData, _parametersStore);
+        var generatedLaborData = ExcelReportHelper.GenerateLaborData(sourceData, _parametersStore, project);
         var laborRecords = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);
         var laborTotalCostRecord = ExcelReportHelper.GenerateTotalRecord(laborRecords);
 

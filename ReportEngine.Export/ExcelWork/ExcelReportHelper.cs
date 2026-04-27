@@ -496,7 +496,7 @@ public static class ExcelReportHelper
     }
 
     //создаем инфу о трудозатратах
-    public static LaborStandsData GenerateLaborData(IEnumerable<Stand> stands, ParametersStore store)
+    public static LaborStandsData GenerateLaborData(IEnumerable<Stand> stands, ParametersStore store, ProjectInfo project)
     {
         //трудозатраты на изготовление рам
 
@@ -527,6 +527,7 @@ public static class ExcelReportHelper
 
         var cabinetProdCostValue = store[CalculationParameterType.FrameCost, "CabinetWorkCost"].Value;
         var cabinetProdCost = TryToParseFloat(cabinetProdCostValue);
+
 
         var framesCostsInfo = stands
             .SelectMany(stand => stand.StandFrames)
@@ -702,7 +703,7 @@ public static class ExcelReportHelper
         var sandBlastTimeValue = store[CalculationParameterType.SandBlastCost, "SandblastingTime"].Value;
         var sandBlastTime = TryToParseFloat(sandBlastTimeValue);
 
-        var isGalvanised = stands.First().Project.IsGalvanized;
+        var isGalvanised = project.IsGalvanized;
 
         var sandBlastingHumanCosts = stands
             .SelectMany(stand => stand.StandFrames)
@@ -753,14 +754,17 @@ public static class ExcelReportHelper
         var paintFrameCostValue = store[CalculationParameterType.FrameCost, "TestBenchPaintCost"].Value;
         var paintFrameCost = TryToParseFloat(paintFrameCostValue);
 
+        var allFramesInProject = project.Stands.SelectMany(s => s.StandFrames).Select(fr => fr.Frame);
+
         var framesPaintInfo = stands
-            .SelectMany(stand => stand.StandFrames)
-            .Select(standFrame => new
-            {
-                Stand = standFrame.Stand,
-                FrameType = standFrame.Frame.FrameType
-            })
-            .Select(frameInfo =>
+                .SelectMany(stand => stand.StandFrames
+                    .Select(frame => new
+                    {
+                        Stand = stand,
+                        FrameType = frame.Frame.FrameType
+                    })
+                )
+               .Select(frameInfo =>
             {
                 var notCabinet = !string.IsNullOrEmpty(frameInfo.FrameType) && frameInfo.FrameType != "Шкаф";
                 var framePaintTime = (notCabinet && !isGalvanised) ? paintFrameTime : 0;

@@ -2014,15 +2014,28 @@ public class ProjectViewModel : BaseViewModel
             return;
 
         var drainageParts = selectedStand.AllDrainagePurposesInStand;
+
         var mainPipeRecord = drainageParts.FirstOrDefault(part => part.Purpose == "Основная труба");
+        var pipeBranch = drainageParts.FirstOrDefault(part => part.Purpose == "Патрубок");
+        var plugMainPipeRecord = drainageParts.FirstOrDefault(part => part.Purpose == "Заглушка основной трубы");
 
-        if (mainPipeRecord == null)
-            return;
-
-
-        if (mainPipeRecord.IsAutoCalculationEnabled == true)
+        if (mainPipeRecord?.IsAutoCalculationEnabled == true)
         {
             mainPipeRecord.Quantity = selectedStand.FramesInStand.Sum(frame => frame.Width) / 1000.0f;
+
+            selectedStand.DrainagePurposesChanges = true;
+        }
+
+        if (pipeBranch?.IsAutoCalculationEnabled == true)
+        {
+            pipeBranch.Quantity = 0.2f * selectedStand.FramesInStand.Count;
+
+            selectedStand.DrainagePurposesChanges = true;
+        }
+
+        if (plugMainPipeRecord?.IsAutoCalculationEnabled == true)
+        {
+            plugMainPipeRecord.Quantity = 2 * selectedStand.FramesInStand.Count;
 
             selectedStand.DrainagePurposesChanges = true;
         }

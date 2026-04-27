@@ -10,7 +10,9 @@ public class StandFrame
     public int StandId { get; set; }
     public int FrameId { get; set; }
 
-    [ForeignKey(nameof(StandId))] public virtual Stand Stand { get; set; }
+    [ForeignKey(nameof(StandId))]
+    public virtual Stand Stand { get; set; }
 
-    [ForeignKey(nameof(FrameId))] public virtual FormedFrame Frame { get; set; }
+    [ForeignKey(nameof(FrameId))]
+    public virtual FormedFrame Frame { get; set; }
 }

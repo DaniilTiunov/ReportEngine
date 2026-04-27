@@ -41,7 +41,7 @@ public class SummaryReportGenerator : IReportGenerator
                 var ws = wb.Worksheets.Add($"{standNumber}");
 
                 CreateStandTableHeader(ws, stand, XLAlignmentHorizontalValues.Center);
-                FillStandTable(ws, stand);
+                FillStandTable(ws, stand, project);
 
                 ws.Columns().Style.Alignment.WrapText = false;
                 ws.Rows().Style.Alignment.WrapText = false;
@@ -100,7 +100,7 @@ public class SummaryReportGenerator : IReportGenerator
                 var ws = wb.Worksheets.Add($"{standNumber}");
 
                 CreateStandTableHeader(ws, stand, XLAlignmentHorizontalValues.Center);
-                FillStandTable(ws, stand);
+                FillStandTable(ws, stand, project);
 
                 ws.Columns().Style.Alignment.WrapText = false;
                 ws.Rows().Style.Alignment.WrapText = false;
@@ -373,7 +373,7 @@ public class SummaryReportGenerator : IReportGenerator
     }
 
     //заполняет таблицу для стенда
-    private void FillStandTable(IXLWorksheet ws, Stand stand)
+    private void FillStandTable(IXLWorksheet ws, Stand stand, ProjectInfo project)
     {
         var activeRow = 4;
 
@@ -427,7 +427,7 @@ public class SummaryReportGenerator : IReportGenerator
         var allPartsList = ExcelReportHelper.GenerateAllPartsCollection(generatedPartsData);
         activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории:", allPartsList, ws);
 
-        var generatedLaborData = ExcelReportHelper.GenerateLaborData(standList, _parametersStore);
+        var generatedLaborData = ExcelReportHelper.GenerateLaborData(standList, _parametersStore, project);
         var allLaborsList = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Трудозатраты", ws);
@@ -526,7 +526,7 @@ public class SummaryReportGenerator : IReportGenerator
         var allPartsList = ExcelReportHelper.GenerateAllPartsCollection(generatedPartsData);
         activeRow = CreateUsualTotalRecord(activeRow, "Итого по комплектующим", allPartsList, ws);
 
-        var generatedLaborData = ExcelReportHelper.GenerateLaborData(project.Stands, _parametersStore);
+        var generatedLaborData = ExcelReportHelper.GenerateLaborData(project.Stands, _parametersStore, project);
         var allLaborsList = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Трудозатраты", ws);
