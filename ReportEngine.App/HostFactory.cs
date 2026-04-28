@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ReportEngine.App.LLM;
+using ReportEngine.App.LLM.Interfaces;
 using ReportEngine.App.LLM.Services;
 using ReportEngine.App.LLM.ViewModels;
 using ReportEngine.App.Services;
@@ -171,7 +172,7 @@ public class HostFactory
         services.AddSingleton<SessionService>();
 
         services.AddHttpClient();
-        services.AddScoped<AiChatService>();
+        services.AddScoped<IAiChatService, GigachatAiService>();
     }
 
     private static void ConfigureReportsServices(IServiceCollection services)

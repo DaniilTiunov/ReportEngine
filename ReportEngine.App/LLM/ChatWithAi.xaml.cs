@@ -11,4 +11,3 @@ public partial class ChatWithAi : UserControl
         DataContext = viewModel;
     }
 }
-
