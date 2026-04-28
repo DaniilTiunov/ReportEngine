@@ -1,8 +1,12 @@
 ﻿using System.Windows.Controls;
+using System.Net.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using ReportEngine.App.LLM;
+using ReportEngine.App.LLM.Services;
+using ReportEngine.App.LLM.ViewModels;
 using ReportEngine.App.Services;
 using ReportEngine.App.Services.Calculation;
 using ReportEngine.App.Services.Cloners;
@@ -84,6 +88,8 @@ public class HostFactory
             options.UseNpgsql(connString));
     }
 
+
+
     private static void ConfigureRepositories(IServiceCollection services)
     {
         // Обычные репозитории
@@ -163,6 +169,9 @@ public class HostFactory
         services.AddScoped<AuditService>();
         services.AddSingleton<ParametersStore>();
         services.AddSingleton<SessionService>();
+
+        services.AddHttpClient();
+        services.AddScoped<AiChatService>();
     }
 
     private static void ConfigureReportsServices(IServiceCollection services)
@@ -201,6 +210,7 @@ public class HostFactory
         services.AddScoped<AllStandsViewModel>();
         services.AddScoped<CalculationParametersViewModel>();
         services.AddScoped<AuditViewModel>();
+        services.AddScoped<ChatWithAiViewModel>();
     }
 
     private static void ConfigureViews(IServiceCollection services)
@@ -250,5 +260,6 @@ public class HostFactory
         services.AddTransient<SandBlastView>();
         services.AddTransient<ElectricCostView>();
         services.AddTransient<AuditEventsView>();
+        services.AddTransient<ChatWithAi>();
     }
 }

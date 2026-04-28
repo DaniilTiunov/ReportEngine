@@ -29,7 +29,7 @@ public static class StartUp
 
             var parametersStore = host.Services.GetRequiredService<ParametersStore>();
 
-            parametersStore.LoadSettingsDataAsync().GetAwaiter().GetResult();
+            //parametersStore.LoadSettingsDataAsync().GetAwaiter().GetResult();
 
             app.MainWindow = mainWindow;
 
