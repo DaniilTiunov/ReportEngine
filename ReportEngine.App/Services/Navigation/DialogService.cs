@@ -105,6 +105,8 @@ public class DialogService : IDialogService
 
             window.EquipDataGrid.IsReadOnly = true;
 
+            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
             window.ShowDialog();
 
             return selected;
