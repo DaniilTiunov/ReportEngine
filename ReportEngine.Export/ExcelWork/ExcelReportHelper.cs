@@ -565,7 +565,7 @@ public static class ExcelReportHelper
                 };
             });
 
-
+        ;
         var frameProductionHumanCostSum = new
         {
             humanCostSum = framesCostsInfo.Where(info => info.humanCost.HasValue).Sum(info => info.humanCost.Value),
@@ -575,7 +575,7 @@ public static class ExcelReportHelper
 
         var frameProductionMoneyCostSum = new
         {
-            moneyCostSum = framesCostsInfo.Where(info => info.moneyCost.HasValue).Sum(info => info.moneyCost.Value),
+            moneyCostSum = frameProdCost, //берется стоимость рамы
             isValid = framesCostsInfo.All(info => info.moneyCost.HasValue)
         };
 
@@ -588,7 +588,7 @@ public static class ExcelReportHelper
                 frameProductionHumanCostSum.isValid),
             CostPerUnit = new ValidatedField<float?>(frameProductionMoneyCostSum.moneyCostSum,
                 frameProductionMoneyCostSum.isValid),
-            CommonCost = new ValidatedField<float?>(frameProductionMoneyCostSum.moneyCostSum,
+            CommonCost = new ValidatedField<float?>(frameProductionMoneyCostSum.moneyCostSum * frameProductionHumanCostSum.humanCostSum,
                 frameProductionHumanCostSum.isValid && frameProductionMoneyCostSum.isValid)
         };
 
