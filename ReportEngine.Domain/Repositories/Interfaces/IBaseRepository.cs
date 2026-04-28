@@ -1,6 +1,4 @@
-﻿using ReportEngine.Domain.Entities;
-
-namespace ReportEngine.Domain.Repositories.Interfaces;
+﻿namespace ReportEngine.Domain.Repositories.Interfaces;
 
 public interface IBaseRepository<TEntity> where TEntity : class
 {

@@ -1,6 +1,10 @@
 ﻿using System.Diagnostics;
 using ClosedXML.Excel;
+using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.BaseEntities.Interface;
+using ReportEngine.Domain.Entities.Pipes;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
@@ -16,14 +20,20 @@ public class SummaryReportGenerator : IReportGenerator
     private readonly IContainerRepository _containerRepository;
     private readonly ParametersStore _parametersStore;
     private readonly IProjectInfoRepository _projectInfoRepository;
+    private readonly IGenericBaseRepository<StainlessPipe, StainlessPipe> _pipesRepository;
+    private readonly IEnumerable<StainlessPipe> _stainlessPipes;
 
-    public SummaryReportGenerator(IProjectInfoRepository projectInfoRepository,
+    public SummaryReportGenerator(
+        IProjectInfoRepository projectInfoRepository,
         IContainerRepository containerRepository,
-        ParametersStore parametersStore)
+        ParametersStore parametersStore,
+        IServiceProvider serviceProvider)
     {
         _projectInfoRepository = projectInfoRepository;
         _containerRepository = containerRepository;
         _parametersStore = parametersStore;
+        _pipesRepository = serviceProvider.GetRequiredService<IGenericBaseRepository<StainlessPipe, StainlessPipe>>();
+
     }
 
     public ReportType Type => ReportType.SummaryReport;
@@ -31,6 +41,7 @@ public class SummaryReportGenerator : IReportGenerator
     public async Task GenerateAsync(int projectId)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        var pipes = await _pipesRepository.GetAllAsync();
 
         using (var wb = new XLWorkbook())
         {
@@ -41,7 +52,7 @@ public class SummaryReportGenerator : IReportGenerator
                 var ws = wb.Worksheets.Add($"{standNumber}");
 
                 CreateStandTableHeader(ws, stand, XLAlignmentHorizontalValues.Center);
-                FillStandTable(ws, stand);
+                FillStandTable(ws, stand, project, pipes);
 
                 ws.Columns().Style.Alignment.WrapText = false;
                 ws.Rows().Style.Alignment.WrapText = false;
@@ -63,7 +74,7 @@ public class SummaryReportGenerator : IReportGenerator
             // Сводная ведомость
             var summarySheet = wb.Worksheets.Add("Сводная заявка");
             CreateCommonListTableHeader(summarySheet, project);
-            await FillCommonListTable(summarySheet, project);
+            await FillCommonListTable(summarySheet, project, pipes);
 
             summarySheet.Columns().Style.Alignment.WrapText = false;
             summarySheet.Rows().Style.Alignment.WrapText = false;
@@ -90,6 +101,7 @@ public class SummaryReportGenerator : IReportGenerator
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        var pipes = await _pipesRepository.GetAllAsync();
 
         using (var wb = new XLWorkbook())
         {
@@ -100,7 +112,7 @@ public class SummaryReportGenerator : IReportGenerator
                 var ws = wb.Worksheets.Add($"{standNumber}");
 
                 CreateStandTableHeader(ws, stand, XLAlignmentHorizontalValues.Center);
-                FillStandTable(ws, stand);
+                FillStandTable(ws, stand, project, pipes);
 
                 ws.Columns().Style.Alignment.WrapText = false;
                 ws.Rows().Style.Alignment.WrapText = false;
@@ -122,7 +134,7 @@ public class SummaryReportGenerator : IReportGenerator
             // Сводная ведомость
             var summarySheet = wb.Worksheets.Add("Сводная заявка");
             CreateCommonListTableHeader(summarySheet, project);
-            await FillCommonListTable(summarySheet, project, selectedStands);
+            await FillCommonListTable(summarySheet, project, pipes, selectedStands);
 
             summarySheet.Columns().Style.Alignment.WrapText = false;
             summarySheet.Rows().Style.Alignment.WrapText = false;
@@ -373,7 +385,11 @@ public class SummaryReportGenerator : IReportGenerator
     }
 
     //заполняет таблицу для стенда
-    private void FillStandTable(IXLWorksheet ws, Stand stand)
+    private void FillStandTable(
+        IXLWorksheet ws,
+        Stand stand,
+        ProjectInfo project,
+        IEnumerable<StainlessPipe> stainlessPipes)
     {
         var activeRow = 4;
 
@@ -427,7 +443,7 @@ public class SummaryReportGenerator : IReportGenerator
         var allPartsList = ExcelReportHelper.GenerateAllPartsCollection(generatedPartsData);
         activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории:", allPartsList, ws);
 
-        var generatedLaborData = ExcelReportHelper.GenerateLaborData(standList, _parametersStore);
+        var generatedLaborData = ExcelReportHelper.GenerateLaborData(standList, _parametersStore, project, stainlessPipes);
         var allLaborsList = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Трудозатраты", ws);
@@ -443,7 +459,11 @@ public class SummaryReportGenerator : IReportGenerator
     }
 
     //заполняет сводную ведомость
-    private async Task FillCommonListTable(IXLWorksheet ws, ProjectInfo project, List<Stand>? selectedStands = null)
+    private async Task FillCommonListTable(
+        IXLWorksheet ws,
+        ProjectInfo project,
+        IEnumerable<StainlessPipe> pipes,
+        List<Stand>? selectedStands = null)
     {
         var activeRow = 4;
 
@@ -526,7 +546,7 @@ public class SummaryReportGenerator : IReportGenerator
         var allPartsList = ExcelReportHelper.GenerateAllPartsCollection(generatedPartsData);
         activeRow = CreateUsualTotalRecord(activeRow, "Итого по комплектующим", allPartsList, ws);
 
-        var generatedLaborData = ExcelReportHelper.GenerateLaborData(project.Stands, _parametersStore);
+        var generatedLaborData = ExcelReportHelper.GenerateLaborData(project.Stands, _parametersStore, project, pipes);
         var allLaborsList = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Трудозатраты", ws);

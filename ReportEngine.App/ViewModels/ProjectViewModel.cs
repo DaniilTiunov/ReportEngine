@@ -31,6 +31,7 @@ namespace ReportEngine.App.ViewModels;
 public class ProjectViewModel : BaseViewModel
 {
     private readonly AdditionalEquipService _additionalEquipService;
+    private readonly AuditService _auditService;
     private readonly ICalculationService _calculationService;
     private readonly ContainerService _containerService;
     private readonly IDialogService _dialogService;
@@ -42,11 +43,10 @@ public class ProjectViewModel : BaseViewModel
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IProjectService _projectService;
     private readonly IReportService _reportService;
+    private readonly SessionService _sessionService;
     private readonly IStandService _standService;
     private readonly UIValidatorService _uiValidatorService;
     private readonly UpdaterStandService _updaterStandService;
-    private readonly SessionService _sessionService;
-    private readonly AuditService _auditService;
 
     public ProjectViewModel(
         IProjectInfoRepository projectRepository,
@@ -114,7 +114,7 @@ public class ProjectViewModel : BaseViewModel
 
     public void OnOpenAllSortamentsDialogExecuted(object e)
     {
-        var selected = _dialogService.ShowAllSortamentsDialog();
+        var selected = _dialogService.ShowAllSortamentsDialog(e);
 
         if (selected == null)
             return;
@@ -812,10 +812,9 @@ public class ProjectViewModel : BaseViewModel
                 if (purpose.Id == 0)
                 {
                     var firstComponent = stand.AllElectricalPurposesInStand.FirstOrDefault();
-                    
+
                     if (firstComponent != null)
                         purpose.FormedElectricalComponentId = firstComponent.FormedElectricalComponentId;
-                    
                 }
 
                 await _standService.UpdateElectricalPurposeAsync(purpose);
@@ -2014,15 +2013,28 @@ public class ProjectViewModel : BaseViewModel
             return;
 
         var drainageParts = selectedStand.AllDrainagePurposesInStand;
+
         var mainPipeRecord = drainageParts.FirstOrDefault(part => part.Purpose == "Основная труба");
+        var pipeBranch = drainageParts.FirstOrDefault(part => part.Purpose == "Патрубок");
+        var plugMainPipeRecord = drainageParts.FirstOrDefault(part => part.Purpose == "Заглушка основной трубы");
 
-        if (mainPipeRecord == null)
-            return;
-
-
-        if (mainPipeRecord.IsAutoCalculationEnabled == true)
+        if (mainPipeRecord?.IsAutoCalculationEnabled == true)
         {
             mainPipeRecord.Quantity = selectedStand.FramesInStand.Sum(frame => frame.Width) / 1000.0f;
+
+            selectedStand.DrainagePurposesChanges = true;
+        }
+
+        if (pipeBranch?.IsAutoCalculationEnabled == true)
+        {
+            pipeBranch.Quantity = 0.2f * selectedStand.FramesInStand.Count;
+
+            selectedStand.DrainagePurposesChanges = true;
+        }
+
+        if (plugMainPipeRecord?.IsAutoCalculationEnabled == true)
+        {
+            plugMainPipeRecord.Quantity = 2 * selectedStand.FramesInStand.Count;
 
             selectedStand.DrainagePurposesChanges = true;
         }

@@ -23,6 +23,7 @@ namespace ReportEngine.App.ViewModels;
 
 public class MainWindowViewModel : BaseViewModel
 {
+    private readonly AuditService _auditService;
     private readonly ICalculationService _calculationService;
     private readonly IDialogService _dialogService;
     private readonly EntityProjectClonerService _entityProjectClonerService;
@@ -32,7 +33,6 @@ public class MainWindowViewModel : BaseViewModel
     private readonly IProjectService _projectService;
     private readonly IServiceProvider _serviceProvider;
     private readonly SessionService _sessionService;
-    private readonly AuditService _auditService;
 
     #region Конструктор
 
@@ -45,7 +45,7 @@ public class MainWindowViewModel : BaseViewModel
         IProjectService projectService,
         IDialogService dialogService,
         EntityProjectClonerService entityProjectClonerService,
-        SessionService  sessionService,
+        SessionService sessionService,
         AuditService auditService)
     {
         _notificationService = notificationService;

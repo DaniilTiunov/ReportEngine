@@ -2,14 +2,9 @@
 using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Entities.Braces;
 using ReportEngine.Domain.Entities.CalculationParameters.Enums;
-using ReportEngine.Domain.Entities.ElectricComponents;
-using ReportEngine.Domain.Entities.Frame;
-using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Store;
-
 
 namespace ReportEngine.App.Services.Core;
 
@@ -62,7 +57,7 @@ public class InitializeService
     {
         const float nameplatesPerStand = 1.0f;
 
-        var bracketUniversalParameter =_parametersStore[CalculationParameterType.Equipments, "Clamps"];
+        var bracketUniversalParameter = _parametersStore[CalculationParameterType.Equipments, "UniversalBracket"];
         var bracketUniversal = _parametersStore[bracketUniversalParameter]?.Equipment;
 
         var bracketDifParameter = _parametersStore[CalculationParameterType.Equipments, "DiffPressureBracket"];
@@ -93,7 +88,7 @@ public class InitializeService
             },
             new()
             {
-                Purpose = "Хомуты", Material =clamp?.Name, Measure = clamp?.Measure, CostPerUnit = clamp?.Cost
+                Purpose = "Хомуты", Material = clamp?.Name, Measure = clamp?.Measure, CostPerUnit = clamp?.Cost
             },
             new()
             {

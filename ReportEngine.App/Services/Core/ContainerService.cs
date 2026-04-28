@@ -67,8 +67,7 @@ public class ContainerService
             await RecalculateAndUpdateAllBatches(projectModel);
 
 
-
-           await LoadAllData(projectModel);
+            await LoadAllData(projectModel);
 
             projectModel.SelectedContainerBatch = null;
 
@@ -156,7 +155,6 @@ public class ContainerService
             RecalculateBatch(batch);
             await _containerRepository.UpdateAsync(batch);
         }
-
     }
 
     public async Task AddStandToContainerAsync(ProjectModel projectModel)

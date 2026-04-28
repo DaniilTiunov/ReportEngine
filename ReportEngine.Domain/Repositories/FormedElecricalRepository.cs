@@ -49,7 +49,6 @@ public class FormedElectricalRepository : IFormedElectricalRepository, IPurposes
 
         if (purpose.Id == 0)
         {
-
             // Получаем компонент, к которому добавляем новую цель
             var component = await _context.FormedElectricalComponents
                 .Include(c => c.Purposes)
@@ -63,7 +62,6 @@ public class FormedElectricalRepository : IFormedElectricalRepository, IPurposes
 
             await _context.SaveChangesAsync();
             return;
-
         }
 
         var existing = await _context.ElectricalPurposes.FindAsync(purpose.Id);

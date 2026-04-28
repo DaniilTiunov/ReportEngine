@@ -15,7 +15,7 @@ public interface IDialogService
 
     Obvyazka? ShowObvyazkaDialog(bool dialogMode);
 
-    IBaseEquip? ShowAllSortamentsDialog();
+    IBaseEquip? ShowAllSortamentsDialog(object equipType = null);
 
     string ShowCompanyDialog();
 

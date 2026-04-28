@@ -233,7 +233,7 @@ public class StandModel : BaseViewModel
     }
 
     // Варианты расположения датчика на кронштейне
-    public IEnumerable<string> BraceSensor { get; } = new List<string> { "На кронштейне", "Швеллер" };
+    public IEnumerable<string> BraceSensor { get; } = new List<string> { "", "На кронштейне", "Швеллер" };
 
     // Доступные типы датчиков
     public IEnumerable<string> SensorType { get; } = new List<string>

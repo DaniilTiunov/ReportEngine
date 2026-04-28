@@ -15,6 +15,7 @@ namespace ReportEngine.App.Services.Core;
 public class ProjectService : IProjectService
 {
     private readonly IFormedAdditionalEquipsRepository _additionalEquipsRepository;
+    private readonly AuditService _auditService;
     private readonly IBaseRepository<Company> _companyRepository;
     private readonly IDialogService _dialogService;
     private readonly IFormedDrainagesRepository _drainagesRepository;
@@ -23,10 +24,9 @@ public class ProjectService : IProjectService
     private readonly INotificationService _notificationService;
     private readonly ObvyazkaInStandRepository _obvyazkaInStandRepository;
     private readonly IProjectInfoRepository _projectRepository;
+    private readonly SessionService _sessionService;
     private readonly IStandService _standService;
     private readonly IBaseRepository<Subject> _subjectRepository;
-    private readonly AuditService _auditService;
-    private readonly SessionService _sessionService;
 
     public ProjectService(
         IProjectInfoRepository projectRepository,
