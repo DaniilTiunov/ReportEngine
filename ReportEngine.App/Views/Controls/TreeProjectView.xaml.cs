@@ -146,7 +146,7 @@ public partial class TreeProjectView : UserControl, IDisposable
         var header = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Margin = new Thickness(0, 0, 0, 0),
+            Margin = new Thickness(0, 0, 0, 0)
         };
 
         var headerText = new TextBlock

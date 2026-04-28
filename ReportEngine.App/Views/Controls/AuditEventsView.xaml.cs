@@ -16,10 +16,6 @@ public partial class AuditEventsView : UserControl
     private async void AuditEventsView_Loaded(object sender, RoutedEventArgs e)
     {
         var vm = DataContext as AuditViewModel;
-        if (vm != null)
-        {
-            await vm.LoadAllEventsAsync();
-        }
+        if (vm != null) await vm.LoadAllEventsAsync();
     }
 }
-

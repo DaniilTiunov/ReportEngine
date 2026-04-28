@@ -25,9 +25,7 @@
     </WindowChrome.WindowChrome>
 
     <Window.Resources>
-        <ResourceDictionary>
-            <converters:AdminVisibilityConverter x:Key="AdminVisibilityConverter" />
-        </ResourceDictionary>
+        <ResourceDictionary />
     </Window.Resources>
 
     <Border Style="{DynamicResource WindowBorder}">

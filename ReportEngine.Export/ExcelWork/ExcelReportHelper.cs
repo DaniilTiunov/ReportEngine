@@ -1,14 +1,9 @@
-using DocumentFormat.OpenXml.EMMA;
+using System.Globalization;
 using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Entities.CalculationParameters;
 using ReportEngine.Domain.Entities.CalculationParameters.Enums;
+using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
-using ReportEngine.Shared.Config.IniHelpers;
-using System.Diagnostics;
-using System.Globalization;
-using System.Runtime.InteropServices;
-
 
 namespace ReportEngine.Export.ExcelWork;
 
@@ -21,10 +16,11 @@ public static class ExcelReportHelper
         return prefix + " " + DateTime.Now.ToString("dd-MM-yy___HH-mm-ss") + "." + fileExtension;
     }
 
-    public static float? TryToParseFloat(string? str)
+    private static float? TryToParseFloat(string? str)
     {
-
-        return float.TryParse(str, NumberStyles.Any, CultureInfo.InvariantCulture, out var parseResult) ? parseResult : null;
+        return float.TryParse(str, NumberStyles.Any, CultureInfo.InvariantCulture, out var parseResult)
+            ? parseResult
+            : null;
     }
 
 
@@ -496,7 +492,8 @@ public static class ExcelReportHelper
     }
 
     //создаем инфу о трудозатратах
-    public static LaborStandsData GenerateLaborData(IEnumerable<Stand> stands, ParametersStore store, ProjectInfo project)
+    public static LaborStandsData GenerateLaborData(IEnumerable<Stand> stands, ParametersStore store,
+        ProjectInfo project, IEnumerable<StainlessPipe> stainlessPipes)
     {
         //трудозатраты на изготовление рам
 
@@ -505,7 +502,8 @@ public static class ExcelReportHelper
         var frameProdTimeValue = store[CalculationParameterType.FrameCost, "FrameProdTime"].Value;
         var frameProdTime = TryToParseFloat(frameProdTimeValue);
 
-        var dissassemledFrameProdTimeValue = store[CalculationParameterType.FrameCost, "DisassemblableFrameFabTime"].Value;
+        var dissassemledFrameProdTimeValue =
+            store[CalculationParameterType.FrameCost, "DisassemblableFrameFabTime"].Value;
         var dissassemledFrameProdTime = TryToParseFloat(dissassemledFrameProdTimeValue);
 
         var standProdTimeValue = store[CalculationParameterType.FrameCost, "StandFabTime"].Value;
@@ -519,7 +517,8 @@ public static class ExcelReportHelper
         var frameProdCostValue = store[CalculationParameterType.FrameCost, "FrameFabCost"].Value;
         var frameProdCost = TryToParseFloat(frameProdCostValue);
 
-        var dissassemledFrameProdCostValue = store[CalculationParameterType.FrameCost, "DisassemblableFrameFabTime"].Value;
+        var dissassemledFrameProdCostValue =
+            store[CalculationParameterType.FrameCost, "DisassemblableFrameFabTime"].Value;
         var dissassemledFrameProdCost = TryToParseFloat(dissassemledFrameProdCostValue);
 
         var standProdCostValue = store[CalculationParameterType.FrameCost, "StandFabCost"].Value;
@@ -544,12 +543,12 @@ public static class ExcelReportHelper
                 switch (frameInfo.frameType)
                 {
                     case "Рама":
-                        humanCost = (frameInfo.isDissassembledFrame ?? false) ? dissassemledFrameProdTime : frameProdTime;
-                        moneyCost = (frameInfo.isDissassembledFrame ?? false) ? dissassemledFrameProdCost : frameProdCost;
+                        humanCost = frameInfo.isDissassembledFrame ?? false ? dissassemledFrameProdTime : frameProdTime;
+                        moneyCost = frameInfo.isDissassembledFrame ?? false ? dissassemledFrameProdCost : frameProdCost;
                         break;
                     case "Стойка":
-                        humanCost = (frameInfo.isDissassembledFrame ?? false) ? dissassemledFrameProdTime : standProdTime;
-                        moneyCost = (frameInfo.isDissassembledFrame ?? false) ? dissassemledFrameProdCost : standProdCost;
+                        humanCost = frameInfo.isDissassembledFrame ?? false ? dissassemledFrameProdTime : standProdTime;
+                        moneyCost = frameInfo.isDissassembledFrame ?? false ? dissassemledFrameProdCost : standProdCost;
                         break;
                     case "Шкаф":
                         humanCost = cabinetProdTime;
@@ -559,10 +558,10 @@ public static class ExcelReportHelper
 
                 return new
                 {
-                    isDissassembledFrame = frameInfo.isDissassembledFrame,
-                    frameType = frameInfo.frameType,
-                    humanCost = humanCost,
-                    moneyCost = moneyCost
+                    frameInfo.isDissassembledFrame,
+                    frameInfo.frameType,
+                    humanCost,
+                    moneyCost
                 };
             });
 
@@ -588,22 +587,21 @@ public static class ExcelReportHelper
             Quantity = new ValidatedField<float?>(frameProductionHumanCostSum.humanCostSum,
                 frameProductionHumanCostSum.isValid),
             CostPerUnit = new ValidatedField<float?>(frameProductionMoneyCostSum.moneyCostSum,
-               frameProductionMoneyCostSum.isValid),
-            CommonCost = new ValidatedField<float?>((frameProductionHumanCostSum.humanCostSum * frameProductionMoneyCostSum.moneyCostSum),
+                frameProductionMoneyCostSum.isValid),
+            CommonCost = new ValidatedField<float?>(frameProductionMoneyCostSum.moneyCostSum,
                 frameProductionHumanCostSum.isValid && frameProductionMoneyCostSum.isValid)
         };
 
 
         //трудозатраты на обвязки
-
         var allObvHumanCosts = stands
             .SelectMany(stand => stand.ObvyazkiInStand)
-            .Sum(obv => obv.HumanCost);
-
+            .Sum(obv => stainlessPipes.Any(pipe => pipe.Name == obv.MaterialLine)
+                ? obv.HumanCost * 1.2f
+                : obv.HumanCost);
 
         var obvProdCostValue = store[CalculationParameterType.HumanCost, "PipeworkFabCost"].Value;
         var obvProdCost = TryToParseFloat(obvProdCostValue);
-
 
         var obvProductionRecord = new EquipmentRecord
         {
@@ -612,10 +610,9 @@ public static class ExcelReportHelper
             Unit = new ValidatedField<string?>("чел/час", true),
             Quantity = new ValidatedField<float?>(allObvHumanCosts, allObvHumanCosts.HasValue),
             CostPerUnit = new ValidatedField<float?>(obvProdCost, obvProdCost.HasValue),
-            CommonCost = new ValidatedField<float?>((allObvHumanCosts * obvProdCost), (allObvHumanCosts * obvProdCost).HasValue)
+            CommonCost = new ValidatedField<float?>(allObvHumanCosts * obvProdCost,
+                (allObvHumanCosts * obvProdCost).HasValue)
         };
-
-
 
 
         //трудозатраты на коллектор
@@ -711,7 +708,7 @@ public static class ExcelReportHelper
             .Select(frameType =>
             {
                 var notCabinet = !string.IsNullOrEmpty(frameType) && frameType != "Шкаф";
-                return (notCabinet && !isGalvanised) ? sandBlastTime : 0;
+                return notCabinet && !isGalvanised ? sandBlastTime : 0;
             });
 
 
@@ -726,11 +723,12 @@ public static class ExcelReportHelper
             ExportDays = new ValidatedField<int?>(null, true),
             Name = new ValidatedField<string?>("Пескоструйные работы", true),
             Unit = new ValidatedField<string?>("чел/час", true),
-            Quantity = new ValidatedField<float?>(sandBlastingHumanCostSum.humanCostSum, sandBlastingHumanCostSum.isValid),
+            Quantity = new ValidatedField<float?>(sandBlastingHumanCostSum.humanCostSum,
+                sandBlastingHumanCostSum.isValid),
             CostPerUnit = new ValidatedField<float?>(sandBlastCost, sandBlastCost.HasValue),
             CommonCost = new ValidatedField<float?>(
-                (sandBlastingHumanCostSum.humanCostSum * sandBlastCost),
-                (sandBlastingHumanCostSum.isValid && sandBlastCost.HasValue))
+                sandBlastingHumanCostSum.humanCostSum * sandBlastCost,
+                sandBlastingHumanCostSum.isValid && sandBlastCost.HasValue)
         };
 
 
@@ -754,20 +752,17 @@ public static class ExcelReportHelper
         var paintFrameCostValue = store[CalculationParameterType.FrameCost, "TestBenchPaintCost"].Value;
         var paintFrameCost = TryToParseFloat(paintFrameCostValue);
 
-        var allFramesInProject = project.Stands.SelectMany(s => s.StandFrames).Select(fr => fr.Frame);
-
         var framesPaintInfo = stands
-                .SelectMany(stand => stand.StandFrames
-                    .Select(frame => new
-                    {
-                        Stand = stand,
-                        FrameType = frame.Frame.FrameType
-                    })
-                )
-               .Select(frameInfo =>
+            .SelectMany(stand => stand.StandFrames
+                .Select(frame => new
+                {
+                    Stand = stand, frame.Frame.FrameType
+                })
+            )
+            .Select(frameInfo =>
             {
                 var notCabinet = !string.IsNullOrEmpty(frameInfo.FrameType) && frameInfo.FrameType != "Шкаф";
-                var framePaintTime = (notCabinet && !isGalvanised) ? paintFrameTime : 0;
+                var framePaintTime = notCabinet && !isGalvanised ? paintFrameTime : 0;
                 var needToPaint = (notCabinet && !isGalvanised) || frameInfo.Stand.ObvyazkiInStand.Count > 0;
 
                 return new
@@ -778,14 +773,16 @@ public static class ExcelReportHelper
                 };
             });
 
-        var obvPaintingHumanCost = stands.
-            Sum(stand => stand.ObvyazkiInStand.Count * paintObvTime);
+        var obvPaintingHumanCost = stands.Sum(stand => stand.ObvyazkiInStand.Count * paintObvTime);
 
         //возможно,надо считать для каждого стенда
         var equipmentPrepareHumanCost = framesPaintInfo
-            .Any(stand => stand.NeedToPaint) ? prepareAllEquipmentTime : 0;
+            .Any(stand => stand.NeedToPaint)
+            ? prepareAllEquipmentTime
+            : 0;
 
-        var paintingHumanCostSum = framesPaintInfo.Sum(frameInfo => frameInfo.FrameHumanCost) + obvPaintingHumanCost + equipmentPrepareHumanCost;
+        var paintingHumanCostSum = framesPaintInfo.Sum(frameInfo => frameInfo.FrameHumanCost) + obvPaintingHumanCost +
+                                   equipmentPrepareHumanCost;
 
         var paintingRecord = new EquipmentRecord
         {
@@ -869,7 +866,7 @@ public static class ExcelReportHelper
             Quantity = new ValidatedField<float?>(electricHumanCost, electricHumanCost.HasValue),
             CostPerUnit = new ValidatedField<float?>(electricMontageCost, electricMontageCost.HasValue),
             CommonCost = new ValidatedField<float?>(electricHumanCost * electricMontageCost,
-                                                    electricHumanCost * electricMontageCost != null)
+                electricHumanCost * electricMontageCost != null)
         };
 
         //трудозатраты на общую проверку стенда

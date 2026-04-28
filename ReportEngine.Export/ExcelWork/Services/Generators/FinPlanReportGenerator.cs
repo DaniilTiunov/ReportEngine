@@ -1,5 +1,9 @@
 ﻿using ClosedXML.Excel;
+using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.BaseEntities.Interface;
+using ReportEngine.Domain.Entities.Pipes;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
@@ -14,15 +18,18 @@ public class FinPlanReportGenerator : IReportGenerator
     private readonly IContainerRepository _containerRepository;
     private readonly ParametersStore _parametersStore;
     private readonly IProjectInfoRepository _projectInfoRepository;
+    private readonly IGenericBaseRepository<StainlessPipe, StainlessPipe> _pipesRepository ;
 
     public FinPlanReportGenerator(
         IProjectInfoRepository projectInfoRepository,
         IContainerRepository containerRepository,
-        ParametersStore parametersStore)
+        ParametersStore parametersStore,
+        IServiceProvider serviceProvider)
     {
         _projectInfoRepository = projectInfoRepository;
         _containerRepository = containerRepository;
         _parametersStore = parametersStore;
+        _pipesRepository = serviceProvider.GetRequiredService<IGenericBaseRepository<StainlessPipe, StainlessPipe>>();
     }
 
     public ReportType Type => ReportType.FinPlanReport;
@@ -30,6 +37,8 @@ public class FinPlanReportGenerator : IReportGenerator
     public async Task GenerateAsync(int projectId)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
+
+        var pipes = await _pipesRepository.GetAllAsync();
 
         using (var wb = new XLWorkbook())
         {
@@ -54,7 +63,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
                 //заполняем таблицу себестоимости
                 activeRow = CreateHeader(activeRow, "Себестоимость", ws);
-                (activeRow, var totalRange, var summaryRange) = await CreateSelfcostTable(ws, project, activeRow);
+                (activeRow, var totalRange, var summaryRange) = await CreateSelfcostTable(ws, project, activeRow, pipes);
 
                 activeRow += 2;
 
@@ -92,6 +101,8 @@ public class FinPlanReportGenerator : IReportGenerator
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
 
+        var pipes = await _pipesRepository.GetAllAsync();
+
         using (var wb = new XLWorkbook())
         {
             const string sellCostWorksheetName = "Стоимость продажи";
@@ -116,7 +127,7 @@ public class FinPlanReportGenerator : IReportGenerator
                 //заполняем таблицу себестоимости
                 activeRow = CreateHeader(activeRow, "Себестоимость", ws);
                 (activeRow, var totalRange, var summaryRange) =
-                    await CreateSelfcostTable(ws, project, activeRow, selectedStands);
+                    await CreateSelfcostTable(ws, project, activeRow, pipes, selectedStands);
 
                 activeRow += 2;
 
@@ -232,6 +243,7 @@ public class FinPlanReportGenerator : IReportGenerator
         IXLWorksheet ws,
         ProjectInfo project,
         int startRow,
+        IEnumerable<StainlessPipe> pipes,
         List<Stand>? selectedStands = null)
     {
         var containerBatches = _containerRepository.GetAllByProjectIdAsync(project.Id);
@@ -277,7 +289,7 @@ public class FinPlanReportGenerator : IReportGenerator
         PasteSeparatorRow(activeRow, ws);
         activeRow++;
 
-        var generatedLaborData = ExcelReportHelper.GenerateLaborData(sourceData, _parametersStore, project);
+        var generatedLaborData = ExcelReportHelper.GenerateLaborData(sourceData, _parametersStore, project, pipes);
         var laborRecords = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);
         var laborTotalCostRecord = ExcelReportHelper.GenerateTotalRecord(laborRecords);
 

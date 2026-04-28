@@ -11,17 +11,17 @@ namespace ReportEngine.App.ViewModels;
 
 public class AuditViewModel : BaseViewModel
 {
-    private DateTime _filterFrom = DateTime.UtcNow.AddDays(-7);
-    private DateTime _filterTo = DateTime.UtcNow;
     private readonly ReAppContext _context;
     private ObservableCollection<AuditEvent> _allEvents = new();
+    private DateTime _filterFrom = DateTime.UtcNow.AddDays(-7);
+    private DateTime _filterTo = DateTime.UtcNow;
 
     public AuditViewModel(ReAppContext context)
     {
         _context = context;
 
-        LoadAllEventsCommand = new RelayCommand(OnLoadAllEventsAsyncExecuted,  CanAlwaysExecute);
-        LoadFilteredEventsCommand = new RelayCommand(OnLoadFilteredEventsAsyncExecuted,  CanAlwaysExecute);
+        LoadAllEventsCommand = new RelayCommand(OnLoadAllEventsAsyncExecuted, CanAlwaysExecute);
+        LoadFilteredEventsCommand = new RelayCommand(OnLoadFilteredEventsAsyncExecuted, CanAlwaysExecute);
     }
 
     public ObservableCollection<AuditEvent> AllEvents
@@ -71,7 +71,7 @@ public class AuditViewModel : BaseViewModel
     public async Task LoadFilteredEventsAsync()
     {
         AllEvents.Clear();
-        var events = await  _context.Set<AuditEvent>()
+        var events = await _context.Set<AuditEvent>()
             .Where(e => FilterFrom <= e.Timestamp && e.Timestamp <= FilterTo)
             .ToListAsync();
 

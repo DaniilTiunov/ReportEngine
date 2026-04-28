@@ -89,7 +89,7 @@ public class DialogService : IDialogService
         }
     }
 
-    public IBaseEquip? ShowAllSortamentsDialog()
+    public IBaseEquip? ShowAllSortamentsDialog(object equipType = null)
     {
         try
         {
@@ -100,6 +100,8 @@ public class DialogService : IDialogService
             viewModel.SelectionHandler = item => { selected = item; };
 
             var window = new AllSortamentsView(viewModel, true);
+
+            OpenCurrentTab(equipType, window);
 
             window.EquipDataGrid.IsReadOnly = true;
 
@@ -369,5 +371,18 @@ public class DialogService : IDialogService
             return vm.SelectedResult;
 
         return null;
+    }
+
+    private void OpenCurrentTab(object equipType, AllSortamentsView window)
+    {
+        switch (equipType)
+        {
+            case ElectricalPurpose:
+                window.MainTabControl.SelectedIndex = 6;
+                break;
+            case DrainagePurpose:
+                window.MainTabControl.SelectedIndex = 3;
+                break;
+        }
     }
 }

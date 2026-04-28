@@ -17,6 +17,5 @@ public static class StringExtensions
     public static float ToFloat(this string value)
     {
         return float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
-
     }
 }
