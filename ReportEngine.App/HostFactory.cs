@@ -31,6 +31,7 @@ using ReportEngine.App.Views.Utils;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Domain.Database.Context;
+using ReportEngine.Domain.Database.DbSettings;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.Braces;
@@ -47,20 +48,21 @@ using ReportEngine.Export.ExcelWork.Services;
 using ReportEngine.Export.ExcelWork.Services.Generators;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Export.PDFWork.Services.Generators;
+using ReportEngine.Shared.Config.JsonHelpers;
 using Serilog;
 
 namespace ReportEngine.App;
 
 public class HostFactory
 {
-    public static IHost BuildHost(string connString)
+    public static IHost BuildHost(string dbMode)
     {
         return Host.CreateDefaultBuilder()
             .UseSerilog(Log.Logger, true)
-            .ConfigureServices((hostContext, services) =>
+            .ConfigureServices((services) =>
             {
                 // Регистрация контекста БД
-                ConfigureDatabase(services, connString);
+                ConfigureDatabase(services, dbMode);
                 // Регистрация репозиториев
                 ConfigureRepositories(services);
                 // Регистрация обощённых репозиториев
@@ -84,10 +86,12 @@ public class HostFactory
             .Build();
     }
 
-    private static void ConfigureDatabase(IServiceCollection services, string connString)
+    private static void ConfigureDatabase(
+        IServiceCollection services,
+        string dbMode)
     {
         services.AddDbContext<ReAppContext>(options =>
-            options.UseNpgsql(connString));
+            DbContextOptionsFactory.Configure(options, dbMode));
     }
 
 

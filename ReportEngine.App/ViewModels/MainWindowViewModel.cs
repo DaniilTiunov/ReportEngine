@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +19,8 @@ using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Shared.Config.Directory;
+using ReportEngine.Shared.Config.JsonHelpers;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -74,6 +77,8 @@ public class MainWindowViewModel : BaseViewModel
     public User? CurrentUser => _sessionService.CurrentUser;
     public string? CurrentUserLogin => _sessionService.CurrentUser?.UserLogin;
 
+    public string DatabaseMode => JsonHandler.GetDatabaseMode(DirectoryHelper.GetConfigPath());
+
     private void SessionChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(SessionService.CurrentUser))
@@ -112,6 +117,51 @@ public class MainWindowViewModel : BaseViewModel
     public bool CanAllCommandsExecute(object e)
     {
         return true;
+    }
+
+    public void OnSetDbOffline(object e)
+    {
+        JsonHandler.SetDatabaseMode(DirectoryHelper.GetConfigPath(), "Offline");
+        RestartApp();
+    }
+
+    public void OnSetDbOnline(object e)
+    {
+        JsonHandler.SetDatabaseMode(DirectoryHelper.GetConfigPath(), "Online");
+        RestartApp();
+    }
+
+    private void RestartApp()
+    {
+        try
+        {
+            var confirm = _notificationService.ShowConfirmation("""
+                                                                Приложение будет перезагружено.
+                                                                Все несохранённые данные будут потеряны.
+                                                                Продолжить?
+                                                                """);
+
+            if (!confirm)
+                return;
+
+            var exePath = Process.GetCurrentProcess().MainModule?.FileName;
+
+            if (exePath == null)
+                return;
+
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = exePath,
+                UseShellExecute = true
+            });
+
+            Application.Current.Shutdown();
+        }
+        catch (Exception e)
+        {
+            MessageBox.Show($"Ошибка {e.Message}");
+            throw;
+        }
     }
 
     public async void OnRecalculateProjectCommandExecuted(object e)

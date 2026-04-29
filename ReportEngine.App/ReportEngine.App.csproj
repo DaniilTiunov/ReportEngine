@@ -152,6 +152,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Folder Include="AppSettings\" />
         <Folder Include="Help\" />
         <Folder Include="logs\" />
         <Folder Include="..\Resources\Icons\" />

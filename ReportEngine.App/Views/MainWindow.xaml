@@ -136,6 +136,11 @@
                     <MenuItem Command="{Binding MainWindowCommandProvider.OpenCalculationParametersCommand}" Header="Параметры расчета" />
                     <Separator />
                     <MenuItem Command="{Binding MainWindowCommandProvider.OpenSettingsWindow}" Header="Настройки приложения" />
+                    <Separator />
+                    <MenuItem Header="База данных">
+                        <MenuItem Command="{Binding MainWindowCommandProvider.SetOnlineDbCommand}" Header="Удалённый сервер" />
+                        <MenuItem Command="{Binding MainWindowCommandProvider.SetOfflineDbCommand}" Header="Локально" />
+                    </MenuItem>
                 </MenuItem>
 
                 <MenuItem Header="Вид" Tag="ThemeItemChanger">
@@ -279,6 +284,22 @@
                         FontWeight="Bold"
                         Text="{Binding CurrentUser.SystemRole, Converter={StaticResource TranslateUserRole}}" />
                 </StatusBarItem>
+
+                <StatusBarItem HorizontalAlignment="Right">
+                    <TextBlock
+                        Margin="5,0,0,0"
+                        FontSize="14"
+                        Text="Режим работы базы данных:" />
+                </StatusBarItem>
+                <StatusBarItem HorizontalAlignment="Right">
+                    <TextBlock
+                        Margin="5,0,0,0"
+                        FontSize="14"
+                        FontWeight="Bold"
+                        Text="{Binding DatabaseMode}" />
+                </StatusBarItem>
+
+
                 <StatusBarItem HorizontalAlignment="Stretch">
                     <Separator Visibility="Hidden" />
                 </StatusBarItem>
