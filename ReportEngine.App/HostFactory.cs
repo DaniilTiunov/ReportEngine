@@ -19,6 +19,7 @@ using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.CalculationSettings;
 using ReportEngine.App.ViewModels.Contacts;
 using ReportEngine.App.ViewModels.FormedEquips;
+using ReportEngine.App.ViewModels.TreeView;
 using ReportEngine.App.ViewModels.Utils;
 using ReportEngine.App.Views;
 using ReportEngine.App.Views.Controls;
@@ -212,6 +213,7 @@ public class HostFactory
         services.AddScoped<CalculationParametersViewModel>();
         services.AddScoped<AuditViewModel>();
         services.AddScoped<ChatWithAiViewModel>();
+        services.AddScoped<TreeViewModel>();
     }
 
     private static void ConfigureViews(IServiceCollection services)
