@@ -25,4 +25,6 @@ public class MainWindowCommandProvider
     public ICommand CopySelectedProjectCommand { get; set; }
     public ICommand OpenCalculationParametersCommand { get; set; }
     public ICommand OpenAuditContentCommand { get; set; }
+    public ICommand SetOfflineDbCommand { get; set; }
+    public ICommand SetOnlineDbCommand { get; set; }
 }

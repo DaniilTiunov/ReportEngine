@@ -1,8 +1,13 @@
 ﻿using System.Windows.Controls;
+using System.Net.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using ReportEngine.App.LLM;
+using ReportEngine.App.LLM.Interfaces;
+using ReportEngine.App.LLM.Services;
+using ReportEngine.App.LLM.ViewModels;
 using ReportEngine.App.Services;
 using ReportEngine.App.Services.Calculation;
 using ReportEngine.App.Services.Cloners;
@@ -14,6 +19,7 @@ using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.CalculationSettings;
 using ReportEngine.App.ViewModels.Contacts;
 using ReportEngine.App.ViewModels.FormedEquips;
+using ReportEngine.App.ViewModels.TreeView;
 using ReportEngine.App.ViewModels.Utils;
 using ReportEngine.App.Views;
 using ReportEngine.App.Views.Controls;
@@ -25,6 +31,7 @@ using ReportEngine.App.Views.Utils;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Domain.Database.Context;
+using ReportEngine.Domain.Database.DbSettings;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.Braces;
@@ -41,20 +48,21 @@ using ReportEngine.Export.ExcelWork.Services;
 using ReportEngine.Export.ExcelWork.Services.Generators;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Export.PDFWork.Services.Generators;
+using ReportEngine.Shared.Config.JsonHelpers;
 using Serilog;
 
 namespace ReportEngine.App;
 
 public class HostFactory
 {
-    public static IHost BuildHost(string connString)
+    public static IHost BuildHost(string dbMode)
     {
         return Host.CreateDefaultBuilder()
             .UseSerilog(Log.Logger, true)
-            .ConfigureServices((hostContext, services) =>
+            .ConfigureServices((services) =>
             {
                 // Регистрация контекста БД
-                ConfigureDatabase(services, connString);
+                ConfigureDatabase(services, dbMode);
                 // Регистрация репозиториев
                 ConfigureRepositories(services);
                 // Регистрация обощённых репозиториев
@@ -78,11 +86,15 @@ public class HostFactory
             .Build();
     }
 
-    private static void ConfigureDatabase(IServiceCollection services, string connString)
+    private static void ConfigureDatabase(
+        IServiceCollection services,
+        string dbMode)
     {
         services.AddDbContext<ReAppContext>(options =>
-            options.UseNpgsql(connString));
+            DbContextOptionsFactory.Configure(options, dbMode));
     }
+
+
 
     private static void ConfigureRepositories(IServiceCollection services)
     {
@@ -163,6 +175,9 @@ public class HostFactory
         services.AddScoped<AuditService>();
         services.AddSingleton<ParametersStore>();
         services.AddSingleton<SessionService>();
+
+        services.AddHttpClient();
+        services.AddScoped<IAiChatService, GigachatAiService>();
     }
 
     private static void ConfigureReportsServices(IServiceCollection services)
@@ -201,6 +216,8 @@ public class HostFactory
         services.AddScoped<AllStandsViewModel>();
         services.AddScoped<CalculationParametersViewModel>();
         services.AddScoped<AuditViewModel>();
+        services.AddScoped<ChatWithAiViewModel>();
+        services.AddScoped<TreeViewModel>();
     }
 
     private static void ConfigureViews(IServiceCollection services)
@@ -250,5 +267,6 @@ public class HostFactory
         services.AddTransient<SandBlastView>();
         services.AddTransient<ElectricCostView>();
         services.AddTransient<AuditEventsView>();
+        services.AddTransient<ChatWithAi>();
     }
 }

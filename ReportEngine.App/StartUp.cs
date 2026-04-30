@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using Microsoft.Extensions.DependencyInjection;
+using ReportEngine.Domain.Database.DbSettings;
 using ReportEngine.Domain.Store;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
@@ -19,9 +20,9 @@ public static class StartUp
 
             Log.Logger = LoggerConfig.InitializeLogger();
 
-            var connString = JsonHandler.GetConnectionString(DirectoryHelper.GetConfigPath());
+            var config = JsonHandler.GetDatabaseMode(DirectoryHelper.GetConfigPath());
 
-            var host = HostFactory.BuildHost(connString);
+            var host = HostFactory.BuildHost(config);
 
             var app = host.Services.GetRequiredService<App>();
 

@@ -6,6 +6,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
+using ReportEngine.App.ViewModels.TreeView;
 using ReportEngine.Shared.Config.DebugConsol;
 
 namespace ReportEngine.App.Views.Controls;
@@ -13,33 +14,15 @@ namespace ReportEngine.App.Views.Controls;
 public partial class TreeProjectView : UserControl, IDisposable
 {
     private readonly ProjectViewModel _projectViewModel;
-    private readonly Dictionary<string, Action> _tagActionMap;
-    private readonly Dictionary<string, Action> _tagCalculateMap;
     private bool _disposed;
 
-    public TreeProjectView(ProjectViewModel projectViewModel)
+    public TreeProjectView(
+        TreeViewModel treeViewModel,
+        ProjectViewModel projectViewModel)
     {
         InitializeComponent();
         _projectViewModel = projectViewModel;
-        DataContext = projectViewModel;
-
-        _tagActionMap = new Dictionary<string, Action>
-        {
-            { "SummaryReport", () => _projectViewModel.OnCreateSummaryReportCommandExecuted(null) },
-            { "ComponentsList", () => _projectViewModel.OnComponentsListReportCommandExecuted(null) },
-            { "NamePlates", () => _projectViewModel.OnCreateNameplatesReportCommandExecuted(null) },
-            { "MarksReport", () => _projectViewModel.OnCreateMarksReportCommandExecuted(null) },
-            { "ProductionList", () => _projectViewModel.OnCreateProductionReportCommandExecuted(null) },
-            { "FinPlan", () => _projectViewModel.OnCreateFinplanReportCommandExecuted(null) },
-            { "ContainersReport", () => _projectViewModel.OnCreateContainerReportCommandExecuted(null) },
-            { "Passport", () => _projectViewModel.OnCreatePassportReportCommandExecuted(null) },
-            { "TechCards", () => _projectViewModel.OnCreateTechnologicalCardsCommandExecute(null) }
-        };
-        _tagCalculateMap = new Dictionary<string, Action>
-        {
-            { "CalculateProject", () => _projectViewModel.OnCalculateProjectCommandExecuted(null) },
-            { "UpdateAllProps", () => _projectViewModel.OnUpdateStandsAfterEquipsCommandExecuted(null) }
-        };
+        DataContext = treeViewModel;
     }
 
     public void Dispose()
@@ -58,7 +41,7 @@ public partial class TreeProjectView : UserControl, IDisposable
     {
         ExceptionHelper.SafeExecute(() =>
         {
-            var treeViewItem = MainTree.SelectedItem as TreeViewItem;
+            var treeViewItem = NavigationTree.SelectedItem as TreeViewItem;
             if (treeViewItem?.Tag != null)
             {
                 var header = treeViewItem.Header.ToString();
@@ -104,11 +87,11 @@ public partial class TreeProjectView : UserControl, IDisposable
             var tabItem = new TabItem
             {
                 Tag = tag,
-                Content = content
+                Content = content,
+                Style = (Style)FindResource(typeof(TabItem))
             };
 
             tabItem.Header = CreaterTabItemHeader(header, tabItem);
-            //tabItem.Style = (Style)FindResource("GigaChadUI.xaml");
 
             MainTabControl.Items.Add(tabItem);
             MainTabControl.SelectedItem = tabItem;
@@ -125,9 +108,6 @@ public partial class TreeProjectView : UserControl, IDisposable
             return tag switch
             {
                 "ProjectCard" => ApplyAnimation(new ProjectCardView(_projectViewModel)),
-                //"Stand" => ApplyAnimation(new StandView(_projectViewModel)),
-                //"StandObv" => ApplyAnimation(new StandObvView(_projectViewModel)),
-                //"FrameDrainages" => ApplyAnimation(new FrameDrainagesView(_projectViewModel)),
                 "ProjectPreview" => ApplyAnimation(new ProjectPreview(_projectViewModel)),
                 "StandsContainer" => ApplyAnimation(new StandsContainerView(_projectViewModel)),
                 "DockViewer" => ApplyAnimation(new DockViewerView(new DockViewerViewModel()))
@@ -155,7 +135,8 @@ public partial class TreeProjectView : UserControl, IDisposable
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 0, 5, 0),
             FontSize = 16,
-            FontFamily = new FontFamily("Bahnschrift")
+            FontFamily = new FontFamily("Bahnschrift"),
+            Style = (Style)FindResource(typeof(TextBlock))
         };
 
         var closeButton = new Button
@@ -165,7 +146,8 @@ public partial class TreeProjectView : UserControl, IDisposable
             Height = 16,
             Padding = new Thickness(0),
             Margin = new Thickness(0),
-            VerticalAlignment = VerticalAlignment.Center
+            VerticalAlignment = VerticalAlignment.Center,
+            Style = (Style)FindResource(typeof(Button))
         };
 
         closeButton.Tag = parentTab;
@@ -200,20 +182,6 @@ public partial class TreeProjectView : UserControl, IDisposable
             }
 
         return false;
-    }
-
-    private async void ReportTree_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-    {
-        if (ReportTree.SelectedItem is TreeViewItem treeViewItem && treeViewItem.Tag is string tag)
-            if (_tagActionMap.TryGetValue(tag, out var action))
-                action();
-    }
-
-    private async void CalculateTree_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-    {
-        if (CalculateTree.SelectedItem is TreeViewItem treeViewItem && treeViewItem.Tag is string tag)
-            if (_tagCalculateMap.TryGetValue(tag, out var action))
-                action();
     }
 
     private UserControl ApplyAnimation(UserControl control)

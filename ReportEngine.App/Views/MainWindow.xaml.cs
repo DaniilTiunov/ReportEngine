@@ -7,6 +7,8 @@ using System.Windows.Data;
 using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
+using ReportEngine.App.LLM;
+using ReportEngine.App.LLM.ViewModels;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.CalculationSettings;
 using ReportEngine.App.Views.Windows;
@@ -263,5 +265,36 @@ public partial class MainWindow : Window //Это так называемый "C
             };
 
         _projectsView.Refresh();
+    }
+
+    private void OpenAssistant_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            if (AiAssistantContainer.Visibility == Visibility.Collapsed)
+            {
+                AiAssistantContainer.Visibility = Visibility.Visible;
+
+                if (AiAssistantHost.Content == null)
+                {
+                    var viewModel = _serviceProvider.GetRequiredService<ChatWithAiViewModel>();
+                    var chatView = new ChatWithAi(viewModel);
+                    AiAssistantHost.Content = chatView;
+                }
+            }
+            else
+            {
+                AiAssistantContainer.Visibility = Visibility.Collapsed;
+            }
+        }
+        catch (Exception exception)
+        {
+            MessageBox.Show(exception.Message);
+        }
+    }
+
+    private void CloseAiAssistant_Click(object sender, RoutedEventArgs e)
+    {
+        AiAssistantContainer.Visibility = Visibility.Collapsed;
     }
 }

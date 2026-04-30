@@ -22,6 +22,12 @@ public static class MainWindowCommandsInitializer
         if (vm == null)
             return;
 
+        vm.MainWindowCommandProvider.SetOnlineDbCommand =
+            new RelayCommand(vm.OnSetDbOnline, vm.CanAllCommandsExecute);
+
+        vm.MainWindowCommandProvider.SetOfflineDbCommand =
+            new RelayCommand(vm.OnSetDbOffline, vm.CanAllCommandsExecute);
+
         vm.MainWindowCommandProvider.OpenAuditContentCommand =
             new RelayCommand(vm.OpenAnotherControlsCommandExecuted<AuditEventsView>, vm.CanAllCommandsExecute);
 
