@@ -1,9 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
-using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model.Contacts;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.Services.Notification;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 
@@ -11,14 +11,18 @@ namespace ReportEngine.App.ViewModels.Contacts;
 
 public class SubjectViewModel
 {
+    private readonly ExceptionService _exceptionService;
     private readonly INotificationService _notificationService;
     private readonly IBaseRepository<Subject> _subjectsRepository;
 
-    public SubjectViewModel(IBaseRepository<Subject> subjectsRepository,
-        INotificationService notificationService)
+    public SubjectViewModel(
+        IBaseRepository<Subject> subjectsRepository,
+        INotificationService notificationService,
+        ExceptionService exceptionService)
     {
         InitializeCommands();
 
+        _exceptionService = exceptionService;
         _subjectsRepository = subjectsRepository;
         _notificationService = notificationService;
     }
@@ -68,7 +72,7 @@ public class SubjectViewModel
 
     public async Task LoadAllSubjectsAsync()
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             var subjects = await _subjectsRepository.GetAllAsync();
             CurrentSubject.AllSubjects = new ObservableCollection<Subject>(subjects);
@@ -77,7 +81,7 @@ public class SubjectViewModel
 
     private async Task AddNewSubjectAsync()
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             var newSubject = CurrentSubject.CreateNewSubject();
             CurrentSubject.AllSubjects.Add(newSubject);
@@ -87,7 +91,7 @@ public class SubjectViewModel
 
     private async Task SaveChangesAsync()
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             if (CurrentSubject.SelectedSubject != null)
                 await _subjectsRepository.UpdateAsync(CurrentSubject.SelectedSubject);
@@ -96,7 +100,7 @@ public class SubjectViewModel
 
     private async Task DeleteSelectedSubjectAsync()
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             if (CurrentSubject.SelectedSubject != null)
             {

@@ -6,11 +6,12 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
-using ReportEngine.App.AppHelpers;
 using ReportEngine.App.LLM;
 using ReportEngine.App.LLM.ViewModels;
+using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.CalculationSettings;
+using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Shared.Config.Directory;
@@ -23,18 +24,21 @@ namespace ReportEngine.App;
 /// </summary>
 public partial class MainWindow : Window //Это так называемый "Code Behind" файл для MainWindow.xaml
 {
+    private readonly ExceptionService _exceptionService;
     private readonly MainWindowViewModel _mainViewModel;
     private readonly IServiceProvider _serviceProvider;
     private ICollectionView _projectsView;
 
     public MainWindow(
         MainWindowViewModel mainViewModel,
-        IServiceProvider serviceProvider)
+        IServiceProvider serviceProvider,
+        ExceptionService exceptionService)
     {
         InitializeComponent();
         DataContext = mainViewModel;
         _mainViewModel = mainViewModel;
         _serviceProvider = serviceProvider;
+        _exceptionService = exceptionService;
 
         Loaded += MainWindow_Loaded;
         StateChanged += MainWindow_StateChanges;
@@ -43,7 +47,7 @@ public partial class MainWindow : Window //Это так называемый "C
     // Событие загрузки окна
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             StandardTheme(null, null);
 
@@ -87,7 +91,7 @@ public partial class MainWindow : Window //Это так называемый "C
 
     private void ShowUpdateIndo(object sender, RoutedEventArgs e)
     {
-        var updateInfo = new UpdateInfoView();
+        var updateInfo = new UpdateInfoView(_exceptionService);
         updateInfo.Show();
     }
 
@@ -232,7 +236,7 @@ public partial class MainWindow : Window //Это так называемый "C
     {
         var helpPath = Path.Combine(DirectoryHelper.GetDirectory(), "Help", "HelpDesk.chm");
 
-        ExceptionHelper.SafeExecute(() =>
+        _exceptionService.SafeExecute(() =>
         {
             Process.Start(new ProcessStartInfo
             {
@@ -296,5 +300,23 @@ public partial class MainWindow : Window //Это так называемый "C
     private void CloseAiAssistant_Click(object sender, RoutedEventArgs e)
     {
         AiAssistantContainer.Visibility = Visibility.Collapsed;
+    }
+
+    private void OpenLogger_Click(object sender, RoutedEventArgs e)
+    {
+        if (LogContainer.Visibility == Visibility.Collapsed)
+        {
+            LogContainer.Visibility = Visibility.Visible;
+
+            if (LogHost.Content == null)
+            {
+                var logView = _serviceProvider.GetRequiredService<AppLogsView>();
+                LogHost.Content = logView;
+            }
+        }
+        else
+        {
+            LogContainer.Visibility = Visibility.Collapsed;
+        }
     }
 }

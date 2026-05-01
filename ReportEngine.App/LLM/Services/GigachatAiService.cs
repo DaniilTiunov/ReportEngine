@@ -20,18 +20,6 @@ public class GigachatAiService : IAiChatService
         SetApiKey();
     }
 
-    private void SetApiKey()
-    {
-        var path = Path.Combine(AppContext.BaseDirectory, "appSecrets.json");
-
-        if (!File.Exists(path)) throw new Exception();
-
-        var json = File.ReadAllText(path);
-        var config = JsonSerializer.Deserialize<ApiConfig>(json);
-
-        _apiKey = config.ApiKey ?? throw new Exception("Не удаётся найти API ключ");
-    }
-
     public async Task<string> SendMessageAsync(string message)
     {
         var authorization = new Authorization(_apiKey,
@@ -66,5 +54,17 @@ public class GigachatAiService : IAiChatService
         }
 
         return "Авторизация не удалась";
+    }
+
+    private void SetApiKey()
+    {
+        var path = Path.Combine(AppContext.BaseDirectory, "appSecrets.json");
+
+        if (!File.Exists(path)) throw new Exception();
+
+        var json = File.ReadAllText(path);
+        var config = JsonSerializer.Deserialize<ApiConfig>(json);
+
+        _apiKey = config.ApiKey ?? throw new Exception("Не удаётся найти API ключ");
     }
 }

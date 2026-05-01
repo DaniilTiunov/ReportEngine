@@ -1,9 +1,7 @@
 ﻿using ClosedXML.Excel;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.Pipes;
-using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
@@ -17,8 +15,8 @@ public class FinPlanReportGenerator : IReportGenerator
 {
     private readonly IContainerRepository _containerRepository;
     private readonly ParametersStore _parametersStore;
+    private readonly IGenericBaseRepository<StainlessPipe, StainlessPipe> _pipesRepository;
     private readonly IProjectInfoRepository _projectInfoRepository;
-    private readonly IGenericBaseRepository<StainlessPipe, StainlessPipe> _pipesRepository ;
 
     public FinPlanReportGenerator(
         IProjectInfoRepository projectInfoRepository,
@@ -63,7 +61,8 @@ public class FinPlanReportGenerator : IReportGenerator
 
                 //заполняем таблицу себестоимости
                 activeRow = CreateHeader(activeRow, "Себестоимость", ws);
-                (activeRow, var totalRange, var summaryRange) = await CreateSelfcostTable(ws, project, activeRow, pipes);
+                (activeRow, var totalRange, var summaryRange) =
+                    await CreateSelfcostTable(ws, project, activeRow, pipes);
 
                 activeRow += 2;
 

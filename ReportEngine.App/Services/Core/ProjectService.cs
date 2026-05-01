@@ -4,6 +4,7 @@ using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.Services.Notification;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Enums;
 using ReportEngine.Domain.Repositories;
@@ -20,7 +21,7 @@ public class ProjectService : IProjectService
     private readonly IDialogService _dialogService;
     private readonly IFormedDrainagesRepository _drainagesRepository;
     private readonly IFormedElectricalRepository _electricalRepository;
-    private readonly IFrameRepository _frameRepository;
+    private readonly ExceptionService _exceptionService;
     private readonly INotificationService _notificationService;
     private readonly ObvyazkaInStandRepository _obvyazkaInStandRepository;
     private readonly IProjectInfoRepository _projectRepository;
@@ -37,11 +38,11 @@ public class ProjectService : IProjectService
         IFormedDrainagesRepository drainagesRepository,
         IBaseRepository<Company> companyRepository,
         IBaseRepository<Subject> subjectRepository,
-        IFrameRepository frameRepository,
         IDialogService dialogService,
         ObvyazkaInStandRepository obvyazkaInStandRepository,
         AuditService auditService,
-        SessionService sessionService)
+        SessionService sessionService,
+        ExceptionService exceptionService)
     {
         _drainagesRepository = drainagesRepository;
         _additionalEquipsRepository = additionalEquipsRepository;
@@ -51,11 +52,11 @@ public class ProjectService : IProjectService
         _notificationService = notificationService;
         _companyRepository = companyRepository;
         _subjectRepository = subjectRepository;
-        _frameRepository = frameRepository;
         _dialogService = dialogService;
         _obvyazkaInStandRepository = obvyazkaInStandRepository;
         _auditService = auditService;
         _sessionService = sessionService;
+        _exceptionService = exceptionService;
     }
 
     public int GetStandsInProjectCount(ProjectModel projectModel)
@@ -139,7 +140,7 @@ public class ProjectService : IProjectService
 
     public async Task CopyStandsAsync(ProjectModel projectModel)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             var count = _dialogService.ShowStandCopyDialog();
 

@@ -1,10 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
-using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.Services.Notification;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 
@@ -12,13 +12,18 @@ namespace ReportEngine.App.ViewModels;
 
 public class ObvyazkaViewModel
 {
+    private readonly ExceptionService _exceptionService;
     private readonly INotificationService _notificationService;
     private readonly IObvyazkaRepository _obvyazkaRepository;
 
-    public ObvyazkaViewModel(IObvyazkaRepository obvyazkaRepository, INotificationService notificationService)
+    public ObvyazkaViewModel(
+        IObvyazkaRepository obvyazkaRepository,
+        INotificationService notificationService,
+        ExceptionService exceptionService)
     {
         _obvyazkaRepository = obvyazkaRepository;
         _notificationService = notificationService;
+        _exceptionService = exceptionService;
         InitializeCommands();
     }
 
@@ -46,7 +51,7 @@ public class ObvyazkaViewModel
 
     public async void OnShowAllObvyazkiCommandExecuted(object e)
     {
-        await ExceptionHelper.SafeExecuteAsync(ShowAllObvyazkiAsync);
+        await _exceptionService.SafeExecuteAsync(ShowAllObvyazkiAsync);
     }
 
     public async void OnAddNewObvyazkaCommandExecuted(object e)
@@ -87,13 +92,15 @@ public class ObvyazkaViewModel
 
     public async void OnUpdateChangesExecuted(object e)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () => await UpdateObvyazkaAsync(CurrentObvyazka.SelectedObvyazka));
+        await _exceptionService.SafeExecuteAsync(async () =>
+            await UpdateObvyazkaAsync(CurrentObvyazka.SelectedObvyazka));
         _notificationService.ShowInfo("Изменения выбранной обвязки сохранены");
     }
 
     public async void OnDeleteObvyazkaExecuted(object e)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () => await DeleteObvyazkaAsync(CurrentObvyazka.SelectedObvyazka));
+        await _exceptionService.SafeExecuteAsync(async () =>
+            await DeleteObvyazkaAsync(CurrentObvyazka.SelectedObvyazka));
         CurrentObvyazka.Obvyazki.Remove(CurrentObvyazka.SelectedObvyazka);
         _notificationService.ShowInfo("Выбранная обвязка удалена");
     }

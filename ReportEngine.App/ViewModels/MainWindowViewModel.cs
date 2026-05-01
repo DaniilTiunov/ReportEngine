@@ -11,7 +11,9 @@ using ReportEngine.App.Model;
 using ReportEngine.App.Services.Cloners;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.Services.Logger;
 using ReportEngine.App.Services.Navigation;
+using ReportEngine.App.Services.Notification;
 using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Settings.CalculationParameters;
 using ReportEngine.App.Views.Windows;
@@ -30,10 +32,11 @@ public class MainWindowViewModel : BaseViewModel
     private readonly ICalculationService _calculationService;
     private readonly IDialogService _dialogService;
     private readonly EntityProjectClonerService _entityProjectClonerService;
+    private readonly ExceptionService _exceptionService;
+    private readonly UiLogger _logger;
     private readonly NavigationService _navigation;
     private readonly INotificationService _notificationService;
     private readonly IProjectInfoRepository _projectRepository;
-    private readonly IProjectService _projectService;
     private readonly IServiceProvider _serviceProvider;
     private readonly SessionService _sessionService;
 
@@ -45,24 +48,26 @@ public class MainWindowViewModel : BaseViewModel
         IProjectInfoRepository projectRepository,
         ICalculationService calculationService,
         INotificationService notificationService,
-        IProjectService projectService,
         IDialogService dialogService,
         EntityProjectClonerService entityProjectClonerService,
         SessionService sessionService,
-        AuditService auditService)
+        AuditService auditService,
+        UiLogger logger,
+        ExceptionService exceptionService)
     {
         _notificationService = notificationService;
         _calculationService = calculationService;
         _serviceProvider = serviceProvider;
         _projectRepository = projectRepository;
         _navigation = navigation;
-        _projectService = projectService;
         _dialogService = dialogService;
         _entityProjectClonerService = entityProjectClonerService;
         _sessionService = sessionService;
         _auditService = auditService;
-        _sessionService.PropertyChanged += SessionChanged;
+        _logger = logger;
+        _exceptionService = exceptionService;
 
+        _sessionService.PropertyChanged += SessionChanged;
 
         InitializeMainWindowCommands();
         InitializeGenericEquipCommands();
@@ -93,7 +98,7 @@ public class MainWindowViewModel : BaseViewModel
     public void OnOpenGenericWindowCommandExecuted<T, TEquip>(object e)
         where T : class, IBaseEquip, new()
     {
-        ExceptionHelper.SafeExecute(() => _navigation.ShowGenericWindow<T, T>());
+        _exceptionService.SafeExecute(() => _navigation.ShowGenericWindow<T, T>());
     }
 
     #endregion Дженерик команды
@@ -166,14 +171,14 @@ public class MainWindowViewModel : BaseViewModel
 
     public async void OnRecalculateProjectCommandExecuted(object e)
     {
-        await ExceptionHelper.SafeExecuteAsync(RecalculateProjectAsync);
+        await _exceptionService.SafeExecuteAsync(RecalculateProjectAsync);
     }
 
     public async void OnEditProjectCommandExecuted(object e)
     {
         if (MainWindowModel.SelectedProject == null) return;
 
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             var projectViewModel = _serviceProvider.GetRequiredService<ProjectViewModel>();
 
@@ -181,13 +186,14 @@ public class MainWindowViewModel : BaseViewModel
             {
                 await projectViewModel.LoadProjectInfoAsync(MainWindowModel.SelectedProject.Id);
                 _navigation.ShowContent<TreeProjectView>();
+                _logger.Success($"Отрыт проект {MainWindowModel.SelectedProject.OrderCustomer} Статус: Успешно");
             });
         });
     }
 
     public async void OnCopyProjectCommandExecuted(object e)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             await _dialogService.RunWithProgressDialogAsync(async () =>
             {
@@ -196,13 +202,15 @@ public class MainWindowViewModel : BaseViewModel
                 await _entityProjectClonerService.CloneProjectEntity(newProject);
 
                 MainWindowModel.AllProjects.Add(newProject);
+
+                _logger.Success($"Скопирован проект {MainWindowModel.SelectedProject.OrderCustomer} Статус: Успешно");
             });
         });
     }
 
     public void OnOpenMainWindowCommandExecuted(object e)
     {
-        ExceptionHelper.SafeExecute(() =>
+        _exceptionService.SafeExecute(() =>
         {
             var projectViewModel = _serviceProvider.GetRequiredService<ProjectViewModel>();
 
@@ -240,24 +248,24 @@ public class MainWindowViewModel : BaseViewModel
     public void OpenOthersWindowCommandExecuted<T>(object e)
         where T : Window
     {
-        ExceptionHelper.SafeExecute(_navigation.ShowWindow<T>);
+        _exceptionService.SafeExecute(_navigation.ShowWindow<T>);
     }
 
     public void OpenAuthWindowCommandExecuted<T>(object e)
         where T : Window
     {
-        ExceptionHelper.SafeExecute(_navigation.ShowWindow<AuthWindow>);
+        _exceptionService.SafeExecute(_navigation.ShowWindow<AuthWindow>);
     }
 
     public void OnOpenCalculationParametersCommandExecuted(object e)
     {
-        ExceptionHelper.SafeExecute(() => _navigation.ShowWindow<CalculationParametersWindow>());
+        _exceptionService.SafeExecute(() => _navigation.ShowWindow<CalculationParametersWindow>());
     }
 
     public void OpenAnotherControlsCommandExecuted<T>(object e)
         where T : UserControl
     {
-        ExceptionHelper.SafeExecute(() =>
+        _exceptionService.SafeExecute(() =>
         {
             // Если открываем TreeProjectView, сбрасываем проект
             if (typeof(T) == typeof(TreeProjectView))
@@ -273,17 +281,17 @@ public class MainWindowViewModel : BaseViewModel
 
     public async void OnCheckDbConnectionCommandExecuted(object e)
     {
-        await ExceptionHelper.SafeExecuteAsync(CheckDbConnectionAsync);
+        await _exceptionService.SafeExecuteAsync(CheckDbConnectionAsync);
     }
 
     public async void OnShowAllProjectsCommandExecuted(object e)
     {
-        await ExceptionHelper.SafeExecuteAsync(ShowAllProjectsAsync);
+        await _exceptionService.SafeExecuteAsync(ShowAllProjectsAsync);
     }
 
     public async void OnDeleteSelectedProjectExecuted(object e)
     {
-        await ExceptionHelper.SafeExecuteAsync(DeleteSelectedProjectAsync);
+        await _exceptionService.SafeExecuteAsync(DeleteSelectedProjectAsync);
     }
 
     public async Task CheckDbConnectionAsync()
@@ -309,7 +317,10 @@ public class MainWindowViewModel : BaseViewModel
         var projects = await _projectRepository.GetAllAsync();
 
         MainWindowModel.AllProjects.Clear();
-        foreach (var project in projects) MainWindowModel.AllProjects.Add(project);
+        foreach (var project in projects)
+            MainWindowModel.AllProjects.Add(project);
+
+        _logger.Success("Проекты загружены. Статус: Успешно");
     }
 
     public async Task DeleteSelectedProjectAsync()
@@ -324,6 +335,8 @@ public class MainWindowViewModel : BaseViewModel
         await ShowAllProjectsAsync();
 
         _notificationService.ShowInfo("Проект успешно удалён");
+
+        _logger.Success($"Удалён проект {MainWindowModel.SelectedProject.OrderCustomer} Статус: Успешно");
 
         await _auditService.LogEventAsync(
             _sessionService.CurrentUser.UserLogin,

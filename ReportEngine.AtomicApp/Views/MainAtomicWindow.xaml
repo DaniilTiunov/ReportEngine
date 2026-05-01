@@ -97,15 +97,19 @@
                 FontSize="14"
                 Height="25">
                 <MenuItem Header="Проект">
-                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenTreeViewCommand}" Header="Создать новый проект" />
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenTreeViewCommand}"
+                              Header="Создать новый проект" />
                     <Separator />
-                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenMainWindowCommand}" Header="На главный экран" />
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenMainWindowCommand}"
+                              Header="На главный экран" />
                 </MenuItem>
 
                 <MenuItem Header="Настройки">
-                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenSettingsWindow}" Header="Настройки приложения" />
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenSettingsWindow}"
+                              Header="Настройки приложения" />
                     <Separator />
-                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenCalculationSettingsWindow}" Header="Настройки расчета" />
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenCalculationSettingsWindow}"
+                              Header="Настройки расчета" />
                 </MenuItem>
 
                 <MenuItem Header="Вид" Tag="ThemeItemChanger">

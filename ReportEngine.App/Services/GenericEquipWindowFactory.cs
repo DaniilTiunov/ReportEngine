@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.Display;
+using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
@@ -30,9 +31,10 @@ public class GenericEquipWindowFactory
         // Разрешаем viewmodel (и все её scoped зависимости) из этого scope
         var repo = scope.ServiceProvider.GetRequiredService<IGenericBaseRepository<T, T>>();
         var viewModel = scope.ServiceProvider.GetRequiredService<GenericEquipViewModel<T>>();
+        var exSerivce = scope.ServiceProvider.GetRequiredService<ExceptionService>();
 
         // Создаём окно и присваиваем DataContext
-        var window = new GenericEquipView(isDialog)
+        var window = new GenericEquipView(exSerivce, isDialog)
         {
             DataContext = viewModel
         };
