@@ -11,6 +11,7 @@ using ReportEngine.App.Services.Calculation;
 using ReportEngine.App.Services.Cloners;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.Services.Logger;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels.Utils;
 using ReportEngine.Domain.Entities;
@@ -49,6 +50,7 @@ public class ProjectViewModel : BaseViewModel
     private readonly IStandService _standService;
     private readonly UIValidatorService _uiValidatorService;
     private readonly UpdaterStandService _updaterStandService;
+    private readonly UiLogger _logger;
 
     public ProjectViewModel(
         IProjectInfoRepository projectRepository,
@@ -68,7 +70,8 @@ public class ProjectViewModel : BaseViewModel
         ParametersStore parametersStore,
         AuditService auditService,
         SessionService sessionService,
-        ExceptionService exceptionService)
+        ExceptionService exceptionService,
+        UiLogger logger)
     {
         _projectRepository = projectRepository;
         _dialogService = dialogService;
@@ -88,6 +91,7 @@ public class ProjectViewModel : BaseViewModel
         _sessionService = sessionService;
         _auditService = auditService;
         _exceptionService = exceptionService;
+        _logger = logger;
 
         NewStand = new StandModel { Number = 1 };
 
@@ -154,7 +158,9 @@ public class ProjectViewModel : BaseViewModel
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
-            if (Guard.ExitIfNull("Сначала создайте стенд!", _notificationService, CurrentProjectModel.SelectedStand))
+            if (Guard.ExitIfNull("Сначала создайте стенд!",
+                    _notificationService,
+                    CurrentProjectModel.SelectedStand))
                 return;
 
             var totalWidth = _projectService.GetSummWidthObvyzaka(CurrentProjectModel);
@@ -171,10 +177,10 @@ public class ProjectViewModel : BaseViewModel
             if (selectedFrame == null)
                 return;
 
-
             await _standService.AddFrameToStandAsync(CurrentProjectModel.SelectedStand.Id, selectedFrame.Id);
 
-            if (selectedFrame.Disassembled == true) await DisambledFrameUpdateAsync();
+            if (selectedFrame.Disassembled == true)
+                await DisambledFrameUpdateAsync();
 
             CurrentProjectModel.SelectedStand.FramesInStand.Add(selectedFrame);
 

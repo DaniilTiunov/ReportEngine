@@ -156,7 +156,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="AppSettings\"/>
         <Folder Include="Help\"/>
         <Folder Include="..\Resources\Icons\"/>
     </ItemGroup>

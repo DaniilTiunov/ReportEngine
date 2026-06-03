@@ -63,15 +63,13 @@
                                 <TreeViewItem Header="Расчёт проекта" IsExpanded="True">
                                     <TreeViewItem Header="Рассчитать проект" Tag="CalculateProject">
                                         <TreeViewItem.InputBindings>
-                                            <MouseBinding Command="{Binding CalculateProjectCommandAsync}"
-                                                          Gesture="LeftDoubleClick" />
+                                            <MouseBinding Command="{Binding CalculateProjectCommandAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
 
                                     <TreeViewItem Header="Пересчёт" Tag="CalculateProject">
                                         <TreeViewItem.InputBindings>
-                                            <MouseBinding Command="{Binding RecalculateProjectCommandAsync}"
-                                                          Gesture="LeftDoubleClick" />
+                                            <MouseBinding Command="{Binding RecalculateProjectCommandAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
                                 </TreeViewItem>
@@ -79,64 +77,55 @@
                                 <TreeViewItem Header="Отчёты" IsExpanded="True">
                                     <TreeViewItem Header="Сводная ведомость" Tag="SummaryReport">
                                         <TreeViewItem.InputBindings>
-                                            <MouseBinding Command="{Binding CreateSummaryReportAsync}"
-                                                          Gesture="LeftDoubleClick" />
+                                            <MouseBinding Command="{Binding CreateSummaryReportAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
 
                                     <TreeViewItem Header="Ведомость комплектующих" Tag="ComponentsList">
                                         <TreeViewItem.InputBindings>
-                                            <MouseBinding Command="{Binding CreateComponentsListReportAsync}"
-                                                          Gesture="LeftDoubleClick" />
+                                            <MouseBinding Command="{Binding CreateComponentsListReportAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
 
                                     <TreeViewItem Header="Шильдики и таблички" Tag="NamePlates">
                                         <TreeViewItem.InputBindings>
-                                            <MouseBinding Command="{Binding CreateNamePlatesReportAsync}"
-                                                          Gesture="LeftDoubleClick" />
+                                            <MouseBinding Command="{Binding CreateNamePlatesReportAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
 
                                     <TreeViewItem Header="Маркировка" Tag="MarksReport">
                                         <TreeViewItem.InputBindings>
-                                            <MouseBinding Command="{Binding CreateMarksReportReportAsync}"
-                                                          Gesture="LeftDoubleClick" />
+                                            <MouseBinding Command="{Binding CreateMarksReportReportAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
 
                                     <TreeViewItem Header="Производство" Tag="ProductionList">
                                         <TreeViewItem.InputBindings>
-                                            <MouseBinding Command="{Binding CreateProductionListReportAsync}"
-                                                          Gesture="LeftDoubleClick" />
+                                            <MouseBinding Command="{Binding CreateProductionListReportAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
 
                                     <TreeViewItem Header="Фин. план" Tag="FinPlan">
                                         <TreeViewItem.InputBindings>
-                                            <MouseBinding Command="{Binding CreateFinPlanReportAsync}"
-                                                          Gesture="LeftDoubleClick" />
+                                            <MouseBinding Command="{Binding CreateFinPlanReportAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
 
                                     <TreeViewItem Header="Отчёт тара" Tag="ContainersReport">
                                         <TreeViewItem.InputBindings>
-                                            <MouseBinding Command="{Binding CreateContainersReportReportAsync}"
-                                                          Gesture="LeftDoubleClick" />
+                                            <MouseBinding Command="{Binding CreateContainersReportReportAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
 
                                     <TreeViewItem Header="Паспорт" Tag="Passport">
                                         <TreeViewItem.InputBindings>
-                                            <MouseBinding Command="{Binding CreatePassportReportAsync}"
-                                                          Gesture="LeftDoubleClick" />
+                                            <MouseBinding Command="{Binding CreatePassportReportAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
 
                                     <TreeViewItem Header="Технологические карты" Tag="TechCards">
                                         <TreeViewItem.InputBindings>
-                                            <MouseBinding Command="{Binding CreateTechCardsReportAsync}"
-                                                          Gesture="LeftDoubleClick" />
+                                            <MouseBinding Command="{Binding CreateTechCardsReportAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
                                 </TreeViewItem>

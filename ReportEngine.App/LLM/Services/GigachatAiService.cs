@@ -10,13 +10,10 @@ namespace ReportEngine.App.LLM.Services;
 
 public class GigachatAiService : IAiChatService
 {
-    private readonly HttpClient _httpClient;
     private string _apiKey;
 
-    public GigachatAiService(HttpClient httpClient)
+    public GigachatAiService()
     {
-        _httpClient = httpClient;
-
         SetApiKey();
     }
 
@@ -35,7 +32,8 @@ public class GigachatAiService : IAiChatService
 
             await authorization.UpdateToken();
 
-            var settings = new CompletionSettings("GigaChat:latest", 1, null, 1, 1500);
+            var settings = new CompletionSettings(
+                "GigaChat:latest", 1, null, 1, 1500);
 
             var result = await completion.SendRequest(
                 authorization.LastResponse.GigaChatAuthorizationResponse?.AccessToken,
@@ -47,7 +45,8 @@ public class GigachatAiService : IAiChatService
             {
                 var answer = "";
 
-                foreach (var it in result.GigaChatCompletionResponse.Choices) answer = it.Message.Content;
+                foreach (var it in result.GigaChatCompletionResponse.Choices)
+                    answer = it.Message.Content;
 
                 return answer ?? "Запрос не успешен";
             }

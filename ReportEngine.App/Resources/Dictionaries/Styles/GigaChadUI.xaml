@@ -5,8 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary
-            Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign2.Defaults.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign2.Defaults.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
@@ -617,8 +616,7 @@
                                             Margin="2"
                                             SnapsToDevicePixels="True"
                                             VerticalScrollBarVisibility="Auto">
-                                            <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained"
-                                                            x:Name="ItemsPresenter" />
+                                            <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" x:Name="ItemsPresenter" />
                                         </ScrollViewer>
                                     </Border>
                                 </Grid>
