@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Input;
-using ReportEngine.App.AppHelpers;
+using ReportEngine.App.Services.Notification;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
 
@@ -13,18 +13,21 @@ namespace ReportEngine.App.Views.Windows;
 /// </summary>
 public partial class UpdateInfoView : Window
 {
-    public UpdateInfoView()
+    private readonly ExceptionService _exceptionService;
+
+    public UpdateInfoView(ExceptionService exceptionService)
     {
         InitializeComponent();
         LoadUpdateHistory();
         DataContext = this;
+        _exceptionService = exceptionService;
     }
 
     public List<UpdateInfo> Updates { get; set; }
 
     private void LoadUpdateHistory()
     {
-        ExceptionHelper.SafeExecute(() =>
+        _exceptionService.SafeExecute(() =>
         {
             var filePath = DirectoryHelper.GetUpdateInfoPath();
 

@@ -1,9 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
-using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model.Contacts;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.Services.Notification;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 
@@ -12,14 +12,17 @@ namespace ReportEngine.App.ViewModels.Contacts;
 public class CompanyViewModel
 {
     private readonly IBaseRepository<Company> _companyRepository;
+    private readonly ExceptionService _exceptionService;
     private readonly INotificationService _notificationService;
 
     public CompanyViewModel(
         IBaseRepository<Company> companyRepository,
-        INotificationService notificationService)
+        INotificationService notificationService,
+        ExceptionService exceptionService)
     {
         InitializeCommands();
 
+        _exceptionService = exceptionService;
         _companyRepository = companyRepository;
         _notificationService = notificationService;
     }
@@ -69,7 +72,7 @@ public class CompanyViewModel
 
     public async Task LoadAllCompaniesAsync()
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             var companies = await _companyRepository.GetAllAsync();
             CurrentCompany.AllCompanies = new ObservableCollection<Company>(companies);
@@ -78,7 +81,7 @@ public class CompanyViewModel
 
     private async Task AddNewCompanyAsync()
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             var newCompany = CurrentCompany.CreateNewCompany();
             CurrentCompany.AllCompanies.Add(newCompany);
@@ -88,7 +91,7 @@ public class CompanyViewModel
 
     private async Task SaveChangesAsync()
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             if (CurrentCompany.SelectedCompany != null)
                 await _companyRepository.UpdateAsync(CurrentCompany.SelectedCompany);
@@ -97,7 +100,7 @@ public class CompanyViewModel
 
     private async Task DeleteSelectedCompanyAsync()
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             if (CurrentCompany.SelectedCompany != null)
             {

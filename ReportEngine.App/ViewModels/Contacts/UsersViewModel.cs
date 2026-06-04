@@ -1,9 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
-using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model.Contacts;
+using ReportEngine.App.Services.Notification;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 
@@ -11,24 +11,27 @@ namespace ReportEngine.App.ViewModels.Contacts;
 
 public class UsersViewModel : BaseViewModel
 {
+    private readonly ExceptionService _exceptionService;
     private readonly IUserRepository _userRepository;
 
-    #region Конструктор
-
-    public UsersViewModel(IUserRepository userRepository)
+    public UsersViewModel(
+        IUserRepository userRepository,
+        ExceptionService exceptionService)
     {
         InitializeCommands();
 
         _userRepository = userRepository;
-
+        _exceptionService = exceptionService;
         LoadAllUsersAsync();
     }
 
-    #endregion Конструктор
-
     public UserModel CurrentUser { get; set; } = new();
 
-    #region Методы
+    public ICommand ShowAllUsersCommand { get; set; }
+    public ICommand AddNewUserCommand { get; set; }
+    public ICommand SaveUserCommand { get; set; }
+
+    public ICommand DeleteUserCommand { get; set; }
 
     public void InitializeCommands()
     {
@@ -37,15 +40,6 @@ public class UsersViewModel : BaseViewModel
         AddNewUserCommand = new RelayCommand(OnAddNewUserCommandExecuted, CanAllCommandsExecute);
         SaveUserCommand = new RelayCommand(OnSaveUserCommandExecuted, CanAllCommandsExecute);
     }
-
-    #endregion Методы
-
-    #region Комманды
-
-    public ICommand HideUsersCommand { get; set; }
-    public ICommand ShowAllUsersCommand { get; set; }
-    public ICommand AddNewUserCommand { get; set; }
-    public ICommand SaveUserCommand { get; set; }
 
     public bool CanAllCommandsExecute(object p)
     {
@@ -56,8 +50,6 @@ public class UsersViewModel : BaseViewModel
     {
         await LoadAllUsersAsync();
     }
-
-    public ICommand DeleteUserCommand { get; set; }
 
     public async void OnDeleteUserCommandExecuted(object e)
     {
@@ -74,13 +66,10 @@ public class UsersViewModel : BaseViewModel
         await SaveUsersChangesAsync();
     }
 
-    #endregion Комманды
-
-    #region Методы
 
     private async Task LoadAllUsersAsync()
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             var users = await _userRepository.GetAllAsync();
             CurrentUser.AllUsers = new ObservableCollection<User>(users);
@@ -89,7 +78,7 @@ public class UsersViewModel : BaseViewModel
 
     private async Task DeleteSelectedUserAsync()
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             if (CurrentUser.SelectedUser != null)
             {
@@ -102,7 +91,7 @@ public class UsersViewModel : BaseViewModel
 
     private async Task AddNewUserAsync()
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             var newUser = CurrentUser.CreateNewUser();
             CurrentUser.AllUsers.Add(newUser);
@@ -112,7 +101,7 @@ public class UsersViewModel : BaseViewModel
 
     private async Task SaveUsersChangesAsync()
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             if (CurrentUser.SelectedUser != null)
             {
@@ -121,6 +110,4 @@ public class UsersViewModel : BaseViewModel
             }
         });
     }
-
-    #endregion Методы
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
-using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Model;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.Services.Notification;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 
@@ -10,12 +10,17 @@ namespace ReportEngine.App.Services.Core;
 public class ContainerService
 {
     private readonly IContainerRepository _containerRepository;
+    private readonly ExceptionService _exceptionService;
     private readonly INotificationService _notificationService;
 
-    public ContainerService(IContainerRepository containerRepository, INotificationService notificationService)
+    public ContainerService(
+        IContainerRepository containerRepository,
+        INotificationService notificationService,
+        ExceptionService exceptionService)
     {
         _containerRepository = containerRepository;
         _notificationService = notificationService;
+        _exceptionService = exceptionService;
     }
 
     public async Task CreateBatchAsync(ProjectModel projectModel)
@@ -26,7 +31,7 @@ public class ContainerService
             return;
         }
 
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             var existing = await _containerRepository
                 .GetAllByProjectIdAsync(projectModel.CurrentProjectId);
@@ -58,7 +63,7 @@ public class ContainerService
             return;
         }
 
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             await _containerRepository
                 .DeleteByIdAsync(projectModel.SelectedContainerBatch.Id);
@@ -89,7 +94,7 @@ public class ContainerService
             return;
         }
 
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             await _containerRepository.AddContainerToBatchAsync(
                 projectModel.SelectedContainerBatch.Id,
@@ -117,7 +122,7 @@ public class ContainerService
             return;
         }
 
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             await _containerRepository.RemoveContainerFromBatchAsync(
                 projectModel.SelectedContainerBatch.Id,
@@ -171,7 +176,7 @@ public class ContainerService
             return;
         }
 
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             await _containerRepository.AddStandToContainerAsync(
                 projectModel.SelectedContainerStand.Id,
@@ -200,7 +205,7 @@ public class ContainerService
             return;
         }
 
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             await _containerRepository.RemoveStandFromContainerAsync(
                 projectModel.SelectedContainerStand.Id,
@@ -237,7 +242,7 @@ public class ContainerService
             return;
         }
 
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             var batches = await _containerRepository.GetAllByProjectIdAsync(projectModel.CurrentProjectId);
 

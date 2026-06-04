@@ -588,7 +588,8 @@ public static class ExcelReportHelper
                 frameProductionHumanCostSum.isValid),
             CostPerUnit = new ValidatedField<float?>(frameProductionMoneyCostSum.moneyCostSum,
                 frameProductionMoneyCostSum.isValid),
-            CommonCost = new ValidatedField<float?>(frameProductionMoneyCostSum.moneyCostSum * frameProductionHumanCostSum.humanCostSum,
+            CommonCost = new ValidatedField<float?>(
+                frameProductionMoneyCostSum.moneyCostSum * frameProductionHumanCostSum.humanCostSum,
                 frameProductionHumanCostSum.isValid && frameProductionMoneyCostSum.isValid)
         };
 

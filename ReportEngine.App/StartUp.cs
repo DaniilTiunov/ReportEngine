@@ -1,10 +1,8 @@
 ﻿using System.Globalization;
 using Microsoft.Extensions.DependencyInjection;
-using ReportEngine.Domain.Database.DbSettings;
 using ReportEngine.Domain.Store;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
-using ReportEngine.Shared.Config.Logger;
 using Serilog;
 
 namespace ReportEngine.App;
@@ -18,8 +16,6 @@ public static class StartUp
         {
             SetCulture();
 
-            Log.Logger = LoggerConfig.InitializeLogger();
-
             var config = JsonHandler.GetDatabaseMode(DirectoryHelper.GetConfigPath());
 
             var host = HostFactory.BuildHost(config);
@@ -30,18 +26,19 @@ public static class StartUp
 
             var parametersStore = host.Services.GetRequiredService<ParametersStore>();
 
-            parametersStore.LoadSettingsDataAsync().GetAwaiter().GetResult();
+            //parametersStore.LoadSettingsDataAsync().GetAwaiter().GetResult();
 
             app.MainWindow = mainWindow;
 
             mainWindow.Show();
 
+            Log.Information("Приложение запущено");
+
             app.Run();
         }
         catch (Exception ex)
         {
-            Log.Fatal(ex, "Приложение не запущено");
-            throw;
+            Log.Fatal($"Ошибка запуска {ex.Message}");
         }
         finally
         {

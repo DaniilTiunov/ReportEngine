@@ -11,13 +11,13 @@ public class ChatWithAiViewModel : BaseViewModel
     private readonly IAiChatService _chatService;
     private string _input;
 
-    public ICommand SendCommand { get; }
-
     public ChatWithAiViewModel(IAiChatService chatService)
     {
         _chatService = chatService;
         SendCommand = new AsyncRelayCommand(SendCommandExecuted, CanAllCommandsExecute);
     }
+
+    public ICommand SendCommand { get; }
 
     public ObservableCollection<string> Messages { get; } = new();
 
@@ -45,7 +45,6 @@ public class ChatWithAiViewModel : BaseViewModel
                        ГигаЧат:
                       {response}
                       """);
-
     }
 
     public bool CanAllCommandsExecute(object obj)

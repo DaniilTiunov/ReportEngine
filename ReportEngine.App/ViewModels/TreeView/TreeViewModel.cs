@@ -9,12 +9,12 @@ namespace ReportEngine.App.ViewModels.TreeView;
 
 public class TreeViewModel
 {
+    private readonly ICalculationService _calculationService;
     private readonly IDialogService _dialogService;
     private readonly INotificationService _notificationService;
-    private readonly IReportService _reportService;
-    private readonly ICalculationService _calculationService;
-    private readonly UpdaterStandService _updaterStandService;
     private readonly ProjectModel _project;
+    private readonly IReportService _reportService;
+    private readonly UpdaterStandService _updaterStandService;
 
     public TreeViewModel(
         ProjectViewModel projectViewModel,
@@ -29,7 +29,7 @@ public class TreeViewModel
         _dialogService = dialogService;
         _calculationService = calculationService;
         _updaterStandService = updaterStandService;
-        _project  = projectViewModel.CurrentProjectModel;
+        _project = projectViewModel.CurrentProjectModel;
 
         InitializeCommands();
     }
@@ -116,12 +116,11 @@ public class TreeViewModel
             new AsyncRelayCommand(CalculateProjectAsync);
         RecalculateProjectCommandAsync =
             new AsyncRelayCommand(RecalculateProjectAsync);
-
     }
 
     private IAsyncCommand CreateReportCommand(ReportType type, string successMessage)
     {
-        return new AsyncRelayCommand(async (_) =>
+        return new AsyncRelayCommand(async _ =>
         {
             await _dialogService.RunWithProgressDialogAsync(async () =>
             {
@@ -149,7 +148,7 @@ public class TreeViewModel
     {
         await _updaterStandService.ApplyChangesAndSaveAsync(_project);
 
-        await  _calculationService.CalculateProjectAsync(_project);
+        await _calculationService.CalculateProjectAsync(_project);
 
         _notificationService.ShowInfo($"""
                                        Проект обновлён и пересчитан! ✅
