@@ -176,7 +176,7 @@ public class HostFactory
         services.AddSingleton<NavigationService>();
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<INotificationService, NotificationService>();
-        services.AddSingleton<ParametersStore>();
+        services.AddScoped<ParametersStore>();
         services.AddSingleton<SessionService>();
         services.AddSingleton<UiLogger>();
         services.AddSingleton<ExceptionService>();
