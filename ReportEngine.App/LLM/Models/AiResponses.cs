@@ -4,18 +4,15 @@ namespace ReportEngine.App.LLM.Models;
 
 public class AiResponse
 {
-    [JsonPropertyName("choices")]
-    public List<ChoiceDto> Choices { get; set; }
+    [JsonPropertyName("choices")] public List<ChoiceDto> Choices { get; set; }
 }
 
 public class ChoiceDto
 {
-    [JsonPropertyName("message")]
-    public MessageDto Message { get; set; }
+    [JsonPropertyName("message")] public MessageDto Message { get; set; }
 }
 
 public class MessageDto
 {
-    [JsonPropertyName("content")]
-    public string Content { get; set; }
+    [JsonPropertyName("content")] public string Content { get; set; }
 }

@@ -4,9 +4,9 @@ using System.Windows;
 using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
-using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.Services.Notification;
 using ReportEngine.App.Views.Settings.SettingsControls;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
@@ -16,6 +16,7 @@ namespace ReportEngine.App.ViewModels;
 
 public class SettingsViewModel : BaseViewModel
 {
+    private readonly ExceptionService _exceptionService;
     private readonly INotificationService _notificationService;
     private readonly IServiceProvider _serviceProvider;
     private string _connectionString;
@@ -30,13 +31,15 @@ public class SettingsViewModel : BaseViewModel
 
     public SettingsViewModel(
         INotificationService notificationService,
-        IServiceProvider serviceProvider)
+        IServiceProvider serviceProvider,
+        ExceptionService exceptionService)
     {
         ApplySettingsCommand = new RelayCommand(ExecuteSaveCommand, _ => true);
 
         LoadSettings();
 
         _serviceProvider = serviceProvider;
+        _exceptionService = exceptionService;
         _notificationService = notificationService;
     }
 
@@ -108,7 +111,7 @@ public class SettingsViewModel : BaseViewModel
 
     public void ExecuteSaveCommand(object p)
     {
-        ExceptionHelper.SafeExecute(SaveSettings);
+        _exceptionService.SafeExecute(SaveSettings);
     }
 
     private void Navigate()

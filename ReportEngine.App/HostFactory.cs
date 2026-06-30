@@ -1,9 +1,6 @@
 ﻿using System.Windows.Controls;
-using System.Net.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using ReportEngine.App.LLM;
 using ReportEngine.App.LLM.Interfaces;
 using ReportEngine.App.LLM.Services;
@@ -13,6 +10,7 @@ using ReportEngine.App.Services.Calculation;
 using ReportEngine.App.Services.Cloners;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.Services.Logger;
 using ReportEngine.App.Services.Navigation;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels;
@@ -48,7 +46,6 @@ using ReportEngine.Export.ExcelWork.Services;
 using ReportEngine.Export.ExcelWork.Services.Generators;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Export.PDFWork.Services.Generators;
-using ReportEngine.Shared.Config.JsonHelpers;
 using Serilog;
 
 namespace ReportEngine.App;
@@ -57,10 +54,34 @@ public class HostFactory
 {
     public static IHost BuildHost(string dbMode)
     {
+        var uiLog = new AppLogsView();
+
+        var theme = RichTextBoxLoggerTheme.Create();
+
         return Host.CreateDefaultBuilder()
-            .UseSerilog(Log.Logger, true)
-            .ConfigureServices((services) =>
+            .UseSerilog((context, services, config) =>
             {
+                config
+                    .ReadFrom.Configuration(context.Configuration)
+                    .ReadFrom.Services(services)
+                    .Enrich.FromLogContext()
+                    .MinimumLevel.Information()
+                    .WriteTo.Console()
+                    .WriteTo.File(
+                        "logs/reportengine.log",
+                        rollingInterval: RollingInterval.Day,
+                        retainedFileCountLimit: 7)
+                    .WriteTo.Logger(lc => lc
+                        .Filter.ByIncludingOnly(e =>
+                            e.Properties.ContainsKey("UiOnly"))
+                        .WriteTo.RichTextBox(
+                            uiLog.LogBox,
+                            theme: theme,
+                            outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {NewLine} {Exception}"));
+            })
+            .ConfigureServices(services =>
+            {
+                services.AddSingleton(uiLog);
                 // Регистрация контекста БД
                 ConfigureDatabase(services, dbMode);
                 // Регистрация репозиториев
@@ -78,11 +99,6 @@ public class HostFactory
 
                 services.AddSingleton<App>();
             })
-            .ConfigureLogging(logging =>
-            {
-                logging.ClearProviders();
-                logging.SetMinimumLevel(LogLevel.Information);
-            })
             .Build();
     }
 
@@ -93,7 +109,6 @@ public class HostFactory
         services.AddDbContext<ReAppContext>(options =>
             DbContextOptionsFactory.Configure(options, dbMode));
     }
-
 
 
     private static void ConfigureRepositories(IServiceCollection services)
@@ -161,6 +176,10 @@ public class HostFactory
         services.AddSingleton<NavigationService>();
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<INotificationService, NotificationService>();
+        services.AddScoped<ParametersStore>();
+        services.AddSingleton<SessionService>();
+        services.AddSingleton<UiLogger>();
+        services.AddSingleton<ExceptionService>();
         services.AddScoped<ICalculationService, CalculationService>();
         services.AddScoped<IStandService, StandService>();
         services.AddScoped<IProjectService, ProjectService>();
@@ -173,11 +192,8 @@ public class HostFactory
         services.AddScoped<EntityProjectClonerService>();
         services.AddScoped<ParameterGroupService>();
         services.AddScoped<AuditService>();
-        services.AddSingleton<ParametersStore>();
-        services.AddSingleton<SessionService>();
-
-        services.AddHttpClient();
         services.AddScoped<IAiChatService, GigachatAiService>();
+        services.AddHttpClient();
     }
 
     private static void ConfigureReportsServices(IServiceCollection services)
@@ -223,11 +239,12 @@ public class HostFactory
     private static void ConfigureViews(IServiceCollection services)
     {
         // Главное окно
-        services.AddSingleton(provider =>
+        services.AddSingleton(serviceProvider =>
         {
-            var navService = provider.GetRequiredService<NavigationService>();
-            var viewModel = provider.GetRequiredService<MainWindowViewModel>();
-            var mainWindow = new MainWindow(viewModel, provider);
+            var navService = serviceProvider.GetRequiredService<NavigationService>();
+            var viewModel = serviceProvider.GetRequiredService<MainWindowViewModel>();
+            var exService = serviceProvider.GetRequiredService<ExceptionService>();
+            var mainWindow = new MainWindow(viewModel, serviceProvider, exService);
 
             navService.InitializeContentHost(mainWindow.FindName("MainContentControl") as ContentControl);
             return mainWindow;

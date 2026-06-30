@@ -14,12 +14,8 @@ public static class DbContextOptionsFactory
         var sqliteConnString = JsonHandler.GetSqlLiteConnection(DirectoryHelper.GetConfigPath());
 
         if (databaseMode == "Online")
-        {
             options.UseNpgsql(connString);
-        }
         else
-        {
             options.UseSqlite(sqliteConnString);
-        }
     }
 }

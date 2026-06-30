@@ -1,6 +1,5 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Input;
-using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Views.Controls;
@@ -50,7 +49,7 @@ public partial class StandObvView : UserControl
 
     private void FillStandFieldsFromObvyazkaCommand_DoubleClick(object sender, MouseButtonEventArgs e)
     {
-        ExceptionHelper.SafeExecute(() => { _projectViewModel.OnEditObvSettingsCommandExecuted(sender); });
+        _projectViewModel.OnEditObvSettingsCommandExecuted(sender);
     }
 
     private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)

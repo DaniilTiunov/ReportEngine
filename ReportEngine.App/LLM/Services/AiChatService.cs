@@ -11,16 +11,15 @@ namespace ReportEngine.App.LLM.Services;
 
 public class AiChatService : IAiChatService
 {
-    private readonly HttpClient _httpClient;
-    private readonly INotificationService _notificationService;
-
     private const string AUTH_URL = "https://ngw.devices.sberbank.ru:9443/api/v2/oauth";
     private const string API_URL = "https://gigachat.devices.sberbank.ru/api/v1/chat/completions";
     private const string MODEL = "GigaChat";
+    private readonly HttpClient _httpClient;
+    private readonly INotificationService _notificationService;
 
     private string _accessToken;
-    private DateTime _tokenExpiry;
     private string _apiKey;
+    private DateTime _tokenExpiry;
 
     public AiChatService(
         HttpClient httpClient,
@@ -32,30 +31,11 @@ public class AiChatService : IAiChatService
         SetApiKey();
     }
 
-    private void SetApiKey()
-    {
-        var path = Path.Combine(AppContext.BaseDirectory, "appSecrets.json");
-
-        if (!File.Exists(path))
-        {
-            _notificationService.ShowError($"Не удаётся найти файл с ключом");
-            throw new Exception();
-        }
-
-        var json = File.ReadAllText(path);
-        var config = JsonSerializer.Deserialize<ApiConfig>(json);
-
-        _apiKey = config.ApiKey ??  throw new Exception("Не удаётся найти API ключ");
-    }
-
-     public async Task<string> SendMessageAsync(string message)
+    public async Task<string> SendMessageAsync(string message)
     {
         try
         {
-            if (string.IsNullOrEmpty(_accessToken) || DateTime.UtcNow >= _tokenExpiry)
-            {
-                await GetAccessTokenAsync();
-            }
+            if (string.IsNullOrEmpty(_accessToken) || DateTime.UtcNow >= _tokenExpiry) await GetAccessTokenAsync();
 
             var request = new
             {
@@ -79,6 +59,22 @@ public class AiChatService : IAiChatService
             _notificationService.ShowError(e.Message);
             throw;
         }
+    }
+
+    private void SetApiKey()
+    {
+        var path = Path.Combine(AppContext.BaseDirectory, "appSecrets.json");
+
+        if (!File.Exists(path))
+        {
+            _notificationService.ShowError("Не удаётся найти файл с ключом");
+            throw new Exception();
+        }
+
+        var json = File.ReadAllText(path);
+        var config = JsonSerializer.Deserialize<ApiConfig>(json);
+
+        _apiKey = config.ApiKey ?? throw new Exception("Не удаётся найти API ключ");
     }
 
     private HttpRequestMessage HandleHttpRequest(
@@ -149,5 +145,3 @@ public class AiChatService : IAiChatService
         return _accessToken;
     }
 }
-
-

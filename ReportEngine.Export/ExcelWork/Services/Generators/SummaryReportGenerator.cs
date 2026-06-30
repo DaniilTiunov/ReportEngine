@@ -2,9 +2,7 @@
 using ClosedXML.Excel;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.Pipes;
-using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
@@ -19,8 +17,8 @@ public class SummaryReportGenerator : IReportGenerator
 {
     private readonly IContainerRepository _containerRepository;
     private readonly ParametersStore _parametersStore;
-    private readonly IProjectInfoRepository _projectInfoRepository;
     private readonly IGenericBaseRepository<StainlessPipe, StainlessPipe> _pipesRepository;
+    private readonly IProjectInfoRepository _projectInfoRepository;
     private readonly IEnumerable<StainlessPipe> _stainlessPipes;
 
     public SummaryReportGenerator(
@@ -33,7 +31,6 @@ public class SummaryReportGenerator : IReportGenerator
         _containerRepository = containerRepository;
         _parametersStore = parametersStore;
         _pipesRepository = serviceProvider.GetRequiredService<IGenericBaseRepository<StainlessPipe, StainlessPipe>>();
-
     }
 
     public ReportType Type => ReportType.SummaryReport;
@@ -443,7 +440,8 @@ public class SummaryReportGenerator : IReportGenerator
         var allPartsList = ExcelReportHelper.GenerateAllPartsCollection(generatedPartsData);
         activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории:", allPartsList, ws);
 
-        var generatedLaborData = ExcelReportHelper.GenerateLaborData(standList, _parametersStore, project, stainlessPipes);
+        var generatedLaborData =
+            ExcelReportHelper.GenerateLaborData(standList, _parametersStore, project, stainlessPipes);
         var allLaborsList = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Трудозатраты", ws);

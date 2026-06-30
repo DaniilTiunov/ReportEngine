@@ -4,7 +4,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
-using ReportEngine.App.AppHelpers;
+using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.TreeView;
 using ReportEngine.Shared.Config.DebugConsol;
@@ -13,15 +13,18 @@ namespace ReportEngine.App.Views.Controls;
 
 public partial class TreeProjectView : UserControl, IDisposable
 {
+    private readonly ExceptionService _exceptionService;
     private readonly ProjectViewModel _projectViewModel;
     private bool _disposed;
 
     public TreeProjectView(
         TreeViewModel treeViewModel,
-        ProjectViewModel projectViewModel)
+        ProjectViewModel projectViewModel,
+        ExceptionService exceptionService)
     {
         InitializeComponent();
         _projectViewModel = projectViewModel;
+        _exceptionService = exceptionService;
         DataContext = treeViewModel;
     }
 
@@ -39,7 +42,7 @@ public partial class TreeProjectView : UserControl, IDisposable
 
     private void OpenCurrentView(object sender, MouseButtonEventArgs e)
     {
-        ExceptionHelper.SafeExecute(() =>
+        _exceptionService.SafeExecute(() =>
         {
             var treeViewItem = NavigationTree.SelectedItem as TreeViewItem;
             if (treeViewItem?.Tag != null)
@@ -53,7 +56,7 @@ public partial class TreeProjectView : UserControl, IDisposable
 
     private void CloseCurrentView(object sender, RoutedEventArgs e)
     {
-        ExceptionHelper.SafeExecute(() =>
+        _exceptionService.SafeExecute(() =>
         {
             // Сначала пытаемся получить связанную вкладку из Tag кнопки
             if (sender is Button btn && btn.Tag is TabItem taggedTab)
@@ -72,7 +75,7 @@ public partial class TreeProjectView : UserControl, IDisposable
 
     private void LoadTreeContent(string tag, string header)
     {
-        ExceptionHelper.SafeExecute(() =>
+        _exceptionService.SafeExecute(() =>
         {
             if (string.IsNullOrEmpty(tag))
                 return;
