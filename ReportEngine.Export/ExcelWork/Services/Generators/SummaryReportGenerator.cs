@@ -6,6 +6,7 @@ using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
+using ReportEngine.Export.Enums;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
@@ -19,7 +20,6 @@ public class SummaryReportGenerator : IReportGenerator
     private readonly ParametersStore _parametersStore;
     private readonly IGenericBaseRepository<StainlessPipe, StainlessPipe> _pipesRepository;
     private readonly IProjectInfoRepository _projectInfoRepository;
-    private readonly IEnumerable<StainlessPipe> _stainlessPipes;
 
     public SummaryReportGenerator(
         IProjectInfoRepository projectInfoRepository,
@@ -463,108 +463,109 @@ public class SummaryReportGenerator : IReportGenerator
         IEnumerable<StainlessPipe> pipes,
         List<Stand>? selectedStands = null)
     {
-        var activeRow = 4;
 
-        var containerBatches = _containerRepository.GetAllByProjectIdAsync(project.Id);
+            var activeRow = 4;
 
-        var generatedPartsData = ExcelReportHelper.GeneratePartsData(project.Stands);
+            var containerBatches = _containerRepository.GetAllByProjectIdAsync(project.Id);
 
-        if (selectedStands != null) generatedPartsData = ExcelReportHelper.GeneratePartsData(selectedStands);
+            var generatedPartsData = ExcelReportHelper.GeneratePartsData(project.Stands);
 
-        //принудительно обнуляем сроки поставки, они там не нужны (вроде)
-        foreach (var property in generatedPartsData.GetType().GetProperties())
-        {
-            var propertyValue = property.GetValue(generatedPartsData);
-            var recordList = propertyValue as List<EquipmentRecord>;
+            if (selectedStands != null) generatedPartsData = ExcelReportHelper.GeneratePartsData(selectedStands);
 
-            if (recordList != null)
+            //принудительно обнуляем сроки поставки, они там не нужны (вроде)
+            foreach (var property in generatedPartsData.GetType().GetProperties())
             {
-                var tempList = new List<EquipmentRecord>(recordList);
-                recordList.Clear();
-                foreach (var part in tempList)
-                {
-                    var record = new EquipmentRecord
-                    {
-                        Name = part.Name,
-                        Quantity = part.Quantity,
-                        Unit = part.Unit,
-                        CostPerUnit = part.CostPerUnit,
-                        CommonCost = part.CommonCost,
-                        ExportDays = new ValidatedField<int?>(null, false)
-                    };
+                var propertyValue = property.GetValue(generatedPartsData);
+                var recordList = propertyValue as List<EquipmentRecord>;
 
-                    recordList.Add(record);
+                if (recordList != null)
+                {
+                    var tempList = new List<EquipmentRecord>(recordList);
+                    recordList.Clear();
+                    foreach (var part in tempList)
+                    {
+                        var record = new EquipmentRecord
+                        {
+                            Name = part.Name,
+                            Quantity = part.Quantity,
+                            Unit = part.Unit,
+                            CostPerUnit = part.CostPerUnit,
+                            CommonCost = part.CommonCost,
+                            ExportDays = new ValidatedField<int?>(null, false)
+                        };
+
+                        recordList.Add(record);
+                    }
                 }
             }
-        }
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.PipesList, ws);
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.PipesList, ws);
+            activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
+            activeRow = FillSubtableData(activeRow, generatedPartsData.PipesList, ws);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.PipesList, ws);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Арматура", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.ArmaturesList, ws);
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.ArmaturesList, ws);
+            activeRow = CreateSubheaderOnWorksheet(activeRow, "Арматура", ws);
+            activeRow = FillSubtableData(activeRow, generatedPartsData.ArmaturesList, ws);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.ArmaturesList, ws);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Тройники и КМЧ", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.TreeList, ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.KmchList, ws);
+            activeRow = CreateSubheaderOnWorksheet(activeRow, "Тройники и КМЧ", ws);
+            activeRow = FillSubtableData(activeRow, generatedPartsData.TreeList, ws);
+            activeRow = FillSubtableData(activeRow, generatedPartsData.KmchList, ws);
 
-        //общий список, чтобы запихнуть в метод
-        var treeAndKmchList = new List<EquipmentRecord>();
-        treeAndKmchList.AddRange(generatedPartsData.TreeList);
-        treeAndKmchList.AddRange(generatedPartsData.KmchList);
+            //общий список, чтобы запихнуть в метод
+            var treeAndKmchList = new List<EquipmentRecord>();
+            treeAndKmchList.AddRange(generatedPartsData.TreeList);
+            treeAndKmchList.AddRange(generatedPartsData.KmchList);
 
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", treeAndKmchList, ws);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", treeAndKmchList, ws);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Дренаж", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.DrainageParts, ws);
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.DrainageParts, ws);
+            activeRow = CreateSubheaderOnWorksheet(activeRow, "Дренаж", ws);
+            activeRow = FillSubtableData(activeRow, generatedPartsData.DrainageParts, ws);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.DrainageParts, ws);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Рамные комплектующие", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.FramesList, ws);
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.FramesList, ws);
+            activeRow = CreateSubheaderOnWorksheet(activeRow, "Рамные комплектующие", ws);
+            activeRow = FillSubtableData(activeRow, generatedPartsData.FramesList, ws);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.FramesList, ws);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Кронштейны", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.SensorsHolders, ws);
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.SensorsHolders, ws);
+            activeRow = CreateSubheaderOnWorksheet(activeRow, "Кронштейны", ws);
+            activeRow = FillSubtableData(activeRow, generatedPartsData.SensorsHolders, ws);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.SensorsHolders, ws);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Электрические компоненты", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.ElectricalParts, ws);
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.ElectricalParts, ws);
+            activeRow = CreateSubheaderOnWorksheet(activeRow, "Электрические компоненты", ws);
+            activeRow = FillSubtableData(activeRow, generatedPartsData.ElectricalParts, ws);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.ElectricalParts, ws);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Прочие", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.OthersParts, ws);
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.OthersParts, ws);
+            activeRow = CreateSubheaderOnWorksheet(activeRow, "Прочие", ws);
+            activeRow = FillSubtableData(activeRow, generatedPartsData.OthersParts, ws);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.OthersParts, ws);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Расходные материалы", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.Supplies, ws);
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.Supplies, ws);
+            activeRow = CreateSubheaderOnWorksheet(activeRow, "Расходные материалы", ws);
+            activeRow = FillSubtableData(activeRow, generatedPartsData.Supplies, ws);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.Supplies, ws);
 
-        var allPartsList = ExcelReportHelper.GenerateAllPartsCollection(generatedPartsData);
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по комплектующим", allPartsList, ws);
+            var allPartsList = ExcelReportHelper.GenerateAllPartsCollection(generatedPartsData);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по комплектующим", allPartsList, ws);
 
-        var generatedLaborData = ExcelReportHelper.GenerateLaborData(project.Stands, _parametersStore, project, pipes);
-        var allLaborsList = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);
+            var generatedLaborData = ExcelReportHelper.GenerateLaborData(project.Stands, _parametersStore, project, pipes);
+            var allLaborsList = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Трудозатраты", ws);
-        activeRow = FillSubtableData(activeRow, allLaborsList, ws);
-        activeRow = CreateLaborTotalRecord(activeRow, allLaborsList, ws);
+            activeRow = CreateSubheaderOnWorksheet(activeRow, "Трудозатраты", ws);
+            activeRow = FillSubtableData(activeRow, allLaborsList, ws);
+            activeRow = CreateLaborTotalRecord(activeRow, allLaborsList, ws);
 
-        var allData = new List<EquipmentRecord>();
+            var allData = new List<EquipmentRecord>();
 
-        allData.AddRange(allPartsList);
-        allData.AddRange(allLaborsList);
+            allData.AddRange(allPartsList);
+            allData.AddRange(allLaborsList);
 
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по комплектующим и трудозатратам:", allData, ws);
-        var containersData = ExcelReportHelper.GenerateContainersData(await containerBatches);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по комплектующим и трудозатратам:", allData, ws);
+            var containersData = ExcelReportHelper.GenerateContainersData(await containerBatches);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Упаковка", ws);
-        activeRow = FillSubtableData(activeRow, containersData, ws);
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по упаковке:", containersData, ws);
+            activeRow = CreateSubheaderOnWorksheet(activeRow, "Упаковка", ws);
+            activeRow = FillSubtableData(activeRow, containersData, ws);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по упаковке:", containersData, ws);
 
-        allData.AddRange(containersData);
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по проекту:", allData, ws);
+            allData.AddRange(containersData);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по проекту:", allData, ws);
     }
 
     //заполняет лист калькуляции
