@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="BenchmarkDotNet" Version="0.15.8"/>
+        <PackageReference Include="Mapster" Version="7.4.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ReportEngine.Domain\ReportEngine.Domain.csproj"/>
+        <ProjectReference Include="..\ReportEngine.Export\ReportEngine.Export.csproj"/>
+        <ProjectReference Include="..\ReportEngine.Shared\ReportEngine.Shared.csproj"/>
+    </ItemGroup>
+
+</Project>

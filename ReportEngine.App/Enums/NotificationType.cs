@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace ReportEngine.App.Enums;
 
-namespace ReportEngine.App.Enums
+public enum NotificationType
 {
-    public enum NotificationType
-    {
-        Info,
-        Error,
-        Confirmation
-    }
+    Info,
+    Error,
+    Confirmation
 }

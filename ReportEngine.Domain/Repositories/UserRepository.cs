@@ -5,7 +5,7 @@ using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.Domain.Repositories;
 
-public class UserRepository : IBaseRepository<User>
+public class UserRepository : IUserRepository
 {
     private readonly ReAppContext _context;
 
@@ -31,6 +31,12 @@ public class UserRepository : IBaseRepository<User>
     {
         return await _context.Set<User>()
             .FirstOrDefaultAsync(c => c.Id == id);
+    }
+
+    public async Task<User?> GetByUserLoginAsync(string userLogin) // Не используется
+    {
+        return await _context.Set<User>()
+            .FirstOrDefaultAsync(c => c.UserLogin == userLogin);
     }
 
     public async Task UpdateAsync(User user)

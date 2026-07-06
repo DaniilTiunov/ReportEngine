@@ -1,19 +1,18 @@
 ﻿<Window
-    x:Class="ReportEngine.AtomicApp.Views.MainWindow"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:ReportEngine.AtomicApp"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="Атомик Стенды КИП"
     Background="{DynamicResource PrimaryColor}"
     FontFamily="Bahnschrift"
     Foreground="{DynamicResource PrimaryForeground}"
     ResizeMode="CanResize"
+    Title="АтомСтенды КИПиА"
     WindowStartupLocation="CenterScreen"
     WindowState="Normal"
     WindowStyle="None"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    x:Class="ReportEngine.AtomicApp.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <WindowChrome.WindowChrome>
         <WindowChrome
@@ -23,76 +22,171 @@
     </WindowChrome.WindowChrome>
 
     <Window.Resources>
-        <ResourceDictionary>
-            <Image x:Key="refresh-button.png" Source="/Resources/Images/refresh-button.png" />
-        </ResourceDictionary>
+        <ResourceDictionary />
     </Window.Resources>
-    <DockPanel>
-        <Border
-            x:Name="MainWindowControlTitle"
-            Height="34"
-            Background="#2D2D30"
-            DockPanel.Dock="Top"
-            MouseLeftButtonDown="Window_MouseLeftButtonDown">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
 
-                <StackPanel
-                    Margin="10,0,0,0"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal">
-                    <Image
-                        Width="18"
-                        Height="18"
-                        Margin="0,0,8,0"
-                        Source="/Resources/Icons/atom-editor.ico" />
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        FontSize="14"
-                        Foreground="White"
-                        Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
-                </StackPanel>
+    <Border Style="{DynamicResource WindowBorder}">
+        <DockPanel>
+            <Border
+                Background="#2D2D30"
+                DockPanel.Dock="Top"
+                Height="34"
+                MouseLeftButtonDown="Window_MouseLeftButtonDown"
+                x:Name="MainWindowControlTitle">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-                <StackPanel
-                    Grid.Column="1"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal">
-                    <Button
-                        x:Name="MinimizeButton"
-                        Width="40"
-                        Height="30"
-                        Click="MinimizeButton_Click"
-                        FontSize="16"
-                        ToolTip="Свернуть">
-                        ─
-                    </Button>
-                    <Button
-                        x:Name="MaxRestoreButton"
-                        Width="40"
-                        Height="30"
+                    <StackPanel
                         Margin="10,0,0,0"
-                        Click="MaxRestoreButton_Click"
-                        FontSize="16"
-                        ToolTip="Развернуть">
-                        ▢
-                    </Button>
-                    <Button
-                        x:Name="CloseButton"
-                        Width="40"
-                        Height="30"
-                        Margin="10,0,10,0"
-                        Click="CloseButton_Click"
-                        FontSize="16"
-                        ToolTip="Закрыть">
-                        ✕
-                    </Button>
-                </StackPanel>
-            </Grid>
-        </Border>
-        <Grid />
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
+                        <Image
+                            Height="18"
+                            Margin="0,0,8,0"
+                            Source="/Resources/Icons/atom-editor.ico"
+                            Width="18" />
+                        <TextBlock
+                            FontSize="14"
+                            Foreground="White"
+                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}"
+                            VerticalAlignment="Center" />
+                    </StackPanel>
 
-    </DockPanel>
+                    <StackPanel
+                        Grid.Column="1"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
+                        <Button
+                            Click="MinimizeButton_Click"
+                            FontSize="16"
+                            Height="30"
+                            ToolTip="Свернуть"
+                            Width="40"
+                            x:Name="MinimizeButton">
+                            ─
+                        </Button>
+                        <Button
+                            Click="MaxRestoreButton_Click"
+                            FontSize="16"
+                            Height="30"
+                            Margin="10,0,0,0"
+                            ToolTip="Развернуть"
+                            Width="40"
+                            x:Name="MaxRestoreButton">
+                            ▢
+                        </Button>
+                        <Button
+                            Click="CloseButton_Click"
+                            FontSize="16"
+                            Height="30"
+                            Margin="10,0,10,0"
+                            ToolTip="Закрыть"
+                            Width="40"
+                            x:Name="CloseButton">
+                            ✕
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+            <Menu
+                DockPanel.Dock="Top"
+                FontFamily="Bahnschrift"
+                FontSize="14"
+                Height="25">
+                <MenuItem Header="Проект">
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenTreeViewCommand}" Header="Создать новый проект" />
+                    <Separator />
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenMainWindowCommand}" Header="На главный экран" />
+                </MenuItem>
+
+                <MenuItem Header="Настройки">
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenSettingsWindow}" Header="Настройки приложения" />
+                    <Separator />
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenCalculationSettingsWindow}" Header="Настройки расчета" />
+                </MenuItem>
+
+                <MenuItem Header="Вид" Tag="ThemeItemChanger">
+                    <MenuItem
+                        Click="StandardTheme"
+                        Header="Светлая тема"
+                        Tag="Standart" />
+                    <Separator />
+                    <MenuItem
+                        Click="ChangeDarkTheme"
+                        Header="Тёмная тема"
+                        Tag="Dark" />
+                    <Separator />
+                    <MenuItem
+                        Click="MangoParadiseTheme"
+                        Header="Манговый рай"
+                        Tag="Mango" />
+                    <Separator />
+                    <MenuItem
+                        Click="BubbleGumTheme"
+                        Header="Жвачка"
+                        Tag="Bubble" />
+                </MenuItem>
+                <MenuItem Header="Контакты">
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllUsersCommand}" Header="Сотрудники" />
+                    <Separator />
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllCompaniesCommand}" Header="Заказчики" />
+                    <Separator />
+                    <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllSubjectsCommand}" Header="Объекты" />
+                </MenuItem>
+                <MenuItem Header="Стенды">
+                    <MenuItem Header="Все стенды" />
+                    <Separator />
+                    <MenuItem Header="Редактирование стендов" />
+                </MenuItem>
+
+                <MenuItem Header="Обвязки">
+                    <MenuItem Header="Все обвязки" />
+                    <Separator />
+                    <MenuItem Header="Редактирование обвязок" />
+                </MenuItem>
+                <MenuItem Header="Инструменты">
+                    <MenuItem Click="OpenLauncher" Header="Открыть лаунчер" />
+                    <Separator />
+                    <MenuItem Click="ShowCalculator" Header="Калькулятор" />
+                    <Separator />
+                    <MenuItem Click="ShowNotepad" Header="Блокнот" />
+                </MenuItem>
+                <MenuItem Header="Справка" />
+                <MenuItem Command="{Binding MainWindowCommandProvider.OpenAuthWindowCommand}" Header="Авторизация" />
+            </Menu>
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <ContentControl Grid.Row="1" x:Name="MainContentControl">
+                    <DataGrid
+                        AutoGenerateColumns="False"
+                        CanUserAddRows="False"
+                        IsReadOnly="True"
+                        ItemsSource="{Binding AllProjects}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
+                                Binding="{Binding Id}"
+                                Header="ID"
+                                Width="50" />
+                            <DataGridTextColumn
+                                Binding="{Binding Name}"
+                                Header="Название"
+                                Width="*" />
+                            <DataGridTextColumn
+                                Binding="{Binding Description}"
+                                Header="Описание"
+                                Width="2*" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ContentControl>
+            </Grid>
+        </DockPanel>
+    </Border>
 </Window>

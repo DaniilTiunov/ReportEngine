@@ -6,18 +6,18 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
+using ReportEngine.App.AppHelpers;
+using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ViewModels;
+using ReportEngine.App.Views.Windows.Dialog;
 
 namespace ReportEngine.App.Views.Controls;
 
 public partial class ProjectPreview : UserControl
 {
-
-    // TODO: Нужен фикс
-
-    private bool _allowEdit;
-
     private readonly ProjectViewModel _projectViewModel;
+    private bool _allowEdit;
 
     public ProjectPreview(ProjectViewModel projectViewModel)
     {
@@ -25,7 +25,11 @@ public partial class ProjectPreview : UserControl
         DataContext = projectViewModel;
         _projectViewModel = projectViewModel;
 
-        CommandBindings.Add(new CommandBinding(ApplicationCommands.Paste, OnPasteExecuted, OnPasteCanExecute));
+        CommandBindings.Add(
+            new CommandBinding(
+                ApplicationCommands.Paste,
+                OnPasteExecuted,
+                OnPasteCanExecute));
 
         Loaded += async (_, __) => await InitializeDataAndRecalculateAsync(_projectViewModel);
 
@@ -34,12 +38,23 @@ public partial class ProjectPreview : UserControl
 
     private async Task InitializeDataAndRecalculateAsync(ProjectViewModel projectViewModel)
     {
-        await InitializeDataAsync(projectViewModel);
+        var progress = new ProgressDialog();
 
-        projectViewModel.OnObvyazkiInStandChanged();
-        projectViewModel.OnFramesInStandChanged();
-        projectViewModel.UpdateNewStandNN();
-        projectViewModel.OnStandsInProjectChanged();
+        progress.Show();
+
+        try
+        {
+            await InitializeDataAsync(projectViewModel);
+
+            projectViewModel.OnObvyazkiInStandChanged();
+            projectViewModel.OnFramesInStandChanged();
+            projectViewModel.UpdateNewStandNN();
+            projectViewModel.OnStandsInProjectChanged();
+        }
+        finally
+        {
+            progress.Close();
+        }
     }
 
     private async Task InitializeDataAsync(ProjectViewModel projectViewModel)
@@ -50,20 +65,6 @@ public partial class ProjectPreview : UserControl
         await projectViewModel.LoadPurposesInStandsAsync();
     }
 
-    // Защита от повторного вызова
-    private async void OnLoaded(object sender, RoutedEventArgs e)
-    {
-        Loaded -= OnLoaded;
-
-        try
-        {
-            await InitializeDataAsync(_projectViewModel);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(ex.Message);
-        }
-    }
     // Защита от автоповтора F5
     private async void StandObvView_PreviewKeyDown(object sender, KeyEventArgs e)
     {
@@ -160,10 +161,7 @@ public partial class ProjectPreview : UserControl
 
         _allowEdit = true;
 
-        if (grid.CurrentCell != null)
-        {
-            grid.BeginEdit();
-        }
+        if (grid.CurrentCell != null) grid.BeginEdit();
 
         _allowEdit = false;
     }
@@ -171,6 +169,8 @@ public partial class ProjectPreview : UserControl
     private void StandsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         _projectViewModel.OnSelectedStandChanged();
+
+        StandsListHelper.GetSelectedStands(StandsList.SelectedItems.Cast<StandModel>());
     }
 
     private void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
@@ -188,9 +188,9 @@ public partial class ProjectPreview : UserControl
             if (presenter == null)
                 return;
 
-            int columnCount = dataGrid.Columns.Count;
+            var columnCount = dataGrid.Columns.Count;
 
-            for (int i = 0; i < columnCount; i++)
+            for (var i = 0; i < columnCount; i++)
             {
                 var cell = (DataGridCell)presenter.ItemContainerGenerator.ContainerFromIndex(i);
                 if (cell == null)
@@ -215,12 +215,12 @@ public partial class ProjectPreview : UserControl
                     cell.Visibility = Visibility.Collapsed;
                 }
             }
-        }), System.Windows.Threading.DispatcherPriority.Loaded);
+        }), DispatcherPriority.Loaded);
     }
 
     private static T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
     {
-        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+        for (var i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
         {
             var child = VisualTreeHelper.GetChild(obj, i);
 
@@ -231,6 +231,7 @@ public partial class ProjectPreview : UserControl
             if (childOfChild != null)
                 return childOfChild;
         }
+
         return null;
     }
 

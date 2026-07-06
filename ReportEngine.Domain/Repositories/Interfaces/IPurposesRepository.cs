@@ -1,10 +1,9 @@
 ﻿using ReportEngine.Domain.Entities.BaseEntities.Interface;
 
-namespace ReportEngine.Domain.Repositories.Interfaces
+namespace ReportEngine.Domain.Repositories.Interfaces;
+
+public interface IPurposesRepository<T>
+    where T : IPurposeEntity
 {
-    public interface IPurposesRepository<T>
-        where T : IPurposeEntity
-    {
-        Task UpdateAsync(T entity);
-    }
+    Task UpdateAsync(T entity);
 }

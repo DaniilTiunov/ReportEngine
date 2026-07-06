@@ -9,49 +9,49 @@ namespace ReportEngine.App.Model.CalculationModels;
 public class StandSettingsModel : BaseViewModel
 {
     private string? _bracket;
-    private string? _bracketMeasure;
-
-    private string? _bracketForDif;
-    private string? _bracketForDifMeasure;
+    private string? _bracketEntityName;
 
     private string? _bracketForAbs;
-    private string? _bracketForAbsMeasure;
+    private string? _bracketForAbsEntityName;
+
+    private string? _bracketForDif;
+    private string? _bracketForDifEntityName;
 
     private string? _bracketUniversal;
-    private string? _bracketUniversalMeasure;
+    private string? _bracketUniversalEntityName;
 
     private string? _cabelFourMm;
-    private string? _cabelFourMmMeasure;
+    private string? _cabelFourMmEntityName;
 
     private string? _cabelSixMm;
-    private string? _cabelSixMmMeasure;
+    private string? _cabelSixMmEntityName;
 
-    private double? _sensorCountOnFrame;
+    private string? _clamp;
+    private string? _clampEntityName;
 
     private string? _frameGalvanizing;
 
     private string? _namePlate;
-    private string? _namePlateMeasure;
+    private string? _namePlateEntityName;
 
     private string? _nameTable;
-    private string? _nameTableMeasure;
+    private string? _nameTableEntityName;
 
     private string? _oSiL;
     private string? _responsibleForAccept;
     private string? _secondLevelSpecialist;
     private string? _seniorEngineer;
 
+    private double? _sensorCountOnFrame;
+
     private string? _signalCable;
-    private string? _signalCableMeasure;
+    private string? _signalCableEntityName;
 
     private string? _steelChannel;
-    private string? _steelChannelMeasure;
-
-    private string? _clamp;
-    private string? _clampMeasure;
+    private string? _steelChannelEntityName;
 
     private string? _terminal;
-    private string? _terminalMeasure;
+    private string? _terminalEntityName;
 
     public string? SteelChannel
     {
@@ -59,10 +59,10 @@ public class StandSettingsModel : BaseViewModel
         set => Set(ref _steelChannel, value);
     } // Швеллер
 
-    public string? SteelChannelMeasure
+    public string? SteelChannelEntityName
     {
-        get => _steelChannelMeasure;
-        set => Set(ref _steelChannelMeasure, value);
+        get => _steelChannelEntityName;
+        set => Set(ref _steelChannelEntityName, value);
     } // Швеллер - ед. изм.
 
     public string? NamePlate
@@ -71,10 +71,10 @@ public class StandSettingsModel : BaseViewModel
         set => Set(ref _namePlate, value);
     } // Шильдик
 
-    public string? NamePlateMeasure
+    public string? NamePlateEntityName
     {
-        get => _namePlateMeasure;
-        set => Set(ref _namePlateMeasure, value);
+        get => _namePlateEntityName;
+        set => Set(ref _namePlateEntityName, value);
     } // Шильдик - ед.изм
 
     public string? NameTable
@@ -83,10 +83,10 @@ public class StandSettingsModel : BaseViewModel
         set => Set(ref _nameTable, value);
     } // Табличка
 
-    public string? NameTableMeasure
+    public string? NameTableEntityName
     {
-        get => _nameTableMeasure;
-        set => Set(ref _nameTableMeasure, value);
+        get => _nameTableEntityName;
+        set => Set(ref _nameTableEntityName, value);
     } // Табличка - ед.изм
 
     public string? FrameGalvanizing
@@ -101,10 +101,10 @@ public class StandSettingsModel : BaseViewModel
         set => Set(ref _bracket, value);
     } // Кронштейн
 
-    public string? BracketMeasure
+    public string? BracketEntityName
     {
-        get => _bracketMeasure;
-        set => Set(ref _bracketMeasure, value);
+        get => _bracketEntityName;
+        set => Set(ref _bracketEntityName, value);
     } // Кронштейн - ед.изм
 
     public string? BracketForDif
@@ -113,10 +113,10 @@ public class StandSettingsModel : BaseViewModel
         set => Set(ref _bracketForDif, value);
     } // Кронштейн для перепадника
 
-    public string? BracketForDifMeasure
+    public string? BracketForDifEntityName
     {
-        get => _bracketForDifMeasure;
-        set => Set(ref _bracketForDifMeasure, value);
+        get => _bracketForDifEntityName;
+        set => Set(ref _bracketForDifEntityName, value);
     } // Кронштейн для перепадника - ед.изм
 
     public string? BracketForAbs
@@ -125,10 +125,10 @@ public class StandSettingsModel : BaseViewModel
         set => Set(ref _bracketForAbs, value);
     } // Кронштейн для абсолютника
 
-    public string? BracketForAbsMeasure
+    public string? BracketForAbsEntityName
     {
-        get => _bracketForAbsMeasure;
-        set => Set(ref _bracketForAbsMeasure, value);
+        get => _bracketForAbsEntityName;
+        set => Set(ref _bracketForAbsEntityName, value);
     } // Кронштейн для абсолютника - ед. изм
 
     public string? BracketUniversal
@@ -137,10 +137,10 @@ public class StandSettingsModel : BaseViewModel
         set => Set(ref _bracketUniversal, value);
     } // Кронштейн универсальный
 
-    public string? BracketUniversalMeasure
+    public string? BracketUniversalEntityName
     {
-        get => _bracketUniversalMeasure;
-        set => Set(ref _bracketUniversalMeasure, value);
+        get => _bracketUniversalEntityName;
+        set => Set(ref _bracketUniversalEntityName, value);
     } // Кронштейн универсальный - ед. изм
 
     public string? CabelSixMm
@@ -149,10 +149,10 @@ public class StandSettingsModel : BaseViewModel
         set => Set(ref _cabelSixMm, value);
     } // Кабель 6 мм
 
-    public string? CabelSixMmMeasure
+    public string? CabelSixMmEntityName
     {
-        get => _cabelSixMmMeasure;
-        set => Set(ref _cabelSixMmMeasure, value);
+        get => _cabelSixMmEntityName;
+        set => Set(ref _cabelSixMmEntityName, value);
     } // Кабель 6 мм - ед. изм
 
     public string? CabelFourMm
@@ -161,10 +161,10 @@ public class StandSettingsModel : BaseViewModel
         set => Set(ref _cabelFourMm, value);
     } // Кабель 4 мм
 
-    public string? CabelFourMmMeasure
+    public string? CabelFourMmEntityName
     {
-        get => _cabelFourMmMeasure;
-        set => Set(ref _cabelFourMmMeasure, value);
+        get => _cabelFourMmEntityName;
+        set => Set(ref _cabelFourMmEntityName, value);
     } // Кабель 4 мм - ед. изм
 
     public string? SignalCable
@@ -173,10 +173,10 @@ public class StandSettingsModel : BaseViewModel
         set => Set(ref _signalCable, value);
     } // Кабель сигнальный
 
-    public string? SignalCableMeasure
+    public string? SignalCableEntityName
     {
-        get => _signalCableMeasure;
-        set => Set(ref _signalCableMeasure, value);
+        get => _signalCableEntityName;
+        set => Set(ref _signalCableEntityName, value);
     } // Кабель сигнальный - ед.изм
 
     public string? SeniorEngineer
@@ -215,10 +215,10 @@ public class StandSettingsModel : BaseViewModel
         set => Set(ref _clamp, value);
     } // Хомут
 
-    public string? ClampMeasure
+    public string? ClampEntityName
     {
-        get => _clampMeasure;
-        set => Set(ref _clampMeasure, value);
+        get => _clampEntityName;
+        set => Set(ref _clampEntityName, value);
     } // Хомут - ед.изм
 
     public string? Terminal
@@ -227,10 +227,10 @@ public class StandSettingsModel : BaseViewModel
         set => Set(ref _terminal, value);
     } // Клемма
 
-    public string? TerminalMeasure
+    public string? TerminalEntityName
     {
-        get => _terminalMeasure;
-        set => Set(ref _terminalMeasure, value);
+        get => _terminalEntityName;
+        set => Set(ref _terminalEntityName, value);
     } // Клемма - ед.изм
 
     public async Task LoadStandsSettingsDataAsync()

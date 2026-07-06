@@ -6,9 +6,12 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
-using ReportEngine.App.AppHelpers;
+using ReportEngine.App.LLM;
+using ReportEngine.App.LLM.ViewModels;
+using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.CalculationSettings;
+using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Shared.Config.Directory;
@@ -21,19 +24,21 @@ namespace ReportEngine.App;
 /// </summary>
 public partial class MainWindow : Window //Это так называемый "Code Behind" файл для MainWindow.xaml
 {
-    private ICollectionView _projectsView;
-
+    private readonly ExceptionService _exceptionService;
     private readonly MainWindowViewModel _mainViewModel;
     private readonly IServiceProvider _serviceProvider;
+    private ICollectionView _projectsView;
 
     public MainWindow(
         MainWindowViewModel mainViewModel,
-        IServiceProvider serviceProvider)
+        IServiceProvider serviceProvider,
+        ExceptionService exceptionService)
     {
         InitializeComponent();
         DataContext = mainViewModel;
         _mainViewModel = mainViewModel;
         _serviceProvider = serviceProvider;
+        _exceptionService = exceptionService;
 
         Loaded += MainWindow_Loaded;
         StateChanged += MainWindow_StateChanges;
@@ -42,7 +47,7 @@ public partial class MainWindow : Window //Это так называемый "C
     // Событие загрузки окна
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             StandardTheme(null, null);
 
@@ -86,7 +91,7 @@ public partial class MainWindow : Window //Это так называемый "C
 
     private void ShowUpdateIndo(object sender, RoutedEventArgs e)
     {
-        var updateInfo = new UpdateInfoView();
+        var updateInfo = new UpdateInfoView(_exceptionService);
         updateInfo.Show();
     }
 
@@ -126,14 +131,12 @@ public partial class MainWindow : Window //Это так называемый "C
         var themeDict = Application.LoadComponent(uri) as ResourceDictionary;
 
         var mergedDicts = Application.Current.Resources.MergedDictionaries;
-        for (int i = 0; i < mergedDicts.Count; i++)
-        {
+        for (var i = 0; i < mergedDicts.Count; i++)
             if (mergedDicts[i].Source != null && mergedDicts[i].Source.OriginalString.Contains("ColorThemes"))
             {
                 mergedDicts[i] = themeDict;
                 return;
             }
-        }
 
         mergedDicts.Add(themeDict);
     }
@@ -184,6 +187,27 @@ public partial class MainWindow : Window //Это так называемый "C
         Application.Current.Shutdown();
     }
 
+    private void OpenLauncher(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var localPath = AppDomain.CurrentDomain.BaseDirectory;
+            var updaterPath = Path.Combine(localPath, "ReportEngine.Launcher.exe");
+
+            if (!File.Exists(updaterPath))
+            {
+                MessageBox.Show("Лаунчер не найден!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            Process.Start(updaterPath);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Ошибка запуска: {ex.Message}");
+        }
+    }
+
     private void AutoUpdate(object sender, RoutedEventArgs e)
     {
         try
@@ -212,7 +236,7 @@ public partial class MainWindow : Window //Это так называемый "C
     {
         var helpPath = Path.Combine(DirectoryHelper.GetDirectory(), "Help", "HelpDesk.chm");
 
-        ExceptionHelper.SafeExecute(() =>
+        _exceptionService.SafeExecute(() =>
         {
             Process.Start(new ProcessStartInfo
             {
@@ -236,13 +260,63 @@ public partial class MainWindow : Window //Это так называемый "C
             {
                 if (obj is ProjectInfo prj)
                 {
-                    bool companyMatch = !string.IsNullOrEmpty(prj.Company) && prj.Company.ToLower().Contains(query);
-                    bool objectMatch = !string.IsNullOrEmpty(prj.Object) && prj.Object.ToLower().Contains(query);
+                    var companyMatch = !string.IsNullOrEmpty(prj.Company) && prj.Company.ToLower().Contains(query);
+                    var objectMatch = !string.IsNullOrEmpty(prj.Object) && prj.Object.ToLower().Contains(query);
                     return companyMatch || objectMatch;
                 }
+
                 return false;
             };
 
         _projectsView.Refresh();
+    }
+
+    private void OpenAssistant_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            if (AiAssistantContainer.Visibility == Visibility.Collapsed)
+            {
+                AiAssistantContainer.Visibility = Visibility.Visible;
+
+                if (AiAssistantHost.Content == null)
+                {
+                    var viewModel = _serviceProvider.GetRequiredService<ChatWithAiViewModel>();
+                    var chatView = new ChatWithAi(viewModel);
+                    AiAssistantHost.Content = chatView;
+                }
+            }
+            else
+            {
+                AiAssistantContainer.Visibility = Visibility.Collapsed;
+            }
+        }
+        catch (Exception exception)
+        {
+            MessageBox.Show(exception.Message);
+        }
+    }
+
+    private void CloseAiAssistant_Click(object sender, RoutedEventArgs e)
+    {
+        AiAssistantContainer.Visibility = Visibility.Collapsed;
+    }
+
+    private void OpenLogger_Click(object sender, RoutedEventArgs e)
+    {
+        if (LogContainer.Visibility == Visibility.Collapsed)
+        {
+            LogContainer.Visibility = Visibility.Visible;
+
+            if (LogHost.Content == null)
+            {
+                var logView = _serviceProvider.GetRequiredService<AppLogsView>();
+                LogHost.Content = logView;
+            }
+        }
+        else
+        {
+            LogContainer.Visibility = Visibility.Collapsed;
+        }
     }
 }

@@ -23,7 +23,7 @@ public class ProjectCommandProvider
     public ICommand CalculateProjectCommand { get; set; }
     public ICommand CreateComponentsListReportCommand { get; set; }
     public ICommand CreateSummaryReportCommand { get; set; }
-    public ICommand OpenAllSortamentsDialogCommand { get; set; } // Новая команда для открытия окна ассортиментов
+    public ICommand OpenAllSortamentsDialogCommand { get; set; }
     public ICommand DeleteSelectedStandCommand { get; set; }
     public ICommand CreateMarkReportCommand { get; set; }
     public ICommand CreateMarkReportAsyncCommand { get; set; }
@@ -49,6 +49,7 @@ public class ProjectCommandProvider
     public ICommand RefreshBatchesCommand { get; set; }
     public ICommand AddContainerToBatchCommand { get; set; }
     public ICommand DeleteContainerCommand { get; set; }
+    public ICommand UpdateContainerCommand { get; set; }
     public ICommand DeleteBatchCommand { get; set; }
     public ICommand AddStandToContainerCommand { get; set; }
     public ICommand RemoveStandFromContainerCommand { get; set; }
@@ -62,16 +63,22 @@ public class ProjectCommandProvider
     public ICommand OpenCreateNewStandCommand { get; set; }
     public ICommand OpenEditStandCommand { get; set; }
     public ICommand FillObvFieldsTiEditCommand { get; set; }
-    public ICommand DeleteAdditionalEquipFromObvCommand {  get; set; }
+    public ICommand DeleteAdditionalEquipFromObvCommand { get; set; }
     public ICommand UpdateAdditionalEquipFromObvCommand { get; set; }
-
-    public ICommand AdditionalTestCommand { get; set;  }
-    public ICommand SaveAllChangesInComponentsCommand {  get; set; }
-
+    public ICommand AdditionalTestCommand { get; set; }
+    public ICommand SaveAllChangesInComponentsCommand { get; set; }
     public ICommand RenumerateObvInStandCommand { get; set; }
 
-    public ICommand Bind(ICommand command, Action<object> execute, Func<object, bool> canExecute = null)
-    {
-        return new RelayCommand(execute, canExecute);
-    }
+    // Команды по отчтам выбранных стендов
+    public ICommand SelectedSummaryReportCommand { get; set; }
+    public ICommand SelectedComponentReportCommand { get; set; }
+    public ICommand SelectedMarksReportCommand { get; set; }
+    public ICommand SelectedNamePlatesReportCommand { get; set; }
+    public ICommand SelectedContainerReportCommand { get; set; }
+    public ICommand SelectedProductionReportCommand { get; set; }
+    public ICommand SelectedFinPlaneReportCommand { get; set; }
+    public ICommand SelectedPassportReportCommand { get; set; }
+    public ICommand SelectedTechnoCardsReportCommand { get; set; }
+    public ICommand OnAddStandFromAllStandsCommand { get; set; }
+    public ICommand DeleteSelectedStandsCommand { get; set; }
 }

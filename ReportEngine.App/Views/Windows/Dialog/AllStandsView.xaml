@@ -1,0 +1,141 @@
+﻿<Window
+    x:Class="ReportEngine.App.Views.Windows.Dialog.AllStandsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Все стенды"
+    Background="{DynamicResource PrimaryColor}"
+    FontFamily="Bahnschrift"
+    FontSize="14"
+    Foreground="{DynamicResource PrimaryForeground}"
+    Loaded="Window_Loaded"
+    ResizeMode="CanResize"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
+    mc:Ignorable="d">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="0"
+            CornerRadius="0"
+            GlassFrameThickness="0" />
+    </WindowChrome.WindowChrome>
+
+    <Border Style="{DynamicResource WindowBorder}">
+        <DockPanel>
+            <Border
+                x:Name="FormedFrameWindowTitle"
+                Height="34"
+                Background="#2D2D30"
+                DockPanel.Dock="Top"
+                MouseLeftButtonDown="Window_MouseLeftButtonDown">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <Image
+                            Width="18"
+                            Height="18"
+                            Margin="0,0,8,0"
+                            Source="/Resources/Icons/estimate_cost_icon_213382.ico" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            Foreground="White"
+                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <Button
+                            x:Name="MinimizeButton"
+                            Width="40"
+                            Height="30"
+                            Click="MinimizeButton_Click"
+                            FontSize="16"
+                            ToolTip="Свернуть">
+                            ─
+                        </Button>
+                        <Button
+                            x:Name="MaxRestoreButton"
+                            Width="40"
+                            Height="30"
+                            Margin="10,0,0,0"
+                            Click="MaxRestoreButton_Click"
+                            FontSize="16"
+                            ToolTip="Развернуть">
+                            ▢
+                        </Button>
+                        <Button
+                            x:Name="CloseButton"
+                            Width="40"
+                            Height="30"
+                            Margin="10,0,10,0"
+                            Click="CloseButton_Click"
+                            FontSize="16"
+                            ToolTip="Закрыть">
+                            ✕
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <GroupBox
+                    Grid.Column="0"
+                    FontSize="16"
+                    Header="Все проекты">
+                    <ListView
+                        x:Name="ProjectList"
+                        Margin="5"
+                        BorderThickness="3"
+                        ItemsSource="{Binding AllProjects}"
+                        SelectedItem="{Binding SelectedProject}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn DisplayMemberBinding="{Binding Company}" Header="Заказчик" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Object}" Header="Объект" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Description}" Header="Обозначение по КД" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </GroupBox>
+
+                <GroupBox
+                    Grid.Column="1"
+                    FontSize="16"
+                    Header="Стенды в проекте">
+                    <ListView
+                        x:Name="StandsList"
+                        Margin="5"
+                        BorderThickness="3"
+                        ItemsSource="{Binding SelectedProject.Stands}"
+                        MouseDoubleClick="StandsList_MouseDoubleClick"
+                        SelectedItem="{Binding SelectedStand}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn DisplayMemberBinding="{Binding KKSCode}" Header="Код ККС" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Design}" Header="Обозначение стенда" />
+                                <GridViewColumn DisplayMemberBinding="{Binding SerialNumber}" Header="Серийный номер" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </GroupBox>
+            </Grid>
+        </DockPanel>
+    </Border>
+</Window>

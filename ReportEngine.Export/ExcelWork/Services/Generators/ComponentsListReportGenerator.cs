@@ -63,19 +63,62 @@ public class ComponentListReportGenerator : IReportGenerator
         }
     }
 
+    public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
+    {
+        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+
+        using (var wb = new XLWorkbook())
+        {
+            var standNumber = 1;
+
+            //заполняем листы по стендам
+            foreach (var stand in selectedStands)
+            {
+                var ws = wb.Worksheets.Add($"{standNumber}");
+
+                CreateStandTableHeader(ws, stand);
+                FillStandTable(ws, stand);
+
+                standNumber++;
+            }
+
+            //заполняем сводную ведомость
+            var lastSheet = wb.Worksheets.Add("Сводная заявка");
+
+            CreateCommonListTableHeader(lastSheet, project);
+            FillCommonListTable(lastSheet, project, selectedStands);
+
+            //применяем оформление ко всему документу
+            foreach (var ws in wb.Worksheets)
+            {
+                ws.Cells().Style.Font.FontName = "Times New Roman";
+                ws.Cells().Style.Alignment.WrapText = true;
+                ws.Columns().AdjustToContents();
+                ws.Rows().AdjustToContents();
+            }
+
+            var savePath = SettingsManager.GetReportDirectory();
+            var fileName = ExcelReportHelper.CreateReportName("Ведомость комплектующих", "xlsx");
+            var fullSavePath = Path.Combine(savePath, fileName);
+
+            Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
+            wb.SaveAs(fullSavePath);
+        }
+    }
+
     #region Вспомогательные
 
     //валидация и вывод в таблицу
     private void PasteRecord(int row, EquipmentRecord record, IXLWorksheet ws)
     {
-        ws.Cell($"B{row}").Value = record.Name.Value?.ToString();
+        ws.Cell($"B{row}").Value = record.Name.Value;
 
         //if (!record.Name.IsValid)
         //{
         //    ws.Cell($"B{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
         //}
 
-        ws.Cell($"C{row}").Value = record.Unit.Value?.ToString();
+        ws.Cell($"C{row}").Value = record.Unit.Value;
 
         //if (!record.Unit.IsValid)
         //{
@@ -194,9 +237,11 @@ public class ComponentListReportGenerator : IReportGenerator
     }
 
     //создание сводной ведомости
-    private void FillCommonListTable(IXLWorksheet ws, ProjectInfo project)
+    private void FillCommonListTable(IXLWorksheet ws, ProjectInfo project, List<Stand>? selectedStands = null)
     {
         var generatedData = ExcelReportHelper.GeneratePartsData(project.Stands);
+
+        if (selectedStands != null) generatedData = ExcelReportHelper.GeneratePartsData(selectedStands);
 
         var activeRow = 4;
 

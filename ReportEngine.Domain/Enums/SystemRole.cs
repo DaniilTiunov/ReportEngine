@@ -4,5 +4,6 @@ public enum SystemRole
 {
     Admin,
     Manager,
-    User
+    User,
+    Guest
 }

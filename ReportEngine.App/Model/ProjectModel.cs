@@ -114,7 +114,9 @@ public class ProjectModel : BaseViewModel
     {
         get => _stand;
         set => Set(ref _stand, value);
-    } //Выбранный стенд;
+    }
+
+    //Выбранный стенд;
 
     public int Number
     {

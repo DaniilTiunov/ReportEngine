@@ -10,6 +10,7 @@ public class HumanCostSettingsModel : BaseViewModel
 {
     private double _collectorProduction;
     private double _commonCheckStand;
+    private double _galvanizedStands;
     private double _obvzyakaProduction;
     private double _tests;
     private double _timeForAllChecks;
@@ -21,7 +22,6 @@ public class HumanCostSettingsModel : BaseViewModel
     private double _timeForOneDrill;
     private double _timeForOthersOperations;
     private double _timeForPrepareAllEquipment;
-    private double _galvanizedStands;
 
     public double GalvanizedStands
     {

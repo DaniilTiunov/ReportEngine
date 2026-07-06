@@ -11,6 +11,7 @@ public class BaseElectricComponent : IBaseEquip
     public int? CabelInput { get; set; }
     public int? ExportDays { get; set; }
     public string? Measure { get; set; }
+    public float? Weight { get; set; }
     public float? Cost { get; set; }
 
     [Key]

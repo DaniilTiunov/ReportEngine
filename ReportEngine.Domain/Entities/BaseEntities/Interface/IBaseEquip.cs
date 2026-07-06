@@ -6,5 +6,6 @@ public interface IBaseEquip
     string? Name { get; set; }
     string? Measure { get; set; }
     float? Cost { get; set; }
+    float? Weight { get; set; }
     int? ExportDays { get; set; }
 }

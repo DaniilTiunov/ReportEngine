@@ -10,6 +10,7 @@
     Background="{DynamicResource PrimaryColor}"
     FontFamily="Bahnschrift"
     Foreground="{DynamicResource PrimaryForeground}"
+    WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d">
 

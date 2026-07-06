@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
-using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model.FormedEquipsModels;
+using ReportEngine.App.Services.Notification;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Drainage;
 using ReportEngine.Domain.Repositories.Interfaces;
@@ -11,15 +11,18 @@ namespace ReportEngine.App.ViewModels.FormedEquips;
 
 public class FormedDrainagesViewModel : BaseViewModel
 {
+    private readonly ExceptionService _exceptionService;
     private readonly IFormedDrainagesRepository _formedDrainagesRepository;
     private readonly IGenericBaseRepository<Drainage, Drainage> _genericEquipRepository;
 
     public FormedDrainagesViewModel(
         IFormedDrainagesRepository formedDrainagesRepository,
-        IGenericBaseRepository<Drainage, Drainage> genericEquipRepository)
+        IGenericBaseRepository<Drainage, Drainage> genericEquipRepository,
+        ExceptionService exceptionService)
     {
         _formedDrainagesRepository = formedDrainagesRepository;
         _genericEquipRepository = genericEquipRepository;
+        _exceptionService = exceptionService;
 
         InitializeCommands();
         LoadDataAsync();
@@ -51,37 +54,37 @@ public class FormedDrainagesViewModel : BaseViewModel
 
     public async void LoadDataAsync()
     {
-        await ExceptionHelper.SafeExecuteAsync(LoadDataInternalAsync);
+        await _exceptionService.SafeExecuteAsync(LoadDataInternalAsync);
     }
 
     public async void OnAddFormedDrainageExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(AddFormedDrainageAsync);
+        await _exceptionService.SafeExecuteAsync(AddFormedDrainageAsync);
     }
 
     public async void OnDeleteFormedDrainageExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(DeleteFormedDrainageAsync);
+        await _exceptionService.SafeExecuteAsync(DeleteFormedDrainageAsync);
     }
 
     public async void OnAddPurposeExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(AddPurposeAsync);
+        await _exceptionService.SafeExecuteAsync(AddPurposeAsync);
     }
 
     public async void OnDeletePurposeExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(DeletePurposeAsync);
+        await _exceptionService.SafeExecuteAsync(DeletePurposeAsync);
     }
 
     public async void OnInsertMaterialExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(InsertMaterialAsync);
+        await _exceptionService.SafeExecuteAsync(InsertMaterialAsync);
     }
 
     public async void OnSaveChangesExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(SaveChangesAsync);
+        await _exceptionService.SafeExecuteAsync(SaveChangesAsync);
     }
 
     #region Методы

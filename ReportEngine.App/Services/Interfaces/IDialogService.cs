@@ -11,9 +11,11 @@ public interface IDialogService
     T? ShowEquipDialog<T>()
         where T : class, IBaseEquip, new();
 
-    Obvyazka? ShowObvyazkaDialog();
+    Stand ShowSelectStandDialog();
 
-    IBaseEquip? ShowAllSortamentsDialog();
+    Obvyazka? ShowObvyazkaDialog(bool dialogMode);
+
+    IBaseEquip? ShowAllSortamentsDialog(object equipType = null);
 
     string ShowCompanyDialog();
 
@@ -27,7 +29,8 @@ public interface IDialogService
 
     void ShowObvSettingsWindow(ProjectViewModel projectViewModel);
 
-    void ShowEditObvSettingsWindow(ProjectViewModel projectViewModel, StandModel standModel, ObvyazkaInStand selectedObvyazka);
+    void ShowEditObvSettingsWindow(ProjectViewModel projectViewModel, StandModel standModel,
+        ObvyazkaInStand selectedObvyazka);
 
     void ShowStandsSettingsWindow(ProjectViewModel projectViewModel, bool editMode);
 
@@ -35,5 +38,5 @@ public interface IDialogService
 
     void RunWithProgressDialog(Action action);
 
-    void RunWithProgressDialogAsync(Func<Task> action);
+    Task RunWithProgressDialogAsync(Func<Task> action);
 }

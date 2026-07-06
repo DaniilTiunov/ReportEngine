@@ -1,15 +1,15 @@
-﻿using System.Diagnostics;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.Domain.Entities.BaseEntities.Interface;
 
 namespace ReportEngine.App.ViewModels.CalculationSettings;
 
 public class CalculationSettingsViewModel : BaseViewModel
 {
-    private readonly INotificationService _notificationService;
     private readonly IDialogService _dialogService;
+    private readonly INotificationService _notificationService;
 
     public CalculationSettingsViewModel(
         INotificationService notificationService,
@@ -44,29 +44,36 @@ public class CalculationSettingsViewModel : BaseViewModel
 
         if (p is string propertyName && !string.IsNullOrWhiteSpace(propertyName))
         {
-            var nameProp = StandSettings.GetType().GetProperty(propertyName);
-
-            if (nameProp != null && nameProp.CanWrite)
-            {
-                nameProp.SetValue(StandSettings, selected.Name);
-            }
-            else
-            {
-                _notificationService.ShowError($"Свойство '{propertyName}' не найдено.");
-            }
-
-            var measurePropertyName = propertyName + "Measure";
-            var measureProp = StandSettings.GetType().GetProperty(measurePropertyName);
-
-            if (measureProp != null && measureProp.CanWrite)
-            {
-                measureProp.SetValue(StandSettings, selected.Measure);
-            }
-            else
-            {
-                Debug.WriteLine($"Свойство '{measurePropertyName}' не найдено.");
-            }
+            //????
+            ApplySelectedItem(StandSettings, selected, propertyName);
+            ApplySelectedItem(FrameSettings, selected, propertyName);
         }
+    }
+
+    private void ApplySelectedItem(object settings, object selected, string propertyName)
+    {
+        if (selected == null || settings == null)
+            return;
+
+        var selectedEquip = selected as IBaseEquip;
+
+        if (selectedEquip == null)
+            return;
+
+        //вытаскиваем свойство с соответствующим именем из настроек
+        var nameProp = settings.GetType().GetProperty(propertyName);
+
+        //заполняем это свойство в настройках из переданного объекта (поле Name)
+        if (nameProp != null && nameProp.CanWrite)
+            nameProp.SetValue(settings, selectedEquip.Name);
+
+        //вытаскиваем свойство с соответствующим именем и постфиксом из настроек
+        var entityPropertyName = propertyName + "EntityName";
+        var entityNameProp = settings.GetType().GetProperty(entityPropertyName);
+
+        //заполняем это свойство в настройках из переданного объекта (имя типа под интерфейсом)
+        if (entityNameProp != null && entityNameProp.CanWrite)
+            entityNameProp.SetValue(settings, selectedEquip.GetType().Name);
     }
 
     public async void OnSaveSettingsCommandExecuted(object p)

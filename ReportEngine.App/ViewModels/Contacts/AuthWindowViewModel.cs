@@ -1,12 +1,10 @@
-﻿using System.Windows.Input;
-using Microsoft.Extensions.DependencyInjection;
+﻿using System.Collections.ObjectModel;
+using System.Windows.Input;
 using ReportEngine.App.Commands;
-using ReportEngine.App.Model.Contacts;
+using ReportEngine.App.Extensions;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
-using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Enums;
 using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.App.ViewModels.Contacts;
@@ -14,91 +12,67 @@ namespace ReportEngine.App.ViewModels.Contacts;
 public class AuthWindowViewModel : BaseViewModel
 {
     private readonly INotificationService _notificationService;
-    private readonly string _password = "12345";
-    private readonly IServiceProvider _serviceProvider;
-    private readonly IBaseRepository<User> _userRepository;
-
-    private UserModel _currentUser = new();
-    private string _inputMegaSecretPassword;
+    private readonly SessionService _sessionService;
+    private readonly IUserRepository _userRepository;
+    private ObservableCollection<User> _allUsers = new();
+    private User _selectedUser = new();
 
     public AuthWindowViewModel(
-        IBaseRepository<User> userRepository,
+        IUserRepository userRepository,
         INotificationService notificationService,
-        IServiceProvider serviceProvider)
+        SessionService sessionService)
     {
-        _serviceProvider = serviceProvider;
         _userRepository = userRepository;
         _notificationService = notificationService;
+        _sessionService = sessionService;
 
         LoginCommand = new RelayCommand(OnLogin, CanLogin);
         ExitCommand = new RelayCommand(LogOut, CanLogin);
     }
 
-    public UserModel CurrentUser
+    public User SelectedUser
     {
-        get => _currentUser;
-        set => Set(ref _currentUser, value);
+        get => _selectedUser;
+        set => Set(ref _selectedUser, value);
     }
 
-    public string InputMegaSecretPassword
+    public ObservableCollection<User> AllUsers
     {
-        get => _inputMegaSecretPassword;
-        set => Set(ref _inputMegaSecretPassword, value);
+        get => _allUsers;
+        set => Set(ref _allUsers, value);
     }
 
     public ICommand LoginCommand { get; }
 
     public ICommand ExitCommand { get; }
 
-    private void OnLogin(object obj) //TODO: Доделать пароль
+    private bool CanLogin(object obj)
     {
-        if (!string.IsNullOrWhiteSpace(InputMegaSecretPassword) &&
-            InputMegaSecretPassword == _password)
-        {
-            SessionService.CurrentUser = CurrentUser.SelectedUser;
+        return true;
+    }
 
-            var mainViewModel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
-            var authWindow = _serviceProvider.GetRequiredService<AuthWindow>();
+    private void OnLogin(object obj)
+    {
+        if (SelectedUser == null)
+            return;
 
-            mainViewModel.OnPropertyChanged(nameof(mainViewModel.CurrentUser));
-            mainViewModel.OnPropertyChanged(nameof(mainViewModel.CurrentUserLogin));
+        _sessionService.SignIn(SelectedUser);
 
-            _notificationService.ShowInfo($"Вход выполнен под {CurrentUser.SelectedUser.UserLogin}!");
-
-            authWindow.Close();
-        }
-        else
-        {
-            _notificationService.ShowError("Неверный пароль!");
-            InputMegaSecretPassword = string.Empty; // сбросим ввод
-        }
+        _notificationService.ShowInfo(
+            $"Вход выполнен: {SelectedUser.UserLogin}");
     }
 
     private void LogOut(object obj)
     {
-        SessionService.CurrentUser = new User { SystemRole = SystemRole.User };
-
-        var mainViewModel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
-        var authWindow = _serviceProvider.GetRequiredService<AuthWindow>();
-
-        mainViewModel.OnPropertyChanged(nameof(mainViewModel.CurrentUser));
-        mainViewModel.OnPropertyChanged(nameof(mainViewModel.CurrentUserLogin));
-
-        _notificationService.ShowInfo("Выход из системы!");
-
-        authWindow.Close();
-    }
-
-    private bool CanLogin(object obj)
-    {
-        return CurrentUser.SelectedUser != null;
+        _sessionService.SignOut();
     }
 
     public async Task LoadAllUsersAsync()
     {
         var users = await _userRepository.GetAllAsync();
 
-        CurrentUser.AllUsers.Clear();
-        foreach (var user in users) CurrentUser.AllUsers.Add(user);
+        AllUsers = users.ToObservable();
+
+        SelectedUser = AllUsers.FirstOrDefault();
     }
 }

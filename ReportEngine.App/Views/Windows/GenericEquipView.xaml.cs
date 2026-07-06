@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using ReportEngine.App.AppHelpers;
+using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Views.Windows;
@@ -11,13 +11,17 @@ namespace ReportEngine.App.Views.Windows;
 /// </summary>
 public partial class GenericEquipView : Window
 {
+    private readonly ExceptionService _exceptionService;
     private readonly bool _isDialog;
     private bool _allowEdit;
 
-    public GenericEquipView(bool IsDialog = false)
+    public GenericEquipView(
+        ExceptionService exceptionService,
+        bool IsDialog = false)
     {
         InitializeComponent();
         _isDialog = IsDialog;
+        _exceptionService = exceptionService;
     }
 
     private void DataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
@@ -28,7 +32,7 @@ public partial class GenericEquipView : Window
 
     private void SelectEquip_DoubleClick(object sender, MouseButtonEventArgs e)
     {
-        ExceptionHelper.SafeExecute(() =>
+        _exceptionService.SafeExecute(() =>
         {
             if (!_isDialog)
             {
@@ -37,10 +41,7 @@ public partial class GenericEquipView : Window
 
                 _allowEdit = true;
 
-                if (grid.CurrentCell != null)
-                {
-                    grid.BeginEdit();
-                }
+                if (grid.CurrentCell != null) grid.BeginEdit();
 
                 _allowEdit = false;
             }

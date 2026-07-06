@@ -1,35 +1,65 @@
 ﻿using System.ComponentModel;
 using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Enums;
+using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.App.Services.Core;
 
-public static class SessionService
+public class SessionService : INotifyPropertyChanged
 {
-    private static User? _currentUser;
+    private readonly AuditService _auditService;
+    private readonly IUserRepository _userRepository;
+    private User? _currentUser;
 
-    static SessionService()
+    public SessionService(
+        AuditService auditService,
+        IUserRepository userRepository)
     {
-        _currentUser = new User { SystemRole = SystemRole.User };
+        _auditService = auditService;
+        _userRepository = userRepository;
+
+        FirstStartSession();
     }
 
-    public static User? CurrentUser
+    public User? CurrentUser
     {
         get => _currentUser;
-        set
+        private set
         {
-            if (_currentUser != value)
-            {
-                _currentUser = value;
-                OnPropertyChanged(nameof(CurrentUser));
-            }
+            _currentUser = value;
+            OnPropertyChanged(nameof(CurrentUser));
+            OnPropertyChanged(nameof(CurrentUser.UserLogin));
         }
     }
 
-    public static event PropertyChangedEventHandler? PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
-    private static void OnPropertyChanged(string propertyName)
+    public async void FirstStartSession()
     {
-        PropertyChanged?.Invoke(null, new PropertyChangedEventArgs(propertyName));
+        _currentUser = await _userRepository.GetByUserLoginAsync("Гость");
+    }
+
+    public async void SignIn(User user)
+    {
+        CurrentUser = user;
+        await _auditService.LogEventAsync(
+            CurrentUser.UserLogin,
+            "Выполнен вход в систему",
+            $"Пользователь {CurrentUser.UserLogin} вошёл в систему");
+    }
+
+    public async void SignOut()
+    {
+        await _auditService.LogEventAsync(
+            CurrentUser.UserLogin,
+            "Выполнен выход в систему",
+            $"Пользователь {CurrentUser.UserLogin} вышёл из систему");
+
+        CurrentUser = null;
+    }
+
+    private void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this,
+            new PropertyChangedEventArgs(propertyName));
     }
 }

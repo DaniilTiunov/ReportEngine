@@ -1,0 +1,91 @@
+﻿<UserControl
+    FontSize="15"
+    d:DesignHeight="450"
+    d:DesignWidth="1000"
+    mc:Ignorable="d"
+    x:Class="ReportEngine.App.Views.Settings.CalculationParameters.Controls.ComponentsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid Margin="5">
+        <Border
+            Background="{DynamicResource PrimaryColor}"
+            BorderBrush="{DynamicResource SecondaryColor}"
+            BorderThickness="1"
+            CornerRadius="8"
+            Padding="5">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="180" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!--  Заголовок  -->
+                <TextBlock
+                    FontSize="18"
+                    FontWeight="SemiBold"
+                    Grid.ColumnSpan="2"
+                    Grid.Row="0"
+                    Margin="0,0,0,10"
+                    Text="Комплектующие" />
+
+                <DataGrid
+                    BeginningEdit="DataGrid_BeginningEdit"
+                    CanUserAddRows="True"
+                    Grid.ColumnSpan="2"
+                    Grid.Row="1"
+                    ItemsSource="{Binding EquipmentsParameters}"
+                    LoadingRow="DataGrid_LoadingRow"
+                    MouseDoubleClick="DataGrid_MouseDoubleClick"
+                    SelectedItem="{Binding SelectedEquipment}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn
+                            Binding="{Binding Name,  TargetNullValue=''}"
+                            Header="Наименование"
+                            Width="0.75*" />
+                        <DataGridTextColumn
+                            Binding="{Binding Value}"
+                            Header="Комплектующее"
+                            Width="*" />
+                        <DataGridTextColumn
+                            Binding="{Binding Unit, TargetNullValue=''}"
+                            Header="Ед. изм"
+                            Width="Auto" />
+                        <DataGridTextColumn
+                            Binding="{Binding Description}"
+                            Header="Комментарий"
+                            Width="Auto" />
+                        <DataGridTemplateColumn Header="Выбрать" Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button
+                                        Command="{Binding DataContext.GetSelectedEquipCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding}"
+                                        Content="Выбрать"
+                                        Margin="2,0,2,0"
+                                        Padding="5,0,5,0" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding AddNewEquipParameterCommand}" Header="Добавить параметр" />
+                            <MenuItem Command="{Binding UpdateEquipParameterCommand}" Header="Сохранить изменения" />
+                            <Separator />
+                            <MenuItem Command="{Binding DeleteEquipParameterCommand}" Header="Удалить параметр" />
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                </DataGrid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

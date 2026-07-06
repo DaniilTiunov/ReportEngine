@@ -1,8 +1,7 @@
 ﻿using System.Windows;
 
-namespace ReportEngine.Launcher
+namespace ReportEngine.Launcher;
+
+public class App : Application
 {
-    public class App : Application
-    {
-    }
 }

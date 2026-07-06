@@ -5,7 +5,8 @@ using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.Domain.Repositories;
 
-public class FormedAdditionalEquipsRepository : IFormedAdditionalEquipsRepository, IPurposesRepository<AdditionalEquipPurpose>
+public class FormedAdditionalEquipsRepository : IFormedAdditionalEquipsRepository,
+    IPurposesRepository<AdditionalEquipPurpose>
 {
     private readonly ReAppContext _context;
 

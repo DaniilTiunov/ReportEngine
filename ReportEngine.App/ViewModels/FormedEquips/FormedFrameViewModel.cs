@@ -1,23 +1,25 @@
 ﻿using System.Windows.Input;
-using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
-using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Model.FormedEquipsModels;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.Services.Notification;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities;
+using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 using ReportEngine.Domain.Entities.Frame;
-using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Domain.Store;
 
 namespace ReportEngine.App.ViewModels.FormedEquips;
 
 public class FormedFrameViewModel : BaseViewModel
 {
+    private readonly ExceptionService _exceptionService;
     private readonly IFrameRepository _formedFrameRepository;
     private readonly IGenericBaseRepository<FrameDetail, FrameDetail> _frameDetailRepository;
     private readonly IGenericBaseRepository<FrameRoll, FrameRoll> _frameRollRepository;
     private readonly INotificationService _notificationService;
+    private readonly ParametersStore _parametersStore;
     private readonly IGenericBaseRepository<PillarEqiup, PillarEqiup> _pillarEqiupRepository;
 
     public FormedFrameViewModel(
@@ -25,15 +27,17 @@ public class FormedFrameViewModel : BaseViewModel
         IGenericBaseRepository<FrameDetail, FrameDetail> frameDetailRepository,
         IGenericBaseRepository<FrameRoll, FrameRoll> frameRollRepository,
         IGenericBaseRepository<PillarEqiup, PillarEqiup> pillarEqiupRepository,
-        INotificationService notificationService)
+        INotificationService notificationService,
+        ExceptionService exceptionService,
+        ParametersStore parametersStore)
     {
         _frameDetailRepository = frameDetailRepository;
         _frameRollRepository = frameRollRepository;
         _pillarEqiupRepository = pillarEqiupRepository;
         _formedFrameRepository = formedFrameRepository;
         _notificationService = notificationService;
-
-        FrameSettings.LoadFrameDataFromIniAsync();
+        _exceptionService = exceptionService;
+        _parametersStore = parametersStore;
 
         LoadDetailsData();
         InitializeCommands();
@@ -43,12 +47,9 @@ public class FormedFrameViewModel : BaseViewModel
 
     public Action<FormedFrame> SelectedItem { get; set; }
 
-    public FrameSettingsModel FrameSettings { get; set; } = new();
-
-
     public async void LoadDetailsData()
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             var frames = await _formedFrameRepository.GetAllAsync();
             var details = await _frameDetailRepository.GetAllAsync();
@@ -93,27 +94,27 @@ public class FormedFrameViewModel : BaseViewModel
 
     public async void OnAddNewFrameExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(CreateNewFrameAsync);
+        await _exceptionService.SafeExecuteAsync(CreateNewFrameAsync);
     }
 
     public async void OnSaveChangesExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(SaveChangesAsync);
+        await _exceptionService.SafeExecuteAsync(SaveChangesAsync);
     }
 
     public async void OnDeleteFrameExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(DeleteFrameAsync);
+        await _exceptionService.SafeExecuteAsync(DeleteFrameAsync);
     }
 
     public async void OnAddDetailsExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(AddDetailsToFrame);
+        await _exceptionService.SafeExecuteAsync(AddDetailsToFrame);
     }
 
     public async void OnRemoveComponentExecuted(object p)
     {
-        await ExceptionHelper.SafeExecuteAsync(RemoveDetailsFromFrameAsync);
+        await _exceptionService.SafeExecuteAsync(RemoveDetailsFromFrameAsync);
     }
 
     #endregion Команды
@@ -129,7 +130,8 @@ public class FormedFrameViewModel : BaseViewModel
         var addedFrame = await _formedFrameRepository.GetByIdAsync(newFrame.Id);
         FormedFrameModel.AllFrames.Add(addedFrame);
 
-        if(FormedFrameModel.Disassembled == true)
+        // TODO: Посмотреть в базе и заменить на параметры из стора
+        if (FormedFrameModel.Disassembled == true)
         {
             var defaultFirstComponent = new FrameComponent
             {
@@ -140,8 +142,8 @@ public class FormedFrameViewModel : BaseViewModel
                 CostComponent = 100,
                 Length = 0,
                 ComponentType = nameof(FrameDetail),
-                ComponentName = FrameSettings.MaterialOne,
-                Count = (int)FrameSettings.CountMaterialOne,
+                ComponentName = _parametersStore[CalculationParameterType.FrameCost, "MaterialOne"].ToString(),
+                Count = 1
             };
             var defaultSecondComponent = new FrameComponent
             {
@@ -152,8 +154,8 @@ public class FormedFrameViewModel : BaseViewModel
                 CostComponent = 100,
                 Length = 0,
                 ComponentType = nameof(FrameDetail),
-                ComponentName = FrameSettings.MaterialTwo,
-                Count = (int)FrameSettings.CountMaterialTwo,
+                ComponentName = _parametersStore[CalculationParameterType.FrameCost, "MaterialOne"].ToString(),
+                Count = 1
             };
 
             await _formedFrameRepository.AddComponentAsync(defaultFirstComponent);

@@ -13,9 +13,8 @@ namespace ReportEngine.App.Views.Windows;
 /// </summary>
 public partial class CompanyView : Window
 {
-    private ICollectionView _companiesView;
-
     private readonly bool _isDialog;
+    private ICollectionView _companiesView;
 
     public CompanyView(CompanyViewModel viewModel, bool IsDialog = false)
     {

@@ -46,21 +46,21 @@ public static class CollectionRefreshHelper
         catch (InvalidOperationException)
         {
             Application.Current.Dispatcher.BeginInvoke(
-            DispatcherPriority.Background,
-            new Action(() =>
-            {
-                try
+                DispatcherPriority.Background,
+                new Action(() =>
                 {
-                    var view = CollectionViewSource.GetDefaultView(collection);
-                    view.SortDescriptions.Clear();
-                    view.SortDescriptions.Add(
-                        new SortDescription(fieldToSortBy, sortType));
-                    view?.Refresh();
-                }
-                catch
-                {
-                }
-            }));
+                    try
+                    {
+                        var view = CollectionViewSource.GetDefaultView(collection);
+                        view.SortDescriptions.Clear();
+                        view.SortDescriptions.Add(
+                            new SortDescription(fieldToSortBy, sortType));
+                        view?.Refresh();
+                    }
+                    catch
+                    {
+                    }
+                }));
         }
     }
 }

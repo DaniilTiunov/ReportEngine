@@ -1,119 +1,172 @@
 ﻿<Window
+    Background="{DynamicResource PrimaryColor}"
+    FontFamily="Bahnschrift"
+    FontSize="14"
+    Foreground="{DynamicResource PrimaryForeground}"
+    Height="700"
+    ResizeMode="CanResize"
+    Title="Настройки приложения"
+    Topmost="True"
+    Width="1200"
+    WindowStyle="None"
+    mc:Ignorable="d"
     x:Class="ReportEngine.App.Views.SettingsWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="Настройки приложения"
-    Width="700"
-    Height="500"
-    mc:Ignorable="d">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <Grid Margin="16">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="0"
+            CornerRadius="0"
+            GlassFrameThickness="0" />
+    </WindowChrome.WindowChrome>
 
-        <!--  Меню категорий  -->
-        <ListBox
-            x:Name="SettingsCategories"
-            Margin="0,0,16,0"
-            BorderThickness="0"
-            SelectionChanged="SettingsCategories_SelectionChanged">
-            <ListBoxItem
-                Content="Основные"
-                IsSelected="True"
-                Tag="GeneralSettings" />
-            <ListBoxItem Content="Подключение" Tag="ConnectionSettings" />
-            <ListBoxItem Content="Оформление" Tag="DesignSettings" />
-            <ListBoxItem Content="Другое" Tag="OtherSettings" />
-        </ListBox>
+    <Border Style="{DynamicResource WindowBorder}">
+        <DockPanel>
+            <Border
+                Background="#2D2D30"
+                DockPanel.Dock="Top"
+                Height="34"
+                MouseLeftButtonDown="Window_MouseLeftButtonDown"
+                x:Name="WindowTitle">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-        <!--  Область с настройками  -->
-        <StackPanel
-            Grid.Column="1"
-            Margin="0"
-            Background="{DynamicResource MaterialDesignPaper}">
+                    <StackPanel
+                        Margin="10,0,0,0"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
+                        <Image
+                            Height="18"
+                            Margin="0,0,8,0"
+                            Source="/Resources/Icons/estimate_cost_icon_213382.ico"
+                            Width="18" />
+                        <TextBlock
+                            FontSize="14"
+                            Foreground="White"
+                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}"
+                            VerticalAlignment="Center" />
+                    </StackPanel>
 
-            <!--  Заголовок  -->
-            <TextBlock
-                x:Name="SettingsTitle"
-                Margin="0,0,0,10"
-                FontSize="20"
-                FontWeight="Bold"
-                Text="Основные настройки" />
+                    <StackPanel
+                        Grid.Column="1"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
+                        <Button
+                            Click="MinimizeButton_Click"
+                            FontSize="16"
+                            Height="30"
+                            ToolTip="Свернуть"
+                            Width="40"
+                            x:Name="MinimizeButton">
+                            ─
+                        </Button>
+                        <Button
+                            Click="MaxRestoreButton_Click"
+                            FontSize="16"
+                            Height="30"
+                            Margin="10,0,0,0"
+                            ToolTip="Развернуть"
+                            Width="40"
+                            x:Name="MaxRestoreButton">
+                            ▢
+                        </Button>
+                        <Button
+                            Click="CloseButton_Click"
+                            FontSize="16"
+                            Height="30"
+                            Margin="10,0,10,0"
+                            ToolTip="Закрыть"
+                            Width="40"
+                            x:Name="CloseButton">
+                            ✕
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
 
-            <!--  Основные настройки  -->
-            <StackPanel x:Name="GeneralSettingsPanel" Visibility="Visible">
-                <TextBlock Margin="0,0,0,4" Text="Директория для сохранения отчётов:" />
-                <DockPanel>
-                    <TextBox
-                        x:Name="ReportDirBox"
-                        Width="400"
-                        Text="{Binding SaveReportDirPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <Button
-                        x:Name="BrowseReportDirButton"
-                        Width="40"
-                        Margin="4,0,0,0"
-                        Command="{Binding OpenDialog}"
-                        Content="..." />
-                </DockPanel>
-            </StackPanel>
+            <Grid Background="{DynamicResource PrimaryColor}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="240" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <!--  Подключение  -->
-            <StackPanel x:Name="ConnectionSettingsPanel" Visibility="Collapsed">
-                <TextBlock Margin="0,0,0,4" Text="Адрес сервера БД:" />
-                <TextBox
-                    x:Name="DbServerBox"
-                    Width="400"
-                    Text="{Binding ConnectionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <!--  Левая панель  -->
+                <Border
+                    Background="{DynamicResource SecondaryColor}"
+                    BorderBrush="{DynamicResource BorderLightColor}"
+                    BorderThickness="0,0,1,0"
+                    Grid.Column="0"
+                    Margin="5"
+                    Padding="10">
 
-                <TextBlock Margin="0,8,0,4" Text="Порт:" />
-                <TextBox
-                    x:Name="DbPortBox"
-                    Width="100"
-                    Text="5432" />
+                    <ListBox
+                        Background="{DynamicResource PrimaryColor}"
+                        BorderThickness="0"
+                        Foreground="{DynamicResource PrimaryForeground}"
+                        ItemsSource="{Binding SettingsItems}"
+                        Margin="5"
+                        SelectedItem="{Binding SelectedSetting}">
 
-                <TextBlock Margin="0,8,0,4" Text="Имя базы:" />
-                <TextBox
-                    x:Name="DbNameBox"
-                    Width="200"
-                    Text="mydb" />
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border
+                                    CornerRadius="6"
+                                    Margin="0,4"
+                                    Padding="12">
+                                    <TextBlock FontSize="15" Text="{Binding}" />
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
 
-                <TextBlock Margin="0,8,0,4" Text="Пользователь:" />
-                <TextBox
-                    x:Name="DbUserBox"
-                    Width="200"
-                    Text="postgres" />
+                    </ListBox>
+                </Border>
 
-                <TextBlock Margin="0,8,0,4" Text="Пароль:" />
-                <PasswordBox x:Name="DbPasswordBox" Width="200" />
-            </StackPanel>
+                <!--  Правая часть  -->
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-            <!--  Оформление (плейсхолдер)  -->
-            <StackPanel x:Name="DesignSettingsPanel" Visibility="Collapsed">
-                <TextBlock Margin="0,0,0,4" Text="Настройки оформления (пусто)" />
-            </StackPanel>
+                    <Border
+                        Background="{DynamicResource PrimaryColor}"
+                        BorderBrush="{DynamicResource BorderLightColor}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Grid.Row="0"
+                        Margin="20"
+                        Padding="20">
 
-            <!--  Другое (плейсхолдер)  -->
-            <StackPanel x:Name="OtherSettingsPanel" Visibility="Collapsed">
-                <TextBlock Margin="0,0,0,4" Text="Прочие настройки (пусто)" />
-            </StackPanel>
+                        <ContentControl Content="{Binding CurrentView}" />
+                    </Border>
 
-            <!--  Кнопки  -->
-            <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
-                <Button
-                    x:Name="ApplyButton"
-                    Width="100"
-                    Margin="0,0,8,0"
-                    Command="{Binding ApplySettingsCommand}"
-                    Content="Применить" />
-                <Button
-                    x:Name="CancelButton"
-                    Width="80"
-                    Content="Отмена" />
-            </StackPanel>
-        </StackPanel>
-    </Grid>
+                    <StackPanel
+                        Grid.Row="1"
+                        HorizontalAlignment="Right"
+                        Margin="0,0,20,20"
+                        Orientation="Horizontal">
+
+                        <Button
+                            Command="{Binding ApplySettingsCommand}"
+                            Content="Сохранить"
+                            Height="36"
+                            Margin="0,0,10,0"
+                            Width="110" />
+
+                        <Button
+                            Command="{Binding CloseCommand}"
+                            Content="Отмена"
+                            Height="36"
+                            Width="110" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </DockPanel>
+    </Border>
 </Window>

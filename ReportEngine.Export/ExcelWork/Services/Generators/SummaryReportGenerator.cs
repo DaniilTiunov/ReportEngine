@@ -1,23 +1,36 @@
 ﻿using System.Diagnostics;
 using ClosedXML.Excel;
+using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
+using ReportEngine.Export.Enums;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
+using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
 public class SummaryReportGenerator : IReportGenerator
 {
-    private readonly IProjectInfoRepository _projectInfoRepository;
     private readonly IContainerRepository _containerRepository;
+    private readonly ParametersStore _parametersStore;
+    private readonly IGenericBaseRepository<StainlessPipe, StainlessPipe> _pipesRepository;
+    private readonly IProjectInfoRepository _projectInfoRepository;
 
-    public SummaryReportGenerator(IProjectInfoRepository projectInfoRepository, IContainerRepository containerRepository)
+    public SummaryReportGenerator(
+        IProjectInfoRepository projectInfoRepository,
+        IContainerRepository containerRepository,
+        ParametersStore parametersStore,
+        IServiceProvider serviceProvider)
     {
         _projectInfoRepository = projectInfoRepository;
         _containerRepository = containerRepository;
+        _parametersStore = parametersStore;
+        _pipesRepository = serviceProvider.GetRequiredService<IGenericBaseRepository<StainlessPipe, StainlessPipe>>();
     }
 
     public ReportType Type => ReportType.SummaryReport;
@@ -25,48 +38,116 @@ public class SummaryReportGenerator : IReportGenerator
     public async Task GenerateAsync(int projectId)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        var pipes = await _pipesRepository.GetAllAsync();
 
         using (var wb = new XLWorkbook())
         {
             var standNumber = 1;
 
-            //заполняем листы по стендам
             foreach (var stand in project.Stands)
             {
                 var ws = wb.Worksheets.Add($"{standNumber}");
 
                 CreateStandTableHeader(ws, stand, XLAlignmentHorizontalValues.Center);
-                FillStandTable(ws, stand);
+                FillStandTable(ws, stand, project, pipes);
+
+                ws.Columns().Style.Alignment.WrapText = false;
+                ws.Rows().Style.Alignment.WrapText = false;
 
                 ws.Columns().AdjustToContents();
                 ws.Rows().AdjustToContents();
+
+                // Костылёк для нормального отображения
+                var exportDaysRange = ws.Range("A2:A3");
+                exportDaysRange.Style.Alignment.WrapText = true;
+
+                foreach (var row in exportDaysRange.Rows()) row.WorksheetRow().Height = 30;
+
+                ws.Columns("A").Width = 18; // ширина столбца "Срок поставки комплектующих"
 
                 standNumber++;
             }
 
-            //заполняем сводную ведомость
+            // Сводная ведомость
             var summarySheet = wb.Worksheets.Add("Сводная заявка");
-
             CreateCommonListTableHeader(summarySheet, project);
-            await FillCommonListTable(summarySheet, project);
+            await FillCommonListTable(summarySheet, project, pipes);
 
-            //заполняем калькуляцию
+            summarySheet.Columns().Style.Alignment.WrapText = false;
+            summarySheet.Rows().Style.Alignment.WrapText = false;
+            summarySheet.Columns().AdjustToContents();
+            summarySheet.Rows().AdjustToContents();
+
+            // Калькуляция
             var calculationSheet = wb.Worksheets.Add("Калькуляция");
-
             CreateCalcullationTableHeader(calculationSheet, project);
             await FillCalculationTable(calculationSheet, project);
 
-            //применяем оформление ко всему документу
-            foreach (var ws in wb.Worksheets)
-            {
-                ws.Cells().Style.Font.FontName = "Times New Roman";
-                ws.Cells().Style.Alignment.WrapText = true;
-                ws.Columns().AdjustToContents();
-                ws.Rows().AdjustToContents();
-            }
+            // Применяем оформление ко всему документу
+            foreach (var ws in wb.Worksheets) ws.Cells().Style.Font.FontName = "Times New Roman";
 
             var savePath = SettingsManager.GetReportDirectory();
-            var fileName = ExcelReportHelper.CreateReportName("Сводная_ведомость", "xlsx");
+            var fileName = ExcelReportHelper.CreateReportName("Сводная ведомость", "xlsx");
+            var fullSavePath = Path.Combine(savePath, fileName);
+
+            Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
+            wb.SaveAs(fullSavePath);
+        }
+    }
+
+    public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
+    {
+        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        var pipes = await _pipesRepository.GetAllAsync();
+
+        using (var wb = new XLWorkbook())
+        {
+            var standNumber = 1;
+
+            foreach (var stand in selectedStands)
+            {
+                var ws = wb.Worksheets.Add($"{standNumber}");
+
+                CreateStandTableHeader(ws, stand, XLAlignmentHorizontalValues.Center);
+                FillStandTable(ws, stand, project, pipes);
+
+                ws.Columns().Style.Alignment.WrapText = false;
+                ws.Rows().Style.Alignment.WrapText = false;
+
+                ws.Columns().AdjustToContents();
+                ws.Rows().AdjustToContents();
+
+                // Костылёк для нормального отображения
+                var exportDaysRange = ws.Range("A2:A3");
+                exportDaysRange.Style.Alignment.WrapText = true;
+
+                foreach (var row in exportDaysRange.Rows()) row.WorksheetRow().Height = 30;
+
+                ws.Columns("A").Width = 18; // ширина столбца "Срок поставки комплектующих"
+
+                standNumber++;
+            }
+
+            // Сводная ведомость
+            var summarySheet = wb.Worksheets.Add("Сводная заявка");
+            CreateCommonListTableHeader(summarySheet, project);
+            await FillCommonListTable(summarySheet, project, pipes, selectedStands);
+
+            summarySheet.Columns().Style.Alignment.WrapText = false;
+            summarySheet.Rows().Style.Alignment.WrapText = false;
+            summarySheet.Columns().AdjustToContents();
+            summarySheet.Rows().AdjustToContents();
+
+            // Калькуляция
+            var calculationSheet = wb.Worksheets.Add("Калькуляция");
+            CreateCalcullationTableHeader(calculationSheet, project);
+            await FillCalculationTable(calculationSheet, project, selectedStands);
+
+            // Применяем оформление ко всему документу
+            foreach (var ws in wb.Worksheets) ws.Cells().Style.Font.FontName = "Times New Roman";
+
+            var savePath = SettingsManager.GetReportDirectory();
+            var fileName = ExcelReportHelper.CreateReportName("Сводная ведомость", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
 
             Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
@@ -77,19 +158,19 @@ public class SummaryReportGenerator : IReportGenerator
     #region Вспомогательные
 
     //валидация и вывод в таблицу
-    private void PasteRecord(int row, EquipmentRecord record, IXLWorksheet ws)
+    private void PasteRecord(int row, EquipmentRecord? record, IXLWorksheet ws)
     {
-        ws.Cell($"A{row}").Value = record.ExportDays.Value?.ToString();
+        ws.Cell($"A{row}").Value = record?.ExportDays.Value?.ToString();
 
-        ws.Cell($"B{row}").Value = record.Name.Value?.ToString();
+        ws.Cell($"B{row}").Value = record?.Name.Value;
 
-        ws.Cell($"C{row}").Value = record.Unit.Value?.ToString();
+        ws.Cell($"C{row}").Value = record?.Unit.Value;
 
-        ws.Cell($"D{row}").Value = record.Quantity.Value?.ToString();
+        ws.Cell($"D{row}").Value = record?.Quantity.Value?.Round(2).ToString();
 
-        ws.Cell($"E{row}").Value = record.CostPerUnit.Value?.ToString();
+        ws.Cell($"E{row}").Value = record?.CostPerUnit.Value?.ToString();
 
-        ws.Cell($"F{row}").Value = record.CommonCost.Value?.ToString();
+        ws.Cell($"F{row}").Value = record?.CommonCost.Value.Ceiling().ToString();
 
         //if (!record.ExportDays.IsValid)
         //{
@@ -146,7 +227,8 @@ public class SummaryReportGenerator : IReportGenerator
         var headerRange = ws.Range("A1:F3");
 
         var exportDaysRange = ws.Range("A2:A3").Merge();
-        exportDaysRange.Value = "Срок поставки комплектующих, дней";
+        exportDaysRange.Value = "Срок\nпоставки\nкомплектующих,\nдней";
+
 
         var kksCodeRange = ws.Range("C1:F1").Merge();
         kksCodeRange.Value = $"Код KKS:{stand.KKSCode}";
@@ -196,6 +278,7 @@ public class SummaryReportGenerator : IReportGenerator
     }
 
     //создает заголовок листа калькуляции
+
     private void CreateCalcullationTableHeader(IXLWorksheet ws, ProjectInfo project)
     {
         var headerRange = ws.Range("A1:K6");
@@ -207,7 +290,11 @@ public class SummaryReportGenerator : IReportGenerator
         descriptionRange.Value = "Примечание";
 
         var deliveryTimeRange = ws.Range("B3:B6").Merge();
-        deliveryTimeRange.Value = "Срок поставки комплектующих, дней";
+        deliveryTimeRange.Value = "Срок\nпоставки\nкомплектующих,\nдней";
+
+        deliveryTimeRange.Style.Alignment.WrapText = true;
+
+        foreach (var row in deliveryTimeRange.Rows()) row.WorksheetRow().Height = 20;
 
         var devicesListRange = ws.Range("C3:K4").Merge();
         devicesListRange.Value = "Перечень оборудования, планируемого к поставке";
@@ -248,7 +335,21 @@ public class SummaryReportGenerator : IReportGenerator
         customerCompanyRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Medium);
         customerCompanyRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Medium);
 
+
         headerRange.Style.Font.SetBold();
+
+
+        ws.Columns("A").Width = 25; //ширина столбца "Примечание"
+        ws.Columns("B").Width = 20; //ширина столбца "Срок поставки комплектующих"
+        ws.Columns("C").Width = 10; //ширина столбца "№ п/п"
+        ws.Columns("D").Width = 30; //ширина столбца "Наименование стенда"
+        ws.Columns("E").Width = 30; //ширина столбца "Код-KKS"
+        ws.Columns("F").Width = 10; //ширина столбца "Ед. изм"
+        ws.Columns("G").Width = 10; //ширина столбца "Кол-во"
+        ws.Columns("H").Width = 15; //ширина столбца "Масса, кг"
+        ws.Columns("I").Width = 25; //ширина столбца "Ширина стенда"
+        ws.Columns("J").Width = 25; //ширина столбца "Цена за единицу"
+        ws.Columns("K").Width = 20; //ширина столбца "Стоимость"
     }
 
     #endregion Заголовки
@@ -256,12 +357,15 @@ public class SummaryReportGenerator : IReportGenerator
     #region Заполнители
 
     //Заполняет подтаблицу и возвращает следующую строку
-    private int FillSubtableData(int startRow, List<EquipmentRecord> items, IXLWorksheet ws)
+    private int FillSubtableData(int startRow, List<EquipmentRecord?> items, IXLWorksheet ws)
     {
         var currentRow = startRow;
 
         foreach (var item in items)
         {
+            if (item == null)
+                continue;
+
             PasteRecord(currentRow, item, ws);
 
             ws.Cell($"A{currentRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
@@ -278,7 +382,11 @@ public class SummaryReportGenerator : IReportGenerator
     }
 
     //заполняет таблицу для стенда
-    private void FillStandTable(IXLWorksheet ws, Stand stand)
+    private void FillStandTable(
+        IXLWorksheet ws,
+        Stand stand,
+        ProjectInfo project,
+        IEnumerable<StainlessPipe> stainlessPipes)
     {
         var activeRow = 4;
 
@@ -332,7 +440,8 @@ public class SummaryReportGenerator : IReportGenerator
         var allPartsList = ExcelReportHelper.GenerateAllPartsCollection(generatedPartsData);
         activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории:", allPartsList, ws);
 
-        var generatedLaborData = ExcelReportHelper.GenerateLaborData(standList);
+        var generatedLaborData =
+            ExcelReportHelper.GenerateLaborData(standList, _parametersStore, project, stainlessPipes);
         var allLaborsList = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Трудозатраты", ws);
@@ -348,95 +457,134 @@ public class SummaryReportGenerator : IReportGenerator
     }
 
     //заполняет сводную ведомость
-    private async Task FillCommonListTable(IXLWorksheet ws, ProjectInfo project)
+    private async Task FillCommonListTable(
+        IXLWorksheet ws,
+        ProjectInfo project,
+        IEnumerable<StainlessPipe> pipes,
+        List<Stand>? selectedStands = null)
     {
-        var activeRow = 4;
 
-        var containerBatches = _containerRepository.GetAllByProjectIdAsync(project.Id);
+            var activeRow = 4;
 
-        var generatedPartsData = ExcelReportHelper.GeneratePartsData(project.Stands);
+            var containerBatches = _containerRepository.GetAllByProjectIdAsync(project.Id);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.PipesList, ws);
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.PipesList, ws);
+            var generatedPartsData = ExcelReportHelper.GeneratePartsData(project.Stands);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Арматура", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.ArmaturesList, ws);
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.ArmaturesList, ws);
+            if (selectedStands != null) generatedPartsData = ExcelReportHelper.GeneratePartsData(selectedStands);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Тройники и КМЧ", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.TreeList, ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.KmchList, ws);
+            //принудительно обнуляем сроки поставки, они там не нужны (вроде)
+            foreach (var property in generatedPartsData.GetType().GetProperties())
+            {
+                var propertyValue = property.GetValue(generatedPartsData);
+                var recordList = propertyValue as List<EquipmentRecord>;
 
-        //общий список, чтобы запихнуть в метод
-        var treeAndKmchList = new List<EquipmentRecord>();
-        treeAndKmchList.AddRange(generatedPartsData.TreeList);
-        treeAndKmchList.AddRange(generatedPartsData.KmchList);
+                if (recordList != null)
+                {
+                    var tempList = new List<EquipmentRecord>(recordList);
+                    recordList.Clear();
+                    foreach (var part in tempList)
+                    {
+                        var record = new EquipmentRecord
+                        {
+                            Name = part.Name,
+                            Quantity = part.Quantity,
+                            Unit = part.Unit,
+                            CostPerUnit = part.CostPerUnit,
+                            CommonCost = part.CommonCost,
+                            ExportDays = new ValidatedField<int?>(null, false)
+                        };
 
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", treeAndKmchList, ws);
+                        recordList.Add(record);
+                    }
+                }
+            }
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Дренаж", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.DrainageParts, ws);
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.DrainageParts, ws);
+            activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
+            activeRow = FillSubtableData(activeRow, generatedPartsData.PipesList, ws);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.PipesList, ws);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Рамные комплектующие", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.FramesList, ws);
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.FramesList, ws);
+            activeRow = CreateSubheaderOnWorksheet(activeRow, "Арматура", ws);
+            activeRow = FillSubtableData(activeRow, generatedPartsData.ArmaturesList, ws);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.ArmaturesList, ws);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Кронштейны", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.SensorsHolders, ws);
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.SensorsHolders, ws);
+            activeRow = CreateSubheaderOnWorksheet(activeRow, "Тройники и КМЧ", ws);
+            activeRow = FillSubtableData(activeRow, generatedPartsData.TreeList, ws);
+            activeRow = FillSubtableData(activeRow, generatedPartsData.KmchList, ws);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Электрические компоненты", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.ElectricalParts, ws);
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.ElectricalParts, ws);
+            //общий список, чтобы запихнуть в метод
+            var treeAndKmchList = new List<EquipmentRecord>();
+            treeAndKmchList.AddRange(generatedPartsData.TreeList);
+            treeAndKmchList.AddRange(generatedPartsData.KmchList);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Прочие", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.OthersParts, ws);
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.OthersParts, ws);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", treeAndKmchList, ws);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Расходные материалы", ws);
-        activeRow = FillSubtableData(activeRow, generatedPartsData.Supplies, ws);
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.Supplies, ws);
+            activeRow = CreateSubheaderOnWorksheet(activeRow, "Дренаж", ws);
+            activeRow = FillSubtableData(activeRow, generatedPartsData.DrainageParts, ws);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.DrainageParts, ws);
 
-        var allPartsList = ExcelReportHelper.GenerateAllPartsCollection(generatedPartsData);
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по комплектующим", allPartsList, ws);
+            activeRow = CreateSubheaderOnWorksheet(activeRow, "Рамные комплектующие", ws);
+            activeRow = FillSubtableData(activeRow, generatedPartsData.FramesList, ws);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.FramesList, ws);
 
-        var generatedLaborData = ExcelReportHelper.GenerateLaborData(project.Stands);
-        var allLaborsList = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);
+            activeRow = CreateSubheaderOnWorksheet(activeRow, "Кронштейны", ws);
+            activeRow = FillSubtableData(activeRow, generatedPartsData.SensorsHolders, ws);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.SensorsHolders, ws);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Трудозатраты", ws);
-        activeRow = FillSubtableData(activeRow, allLaborsList, ws);
-        activeRow = CreateLaborTotalRecord(activeRow, allLaborsList, ws);
+            activeRow = CreateSubheaderOnWorksheet(activeRow, "Электрические компоненты", ws);
+            activeRow = FillSubtableData(activeRow, generatedPartsData.ElectricalParts, ws);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.ElectricalParts, ws);
 
-        var allData = new List<EquipmentRecord>();
+            activeRow = CreateSubheaderOnWorksheet(activeRow, "Прочие", ws);
+            activeRow = FillSubtableData(activeRow, generatedPartsData.OthersParts, ws);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.OthersParts, ws);
 
-        allData.AddRange(allPartsList);
-        allData.AddRange(allLaborsList);
+            activeRow = CreateSubheaderOnWorksheet(activeRow, "Расходные материалы", ws);
+            activeRow = FillSubtableData(activeRow, generatedPartsData.Supplies, ws);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории", generatedPartsData.Supplies, ws);
 
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по комплектующим и трудозатратам:", allData, ws);
-        var containersData = ExcelReportHelper.GenerateContainersData(await containerBatches);
+            var allPartsList = ExcelReportHelper.GenerateAllPartsCollection(generatedPartsData);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по комплектующим", allPartsList, ws);
 
-        activeRow = CreateSubheaderOnWorksheet(activeRow, "Упаковка", ws);
-        activeRow = FillSubtableData(activeRow, containersData, ws);
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по упаковке:", containersData, ws);
+            var generatedLaborData = ExcelReportHelper.GenerateLaborData(project.Stands, _parametersStore, project, pipes);
+            var allLaborsList = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);
 
-        allData.AddRange(containersData);
-        activeRow = CreateUsualTotalRecord(activeRow, "Итого по проекту:", allData, ws);
+            activeRow = CreateSubheaderOnWorksheet(activeRow, "Трудозатраты", ws);
+            activeRow = FillSubtableData(activeRow, allLaborsList, ws);
+            activeRow = CreateLaborTotalRecord(activeRow, allLaborsList, ws);
+
+            var allData = new List<EquipmentRecord>();
+
+            allData.AddRange(allPartsList);
+            allData.AddRange(allLaborsList);
+
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по комплектующим и трудозатратам:", allData, ws);
+            var containersData = ExcelReportHelper.GenerateContainersData(await containerBatches);
+
+            activeRow = CreateSubheaderOnWorksheet(activeRow, "Упаковка", ws);
+            activeRow = FillSubtableData(activeRow, containersData, ws);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по упаковке:", containersData, ws);
+
+            allData.AddRange(containersData);
+            activeRow = CreateUsualTotalRecord(activeRow, "Итого по проекту:", allData, ws);
     }
 
     //заполняет лист калькуляции
-    private async Task FillCalculationTable(IXLWorksheet ws, ProjectInfo project)
+    private async Task FillCalculationTable(IXLWorksheet ws, ProjectInfo project, List<Stand>? selectedStands = null)
     {
         var activeRow = 7;
 
         var containerBatches = _containerRepository.GetAllByProjectIdAsync(project.Id);
 
-        var standsRecords = project.Stands
+        var sourceStands = project.Stands;
+
+        if (selectedStands != null) sourceStands = selectedStands;
+
+        var standsRecords = sourceStands
             .GroupBy(stand => stand.Design)
             .Select(group =>
             {
-                var generatedPartsData = ExcelReportHelper.GeneratePartsData(new List<Stand> { group.FirstOrDefault() });
+                var generatedPartsData =
+                    ExcelReportHelper.GeneratePartsData(new List<Stand> { group.FirstOrDefault() });
                 var partsRecords = ExcelReportHelper.GenerateAllPartsCollection(generatedPartsData);
 
                 var exportDays = partsRecords.Max(part => part.ExportDays.Value);
@@ -444,11 +592,11 @@ public class SummaryReportGenerator : IReportGenerator
                 var kks = group.FirstOrDefault().KKSCode;
                 var unit = "шт.";
                 var quantity = group.Count();
-                var weight = group.FirstOrDefault().Weight;
+                var weight = group.FirstOrDefault().Weight.RoundUp(1);
                 var width = group.FirstOrDefault().Width;
-                var cost = group.FirstOrDefault().StandSummCost;
+                var cost = (float)group.FirstOrDefault().StandSummCost;
 
-                var commonCost = quantity * cost;
+                var commonCost = (quantity * cost).Ceiling();
 
                 return new
                 {
@@ -468,34 +616,42 @@ public class SummaryReportGenerator : IReportGenerator
 
         foreach (var stand in standsRecords)
         {
-            ws.Cell($"B{activeRow}").Value = stand.exportDays;
+            ws.Cell($"B{activeRow}").Value = stand.exportDays.ToString();
+            ;
             ws.Cell($"B{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-            ws.Cell($"C{activeRow}").Value = standNumber;
+            ws.Cell($"C{activeRow}").Value = standNumber.ToString();
+            ;
             ws.Cell($"C{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
 
             ws.Cell($"D{activeRow}").Value = stand.name;
+            ;
             ws.Cell($"D{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
 
             ws.Cell($"E{activeRow}").Value = stand.kks;
+            ;
             ws.Cell($"E{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
 
             ws.Cell($"F{activeRow}").Value = stand.unit;
+            ;
             ws.Cell($"F{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-            ws.Cell($"G{activeRow}").Value = stand.quantity;
+            ws.Cell($"G{activeRow}").Value = stand.quantity.ToString();
+            ;
             ws.Cell($"G{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-            ws.Cell($"H{activeRow}").Value = stand.weight;
+            ws.Cell($"H{activeRow}").Value = stand.weight.ToString();
             ws.Cell($"H{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-            ws.Cell($"I{activeRow}").Value = stand.width;
+            ws.Cell($"I{activeRow}").Value = stand.width.ToString();
+            ;
             ws.Cell($"I{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-            ws.Cell($"J{activeRow}").Value = stand.cost;
+            ws.Cell($"J{activeRow}").Value = stand.cost.ToString();
+            ;
             ws.Cell($"J{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
 
-            ws.Cell($"K{activeRow}").Value = stand.commonCost;
+            ws.Cell($"K{activeRow}").Value = stand.commonCost.ToString();
             ws.Cell($"K{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
 
             standNumber++;
@@ -503,7 +659,8 @@ public class SummaryReportGenerator : IReportGenerator
         }
 
         var standsPriceLabelRange = ws.Range($"C{activeRow}:J{activeRow}").Merge();
-        standsPriceLabelRange.Value = $"Общее количество стендов {standNumber - 1} на сумму (без учета упаковки и транспортных расходов), без НДС, руб.";
+        standsPriceLabelRange.Value =
+            $"Общее количество стендов {standNumber - 1} на сумму (без учета упаковки и транспортных расходов), без НДС, руб.";
         standsPriceLabelRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
         standsPriceLabelRange.Style.Font.SetBold();
 
@@ -519,7 +676,7 @@ public class SummaryReportGenerator : IReportGenerator
         var transportPrice = 0.0f;
 
         var transportPriceLabelRange = ws.Range($"C{activeRow}:J{activeRow}").Merge();
-        transportPriceLabelRange.Value = $"Транспортные расходы на сумму, без НДС, руб.";
+        transportPriceLabelRange.Value = "Транспортные расходы на сумму, без НДС, руб.";
         transportPriceLabelRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
         transportPriceLabelRange.Style.Font.SetBold();
 
@@ -534,7 +691,7 @@ public class SummaryReportGenerator : IReportGenerator
         var containerPrice = containers.Sum(container => container.CommonCost.Value);
 
         var containerPriceLabelRange = ws.Range($"C{activeRow}:J{activeRow}").Merge();
-        containerPriceLabelRange.Value = $"Стоимость упаковки на сумму, без НДС, руб.";
+        containerPriceLabelRange.Value = "Стоимость упаковки на сумму, без НДС, руб.";
         containerPriceLabelRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
         containerPriceLabelRange.Style.Font.SetBold();
 
@@ -545,14 +702,15 @@ public class SummaryReportGenerator : IReportGenerator
 
         activeRow++;
 
-        var totalPrice = (float)standsPrice + transportPrice + containerPrice;
+        var totalPrice = standsPrice + transportPrice + containerPrice;
 
         var totalLabelRange = ws.Range($"C{activeRow}:J{activeRow}").Merge();
-        totalLabelRange.Value = $"Итого, руб.";
+        totalLabelRange.Value = "Итого, руб.";
         totalLabelRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
         totalLabelRange.Style.Font.SetBold();
 
-        var totalValueCell = ws.Cell($"K{activeRow}"); ;
+        var totalValueCell = ws.Cell($"K{activeRow}");
+        ;
         totalValueCell.Value = totalPrice;
         totalValueCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
         totalValueCell.Style.Font.SetBold();

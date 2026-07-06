@@ -39,7 +39,36 @@ public class NameplatesReportGenerator : IReportGenerator
             ws.Cells().Style.Alignment.WrapText = true;
 
             var savePath = SettingsManager.GetReportDirectory();
-            var fileName = ExcelReportHelper.CreateReportName("Ведомость_шильдиков_табличек", "xlsx");
+            var fileName = ExcelReportHelper.CreateReportName("Ведомость шильдиков и табличек", "xlsx");
+
+            var fullSavePath = Path.Combine(savePath, fileName);
+
+            Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
+            wb.SaveAs(fullSavePath);
+        }
+    }
+
+    public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
+    {
+        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+
+        using (var wb = new XLWorkbook())
+        {
+            wb.Worksheets.ToList().ForEach(ws => ws.Delete());
+
+            var ws = wb.Worksheets.Add("Лист1");
+
+            var maxTablesQuantity = FillWorksheetTable(ws, project, selectedStands);
+            CreateWorksheetTableHeader(ws, maxTablesQuantity);
+
+            ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+            ws.Columns().AdjustToContents();
+            ws.Cells().Style.Alignment.WrapText = true;
+
+            var savePath = SettingsManager.GetReportDirectory();
+            var fileName = ExcelReportHelper.CreateReportName("Ведомость шильдиков и табличек", "xlsx");
 
             var fullSavePath = Path.Combine(savePath, fileName);
 
@@ -81,9 +110,11 @@ public class NameplatesReportGenerator : IReportGenerator
         tablesHeaderArea.Value = tablesHeaderContent;
     }
 
-    private int FillWorksheetTable(IXLWorksheet ws, ProjectInfo project)
+    private int FillWorksheetTable(IXLWorksheet ws, ProjectInfo project, List<Stand>? selectedStands = null)
     {
         var stands = project.Stands;
+
+        if (selectedStands != null) stands = selectedStands;
 
         var maxTables = 0;
 
@@ -98,7 +129,7 @@ public class NameplatesReportGenerator : IReportGenerator
             var standNameplateText = "Стенд датчиков КИПиА\n";
             standNameplateText += $"{stand.KKSCode}\n";
             standNameplateText += $"{stand.SerialNumber}\n";
-            standNameplateText += $"Дата: {DateTime.Now.ToString("MM.yyyy")}";
+            standNameplateText += $"Дата: {project.OutOfProduction.ToString("MM.yyyy")}";
 
             //формируем текста табличек
             var standTablesStrings = stand.ObvyazkiInStand

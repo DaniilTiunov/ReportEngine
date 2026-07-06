@@ -20,7 +20,6 @@
 
     <Window.Resources>
         <converters:ObvyazkaImagePathConverter x:Key="ObvyazkaImagePathConverter" />
-        <converters:DrainagesVisibilityConverter x:Key="DrainagesVisibilityConverter" />
 
     </Window.Resources>
 
@@ -125,7 +124,7 @@
                                     Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(нет данных)'}" />
                             </TextBlock>
                         </GroupBox.Header>
-                        <Grid Grid.Column="0">
+                        <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="50" />
                                 <RowDefinition Height="Auto" />
@@ -143,6 +142,23 @@
                                 <ColumnDefinition Width="150" />
                                 <ColumnDefinition Width="30" />
                             </Grid.ColumnDefinitions>
+
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Height="25"
+                                Margin="5,5,5,5"
+                                VerticalAlignment="Top"
+                                Text="№ обвязки:" />
+                            <TextBox
+                                x:Name="ObvImg"
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Width="50"
+                                Margin="5,5,5,5"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Text="{Binding CurrentProjectModel.SelectedStand.NN}" />
 
                             <TextBlock
                                 Grid.Row="1"
@@ -431,9 +447,13 @@
                                     </DataGrid.Columns>
                                     <DataGrid.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem Command="{Binding ProjectCommandProvider.UpdateAdditionalEquipFromObvCommand}" Header="Сохранить изменения" />
+                                            <MenuItem
+                                                Command="{Binding ProjectCommandProvider.UpdateAdditionalEquipFromObvCommand}"
+                                                Header="Сохранить изменения" />
                                             <Separator />
-                                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteAdditionalEquipFromObvCommand}" Header="Удалить" />
+                                            <MenuItem
+                                                Command="{Binding ProjectCommandProvider.DeleteAdditionalEquipFromObvCommand}"
+                                                Header="Удалить" />
                                         </ContextMenu>
                                     </DataGrid.ContextMenu>
                                 </DataGrid>
@@ -732,9 +752,11 @@
                             </DataGrid.Columns>
                             <DataGrid.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}" Header="Скопировать в выбранный стенд" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}"
+                                              Header="Скопировать в выбранный стенд" />
                                     <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.FillObvFieldsTiEditCommand}" Header="Заполнить поля из этой обвязки" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.FillObvFieldsTiEditCommand}"
+                                              Header="Заполнить поля из этой обвязки" />
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
                         </DataGrid>

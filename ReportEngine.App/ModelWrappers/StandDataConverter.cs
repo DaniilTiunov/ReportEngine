@@ -1,4 +1,5 @@
-﻿using ReportEngine.App.Model.StandsModel;
+﻿using System.Collections.ObjectModel;
+using ReportEngine.App.Model.StandsModel;
 using ReportEngine.Domain.Entities;
 
 namespace ReportEngine.App.ModelWrappers;
@@ -28,7 +29,27 @@ public static class StandDataConverter
             TreeSocket = stand.TreeSocket,
             KMCH = stand.KMCH,
             ImageData = stand.ImageData,
-            ImageType = stand.ImageType
+            ImageType = stand.ImageType,
+            AdditionalEquipsInStand = new ObservableCollection<FormedAdditionalEquip>(
+                stand.StandAdditionalEquips
+                    .Where(e => e.AdditionalEquip != null)
+                    .Select(e => new FormedAdditionalEquip
+                    {
+                        Id = e.AdditionalEquip.Id,
+                        Name = e.AdditionalEquip.Name,
+
+                        Purposes = new ObservableCollection<AdditionalEquipPurpose>(
+                            e.AdditionalEquip.Purposes.Select(p => new AdditionalEquipPurpose
+                            {
+                                Purpose = p.Purpose,
+                                Material = p.Material,
+                                Quantity = p.Quantity,
+                                Measure = p.Measure,
+                                CostPerUnit = p.CostPerUnit,
+                                ExportDays = p.ExportDays
+                            })
+                        )
+                    }))
         };
     }
 
@@ -61,27 +82,31 @@ public static class StandDataConverter
             StandAdditionalEquips = model.AdditionalEquipsInStand
                 .Select(equip => new StandAdditionalEquip
                 {
-                    AdditionalEquipId = equip.Id
+                    AdditionalEquipId = equip.Id,
+                    AdditionalEquip = equip is FormedAdditionalEquip fae ? fae : null
                 })
                 .ToList(),
 
             StandElectricalComponent = model.ElectricalComponentsInStand
                 .Select(equip => new StandElectricalComponent
                 {
-                    ElectricalComponentId = equip.Id
+                    ElectricalComponentId = equip.Id,
+                    ElectricalComponent = equip is FormedElectricalComponent fe ? fe : null
                 })
                 .ToList(),
 
             StandDrainages = model.DrainagesInStand
                 .Select(equip => new StandDrainage
                 {
-                    DrainageId = equip.Id
+                    DrainageId = equip.Id,
+                    Drainage = equip is FormedDrainage fd ? fd : null
                 }).ToList(),
 
             StandFrames = model.FramesInStand
                 .Select(equip => new StandFrame
                 {
-                    FrameId = equip.Id
+                    FrameId = equip.Id,
+                    Frame = equip is FormedFrame fd ? fd : null
                 }).ToList()
         };
     }

@@ -2,39 +2,30 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using ReportEngine.App.AppHelpers;
+using System.Windows.Media.Animation;
+using System.Windows.Threading;
+using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels;
+using ReportEngine.App.ViewModels.TreeView;
 using ReportEngine.Shared.Config.DebugConsol;
 
 namespace ReportEngine.App.Views.Controls;
 
 public partial class TreeProjectView : UserControl, IDisposable
 {
-    private readonly Dictionary<string, Action> _tagActionMap;
-
+    private readonly ExceptionService _exceptionService;
     private readonly ProjectViewModel _projectViewModel;
     private bool _disposed;
 
-    public TreeProjectView(ProjectViewModel projectViewModel)
+    public TreeProjectView(
+        TreeViewModel treeViewModel,
+        ProjectViewModel projectViewModel,
+        ExceptionService exceptionService)
     {
         InitializeComponent();
         _projectViewModel = projectViewModel;
-        DataContext = projectViewModel;
-
-        _tagActionMap = new Dictionary<string, Action>
-            {
-                { "CalculateProject", () => _projectViewModel.OnCalculateProjectCommandExecuted(null) },
-                { "UpdateAllProps", () => _projectViewModel.OnUpdateStandsAfterEquipsCommandExecuted(null) },
-                { "SummaryReport", () => _projectViewModel.OnCreateSummaryReportCommandExecuted(null) },
-                { "ComponentsList", () => _projectViewModel.OnCreateSummaryReportCommandExecuted(null) },
-                { "NamePlates", () => _projectViewModel.OnCreateNameplatesReportCommandExecuted(null) },
-                { "MarksReport", () => _projectViewModel.OnCreateMarksReportCommandExecuted(null) },
-                { "ProductionList", () => _projectViewModel.OnCreateProductionReportCommandExecuted(null) },
-                { "FinPlan", () => _projectViewModel.OnCreateFinplanReportCommandExecuted(null) },
-                { "ContainersReport", () => _projectViewModel.OnCreateContainerReportCommandExecuted(null) },
-                { "Passport", () => _projectViewModel.OnCreatePassportReportCommandExecuted(null) },
-                { "TechCards", () => _projectViewModel.OnCreateTechnologicalCardsCommandExecute(null) }
-            };
+        _exceptionService = exceptionService;
+        DataContext = treeViewModel;
     }
 
     public void Dispose()
@@ -51,9 +42,9 @@ public partial class TreeProjectView : UserControl, IDisposable
 
     private void OpenCurrentView(object sender, MouseButtonEventArgs e)
     {
-        ExceptionHelper.SafeExecute(() =>
+        _exceptionService.SafeExecute(() =>
         {
-            var treeViewItem = MainTree.SelectedItem as TreeViewItem;
+            var treeViewItem = NavigationTree.SelectedItem as TreeViewItem;
             if (treeViewItem?.Tag != null)
             {
                 var header = treeViewItem.Header.ToString();
@@ -65,7 +56,7 @@ public partial class TreeProjectView : UserControl, IDisposable
 
     private void CloseCurrentView(object sender, RoutedEventArgs e)
     {
-        ExceptionHelper.SafeExecute(() =>
+        _exceptionService.SafeExecute(() =>
         {
             // Сначала пытаемся получить связанную вкладку из Tag кнопки
             if (sender is Button btn && btn.Tag is TabItem taggedTab)
@@ -84,7 +75,7 @@ public partial class TreeProjectView : UserControl, IDisposable
 
     private void LoadTreeContent(string tag, string header)
     {
-        ExceptionHelper.SafeExecute(() =>
+        _exceptionService.SafeExecute(() =>
         {
             if (string.IsNullOrEmpty(tag))
                 return;
@@ -99,7 +90,8 @@ public partial class TreeProjectView : UserControl, IDisposable
             var tabItem = new TabItem
             {
                 Tag = tag,
-                Content = content
+                Content = content,
+                Style = (Style)FindResource(typeof(TabItem))
             };
 
             tabItem.Header = CreaterTabItemHeader(header, tabItem);
@@ -118,12 +110,10 @@ public partial class TreeProjectView : UserControl, IDisposable
 
             return tag switch
             {
-                "ProjectCard" => new ProjectCardView(_projectViewModel),
-                "Stand" => new StandView(_projectViewModel),
-                "StandObv" => new StandObvView(_projectViewModel),
-                "FrameDrainages" => new FrameDrainagesView(_projectViewModel),
-                "ProjectPreview" => new ProjectPreview(_projectViewModel),
-                "StandsContainer" => new StandsContainerView(_projectViewModel)
+                "ProjectCard" => ApplyAnimation(new ProjectCardView(_projectViewModel)),
+                "ProjectPreview" => ApplyAnimation(new ProjectPreview(_projectViewModel)),
+                "StandsContainer" => ApplyAnimation(new StandsContainerView(_projectViewModel)),
+                "DockViewer" => ApplyAnimation(new DockViewerView(new DockViewerViewModel()))
             };
         }
         catch (Exception ex)
@@ -148,7 +138,8 @@ public partial class TreeProjectView : UserControl, IDisposable
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 0, 5, 0),
             FontSize = 16,
-            FontFamily = new FontFamily("Bahnschrift")
+            FontFamily = new FontFamily("Bahnschrift"),
+            Style = (Style)FindResource(typeof(TextBlock))
         };
 
         var closeButton = new Button
@@ -158,7 +149,8 @@ public partial class TreeProjectView : UserControl, IDisposable
             Height = 16,
             Padding = new Thickness(0),
             Margin = new Thickness(0),
-            VerticalAlignment = VerticalAlignment.Center
+            VerticalAlignment = VerticalAlignment.Center,
+            Style = (Style)FindResource(typeof(Button))
         };
 
         closeButton.Tag = parentTab;
@@ -175,7 +167,6 @@ public partial class TreeProjectView : UserControl, IDisposable
             return false;
 
         foreach (var item in MainTabControl.Items.OfType<TabItem>())
-        {
             if (item.Tag is string existingTag && !string.IsNullOrEmpty(existingTag))
             {
                 if (string.Equals(existingTag, tag, StringComparison.Ordinal))
@@ -192,19 +183,55 @@ public partial class TreeProjectView : UserControl, IDisposable
                     return true;
                 }
             }
-        }
+
         return false;
     }
 
-    private async void ReportTree_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    private UserControl ApplyAnimation(UserControl control)
     {
-        if (ReportTree.SelectedItem is TreeViewItem treeViewItem && treeViewItem.Tag is string tag)
+        control.Opacity = 0;
+        control.RenderTransform = new TranslateTransform(0, 20);
+
+        control.Dispatcher.BeginInvoke(new Action(() =>
         {
-            if (_tagActionMap.TryGetValue(tag, out var action))
+            var storyboard = new Storyboard();
+
+            var fadeAnimation = new DoubleAnimation
             {
-                action();
-            }
-        }
+                From = 0,
+                To = 1,
+                Duration = TimeSpan.FromMilliseconds(250),
+                EasingFunction = new QuadraticEase
+                {
+                    EasingMode = EasingMode.EaseOut
+                }
+            };
+
+            Storyboard.SetTarget(fadeAnimation, control);
+            Storyboard.SetTargetProperty(fadeAnimation, new PropertyPath("Opacity"));
+
+            var slideAnimation = new DoubleAnimation
+            {
+                From = 20,
+                To = 0,
+                Duration = TimeSpan.FromMilliseconds(250),
+                EasingFunction = new QuadraticEase
+                {
+                    EasingMode = EasingMode.EaseOut
+                }
+            };
+
+            Storyboard.SetTarget(slideAnimation, control);
+            Storyboard.SetTargetProperty(slideAnimation,
+                new PropertyPath("(UIElement.RenderTransform).(TranslateTransform.Y)"));
+
+            storyboard.Children.Add(fadeAnimation);
+            storyboard.Children.Add(slideAnimation);
+
+            storyboard.Begin();
+        }), DispatcherPriority.Loaded);
+
+        return control;
     }
 
     ~TreeProjectView()

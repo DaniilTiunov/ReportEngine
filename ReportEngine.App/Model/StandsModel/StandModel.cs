@@ -14,6 +14,7 @@ public class StandModel : BaseViewModel
 {
     // Коллекция дополнительных комплектующих, находящихся в стенде
     private ObservableCollection<FormedAdditionalEquip> _additionalEquipsInStand = new();
+    private bool _additionalPurposesChanges;
 
     // Коллекция всех целей для дополнительных комплектующих в стенде
     private ObservableCollection<AdditionalEquipPurpose> _allAdditionalEquipPurposesInStand = new();
@@ -35,6 +36,7 @@ public class StandModel : BaseViewModel
 
     private string? _armatureCostPerUnit;
     private float? _armatureCount;
+    private int? _armatureExportDays;
     private string? _armatureMeasure;
 
     // Тип крепления датчика
@@ -51,17 +53,14 @@ public class StandModel : BaseViewModel
 
     // Количество приборов
     private int _devices;
-
-    //коллекция доп комплектующих обвязки
-    private ObservableCollection<ObvyazkaAdditionalEquipPurpose> _obvyazkaAdditionalComponents = new();
-
-    private ObvyazkaAdditionalEquipPurpose _selectedObvyazkaAdditional = new();
+    private bool _drainagePurposesChanges;
 
     // Коллекция дренажей, находящихся в стенде
     private ObservableCollection<FormedDrainage> _drainagesInStand = new();
 
     // Коллекция электрических компонентов, находящихся в стенде
     private ObservableCollection<FormedElectricalComponent> _electricalComponentsInStand = new();
+    private bool _electricalPurposesChanges;
 
     // KKS код первого датчика (внутреннее поле)
     private string _firsSensorKksCode;
@@ -100,6 +99,7 @@ public class StandModel : BaseViewModel
 
     private string? _kmchCostPerUnit;
     private float? _kmchCount;
+    private int? _kMCHExportDays;
     private string? _kmchMeasure;
 
     // Материал линии
@@ -107,6 +107,8 @@ public class StandModel : BaseViewModel
 
     private string _materialLineCostPerUnit;
     private float? _materialLineCount;
+
+    private int? _materialLineExportDays;
     private string? _materialLineMeasure;
 
     // Объект для создания нового дополнительного комплектующего
@@ -120,6 +122,10 @@ public class StandModel : BaseViewModel
 
     // Номер по порядку (NN)
     private int _nn;
+    private int _number;
+
+    //коллекция доп комплектующих обвязки
+    private ObservableCollection<ObvyazkaAdditionalEquipPurpose> _obvyazkaAdditionalComponents = new();
 
     // Имя/тип обвязки
     private string _obvyazkaName;
@@ -164,11 +170,16 @@ public class StandModel : BaseViewModel
     // Выбранная обвязка (UI модель)
     private StandObvyazkaModel _selectedObvyazka;
 
+    private ObvyazkaAdditionalEquipPurpose _selectedObvyazkaAdditional = new();
+
     // Выбранная обвязка в стенде
-    private ObvyazkaInStand? _selectedObvyazkaInStand =  null;
+    private ObvyazkaInStand? _selectedObvyazkaInStand;
+
+    private int? _sensor;
 
     // Серийный номер стенда
     private string _serialNumber;
+    private int _standSensorsQuantity;
 
     // Суммарная стоимость стенда
     private decimal _standSummCost;
@@ -189,6 +200,7 @@ public class StandModel : BaseViewModel
 
     // Тройник/разветвитель
     private string _treeScoket;
+    private int? _treeSocketExportDays;
 
     private string? _treeSocketMaterialCostPerUnit;
     private float? _treeSocketMaterialCount;
@@ -199,22 +211,6 @@ public class StandModel : BaseViewModel
 
     // Ширина стенда
     private float _width;
-
-    private int? _materialLineExportDays;
-    private int? _armatureExportDays;
-    private int? _kMCHExportDays;
-    private int? _treeSocketExportDays;
-    private int _number;
-
-    private int? _sensor;
-    private int _standSensorsQuantity;
-    private bool _electricalPurposesChanges;
-    private bool _additionalPurposesChanges;
-    private bool _drainagePurposesChanges;
-
-    public StandModel()
-    {
-    }
 
     public ObvyazkaAdditionalEquipPurpose SelectedObvyazkaAdditionalEquipPurpose
     {
@@ -237,7 +233,7 @@ public class StandModel : BaseViewModel
     }
 
     // Варианты расположения датчика на кронштейне
-    public IEnumerable<string> BraceSensor { get; } = new List<string> { "На кронштейне", "Швеллер" };
+    public IEnumerable<string> BraceSensor { get; } = new List<string> { "", "На кронштейне", "Швеллер" };
 
     // Доступные типы датчиков
     public IEnumerable<string> SensorType { get; } = new List<string>
@@ -571,6 +567,7 @@ public class StandModel : BaseViewModel
         get => _thirdSensorDescription;
         set => Set(ref _thirdSensorDescription, value);
     }
+
     //кол-во датчиков в обвязке
     public int? Sensor
     {
@@ -742,23 +739,26 @@ public class StandModel : BaseViewModel
         get => _electricalPurposesChanges;
         set => Set(ref _electricalPurposesChanges, value);
     }
+
     public bool AdditionalPurposesChanges
     {
         get => _additionalPurposesChanges;
         set => Set(ref _additionalPurposesChanges, value);
     }
+
     public bool DrainagePurposesChanges
     {
         get => _drainagePurposesChanges;
         set => Set(ref _drainagePurposesChanges, value);
     }
+
     public StandSettingsModel DefaultStandSettings { get; set; } = new();
 
     public void InitializeObvAdditionalPurposes()
     {
         ObvyazkaAdditionalComponents = new ObservableCollection<ObvyazkaAdditionalEquipPurpose>
         {
-             new() { Purpose = "Доп.компонент" },
+            new() { Purpose = "Доп.компонент" }
         };
     }
 
@@ -768,29 +768,29 @@ public class StandModel : BaseViewModel
         const float pipePlugQuantityPerStand = 2.0f;
 
         AllDrainagePurposesInStand = new ObservableCollection<DrainagePurpose>
-            {
-                new() { Purpose = "Основная труба" , Measure = "м"},
-                new() { Purpose = "Патрубок", Quantity = endPipeQuantityPerStand, Measure = "м"},
-                new() { Purpose = "Заглушка основной трубы", Quantity = pipePlugQuantityPerStand,  Measure = "м" },
-                new() { Purpose = "Кронштейн дренажа" },
-                new() { Purpose = "Клапан" }
-            };
+        {
+            new() { Purpose = "Основная труба", Measure = "м" },
+            new() { Purpose = "Патрубок", Quantity = endPipeQuantityPerStand, Measure = "м" },
+            new() { Purpose = "Заглушка основной трубы", Quantity = pipePlugQuantityPerStand, Measure = "м" },
+            new() { Purpose = "Кронштейн дренажа" },
+            new() { Purpose = "Клапан" }
+        };
     }
 
     public void InitializeAdditionalEquip()
     {
         const float nameplatesPerStand = 1.0f;
 
-        AllAdditionalEquipPurposesInStand = new ObservableCollection<AdditionalEquipPurpose>
-            {
-                new() { Purpose = "Шильдик", Material = DefaultStandSettings.NamePlate, Quantity = nameplatesPerStand, Measure = DefaultStandSettings.NamePlateMeasure},
-                new() { Purpose = "Швеллер", Material = DefaultStandSettings.SteelChannel, Measure = DefaultStandSettings.SteelChannelMeasure },
-                new() { Purpose = "Хомуты" , Material = DefaultStandSettings.Clamp, Measure = DefaultStandSettings.ClampMeasure},
-                new() { Purpose = "Табличка", Material = DefaultStandSettings.NameTable, Measure = DefaultStandSettings.NameTableMeasure},
-                new() { Purpose = "Кронштейн универсальный",Material = DefaultStandSettings.BracketUniversal, Measure = DefaultStandSettings.BracketUniversalMeasure},
-                new() { Purpose = "Кронштейн перепадчика",Material = DefaultStandSettings.BracketForDif, Measure = DefaultStandSettings.BracketForDifMeasure},
-                new() { Purpose = "Кронштейн абсолютника", Material = DefaultStandSettings.BracketForAbs, Measure = DefaultStandSettings.BracketForAbsMeasure}
-            };
+        //AllAdditionalEquipPurposesInStand = new ObservableCollection<AdditionalEquipPurpose>
+        //    {
+        //        new() { Purpose = "Шильдик", Material = DefaultStandSettings.NamePlate, Quantity = nameplatesPerStand, Measure = DefaultStandSettings.NamePlateMeasure},
+        //        new() { Purpose = "Швеллер", Material = DefaultStandSettings.SteelChannel, Measure = DefaultStandSettings.SteelChannelMeasure },
+        //        new() { Purpose = "Хомуты" , Material = DefaultStandSettings.Clamp, Measure = DefaultStandSettings.ClampMeasure},
+        //        new() { Purpose = "Табличка", Material = DefaultStandSettings.NameTable, Measure = DefaultStandSettings.NameTableMeasure},
+        //        new() { Purpose = "Кронштейн универсальный",Material = DefaultStandSettings.BracketUniversal, Measure = DefaultStandSettings.BracketUniversalMeasure},
+        //        new() { Purpose = "Кронштейн перепадчика",Material = DefaultStandSettings.BracketForDif, Measure = DefaultStandSettings.BracketForDifMeasure},
+        //        new() { Purpose = "Кронштейн абсолютника", Material = DefaultStandSettings.BracketForAbs, Measure = DefaultStandSettings.BracketForAbsMeasure}
+        //    };
     }
 
     public void InitializeElectricalComponent()
@@ -798,28 +798,27 @@ public class StandModel : BaseViewModel
         float? usualConnectionBoxQuantity = 1.0f;
         float? usualCablesQuantity = 2.0f;
 
-        AllElectricalPurposesInStand = new ObservableCollection<ElectricalPurpose>
-            {
-                new() { Purpose = "Клеммная коробка" ,Quantity = usualConnectionBoxQuantity, Measure = "шт"},
-                new() { Purpose = "Кабельные вводы" , Quantity = 1, Measure = "шт"},
-                new() { Purpose = "Сигнальный кабель", Material = DefaultStandSettings.SignalCable, Quantity = usualCablesQuantity , Measure = DefaultStandSettings.SignalCableMeasure},
-                new() { Purpose = "Металлорукав" , Quantity = usualCablesQuantity, Measure = "м"},
-                new() { Purpose = "Кабель 6мм", Material = DefaultStandSettings.CabelSixMm, Quantity = (float?) DefaultStandSettings.SensorCountOnFrame , Measure = DefaultStandSettings.CabelSixMmMeasure},
-                new() { Purpose = "Кабель 4мм", Material = DefaultStandSettings.CabelFourMm, Quantity = usualCablesQuantity, Measure = DefaultStandSettings.CabelFourMmMeasure },
-                new() { Purpose = "Кронштейн коробки" },
-                new() { Purpose = "Клемма", Material = DefaultStandSettings.Terminal, Measure = DefaultStandSettings.TerminalMeasure }
-            };
+
+        //AllElectricalPurposesInStand = new ObservableCollection<ElectricalPurpose>
+        //    {
+        //        new() { Purpose = "Клеммная коробка" ,Quantity = usualConnectionBoxQuantity, Measure = "шт"},
+        //        new() { Purpose = "Кабельные вводы" , Quantity = 1, Measure = "шт"},
+        //        new() { Purpose = "Сигнальный кабель", Material = DefaultStandSettings.SignalCable, Quantity = usualCablesQuantity , Measure = DefaultStandSettings.SignalCableMeasure},
+        //        new() { Purpose = "Металлорукав" , Quantity = usualCablesQuantity, Measure = "м"},
+        //        new() { Purpose = "Кабель 6мм", Material = DefaultStandSettings.CabelSixMm, Quantity = (float?) DefaultStandSettings.SensorCountOnFrame , Measure = DefaultStandSettings.CabelSixMmMeasure},
+        //        new() { Purpose = "Кабель 4мм", Material = DefaultStandSettings.CabelFourMm, Quantity = usualCablesQuantity, Measure = DefaultStandSettings.CabelFourMmMeasure },
+        //        new() { Purpose = "Кронштейн коробки" },
+        //        new() { Purpose = "Клемма", Material = DefaultStandSettings.Terminal, Measure = DefaultStandSettings.TerminalMeasure }
+        //    };
     }
 
-
-    
 
     public int CountSensorsQuantity()
     {
         return ObvyazkiInStand
             .Sum(obv =>
             {
-                int sensorsQuantity = 0;
+                var sensorsQuantity = 0;
 
                 if (!string.IsNullOrEmpty(obv.FirstSensorType))
                     sensorsQuantity++;
@@ -836,12 +835,13 @@ public class StandModel : BaseViewModel
 
     public int CountElectricSensorsQuantity()
     {
-        var isElectricSensor = (string? typeOfSensor) => !string.IsNullOrEmpty(typeOfSensor) && typeOfSensor != "Манометр";
+        var isElectricSensor = (string? typeOfSensor) =>
+            !string.IsNullOrEmpty(typeOfSensor) && typeOfSensor != "Манометр";
 
         return ObvyazkiInStand
             .Sum(obv =>
             {
-                int sensorsQuantity = 0;
+                var sensorsQuantity = 0;
 
                 if (isElectricSensor(obv.FirstSensorType))
                     sensorsQuantity++;
@@ -858,12 +858,13 @@ public class StandModel : BaseViewModel
 
     public int CountDifSensorsQuantity()
     {
-        var isDifSensor = (string? typeOfSensor) => !string.IsNullOrEmpty(typeOfSensor) && typeOfSensor == "Датчик перепада давления";
+        var isDifSensor = (string? typeOfSensor) =>
+            !string.IsNullOrEmpty(typeOfSensor) && typeOfSensor == "Датчик перепада давления";
 
         return ObvyazkiInStand
             .Sum(obv =>
             {
-                int sensorsQuantity = 0;
+                var sensorsQuantity = 0;
 
                 if (isDifSensor(obv.FirstSensorType))
                     sensorsQuantity++;
@@ -880,12 +881,13 @@ public class StandModel : BaseViewModel
 
     public int CountAbsoluteSensorsQuantity()
     {
-        var isAbsoluteSensor = (string? typeOfSensor) => !string.IsNullOrEmpty(typeOfSensor) && typeOfSensor == "Датчик абсолютного давления";
+        var isAbsoluteSensor = (string? typeOfSensor) =>
+            !string.IsNullOrEmpty(typeOfSensor) && typeOfSensor == "Датчик абсолютного давления";
 
         return ObvyazkiInStand
             .Sum(obv =>
             {
-                int sensorsQuantity = 0;
+                var sensorsQuantity = 0;
 
                 if (isAbsoluteSensor(obv.FirstSensorType))
                     sensorsQuantity++;

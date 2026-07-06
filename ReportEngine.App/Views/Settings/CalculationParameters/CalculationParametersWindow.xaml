@@ -1,0 +1,172 @@
+﻿<Window
+    Background="{DynamicResource PrimaryColor}"
+    FontFamily="Bahnschrift"
+    FontSize="14"
+    Foreground="{DynamicResource PrimaryForeground}"
+    Height="900"
+    ResizeMode="CanResize"
+    Title="Настройки параметров расчета"
+    Width="1300"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
+    mc:Ignorable="d"
+    x:Class="ReportEngine.App.Views.Settings.CalculationParameters.CalculationParametersWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="0"
+            CornerRadius="0"
+            GlassFrameThickness="0" />
+    </WindowChrome.WindowChrome>
+
+    <Border Style="{DynamicResource WindowBorder}">
+        <DockPanel>
+            <Border
+                Background="#2D2D30"
+                DockPanel.Dock="Top"
+                Height="34"
+                MouseLeftButtonDown="Window_MouseLeftButtonDown"
+                x:Name="FormedFrameWindowTitle">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel
+                        Margin="10,0,0,0"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
+                        <Image
+                            Height="18"
+                            Margin="0,0,8,0"
+                            Source="/Resources/Icons/estimate_cost_icon_213382.ico"
+                            Width="18" />
+                        <TextBlock
+                            FontSize="14"
+                            Foreground="{DynamicResource PrimaryForeground}"
+                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}"
+                            VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Column="1"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
+                        <Button
+                            Click="MinimizeButton_Click"
+                            FontSize="16"
+                            Height="30"
+                            ToolTip="Свернуть"
+                            Width="40"
+                            x:Name="MinimizeButton">
+                            ─
+                        </Button>
+                        <Button
+                            Click="MaxRestoreButton_Click"
+                            FontSize="16"
+                            Height="30"
+                            Margin="10,0,0,0"
+                            ToolTip="Развернуть"
+                            Width="40"
+                            x:Name="MaxRestoreButton">
+                            ▢
+                        </Button>
+                        <Button
+                            Click="CloseButton_Click"
+                            FontSize="16"
+                            Height="30"
+                            Margin="10,0,10,0"
+                            ToolTip="Закрыть"
+                            Width="40"
+                            x:Name="CloseButton">
+                            ✕
+                        </Button>
+                    </StackPanel>
+                </Grid>
+
+            </Border>
+            <Grid Background="{DynamicResource PrimaryColor}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="240" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!--  Левая панель  -->
+                <Border
+                    Background="{DynamicResource PrimaryColor}"
+                    BorderBrush="{DynamicResource BorderLightColor}"
+                    BorderThickness="0,0,1,0"
+                    Grid.Column="0"
+                    Margin="5"
+                    Padding="10">
+
+                    <ListBox
+                        Background="{DynamicResource PrimaryColor}"
+                        BorderThickness="0"
+                        Foreground="{DynamicResource PrimaryForeground}"
+                        ItemsSource="{Binding SettingsItems}"
+                        Margin="5"
+                        SelectedItem="{Binding SelectedSetting}">
+
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border
+                                    CornerRadius="6"
+                                    Margin="0,4"
+                                    Padding="12">
+                                    <TextBlock FontSize="15" Text="{Binding}" />
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+
+                    </ListBox>
+                </Border>
+
+                <!--  Правая часть  -->
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Border
+                        Background="{DynamicResource PrimaryColor}"
+                        BorderBrush="{DynamicResource BorderLightColor}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Grid.Row="0"
+                        Margin="20"
+                        Padding="20">
+
+                        <ContentControl Content="{Binding CurrentView}" />
+                    </Border>
+
+                    <StackPanel
+                        Grid.Row="1"
+                        HorizontalAlignment="Right"
+                        Margin="0,0,20,20"
+                        Orientation="Horizontal">
+
+                        <Button
+                            Command="{Binding UpdateAllParametersCommand}"
+                            Content="Сохранить"
+                            Height="36"
+                            Margin="0,0,10,0"
+                            Width="110" />
+
+                        <Button
+                            Click="CloseButton_Click"
+                            Content="Отмена"
+                            Height="36"
+                            Width="110" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </DockPanel>
+    </Border>
+</Window>

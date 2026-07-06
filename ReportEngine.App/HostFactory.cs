@@ -1,23 +1,35 @@
 ﻿using System.Windows.Controls;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using ReportEngine.App.LLM;
+using ReportEngine.App.LLM.Interfaces;
+using ReportEngine.App.LLM.Services;
+using ReportEngine.App.LLM.ViewModels;
 using ReportEngine.App.Services;
+using ReportEngine.App.Services.Calculation;
+using ReportEngine.App.Services.Cloners;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.Services.Logger;
+using ReportEngine.App.Services.Navigation;
+using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.CalculationSettings;
 using ReportEngine.App.ViewModels.Contacts;
 using ReportEngine.App.ViewModels.FormedEquips;
+using ReportEngine.App.ViewModels.TreeView;
 using ReportEngine.App.ViewModels.Utils;
 using ReportEngine.App.Views;
 using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Settings;
+using ReportEngine.App.Views.Settings.CalculationParameters;
+using ReportEngine.App.Views.Settings.CalculationParameters.Controls;
+using ReportEngine.App.Views.Settings.SettingsControls;
 using ReportEngine.App.Views.Utils;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Domain.Database.Context;
+using ReportEngine.Domain.Database.DbSettings;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.Braces;
@@ -29,6 +41,7 @@ using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Domain.Store;
 using ReportEngine.Export.ExcelWork.Services;
 using ReportEngine.Export.ExcelWork.Services.Generators;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
@@ -39,14 +52,38 @@ namespace ReportEngine.App;
 
 public class HostFactory
 {
-    public static IHost BuildHost(string connString)
+    public static IHost BuildHost(string dbMode)
     {
+        var uiLog = new AppLogsView();
+
+        var theme = RichTextBoxLoggerTheme.Create();
+
         return Host.CreateDefaultBuilder()
-            .UseSerilog(Log.Logger, dispose: true)
-            .ConfigureServices((hostContext, services) =>
+            .UseSerilog((context, services, config) =>
             {
+                config
+                    .ReadFrom.Configuration(context.Configuration)
+                    .ReadFrom.Services(services)
+                    .Enrich.FromLogContext()
+                    .MinimumLevel.Information()
+                    .WriteTo.Console()
+                    .WriteTo.File(
+                        "logs/reportengine.log",
+                        rollingInterval: RollingInterval.Day,
+                        retainedFileCountLimit: 7)
+                    .WriteTo.Logger(lc => lc
+                        .Filter.ByIncludingOnly(e =>
+                            e.Properties.ContainsKey("UiOnly"))
+                        .WriteTo.RichTextBox(
+                            uiLog.LogBox,
+                            theme: theme,
+                            outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {NewLine} {Exception}"));
+            })
+            .ConfigureServices(services =>
+            {
+                services.AddSingleton(uiLog);
                 // Регистрация контекста БД
-                ConfigureDatabase(services, connString);
+                ConfigureDatabase(services, dbMode);
                 // Регистрация репозиториев
                 ConfigureRepositories(services);
                 // Регистрация обощённых репозиториев
@@ -62,24 +99,22 @@ public class HostFactory
 
                 services.AddSingleton<App>();
             })
-            .ConfigureLogging(logging =>
-             {
-                 logging.ClearProviders();
-                 logging.SetMinimumLevel(LogLevel.Information);
-             })
             .Build();
     }
 
-    private static void ConfigureDatabase(IServiceCollection services, string connString)
+    private static void ConfigureDatabase(
+        IServiceCollection services,
+        string dbMode)
     {
         services.AddDbContext<ReAppContext>(options =>
-            options.UseNpgsql(connString));
+            DbContextOptionsFactory.Configure(options, dbMode));
     }
+
 
     private static void ConfigureRepositories(IServiceCollection services)
     {
         // Обычные репозитории
-        services.AddScoped<IBaseRepository<User>, UserRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IBaseRepository<Company>, CompanyRepository>();
         services.AddScoped<IBaseRepository<Subject>, SubjectsRepository>();
         services.AddScoped<IProjectInfoRepository, ProjectInfoRepository>();
@@ -93,7 +128,7 @@ public class HostFactory
         services.AddScoped<IPurposesRepository<AdditionalEquipPurpose>, FormedAdditionalEquipsRepository>();
         services.AddScoped<IPurposesRepository<ElectricalPurpose>, FormedElectricalRepository>();
         services.AddScoped<IPurposesRepository<DrainagePurpose>, FormedDrainagesRepository>();
-
+        services.AddScoped<CalculationRepository>();
     }
 
     private static void ConfigureGenericRepositories(IServiceCollection services)
@@ -137,11 +172,14 @@ public class HostFactory
     private static void ConfigureApplicationServices(IServiceCollection services)
     {
         services.AddSingleton<UpdaterStandService>();
-        services.AddSingleton<EquipChangesListener>();
         services.AddSingleton<GenericEquipWindowFactory>();
         services.AddSingleton<NavigationService>();
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<INotificationService, NotificationService>();
+        services.AddScoped<ParametersStore>();
+        services.AddSingleton<SessionService>();
+        services.AddSingleton<UiLogger>();
+        services.AddSingleton<ExceptionService>();
         services.AddScoped<ICalculationService, CalculationService>();
         services.AddScoped<IStandService, StandService>();
         services.AddScoped<IProjectService, ProjectService>();
@@ -149,6 +187,13 @@ public class HostFactory
         services.AddScoped<ContainerService>();
         services.AddScoped<AdditionalEquipService>();
         services.AddScoped<UIValidatorService>();
+        services.AddScoped<InitializeService>();
+        services.AddScoped<EntityStandClonerService>();
+        services.AddScoped<EntityProjectClonerService>();
+        services.AddScoped<ParameterGroupService>();
+        services.AddScoped<AuditService>();
+        services.AddScoped<IAiChatService, GigachatAiService>();
+        services.AddHttpClient();
     }
 
     private static void ConfigureReportsServices(IServiceCollection services)
@@ -163,6 +208,7 @@ public class HostFactory
         services.AddScoped<IReportGenerator, FinPlanReportGenerator>();
         services.AddScoped<IReportGenerator, PassportsGenerator>();
         services.AddScoped<IReportGenerator, TechnologicalCardsGenerator>();
+        services.AddScoped<FlatSummaryReportGenerator>();
     }
 
     private static void ConfigureViewModels(IServiceCollection services)
@@ -181,18 +227,25 @@ public class HostFactory
         services.AddScoped<SubjectViewModel>();
         services.AddScoped<RenumeratorViewModel>();
         services.AddScoped<StandCopyViewModel>();
-
+        services.AddScoped<GenericRepository>();
         services.AddScoped(typeof(GenericEquipViewModel<>));
+        services.AddScoped<DockViewerViewModel>();
+        services.AddScoped<AllStandsViewModel>();
+        services.AddScoped<CalculationParametersViewModel>();
+        services.AddScoped<AuditViewModel>();
+        services.AddScoped<ChatWithAiViewModel>();
+        services.AddScoped<TreeViewModel>();
     }
 
     private static void ConfigureViews(IServiceCollection services)
     {
         // Главное окно
-        services.AddSingleton(provider =>
+        services.AddSingleton(serviceProvider =>
         {
-            var navService = provider.GetRequiredService<NavigationService>();
-            var viewModel = provider.GetRequiredService<MainWindowViewModel>();
-            var mainWindow = new MainWindow(viewModel, provider);
+            var navService = serviceProvider.GetRequiredService<NavigationService>();
+            var viewModel = serviceProvider.GetRequiredService<MainWindowViewModel>();
+            var exService = serviceProvider.GetRequiredService<ExceptionService>();
+            var mainWindow = new MainWindow(viewModel, serviceProvider, exService);
 
             navService.InitializeContentHost(mainWindow.FindName("MainContentControl") as ContentControl);
             return mainWindow;
@@ -220,5 +273,18 @@ public class HostFactory
         services.AddTransient<StandsSettingsView>();
         services.AddTransient<ProgressDialog>();
         services.AddTransient<NotifyWindow>();
+        services.AddTransient<CommonSettings>();
+        services.AddTransient<ConnectionSettings>();
+        services.AddTransient<DockViewerView>();
+        services.AddTransient<AllStandsView>();
+        services.AddTransient<CalculationParametersWindow>();
+        services.AddTransient<ComponentsView>();
+        services.AddTransient<StandParametersView>();
+        services.AddTransient<HumanCostView>();
+        services.AddTransient<FrameParametersView>();
+        services.AddTransient<SandBlastView>();
+        services.AddTransient<ElectricCostView>();
+        services.AddTransient<AuditEventsView>();
+        services.AddTransient<ChatWithAi>();
     }
 }

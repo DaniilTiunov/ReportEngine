@@ -2,82 +2,84 @@
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Input;
-using ReportEngine.App.AppHelpers;
+using ReportEngine.App.Services.Notification;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
 
-namespace ReportEngine.App.Views.Windows
+namespace ReportEngine.App.Views.Windows;
+
+/// <summary>
+///     Логика взаимодействия для UpdateInfoView.xaml
+/// </summary>
+public partial class UpdateInfoView : Window
 {
-    /// <summary>
-    /// Логика взаимодействия для UpdateInfoView.xaml
-    /// </summary>
-    public partial class UpdateInfoView : Window
+    private readonly ExceptionService _exceptionService;
+
+    public UpdateInfoView(ExceptionService exceptionService)
     {
-        public List<UpdateInfo> Updates { get; set; }
+        InitializeComponent();
+        LoadUpdateHistory();
+        DataContext = this;
+        _exceptionService = exceptionService;
+    }
 
-        public UpdateInfoView()
-        {
-            InitializeComponent();
-            LoadUpdateHistory();
-            DataContext = this;
-        }
+    public List<UpdateInfo> Updates { get; set; }
 
-        private void LoadUpdateHistory()
+    private void LoadUpdateHistory()
+    {
+        _exceptionService.SafeExecute(() =>
         {
-            ExceptionHelper.SafeExecute(() =>
+            var filePath = DirectoryHelper.GetUpdateInfoPath();
+
+            if (File.Exists(filePath))
             {
-                var filePath = DirectoryHelper.GetUpdateInfoPath();
+                var json = File.ReadAllText(filePath);
 
-                if (File.Exists(filePath))
-                {
-                    var json = File.ReadAllText(filePath);
+                var updates = JsonSerializer.Deserialize<List<UpdateInfo>>(json);
 
-                    var updates = JsonSerializer.Deserialize<List<UpdateInfo>>(json);
-
-                    UpdatesList.ItemsSource = updates;
-                }
-                else
-                {
-                    Updates = new List<UpdateInfo>();
-                }
-            });
-        }
-
-        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ClickCount == 2)
-                MaxRestoreButton_Click(sender, e);
-            else
-                DragMove();
-        }
-
-        private void MinimizeButton_Click(object sender, RoutedEventArgs e)
-        {
-            WindowState = WindowState.Minimized;
-        }
-
-        private void MaxRestoreButton_Click(object sender, RoutedEventArgs e)
-        {
-            var area = SystemParameters.WorkArea;
-            if (Width != area.Width || Height != area.Height || Left != area.Left || Top != area.Top)
-            {
-                Left = area.Left;
-                Top = area.Top;
-                Width = area.Width;
-                Height = area.Height;
+                UpdatesList.ItemsSource = updates;
             }
             else
             {
-                Width = 1000;
-                Height = 600;
-                Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
-                Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
+                Updates = new List<UpdateInfo>();
             }
-        }
+        });
+    }
 
-        private void CloseButton_Click(object sender, RoutedEventArgs e)
+    private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ClickCount == 2)
+            MaxRestoreButton_Click(sender, e);
+        else
+            DragMove();
+    }
+
+    private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState.Minimized;
+    }
+
+    private void MaxRestoreButton_Click(object sender, RoutedEventArgs e)
+    {
+        var area = SystemParameters.WorkArea;
+        if (Width != area.Width || Height != area.Height || Left != area.Left || Top != area.Top)
         {
-            Close();
+            Left = area.Left;
+            Top = area.Top;
+            Width = area.Width;
+            Height = area.Height;
         }
+        else
+        {
+            Width = 1000;
+            Height = 600;
+            Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
+            Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
+        }
+    }
+
+    private void CloseButton_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
     }
 }

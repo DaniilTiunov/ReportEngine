@@ -3,6 +3,7 @@ using ReportEngine.Domain.Background;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.Braces;
+using ReportEngine.Domain.Entities.CalculationParameters;
 using ReportEngine.Domain.Entities.Drainage;
 using ReportEngine.Domain.Entities.ElectricComponents;
 using ReportEngine.Domain.Entities.ElectricSockets;
@@ -20,7 +21,6 @@ public class ReAppContext : DbContext
 
     //Сортаменты
     public DbSet<CarbonPipe> CarbonPipes { get; set; } //Сортамент труб Труба углеродистая сталь
-
     public DbSet<HeaterPipe> HeaterPipes { get; set; } //Труба нержавеющая сталь
     public DbSet<StainlessPipe> StainlessPipes { get; set; } //Труба жарапрочная сталь
     public DbSet<CarbonArmature> CarbonArmatures { get; set; } //Запорные арматуры Запорная арматура углеродистая сталь
@@ -42,42 +42,58 @@ public class ReAppContext : DbContext
     public DbSet<CabelProtection> CabelProtections { get; set; } //Средства прокладки и защиты кабеля
     public DbSet<Heater> Heaters { get; set; } //Обогрев
     public DbSet<Other> Others { get; set; } //Прочие
+
     public DbSet<Container> Containers { get; set; } //Тара
 
     //Обвязки
     public DbSet<Obvyazka> Obvyazki { get; set; } //Обвязки
     public DbSet<ObvyazkaInStand> ObvyazkiInStands { get; set; } // Обвязки в стендах
+
     public DbSet<ObvyazkaAdditionalEquipPurpose> ObvyazkaAdditionalEquipPurpose { get; set; }
 
     //Сформированные рамы
     public DbSet<FormedFrame> FormedFrames { get; set; } //Сформированные рамы
     public DbSet<FrameComponent> FrameComponents { get; set; } //Компоненты рамы
+
     public DbSet<StandFrame> StandFrames { get; set; }
 
     //Сформированные дренажи
     public DbSet<FormedDrainage> FormedDrainages { get; set; }
     public DbSet<DrainagePurpose> DrainagePurposes { get; set; }
+
     public DbSet<StandDrainage> StandDrainages { get; set; }
 
     // Электрические компоненты
     public DbSet<FormedElectricalComponent> FormedElectricalComponents { get; set; }
     public DbSet<ElectricalPurpose> ElectricalPurposes { get; set; }
+
     public DbSet<StandElectricalComponent> StandElectricalComponents { get; set; }
 
     // Дополнительные комплектующие
     public DbSet<FormedAdditionalEquip> FormedAdditionalEquips { get; set; }
     public DbSet<AdditionalEquipPurpose> AdditionalEquipPurposes { get; set; }
+
     public DbSet<StandAdditionalEquip> StandAdditionalEquips { get; set; }
 
     //Остальные сущности
     public DbSet<ProjectInfo> Projects { get; set; }
-
     public DbSet<User> Users { get; set; }
     public DbSet<Company> Companies { get; set; }
     public DbSet<Subject> Subjects { get; set; }
     public DbSet<Stand> Stands { get; set; }
     public DbSet<ContainerStand> ContainersStand { get; set; } // Ящики с стендами
     public DbSet<ContainerBatch> ContainersBatch { get; set; } // Ящики с стендами
-
     public DbSet<TablesChanges> TablesChanges { get; set; }
+    public DbSet<CalculationParameter> CalculationParameters { get; set; }
+    public DbSet<CalculationParameterGroup> CalculationParametersGroup { get; set; }
+    public DbSet<AuditEvent> AuditEvents { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<AuditEvent>()
+            .Property(x => x.Timestamp)
+            .HasColumnType("timestamp without time zone");
+    }
 }

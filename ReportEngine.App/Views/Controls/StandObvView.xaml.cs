@@ -1,6 +1,5 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Input;
-using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Views.Controls;
@@ -10,9 +9,8 @@ namespace ReportEngine.App.Views.Controls;
 /// </summary>
 public partial class StandObvView : UserControl
 {
-    private bool _allowEdit;
-
     private readonly ProjectViewModel _projectViewModel;
+    private bool _allowEdit;
 
     public StandObvView(ProjectViewModel projectViewModel)
     {
@@ -51,10 +49,7 @@ public partial class StandObvView : UserControl
 
     private void FillStandFieldsFromObvyazkaCommand_DoubleClick(object sender, MouseButtonEventArgs e)
     {
-        ExceptionHelper.SafeExecute(() =>
-        {
-            _projectViewModel.OnEditObvSettingsCommandExecuted(sender);
-        });
+        _projectViewModel.OnEditObvSettingsCommandExecuted(sender);
     }
 
     private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -80,10 +75,7 @@ public partial class StandObvView : UserControl
 
         _allowEdit = true;
 
-        if (grid.CurrentCell != null)
-        {
-            grid.BeginEdit();
-        }
+        if (grid.CurrentCell != null) grid.BeginEdit();
 
         _allowEdit = false;
     }

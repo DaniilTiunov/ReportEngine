@@ -1,11 +1,11 @@
 ﻿namespace ReportEngine.Export.DTO;
 
-public struct SensorRecordData
+public class SensorRecordData
 {
-    public string SensorKKS;
-    public string SensorDescription;
-    public string SensorMarkPlus;
-    public string SensorMarkMinus;
+    public string? SensorDescription;
+    public string? SensorKKS;
+    public string? SensorMarkMinus;
+    public string? SensorMarkPlus;
 
     public SensorRecordData(string sensorKKS, string sensorDescription, string sensorMarkPlus, string sensorMarkMinus)
     {
@@ -16,31 +16,33 @@ public struct SensorRecordData
     }
 }
 
-public record PartsStandsData(
-    List<EquipmentRecord> PipesList,
-    List<EquipmentRecord> ArmaturesList,
-    List<EquipmentRecord> TreeList,
-    List<EquipmentRecord> KmchList,
-    List<EquipmentRecord> DrainageParts,
-    List<EquipmentRecord> FramesList,
-    List<EquipmentRecord> SensorsHolders,
-    List<EquipmentRecord> ElectricalParts,
-    List<EquipmentRecord> OthersParts,
-    List<EquipmentRecord> Supplies
-);
+public class PartsStandsData
+{
+    public List<EquipmentRecord?> PipesList { get; set; } = new();
+    public List<EquipmentRecord?> ArmaturesList { get; set; } = new();
+    public List<EquipmentRecord?> TreeList { get; set; } = new();
+    public List<EquipmentRecord?> KmchList { get; set; } = new();
+    public List<EquipmentRecord?> DrainageParts { get; set; } = new();
+    public List<EquipmentRecord?> FramesList { get; set; } = new();
+    public List<EquipmentRecord?> SensorsHolders { get; set; } = new();
+    public List<EquipmentRecord?> ElectricalParts { get; set; } = new();
+    public List<EquipmentRecord?> OthersParts { get; set; } = new();
+    public List<EquipmentRecord?> Supplies { get; set; } = new();
+}
 
-public record LaborStandsData(
-    EquipmentRecord frameProduction,
-    EquipmentRecord obvProduction,
-    EquipmentRecord collectorProduction,
-    EquipmentRecord qualityTests,
-    EquipmentRecord sandblasting,
-    EquipmentRecord paintingWorks,
-    EquipmentRecord electricalWorks,
-    EquipmentRecord commonStandCheck
- );
+public class LaborStandsData
+{
+    public EquipmentRecord? FrameProduction { get; set; }
+    public EquipmentRecord? ObvProduction { get; set; }
+    public EquipmentRecord? CollectorProduction { get; set; }
+    public EquipmentRecord? QualityTests { get; set; }
+    public EquipmentRecord? Sandblasting { get; set; }
+    public EquipmentRecord? PaintingWorks { get; set; }
+    public EquipmentRecord? ElectricalWorks { get; set; }
+    public EquipmentRecord? CommonStandCheck { get; set; }
+}
 
-public struct EquipmentRecord
+public class EquipmentRecord
 {
     public ValidatedField<int?> ExportDays { get; set; }
     public ValidatedField<string?> Name { get; set; }
@@ -50,7 +52,7 @@ public struct EquipmentRecord
     public ValidatedField<float?> CommonCost { get; set; }
 }
 
-public struct StandInfoData
+public class StandInfoData
 {
     public ValidatedField<string?> Name { get; set; }
     public ValidatedField<string?> KKS { get; set; }

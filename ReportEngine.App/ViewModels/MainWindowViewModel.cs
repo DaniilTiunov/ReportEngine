@@ -1,34 +1,44 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
-using ControlzEx.Standard;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
 using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Commands.Providers;
 using ReportEngine.App.Model;
-using ReportEngine.App.Model.StandsModel;
-using ReportEngine.App.Services;
+using ReportEngine.App.Services.Cloners;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.Services.Logger;
+using ReportEngine.App.Services.Navigation;
+using ReportEngine.App.Services.Notification;
 using ReportEngine.App.Views.Controls;
+using ReportEngine.App.Views.Settings.CalculationParameters;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Shared.Config.Directory;
+using ReportEngine.Shared.Config.JsonHelpers;
 
 namespace ReportEngine.App.ViewModels;
 
 public class MainWindowViewModel : BaseViewModel
 {
+    private readonly AuditService _auditService;
     private readonly ICalculationService _calculationService;
+    private readonly IDialogService _dialogService;
+    private readonly EntityProjectClonerService _entityProjectClonerService;
+    private readonly ExceptionService _exceptionService;
+    private readonly UiLogger _logger;
     private readonly NavigationService _navigation;
     private readonly INotificationService _notificationService;
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IServiceProvider _serviceProvider;
-    private readonly IProjectService _projectService;
-    private readonly IDialogService _dialogService;
+    private readonly SessionService _sessionService;
 
     #region Конструктор
 
@@ -38,16 +48,26 @@ public class MainWindowViewModel : BaseViewModel
         IProjectInfoRepository projectRepository,
         ICalculationService calculationService,
         INotificationService notificationService,
-        IProjectService projectService,
-        IDialogService dialogService)
+        IDialogService dialogService,
+        EntityProjectClonerService entityProjectClonerService,
+        SessionService sessionService,
+        AuditService auditService,
+        UiLogger logger,
+        ExceptionService exceptionService)
     {
         _notificationService = notificationService;
         _calculationService = calculationService;
         _serviceProvider = serviceProvider;
         _projectRepository = projectRepository;
         _navigation = navigation;
-        _projectService = projectService;
         _dialogService = dialogService;
+        _entityProjectClonerService = entityProjectClonerService;
+        _sessionService = sessionService;
+        _auditService = auditService;
+        _logger = logger;
+        _exceptionService = exceptionService;
+
+        _sessionService.PropertyChanged += SessionChanged;
 
         InitializeMainWindowCommands();
         InitializeGenericEquipCommands();
@@ -59,15 +79,26 @@ public class MainWindowViewModel : BaseViewModel
     public GenericEquipCommandProvider GenericEquipCommandProvider { get; set; } = new();
     public MainWindowCommandProvider MainWindowCommandProvider { get; set; } = new();
 
-    public User? CurrentUser => SessionService.CurrentUser;
-    public string? CurrentUserLogin => SessionService.CurrentUser?.UserLogin;
+    public User? CurrentUser => _sessionService.CurrentUser;
+    public string? CurrentUserLogin => _sessionService.CurrentUser?.UserLogin;
+
+    public string DatabaseMode => JsonHandler.GetDatabaseMode(DirectoryHelper.GetConfigPath());
+
+    private void SessionChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(SessionService.CurrentUser))
+        {
+            OnPropertyChanged(nameof(CurrentUser));
+            OnPropertyChanged(nameof(CurrentUserLogin));
+        }
+    }
 
     #region Дженерик команды
 
     public void OnOpenGenericWindowCommandExecuted<T, TEquip>(object e)
         where T : class, IBaseEquip, new()
     {
-        ExceptionHelper.SafeExecute(() => _navigation.ShowGenericWindow<T, T>());
+        _exceptionService.SafeExecute(() => _navigation.ShowGenericWindow<T, T>());
     }
 
     #endregion Дженерик команды
@@ -93,30 +124,93 @@ public class MainWindowViewModel : BaseViewModel
         return true;
     }
 
+    public void OnSetDbOffline(object e)
+    {
+        JsonHandler.SetDatabaseMode(DirectoryHelper.GetConfigPath(), "Offline");
+        RestartApp();
+    }
+
+    public void OnSetDbOnline(object e)
+    {
+        JsonHandler.SetDatabaseMode(DirectoryHelper.GetConfigPath(), "Online");
+        RestartApp();
+    }
+
+    private void RestartApp()
+    {
+        try
+        {
+            var confirm = _notificationService.ShowConfirmation("""
+                                                                Приложение будет перезагружено.
+                                                                Все несохранённые данные будут потеряны.
+                                                                Продолжить?
+                                                                """);
+
+            if (!confirm)
+                return;
+
+            var exePath = Process.GetCurrentProcess().MainModule?.FileName;
+
+            if (exePath == null)
+                return;
+
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = exePath,
+                UseShellExecute = true
+            });
+
+            Application.Current.Shutdown();
+        }
+        catch (Exception e)
+        {
+            MessageBox.Show($"Ошибка {e.Message}");
+            throw;
+        }
+    }
+
     public async void OnRecalculateProjectCommandExecuted(object e)
     {
-        await ExceptionHelper.SafeExecuteAsync(RecalculateProjectAsync);
+        await _exceptionService.SafeExecuteAsync(RecalculateProjectAsync);
     }
 
     public async void OnEditProjectCommandExecuted(object e)
     {
         if (MainWindowModel.SelectedProject == null) return;
 
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             var projectViewModel = _serviceProvider.GetRequiredService<ProjectViewModel>();
 
-            _dialogService.RunWithProgressDialogAsync(async () =>
+            await _dialogService.RunWithProgressDialogAsync(async () =>
             {
                 await projectViewModel.LoadProjectInfoAsync(MainWindowModel.SelectedProject.Id);
                 _navigation.ShowContent<TreeProjectView>();
+                _logger.Success($"Отрыт проект {MainWindowModel.SelectedProject.OrderCustomer} Статус: Успешно");
+            });
+        });
+    }
+
+    public async void OnCopyProjectCommandExecuted(object e)
+    {
+        await _exceptionService.SafeExecuteAsync(async () =>
+        {
+            await _dialogService.RunWithProgressDialogAsync(async () =>
+            {
+                var newProject = MainWindowModel.SelectedProject;
+
+                await _entityProjectClonerService.CloneProjectEntity(newProject);
+
+                MainWindowModel.AllProjects.Add(newProject);
+
+                _logger.Success($"Скопирован проект {MainWindowModel.SelectedProject.OrderCustomer} Статус: Успешно");
             });
         });
     }
 
     public void OnOpenMainWindowCommandExecuted(object e)
     {
-        ExceptionHelper.SafeExecute(() =>
+        _exceptionService.SafeExecute(() =>
         {
             var projectViewModel = _serviceProvider.GetRequiredService<ProjectViewModel>();
 
@@ -131,7 +225,7 @@ public class MainWindowViewModel : BaseViewModel
             //{
             //    _navigation.CloseContent();
             //}
-            
+
             _navigation.CloseContent();
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
             mainWindow.MainContentControl.Content = mainWindow.MainGrid;
@@ -145,32 +239,33 @@ public class MainWindowViewModel : BaseViewModel
         if (stands.Count == 0 || stands == null)
             return false;
 
-        if (stands.Any(s => s.ElectricalPurposesChanges || s.DrainagePurposesChanges == true)) //s.AdditionalPurposesChanges
-        {
+        if (stands.Any(s => s.ElectricalPurposesChanges || s.DrainagePurposesChanges)) //s.AdditionalPurposesChanges
             return true;
-        }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     public void OpenOthersWindowCommandExecuted<T>(object e)
         where T : Window
     {
-        ExceptionHelper.SafeExecute(_navigation.ShowWindow<T>);
+        _exceptionService.SafeExecute(_navigation.ShowWindow<T>);
     }
 
     public void OpenAuthWindowCommandExecuted<T>(object e)
         where T : Window
     {
-        ExceptionHelper.SafeExecute(_navigation.ShowWindow<AuthWindow>);
+        _exceptionService.SafeExecute(_navigation.ShowWindow<AuthWindow>);
+    }
+
+    public void OnOpenCalculationParametersCommandExecuted(object e)
+    {
+        _exceptionService.SafeExecute(() => _navigation.ShowWindow<CalculationParametersWindow>());
     }
 
     public void OpenAnotherControlsCommandExecuted<T>(object e)
         where T : UserControl
     {
-        ExceptionHelper.SafeExecute(() =>
+        _exceptionService.SafeExecute(() =>
         {
             // Если открываем TreeProjectView, сбрасываем проект
             if (typeof(T) == typeof(TreeProjectView))
@@ -186,17 +281,17 @@ public class MainWindowViewModel : BaseViewModel
 
     public async void OnCheckDbConnectionCommandExecuted(object e)
     {
-        await ExceptionHelper.SafeExecuteAsync(CheckDbConnectionAsync);
+        await _exceptionService.SafeExecuteAsync(CheckDbConnectionAsync);
     }
 
     public async void OnShowAllProjectsCommandExecuted(object e)
     {
-        await ExceptionHelper.SafeExecuteAsync(ShowAllProjectsAsync);
+        await _exceptionService.SafeExecuteAsync(ShowAllProjectsAsync);
     }
 
     public async void OnDeleteSelectedProjectExecuted(object e)
     {
-        await ExceptionHelper.SafeExecuteAsync(DeleteSelectedProjectAsync);
+        await _exceptionService.SafeExecuteAsync(DeleteSelectedProjectAsync);
     }
 
     public async Task CheckDbConnectionAsync()
@@ -223,16 +318,30 @@ public class MainWindowViewModel : BaseViewModel
 
         MainWindowModel.AllProjects.Clear();
         foreach (var project in projects)
-        {
             MainWindowModel.AllProjects.Add(project);
-        }
+
+        _logger.Success("Проекты загружены. Статус: Успешно");
     }
 
     public async Task DeleteSelectedProjectAsync()
     {
+        var result = _notificationService.ShowConfirmation("Вы уверены, что хотите удалить проект?");
+
+        if (!result)
+            return;
+
         var currentProject = MainWindowModel.SelectedProject;
         await _projectRepository.DeleteAsync(currentProject);
         await ShowAllProjectsAsync();
+
+        _notificationService.ShowInfo("Проект успешно удалён");
+
+        _logger.Success($"Удалён проект {MainWindowModel.SelectedProject.OrderCustomer} Статус: Успешно");
+
+        await _auditService.LogEventAsync(
+            _sessionService.CurrentUser.UserLogin,
+            $"Пользователь {_sessionService.CurrentUser.UserLogin} удалил проект {currentProject.OrderCustomer}",
+            $"Удаление проекта с заказом покупателя {currentProject.OrderCustomer}");
     }
 
     private async Task RecalculateProjectAsync()

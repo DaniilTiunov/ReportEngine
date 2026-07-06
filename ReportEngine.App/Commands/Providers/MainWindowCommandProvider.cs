@@ -21,4 +21,10 @@ public class MainWindowCommandProvider
     public ICommand OpenCalculationSettingsWindow { get; set; }
     public ICommand RecalculateProjectCommand { get; set; }
     public ICommand OpenAllSubjectsCommand { get; set; }
+    public ICommand OpenAllStandsCommand { get; set; }
+    public ICommand CopySelectedProjectCommand { get; set; }
+    public ICommand OpenCalculationParametersCommand { get; set; }
+    public ICommand OpenAuditContentCommand { get; set; }
+    public ICommand SetOfflineDbCommand { get; set; }
+    public ICommand SetOnlineDbCommand { get; set; }
 }

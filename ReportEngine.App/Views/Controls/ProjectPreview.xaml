@@ -16,21 +16,17 @@
         <converters:ByteArrayImageConverter x:Key="ByteArrayImageConverter" />
     </UserControl.Resources>
 
-    <!--<UserControl.InputBindings>
+    <UserControl.InputBindings>
         <KeyBinding
-            Key="F5"
-            Command="{Binding ProjectCommandProvider.UpdateUICommand}"
+            Key="Delete"
+            Command="{Binding ProjectCommandProvider.DeleteSelectedStandsCommand}"
             CommandParameter="{x:Null}" />
-    </UserControl.InputBindings>-->
+    </UserControl.InputBindings>
 
     <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+        <!--  Главный грид  -->
         <Grid Margin="10">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" MinHeight="250" />
-                <RowDefinition Height="Auto" MinHeight="200" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -38,665 +34,773 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <GroupBox
-                Grid.Row="0"
-                Grid.Column="0"
-                Margin="5"
-                Padding="5"
-                BorderThickness="0">
-                <GroupBox.Header>
-                    <TextBlock>
-                        <Run FontSize="16" Text="Стенды в проекте — " />
-                        <Run
-                            FontSize="15"
-                            FontWeight="Bold"
-                            Text="{Binding CurrentProjectModel.Company, TargetNullValue='(нет данных)'}" />
-                        <Run FontSize="16" Text=" объекта — " />
-                        <Run
-                            FontSize="15"
-                            FontWeight="Bold"
-                            Text="{Binding CurrentProjectModel.Object, TargetNullValue='(нет данных)'}" />
-                    </TextBlock>
-                </GroupBox.Header>
-                <ListView
-                    MaxHeight="300"
-                    FontSize="15"
-                    ItemsSource="{Binding CurrentProjectModel.Stands}"
-                    MouseDoubleClick="StandListView_MouseDoubleClick"
-                    SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}"
-                    SelectionChanged="StandsList_SelectionChanged">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn
-                                Width="40"
-                                DisplayMemberBinding="{Binding Number}"
-                                Header="№" />
-                            <GridViewColumn
-                                Width="120"
-                                DisplayMemberBinding="{Binding KKSCode}"
-                                Header="KKS" />
-                            <GridViewColumn
-                                Width="200"
-                                DisplayMemberBinding="{Binding Design}"
-                                Header="Обозначение" />
-                            <GridViewColumn
-                                Width="200"
-                                DisplayMemberBinding="{Binding SerialNumber}"
-                                Header="Серийный номер" />
-                            <GridViewColumn
-                                Width="100"
-                                DisplayMemberBinding="{Binding BraceType}"
-                                Header="Тип крепления" />
-                            <GridViewColumn
-                                Width="100"
-                                DisplayMemberBinding="{Binding ObvyazkaName}"
-                                Header="Тип обвязки" />
-                            <GridViewColumn
-                                Width="100"
-                                DisplayMemberBinding="{Binding StandSummCost}"
-                                Header="Стоимость стенда" />
-                        </GridView>
-                    </ListView.View>
-                    <ListView.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Command="{Binding ProjectCommandProvider.OpenCreateNewStandCommand}" Header="Создать стенд" />
-                            <MenuItem Command="{Binding ProjectCommandProvider.OpenEditStandCommand}" Header="Редактировать стенд" />
-                            <Separator />
-                            <MenuItem Command="{Binding ProjectCommandProvider.RenumerateStandsCommand}" Header="Пронумеровать стенды..." />
-                            <MenuItem Command="{Binding ProjectCommandProvider.CopyStandsCommand}" Header="Создать копию на основе прототипа" />
-                            <Separator />
-                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}" Header="Удалить стенд из проекта" />
-                        </ContextMenu>
-                    </ListView.ContextMenu>
-                </ListView>
-            </GroupBox>
+            <!--  Левая часть, инфа по стендам  -->
+            <Grid Grid.Row="0" Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-            <GroupBox
-                Grid.Row="0"
-                Grid.Column="1"
-                Margin="5"
-                Padding="5"
-                BorderThickness="0">
-                <GroupBox.Header>
-                    <TextBlock>
-                        <Run FontSize="16" Text="Рамы в стенде — " />
-                        <Run
-                            FontSize="15"
-                            FontWeight="Bold"
-                            Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(нет данных)'}" />
-                    </TextBlock>
-                </GroupBox.Header>
-
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="40" />
-                    </Grid.ColumnDefinitions>
+                <!--  Стенды  -->
+                <GroupBox
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    MinHeight="300"
+                    MaxHeight="320"
+                    Margin="5"
+                    Padding="5"
+                    VerticalAlignment="Top"
+                    BorderThickness="0">
+                    <GroupBox.Header>
+                        <TextBlock>
+                            <Run FontSize="16" Text="Стенды в проекте — " />
+                            <Run
+                                FontSize="15"
+                                FontWeight="Bold"
+                                Text="{Binding CurrentProjectModel.Company, TargetNullValue='(нет данных)'}" />
+                            <Run FontSize="16" Text=" объекта — " />
+                            <Run
+                                FontSize="15"
+                                FontWeight="Bold"
+                                Text="{Binding CurrentProjectModel.Object, TargetNullValue='(нет данных)'}" />
+                        </TextBlock>
+                    </GroupBox.Header>
                     <ListView
-                        Grid.Column="0"
+                        x:Name="StandsList"
                         MaxHeight="300"
-                        DisplayMemberPath="Name"
                         FontSize="15"
-                        ItemsSource="{Binding CurrentProjectModel.SelectedStand.FramesInStand}"
-                        SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedFrame}">
+                        ItemsSource="{Binding CurrentProjectModel.Stands}"
+                        MouseDoubleClick="StandListView_MouseDoubleClick"
+                        SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}"
+                        SelectionChanged="StandsList_SelectionChanged"
+                        SelectionMode="Extended">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn
-                                    Width="150"
-                                    DisplayMemberBinding="{Binding Name}"
-                                    Header="Наименование" />
+                                    Width="40"
+                                    DisplayMemberBinding="{Binding Number}"
+                                    Header="№" />
                                 <GridViewColumn
-                                    Width="150"
-                                    DisplayMemberBinding="{Binding FrameType}"
-                                    Header="Тип" />
+                                    Width="120"
+                                    DisplayMemberBinding="{Binding KKSCode}"
+                                    Header="KKS" />
                                 <GridViewColumn
-                                    Width="80"
+                                    Width="200"
+                                    DisplayMemberBinding="{Binding Design}"
+                                    Header="Обозначение" />
+                                <GridViewColumn
+                                    Width="200"
+                                    DisplayMemberBinding="{Binding SerialNumber}"
+                                    Header="Серийный номер" />
+                                <GridViewColumn
+                                    Width="100"
+                                    DisplayMemberBinding="{Binding BraceType}"
+                                    Header="Тип крепления" />
+                                <GridViewColumn
+                                    Width="100"
                                     DisplayMemberBinding="{Binding Width}"
-                                    Header="Ширина" />
+                                    Header="Ширина, мм" />
                                 <GridViewColumn
-                                    Width="80"
-                                    DisplayMemberBinding="{Binding Height}"
-                                    Header="Высота" />
-                                <GridViewColumn
-                                    Width="80"
-                                    DisplayMemberBinding="{Binding Depth}"
-                                    Header="Глубина" />
-                                <GridViewColumn
-                                    Width="80"
+                                    Width="100"
                                     DisplayMemberBinding="{Binding Weight}"
-                                    Header="Масса" />
+                                    Header="Масса, кг" />
                                 <GridViewColumn
-                                    Width="150"
-                                    DisplayMemberBinding="{Binding Designe}"
-                                    Header="Описание по КД" />
+                                    Width="100"
+                                    DisplayMemberBinding="{Binding StandSummCost}"
+                                    Header="Сум.стоимость" />
                             </GridView>
                         </ListView.View>
                         <ListView.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding ProjectCommandProvider.RemoveFrameStandCommand}" Header="Удалить раму" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.OpenCreateNewStandCommand}"
+                                          Header="Создать стенд" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.OpenEditStandCommand}"
+                                          Header="Редактировать стенд" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.OnAddStandFromAllStandsCommand}"
+                                          Header="Добавить стенд из других проектов" />
+                                <Separator />
+                                <MenuItem Command="{Binding ProjectCommandProvider.RenumerateStandsCommand}"
+                                          Header="Пронумеровать стенды..." />
+                                <MenuItem Command="{Binding ProjectCommandProvider.CopyStandsCommand}"
+                                          Header="Создать копию на основе прототипа" />
+                                <Separator />
+                                <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}"
+                                          Header="Удалить стенд из проекта" />
+                                <Separator />
+                                <MenuItem Header="Создать отчет по выбранным">
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedSummaryReportCommand}"
+                                              Header="Сводная ведомость" />
+                                    <Separator />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedComponentReportCommand}"
+                                              Header="Ведомость комплектующих" />
+                                    <Separator />
+                                    <MenuItem
+                                        Command="{Binding ProjectCommandProvider.SelectedNamePlatesReportCommand}"
+                                        Header="Шильдики и таблички" />
+                                    <Separator />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedMarksReportCommand}"
+                                              Header="Маркировка" />
+                                    <Separator />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedContainerReportCommand}"
+                                              Header="Тара" />
+                                    <Separator />
+                                    <MenuItem
+                                        Command="{Binding ProjectCommandProvider.SelectedProductionReportCommand}"
+                                        Header="Производство" />
+                                    <Separator />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedFinPlaneReportCommand}"
+                                              Header="Фин. план" />
+                                    <Separator />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedPassportReportCommand}"
+                                              Header="Паспорт" />
+                                    <Separator />
+                                    <MenuItem
+                                        Command="{Binding ProjectCommandProvider.SelectedTechnoCardsReportCommand}"
+                                        Header="Технологические карты" />
+                                </MenuItem>
+
                             </ContextMenu>
                         </ListView.ContextMenu>
                     </ListView>
+                </GroupBox>
+
+                <!--  Обвязки в стенде  -->
+                <GroupBox
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    MinHeight="300"
+                    MaxHeight="320"
+                    Margin="5"
+                    Padding="5"
+                    BorderThickness="0">
+                    <GroupBox.Header>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" HorizontalAlignment="Left">
+                                <Run FontSize="16" Text="Обвязки в стенде — " />
+                                <Run
+                                    FontSize="15"
+                                    FontWeight="Bold"
+                                    Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(нет данных)'}" />
+                            </TextBlock>
+                            <TextBlock Grid.Column="1" MinWidth="200" />
+                            <TextBlock Grid.Column="2" HorizontalAlignment="Right">
+                                <Run FontSize="16" Text="Общее количество датчиков в стенде - " />
+                                <Run
+                                    FontSize="15"
+                                    FontWeight="Bold"
+                                    Text="{Binding CurrentProjectModel.SelectedStand.StandSensorsQuantity, TargetNullValue='(нет данных)'}" />
+                                <Run FontSize="14" Text="шт." />
+                            </TextBlock>
+                        </Grid>
+                    </GroupBox.Header>
+                    <ListView
+                        MaxHeight="300"
+                        FontSize="15"
+                        ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}"
+                        MouseDoubleClick="ListView_MouseDoubleClick"
+                        SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand, Mode=TwoWay}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn
+                                    Width="100"
+                                    DisplayMemberBinding="{Binding NN}"
+                                    Header="№" />
+                                <GridViewColumn
+                                    Width="100"
+                                    DisplayMemberBinding="{Binding ObvyazkaName}"
+                                    Header="Тип" />
+                                <GridViewColumn
+                                    Width="120"
+                                    DisplayMemberBinding="{Binding MaterialLine}"
+                                    Header="Материал" />
+                                <GridViewColumn
+                                    Width="120"
+                                    DisplayMemberBinding="{Binding Armature}"
+                                    Header="Арматура" />
+                                <GridViewColumn
+                                    Width="120"
+                                    DisplayMemberBinding="{Binding TreeSocket}"
+                                    Header="Тройник" />
+                                <GridViewColumn
+                                    Width="120"
+                                    DisplayMemberBinding="{Binding KMCH}"
+                                    Header="КМЧ" />
+                                <GridViewColumn
+                                    Width="120"
+                                    DisplayMemberBinding="{Binding FirstSensorType}"
+                                    Header="Датчик 1" />
+                                <GridViewColumn
+                                    Width="120"
+                                    DisplayMemberBinding="{Binding SecondSensorType}"
+                                    Header="Датчик 2" />
+                                <GridViewColumn
+                                    Width="120"
+                                    DisplayMemberBinding="{Binding ThirdSensorType}"
+                                    Header="Датчик 3" />
+                            </GridView>
+                        </ListView.View>
+
+                        <ListView.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding ProjectCommandProvider.OpenObvSettingsWindowCommand}"
+                                          Header="Создать обвязку" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.FillStandFieldsFromObvyazkaCommand}"
+                                          Header="Редактировать обвязку" />
+                                <Separator />
+                                <MenuItem Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}"
+                                          Header="Удалить обвязку из стенда" />
+                                <Separator />
+                                <MenuItem Command="{Binding ProjectCommandProvider.RenumerateObvInStandCommand}"
+                                          Header="Пронумеровать обвязки заново" />
+                            </ContextMenu>
+                        </ListView.ContextMenu>
+                    </ListView>
+                </GroupBox>
+
+                <!--  Электрические компоненты  -->
+                <GroupBox
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Margin="5"
+                    Padding="5"
+                    BorderThickness="0">
+                    <GroupBox.Header>
+                        <TextBlock>
+                            <Run FontSize="16" Text="Электрические компоненты в стенде — " />
+                            <Run
+                                FontSize="14"
+                                FontWeight="Bold"
+                                Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(ошибка привязки)'}" />
+                        </TextBlock>
+                    </GroupBox.Header>
+                    <DataGrid
+                        BeginningEdit="DataGrid_BeginningEdit"
+                        CanUserAddRows="True"
+                        FontSize="15"
+                        ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}"
+                        LoadingRow="DataGrid_LoadingRow"
+                        MouseDoubleClick="DataGrid_MouseDoubleClick"
+                        SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedElectricalComponent}">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Style.Triggers>
+                                    <DataTrigger
+                                        Binding="{Binding DataContext.CurrentProjectModel.SelectedStand.ElectricalPurposesChanges, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource UnsafeDetails}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
+                            <DataGridTextColumn
+                                Width="*"
+                                Binding="{Binding Material}"
+                                Header="Доп. комплектующее" />
+                            <DataGridTextColumn
+                                Width="70"
+                                Binding="{Binding Quantity}"
+                                Header="Кол-во" />
+                            <DataGridTextColumn
+                                Width="75"
+                                Binding="{Binding Measure}"
+                                Header="Ед. изм." />
+                            <DataGridTextColumn
+                                Width="70"
+                                Binding="{Binding CostPerUnit}"
+                                Header="Цена" />
+                            <DataGridTemplateColumn Width="90" Header="Выбрать">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button
+                                            Margin="2,0,2,0"
+                                            Padding="5,0,5,0"
+                                            Command="{Binding DataContext.ProjectCommandProvider.OpenAllSortamentsDialogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}"
+                                            Content="Выбрать" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Width="70" Header="Авто">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsChecked="{Binding IsAutoCalculationEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                        <DataGrid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem
+                                    Command="{Binding ProjectCommandProvider.UpdateElectricalComponentInStandCommand}"
+                                    Header="Сохранить изменения" />
+                                <Separator />
+                                <MenuItem
+                                    Command="{Binding ProjectCommandProvider.DeleteElectricalComponentFromStandCommand}"
+                                    Header="Удалить" />
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>
+                    </DataGrid>
+                </GroupBox>
+
+                <!--  Дополнительные компоненты в стенде  -->
+                <GroupBox
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Margin="5"
+                    Padding="5"
+                    BorderThickness="0">
+                    <GroupBox.Header>
+                        <TextBlock>
+                            <Run FontSize="16" Text="Дополнительные компоненты в стенде — " />
+                            <Run
+                                FontSize="14"
+                                FontWeight="Bold"
+                                Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(ошибка привязки)'}" />
+                        </TextBlock>
+                    </GroupBox.Header>
+                    <DataGrid
+                        BeginningEdit="DataGrid_BeginningEdit"
+                        CanUserAddRows="True"
+                        FontSize="15"
+                        ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand}"
+                        LoadingRow="DataGrid_LoadingRow"
+                        MouseDoubleClick="DataGrid_MouseDoubleClick"
+                        SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedAdditionalEquip}">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Style.Triggers>
+                                    <DataTrigger
+                                        Binding="{Binding DataContext.CurrentProjectModel.SelectedStand.AdditionalPurposesChanges, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource UnsafeDetails}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
+                            <DataGridTextColumn
+                                Width="*"
+                                Binding="{Binding Material}"
+                                Header="Доп. комплектующее" />
+                            <DataGridTextColumn Binding="{Binding Quantity}" Header="Кол-во" />
+                            <DataGridTextColumn Binding="{Binding Measure}" Header="Ед. изм." />
+                            <DataGridTextColumn Binding="{Binding CostPerUnit}" Header="Цена" />
+                            <DataGridTemplateColumn Header="Выбрать">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button
+                                            Margin="2,0,2,0"
+                                            Padding="5,0,5,0"
+                                            Command="{Binding DataContext.ProjectCommandProvider.OpenAllSortamentsDialogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}"
+                                            Content="Выбрать" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Width="70" Header="Авто">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsChecked="{Binding IsAutoCalculationEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                        <DataGrid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem
+                                    Command="{Binding ProjectCommandProvider.UpdateAdditionalComponentInStandCommand}"
+                                    Header="Сохранить изменения" />
+                                <Separator />
+                                <MenuItem
+                                    Command="{Binding ProjectCommandProvider.DeleteAdditionalComponentFromStandCommand}"
+                                    Header="Удалить" />
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>
+                    </DataGrid>
+                </GroupBox>
+
+                <!--  Дренаж в стенде  -->
+                <GroupBox
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    Margin="5"
+                    Padding="5"
+                    BorderThickness="0">
+                    <GroupBox.Header>
+                        <TextBlock>
+                            <Run FontSize="16" Text="Дренаж в стенде — " />
+                            <Run
+                                FontSize="14"
+                                FontWeight="Bold"
+                                Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(ошибка привязки)'}" />
+                        </TextBlock>
+                    </GroupBox.Header>
+                    <DataGrid
+                        BeginningEdit="DataGrid_BeginningEdit"
+                        CanUserAddRows="True"
+                        FontSize="15"
+                        ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand}"
+                        LoadingRow="DataGrid_LoadingRow"
+                        MouseDoubleClick="DataGrid_MouseDoubleClick"
+                        SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedDrainagePurpose}">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Style.Triggers>
+                                    <DataTrigger
+                                        Binding="{Binding DataContext.CurrentProjectModel.SelectedStand.DrainagePurposesChanges, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource UnsafeDetails}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
+                            <DataGridTextColumn
+                                Width="*"
+                                Binding="{Binding Material}"
+                                Header="Материал" />
+                            <DataGridTextColumn Binding="{Binding Quantity}" Header="Кол-во" />
+                            <DataGridTextColumn Binding="{Binding Measure}" Header="Ед. изм." />
+                            <DataGridTextColumn Binding="{Binding CostPerUnit}" Header="Цена" />
+                            <DataGridTemplateColumn Header="Выбрать">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button
+                                            Margin="2,0,2,0"
+                                            Padding="5,0,5,0"
+                                            Command="{Binding DataContext.ProjectCommandProvider.OpenAllSortamentsDialogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}"
+                                            Content="Выбрать" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Width="70" Header="Авто">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsChecked="{Binding IsAutoCalculationEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                        <DataGrid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem
+                                    Command="{Binding ProjectCommandProvider.UpdateDrainageComponentInStandCommand}"
+                                    Header="Сохранить изменения" />
+                                <Separator />
+                                <MenuItem
+                                    Command="{Binding ProjectCommandProvider.DeleteDrainageComponentFromStandCommand}"
+                                    Header="Удалить" />
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>
+                    </DataGrid>
+                </GroupBox>
+
+                <StackPanel
+                    Grid.Row="5"
+                    Grid.Column="0"
+                    Margin="5"
+                    HorizontalAlignment="Right">
                     <Button
-                        Grid.Column="1"
-                        MaxHeight="20"
-                        Margin="10,10,10,10"
-                        Command="{Binding ProjectCommandProvider.ShowFrameDialogCommand}"
-                        Content="..." />
-                </Grid>
-            </GroupBox>
+                        Width="165"
+                        Height="30"
+                        Command="{Binding ProjectCommandProvider.SaveAllChangesInComponentsCommand}"
+                        Content="Сохранить все изменения" />
+                </StackPanel>
+            </Grid>
 
-            <!--  Обвязки по стенду  -->
-            <GroupBox
-                Grid.Row="1"
-                Grid.Column="0"
-                Margin="5"
-                Padding="5"
-                BorderThickness="0">
-                <GroupBox.Header>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock Grid.Column="0" HorizontalAlignment="Left">
-                            <Run FontSize="16" Text="Обвязки в стенде — " />
+            <!--  Правая часть, инфа по проекту + чертёж  -->
+            <Grid Grid.Row="0" Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <GroupBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="5"
+                    Padding="5"
+                    VerticalAlignment="Top"
+                    BorderThickness="0">
+                    <GroupBox.Header>
+                        <TextBlock>
+                            <Run FontSize="16" Text="Рамы в стенде — " />
                             <Run
                                 FontSize="15"
                                 FontWeight="Bold"
                                 Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(нет данных)'}" />
                         </TextBlock>
-                        <TextBlock Grid.Column="1" MinWidth="250" />
-                        <TextBlock Grid.Column="2" HorizontalAlignment="Right">
-                            <Run FontSize="16" Text="Общее количество датчиков в стенде - " />
+                    </GroupBox.Header>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="40" />
+                        </Grid.ColumnDefinitions>
+
+                        <!--  Рамы  -->
+                        <ListView
+                            Grid.Column="0"
+                            MaxHeight="150"
+                            DisplayMemberPath="Name"
+                            FontSize="15"
+                            ItemsSource="{Binding CurrentProjectModel.SelectedStand.FramesInStand}"
+                            SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedFrame}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn
+                                        Width="150"
+                                        DisplayMemberBinding="{Binding Name}"
+                                        Header="Наименование" />
+                                    <GridViewColumn
+                                        Width="150"
+                                        DisplayMemberBinding="{Binding FrameType}"
+                                        Header="Тип" />
+                                    <GridViewColumn
+                                        Width="80"
+                                        DisplayMemberBinding="{Binding Width}"
+                                        Header="Ширина" />
+                                    <GridViewColumn
+                                        Width="80"
+                                        DisplayMemberBinding="{Binding Height}"
+                                        Header="Высота" />
+                                    <GridViewColumn
+                                        Width="80"
+                                        DisplayMemberBinding="{Binding Depth}"
+                                        Header="Глубина" />
+                                    <GridViewColumn
+                                        Width="80"
+                                        DisplayMemberBinding="{Binding Weight}"
+                                        Header="Масса" />
+                                    <GridViewColumn
+                                        Width="150"
+                                        DisplayMemberBinding="{Binding Designe}"
+                                        Header="Описание по КД" />
+                                </GridView>
+                            </ListView.View>
+                            <ListView.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="{Binding ProjectCommandProvider.RemoveFrameStandCommand}"
+                                              Header="Удалить раму" />
+                                </ContextMenu>
+                            </ListView.ContextMenu>
+                        </ListView>
+                        <Button
+                            Grid.Column="1"
+                            MaxHeight="20"
+                            Margin="10,10,10,10"
+                            Command="{Binding ProjectCommandProvider.ShowFrameDialogCommand}"
+                            Content="..." />
+                    </Grid>
+                </GroupBox>
+
+                <!--  Обвязки в проекте  -->
+                <GroupBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    MinHeight="300"
+                    MaxHeight="320"
+                    Margin="5"
+                    Padding="5"
+                    BorderThickness="0">
+                    <GroupBox.Header>
+                        <TextBlock>
+                            <Run FontSize="16" Text="Обвязки в проекте — " />
                             <Run
                                 FontSize="15"
                                 FontWeight="Bold"
-                                Text="{Binding CurrentProjectModel.SelectedStand.StandSensorsQuantity, TargetNullValue='(нет данных)'}" />
-                            <Run FontSize="14" Text="шт." />
+                                Text="{Binding CurrentProjectModel.Company, TargetNullValue='(нет данных)'}" />
                         </TextBlock>
-                    </Grid>
-                </GroupBox.Header>
+                    </GroupBox.Header>
+                    <ListView
+                        MaxHeight="300"
+                        FontSize="15"
+                        ItemsSource="{Binding CurrentProjectModel.ObvyazkiInProject}"
+                        SelectedItem="{Binding CurrentProjectModel.SelectedObvyazkaToCopy}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn
+                                    Width="100"
+                                    DisplayMemberBinding="{Binding ObvyazkaName}"
+                                    Header="Тип" />
+                                <GridViewColumn
+                                    Width="120"
+                                    DisplayMemberBinding="{Binding MaterialLine}"
+                                    Header="Материал" />
+                                <GridViewColumn
+                                    Width="120"
+                                    DisplayMemberBinding="{Binding Armature}"
+                                    Header="Арматура" />
+                                <GridViewColumn
+                                    Width="120"
+                                    DisplayMemberBinding="{Binding TreeSocket}"
+                                    Header="Тройник" />
+                                <GridViewColumn
+                                    Width="120"
+                                    DisplayMemberBinding="{Binding KMCH}"
+                                    Header="КМЧ" />
+                                <GridViewColumn
+                                    Width="120"
+                                    DisplayMemberBinding="{Binding FirstSensorType}"
+                                    Header="Датчик 1" />
+                                <GridViewColumn
+                                    Width="120"
+                                    DisplayMemberBinding="{Binding SecondSensorType}"
+                                    Header="Датчик 2" />
+                                <GridViewColumn
+                                    Width="120"
+                                    DisplayMemberBinding="{Binding ThirdSensorType}"
+                                    Header="Датчик 3" />
+                            </GridView>
+                        </ListView.View>
+                        <ListView.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}"
+                                          Header="Скопировать в выбранный стенд" />
+                            </ContextMenu>
+                        </ListView.ContextMenu>
+                    </ListView>
+                </GroupBox>
 
+                <!--  Объединённая секция: Чертёж стенда + инфо  -->
+                <GroupBox
+                    Grid.Row="2"
+                    Grid.RowSpan="2"
+                    Grid.Column="1"
+                    MinHeight="450"
+                    Margin="5"
+                    Padding="5"
+                    BorderThickness="0">
+                    <GroupBox.Header>
+                        <TextBlock>
+                            <Run FontSize="16" Text="Чертёж стенда и информация по обвязке — " />
+                            <Run
+                                FontSize="15"
+                                FontWeight="Bold"
+                                Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(ошибка привязки)'}" />
+                        </TextBlock>
+                    </GroupBox.Header>
 
-                <ListView
-                    MaxHeight="300"
-                    FontSize="15"
-                    ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}"
-                    MouseDoubleClick="ListView_MouseDoubleClick"
-                    SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand, Mode=TwoWay}">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn
-                                Width="100"
-                                DisplayMemberBinding="{Binding NN}"
-                                Header="№" />
-                            <GridViewColumn
-                                Width="100"
-                                DisplayMemberBinding="{Binding ObvyazkaName}"
-                                Header="Тип" />
-                            <GridViewColumn
-                                Width="120"
-                                DisplayMemberBinding="{Binding MaterialLine}"
-                                Header="Материал" />
-                            <GridViewColumn
-                                Width="120"
-                                DisplayMemberBinding="{Binding Armature}"
-                                Header="Арматура" />
-                            <GridViewColumn
-                                Width="120"
-                                DisplayMemberBinding="{Binding TreeSocket}"
-                                Header="Тройник" />
-                            <GridViewColumn
-                                Width="120"
-                                DisplayMemberBinding="{Binding KMCH}"
-                                Header="КМЧ" />
-                            <GridViewColumn
-                                Width="120"
-                                DisplayMemberBinding="{Binding FirstSensorType}"
-                                Header="Датчик 1" />
-                            <GridViewColumn
-                                Width="120"
-                                DisplayMemberBinding="{Binding SecondSensorType}"
-                                Header="Датчик 2" />
-                            <GridViewColumn
-                                Width="120"
-                                DisplayMemberBinding="{Binding ThirdSensorType}"
-                                Header="Датчик 3" />
-                        </GridView>
-                    </ListView.View>
+                    <!--  Внешняя рамка для визуального выделения секции  -->
+                    <Border
+                        Padding="8"
+                        Background="{DynamicResource PrimaryColor}"
+                        BorderBrush="{DynamicResource SecondaryColor}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        SnapsToDevicePixels="True">
+                        <Border.Effect>
+                            <DropShadowEffect
+                                BlurRadius="8"
+                                Opacity="0.6"
+                                ShadowDepth="2"
+                                Color="#22000000" />
+                        </Border.Effect>
 
-                    <ListView.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Command="{Binding ProjectCommandProvider.OpenObvSettingsWindowCommand}" Header="Создать обвязку" />
-                            <MenuItem Command="{Binding ProjectCommandProvider.FillStandFieldsFromObvyazkaCommand}" Header="Редактировать обвязку" />
-                            <Separator />
-                            <MenuItem Command="{Binding ProjectCommandProvider.RemoveObvFromStandCommand}" Header="Удалить обвязку из стенда" />
-                            <Separator />
-                            <MenuItem Command="{Binding ProjectCommandProvider.RenumerateObvInStandCommand}" Header="Пронумеровать обвязки заново" />
-                        </ContextMenu>
-                    </ListView.ContextMenu>
-                </ListView>
-            </GroupBox>
-
-            <GroupBox
-                Grid.Row="1"
-                Grid.Column="1"
-                MinHeight="250"
-                Margin="5"
-                Padding="5"
-                BorderThickness="0">
-                <GroupBox.Header>
-                    <TextBlock>
-                        <Run FontSize="16" Text="Обвязки в проекте — " />
-                        <Run
-                            FontSize="15"
-                            FontWeight="Bold"
-                            Text="{Binding CurrentProjectModel.Company, TargetNullValue='(нет данных)'}" />
-                    </TextBlock>
-                </GroupBox.Header>
-                <ListView
-                    MaxHeight="300"
-                    FontSize="15"
-                    ItemsSource="{Binding CurrentProjectModel.ObvyazkiInProject}"
-                    SelectedItem="{Binding CurrentProjectModel.SelectedObvyazkaToCopy}">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn
-                                Width="100"
-                                DisplayMemberBinding="{Binding ObvyazkaName}"
-                                Header="Тип" />
-                            <GridViewColumn
-                                Width="120"
-                                DisplayMemberBinding="{Binding MaterialLine}"
-                                Header="Материал" />
-                            <GridViewColumn
-                                Width="120"
-                                DisplayMemberBinding="{Binding Armature}"
-                                Header="Арматура" />
-                            <GridViewColumn
-                                Width="120"
-                                DisplayMemberBinding="{Binding TreeSocket}"
-                                Header="Тройник" />
-                            <GridViewColumn
-                                Width="120"
-                                DisplayMemberBinding="{Binding KMCH}"
-                                Header="КМЧ" />
-                            <GridViewColumn
-                                Width="120"
-                                DisplayMemberBinding="{Binding FirstSensorType}"
-                                Header="Датчик 1" />
-                            <GridViewColumn
-                                Width="120"
-                                DisplayMemberBinding="{Binding SecondSensorType}"
-                                Header="Датчик 2" />
-                            <GridViewColumn
-                                Width="120"
-                                DisplayMemberBinding="{Binding ThirdSensorType}"
-                                Header="Датчик 3" />
-                        </GridView>
-                    </ListView.View>
-                    <ListView.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}" Header="Скопировать в выбранный стенд" />
-                        </ContextMenu>
-                    </ListView.ContextMenu>
-                </ListView>
-            </GroupBox>
-
-            <!--  Объединённая секция: Чертёж стенда + инфо  -->
-            <GroupBox
-                Grid.Row="2"
-                Grid.RowSpan="2"
-                Grid.Column="1"
-                MinHeight="450"
-                Margin="5"
-                Padding="5"
-                BorderThickness="0">
-                <GroupBox.Header>
-                    <TextBlock>
-                        <Run FontSize="16" Text="Чертёж стенда и информация по обвязке — " />
-                        <Run
-                            FontSize="15"
-                            FontWeight="Bold"
-                            Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(ошибка привязки)'}" />
-                    </TextBlock>
-                </GroupBox.Header>
-
-                <!--  Внешняя рамка для визуального выделения секции  -->
-                <Border
-                    Padding="8"
-                    Background="{DynamicResource PrimaryColor}"
-                    BorderBrush="{DynamicResource SecondaryColor}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    SnapsToDevicePixels="True">
-                    <Border.Effect>
-                        <DropShadowEffect
-                            BlurRadius="8"
-                            Opacity="0.6"
-                            ShadowDepth="2"
-                            Color="#22000000" />
-                    </Border.Effect>
-
-                    <Grid Margin="0">
-                        <Grid.ColumnDefinitions>
-                            <!--  Поле чертежа: растягивается  -->
-                            <ColumnDefinition Width="*" MinWidth="100" />
-                            <!--  Полоска GridSplitter  -->
-                            <ColumnDefinition Width="6" />
-                            <!--  Правая панель: содержит картинку обвязки + информацию, сворачивается целиком  -->
-                            <ColumnDefinition Width="Auto" MinWidth="0" />
-                        </Grid.ColumnDefinitions>
-
-                        <!--  Stand drawing  -->
-                        <Border
-                            Grid.Column="0"
-                            Margin="0,0,10,0"
-                            Padding="6"
-                            VerticalAlignment="Stretch"
-                            Background="{DynamicResource SecondaryColor}"
-                            BorderBrush="{DynamicResource PrimaryForeground}"
-                            BorderThickness="1"
-                            CornerRadius="6"
-                            SnapsToDevicePixels="True">
-                            <Image
-                                x:Name="StandDrawingImage"
-                                Focusable="True"
-                                Source="{Binding CurrentProjectModel.SelectedStand.ImageData, Converter={StaticResource ByteArrayImageConverter}}"
-                                Stretch="Uniform" />
-                        </Border>
-
-                        <GridSplitter
-                            Grid.Column="1"
-                            Width="6"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Stretch"
-                            Background="{DynamicResource PrimaryForeground}"
-                            Cursor="SizeWE"
-                            ResizeBehavior="PreviousAndNext"
-                            ResizeDirection="Columns" />
-
-                        <!--  Правая объединённая панель (обвязка + инфо)  -->
-                        <Grid
-                            Grid.Column="2"
-                            MinWidth="0"
-                            HorizontalAlignment="Right">
+                        <Grid Margin="0">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" MinWidth="0" />
-                                <ColumnDefinition Width="*" MinWidth="0" />
+                                <!--  Поле чертежа: растягивается  -->
+                                <ColumnDefinition
+                                    Width="350"
+                                    MinWidth="350"
+                                    MaxWidth="810" />
+                                <!--  Полоска GridSplitter  -->
+                                <ColumnDefinition Width="6" />
+                                <!--  Правая панель: содержит картинку обвязки + информацию, сворачивается целиком  -->
+                                <ColumnDefinition
+                                    Width="*"
+                                    MinWidth="250"
+                                    MaxWidth="600" />
                             </Grid.ColumnDefinitions>
 
-                            <!--  Большая картинка обвязки  -->
+                            <!--  Stand drawing  -->
                             <Border
                                 Grid.Column="0"
-                                Width="220"
-                                Height="220"
-                                Margin="10,0,10,0"
-                                Padding="4"
-                                VerticalAlignment="Top"
+                                Margin="0,0,10,0"
+                                Padding="6"
+                                VerticalAlignment="Stretch"
                                 Background="{DynamicResource SecondaryColor}"
                                 BorderBrush="{DynamicResource PrimaryForeground}"
                                 BorderThickness="1"
-                                CornerRadius="6">
+                                CornerRadius="6"
+                                SnapsToDevicePixels="True">
                                 <Image
-                                    Width="210"
-                                    Height="210"
-                                    Source="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.ImageName, Converter={StaticResource ObvyazkaImagePathConverter}}"
+                                    x:Name="StandDrawingImage"
+                                    MaxWidth="1000"
+                                    MaxHeight="800"
+                                    Focusable="True"
+                                    Source="{Binding CurrentProjectModel.SelectedStand.ImageData, Converter={StaticResource ByteArrayImageConverter}}"
                                     Stretch="Uniform" />
                             </Border>
+
+                            <GridSplitter
+                                Grid.Column="1"
+                                Width="6"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Stretch"
+                                Background="{DynamicResource PrimaryForeground}"
+                                Cursor="SizeWE"
+                                ResizeBehavior="PreviousAndNext"
+                                ResizeDirection="Columns" />
+
+                            <!--  Правая объединённая панель (обвязка + инфо)  -->
+                            <Grid
+                                Grid.Column="2"
+                                MinWidth="0"
+                                HorizontalAlignment="Right">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" MinWidth="0" />
+                                    <ColumnDefinition Width="*" MinWidth="0" />
+                                </Grid.ColumnDefinitions>
+
+                                <!--  Большая картинка обвязки  -->
+                                <Border
+                                    Grid.Column="0"
+                                    Width="220"
+                                    Height="220"
+                                    Margin="10,0,10,0"
+                                    Padding="4"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Top"
+                                    Background="{DynamicResource SecondaryColor}"
+                                    BorderBrush="{DynamicResource PrimaryForeground}"
+                                    BorderThickness="1"
+                                    CornerRadius="6">
+                                    <Image
+                                        Width="210"
+                                        Height="210"
+                                        Source="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.ImageName, Converter={StaticResource ObvyazkaImagePathConverter}}"
+                                        Stretch="Uniform" />
+                                </Border>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </Border>
-            </GroupBox>
-
-            <!--  Электрические компоненты  -->
-            <GroupBox
-                Grid.Row="2"
-                Grid.Column="0"
-                Margin="5"
-                Padding="5"
-                BorderThickness="0">
-                <GroupBox.Header>
-                    <TextBlock>
-                        <Run FontSize="16" Text="Электрические компоненты в стенде — " />
-                        <Run
-                            FontSize="14"
-                            FontWeight="Bold"
-                            Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(ошибка привязки)'}" />
-                    </TextBlock>
-                </GroupBox.Header>
-                <DataGrid
-                    BeginningEdit="DataGrid_BeginningEdit"
-                    CanUserAddRows="True"
-                    FontSize="15"
-                    ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllElectricalPurposesInStand}"
-                    LoadingRow="DataGrid_LoadingRow"
-                    MouseDoubleClick="DataGrid_MouseDoubleClick"
-                    SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedElectricalComponent}">
-                    <DataGrid.RowStyle>
-                        <Style TargetType="DataGridRow">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding DataContext.CurrentProjectModel.SelectedStand.ElectricalPurposesChanges, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
-                                    <Setter Property="Background" Value="{DynamicResource UnsafeDetails}" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGrid.RowStyle>
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Material}"
-                            Header="Доп. комплектующее" />
-                        <DataGridTextColumn
-                            Width="70"
-                            Binding="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            Header="Кол-во" />
-                        <DataGridTextColumn
-                            Width="75"
-                            Binding="{Binding Measure}"
-                            Header="Ед. изм." />
-                        <DataGridTextColumn
-                            Width="70"
-                            Binding="{Binding CostPerUnit}"
-                            Header="Цена" />
-                        <DataGridTemplateColumn Width="90" Header="Выбрать">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button
-                                        Margin="2,0,2,0"
-                                        Padding="5,0,5,0"
-                                        Command="{Binding DataContext.ProjectCommandProvider.OpenAllSortamentsDialogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                        CommandParameter="{Binding}"
-                                        Content="Выбрать" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Width="70" Header="Авто">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <CheckBox
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        IsChecked="{Binding IsAutoCalculationEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                    <DataGrid.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Command="{Binding ProjectCommandProvider.UpdateElectricalComponentInStandCommand}" Header="Сохранить изменения" />
-                            <Separator />
-                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteElectricalComponentFromStandCommand}" Header="Удалить" />
-                        </ContextMenu>
-                    </DataGrid.ContextMenu>
-                </DataGrid>
-            </GroupBox>
-
-            <!--  Дополнительные компоненты в стенде  -->
-            <GroupBox
-                Grid.Row="3"
-                Grid.Column="0"
-                Margin="5"
-                Padding="5"
-                BorderThickness="0">
-                <GroupBox.Header>
-                    <TextBlock>
-                        <Run FontSize="16" Text="Дополнительные компоненты в стенде — " />
-                        <Run
-                            FontSize="14"
-                            FontWeight="Bold"
-                            Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(ошибка привязки)'}" />
-                    </TextBlock>
-                </GroupBox.Header>
-                <DataGrid
-                    BeginningEdit="DataGrid_BeginningEdit"
-                    CanUserAddRows="True"
-                    FontSize="15"
-                    ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand}"
-                    LoadingRow="DataGrid_LoadingRow"
-                    MouseDoubleClick="DataGrid_MouseDoubleClick"
-                    SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedAdditionalEquip}">
-                    <DataGrid.RowStyle>
-                        <Style TargetType="DataGridRow">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding DataContext.CurrentProjectModel.SelectedStand.AdditionalPurposesChanges, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
-                                    <Setter Property="Background" Value="{DynamicResource UnsafeDetails}" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGrid.RowStyle>
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Material}"
-                            Header="Доп. комплектующее" />
-                        <DataGridTextColumn Binding="{Binding Quantity}" Header="Кол-во" />
-                        <DataGridTextColumn Binding="{Binding Measure}" Header="Ед. изм." />
-                        <DataGridTextColumn Binding="{Binding CostPerUnit}" Header="Цена" />
-                        <DataGridTemplateColumn Header="Выбрать">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button
-                                        Margin="2,0,2,0"
-                                        Padding="5,0,5,0"
-                                        Command="{Binding DataContext.ProjectCommandProvider.OpenAllSortamentsDialogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                        CommandParameter="{Binding}"
-                                        Content="Выбрать" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Width="70" Header="Авто">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <CheckBox
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        IsChecked="{Binding IsAutoCalculationEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                    <DataGrid.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Command="{Binding ProjectCommandProvider.UpdateAdditionalComponentInStandCommand}" Header="Сохранить изменения" />
-                            <Separator />
-                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteAdditionalComponentFromStandCommand}" Header="Удалить" />
-                        </ContextMenu>
-                    </DataGrid.ContextMenu>
-                </DataGrid>
-            </GroupBox>
-
-            <!--  Дренаж в стенде  -->
-            <GroupBox
-                Grid.Row="4"
-                Grid.Column="0"
-                Margin="5"
-                Padding="5"
-                BorderThickness="0">
-                <GroupBox.Header>
-                    <TextBlock>
-                        <Run FontSize="16" Text="Дренаж в стенде — " />
-                        <Run
-                            FontSize="14"
-                            FontWeight="Bold"
-                            Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(ошибка привязки)'}" />
-                    </TextBlock>
-                </GroupBox.Header>
-                <DataGrid
-                    BeginningEdit="DataGrid_BeginningEdit"
-                    CanUserAddRows="True"
-                    FontSize="15"
-                    ItemsSource="{Binding CurrentProjectModel.SelectedStand.AllDrainagePurposesInStand}"
-                    LoadingRow="DataGrid_LoadingRow"
-                    MouseDoubleClick="DataGrid_MouseDoubleClick"
-                    SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedDrainagePurpose}">
-                    <DataGrid.RowStyle>
-                        <Style TargetType="DataGridRow">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding DataContext.CurrentProjectModel.SelectedStand.DrainagePurposesChanges, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
-                                    <Setter Property="Background" Value="{DynamicResource UnsafeDetails}" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGrid.RowStyle>
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Purpose}" Header="Назначение" />
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Material}"
-                            Header="Материал" />
-                        <DataGridTextColumn Binding="{Binding Quantity}" Header="Кол-во" />
-                        <DataGridTextColumn Binding="{Binding Measure}" Header="Ед. изм." />
-                        <DataGridTextColumn Binding="{Binding CostPerUnit}" Header="Цена" />
-                        <DataGridTemplateColumn Header="Выбрать">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button
-                                        Margin="2,0,2,0"
-                                        Padding="5,0,5,0"
-                                        Command="{Binding DataContext.ProjectCommandProvider.OpenAllSortamentsDialogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                        CommandParameter="{Binding}"
-                                        Content="Выбрать" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Width="70" Header="Авто">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <CheckBox
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        IsChecked="{Binding IsAutoCalculationEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                    <DataGrid.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Command="{Binding ProjectCommandProvider.UpdateDrainageComponentInStandCommand}" Header="Сохранить изменения" />
-                            <Separator />
-                            <MenuItem Command="{Binding ProjectCommandProvider.DeleteDrainageComponentFromStandCommand}" Header="Удалить" />
-                        </ContextMenu>
-                    </DataGrid.ContextMenu>
-                </DataGrid>
-            </GroupBox>
-
-            <StackPanel
-                Grid.Row="5"
-                Grid.Column="0"
-                Margin="5"
-                HorizontalAlignment="Right">
-                <Button
-                    Width="165"
-                    Height="30"
-                    Command="{Binding ProjectCommandProvider.SaveAllChangesInComponentsCommand}"
-                    Content="Сохранить все изменения" />
-            </StackPanel>
+                    </Border>
+                </GroupBox>
+            </Grid>
         </Grid>
     </ScrollViewer>
 </UserControl>

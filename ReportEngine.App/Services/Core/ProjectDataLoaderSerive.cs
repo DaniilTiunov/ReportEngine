@@ -9,8 +9,8 @@ namespace ReportEngine.App.Services.Core;
 
 public class ProjectDataLoaderSerive : IProjectDataLoaderService
 {
-    private readonly IStandService _standService;
     private readonly IProjectInfoRepository _projectInfoRepository;
+    private readonly IStandService _standService;
 
     public ProjectDataLoaderSerive(IStandService standService, IProjectInfoRepository projectInfoRepository)
     {
@@ -23,6 +23,7 @@ public class ProjectDataLoaderSerive : IProjectDataLoaderService
         var projectInfo = await _projectInfoRepository.GetStandsByIdAsync(projectId);
         var standsEntities = projectInfo.Stands;
 
+        viewModel.CurrentProjectModel.Stands.Clear();
         foreach (var standEntity in standsEntities)
         {
             var standModel = StandDataConverter.ConvertToStandModel(standEntity);

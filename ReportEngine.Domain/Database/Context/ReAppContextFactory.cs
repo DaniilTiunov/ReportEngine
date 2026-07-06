@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using ReportEngine.Domain.Database.DbSettings;
 
 namespace ReportEngine.Domain.Database.Context;
 
@@ -8,8 +9,11 @@ public class ReAppContextFactory : IDesignTimeDbContextFactory<ReAppContext>
     public ReAppContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<ReAppContext>();
-        optionsBuilder.UseNpgsql(
-            "Host=172.16.0.210;Port=5432;Database=reportengine;Username=postgres;Password=postgres");
+
+        DbContextOptionsFactory.Configure(
+            optionsBuilder,
+            "Online");
+
         return new ReAppContext(optionsBuilder.Options);
     }
 }

@@ -8,6 +8,8 @@ public interface IContainerRepository : IBaseRepository<ContainerBatch>
 
     Task<IEnumerable<ContainerBatch>> GetAllByProjectIdAsync(int projectId);
 
+    Task<IEnumerable<ContainerBatch>> GetAllProjectBatchesInfoAsync(int projectId);
+
     Task AddContainerToBatchAsync(int batchId, ContainerStand container);
 
     Task RemoveContainerFromBatchAsync(int batchId, int containerId);
@@ -17,4 +19,6 @@ public interface IContainerRepository : IBaseRepository<ContainerBatch>
     Task RemoveStandFromContainerAsync(int containerId, int standId);
 
     Task DeleteContainerAsync(int containerId);
+
+    Task UpdateContainerAsync(ContainerStand container);
 }

@@ -1,10 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
-using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
-using ReportEngine.App.Display;
 using ReportEngine.App.Model;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.Services.Notification;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Repositories.Interfaces;
 
@@ -17,6 +16,8 @@ namespace ReportEngine.App.ViewModels;
 public class GenericEquipViewModel<T> : BaseViewModel
     where T : class, IBaseEquip, new() // Ограничение: T должен реализовывать интерфейс IBaseEquip
 {
+    private readonly ExceptionService _exceptionService;
+
     private readonly IGenericBaseRepository<T, T>
         _genericEquipRepository; // Репозиторий для работы с данными оборудования
 
@@ -24,11 +25,13 @@ public class GenericEquipViewModel<T> : BaseViewModel
 
     public GenericEquipViewModel(
         IGenericBaseRepository<T, T> genericEquipRepository,
-        INotificationService notificationService)
+        INotificationService notificationService,
+        ExceptionService exceptionService)
     {
         InitializeCommands(); // Инициализируем команды
         _genericEquipRepository = genericEquipRepository; // Устанавливаем репозиторий
         _notificationService = notificationService;
+        _exceptionService = exceptionService;
     }
 
     public Action<T> SelectionHandler { get; set; }
@@ -94,7 +97,7 @@ public class GenericEquipViewModel<T> : BaseViewModel
 
     private async Task LoadAllBaseEquipsAsync()
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             var items = await _genericEquipRepository.GetAllAsync();
             var baseEquips = items.OfType<T>().ToList();
@@ -113,7 +116,7 @@ public class GenericEquipViewModel<T> : BaseViewModel
 
     private async Task AddBaseEquipAsync()
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             var newEquip = new T();
             GenericEquipModel.BaseEquips.Add(newEquip);
@@ -123,7 +126,7 @@ public class GenericEquipViewModel<T> : BaseViewModel
 
     private async Task SaveChangesAsync()
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             foreach (var equip in GenericEquipModel.BaseEquips)
             {
@@ -144,7 +147,7 @@ public class GenericEquipViewModel<T> : BaseViewModel
 
     private async Task RemoveSelectedBaseEquipAsync()
     {
-        await ExceptionHelper.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             var selectedEquip = GenericEquipModel.SelectedBaseEquip;
             if (selectedEquip == null)

@@ -46,6 +46,33 @@ public class MarksReportGenerator : IReportGenerator
         }
     }
 
+    public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
+    {
+        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+
+        using (var wb = new XLWorkbook())
+        {
+            var ws = wb.Worksheets.Add("Проект");
+
+            CreateWorksheetTableHeader(ws);
+            FillWorksheetTable(ws, project, selectedStands);
+
+            ws.Cells().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            ws.Cells().Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+            ws.Cells().Style.Alignment.WrapText = true;
+            ws.Columns().AdjustToContents();
+
+            var savePath = SettingsManager.GetReportDirectory();
+
+            var fileName = ExcelReportHelper.CreateReportName("Маркировка", "xlsx");
+            var fullSavePath = Path.Combine(savePath, fileName);
+
+            Debug.WriteLine("Отчёт сохранён: " + fullSavePath);
+            wb.SaveAs(fullSavePath);
+        }
+    }
+
     private void CreateWorksheetTableHeader(IXLWorksheet ws)
     {
         var headerRange = ws.Range("A1:D1");
@@ -61,10 +88,13 @@ public class MarksReportGenerator : IReportGenerator
         headerRange.Style.Font.SetBold();
     }
 
-    private void FillWorksheetTable(IXLWorksheet ws, ProjectInfo project)
+    private void FillWorksheetTable(IXLWorksheet ws, ProjectInfo project, List<Stand>? selectedStands = null)
     {
-        //формируем все необходимые записи
-        var allRecords = project.Stands
+        var sourceData = project.Stands;
+
+        if (selectedStands != null) sourceData = selectedStands;
+
+        var allRecords = sourceData
             .SelectMany(
                 stand => stand.ObvyazkiInStand,
                 (stand, obv) => new
