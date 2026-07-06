@@ -208,6 +208,7 @@ public class HostFactory
         services.AddScoped<IReportGenerator, FinPlanReportGenerator>();
         services.AddScoped<IReportGenerator, PassportsGenerator>();
         services.AddScoped<IReportGenerator, TechnologicalCardsGenerator>();
+        services.AddScoped<FlatSummaryReportGenerator>();
     }
 
     private static void ConfigureViewModels(IServiceCollection services)
