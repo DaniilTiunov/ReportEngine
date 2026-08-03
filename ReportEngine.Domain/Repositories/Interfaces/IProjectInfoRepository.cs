@@ -44,4 +44,6 @@ public interface IProjectInfoRepository : IBaseRepository<ProjectInfo>
     Task UpdateObvInStandAsync(int standId, ObvyazkaInStand standObvyazka);
 
     Task DeleteFrameFromStandAsync(int standFrameId);
+
+    Task<ProjectInfo?> GetFullProjectAsync(int projectId);
 }

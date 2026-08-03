@@ -10,5 +10,6 @@ public enum ReportType
     ContainerReport, // Тара
     NameplatesReport, // Шильдики и таблички
     PassportsReport, // Паспорт
-    TechnologicalCards // Технологические карты
+    TechnologicalCards, // Технологические карты
+    FlatSummaryReport
 }

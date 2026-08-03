@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
-using ReportEngine.App.Services.Notification;
 using ReportEngine.Domain.Store;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
@@ -26,11 +25,18 @@ public static class StartUp
 
             var mainWindow = host.Services.GetRequiredService<MainWindow>();
 
-            var parametersStore = host.Services.GetRequiredService<ParametersStore>();
-
-            parametersStore.LoadSettingsDataAsync().GetAwaiter().GetResult();
-
-            Thread.Sleep(1000);
+            try
+            {
+                host.Services
+                    .GetRequiredService<ParametersStore>()
+                    .LoadSettingsDataAsync()
+                    .GetAwaiter()
+                    .GetResult();
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Ошибка загрузки ParameterStore");
+            }
 
             app.MainWindow = mainWindow;
 

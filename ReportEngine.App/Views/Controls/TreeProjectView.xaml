@@ -129,6 +129,14 @@
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
                                 </TreeViewItem>
+
+                                <TreeViewItem Header="1C" IsExpanded="True">
+                                    <TreeViewItem Header="Сводная ведомость (1C)" Tag="SummaryReport">
+                                        <TreeViewItem.InputBindings>
+                                            <MouseBinding Command="{Binding CreateFlatSummaryReportCommandAsync}" Gesture="LeftDoubleClick" />
+                                        </TreeViewItem.InputBindings>
+                                    </TreeViewItem>
+                                </TreeViewItem>
                             </TreeView>
 
                         </avalonDock:LayoutAnchorable>
