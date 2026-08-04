@@ -49,6 +49,22 @@ public partial class AllSortamentsView : Window
         if (e.Source is not TabControl) return;
         if ((sender as TabControl)?.SelectedItem is not TabItem selectedTab) return;
 
+        // Перед сменой данных отменяем текущее редактирование в DataGrid —
+        // предотвращает NullReferenceException внутри DataGrid.UpdateRowEditing
+        // когда колонки/ItemsSource меняются во время редактирования.
+        try
+        {
+            if (EquipDataGrid.IsReadOnly == false)
+            {
+                // Попытка откатить текущее редактирование
+                EquipDataGrid.CancelEdit(DataGridEditingUnit.Row);
+            }
+        }
+        catch
+        {
+            // Безопасно игнорируем исключения при отмене редактирования
+        }
+
         ResetAllSubTabControls();
 
         var groupKey = selectedTab.Tag as string;
@@ -67,7 +83,7 @@ public partial class AllSortamentsView : Window
     {
         foreach (var mainTabItem in MainTabControl.Items)
             if (mainTabItem is TabItem tabItem && tabItem.Content is TabControl subTabControl)
-                subTabControl.SelectedIndex = -1;
+               subTabControl.SelectedIndex = -1;
     }
 
     private void SelectEquip_DoubleClick(object sender, MouseButtonEventArgs e)
@@ -79,7 +95,7 @@ public partial class AllSortamentsView : Window
         }
         else
         {
-            Close();
+            //Close();
         }
     }
 
