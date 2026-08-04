@@ -18,9 +18,10 @@ public partial class UpdateInfoView : Window
     public UpdateInfoView(ExceptionService exceptionService)
     {
         InitializeComponent();
+        _exceptionService = exceptionService;
         LoadUpdateHistory();
         DataContext = this;
-        _exceptionService = exceptionService;
+        
     }
 
     public List<UpdateInfo> Updates { get; set; }
