@@ -333,18 +333,30 @@ public class MainWindowViewModel : BaseViewModel
         if (!result)
             return;
 
+
+
         var currentProject = MainWindowModel.SelectedProject;
+
+
+        var deletingProjectInfo = new
+        {
+            OrderCustomer = currentProject.OrderCustomer,
+            Description = currentProject.Description
+        };
+            
         await _projectRepository.DeleteAsync(currentProject);
         await ShowAllProjectsAsync();
 
         _notificationService.ShowInfo("Проект успешно удалён");
 
-        _logger.Success($"Удалён проект {MainWindowModel.SelectedProject.OrderCustomer} Статус: Успешно");
+        _logger.Success($"Удалён проект {deletingProjectInfo.Description} " +
+            $"c заказом покупателя {deletingProjectInfo.OrderCustomer} " +
+            $"Статус: Успешно");
 
         await _auditService.LogEventAsync(
             _sessionService.CurrentUser.UserLogin,
-            $"Пользователь {_sessionService.CurrentUser.UserLogin} удалил проект {currentProject.OrderCustomer}",
-            $"Удаление проекта с заказом покупателя {currentProject.OrderCustomer}");
+            $"Пользователь {_sessionService.CurrentUser.UserLogin} удалил проект {deletingProjectInfo.Description}",
+            $"Удаление проекта с заказом покупателя {deletingProjectInfo.OrderCustomer}");
     }
 
     private async Task RecalculateProjectAsync()

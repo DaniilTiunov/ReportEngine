@@ -6,14 +6,16 @@ public static class StoreKeys
     {
         "LeadEngineer",
         "AcceptanceSupervisor",
-        "SpecialistL2"
+        "SpecialistL2",
+        "OsilRep"
     };
 
     public static readonly string[] ElectricRequired =
     {
         "ElectricalInstallCost",
         "WireInstallTime",
-        "CableInstallTime"
+        "CableInstallTime",
+        "Cable6mmQuantity"
     };
 
     public static readonly string[] HumanCostRequired =

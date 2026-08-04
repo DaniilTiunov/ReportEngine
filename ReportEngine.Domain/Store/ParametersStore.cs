@@ -53,6 +53,7 @@ public class ParametersStore
             .Select(keyParamPair => keyParamPair.Value)
             .ToList();
 
+
         foreach (var parameter in allParameters)
         {
             //если нет ссылки на внешний компонент - пропускаем

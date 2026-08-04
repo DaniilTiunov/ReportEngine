@@ -882,6 +882,8 @@ public class ProjectViewModel : BaseViewModel
         {
             var selectedStandEntity = _dialogService.ShowSelectStandDialog();
 
+            if (selectedStandEntity == null) { return; }
+
             await _dialogService.RunWithProgressDialogAsync(async () =>
             {
                 var newStand = await _entityStandCloner.CloneStandEntity(selectedStandEntity);
