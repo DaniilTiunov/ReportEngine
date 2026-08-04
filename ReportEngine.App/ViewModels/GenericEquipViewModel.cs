@@ -37,6 +37,16 @@ public class GenericEquipViewModel<T> : BaseViewModel
     public Action<T> SelectionHandler { get; set; }
     public GenericEquipModel<T, T> GenericEquipModel { get; set; } = new();
 
+    // Динамический источник единиц измерения для ComboBox в DataGrid
+    public ObservableCollection<string> Measures { get; set; } = new()
+    {
+        "шт",
+        "м",
+        "компл",
+        "упак",
+        "ед"
+    };
+
     public void InitializeCommands()
     {
         // Инициализируем команду для отображения всего оборудования

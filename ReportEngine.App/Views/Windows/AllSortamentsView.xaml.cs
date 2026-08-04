@@ -50,20 +50,15 @@ public partial class AllSortamentsView : Window
         if ((sender as TabControl)?.SelectedItem is not TabItem selectedTab) return;
 
         // Перед сменой данных отменяем текущее редактирование в DataGrid —
-        // предотвращает NullReferenceException внутри DataGrid.UpdateRowEditing
         // когда колонки/ItemsSource меняются во время редактирования.
         try
         {
             if (EquipDataGrid.IsReadOnly == false)
             {
-                // Попытка откатить текущее редактирование
                 EquipDataGrid.CancelEdit(DataGridEditingUnit.Row);
             }
         }
-        catch
-        {
-            // Безопасно игнорируем исключения при отмене редактирования
-        }
+        catch { }
 
         ResetAllSubTabControls();
 
@@ -92,10 +87,6 @@ public partial class AllSortamentsView : Window
         {
             _viewModel.SelectionHandler?.Invoke(_viewModel.SelectedEquip);
             Close();
-        }
-        else
-        {
-            //Close();
         }
     }
 
