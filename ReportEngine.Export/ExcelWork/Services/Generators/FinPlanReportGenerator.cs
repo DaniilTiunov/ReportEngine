@@ -35,8 +35,11 @@ public class FinPlanReportGenerator : IReportGenerator
     public async Task GenerateAsync(int projectId)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
-
         var pipes = await _pipesRepository.GetAllAsync();
+
+
+        //принудительно загружаем настройки при генерации отчета
+        await _parametersStore.LoadSettingsDataAsync();
 
         using (var wb = new XLWorkbook())
         {
@@ -287,6 +290,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
         PasteSeparatorRow(activeRow, ws);
         activeRow++;
+
 
         var generatedLaborData = ExcelReportHelper.GenerateLaborData(sourceData, _parametersStore, project, pipes);
         var laborRecords = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);

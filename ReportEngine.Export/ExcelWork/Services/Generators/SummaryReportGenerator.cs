@@ -40,6 +40,9 @@ public class SummaryReportGenerator : IReportGenerator
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
         var pipes = await _pipesRepository.GetAllAsync();
 
+        //принудительно загружаем настройки при генерации отчета
+        await _parametersStore.LoadSettingsDataAsync();
+
         using (var wb = new XLWorkbook())
         {
             var standNumber = 1;
@@ -49,7 +52,7 @@ public class SummaryReportGenerator : IReportGenerator
                 var ws = wb.Worksheets.Add($"{standNumber}");
 
                 CreateStandTableHeader(ws, stand, XLAlignmentHorizontalValues.Center);
-                FillStandTable(ws, stand, project, pipes);
+                await FillStandTable(ws, stand, project, pipes);
 
                 ws.Columns().Style.Alignment.WrapText = false;
                 ws.Rows().Style.Alignment.WrapText = false;
@@ -109,7 +112,7 @@ public class SummaryReportGenerator : IReportGenerator
                 var ws = wb.Worksheets.Add($"{standNumber}");
 
                 CreateStandTableHeader(ws, stand, XLAlignmentHorizontalValues.Center);
-                FillStandTable(ws, stand, project, pipes);
+                await FillStandTable(ws, stand, project, pipes);
 
                 ws.Columns().Style.Alignment.WrapText = false;
                 ws.Rows().Style.Alignment.WrapText = false;
@@ -382,7 +385,7 @@ public class SummaryReportGenerator : IReportGenerator
     }
 
     //заполняет таблицу для стенда
-    private void FillStandTable(
+    private async Task FillStandTable(
         IXLWorksheet ws,
         Stand stand,
         ProjectInfo project,
@@ -439,6 +442,8 @@ public class SummaryReportGenerator : IReportGenerator
 
         var allPartsList = ExcelReportHelper.GenerateAllPartsCollection(generatedPartsData);
         activeRow = CreateUsualTotalRecord(activeRow, "Итого по категории:", allPartsList, ws);
+
+ 
 
         var generatedLaborData =
             ExcelReportHelper.GenerateLaborData(standList, _parametersStore, project, stainlessPipes);

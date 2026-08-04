@@ -5,6 +5,7 @@ using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Generators;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
+using ReportEngine.Shared.Config.DebugConsol;
 
 namespace ReportEngine.App.ViewModels.TreeView;
 
@@ -13,7 +14,8 @@ public class TreeViewModel
     private readonly ICalculationService _calculationService;
     private readonly IDialogService _dialogService;
     private readonly INotificationService _notificationService;
-    private readonly ProjectModel _project;
+    private ProjectModel _project => _projectViewModel.CurrentProjectModel;
+    private readonly ProjectViewModel _projectViewModel;
     private readonly IReportService _reportService;
     private readonly UpdaterStandService _updaterStandService;
     private readonly FlatSummaryReportGenerator _flatSummaryReportGenerator;
@@ -33,7 +35,7 @@ public class TreeViewModel
         _calculationService = calculationService;
         _updaterStandService = updaterStandService;
         _flatSummaryReportGenerator = flatSummaryReportGenerator;
-        _project = projectViewModel.CurrentProjectModel;
+        _projectViewModel = projectViewModel;
 
         InitializeCommands();
     }
@@ -55,63 +57,64 @@ public class TreeViewModel
     {
         CreateSummaryReportAsync = CreateReportCommand(
             ReportType.SummaryReport,
-            $"""
+            () => $"""
              Сводная ведомость создана по проекту:
              Заказ покупателя: {_project.OrderCustomer}
              Обозначение КД: {_project.Description}
              """);
+
         CreateComponentsListReportAsync = CreateReportCommand(
             ReportType.ComponentsListReport,
-            $"""
+            () => $"""
              Ведомость комплектующих создана про проекту:
              Заказ покупателя: {_project.OrderCustomer}
              Обозначение КД: {_project.Description}
              """);
         CreateNamePlatesReportAsync = CreateReportCommand(
             ReportType.NameplatesReport,
-            $"""
+            () => $"""
              Ведомость шильдиков и табличек создана по проекту:
              Заказ покупателя: {_project.OrderCustomer}
              Обозначение КД: {_project.Description}
              """);
         CreateMarksReportReportAsync = CreateReportCommand(
             ReportType.MarksReport,
-            $"""
+            () => $"""
              Ведомость маркировки создана по проекту:
              Заказ покупателя: {_project.OrderCustomer}
              Обозначение КД: {_project.Description}
              """);
         CreateProductionListReportAsync = CreateReportCommand(
             ReportType.ProductionReport,
-            $"""
+            () => $"""
              Ведомость производства создана по проекту:
              Заказ покупателя: {_project.OrderCustomer}
              Обозначение КД: {_project.Description}
              """);
         CreateFinPlanReportAsync = CreateReportCommand(
             ReportType.FinPlanReport,
-            $"""
+            () => $"""
              Фин. план создан по проекту:
              Заказ покупателя: {_project.OrderCustomer}
              Обозначение КД: {_project.Description}
              """);
         CreateContainersReportReportAsync = CreateReportCommand(
             ReportType.ContainerReport,
-            $"""
+            () => $"""
              Ведомость тары создана по проекту:
              Заказ покупателя: {_project.OrderCustomer}
              Обозначение КД: {_project.Description}
              """);
         CreatePassportReportAsync = CreateReportCommand(
             ReportType.PassportsReport,
-            $"""
+            () => $"""
              Ведомость паспортов создана по проекту:
              Заказ покупателя: {_project.OrderCustomer}
              Обозначение КД: {_project.Description}
              """);
         CreateTechCardsReportAsync = CreateReportCommand(
             ReportType.TechnologicalCards,
-            $"""
+            () => $"""
              Ведомость технологических карт создана по проекту:
              Заказ покупателя: {_project.OrderCustomer}
              Обозначение КД: {_project.Description}
@@ -125,7 +128,7 @@ public class TreeViewModel
             new AsyncRelayCommand(CreateFlatSummaryReportAsync);
     }
 
-    private IAsyncCommand CreateReportCommand(ReportType type, string successMessage)
+    private IAsyncCommand CreateReportCommand(ReportType type, Func<string> successMessageFactory)
     {
         return new AsyncRelayCommand(async _ =>
         {
@@ -136,12 +139,15 @@ public class TreeViewModel
                     _project.CurrentProjectId);
             });
 
-            _notificationService.ShowInfo(successMessage);
+            _notificationService.ShowInfo(successMessageFactory());
         });
     }
 
+
+
     private async Task CreateFlatSummaryReportAsync(object obj)
     {
+
         await _dialogService.RunWithProgressDialogAsync(async () =>
         {
             await _flatSummaryReportGenerator.GenerateAsync(_project.CurrentProjectId);

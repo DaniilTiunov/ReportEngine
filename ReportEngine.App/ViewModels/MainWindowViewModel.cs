@@ -188,6 +188,9 @@ public class MainWindowViewModel : BaseViewModel
                 _navigation.ShowContent<TreeProjectView>();
                 _logger.Success($"Отрыт проект {MainWindowModel.SelectedProject.OrderCustomer} Статус: Успешно");
             });
+
+
+            
         });
     }
 

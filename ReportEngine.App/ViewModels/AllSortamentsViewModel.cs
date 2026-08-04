@@ -18,6 +18,7 @@ namespace ReportEngine.App.ViewModels;
 
 public class AllSortamentsViewModel : BaseViewModel
 {
+
     private readonly Dictionary<string, Type> _equipTypeMap = new()
     {
         { "Трубы\\Жаропрочные", typeof(HeaterPipe) },
@@ -44,6 +45,9 @@ public class AllSortamentsViewModel : BaseViewModel
         { "Прочие", typeof(Other) },
         { "Тара", typeof(Container) }
     };
+
+
+    private readonly List<string> _comboBoxUnits = new List<string> { "шт", "м", "компл.", "ед." };
 
     // Словарь текущих задач загрузки по ключу группы — предотвращает параллельный доступ
     private readonly ConcurrentDictionary<string, Task> _loadingTasks = new();
@@ -117,11 +121,27 @@ public class AllSortamentsViewModel : BaseViewModel
             if (property.Name == "Id")
                 continue;
 
-            var column = new DataGridTextColumn
-            {
-                Header = GenericEquipMapper.GetColumnName(property.Name),
-                Binding = new Binding(property.Name)
-            };
+            bool isUnitsProperty = property.Name.StartsWith("Unit") || property.Name.StartsWith("Measure");
+            //isUnitsProperty = false;
+
+            //формируем колонку в таблице
+            //если единицы измерения - выпадающий список
+
+            DataGridColumn column = isUnitsProperty
+               ?
+               new DataGridComboBoxColumn
+               {
+                   Header = GenericEquipMapper.GetColumnName(property.Name),
+                   ItemsSource = _comboBoxUnits,
+                   SelectedItemBinding = new Binding(property.Name)
+               }
+               :
+               new DataGridTextColumn
+               {
+                   Header = GenericEquipMapper.GetColumnName(property.Name),
+                   Binding = new Binding(property.Name)
+               };
+
 
             if (property.Name == "Name")
                 column.Width = new DataGridLength(1, DataGridLengthUnitType.SizeToCells);
