@@ -49,10 +49,12 @@ public class SessionService : INotifyPropertyChanged
 
     public async void SignOut()
     {
+        if (CurrentUser == null) { return; }
+
         await _auditService.LogEventAsync(
             CurrentUser.UserLogin,
-            "Выполнен выход в систему",
-            $"Пользователь {CurrentUser.UserLogin} вышёл из систему");
+            "Выполнен выход из системы",
+            $"Пользователь {CurrentUser.UserLogin} вышёл из системы");
 
         CurrentUser = null;
     }
