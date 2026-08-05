@@ -551,7 +551,7 @@ public class ProjectViewModel : BaseViewModel
             if (!isAlreadyExist)
                 CurrentProjectModel.ObvyazkiInProject.Add(entity);
 
-            CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand.ObvyazkaAdditionalComponents); 
+            CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand.ObvyazkaAdditionalComponents);
 
             await LoadObvyazkiAsync(); // Перезагрузить данные из БД 
 
@@ -925,9 +925,20 @@ public class ProjectViewModel : BaseViewModel
 
                 await _projectRepository.AddStandAsync(CurrentProjectModel.CurrentProjectId, newStand);
 
-                CurrentProjectModel.Stands.Add(StandDataConverter.ConvertToStandModel(newStand));
+                var convertedStandModel = StandDataConverter.ConvertToStandModel(newStand);
 
-                await LoadStandsDataAsync();
+
+
+                CurrentProjectModel.Stands.Add(convertedStandModel);
+
+                
+
+                //костыль - чтобы при добавлении стенда подгрузить все
+                await _standService.LoadPurposesInStands([convertedStandModel]);
+                await _standService.LoadObvyazkiInStandsAsync([convertedStandModel]);
+
+                CurrentProjectModel.SelectedStand = convertedStandModel;
+
             });
 
             _notificationService.ShowInfo("Стенд успешно добавлен!");
