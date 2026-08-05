@@ -1362,6 +1362,10 @@ public class ProjectViewModel : BaseViewModel
 
         _notificationService.ShowInfo("Стенд успешно добавлен!");
 
+        //костылек - после создания стенда данные по доп комплектующим не были синхронизированы
+        //после создания стенда тут же запрашиваем обновленные данные по доп комплектующими
+        await _standService.LoadStandsDataAsync([newStandModel]);
+
         await _auditService.LogEventAsync(
             _sessionService.CurrentUser.UserLogin,
             $"Пользователь {_sessionService.CurrentUser.UserLogin} добавил стенд в проект {addedStandEntity.KKSCode}",
