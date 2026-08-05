@@ -150,6 +150,10 @@ public class ProjectViewModel : BaseViewModel
         {
             CurrentProjectModel.SelectedStand.ObvyazkaAdditionalComponents.Clear();
 
+
+            //перед открытием создания обвязки обновляем номер в окне
+            UpdateNewObvNN();
+
             _dialogService.ShowObvSettingsWindow(this);
         });
     }
