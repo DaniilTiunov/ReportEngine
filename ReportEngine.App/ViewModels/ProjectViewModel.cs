@@ -923,6 +923,8 @@ public class ProjectViewModel : BaseViewModel
             {
                 var newStand = await _entityStandCloner.CloneStandEntity(selectedStandEntity);
 
+                newStand.Number = MaxStandNN + 1;
+
                 await _projectRepository.AddStandAsync(CurrentProjectModel.CurrentProjectId, newStand);
 
                 var convertedStandModel = StandDataConverter.ConvertToStandModel(newStand);
