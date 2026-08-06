@@ -150,6 +150,10 @@ public class ProjectViewModel : BaseViewModel
         {
             CurrentProjectModel.SelectedStand.ObvyazkaAdditionalComponents.Clear();
 
+
+            //перед открытием создания обвязки обновляем номер в окне
+            UpdateNewObvNN();
+
             _dialogService.ShowObvSettingsWindow(this);
         });
     }
@@ -509,10 +513,10 @@ public class ProjectViewModel : BaseViewModel
     {
         var selectedStand = CurrentProjectModel?.SelectedStand;
 
-        if (Guard.ExitIfNull("Не был выбран стенд", _notificationService, selectedStand))
+        if (Guard.ExitIfNull("Не был выбран стенд!", _notificationService, selectedStand))
             return;
 
-        if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka))
+        if (Guard.ExitIfNull("Не был выбран тип обвязки!", _notificationService, SelectedObvyazka))
             return;
 
 
@@ -526,7 +530,7 @@ public class ProjectViewModel : BaseViewModel
         if (!freeNN)
             return;
 
-
+        //Валидация по количеству датчиков в обвязке
         //var isCorrectSensorsData = _uiValidatorService.ValidateSensorsQuantityInNewObv(this);
 
         //if (!isCorrectSensorsData)
@@ -534,8 +538,22 @@ public class ProjectViewModel : BaseViewModel
 
         await _exceptionService.SafeExecuteAsync(async () =>
         {
-            await AddObvToStandAsync();
-            await LoadObvyazkiAsync(); // Перезагрузить данные из БД
+            var entity = await _standService.CreateObvyazkaAsync(selectedStand, SelectedObvyazka);
+
+            if (Guard.ExitIfNull("Не удалось создать обвязку!", _notificationService, entity))
+                return;
+
+            await _standService.AddObvyazkaToStandAsync(selectedStand.Id, entity);
+
+            //сравнение по типу
+            var isAlreadyExist = CurrentProjectModel.ObvyazkiInProject.Any(obv => obv.ObvyazkaName == entity.ObvyazkaName);
+
+            if (!isAlreadyExist)
+                CurrentProjectModel.ObvyazkiInProject.Add(entity);
+
+            CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand.ObvyazkaAdditionalComponents);
+
+            await LoadObvyazkiAsync(); // Перезагрузить данные из БД 
 
             UpdateNewObvNN();
             OnObvyazkiInStandChanged();
@@ -552,22 +570,39 @@ public class ProjectViewModel : BaseViewModel
                 CurrentProjectModel.SelectedStand));
     }
 
+
+    //TODO: перенести в отдельный  метод
     public async void OnUpdateAdditionalEquipFromObvCommandExecuted(object e)
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
             var stand = CurrentProjectModel.SelectedStand;
 
-            if (Guard.ExitIfNull("Стенд не выбран!", _notificationService, stand))
-                return;
-
-            var obvyazki = stand.ObvyazkaAdditionalComponents.ToList();
-
-            foreach (var obv in obvyazki)
+            if (stand == null)
             {
-                if (obv.Id == 0) obv.ObvyazkaInStandId = stand.SelectedObvyazkaInStand?.Id;
+                _notificationService.ShowError("Стенд не выбран!");
+                return;
+            }
 
-                await _standService.UpdateAdditionalPurposeFromObvAsync(obv, obv.ObvyazkaInStandId ?? 0);
+            if (stand.SelectedObvyazkaInStand == null)
+            {
+                _notificationService.ShowError("Обвязка не выбрана!");
+                return;
+            }
+
+            if (stand.SelectedObvyazkaInStand.Id == 0)
+            {
+                _notificationService.ShowError("Сначала сохраните обвязку!");
+                return;
+            }
+
+            var obvComponents = stand.ObvyazkaAdditionalComponents.ToList();
+
+            foreach (var obvComponent in obvComponents)
+            {
+                if (obvComponent.Id == 0) obvComponent.ObvyazkaInStandId = stand.SelectedObvyazkaInStand?.Id;
+
+                await _standService.UpdateAdditionalPurposeFromObvAsync(obvComponent, obvComponent.ObvyazkaInStandId ?? 0);
             }
 
             _notificationService.ShowInfo("Все комплектующие обвязок сохранены");
@@ -888,11 +923,20 @@ public class ProjectViewModel : BaseViewModel
             {
                 var newStand = await _entityStandCloner.CloneStandEntity(selectedStandEntity);
 
+                newStand.Number = MaxStandNN + 1;
+
                 await _projectRepository.AddStandAsync(CurrentProjectModel.CurrentProjectId, newStand);
 
-                CurrentProjectModel.Stands.Add(StandDataConverter.ConvertToStandModel(newStand));
+                var convertedStandModel = StandDataConverter.ConvertToStandModel(newStand);
 
-                await LoadStandsDataAsync();
+                CurrentProjectModel.Stands.Add(convertedStandModel);
+
+                //подгружаем все данные нового стенда
+                await _standService.LoadStandsDataAsync([convertedStandModel]);
+                await _standService.LoadObvyazkiInStandsAsync([convertedStandModel]);
+                await _standService.LoadPurposesInStands([convertedStandModel]);
+
+                CurrentProjectModel.SelectedStand = convertedStandModel;
             });
 
             _notificationService.ShowInfo("Стенд успешно добавлен!");
@@ -1059,11 +1103,15 @@ public class ProjectViewModel : BaseViewModel
             if (!freeNN)
                 return;
 
+            //Валидация по количеству датчиков в обвязке
             // var isCorrectSensorsData = _uiValidatorService.ValidateSensorsQuantityInNewObv(this);
 
             // if (!isCorrectSensorsData)
             //   return;
 
+
+
+            //TODO: здесь бы по хорошему встроить сохранение всех доп комплектующих в обвязке
 
             await _projectService.UpdateObvInStandAsync(CurrentProjectModel);
 
@@ -1352,6 +1400,10 @@ public class ProjectViewModel : BaseViewModel
         CurrentProjectModel.SelectedStand = newStandModel;
 
         await CreateDefaultPurposesAsync(newStandModel);
+
+        //костылек - после создания стенда данные по доп комплектующим не были синхронизированы
+        //после создания стенда тут же запрашиваем обновленные данные по доп комплектующими
+        await _standService.LoadStandsDataAsync([newStandModel]);
 
         UpdateNewStandNN();
 
