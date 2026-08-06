@@ -927,18 +927,14 @@ public class ProjectViewModel : BaseViewModel
 
                 var convertedStandModel = StandDataConverter.ConvertToStandModel(newStand);
 
-
-
                 CurrentProjectModel.Stands.Add(convertedStandModel);
 
-                
-
-                //костыль - чтобы при добавлении стенда подгрузить все
-                await _standService.LoadPurposesInStands([convertedStandModel]);
+                //подгружаем все данные нового стенда
+                await _standService.LoadStandsDataAsync([convertedStandModel]);
                 await _standService.LoadObvyazkiInStandsAsync([convertedStandModel]);
+                await _standService.LoadPurposesInStands([convertedStandModel]);
 
                 CurrentProjectModel.SelectedStand = convertedStandModel;
-
             });
 
             _notificationService.ShowInfo("Стенд успешно добавлен!");
