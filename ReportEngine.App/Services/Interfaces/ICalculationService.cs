@@ -6,5 +6,5 @@ public interface ICalculationService
 {
     Task CalculateProjectAsync(ProjectModel project);
 
-    Task CalculateStandQuantity(ProjectModel project);
+    Task CalculateAndUpdateStandQuantity(ProjectModel project);
 }

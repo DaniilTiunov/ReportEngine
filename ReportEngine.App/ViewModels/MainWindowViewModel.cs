@@ -222,13 +222,14 @@ public class MainWindowViewModel : BaseViewModel
             var projectViewModel = _serviceProvider.GetRequiredService<ProjectViewModel>();
 
             //принудительно обновляем количество стендов при закрытии проекта и подгружаем свежие данные
-            //костыль - приходится постоянно пересчитывать, что занимает время
-            //можно при желании распраллелить
+            //при пересчете всего проекта начинает подтормаживать, поэтому оставляем только обновление количества стендов
             if (projectViewModel != null)
             {
-               await RecalculateProjectAsync();
 
-               await UpdateSingleProject(projectViewModel.CurrentProjectModel.CurrentProjectId);
+               //await RecalculateProjectAsync(); 
+               await _calculationService.CalculateAndUpdateStandQuantity(projectViewModel.CurrentProjectModel);
+
+               await UpdateProjectStandsQuantity(projectViewModel.CurrentProjectModel.CurrentProjectId);
             }
 
             //if (CheckUnsafeDetails(projectViewModel))
@@ -341,9 +342,9 @@ public class MainWindowViewModel : BaseViewModel
     }
 
     //Обновление информации о проекте в коллекции AllProjects
-    public async Task UpdateSingleProject(int projectId)
+    public async Task UpdateProjectStandsQuantity(int projectId)
     {
-        var project = await _projectRepository.GetByIdAsync(projectId); 
+        var project = await _projectRepository.GetByIdAsync(projectId);
 
         // всратая вставка, но пока быстро (до 1к проектов)
         var index = MainWindowModel.AllProjects.IndexOf(MainWindowModel.AllProjects.First(p => p.Id == projectId));
