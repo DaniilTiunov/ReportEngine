@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using DevExpress.DataProcessing.InMemoryDataProcessor;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
@@ -39,6 +40,7 @@ public class MainWindowViewModel : BaseViewModel
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IServiceProvider _serviceProvider;
     private readonly SessionService _sessionService;
+
 
     #region Конструктор
 
@@ -172,6 +174,8 @@ public class MainWindowViewModel : BaseViewModel
     public async void OnRecalculateProjectCommandExecuted(object e)
     {
         await _exceptionService.SafeExecuteAsync(RecalculateProjectAsync);
+
+        _notificationService.ShowInfo("Переформирование завершено");
     }
 
     public async void OnEditProjectCommandExecuted(object e)
@@ -213,9 +217,24 @@ public class MainWindowViewModel : BaseViewModel
 
     public void OnOpenMainWindowCommandExecuted(object e)
     {
-        _exceptionService.SafeExecute(() =>
+        _ = _exceptionService.SafeExecuteAsync(async () =>
         {
             var projectViewModel = _serviceProvider.GetRequiredService<ProjectViewModel>();
+
+            //принудительно обновляем количество стендов при закрытии проекта и подгружаем свежие данные
+            //костыль - приходится постоянно пересчитывать, что занимает время
+            //можно при желании распраллелить
+            if (projectViewModel != null)
+            {
+               await RecalculateProjectAsync();
+
+               await UpdateSingleProject(projectViewModel.CurrentProjectModel.CurrentProjectId);
+
+            }
+
+
+
+
 
             //if (CheckUnsafeDetails(projectViewModel))
             //{
@@ -326,6 +345,20 @@ public class MainWindowViewModel : BaseViewModel
         _logger.Success("Проекты загружены. Статус: Успешно");
     }
 
+    //Обновление информации о проекте в коллекции AllProjects
+    public async Task UpdateSingleProject(int projectId)
+    {
+        var project = await _projectRepository.GetByIdAsync(projectId); 
+
+        // всратая вставка, но пока быстро (до 1к проектов)
+        var index = MainWindowModel.AllProjects.IndexOf(MainWindowModel.AllProjects.First(p => p.Id == projectId));
+
+        if (index >= 0)
+            MainWindowModel.AllProjects[index] = project;
+    }
+
+
+
     public async Task DeleteSelectedProjectAsync()
     {
         var result = _notificationService.ShowConfirmation("Вы уверены, что хотите удалить проект?");
@@ -378,7 +411,7 @@ public class MainWindowViewModel : BaseViewModel
 
         CollectionRefreshHelper.SafeRefreshCollection(MainWindowModel.AllProjects);
 
-        _notificationService.ShowInfo("Переформирование завершено");
+        
     }
 
     #endregion Комманды главного окна

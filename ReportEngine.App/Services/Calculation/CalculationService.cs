@@ -55,6 +55,15 @@ public class CalculationService : ICalculationService
         await _projectService.UpdateStandEntity(project);
     }
 
+    //обновляем только количество стендов
+    public async Task CalculateStandQuantity(ProjectModel project)
+    {
+        CalculateStandsCount(project);
+        await _projectService.UpdateProjectAsync(project);
+    }
+
+
+
     private void CalculateStandsCount(ProjectModel project)
     {
         project.StandCount = project.Stands.Count;
