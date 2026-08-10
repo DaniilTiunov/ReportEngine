@@ -10,9 +10,19 @@ namespace ReportEngine.App;
 
 public static class StartUp
 {
+    private static Mutex _mutex = null;
+
     [STAThread]
     public static void Main()
     {
+        _mutex = new Mutex(true, "Global\\ReportEngineApp", out var createdNew);
+
+        if (!createdNew)
+        {
+            MessageBox.Show("Приложение уже запущено", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
+
         try
         {
             SetCulture();
@@ -54,6 +64,12 @@ public static class StartUp
         }
         finally
         {
+            if (_mutex != null)
+            {
+                _mutex.ReleaseMutex();
+                _mutex.Dispose();
+            }
+
             Log.CloseAndFlush();
         }
     }
