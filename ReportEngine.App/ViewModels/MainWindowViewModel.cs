@@ -229,12 +229,7 @@ public class MainWindowViewModel : BaseViewModel
                await RecalculateProjectAsync();
 
                await UpdateSingleProject(projectViewModel.CurrentProjectModel.CurrentProjectId);
-
             }
-
-
-
-
 
             //if (CheckUnsafeDetails(projectViewModel))
             //{
