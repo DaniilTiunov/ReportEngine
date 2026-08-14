@@ -327,10 +327,11 @@ def fillStandPage(stand, doc, project):
             wires.append( [wire["Circuit"],wire["Mark"],wire["ElectricBox"],wire["Terminal"]] )
 
         descAndKKS = f"{impulseLine["Name"]} \n {impulseLine["CodeKKS"]}"
+        note = impulseLine["Annotation"]
 
         rowArray = [str(impulseLineNumber),descAndKKS]
         rowArray.extend(wires[0])
-        rowArray.extend("")
+        rowArray.extend(note)
         impulseLineTableData.append(rowArray)
 
         rowArray = ["",""]
