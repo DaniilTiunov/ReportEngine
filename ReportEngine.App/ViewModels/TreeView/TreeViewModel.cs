@@ -5,7 +5,6 @@ using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Generators;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.DebugConsol;
 
 namespace ReportEngine.App.ViewModels.TreeView;
 
@@ -135,17 +134,16 @@ public class TreeViewModel
             var kksDuplicates = _project.Stands
                 .GroupBy(stand => stand.KKSCode)
                 .Where(group => group.Count() > 1)
-                .Select(group => group.Key)
                 .ToList();
 
             if (kksDuplicates.Count > 0)
             {
-                var confirmationResult = _notificationService.ShowConfirmation
-                (
-                         "Обнаружены дублирования KKS - кодов стендов:\n\n" +
-                        "- " + string.Join("\n- ", kksDuplicates) +
-                        "\n\nПродолжить генерацию отчета?"
-                );
+
+                var warningMessage = "Обнаружены дублирования KKS-кодов стендов:\n\n" +
+                    string.Join("\n", kksDuplicates.Select(g => $"- {g.Key} ({g.Count()} шт.)")) +
+                    "\n\nПродолжить генерацию отчета?";
+
+                var confirmationResult = _notificationService.ShowConfirmation(warningMessage);
 
                 if (!confirmationResult)
                 {
