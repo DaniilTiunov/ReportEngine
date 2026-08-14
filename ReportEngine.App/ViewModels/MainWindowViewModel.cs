@@ -223,7 +223,7 @@ public class MainWindowViewModel : BaseViewModel
 
             //принудительно обновляем количество стендов при закрытии проекта и подгружаем свежие данные
             //при пересчете всего проекта начинает подтормаживать, поэтому оставляем только обновление количества стендов
-            if (projectViewModel != null)
+            if (projectViewModel?.CurrentProjectModel != null && projectViewModel.CurrentProjectModel.CurrentProjectId != 0 )
             {
 
                //await RecalculateProjectAsync(); 

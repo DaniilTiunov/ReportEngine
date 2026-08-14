@@ -171,7 +171,7 @@ public class FinPlanReportGenerator : IReportGenerator
         recordNameRange.Value = record.Name.Value;
 
         var recordPriceRange = ws.Range($"F{row}:G{row}").Merge();
-        recordPriceRange.Value = record.CommonCost.Value.ToString();
+        recordPriceRange.Value = ExcelReportHelper.FormatPrice(record.CommonCost.Value);
 
         var unitPriceRange = ws.Range($"H{row}:I{row}").Merge();
         unitPriceRange.Value = record.Unit.Value;
