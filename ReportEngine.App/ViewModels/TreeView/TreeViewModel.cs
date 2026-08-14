@@ -132,8 +132,35 @@ public class TreeViewModel
     {
         return new AsyncRelayCommand(async _ =>
         {
+            var kksDuplicates = _project.Stands
+                .GroupBy(stand => stand.KKSCode)
+                .Where(group => group.Count() > 1)
+                .Select(group => group.Key)
+                .ToList();
+
+            if (kksDuplicates.Count > 0)
+            {
+                var confirmationResult = _notificationService.ShowConfirmation
+                (
+                    "Обнаружены дублирования KKS-кодов стендов: \n" + string.Join("\n", kksDuplicates) + "\nПродолжить?"
+                );
+
+                if (!confirmationResult)
+                {
+                    _notificationService.ShowInfo("Генерация отчета отменена");
+                    return;
+                }
+            }
+
+
+
+
             await _dialogService.RunWithProgressDialogAsync(async () =>
             {
+                //TODO: добавить проверку на дублирования KKS 
+
+
+
                 await _reportService.GenerateReportAsync(
                     type,
                     _project.CurrentProjectId);
