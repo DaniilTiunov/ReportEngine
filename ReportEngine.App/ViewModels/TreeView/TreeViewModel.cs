@@ -142,7 +142,9 @@ public class TreeViewModel
             {
                 var confirmationResult = _notificationService.ShowConfirmation
                 (
-                    "Обнаружены дублирования KKS-кодов стендов: \n" + string.Join("\n", kksDuplicates) + "\nПродолжить?"
+                         "Обнаружены дублирования KKS - кодов стендов:\n\n" +
+                        "- " + string.Join("\n- ", kksDuplicates) +
+                        "\n\nПродолжить генерацию отчета?"
                 );
 
                 if (!confirmationResult)
