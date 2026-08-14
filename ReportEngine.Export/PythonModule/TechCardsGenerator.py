@@ -70,7 +70,7 @@ def fillStandPage(stand, doc, project):
 
     #общие заголовки таблицы
     galvanizeStr = "Оцинковка" if project["IsGalvanized"] else "Покраска"
-    standTechCardHeaderTable = Table(data = [[ "Технологическая карта", str(galvanizeStr), str(project["Description"]) ]],
+    standTechCardHeaderTable = Table(data = [[ "Технологическая карта", str(galvanizeStr), str(project["RequestProduction"]) ]],
                                    colWidths= leftPartWidth/3)
     standTechCardHeaderTable.setStyle(TableStyle(cmds =
                                                  PdfHelper.commonTableStyleCmd +

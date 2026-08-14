@@ -27,6 +27,7 @@ public partial class NotifyWindow : Window
         {
             case NotificationType.Info:
                 OkButton.Visibility = Visibility.Visible;
+                OkButton.Focus();
                 CancelButton.Visibility = Visibility.Collapsed;
                 IconImage.Source = new BitmapImage(new Uri("/Resources/Icons/IconInfo.png", UriKind.Relative));
                 TitleIcon.Source = IconImage.Source;
@@ -41,6 +42,7 @@ public partial class NotifyWindow : Window
                 break;
             case NotificationType.Error:
                 OkButton.Visibility = Visibility.Visible;
+                OkButton.Focus();
                 CancelButton.Visibility = Visibility.Collapsed;
                 IconImage.Source = new BitmapImage(new Uri("/Resources/Icons/Icon_Error.png", UriKind.Relative));
                 TitleIcon.Source = IconImage.Source;

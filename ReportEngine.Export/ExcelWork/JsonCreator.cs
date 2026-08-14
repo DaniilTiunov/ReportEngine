@@ -4,6 +4,7 @@ using ReportEngine.Export.DTO.JsonObjects;
 using ReportEngine.Shared.Config.IniHelpers;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
+using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.Export.ExcelWork;
 
@@ -12,6 +13,8 @@ public static class JsonCreator
     //создание JSON объекта проекта
     public static ProjectJsonObject CreateProjectJson(ProjectInfo project, List<Stand>? selectedStands = null)
     {
+
+
         var standSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
 
         var sourceData = project.Stands;
@@ -85,6 +88,8 @@ public static class JsonCreator
         mountPartsRecords.AddRange(parts.KmchList);
         mountPartsRecords.AddRange(parts.SensorsHolders);
         mountPartsRecords.AddRange(parts.OthersParts);
+        mountPartsRecords.AddRange(parts.Supplies);
+
 
         var mountParts = mountPartsRecords.Select(record => RecordToJson(record));
 
@@ -130,7 +135,7 @@ public static class JsonCreator
         {
             Name = record?.Name.Value,
             Unit = record?.Unit.Value,
-            Quantity = record?.Quantity.Value
+            Quantity = record?.Quantity.Value.Round(1)
         };
     }
 
