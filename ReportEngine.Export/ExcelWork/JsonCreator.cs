@@ -1,21 +1,20 @@
 ﻿using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.DTO.JsonObjects;
 using ReportEngine.Shared.Config.IniHelpers;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
 using ReportEngine.Shared.Helpers;
+using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 
 namespace ReportEngine.Export.ExcelWork;
 
 public static class JsonCreator
 {
     //создание JSON объекта проекта
-    public static ProjectJsonObject CreateProjectJson(ProjectInfo project, List<Stand>? selectedStands = null)
+    public static async Task<ProjectJsonObject> CreateProjectJson(ProjectInfo project, ParametersStore parametersStore, List<Stand>? selectedStands = null)
     {
-
-
-        var standSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
 
         var sourceData = project.Stands;
 
@@ -23,11 +22,10 @@ public static class JsonCreator
 
         return new ProjectJsonObject
         {
-            SeniorEngineer = standSettings.SeniorEngineer,
-            ResponsibleForAccept = standSettings.ResponsibleForAccept,
-            SecondLevelSpecialist = standSettings.SecondLevelSpecialist,
-            OSiL = standSettings.OSiL,
-
+            SeniorEngineer = parametersStore[CalculationParameterType.StandCost, "LeadEngineer"].Value,
+            ResponsibleForAccept = parametersStore[CalculationParameterType.StandCost, "AcceptanceSupervisor"].Value,
+            SecondLevelSpecialist = parametersStore[CalculationParameterType.StandCost, "SpecialistL2"].Value,
+            OSiL = parametersStore[CalculationParameterType.StandCost, "OsilRep"].Value,
             Number = project.Number,
             Id = project.Id,
             Description = project.Description,

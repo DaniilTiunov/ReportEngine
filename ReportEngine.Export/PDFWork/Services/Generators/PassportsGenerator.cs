@@ -4,6 +4,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork;
 using ReportEngine.Export.ExcelWork.Enums;
@@ -16,10 +17,12 @@ namespace ReportEngine.Export.PDFWork.Services.Generators;
 public class PassportsGenerator : IReportGenerator
 {
     private readonly IProjectInfoRepository _projectInfoRepository;
+    private readonly ParametersStore _parametersStore;
 
-    public PassportsGenerator(IProjectInfoRepository projectRepository)
+    public PassportsGenerator(IProjectInfoRepository projectRepository, ParametersStore parametersStore)
     {
         _projectInfoRepository = projectRepository;
+        _parametersStore = parametersStore;
     }
 
     public ReportType Type => ReportType.PassportsReport;
@@ -27,13 +30,14 @@ public class PassportsGenerator : IReportGenerator
     public async Task GenerateAsync(int projectId)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        await _parametersStore.LoadSettingsDataAsync();
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
         var savePath = SettingsManager.GetReportDirectory();
         var fileName = ExcelReportHelper.CreateReportName("Паспорт", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
 
-        var dataObject = JsonCreator.CreateProjectJson(project);
+        var dataObject = await JsonCreator.CreateProjectJson(project,_parametersStore);
         var options = new JsonSerializerOptions
         {
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -84,13 +88,14 @@ public class PassportsGenerator : IReportGenerator
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        await _parametersStore.LoadSettingsDataAsync();
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
         var savePath = SettingsManager.GetReportDirectory();
         var fileName = ExcelReportHelper.CreateReportName("Паспорт", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
 
-        var dataObject = JsonCreator.CreateProjectJson(project, selectedStands);
+        var dataObject = await JsonCreator.CreateProjectJson(project,_parametersStore, selectedStands);
         var options = new JsonSerializerOptions
         {
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,

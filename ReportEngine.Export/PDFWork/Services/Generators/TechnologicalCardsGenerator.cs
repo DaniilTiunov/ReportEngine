@@ -4,6 +4,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork;
 using ReportEngine.Export.ExcelWork.Enums;
@@ -16,10 +17,12 @@ namespace ReportEngine.Export.PDFWork.Services.Generators;
 public class TechnologicalCardsGenerator : IReportGenerator
 {
     private readonly IProjectInfoRepository _projectInfoRepository;
+    private readonly ParametersStore _parametersStore;
 
-    public TechnologicalCardsGenerator(IProjectInfoRepository projectInfoRepository)
+    public TechnologicalCardsGenerator(IProjectInfoRepository projectInfoRepository, ParametersStore parametersStore)
     {
         _projectInfoRepository = projectInfoRepository;
+        _parametersStore = parametersStore;
     }
 
     public ReportType Type => ReportType.TechnologicalCards;
@@ -27,8 +30,9 @@ public class TechnologicalCardsGenerator : IReportGenerator
     public async Task GenerateAsync(int projectId)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        await _parametersStore.LoadSettingsDataAsync();
 
-        var dataObject = JsonCreator.CreateProjectJson(project);
+        var dataObject = await JsonCreator.CreateProjectJson(project, _parametersStore);
         var options = new JsonSerializerOptions
         {
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -87,8 +91,9 @@ public class TechnologicalCardsGenerator : IReportGenerator
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        await _parametersStore.LoadSettingsDataAsync();
 
-        var dataObject = JsonCreator.CreateProjectJson(project, selectedStands);
+        var dataObject = await JsonCreator.CreateProjectJson(project, _parametersStore, selectedStands);
         var options = new JsonSerializerOptions
         {
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
