@@ -160,7 +160,7 @@ public static class JsonCreator
             Name = record.SensorDescription,
             CodeKKS = record.SensorKKS,
             Wires = wiresInfo,
-            Annotation = stand.DesigneStand
+            Annotation = stand.DesigneStand ?? ""
         };
     }
 }
