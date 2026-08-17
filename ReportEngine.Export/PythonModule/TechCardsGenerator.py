@@ -70,6 +70,7 @@ def fillStandPage(stand, doc, project):
 
     #общие заголовки таблицы
     galvanizeStr = "Оцинковка" if project["IsGalvanized"] else "Покраска"
+
     standTechCardHeaderTable = Table(data = [[ "Технологическая карта", str(galvanizeStr), str(project["RequestProduction"]) ]],
                                    colWidths= leftPartWidth/3)
     standTechCardHeaderTable.setStyle(TableStyle(cmds =
@@ -82,6 +83,7 @@ def fillStandPage(stand, doc, project):
                                                  [('FONTNAME', (0, 0), (0, 0), "Arial-Bold")]
                                                  )) 
 
+   
     standNameData = [[ "Стенд датчиков КИПиА " + str(stand["Designation"]) ]]
     standNameHeaderTable = Table(data = standNameData, colWidths = leftPartWidth)
     standNameHeaderTable.setStyle(TableStyle(cmds =
@@ -212,7 +214,7 @@ def fillStandPage(stand, doc, project):
                                             PdfHelper.firstColumnLeftTableStyleCmd ))
 
 
-    #таблица электрическх компонентов
+    #таблица электрических компонентов
     electricPartsHeaderTable = Table(data = [["Электрические компоненты"]], colWidths = rightPartWidth)
     electricPartsHeaderTable.setStyle(TableStyle(cmds =
                                               PdfHelper.commonTableStyleCmd +
@@ -248,11 +250,19 @@ def fillStandPage(stand, doc, project):
 
 
     imageString = stand["ImageData"]
-    if imageString is not None:  
-        standBlueprint = PdfHelper.generateImageFromStr(imageString, rightPartWidth, sumHeight)  
+    blueprintOriginalWidth,blueprintOriginalHeight = 0,0
+
+
+    imageExist = imageString is not None
+
+    if imageExist:     
+         blueprintOriginalWidth,blueprintOriginalHeight = PdfHelper.getImageOriginalSizes(imageString)
+         newWidth, newHeight , _ = PdfHelper.scaleImageToFit(blueprintOriginalWidth,blueprintOriginalHeight,rightPartWidth,sumHeight)
+         standBlueprint = PdfHelper.generateImageFromStr(imageString, newWidth, newHeight)  
     else:
         standBlueprint = Paragraph(text = "Изображение отсутствует", style = cyrillicStyle)
-
+        
+    
 
     blueprintTable = Table(data = [[standBlueprint]], colWidths = rightPartWidth, rowHeights = sumHeight)
     blueprintTable.setStyle(TableStyle(cmds = PdfHelper.commonTableStyleCmd +

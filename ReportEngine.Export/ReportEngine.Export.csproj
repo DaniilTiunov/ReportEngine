@@ -30,9 +30,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="PythonModule\MainLauncher.exe">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
         <Content Include="PythonModule\MainLauncher.py">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
@@ -66,6 +63,12 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
         <PackageReference Include="System.Drawing.Common" Version="9.0.10" />
         <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="PythonModule\MainLauncher.exe">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
     <ItemGroup>

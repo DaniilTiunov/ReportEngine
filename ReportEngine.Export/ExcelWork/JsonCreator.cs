@@ -98,8 +98,8 @@ public static class JsonCreator
         return new StandJsonObject
         {
             Number = stand.Number,
-            KKSCode = stand.KKSCode,
-            Designation = stand.Design,
+            KKSCode = stand.KKSCode ?? "",
+            Designation = stand.Design ?? "",
             Devices = stand.Devices,
             BraceType = stand.BraceType,
             Width = stand.Width,
@@ -112,7 +112,7 @@ public static class JsonCreator
             Armature = stand.Armature,
             TreeSocket = stand.TreeSocket,
             KMCH = stand.KMCH,
-            Description = stand.DesigneStand,
+            Description = stand.DesigneStand ?? "",
             Comments = stand.Comments,
             ContainerStandId = stand.ContainerStandId,
             ImageData = stand.ImageData,
