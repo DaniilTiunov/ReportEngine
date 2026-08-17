@@ -157,10 +157,10 @@ public static class JsonCreator
 
         return new ImpulseLineRecordJsonObject
         {
-            Name = record.SensorDescription,
-            CodeKKS = record.SensorKKS,
+            Name = ExcelReportHelper.RemoveControlSymbols(record.SensorDescription),
+            CodeKKS = ExcelReportHelper.RemoveControlSymbols(record.SensorKKS),
             Wires = wiresInfo,
-            Annotation = stand.DesigneStand ?? ""
+            Annotation = ExcelReportHelper.RemoveControlSymbols(stand.DesigneStand)
         };
     }
 }
