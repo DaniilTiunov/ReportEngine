@@ -44,13 +44,15 @@ public class TechnologicalCardsGenerator : IReportGenerator
         var fileName = ExcelReportHelper.CreateReportName("Технологические карты", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
 
-        var startInfo = new ProcessStartInfo();
-        startInfo.FileName = exeFilePath;
-        startInfo.Arguments = $"--script techcard --jsonPath \"{jsonSavePath}\" --outputFilePath \"{fullSavePath}\"";
-        startInfo.UseShellExecute = false;
-        startInfo.RedirectStandardOutput = true;
-        startInfo.RedirectStandardError = true;
-        startInfo.CreateNoWindow = true;
+        var startInfo = new ProcessStartInfo
+        {
+            FileName = exeFilePath,
+            Arguments = $"--script techcard --jsonPath \"{jsonSavePath}\" --outputFilePath \"{fullSavePath}\"",
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            CreateNoWindow = true
+        };
 
         using (var process = Process.Start(startInfo))
         {
@@ -102,13 +104,15 @@ public class TechnologicalCardsGenerator : IReportGenerator
         var fileName = ExcelReportHelper.CreateReportName("Технологические карты", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
 
-        var startInfo = new ProcessStartInfo();
-        startInfo.FileName = exeFilePath;
-        startInfo.Arguments = $"--script techcard --jsonPath \"{jsonSavePath}\" --outputFilePath \"{fullSavePath}\"";
-        startInfo.UseShellExecute = false;
-        startInfo.RedirectStandardOutput = true;
-        startInfo.RedirectStandardError = true;
-        startInfo.CreateNoWindow = true;
+        var startInfo = new ProcessStartInfo
+        {
+            FileName = exeFilePath,
+            Arguments = $"--script techcard --jsonPath \"{jsonSavePath}\" --outputFilePath \"{fullSavePath}\"",
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            CreateNoWindow = true
+        };
 
         using (var process = Process.Start(startInfo))
         {

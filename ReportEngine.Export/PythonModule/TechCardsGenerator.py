@@ -70,7 +70,7 @@ def fillStandPage(stand, doc, project):
 
     #общие заголовки таблицы
     galvanizeStr = "Оцинковка" if project["IsGalvanized"] else "Покраска"
-    standTechCardHeaderTable = Table(data = [[ "Технологическая карта", str(galvanizeStr), str(project["Description"]) ]],
+    standTechCardHeaderTable = Table(data = [[ "Технологическая карта", str(galvanizeStr), str(project["RequestProduction"]) ]],
                                    colWidths= leftPartWidth/3)
     standTechCardHeaderTable.setStyle(TableStyle(cmds =
                                                  PdfHelper.commonTableStyleCmd +
@@ -327,10 +327,11 @@ def fillStandPage(stand, doc, project):
             wires.append( [wire["Circuit"],wire["Mark"],wire["ElectricBox"],wire["Terminal"]] )
 
         descAndKKS = f"{impulseLine["Name"]} \n {impulseLine["CodeKKS"]}"
+        note = impulseLine["Annotation"]
 
         rowArray = [str(impulseLineNumber),descAndKKS]
         rowArray.extend(wires[0])
-        rowArray.extend("")
+        rowArray.extend(note)
         impulseLineTableData.append(rowArray)
 
         rowArray = ["",""]

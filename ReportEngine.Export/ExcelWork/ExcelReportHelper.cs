@@ -757,7 +757,8 @@ public static class ExcelReportHelper
             .SelectMany(stand => stand.StandFrames
                 .Select(frame => new
                 {
-                    Stand = stand, frame.Frame.FrameType
+                    Stand = stand,
+                    frame.Frame.FrameType
                 })
             )
             .Select(frameInfo =>
@@ -1003,5 +1004,15 @@ public static class ExcelReportHelper
         }
 
         return allPartsList;
+    }
+
+
+
+
+    //форматирует цену
+    public static string FormatPrice(float? price)
+    {
+        var ruCulture = new CultureInfo("ru-RU");
+        return price.HasValue ? price.Value.ToString("N0", ruCulture) : string.Empty;
     }
 }

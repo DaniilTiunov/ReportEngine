@@ -192,6 +192,7 @@ public static class ProjectCommandsInitializer
             new RelayCommand(vm.OnSelectedCreateContainerReportCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.SelectedProductionReportCommand =
+
             new RelayCommand(vm.OnCreateSelectedProductionReportCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.SelectedFinPlaneReportCommand =

@@ -4,6 +4,7 @@ using ReportEngine.Export.DTO.JsonObjects;
 using ReportEngine.Shared.Config.IniHelpers;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
+using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.Export.ExcelWork;
 
@@ -12,6 +13,8 @@ public static class JsonCreator
     //создание JSON объекта проекта
     public static ProjectJsonObject CreateProjectJson(ProjectInfo project, List<Stand>? selectedStands = null)
     {
+
+
         var standSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
 
         var sourceData = project.Stands;
@@ -85,12 +88,14 @@ public static class JsonCreator
         mountPartsRecords.AddRange(parts.KmchList);
         mountPartsRecords.AddRange(parts.SensorsHolders);
         mountPartsRecords.AddRange(parts.OthersParts);
+        mountPartsRecords.AddRange(parts.Supplies);
+
 
         var mountParts = mountPartsRecords.Select(record => RecordToJson(record));
 
         var impulseLines = stand.ObvyazkiInStand
             .SelectMany(obv => ExcelReportHelper.CreateSensorsListFromObvyazka(obv))
-            .Select(record => SensorToJson(record));
+            .Select(record => SensorToJson(record,stand));
 
         return new StandJsonObject
         {
@@ -130,18 +135,24 @@ public static class JsonCreator
         {
             Name = record?.Name.Value,
             Unit = record?.Unit.Value,
-            Quantity = record?.Quantity.Value
+            Quantity = record?.Quantity.Value.Round(1)
         };
     }
 
     //конвертация записи датчика в JSON объект
-    public static ImpulseLineRecordJsonObject SensorToJson(SensorRecordData record)
+    public static ImpulseLineRecordJsonObject SensorToJson(SensorRecordData record, Stand stand)
     {
+        //находим название коробки в стенде
+        var boxName = stand.StandElectricalComponent
+             .SelectMany(sec => sec.ElectricalComponent.Purposes)
+             .First(purpose => !string.IsNullOrEmpty(purpose.Purpose) && purpose.Purpose.StartsWith("Клеммная коробка"))
+             .Material;
+
         var wiresInfo = new List<WireRecord>
         {
-            new("+", $"{record.SensorMarkPlus}", "Коробка КС-1", "1"),
-            new("-", $"{record.SensorMarkMinus}", "Коробка КС-1", "2"),
-            new("Экран", "", "Коробка КС-1", "3")
+            new("+", $"{record.SensorMarkPlus}", boxName ?? "", "1"),
+            new("-", $"{record.SensorMarkMinus}", boxName ?? "", "2"),
+            new("Экран", "", boxName ?? "", "3")
         };
 
         return new ImpulseLineRecordJsonObject
@@ -149,7 +160,7 @@ public static class JsonCreator
             Name = record.SensorDescription,
             CodeKKS = record.SensorKKS,
             Wires = wiresInfo,
-            Annotation = ""
+            Annotation = stand.DesigneStand
         };
     }
 }
