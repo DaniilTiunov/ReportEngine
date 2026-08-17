@@ -19,6 +19,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
     private readonly IProjectInfoRepository _projectInfoRepository;
     private readonly ParametersStore _parametersStore;
 
+
     public TechnologicalCardsGenerator(IProjectInfoRepository projectInfoRepository, ParametersStore parametersStore)
     {
         _projectInfoRepository = projectInfoRepository;
@@ -29,10 +30,14 @@ public class TechnologicalCardsGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId)
     {
+
+
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
         await _parametersStore.LoadSettingsDataAsync();
 
-        var dataObject = await JsonCreator.CreateProjectJson(project, _parametersStore);
+        
+
+        var dataObject = await JsonCreator.CreateProjectJson(project, _parametersStore,null);
         var options = new JsonSerializerOptions
         {
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,

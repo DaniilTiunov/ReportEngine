@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
+using ReportEngine.App.Enums;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.ViewModels;
@@ -385,5 +386,17 @@ public class DialogService : IDialogService
                 window.MainTabControl.SelectedIndex = 3;
                 break;
         }
+    }
+
+
+    public TechCardElecticDialogResult ShowTechCardTypeReportDialog()
+    {
+        var window = new TechCardElecrticDialog()
+        {
+            Owner = Application.Current.MainWindow
+        };
+
+        var result = window.ShowDialog();
+        return (result == true) ? window.SelectedOption : TechCardElecticDialogResult.Cancel;
     }
 }

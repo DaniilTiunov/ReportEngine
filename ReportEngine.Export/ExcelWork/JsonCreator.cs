@@ -15,10 +15,7 @@ public static class JsonCreator
     //создание JSON объекта проекта
     public static async Task<ProjectJsonObject> CreateProjectJson(ProjectInfo project, ParametersStore parametersStore, List<Stand>? selectedStands = null)
     {
-
-        var sourceData = project.Stands;
-
-        if (selectedStands != null) sourceData = selectedStands;
+        var sourceData = selectedStands ?? project.Stands;
 
         return new ProjectJsonObject
         {
@@ -26,6 +23,7 @@ public static class JsonCreator
             ResponsibleForAccept = parametersStore[CalculationParameterType.StandCost, "AcceptanceSupervisor"].Value,
             SecondLevelSpecialist = parametersStore[CalculationParameterType.StandCost, "SpecialistL2"].Value,
             OSiL = parametersStore[CalculationParameterType.StandCost, "OsilRep"].Value,
+
             Number = project.Number,
             Id = project.Id,
             Description = project.Description,
@@ -45,7 +43,10 @@ public static class JsonCreator
             IsGalvanized = project.IsGalvanized,
             HumanCost = project.HumanCost,
             Manager = project.Manager,
-            Stands = sourceData.Select(CreateStandJson).ToList()
+            Stands = sourceData
+                        .OrderBy(stand => stand.NN)
+                        .Select(CreateStandJson)
+                        .ToList()
         };
     }
 
