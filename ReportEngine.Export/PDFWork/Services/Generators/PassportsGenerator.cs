@@ -47,13 +47,15 @@ public class PassportsGenerator : IReportGenerator
         var jsonSavePath = DirectoryHelper.GetJsonSavePath();
         File.WriteAllText(jsonSavePath, jsonObject, Encoding.UTF8);
 
-        var startInfo = new ProcessStartInfo();
-        startInfo.FileName = exeFilePath;
-        startInfo.Arguments = $"--script passport --jsonPath \"{jsonSavePath}\" --outputFilePath \"{fullSavePath}\"";
-        startInfo.UseShellExecute = false;
-        startInfo.RedirectStandardOutput = true;
-        startInfo.RedirectStandardError = true;
-        startInfo.CreateNoWindow = true;
+        var startInfo = new ProcessStartInfo
+        {
+            FileName = exeFilePath,
+            Arguments = $"--script passport --jsonPath \"{jsonSavePath}\" --outputFilePath \"{fullSavePath}\"",
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            CreateNoWindow = true
+        };
 
         using (var process = Process.Start(startInfo))
         {
@@ -105,13 +107,15 @@ public class PassportsGenerator : IReportGenerator
         var jsonSavePath = DirectoryHelper.GetJsonSavePath();
         File.WriteAllText(jsonSavePath, jsonObject, Encoding.UTF8);
 
-        var startInfo = new ProcessStartInfo();
-        startInfo.FileName = exeFilePath;
-        startInfo.Arguments = $"--script passport --jsonPath \"{jsonSavePath}\" --outputFilePath \"{fullSavePath}\"";
-        startInfo.UseShellExecute = false;
-        startInfo.RedirectStandardOutput = true;
-        startInfo.RedirectStandardError = true;
-        startInfo.CreateNoWindow = true;
+        var startInfo = new ProcessStartInfo
+        {
+            FileName = exeFilePath,
+            Arguments = $"--script passport --jsonPath \"{jsonSavePath}\" --outputFilePath \"{fullSavePath}\"",
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            CreateNoWindow = true
+        };
 
         using (var process = Process.Start(startInfo))
         {
