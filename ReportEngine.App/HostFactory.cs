@@ -42,6 +42,7 @@ using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Store;
+using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Services;
 using ReportEngine.Export.ExcelWork.Services.Generators;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
@@ -209,6 +210,7 @@ public class HostFactory
         services.AddScoped<IReportGenerator, PassportsGenerator>();
         services.AddScoped<IReportGenerator, TechnologicalCardsGenerator>();
         services.AddScoped<FlatSummaryReportGenerator>();
+        services.AddSingleton<ReportSettings>();
     }
 
     private static void ConfigureViewModels(IServiceCollection services)

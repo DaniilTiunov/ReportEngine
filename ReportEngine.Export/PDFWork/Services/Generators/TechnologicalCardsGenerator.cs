@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Text.Json;
+﻿using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Store;
@@ -11,33 +8,39 @@ using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.IniHeleprs;
+using System.Diagnostics;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 
 namespace ReportEngine.Export.PDFWork.Services.Generators;
 
 public class TechnologicalCardsGenerator : IReportGenerator
 {
+    private readonly IServiceProvider _serviceProvider;
     private readonly IProjectInfoRepository _projectInfoRepository;
     private readonly ParametersStore _parametersStore;
 
 
-    public TechnologicalCardsGenerator(IProjectInfoRepository projectInfoRepository, ParametersStore parametersStore)
+    public TechnologicalCardsGenerator(IProjectInfoRepository projectInfoRepository, ParametersStore parametersStore, IServiceProvider serviceProvider)
     {
         _projectInfoRepository = projectInfoRepository;
         _parametersStore = parametersStore;
+        _serviceProvider = serviceProvider;
     }
 
     public ReportType Type => ReportType.TechnologicalCards;
 
     public async Task GenerateAsync(int projectId)
     {
-
-
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
         await _parametersStore.LoadSettingsDataAsync();
 
-        
-
         var dataObject = await JsonCreator.CreateProjectJson(project, _parametersStore,null);
+
+        //впихиваем доп опции генерации
+        dataObject.ReportSettings = _serviceProvider.GetRequiredService<ReportSettings>();
+
         var options = new JsonSerializerOptions
         {
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -93,12 +96,18 @@ public class TechnologicalCardsGenerator : IReportGenerator
         }
     }
 
+
+    //перегрузка для выбранных стендов
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
         await _parametersStore.LoadSettingsDataAsync();
 
         var dataObject = await JsonCreator.CreateProjectJson(project, _parametersStore, selectedStands);
+
+        //впихиваем доп опции генерации
+        dataObject.ReportSettings = _serviceProvider.GetRequiredService<ReportSettings>();
+
         var options = new JsonSerializerOptions
         {
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,

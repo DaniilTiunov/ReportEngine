@@ -388,15 +388,4 @@ public class DialogService : IDialogService
         }
     }
 
-
-    public TechCardElecticDialogResult ShowTechCardTypeReportDialog()
-    {
-        var window = new TechCardElecrticDialog()
-        {
-            Owner = Application.Current.MainWindow
-        };
-
-        var result = window.ShowDialog();
-        return (result == true) ? window.SelectedOption : TechCardElecticDialogResult.Cancel;
-    }
 }

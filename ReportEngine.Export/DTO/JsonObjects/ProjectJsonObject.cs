@@ -29,4 +29,6 @@ public class ProjectJsonObject
     public string? Manager { get; set; } //Руководитель
 
     public ICollection<StandJsonObject> Stands { get; set; } = new List<StandJsonObject>();
+
+    public ReportSettings ReportSettings { get; set; } = new();
 }

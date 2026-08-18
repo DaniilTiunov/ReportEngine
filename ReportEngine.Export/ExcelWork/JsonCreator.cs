@@ -1,4 +1,6 @@
-﻿using ReportEngine.Domain.Entities;
+﻿using Microsoft.Extensions.DependencyInjection;
+using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.DTO.JsonObjects;
@@ -6,7 +8,6 @@ using ReportEngine.Shared.Config.IniHelpers;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
 using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
 using ReportEngine.Shared.Helpers;
-using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 
 namespace ReportEngine.Export.ExcelWork;
 
