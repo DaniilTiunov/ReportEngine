@@ -45,7 +45,7 @@ public static class JsonCreator
             HumanCost = project.HumanCost,
             Manager = project.Manager,
             Stands = sourceData
-                        .OrderBy(stand => stand.NN)
+                        .OrderBy(stand => stand.Number)
                         .Select(CreateStandJson)
                         .ToList()
         };
