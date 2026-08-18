@@ -374,8 +374,9 @@ def fillStandPage(stand, doc, project):
     if abs(partsHeightOffset) > 0:
 
         targetObject = leftPart if partsHeightOffset < 0 else rightPart
+        targetWidht = leftPartWidth if partsHeightOffset < 0 else rightPartWidth
 
-        spacerTable = Table([[""]], rowHeights = [abs(partsHeightOffset)], colWidths=[rightPartWidth])
+        spacerTable = Table([[""]], rowHeights = [abs(partsHeightOffset)], colWidths=[targetWidht])
         spacerTable.setStyle(TableStyle(cmds =PdfHelper.visibleAllBordersTableStyleCmd))
 
         targetObject.append(spacerTable)
