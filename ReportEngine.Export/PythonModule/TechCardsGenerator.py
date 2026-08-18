@@ -323,8 +323,15 @@ def fillStandPage(stand, doc, project):
                          #выравнивание по верху
                          [('VALIGN', (0, 0), (-1, -1), "TOP")] ))
 
+
+
+    #вытаскиваем параметр - с электрикой или без
+    includeElectric = project["ReportSettings"]["TechCardIncludeElectric"]
+
+    
+
     impulseLinesHeaderData = [["№\nимп.линии", "Наименование импульсной линии\n и код KKS", "Таблица соединений","","","","Примечание"],
-                          ["","","Цепь","Маркировка","Коробка","Клеммы",""]]
+                            ["","","Цепь","Маркировка","Коробка","Клеммы",""]]
 
     impulseLineTableData = impulseLinesHeaderData.copy()
     impulseLineNumber = 1
@@ -334,7 +341,12 @@ def fillStandPage(stand, doc, project):
 
         wires = []
         for wire in impulseLine["Wires"]:
-            wires.append( [wire["Circuit"],wire["Mark"],wire["ElectricBox"],wire["Terminal"]] )
+
+            #в зависимости от параметра вставляем электрику или нет
+            if includeElectric:
+                wires.append( [wire["Circuit"], wire["Mark"], wire["ElectricBox"], wire["Terminal"]] )
+            else:
+                wires.append( ["","","",""] )
 
         descAndKKS = f"{impulseLine["Name"]} \n {impulseLine["CodeKKS"]}"
         note = f"{impulseLine["Annotation"]}"
@@ -360,40 +372,40 @@ def fillStandPage(stand, doc, project):
 
 
 
-    impulseLineTable = Table(data = impulseLineTableData, colWidths = [sheetWidth * 0.075,sheetWidth * 0.275,sheetWidth * 0.1,sheetWidth * 0.15,sheetWidth * 0.15,sheetWidth * 0.1,sheetWidth * 0.15])
-    impulseLineTableStyleCmds = PdfHelper.commonTableStyleCmd.copy()
-    impulseLineTableStyleCmds.extend(PdfHelper.centerAlignTableStyleCmd +
-                                         PdfHelper.visibleAllBordersTableStyleCmd + 
-                                         PdfHelper.usualFontTableStyleCmd)
-    impulseLineTableStyleCmds.extend(#шапка
-                                     [('FONTNAME', (0, 0), (-1, 1), "Arial-Bold")] +
-                                     [('SPAN', (0, 0), (0,1) )] + 
-                                     [('SPAN', (1, 0), (1, 1) )] + 
-                                     [('SPAN', (-1, 0), (-1, 1) )] + 
-                                     [('SPAN', (2, 0), (5, 0) )] )
+        impulseLineTable = Table(data = impulseLineTableData, colWidths = [sheetWidth * 0.075,sheetWidth * 0.275,sheetWidth * 0.1,sheetWidth * 0.15,sheetWidth * 0.15,sheetWidth * 0.1,sheetWidth * 0.15])
+        impulseLineTableStyleCmds = PdfHelper.commonTableStyleCmd.copy()
+        impulseLineTableStyleCmds.extend(PdfHelper.centerAlignTableStyleCmd +
+                                             PdfHelper.visibleAllBordersTableStyleCmd + 
+                                             PdfHelper.usualFontTableStyleCmd)
+        impulseLineTableStyleCmds.extend(#шапка
+                                         [('FONTNAME', (0, 0), (-1, 1), "Arial-Bold")] +
+                                         [('SPAN', (0, 0), (0,1) )] + 
+                                         [('SPAN', (1, 0), (1, 1) )] + 
+                                         [('SPAN', (-1, 0), (-1, 1) )] + 
+                                         [('SPAN', (2, 0), (5, 0) )] )
 
-    recordsStartRow = 2
-    impulseLineRecordOffset = 2
+        recordsStartRow = 2
+        impulseLineRecordOffset = 2
 
-    currentRecordFirstRow = recordsStartRow
+        currentRecordFirstRow = recordsStartRow
 
-    for impulseLineRecord in range(impulseLineNumber):
-        #формируем каждую запись
-        impulseLineTableStyleCmds.extend(
-                                     [('SPAN', (0, currentRecordFirstRow), (0,currentRecordFirstRow + impulseLineRecordOffset) )] + 
-                                     [('SPAN', (1, currentRecordFirstRow), (1, currentRecordFirstRow + impulseLineRecordOffset) )] + 
-                                     [('SPAN', (-1, currentRecordFirstRow), (-1, currentRecordFirstRow + impulseLineRecordOffset) )] 
-                                     )
-        currentRecordFirstRow+=impulseLineRecordOffset + 1
+        for impulseLineRecord in range(impulseLineNumber):
+            #формируем каждую запись
+            impulseLineTableStyleCmds.extend(
+                                         [('SPAN', (0, currentRecordFirstRow), (0,currentRecordFirstRow + impulseLineRecordOffset) )] + 
+                                         [('SPAN', (1, currentRecordFirstRow), (1, currentRecordFirstRow + impulseLineRecordOffset) )] + 
+                                         [('SPAN', (-1, currentRecordFirstRow), (-1, currentRecordFirstRow + impulseLineRecordOffset) )] 
+                                         )
+            currentRecordFirstRow+=impulseLineRecordOffset + 1
                                          
-    impulseLineTable.setStyle(TableStyle(cmds= impulseLineTableStyleCmds ))
+        impulseLineTable.setStyle(TableStyle(cmds= impulseLineTableStyleCmds ))
 
     
     
 
     #собираем все объекты в массив и отдаем
     sheetElements = []   
-    sheetElements.append(sheetTable)
+    sheetElements.append(sheetTable) 
     sheetElements.append(impulseLineTable)
          
     return sheetElements
