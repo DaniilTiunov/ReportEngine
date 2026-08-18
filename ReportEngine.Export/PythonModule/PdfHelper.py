@@ -93,3 +93,29 @@ def registerFonts():
     pdfmetrics.registerFont(TTFont('Arial-Bold','arialbd.ttf'))
     pdfmetrics.registerFont(UnicodeCIDFont('STSong-Light'))
 
+
+def to_str(value):
+    return str(value) if value is not None else ""
+
+
+
+def calculate_element_height(element, width):
+    """Вычисляет реальную высоту элемента"""
+    try:
+        w, h = element.wrap(width, 0)
+        return h
+    except:
+        # Если элемент не поддерживает wrap
+        return 0
+
+def get_column_height(elements, column_width):
+    """Вычисляет суммарную высоту колонки"""
+    total = 0
+    for element in elements:
+        if isinstance(element, list):
+            # Рекурсивно для вложенных списков
+            for sub_element in element:
+                total += calculate_element_height(sub_element, column_width)
+        else:
+            total += calculate_element_height(element, column_width)
+    return total
