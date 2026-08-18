@@ -100,7 +100,7 @@ def to_str(value):
 
 
 def calculate_element_height(element, width):
-    """Вычисляет реальную высоту элемента"""
+    #Вычисляет реальную высоту элемента
     try:
         w, h = element.wrap(width, 0)
         return h
@@ -108,8 +108,9 @@ def calculate_element_height(element, width):
         # Если элемент не поддерживает wrap
         return 0
 
+
 def get_column_height(elements, column_width):
-    """Вычисляет суммарную высоту колонки"""
+    #Вычисляет суммарную высоту колонки
     total = 0
     for element in elements:
         if isinstance(element, list):

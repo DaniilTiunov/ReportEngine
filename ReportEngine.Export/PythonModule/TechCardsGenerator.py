@@ -309,21 +309,21 @@ def fillStandPage(stand, doc, project):
                                               PdfHelper.usualFontTableStyleCmd + 
                                               PdfHelper.visibleAllBordersTableStyleCmd))
 
-    #выравнивание таблиц по кол-вам строк
-    rowsOffset = leftPartElementsCount - rightPartElementsCount
-    targetObject = mountPartsRecords if rowsOffset < 0 else electricPartsRecords
+    # #выравнивание таблиц по кол-вам строк
+    # rowsOffset = leftPartElementsCount - rightPartElementsCount
 
-    for _ in range(abs(rowsOffset)):
+    # targetObject = mountPartsRecords if rowsOffset < 0 else electricPartsRecords
 
-        emptyRows = [
-            Paragraph("",tableContentStyle),
-            Paragraph("",tableContentStyle),
-            Paragraph("",tableContentStyle),
-            Paragraph("",tableContentStyle),
-            ]
+    # for _ in range(abs(rowsOffset-1)):
 
+    #     emptyRow = [
+    #         Paragraph("",tableContentStyle),
+    #         Paragraph("",tableContentStyle),
+    #         Paragraph("",tableContentStyle),
+    #         Paragraph("",tableContentStyle),
+    #         ]
 
-        targetObject.append(emptyRows)
+    #     targetObject.append(emptyRow)
 
 
     mountPartsTable = Table(data = mountPartsRecords, colWidths = [leftPartWidth*0.68, leftPartWidth*0.12, leftPartWidth*0.1, leftPartWidth*0.1])
@@ -356,11 +356,30 @@ def fillStandPage(stand, doc, project):
                 mountPartsHeaderTable, 
                 mountPartsTable ]
 
+
     rightPart = [ blueprintTable,
                  drainagePartsHeaderTable,
                  drainagePartsTable, 
                  electricPartsHeaderTable,  
                  electricPartsTable ]
+
+
+
+    #пытаемся выровнять левую и правую части таблицы дополнительным отступом
+    leftPartHeight = PdfHelper.get_column_height(leftPart, leftPartWidth)
+    rightPartHeight = PdfHelper.get_column_height(rightPart, rightPartWidth)
+
+    partsHeightOffset = leftPartHeight - rightPartHeight
+
+    if abs(partsHeightOffset) > 0:
+
+        targetObject = leftPart if partsHeightOffset < 0 else rightPart
+
+        spacerTable = Table([[""]], rowHeights = [abs(partsHeightOffset)], colWidths=[rightPartWidth])
+        spacerTable.setStyle(TableStyle(cmds =PdfHelper.visibleAllBordersTableStyleCmd))
+
+        targetObject.append(spacerTable)
+
 
     sheetTable = Table(data = [[ leftPart, rightPart ]], colWidths = [leftPartWidth , rightPartWidth])
 
