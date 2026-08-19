@@ -2,9 +2,11 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
+using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Commands.Providers;
+using ReportEngine.App.Enums;
 using ReportEngine.App.Extensions;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
@@ -16,6 +18,7 @@ using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Services.Logger;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels.Utils;
+using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.BaseEntities;
@@ -26,6 +29,7 @@ using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Store;
+using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
@@ -53,6 +57,7 @@ public class ProjectViewModel : BaseViewModel
     private readonly UIValidatorService _uiValidatorService;
     private readonly UpdaterStandService _updaterStandService;
     private readonly UiLogger _logger;
+    private readonly IServiceProvider _serviceProvider;
 
     public ProjectViewModel(
         IProjectInfoRepository projectRepository,
@@ -73,7 +78,8 @@ public class ProjectViewModel : BaseViewModel
         AuditService auditService,
         SessionService sessionService,
         ExceptionService exceptionService,
-        UiLogger logger)
+        UiLogger logger,
+        IServiceProvider serviceProvider)
     {
         _projectRepository = projectRepository;
         _dialogService = dialogService;
@@ -94,6 +100,7 @@ public class ProjectViewModel : BaseViewModel
         _auditService = auditService;
         _exceptionService = exceptionService;
         _logger = logger;
+        _serviceProvider = serviceProvider;
 
         NewStand = new StandModel { Number = 1 };
 
@@ -146,6 +153,8 @@ public class ProjectViewModel : BaseViewModel
             CurrentProjectModel.Object = _dialogService.ShowSubjectDialog());
     }
 
+
+    //добавление новой обвязки
     public async void OnOpenObvSettingsWindowCommandExecuted(object e)
     {
         await _exceptionService.SafeExecuteAsync(async () =>
@@ -1123,6 +1132,72 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
+
+    public async Task OnFillMarkInObvCommandExecuted(object obv)
+    {
+        await _exceptionService.SafeExecuteAsync(async () =>
+        {
+            var proj = CurrentProjectModel;
+            var selectedStand = proj.SelectedStand;
+
+            if (selectedStand == null)
+            {
+                return;
+            }
+
+            bool projectHasMarkPlus = !String.IsNullOrEmpty(proj.MarkPlus);
+            bool projectHasMarkMinus = !String.IsNullOrEmpty(proj.MarkMinus);
+
+            //если совсем нет маркировки в проекте
+            if (!projectHasMarkPlus && !projectHasMarkMinus)
+            {
+                _notificationService.ShowError("Отсутствует маркировка в проекте!");
+                return;
+            }
+
+            bool firstSensorHasKKS = !String.IsNullOrEmpty(selectedStand.FirstSensorKKS);
+            bool secondSensorHasKKS = !String.IsNullOrEmpty(selectedStand.SecondSensorKKS);
+            bool thirdSensorHasKKS = !String.IsNullOrEmpty(selectedStand.ThirdSensorKKS);
+
+            if (projectHasMarkPlus)
+            {
+
+                selectedStand.FirstSensorMarkPlus = firstSensorHasKKS ?
+                                                        selectedStand.FirstSensorKKS + proj.MarkPlus :
+                                                        selectedStand.FirstSensorMarkPlus;
+
+                selectedStand.SecondSensorMarkPlus = secondSensorHasKKS ?
+                                                        selectedStand.SecondSensorKKS + proj.MarkPlus :
+                                                        selectedStand.SecondSensorMarkPlus;
+
+
+                selectedStand.ThirdSensorMarkPlus = thirdSensorHasKKS ?
+                                                        selectedStand.ThirdSensorKKS + proj.MarkPlus :
+                                                        selectedStand.ThirdSensorMarkPlus;
+            }
+
+            if (projectHasMarkMinus)
+            {
+
+                selectedStand.FirstSensorMarkMinus = firstSensorHasKKS ?
+                                                        selectedStand.FirstSensorKKS + proj.MarkMinus :
+                                                        selectedStand.FirstSensorMarkMinus;
+
+                selectedStand.SecondSensorMarkMinus = secondSensorHasKKS ?
+                                                        selectedStand.SecondSensorKKS + proj.MarkMinus :
+                                                        selectedStand.SecondSensorMarkMinus;
+
+                selectedStand.ThirdSensorMarkMinus = thirdSensorHasKKS ?
+                                                        selectedStand.ThirdSensorKKS + proj.MarkMinus :
+                                                        selectedStand.ThirdSensorMarkMinus;
+            }
+
+        });
+    }
+
+
+
+
     public async void OnCreateContainerStandCommandExecuted(object obj)
     {
         await _exceptionService.SafeExecuteAsync(async () =>
@@ -1793,15 +1868,21 @@ public class ProjectViewModel : BaseViewModel
         var standsToUse = selectedStands;
         var etaonStands = CurrentProjectModel.Stands;
 
-        // Проверяем на дубликаты KKS
-        var hasDuplicates = standsToUse
-            .GroupBy(stand => stand.KKSCode)
-            .Any(group => group.Count() > 1);
 
-        if (hasDuplicates)
+
+        var kksDuplicates = standsToUse
+            .GroupBy(stand => stand.KKSCode)
+            .Where(group => group.Count() > 1)
+            .ToList();
+
+
+        if (kksDuplicates.Count > 0)
         {
-            var confirmationResult = _notificationService.ShowConfirmation(
-                "Обнаружены дублирования KKS-кодов стендов.\nПродолжить?");
+            var warningMessage = "Обнаружены дублирования KKS-кодов стендов:\n\n" +
+                string.Join("\n", kksDuplicates.Select(g => $"- {g.Key} ({g.Count()} шт.)")) +
+                "\n\nПродолжить генерацию отчета?";
+
+            var confirmationResult = _notificationService.ShowConfirmation(warningMessage);
 
             if (!confirmationResult)
             {
@@ -1809,6 +1890,31 @@ public class ProjectViewModel : BaseViewModel
                 return;
             }
         }
+
+        //если тех карты - вызываем доп окно
+        if (typeGenerator == ReportType.TechnologicalCards)
+        {
+            var reportTypeWindow = new TechCardElecrticDialog()
+            {
+                Owner = Application.Current.MainWindow
+            };
+            var dialogResult = reportTypeWindow.ShowDialog();
+
+            //если пользователь что-то выбрал
+            if (dialogResult == true && reportTypeWindow.SelectedOption != TechCardElecticDialogResult.Cancel)
+            {
+                bool includeElectric = (reportTypeWindow.SelectedOption == TechCardElecticDialogResult.WithElectric);
+                var reportSettings = _serviceProvider.GetRequiredService<ReportSettings>();
+                reportSettings.TechCardIncludeElectric = includeElectric;
+            }
+            else
+            {
+                _notificationService.ShowInfo("Генерация отчета отменена");
+                return;
+            }
+        }
+
+
 
         // Генерация отчета — перегрузка в _reportService разберётся сама
         await _dialogService.RunWithProgressDialogAsync(() =>

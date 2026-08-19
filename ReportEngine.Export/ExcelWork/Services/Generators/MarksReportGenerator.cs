@@ -94,6 +94,9 @@ public class MarksReportGenerator : IReportGenerator
 
         if (selectedStands != null) sourceData = selectedStands;
 
+        sourceData = sourceData.OrderBy(stand => stand.Number).ToList();
+
+
         var allRecords = sourceData
             .SelectMany(
                 stand => stand.ObvyazkiInStand,

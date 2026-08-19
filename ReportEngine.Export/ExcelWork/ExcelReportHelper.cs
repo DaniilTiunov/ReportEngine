@@ -1015,4 +1015,10 @@ public static class ExcelReportHelper
         var ruCulture = new CultureInfo("ru-RU");
         return price.HasValue ? price.Value.ToString("N0", ruCulture) : string.Empty;
     }
+
+
+    public static string RemoveControlSymbols(string? text)
+    {
+        return text?.Replace("\r\n", "\n") ?? "";
+    }
 }

@@ -1,7 +1,12 @@
-﻿using ReportEngine.App.AsyncCommands;
+﻿using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
+using ReportEngine.App.AsyncCommands;
+using ReportEngine.App.Enums;
 using ReportEngine.App.Model;
 using ReportEngine.App.Services.Calculation;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.Views.Windows.Dialog;
+using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Generators;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
@@ -19,6 +24,8 @@ public class TreeViewModel
     private readonly UpdaterStandService _updaterStandService;
     private readonly FlatSummaryReportGenerator _flatSummaryReportGenerator;
 
+    private readonly IServiceProvider _serviceProvider;
+
     public TreeViewModel(
         ProjectViewModel projectViewModel,
         INotificationService notificationService,
@@ -26,7 +33,8 @@ public class TreeViewModel
         IDialogService dialogService,
         ICalculationService calculationService,
         UpdaterStandService updaterStandService,
-        FlatSummaryReportGenerator flatSummaryReportGenerator)
+        FlatSummaryReportGenerator flatSummaryReportGenerator,
+        IServiceProvider serviceProvider)
     {
         _notificationService = notificationService;
         _reportService = reportService;
@@ -35,6 +43,7 @@ public class TreeViewModel
         _updaterStandService = updaterStandService;
         _flatSummaryReportGenerator = flatSummaryReportGenerator;
         _projectViewModel = projectViewModel;
+        _serviceProvider = serviceProvider;
 
         InitializeCommands();
     }
@@ -138,7 +147,6 @@ public class TreeViewModel
 
             if (kksDuplicates.Count > 0)
             {
-
                 var warningMessage = "Обнаружены дублирования KKS-кодов стендов:\n\n" +
                     string.Join("\n", kksDuplicates.Select(g => $"- {g.Key} ({g.Count()} шт.)")) +
                     "\n\nПродолжить генерацию отчета?";
@@ -152,8 +160,28 @@ public class TreeViewModel
                 }
             }
 
+            //если тех карты - вызываем доп окно
+            if (type == ReportType.TechnologicalCards)
+            {
+                var reportTypeWindow = new TechCardElecrticDialog()
+                {
+                    Owner = Application.Current.MainWindow
+                };
+                var dialogResult = reportTypeWindow.ShowDialog();
 
-
+                //если пользователь что-то выбрал
+                if (dialogResult == true && reportTypeWindow.SelectedOption != TechCardElecticDialogResult.Cancel)
+                {
+                    bool includeElectric = (reportTypeWindow.SelectedOption == TechCardElecticDialogResult.WithElectric);
+                    var reportSettings = _serviceProvider.GetRequiredService<ReportSettings>();
+                    reportSettings.TechCardIncludeElectric = includeElectric;
+                }
+                else
+                {
+                    _notificationService.ShowInfo("Генерация отчета отменена");
+                    return;
+                }
+            }
 
             await _dialogService.RunWithProgressDialogAsync(async () =>
             {
@@ -174,7 +202,6 @@ public class TreeViewModel
 
     private async Task CreateFlatSummaryReportAsync(object obj)
     {
-
         await _dialogService.RunWithProgressDialogAsync(async () =>
         {
             await _flatSummaryReportGenerator.GenerateAsync(_project.CurrentProjectId);

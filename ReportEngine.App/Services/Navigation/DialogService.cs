@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
+using ReportEngine.App.Enums;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.ViewModels;
@@ -386,4 +387,5 @@ public class DialogService : IDialogService
                 break;
         }
     }
+
 }
