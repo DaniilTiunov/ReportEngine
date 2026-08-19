@@ -1,8 +1,12 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Windows;
+using DevExpress.DataProcessing.InMemoryDataProcessor;
+using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Commands.Providers;
+using ReportEngine.App.Enums;
 using ReportEngine.App.Extensions;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
@@ -14,6 +18,7 @@ using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Services.Logger;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels.Utils;
+using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.BaseEntities;
@@ -24,6 +29,7 @@ using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Store;
+using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
@@ -51,6 +57,7 @@ public class ProjectViewModel : BaseViewModel
     private readonly UIValidatorService _uiValidatorService;
     private readonly UpdaterStandService _updaterStandService;
     private readonly UiLogger _logger;
+    private readonly IServiceProvider _serviceProvider;
 
     public ProjectViewModel(
         IProjectInfoRepository projectRepository,
@@ -71,7 +78,8 @@ public class ProjectViewModel : BaseViewModel
         AuditService auditService,
         SessionService sessionService,
         ExceptionService exceptionService,
-        UiLogger logger)
+        UiLogger logger,
+        IServiceProvider serviceProvider)
     {
         _projectRepository = projectRepository;
         _dialogService = dialogService;
@@ -92,6 +100,7 @@ public class ProjectViewModel : BaseViewModel
         _auditService = auditService;
         _exceptionService = exceptionService;
         _logger = logger;
+        _serviceProvider = serviceProvider;
 
         NewStand = new StandModel { Number = 1 };
 
@@ -1791,15 +1800,21 @@ public class ProjectViewModel : BaseViewModel
         var standsToUse = selectedStands;
         var etaonStands = CurrentProjectModel.Stands;
 
-        // Проверяем на дубликаты KKS
-        var hasDuplicates = standsToUse
-            .GroupBy(stand => stand.KKSCode)
-            .Any(group => group.Count() > 1);
 
-        if (hasDuplicates)
+
+        var kksDuplicates = standsToUse
+            .GroupBy(stand => stand.KKSCode)
+            .Where(group => group.Count() > 1)
+            .ToList();
+
+
+        if (kksDuplicates.Count > 0)
         {
-            var confirmationResult = _notificationService.ShowConfirmation(
-                "Обнаружены дублирования KKS-кодов стендов.\nПродолжить?");
+            var warningMessage = "Обнаружены дублирования KKS-кодов стендов:\n\n" +
+                string.Join("\n", kksDuplicates.Select(g => $"- {g.Key} ({g.Count()} шт.)")) +
+                "\n\nПродолжить генерацию отчета?";
+
+            var confirmationResult = _notificationService.ShowConfirmation(warningMessage);
 
             if (!confirmationResult)
             {
@@ -1807,6 +1822,31 @@ public class ProjectViewModel : BaseViewModel
                 return;
             }
         }
+
+        //если тех карты - вызываем доп окно
+        if (typeGenerator == ReportType.TechnologicalCards)
+        {
+            var reportTypeWindow = new TechCardElecrticDialog()
+            {
+                Owner = Application.Current.MainWindow
+            };
+            var dialogResult = reportTypeWindow.ShowDialog();
+
+            //если пользователь что-то выбрал
+            if (dialogResult == true && reportTypeWindow.SelectedOption != TechCardElecticDialogResult.Cancel)
+            {
+                bool includeElectric = (reportTypeWindow.SelectedOption == TechCardElecticDialogResult.WithElectric);
+                var reportSettings = _serviceProvider.GetRequiredService<ReportSettings>();
+                reportSettings.TechCardIncludeElectric = includeElectric;
+            }
+            else
+            {
+                _notificationService.ShowInfo("Генерация отчета отменена");
+                return;
+            }
+        }
+
+
 
         // Генерация отчета — перегрузка в _reportService разберётся сама
         await _dialogService.RunWithProgressDialogAsync(() =>

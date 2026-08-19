@@ -1,4 +1,7 @@
-﻿using ReportEngine.Domain.Entities;
+﻿using Microsoft.Extensions.DependencyInjection;
+using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.CalculationParameters.Enums;
+using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.DTO.JsonObjects;
 using ReportEngine.Shared.Config.IniHelpers;
@@ -11,22 +14,16 @@ namespace ReportEngine.Export.ExcelWork;
 public static class JsonCreator
 {
     //создание JSON объекта проекта
-    public static ProjectJsonObject CreateProjectJson(ProjectInfo project, List<Stand>? selectedStands = null)
+    public static async Task<ProjectJsonObject> CreateProjectJson(ProjectInfo project, ParametersStore parametersStore, List<Stand>? selectedStands = null)
     {
-
-
-        var standSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
-
-        var sourceData = project.Stands;
-
-        if (selectedStands != null) sourceData = selectedStands;
+        var sourceData = selectedStands ?? project.Stands;
 
         return new ProjectJsonObject
         {
-            SeniorEngineer = standSettings.SeniorEngineer,
-            ResponsibleForAccept = standSettings.ResponsibleForAccept,
-            SecondLevelSpecialist = standSettings.SecondLevelSpecialist,
-            OSiL = standSettings.OSiL,
+            SeniorEngineer = parametersStore[CalculationParameterType.StandCost, "LeadEngineer"].Value,
+            ResponsibleForAccept = parametersStore[CalculationParameterType.StandCost, "AcceptanceSupervisor"].Value,
+            SecondLevelSpecialist = parametersStore[CalculationParameterType.StandCost, "SpecialistL2"].Value,
+            OSiL = parametersStore[CalculationParameterType.StandCost, "OsilRep"].Value,
 
             Number = project.Number,
             Id = project.Id,
@@ -47,7 +44,10 @@ public static class JsonCreator
             IsGalvanized = project.IsGalvanized,
             HumanCost = project.HumanCost,
             Manager = project.Manager,
-            Stands = sourceData.Select(CreateStandJson).ToList()
+            Stands = sourceData
+                        .OrderBy(stand => stand.Number)
+                        .Select(CreateStandJson)
+                        .ToList()
         };
     }
 
@@ -100,8 +100,8 @@ public static class JsonCreator
         return new StandJsonObject
         {
             Number = stand.Number,
-            KKSCode = stand.KKSCode,
-            Designation = stand.Design,
+            KKSCode = stand.KKSCode ?? "",
+            Designation = stand.Design ?? "",
             Devices = stand.Devices,
             BraceType = stand.BraceType,
             Width = stand.Width,
@@ -114,7 +114,7 @@ public static class JsonCreator
             Armature = stand.Armature,
             TreeSocket = stand.TreeSocket,
             KMCH = stand.KMCH,
-            Description = stand.DesigneStand,
+            Description = stand.DesigneStand ?? "",
             Comments = stand.Comments,
             ContainerStandId = stand.ContainerStandId,
             ImageData = stand.ImageData,
@@ -157,10 +157,10 @@ public static class JsonCreator
 
         return new ImpulseLineRecordJsonObject
         {
-            Name = record.SensorDescription,
-            CodeKKS = record.SensorKKS,
+            Name = ExcelReportHelper.RemoveControlSymbols(record.SensorDescription),
+            CodeKKS = ExcelReportHelper.RemoveControlSymbols(record.SensorKKS),
             Wires = wiresInfo,
-            Annotation = stand.DesigneStand
+            Annotation = ExcelReportHelper.RemoveControlSymbols(stand.DesigneStand)
         };
     }
 }

@@ -46,7 +46,7 @@ public class SummaryReportGenerator : IReportGenerator
         {
             var standNumber = 1;
 
-            foreach (var stand in project.Stands)
+            foreach (var stand in project.Stands.OrderBy(stand => stand.Number))
             {
                 var ws = wb.Worksheets.Add($"{standNumber}");
 

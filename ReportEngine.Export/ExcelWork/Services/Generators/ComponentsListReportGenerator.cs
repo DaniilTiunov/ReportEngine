@@ -29,7 +29,7 @@ public class ComponentListReportGenerator : IReportGenerator
             var standNumber = 1;
 
             //заполняем листы по стендам
-            foreach (var stand in project.Stands)
+            foreach (var stand in project.Stands.OrderBy(stand => stand.Number))
             {
                 var ws = wb.Worksheets.Add($"{standNumber}");
 
@@ -65,6 +65,10 @@ public class ComponentListReportGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
     {
+
+
+
+
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
 
         using (var wb = new XLWorkbook())
@@ -72,7 +76,7 @@ public class ComponentListReportGenerator : IReportGenerator
             var standNumber = 1;
 
             //заполняем листы по стендам
-            foreach (var stand in selectedStands)
+            foreach (var stand in selectedStands.OrderBy(stand => stand.Number))
             {
                 var ws = wb.Worksheets.Add($"{standNumber}");
 
