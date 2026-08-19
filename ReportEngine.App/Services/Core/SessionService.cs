@@ -17,7 +17,20 @@ public class SessionService : INotifyPropertyChanged
         _auditService = auditService;
         _userRepository = userRepository;
 
-        FirstStartSession();
+        if (StartUp.CanConnect)
+        {
+            FirstStartSession();
+        }
+        else
+        {
+            CurrentUser = new User
+            {
+                Id = 0,
+                Name = "Гость",
+                SecondName = "Гость",
+                LastName = "Гость"
+            };
+        }
     }
 
     public User? CurrentUser
@@ -33,7 +46,7 @@ public class SessionService : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    public async void FirstStartSession()
+    private async void FirstStartSession()
     {
         _currentUser = await _userRepository.GetByUserLoginAsync("Гость");
     }
