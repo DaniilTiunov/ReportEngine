@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
@@ -563,7 +564,7 @@ public class ProjectViewModel : BaseViewModel
 
             CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand.ObvyazkaAdditionalComponents);
 
-            await LoadObvyazkiAsync(); // Перезагрузить данные из БД 
+            await LoadObvyazkiAsync(); // Перезагрузить данные из БД
 
             UpdateNewObvNN();
             OnObvyazkiInStandChanged();

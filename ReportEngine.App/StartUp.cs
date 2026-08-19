@@ -1,6 +1,8 @@
 ﻿using System.Globalization;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
+using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Store;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
@@ -11,6 +13,8 @@ namespace ReportEngine.App;
 public static class StartUp
 {
     private static Mutex _mutex = null;
+
+    public static bool CanConnect;
 
     [STAThread]
     public static void Main()
@@ -31,21 +35,28 @@ public static class StartUp
 
             var host = HostFactory.BuildHost(config);
 
+            var context = host.Services.GetRequiredService<ReAppContext>();
+
             var app = host.Services.GetRequiredService<App>();
 
             var mainWindow = host.Services.GetRequiredService<MainWindow>();
 
-            try
+            CanConnect = CheckDbConnection(context);
+
+            if (CanConnect)
             {
-                host.Services
-                    .GetRequiredService<ParametersStore>()
-                    .LoadSettingsDataAsync()
-                    .GetAwaiter()
-                    .GetResult();
-            }
-            catch (Exception ex)
-            {
-                Log.Fatal(ex, "Ошибка загрузки ParameterStore");
+                try
+                {
+                    host.Services
+                        .GetRequiredService<ParametersStore>()
+                        .LoadSettingsDataAsync()
+                        .GetAwaiter()
+                        .GetResult();
+                }
+                catch (Exception ex)
+                {
+                    Log.Fatal(ex, "Ошибка загрузки ParameterStore");
+                }
             }
 
             app.MainWindow = mainWindow;
@@ -74,7 +85,19 @@ public static class StartUp
         }
     }
 
-    public static void SetCulture()
+    private static bool CheckDbConnection(ReAppContext context)
+    {
+        var canConnect = context.Database.CanConnect();
+
+        if (!canConnect)
+        {
+            ShowErrorWindow("Отсутствует подключение к БД");
+        }
+
+        return canConnect;
+    }
+
+    private static void SetCulture()
     {
         var culture = new CultureInfo("ru-RU");
 
