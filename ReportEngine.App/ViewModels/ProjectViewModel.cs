@@ -1,7 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
-using DevExpress.DataProcessing.InMemoryDataProcessor;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
@@ -164,8 +163,6 @@ public class ProjectViewModel : BaseViewModel
 
             //перед открытием создания обвязки обновляем номер в окне
             UpdateNewObvNN();
-
-            UpdateMarkAutoComplete();
 
             _dialogService.ShowObvSettingsWindow(this);
         });
@@ -1133,6 +1130,72 @@ public class ProjectViewModel : BaseViewModel
             OnPropertyChanged(nameof(CurrentProjectModel.SelectedStand.NewElectricalComponent.Purposes));
         });
     }
+
+
+    public async Task OnFillMarkInObvCommandExecuted(object obv)
+    {
+        await _exceptionService.SafeExecuteAsync(async () =>
+        {
+            var proj = CurrentProjectModel;
+            var selectedStand = proj.SelectedStand;
+
+            if (selectedStand == null)
+            {
+                return;
+            }
+
+            bool projectHasMarkPlus = !String.IsNullOrEmpty(proj.MarkPlus);
+            bool projectHasMarkMinus = !String.IsNullOrEmpty(proj.MarkMinus);
+
+            //если совсем нет маркировки в проекте
+            if (!projectHasMarkPlus && !projectHasMarkMinus)
+            {
+                _notificationService.ShowError("Отсутствует маркировка в проекте!");
+                return;
+            }
+
+            bool firstSensorHasKKS = !String.IsNullOrEmpty(selectedStand.FirstSensorKKS);
+            bool secondSensorHasKKS = !String.IsNullOrEmpty(selectedStand.SecondSensorKKS);
+            bool thirdSensorHasKKS = !String.IsNullOrEmpty(selectedStand.ThirdSensorKKS);
+
+            if (projectHasMarkPlus)
+            {
+
+                selectedStand.FirstSensorMarkPlus = firstSensorHasKKS ?
+                                                        selectedStand.FirstSensorKKS + proj.MarkPlus :
+                                                        selectedStand.FirstSensorMarkPlus;
+
+                selectedStand.SecondSensorMarkPlus = secondSensorHasKKS ?
+                                                        selectedStand.SecondSensorKKS + proj.MarkPlus :
+                                                        selectedStand.SecondSensorMarkPlus;
+
+
+                selectedStand.ThirdSensorMarkPlus = thirdSensorHasKKS ?
+                                                        selectedStand.ThirdSensorKKS + proj.MarkPlus :
+                                                        selectedStand.ThirdSensorMarkPlus;
+            }
+
+            if (projectHasMarkMinus)
+            {
+
+                selectedStand.FirstSensorMarkMinus = firstSensorHasKKS ?
+                                                        selectedStand.FirstSensorKKS + proj.MarkMinus :
+                                                        selectedStand.FirstSensorMarkMinus;
+
+                selectedStand.SecondSensorMarkMinus = secondSensorHasKKS ?
+                                                        selectedStand.SecondSensorKKS + proj.MarkMinus :
+                                                        selectedStand.SecondSensorMarkMinus;
+
+                selectedStand.ThirdSensorMarkMinus = thirdSensorHasKKS ?
+                                                        selectedStand.ThirdSensorKKS + proj.MarkMinus :
+                                                        selectedStand.ThirdSensorMarkMinus;
+            }
+
+        });
+    }
+
+
+
 
     public async void OnCreateContainerStandCommandExecuted(object obj)
     {
@@ -2217,51 +2280,6 @@ public class ProjectViewModel : BaseViewModel
             selectedStand.ElectricalPurposesChanges = true;
         }
     }
-
-
-    //пока что всратая реализация
-    private void UpdateMarkAutoComplete()
-    {
-
-        var proj = CurrentProjectModel;
-        var selectedStand = proj.SelectedStand;
-
-
-        if (selectedStand == null)
-        {
-            return;
-        }
-
-
-        bool projectHasMarkPlus = !String.IsNullOrEmpty(proj.MarkPlus);
-        bool projectHasMarkMinus = !String.IsNullOrEmpty(proj.MarkMinus);
-
-        bool firstSensorReadyToMark = selectedStand.FirstSensorType != null &&
-            !String.IsNullOrEmpty(selectedStand.FirstSensorKKS);
-
-        bool secondSensorReadyToMark = selectedStand.SecondSensorType != null &&
-            !String.IsNullOrEmpty(selectedStand.SecondSensorKKS);
-
-        bool thirdSensorReadyToMark = selectedStand.ThirdSensorType != null &&
-            !String.IsNullOrEmpty(selectedStand.ThirdSensorKKS);
-
-        if (projectHasMarkPlus)
-        {
-            selectedStand.FirstSensorMarkPlus = proj.MarkPlus;
-            selectedStand.SecondSensorMarkPlus = proj.MarkPlus;
-            selectedStand.ThirdSensorMarkPlus = proj.MarkPlus;
-        }
-
-        if (projectHasMarkMinus)
-        {
-            selectedStand.FirstSensorMarkMinus = proj.MarkMinus;
-            selectedStand.SecondSensorMarkMinus = proj.MarkMinus;
-            selectedStand.ThirdSensorMarkMinus = proj.MarkMinus;
-        }
-    }
-
-
-
 
     #endregion Обновление UI
 }
