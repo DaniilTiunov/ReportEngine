@@ -202,7 +202,6 @@ public class TreeViewModel
 
     private async Task CreateFlatSummaryReportAsync(object obj)
     {
-
         await _dialogService.RunWithProgressDialogAsync(async () =>
         {
             await _flatSummaryReportGenerator.GenerateAsync(_project.CurrentProjectId);

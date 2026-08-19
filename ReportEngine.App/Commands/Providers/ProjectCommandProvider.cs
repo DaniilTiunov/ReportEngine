@@ -32,6 +32,7 @@ public class ProjectCommandProvider
     public ICommand CreateFinplanReportCommand { get; set; }
     public ICommand RemoveObvFromStandCommand { get; set; }
     public ICommand UpdateObvInStandCommand { get; set; }
+    public ICommand FillMarkInObvCommand { get; set; }
     public ICommand CopyObvyazkaToStandsCommand { get; set; }
     public ICommand CreatePassportReportCommand { get; set; }
     public ICommand CreateTechnologicalCardsReportCommand { get; set; }

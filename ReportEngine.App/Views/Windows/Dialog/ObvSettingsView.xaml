@@ -694,26 +694,33 @@
                             <StackPanel
                                 Grid.Row="15"
                                 Grid.ColumnSpan="2"
-                                Margin="0,10,0,0"
+                                Margin="10"
                                 HorizontalAlignment="Right"
                                 Orientation="Horizontal">
-                                <Button
-                                    Width="150"
-                                    Height="30"
-                                    Margin="0,0,5,0"
+
+                                <StackPanel.Resources>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Margin" Value="0,0,10,0"/>
+                                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                        <Setter Property="Height" Value="40"/>
+                                        <Setter Property="Width" Value="150"/>
+                                    </Style>
+                                </StackPanel.Resources>
+                                
+                                <Button      
                                     Command="{Binding ProjectCommandProvider.SaveObvCommand}"
-                                    Content="Добавить новую" />
+                                    Content="Добавить&#10;  новую" 
+                                    />
                                 <Button
-                                    Width="178"
-                                    Height="30"
                                     Command="{Binding ProjectCommandProvider.UpdateObvInStandCommand}"
-                                    Content="Сохранить изменения" />
+                                    Content="Сохранить &#10;изменения" 
+                                    />
                                 <Button
-                                    Width="190"
-                                    Height="30"
-                                    Margin="5,0,5,0"
                                     Command="{Binding ProjectCommandProvider.AdditionalTestCommand}"
-                                    Content="Заполнить доп. компоненты" />
+                                    Content="    Заполнить&#10;доп.компоненты" />
+                                <Button
+                                    Command="{Binding ProjectCommandProvider.FillMarkInObvCommand}"
+                                    Content=" Заполнить&#10;маркировку" />
                             </StackPanel>
                         </Grid>
                     </GroupBox>
