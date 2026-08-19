@@ -153,6 +153,8 @@ public class ProjectViewModel : BaseViewModel
             CurrentProjectModel.Object = _dialogService.ShowSubjectDialog());
     }
 
+
+    //добавление новой обвязки
     public async void OnOpenObvSettingsWindowCommandExecuted(object e)
     {
         await _exceptionService.SafeExecuteAsync(async () =>
@@ -162,6 +164,8 @@ public class ProjectViewModel : BaseViewModel
 
             //перед открытием создания обвязки обновляем номер в окне
             UpdateNewObvNN();
+
+            UpdateMarkAutoComplete();
 
             _dialogService.ShowObvSettingsWindow(this);
         });
@@ -2213,6 +2217,51 @@ public class ProjectViewModel : BaseViewModel
             selectedStand.ElectricalPurposesChanges = true;
         }
     }
+
+
+    //пока что всратая реализация
+    private void UpdateMarkAutoComplete()
+    {
+
+        var proj = CurrentProjectModel;
+        var selectedStand = proj.SelectedStand;
+
+
+        if (selectedStand == null)
+        {
+            return;
+        }
+
+
+        bool projectHasMarkPlus = !String.IsNullOrEmpty(proj.MarkPlus);
+        bool projectHasMarkMinus = !String.IsNullOrEmpty(proj.MarkMinus);
+
+        bool firstSensorReadyToMark = selectedStand.FirstSensorType != null &&
+            !String.IsNullOrEmpty(selectedStand.FirstSensorKKS);
+
+        bool secondSensorReadyToMark = selectedStand.SecondSensorType != null &&
+            !String.IsNullOrEmpty(selectedStand.SecondSensorKKS);
+
+        bool thirdSensorReadyToMark = selectedStand.ThirdSensorType != null &&
+            !String.IsNullOrEmpty(selectedStand.ThirdSensorKKS);
+
+        if (projectHasMarkPlus)
+        {
+            selectedStand.FirstSensorMarkPlus = proj.MarkPlus;
+            selectedStand.SecondSensorMarkPlus = proj.MarkPlus;
+            selectedStand.ThirdSensorMarkPlus = proj.MarkPlus;
+        }
+
+        if (projectHasMarkMinus)
+        {
+            selectedStand.FirstSensorMarkMinus = proj.MarkMinus;
+            selectedStand.SecondSensorMarkMinus = proj.MarkMinus;
+            selectedStand.ThirdSensorMarkMinus = proj.MarkMinus;
+        }
+    }
+
+
+
 
     #endregion Обновление UI
 }
