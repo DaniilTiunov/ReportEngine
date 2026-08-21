@@ -1,12 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using ReportEngine.Domain.Entities;
+﻿using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.DTO.JsonObjects;
-using ReportEngine.Shared.Config.IniHelpers;
-using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
-using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
 using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.Export.ExcelWork;
@@ -14,7 +10,8 @@ namespace ReportEngine.Export.ExcelWork;
 public static class JsonCreator
 {
     //создание JSON объекта проекта
-    public static async Task<ProjectJsonObject> CreateProjectJson(ProjectInfo project, ParametersStore parametersStore, List<Stand>? selectedStands = null)
+    public static async Task<ProjectJsonObject> CreateProjectJson(ProjectInfo project, ParametersStore parametersStore,
+        List<Stand>? selectedStands = null)
     {
         var sourceData = selectedStands ?? project.Stands;
 
@@ -45,9 +42,9 @@ public static class JsonCreator
             HumanCost = project.HumanCost,
             Manager = project.Manager,
             Stands = sourceData
-                        .OrderBy(stand => stand.Number)
-                        .Select(CreateStandJson)
-                        .ToList()
+                .OrderBy(stand => stand.Number)
+                .Select(CreateStandJson)
+                .ToList()
         };
     }
 
@@ -95,7 +92,7 @@ public static class JsonCreator
 
         var impulseLines = stand.ObvyazkiInStand
             .SelectMany(obv => ExcelReportHelper.CreateSensorsListFromObvyazka(obv))
-            .Select(record => SensorToJson(record,stand));
+            .Select(record => SensorToJson(record, stand));
 
         return new StandJsonObject
         {
@@ -144,9 +141,9 @@ public static class JsonCreator
     {
         //находим название коробки в стенде
         var boxName = stand.StandElectricalComponent
-             .SelectMany(sec => sec.ElectricalComponent.Purposes)
-             .First(purpose => !string.IsNullOrEmpty(purpose.Purpose) && purpose.Purpose.StartsWith("Клеммная коробка"))
-             .Material;
+            .SelectMany(sec => sec.ElectricalComponent.Purposes)
+            .First(purpose => !string.IsNullOrEmpty(purpose.Purpose) && purpose.Purpose.StartsWith("Клеммная коробка"))
+            .Material;
 
         var wiresInfo = new List<WireRecord>
         {

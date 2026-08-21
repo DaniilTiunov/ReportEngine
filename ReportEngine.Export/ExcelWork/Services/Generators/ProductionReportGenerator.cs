@@ -196,11 +196,11 @@ public class ProductionReportGenerator : IReportGenerator
         //выводим стенды
         var standsRecords = sourceData
             .Select(stand => new StandInfoData
-        {
-            Name = new ValidatedField<string?>(stand.Design, true),
-            KKS = new ValidatedField<string?>(stand.KKSCode, true),
-            SerialNumber = new ValidatedField<string?>(stand.SerialNumber, true)
-        });
+            {
+                Name = new ValidatedField<string?>(stand.Design, true),
+                KKS = new ValidatedField<string?>(stand.KKSCode, true),
+                SerialNumber = new ValidatedField<string?>(stand.SerialNumber, true)
+            });
 
         foreach (var standRecord in standsRecords)
         {

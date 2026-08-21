@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel;
+﻿using System.Diagnostics;
+using ClosedXML.Excel;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Pipes;
@@ -9,7 +10,6 @@ using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
 using ReportEngine.Shared.Helpers;
-using System.Diagnostics;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -443,7 +443,6 @@ public class SummaryReportGenerator : IReportGenerator
         activeRow = CreateUsualTotalRecord(activeRow, "Итого по комплектующим", allPartsList, ws);
 
 
-
         var generatedLaborData =
             ExcelReportHelper.GenerateLaborData(standList, _parametersStore, project, stainlessPipes);
         var allLaborsList = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);
@@ -467,7 +466,6 @@ public class SummaryReportGenerator : IReportGenerator
         IEnumerable<StainlessPipe> pipes,
         List<Stand>? selectedStands = null)
     {
-
         var activeRow = 4;
 
         var containerBatches = _containerRepository.GetAllByProjectIdAsync(project.Id);
@@ -649,48 +647,43 @@ public class SummaryReportGenerator : IReportGenerator
             });
 
 
-
-
-
-
-
         var standNumber = 1;
 
         foreach (var stand in standsRecords)
         {
             ws.Cell($"B{activeRow}").Value = stand.exportDays.ToString();
-            
+
             ws.Cell($"B{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
             ws.Cell($"C{activeRow}").Value = standNumber.ToString();
-            
+
             ws.Cell($"C{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
 
             ws.Cell($"D{activeRow}").Value = stand.name;
-            
+
             ws.Cell($"D{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
 
             ws.Cell($"E{activeRow}").Value = stand.kks;
-            
+
             ws.Cell($"E{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
 
             ws.Cell($"F{activeRow}").Value = stand.unit;
-            
+
             ws.Cell($"F{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
             ws.Cell($"G{activeRow}").Value = stand.quantity.ToString();
-            
+
             ws.Cell($"G{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
             ws.Cell($"H{activeRow}").Value = stand.weight.ToString();
             ws.Cell($"H{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
             ws.Cell($"I{activeRow}").Value = stand.width.ToString();
-            
+
             ws.Cell($"I{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
             ws.Cell($"J{activeRow}").Value = ExcelReportHelper.FormatPrice(stand.cost);
-            
+
             ws.Cell($"J{activeRow}").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
 
             ws.Cell($"K{activeRow}").Value = ExcelReportHelper.FormatPrice(stand.commonCost);

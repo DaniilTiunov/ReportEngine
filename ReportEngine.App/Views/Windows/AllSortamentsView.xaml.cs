@@ -53,12 +53,11 @@ public partial class AllSortamentsView : Window
         // когда колонки/ItemsSource меняются во время редактирования.
         try
         {
-            if (EquipDataGrid.IsReadOnly == false)
-            {
-                EquipDataGrid.CancelEdit(DataGridEditingUnit.Row);
-            }
+            if (!EquipDataGrid.IsReadOnly) EquipDataGrid.CancelEdit(DataGridEditingUnit.Row);
         }
-        catch { }
+        catch
+        {
+        }
 
         ResetAllSubTabControls();
 
@@ -78,7 +77,7 @@ public partial class AllSortamentsView : Window
     {
         foreach (var mainTabItem in MainTabControl.Items)
             if (mainTabItem is TabItem tabItem && tabItem.Content is TabControl subTabControl)
-               subTabControl.SelectedIndex = -1;
+                subTabControl.SelectedIndex = -1;
     }
 
     private void SelectEquip_DoubleClick(object sender, MouseButtonEventArgs e)

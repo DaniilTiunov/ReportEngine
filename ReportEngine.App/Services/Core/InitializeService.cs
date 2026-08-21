@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.CalculationParameters.Enums;
@@ -131,7 +130,7 @@ public class InitializeService
         var cableSixMm = _parametersStore[cableSixMmParameter]?.Equipment;
 
         var cableSixMmQuantityParameter = _parametersStore[CalculationParameterType.ElectricCost, "Cable6mmQuantity"];
-        bool parameterConversionIsOk = float.TryParse(cableSixMmQuantityParameter.Value, out var cableSixMmQuantity);
+        var parameterConversionIsOk = float.TryParse(cableSixMmQuantityParameter.Value, out var cableSixMmQuantity);
 
         var cableFourMmParameter = _parametersStore[CalculationParameterType.Equipments, "Cable4mm"];
         var cableFourMm = _parametersStore[cableFourMmParameter]?.Equipment;

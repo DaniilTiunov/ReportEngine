@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using DevExpress.DataProcessing.InMemoryDataProcessor;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
@@ -192,9 +191,6 @@ public class MainWindowViewModel : BaseViewModel
                 _navigation.ShowContent<TreeProjectView>();
                 _logger.Success($"Отрыт проект {MainWindowModel.SelectedProject.OrderCustomer} Статус: Успешно");
             });
-
-
-            
         });
     }
 
@@ -202,13 +198,19 @@ public class MainWindowViewModel : BaseViewModel
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
+            var selectedProject = MainWindowModel.SelectedProject;
+
+            if (selectedProject == null)
+            {
+                _notificationService.ShowInfo("Проект не выбран");
+                return;
+            }
+
             await _dialogService.RunWithProgressDialogAsync(async () =>
             {
-                var newProject = MainWindowModel.SelectedProject;
+                await _entityProjectClonerService.CloneProjectEntity(selectedProject);
 
-                await _entityProjectClonerService.CloneProjectEntity(newProject);
-
-                MainWindowModel.AllProjects.Add(newProject);
+                await ShowAllProjectsAsync();
 
                 _logger.Success($"Скопирован проект {MainWindowModel.SelectedProject.OrderCustomer} Статус: Успешно");
             });
@@ -223,13 +225,13 @@ public class MainWindowViewModel : BaseViewModel
 
             //принудительно обновляем количество стендов при закрытии проекта и подгружаем свежие данные
             //при пересчете всего проекта начинает подтормаживать, поэтому оставляем только обновление количества стендов
-            if (projectViewModel?.CurrentProjectModel != null && projectViewModel.CurrentProjectModel.CurrentProjectId != 0 )
+            if (projectViewModel?.CurrentProjectModel != null &&
+                projectViewModel.CurrentProjectModel.CurrentProjectId != 0)
             {
+                //await RecalculateProjectAsync();
+                await _calculationService.CalculateAndUpdateStandQuantity(projectViewModel.CurrentProjectModel);
 
-               //await RecalculateProjectAsync(); 
-               await _calculationService.CalculateAndUpdateStandQuantity(projectViewModel.CurrentProjectModel);
-
-               await UpdateProjectStandsQuantity(projectViewModel.CurrentProjectModel.CurrentProjectId);
+                await UpdateProjectStandsQuantity(projectViewModel.CurrentProjectModel.CurrentProjectId);
             }
 
             //if (CheckUnsafeDetails(projectViewModel))
@@ -346,13 +348,14 @@ public class MainWindowViewModel : BaseViewModel
     {
         var project = await _projectRepository.GetByIdAsync(projectId);
 
+        if (project.Stands.Count == 0) return;
+
         // всратая вставка, но пока быстро (до 1к проектов)
         var index = MainWindowModel.AllProjects.IndexOf(MainWindowModel.AllProjects.First(p => p.Id == projectId));
 
         if (index >= 0)
             MainWindowModel.AllProjects[index] = project;
     }
-
 
 
     public async Task DeleteSelectedProjectAsync()
@@ -363,24 +366,22 @@ public class MainWindowViewModel : BaseViewModel
             return;
 
 
-
         var currentProject = MainWindowModel.SelectedProject;
 
 
         var deletingProjectInfo = new
         {
-            OrderCustomer = currentProject.OrderCustomer,
-            Description = currentProject.Description
+            currentProject.OrderCustomer, currentProject.Description
         };
-            
+
         await _projectRepository.DeleteAsync(currentProject);
         await ShowAllProjectsAsync();
 
         _notificationService.ShowInfo("Проект успешно удалён");
 
         _logger.Success($"Удалён проект {deletingProjectInfo.Description} " +
-            $"c заказом покупателя {deletingProjectInfo.OrderCustomer} " +
-            $"Статус: Успешно");
+                        $"c заказом покупателя {deletingProjectInfo.OrderCustomer} " +
+                        $"Статус: Успешно");
 
         await _auditService.LogEventAsync(
             _sessionService.CurrentUser.UserLogin,
@@ -406,8 +407,6 @@ public class MainWindowViewModel : BaseViewModel
         await projectService.UpdateProjectAsync(projectViewModel.CurrentProjectModel);
 
         CollectionRefreshHelper.SafeRefreshCollection(MainWindowModel.AllProjects);
-
-        
     }
 
     #endregion Комманды главного окна

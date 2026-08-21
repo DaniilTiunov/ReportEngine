@@ -24,10 +24,8 @@ public class CalculationService : ICalculationService
 
     public async Task CalculateProjectAsync(ProjectModel project)
     {
-
         //принудительно загружаем настройки
         await _parametersStore.LoadSettingsDataAsync();
-
 
         CalculateStandsCount(project);
 
@@ -63,9 +61,11 @@ public class CalculationService : ICalculationService
     }
 
 
-
     private void CalculateStandsCount(ProjectModel project)
     {
+        if (project.Stands.Count == 0)
+            return;
+
         project.StandCount = project.Stands.Count;
     }
 

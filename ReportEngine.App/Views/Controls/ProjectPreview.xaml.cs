@@ -239,7 +239,7 @@ public partial class ProjectPreview : UserControl
         var parentListView = FindVisualParent<ListView>(focusedElement);
 
         // Получаем провайдер команд
-        dynamic vm = this.DataContext;
+        dynamic vm = DataContext;
         if (vm?.ProjectCommandProvider == null) return;
 
         // Если фокус на списке обвязок - удаляем обвязку
