@@ -208,6 +208,38 @@ public static class ProjectCommandsInitializer
 
         vm.ProjectCommandProvider.DeleteSelectedStandsCommand =
             new RelayCommand(vm.OnDeleteSelectedStandsCommandExecuted, vm.CanAllCommandsExecute);
+
+
+
+        vm.ProjectCommandProvider.SelectedBatchSummaryReportCommand =
+            new RelayCommand(vm.OnCreateSelectedBatchSummaryReportCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.SelectedBatchComponentReportCommand =
+            new RelayCommand(vm.OnSelectedBatchComponentsListReportCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.SelectedBatchNamePlatesReportCommand =
+            new RelayCommand(vm.OnCreateSelectedBatchNameplatesReportCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.SelectedBatchMarksReportCommand =
+            new RelayCommand(vm.OnSelectedBatchCreateMarksReportCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.SelectedBatchContainerReportCommand =
+            new RelayCommand(vm.OnSelectedBatchCreateContainerReportCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.SelectedBatchProductionReportCommand =
+            new RelayCommand(vm.OnCreateSelectedBatchProductionReportCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.SelectedBatchFinPlaneReportCommand =
+            new RelayCommand(vm.OnCreateSelectedBatchFinplanReportCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.SelectedBatchPassportReportCommand =
+            new RelayCommand(vm.OnCreateSelectedBatchPassportReportCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.SelectedBatchTechnoCardsReportCommand =
+            new RelayCommand(vm.OnCreateSelectedBatchTechnologicalCardsCommandExecute, vm.CanAllCommandsExecute);
+
+
+
     }
 
     public static void InitializeGenericCommands(ProjectViewModel vm)

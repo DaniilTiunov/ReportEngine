@@ -70,7 +70,7 @@ public class ProjectCommandProvider
     public ICommand SaveAllChangesInComponentsCommand { get; set; }
     public ICommand RenumerateObvInStandCommand { get; set; }
 
-    // Команды по отчтам выбранных стендов
+    // Команды по отчетам выбранных стендов
     public ICommand SelectedSummaryReportCommand { get; set; }
     public ICommand SelectedComponentReportCommand { get; set; }
     public ICommand SelectedMarksReportCommand { get; set; }
@@ -82,4 +82,17 @@ public class ProjectCommandProvider
     public ICommand SelectedTechnoCardsReportCommand { get; set; }
     public ICommand OnAddStandFromAllStandsCommand { get; set; }
     public ICommand DeleteSelectedStandsCommand { get; set; }
+
+
+    //команды по отчетам выбранной партии
+    public ICommand SelectedBatchSummaryReportCommand { get; set; }
+    public ICommand SelectedBatchComponentReportCommand { get; set; }
+    public ICommand SelectedBatchMarksReportCommand { get; set; }
+    public ICommand SelectedBatchNamePlatesReportCommand { get; set; }
+    public ICommand SelectedBatchContainerReportCommand { get; set; }
+    public ICommand SelectedBatchProductionReportCommand { get; set; }
+    public ICommand SelectedBatchFinPlaneReportCommand { get; set; }
+    public ICommand SelectedBatchPassportReportCommand { get; set; }
+    public ICommand SelectedBatchTechnoCardsReportCommand { get; set; }
+
 }

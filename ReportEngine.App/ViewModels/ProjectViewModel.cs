@@ -820,6 +820,249 @@ public class ProjectViewModel : BaseViewModel
                 StandsListHelper.SelectedStands));
     }
 
+
+    //отчеты по выбранной упаковке
+
+    public async void OnCreateSelectedBatchSummaryReportCommandExecuted(object p)
+    {
+
+        var selectedBatch = CurrentProjectModel.SelectedContainerBatch;
+
+        if (selectedBatch == null)
+        {
+            _notificationService.ShowError("Партия не выбрана!");
+            return;
+        }
+
+        var batchStands = selectedBatch.Containers
+            .SelectMany(container => container.Stands)
+            .ToList();
+
+
+        if (batchStands.Count == 0)
+        {
+            _notificationService.ShowError("Выбранная партия не содержит стендов!");
+            return;
+        }
+
+
+
+        await _exceptionService.SafeExecuteAsync(()
+                => CreateReportAsync(ReportType.SummaryReport, "сводная", batchStands));
+    }
+
+    public async void OnSelectedBatchComponentsListReportCommandExecuted(object p)
+    {
+
+        var selectedBatch = CurrentProjectModel.SelectedContainerBatch;
+
+        if (selectedBatch == null)
+        {
+            _notificationService.ShowError("Партия не выбрана!");
+            return;
+        }
+
+        var batchStands = selectedBatch.Containers
+            .SelectMany(container => container.Stands)
+            .ToList();
+
+
+        if (batchStands.Count == 0)
+        {
+            _notificationService.ShowError("Выбранная партия не содержит стендов!");
+            return;
+        }
+
+        await _exceptionService.SafeExecuteAsync(()
+                => CreateReportAsync(ReportType.ComponentsListReport, "комплектующих", batchStands));
+    }
+
+    public async void OnCreateSelectedBatchNameplatesReportCommandExecuted(object p)
+    {
+
+        var selectedBatch = CurrentProjectModel.SelectedContainerBatch;
+
+        if (selectedBatch == null)
+        {
+            _notificationService.ShowError("Партия не выбрана!");
+            return;
+        }
+
+        var batchStands = selectedBatch.Containers
+            .SelectMany(container => container.Stands)
+            .ToList();
+
+
+        if (batchStands.Count == 0)
+        {
+            _notificationService.ShowError("Выбранная партия не содержит стендов!");
+            return;
+        }
+
+        await _exceptionService.SafeExecuteAsync(() =>
+            CreateReportAsync(ReportType.NameplatesReport, "шильдики и таблички", batchStands));
+    }
+
+    public async void OnSelectedBatchCreateMarksReportCommandExecuted(object p)
+    {
+        var selectedBatch = CurrentProjectModel.SelectedContainerBatch;
+
+        if (selectedBatch == null)
+        {
+            _notificationService.ShowError("Партия не выбрана!");
+            return;
+        }
+
+        var batchStands = selectedBatch.Containers
+            .SelectMany(container => container.Stands)
+            .ToList();
+
+
+        if (batchStands.Count == 0)
+        {
+            _notificationService.ShowError("Выбранная партия не содержит стендов!");
+            return;
+        }
+
+        await _exceptionService.SafeExecuteAsync(()
+                => CreateReportAsync(ReportType.MarksReport, "маркировки", batchStands));
+    }
+
+    public async void OnSelectedBatchCreateContainerReportCommandExecuted(object p)
+    {
+
+        var selectedBatch = CurrentProjectModel.SelectedContainerBatch;
+
+        if (selectedBatch == null)
+        {
+            _notificationService.ShowError("Партия не выбрана!");
+            return;
+        }
+
+        var batchStands = selectedBatch.Containers
+            .SelectMany(container => container.Stands)
+            .ToList();
+
+
+        if (batchStands.Count == 0)
+        {
+            _notificationService.ShowError("Выбранная партия не содержит стендов!");
+            return;
+        }
+
+        await _exceptionService.SafeExecuteAsync(()
+                => CreateReportAsync(ReportType.ContainerReport, "тара", batchStands));
+    }
+
+
+    public async void OnCreateSelectedBatchProductionReportCommandExecuted(object p)
+    {
+
+        var selectedBatch = CurrentProjectModel.SelectedContainerBatch;
+
+        if (selectedBatch == null)
+        {
+            _notificationService.ShowError("Партия не выбрана!");
+            return;
+        }
+
+        var batchStands = selectedBatch.Containers
+            .SelectMany(container => container.Stands)
+            .ToList();
+
+
+        if (batchStands.Count == 0)
+        {
+            _notificationService.ShowError("Выбранная партия не содержит стендов!");
+            return;
+        }
+
+        await _exceptionService.SafeExecuteAsync(()
+    => CreateReportAsync(ReportType.ProductionReport, "производство", batchStands));
+    }
+
+    public async void OnCreateSelectedBatchFinplanReportCommandExecuted(object p)
+    {
+
+        var selectedBatch = CurrentProjectModel.SelectedContainerBatch;
+
+        if (selectedBatch == null)
+        {
+            _notificationService.ShowError("Партия не выбрана!");
+            return;
+        }
+
+        var batchStands = selectedBatch.Containers
+            .SelectMany(container => container.Stands)
+            .ToList();
+
+
+        if (batchStands.Count == 0)
+        {
+            _notificationService.ShowError("Выбранная партия не содержит стендов!");
+            return;
+        }
+
+        await _exceptionService.SafeExecuteAsync(()
+    => CreateReportAsync(ReportType.FinPlanReport, "финплан", batchStands));
+    }
+
+    public async void OnCreateSelectedBatchPassportReportCommandExecuted(object p)
+    {
+
+        var selectedBatch = CurrentProjectModel.SelectedContainerBatch;
+
+        if (selectedBatch == null)
+        {
+            _notificationService.ShowError("Партия не выбрана!");
+            return;
+        }
+
+        var batchStands = selectedBatch.Containers
+            .SelectMany(container => container.Stands)
+            .ToList();
+
+
+        if (batchStands.Count == 0)
+        {
+            _notificationService.ShowError("Выбранная партия не содержит стендов!");
+            return;
+        }
+
+        await _exceptionService.SafeExecuteAsync(() =>
+              CreateReportAsync(ReportType.PassportsReport, "паспорта", batchStands));
+    }
+
+    public async void OnCreateSelectedBatchTechnologicalCardsCommandExecute(object p)
+    {
+
+        var selectedBatch = CurrentProjectModel.SelectedContainerBatch;
+
+        if (selectedBatch == null)
+        {
+            _notificationService.ShowError("Партия не выбрана!");
+            return;
+        }
+
+        var batchStands = selectedBatch.Containers
+            .SelectMany(container => container.Stands)
+            .ToList();
+
+
+        if (batchStands.Count == 0)
+        {
+            _notificationService.ShowError("Выбранная партия не содержит стендов!");
+            return;
+        }
+
+        await _exceptionService.SafeExecuteAsync(async ()
+                => await CreateReportAsync(ReportType.TechnologicalCards, "технологические карты", batchStands));
+    }
+
+
+
+
+
     public async void OnSaveChangesInStandCommandExecuted(object obj)
     {
         await _exceptionService.SafeExecuteAsync(SaveChangesInStandAsync);

@@ -60,15 +60,35 @@
                             <ContextMenu>
                                 <MenuItem Command="{Binding ProjectCommandProvider.CreateContainerBatchCommand}"
                                           Header="Добавить партию" />
+
+                                <MenuItem Command="{Binding ProjectCommandProvider.DeleteBatchCommand}"
+                                          Header="Удалить партию" />
                                 <Separator />
                                 <MenuItem Command="{Binding ProjectCommandProvider.UpdateContainerCommand}"
                                           Header="Сохранить изменения" />
-                                <Separator />
                                 <MenuItem Command="{Binding ProjectCommandProvider.RefreshBatchesCommand}"
                                           Header="Обновить список" />
                                 <Separator />
-                                <MenuItem Command="{Binding ProjectCommandProvider.DeleteBatchCommand}"
-                                          Header="Удалить партию" />
+                                <MenuItem Header="Создать отчет по выбранной партии">
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedBatchSummaryReportCommand}" Header="Сводная ведомость" />
+                                    <Separator />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedBatchComponentReportCommand}" Header="Ведомость комплектующих" />
+                                    <Separator />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedBatchNamePlatesReportCommand}" Header="Шильдики и таблички" />
+                                    <Separator />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedBatchMarksReportCommand}" Header="Маркировка" />
+                                    <Separator />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedBatchContainerReportCommand}" Header="Тара" />
+                                    <Separator />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedBatchProductionReportCommand}" Header="Производство" />
+                                    <Separator />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedBatchFinPlaneReportCommand}" Header="Фин. план" />
+                                    <Separator />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedBatchPassportReportCommand}" Header="Паспорт" />
+                                    <Separator />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedBatchTechnoCardsReportCommand}" Header="Технологические карты" />
+                                </MenuItem>
+
                             </ContextMenu>
                         </DataGrid.ContextMenu>
                         <DataGrid.Columns>
