@@ -16,8 +16,8 @@ namespace ReportEngine.Export.PDFWork.Services.Generators;
 
 public class PassportsGenerator : IReportGenerator
 {
-    private readonly IProjectInfoRepository _projectInfoRepository;
     private readonly ParametersStore _parametersStore;
+    private readonly IProjectInfoRepository _projectInfoRepository;
 
     public PassportsGenerator(IProjectInfoRepository projectRepository, ParametersStore parametersStore)
     {
@@ -37,7 +37,7 @@ public class PassportsGenerator : IReportGenerator
         var fileName = ExcelReportHelper.CreateReportName("Паспорт", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
 
-        var dataObject = await JsonCreator.CreateProjectJson(project,_parametersStore);
+        var dataObject = await JsonCreator.CreateProjectJson(project, _parametersStore);
         var options = new JsonSerializerOptions
         {
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -97,7 +97,7 @@ public class PassportsGenerator : IReportGenerator
         var fileName = ExcelReportHelper.CreateReportName("Паспорт", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
 
-        var dataObject = await JsonCreator.CreateProjectJson(project,_parametersStore, selectedStands);
+        var dataObject = await JsonCreator.CreateProjectJson(project, _parametersStore, selectedStands);
         var options = new JsonSerializerOptions
         {
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,

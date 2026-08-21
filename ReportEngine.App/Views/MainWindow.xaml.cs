@@ -10,7 +10,6 @@ using ReportEngine.App.LLM;
 using ReportEngine.App.LLM.ViewModels;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels;
-using ReportEngine.App.ViewModels.CalculationSettings;
 using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Entities;
@@ -53,10 +52,7 @@ public partial class MainWindow : Window //Это так называемый "C
 
             MainWindow_StartUpState();
 
-            if (StartUp.CanConnect)
-            {
-                await _mainViewModel.ShowAllProjectsAsync();
-            }
+            if (StartUp.CanConnect) await _mainViewModel.ShowAllProjectsAsync();
 
             _projectsView = CollectionViewSource.GetDefaultView(
                 _mainViewModel.MainWindowModel.AllProjects);

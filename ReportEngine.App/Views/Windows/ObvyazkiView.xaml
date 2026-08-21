@@ -1,19 +1,21 @@
 ﻿<Window
-    x:Class="ReportEngine.App.Views.Windows.ObvyazkiView"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converters="clr-namespace:ReportEngine.App.Display"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="Обвязки"
-    Width="1400"
-    Height="700"
     Background="{DynamicResource PrimaryColor}"
     FontFamily="Bahnschrift"
     Foreground="{DynamicResource PrimaryForeground}"
+    Height="700"
+    Title="Обвязки"
+    Width="1400"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    windowHelpers:WindowBehavior.CloseOnEscape="True"
+    x:Class="ReportEngine.App.Views.Windows.ObvyazkiView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:converters="clr-namespace:ReportEngine.App.Display"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:windowHelpers="clr-namespace:ReportEngine.App.Views.Windows.WindowHelpers"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Window.Resources>
         <converters:ObvyazkaImagePathConverter x:Key="ObvyazkaImagePathConverter" />
@@ -40,11 +42,11 @@
     <Border Style="{DynamicResource WindowBorder}">
         <DockPanel>
             <Border
-                x:Name="FormedFrameWindowTitle"
-                Height="34"
                 Background="#2D2D30"
                 DockPanel.Dock="Top"
-                MouseLeftButtonDown="Window_MouseLeftButtonDown">
+                Height="34"
+                MouseLeftButtonDown="Window_MouseLeftButtonDown"
+                x:Name="FormedFrameWindowTitle">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -53,51 +55,51 @@
 
                     <StackPanel
                         Margin="10,0,0,0"
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal">
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
                         <Image
-                            Width="18"
                             Height="18"
                             Margin="0,0,8,0"
-                            Source="/Resources/Icons/estimate_cost_icon_213382.ico" />
+                            Source="/Resources/Icons/estimate_cost_icon_213382.ico"
+                            Width="18" />
                         <TextBlock
-                            VerticalAlignment="Center"
                             FontSize="14"
                             Foreground="White"
-                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
+                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}"
+                            VerticalAlignment="Center" />
                     </StackPanel>
 
                     <StackPanel
                         Grid.Column="1"
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal">
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
                         <Button
-                            x:Name="MinimizeButton"
-                            Width="40"
-                            Height="30"
                             Click="MinimizeButton_Click"
                             FontSize="16"
-                            ToolTip="Свернуть">
+                            Height="30"
+                            ToolTip="Свернуть"
+                            Width="40"
+                            x:Name="MinimizeButton">
                             ─
                         </Button>
                         <Button
-                            x:Name="MaxRestoreButton"
-                            Width="40"
-                            Height="30"
-                            Margin="10,0,0,0"
                             Click="MaxRestoreButton_Click"
                             FontSize="16"
-                            ToolTip="Развернуть">
+                            Height="30"
+                            Margin="10,0,0,0"
+                            ToolTip="Развернуть"
+                            Width="40"
+                            x:Name="MaxRestoreButton">
                             ▢
                         </Button>
                         <Button
-                            x:Name="CloseButton"
-                            Width="40"
-                            Height="30"
-                            Margin="10,0,10,0"
                             Click="CloseButton_Click"
                             FontSize="16"
-                            ToolTip="Закрыть">
+                            Height="30"
+                            Margin="10,0,10,0"
+                            ToolTip="Закрыть"
+                            Width="40"
+                            x:Name="CloseButton">
                             ✕
                         </Button>
                     </StackPanel>
@@ -107,7 +109,7 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition x:Name="PanelColumn" Width="400" />
+                    <ColumnDefinition Width="400" x:Name="PanelColumn" />
                 </Grid.ColumnDefinitions>
 
                 <ScrollViewer
@@ -129,16 +131,16 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Border
-                                    Margin="10"
                                     Background="{DynamicResource SecondaryColor}"
                                     BorderBrush="{DynamicResource BorderColor}"
                                     BorderThickness="1"
-                                    CornerRadius="5">
+                                    CornerRadius="5"
+                                    Margin="10">
                                     <Image
-                                        Width="200"
                                         Height="200"
                                         Source="{Binding ImageName, Converter={StaticResource ObvyazkaImagePathConverter}}"
-                                        Stretch="Uniform" />
+                                        Stretch="Uniform"
+                                        Width="200" />
                                 </Border>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -152,29 +154,29 @@
 
                 <!--  Информация о выбранной обвязке (справа)  -->
                 <StackPanel
-                    x:Name="CreateObvPanel"
                     Grid.Column="1"
                     Margin="10"
-                    VerticalAlignment="Top">
+                    VerticalAlignment="Top"
+                    x:Name="CreateObvPanel">
                     <!--  Картинка выбранной обвязки  -->
                     <Border
-                        Margin="0,10,0,10"
                         Background="{DynamicResource SecondaryColor}"
                         BorderBrush="{DynamicResource BorderColor}"
                         BorderThickness="1"
-                        CornerRadius="5">
+                        CornerRadius="5"
+                        Margin="0,10,0,10">
                         <Image
-                            Width="200"
                             Height="200"
                             Source="{Binding CurrentObvyazka.SelectedObvyazka.ImageName, Converter={StaticResource ObvyazkaImagePathConverter}}"
-                            Stretch="Uniform" />
+                            Stretch="Uniform"
+                            Width="200" />
                     </Border>
 
                     <!--  Данные обвязки  -->
                     <GroupBox
+                        Header="Информация"
                         Margin="0,10,0,0"
-                        Padding="10"
-                        Header="Информация">
+                        Padding="10">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
@@ -329,18 +331,18 @@
                                 Margin="0,5,0,0"
                                 Orientation="Horizontal">
                                 <Button
-                                    Margin="10,0,10,0"
                                     Command="{Binding AddNewObvyazkaCommand}"
-                                    Content="Добавить новую" />
+                                    Content="Добавить новую"
+                                    Margin="10,0,10,0" />
                                 <Button
-                                    Margin="10,0,10,0"
                                     Command="{Binding UpdateChangesCommand}"
-                                    Content="Сохранить изменения" />
+                                    Content="Сохранить изменения"
+                                    Margin="10,0,10,0" />
                                 <Button
-                                    Width="75"
-                                    Margin="0,0,0,0"
                                     Command="{Binding DeleteObvyazkaCommand}"
-                                    Content="Удалить" />
+                                    Content="Удалить"
+                                    Margin="0,0,0,0"
+                                    Width="75" />
                             </StackPanel>
                         </Grid>
                     </GroupBox>

@@ -1,7 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
-using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
@@ -46,18 +45,18 @@ public class ProjectViewModel : BaseViewModel
     private readonly EntityStandClonerService _entityStandCloner;
     private readonly ExceptionService _exceptionService;
     private readonly InitializeService _initializeService;
+    private readonly UiLogger _logger;
     private readonly INotificationService _notificationService;
     private readonly ParametersStore _parametersStore;
     private readonly IProjectDataLoaderService _projectDataLoaderService;
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IProjectService _projectService;
     private readonly IReportService _reportService;
+    private readonly IServiceProvider _serviceProvider;
     private readonly SessionService _sessionService;
     private readonly IStandService _standService;
     private readonly UIValidatorService _uiValidatorService;
     private readonly UpdaterStandService _updaterStandService;
-    private readonly UiLogger _logger;
-    private readonly IServiceProvider _serviceProvider;
 
     public ProjectViewModel(
         IProjectInfoRepository projectRepository,
@@ -557,12 +556,14 @@ public class ProjectViewModel : BaseViewModel
             await _standService.AddObvyazkaToStandAsync(selectedStand.Id, entity);
 
             //сравнение по типу
-            var isAlreadyExist = CurrentProjectModel.ObvyazkiInProject.Any(obv => obv.ObvyazkaName == entity.ObvyazkaName);
+            var isAlreadyExist =
+                CurrentProjectModel.ObvyazkiInProject.Any(obv => obv.ObvyazkaName == entity.ObvyazkaName);
 
             if (!isAlreadyExist)
                 CurrentProjectModel.ObvyazkiInProject.Add(entity);
 
-            CollectionRefreshHelper.SafeRefreshCollection(CurrentProjectModel.SelectedStand.ObvyazkaAdditionalComponents);
+            CollectionRefreshHelper.SafeRefreshCollection(
+                CurrentProjectModel.SelectedStand.ObvyazkaAdditionalComponents);
 
             await LoadObvyazkiAsync(); // Перезагрузить данные из БД
 
@@ -613,7 +614,8 @@ public class ProjectViewModel : BaseViewModel
             {
                 if (obvComponent.Id == 0) obvComponent.ObvyazkaInStandId = stand.SelectedObvyazkaInStand?.Id;
 
-                await _standService.UpdateAdditionalPurposeFromObvAsync(obvComponent, obvComponent.ObvyazkaInStandId ?? 0);
+                await _standService.UpdateAdditionalPurposeFromObvAsync(obvComponent,
+                    obvComponent.ObvyazkaInStandId ?? 0);
             }
 
             _notificationService.ShowInfo("Все комплектующие обвязок сохранены");
@@ -928,7 +930,7 @@ public class ProjectViewModel : BaseViewModel
         {
             var selectedStandEntity = _dialogService.ShowSelectStandDialog();
 
-            if (selectedStandEntity == null) { return; }
+            if (selectedStandEntity == null) return;
 
             await _dialogService.RunWithProgressDialogAsync(async () =>
             {
@@ -1121,7 +1123,6 @@ public class ProjectViewModel : BaseViewModel
             //   return;
 
 
-
             //TODO: здесь бы по хорошему встроить сохранение всех доп комплектующих в обвязке
 
             await _projectService.UpdateObvInStandAsync(CurrentProjectModel);
@@ -1140,13 +1141,10 @@ public class ProjectViewModel : BaseViewModel
             var proj = CurrentProjectModel;
             var selectedStand = proj.SelectedStand;
 
-            if (selectedStand == null)
-            {
-                return;
-            }
+            if (selectedStand == null) return;
 
-            bool projectHasMarkPlus = !String.IsNullOrEmpty(proj.MarkPlus);
-            bool projectHasMarkMinus = !String.IsNullOrEmpty(proj.MarkMinus);
+            var projectHasMarkPlus = !string.IsNullOrEmpty(proj.MarkPlus);
+            var projectHasMarkMinus = !string.IsNullOrEmpty(proj.MarkMinus);
 
             //если совсем нет маркировки в проекте
             if (!projectHasMarkPlus && !projectHasMarkMinus)
@@ -1155,47 +1153,42 @@ public class ProjectViewModel : BaseViewModel
                 return;
             }
 
-            bool firstSensorHasKKS = !String.IsNullOrEmpty(selectedStand.FirstSensorKKS);
-            bool secondSensorHasKKS = !String.IsNullOrEmpty(selectedStand.SecondSensorKKS);
-            bool thirdSensorHasKKS = !String.IsNullOrEmpty(selectedStand.ThirdSensorKKS);
+            var firstSensorHasKKS = !string.IsNullOrEmpty(selectedStand.FirstSensorKKS);
+            var secondSensorHasKKS = !string.IsNullOrEmpty(selectedStand.SecondSensorKKS);
+            var thirdSensorHasKKS = !string.IsNullOrEmpty(selectedStand.ThirdSensorKKS);
 
             if (projectHasMarkPlus)
             {
+                selectedStand.FirstSensorMarkPlus = firstSensorHasKKS
+                    ? selectedStand.FirstSensorKKS + proj.MarkPlus
+                    : selectedStand.FirstSensorMarkPlus;
 
-                selectedStand.FirstSensorMarkPlus = firstSensorHasKKS ?
-                                                        selectedStand.FirstSensorKKS + proj.MarkPlus :
-                                                        selectedStand.FirstSensorMarkPlus;
-
-                selectedStand.SecondSensorMarkPlus = secondSensorHasKKS ?
-                                                        selectedStand.SecondSensorKKS + proj.MarkPlus :
-                                                        selectedStand.SecondSensorMarkPlus;
+                selectedStand.SecondSensorMarkPlus = secondSensorHasKKS
+                    ? selectedStand.SecondSensorKKS + proj.MarkPlus
+                    : selectedStand.SecondSensorMarkPlus;
 
 
-                selectedStand.ThirdSensorMarkPlus = thirdSensorHasKKS ?
-                                                        selectedStand.ThirdSensorKKS + proj.MarkPlus :
-                                                        selectedStand.ThirdSensorMarkPlus;
+                selectedStand.ThirdSensorMarkPlus = thirdSensorHasKKS
+                    ? selectedStand.ThirdSensorKKS + proj.MarkPlus
+                    : selectedStand.ThirdSensorMarkPlus;
             }
 
             if (projectHasMarkMinus)
             {
+                selectedStand.FirstSensorMarkMinus = firstSensorHasKKS
+                    ? selectedStand.FirstSensorKKS + proj.MarkMinus
+                    : selectedStand.FirstSensorMarkMinus;
 
-                selectedStand.FirstSensorMarkMinus = firstSensorHasKKS ?
-                                                        selectedStand.FirstSensorKKS + proj.MarkMinus :
-                                                        selectedStand.FirstSensorMarkMinus;
+                selectedStand.SecondSensorMarkMinus = secondSensorHasKKS
+                    ? selectedStand.SecondSensorKKS + proj.MarkMinus
+                    : selectedStand.SecondSensorMarkMinus;
 
-                selectedStand.SecondSensorMarkMinus = secondSensorHasKKS ?
-                                                        selectedStand.SecondSensorKKS + proj.MarkMinus :
-                                                        selectedStand.SecondSensorMarkMinus;
-
-                selectedStand.ThirdSensorMarkMinus = thirdSensorHasKKS ?
-                                                        selectedStand.ThirdSensorKKS + proj.MarkMinus :
-                                                        selectedStand.ThirdSensorMarkMinus;
+                selectedStand.ThirdSensorMarkMinus = thirdSensorHasKKS
+                    ? selectedStand.ThirdSensorKKS + proj.MarkMinus
+                    : selectedStand.ThirdSensorMarkMinus;
             }
-
         });
     }
-
-
 
 
     public async void OnCreateContainerStandCommandExecuted(object obj)
@@ -1869,7 +1862,6 @@ public class ProjectViewModel : BaseViewModel
         var etaonStands = CurrentProjectModel.Stands;
 
 
-
         var kksDuplicates = standsToUse
             .GroupBy(stand => stand.KKSCode)
             .Where(group => group.Count() > 1)
@@ -1879,8 +1871,8 @@ public class ProjectViewModel : BaseViewModel
         if (kksDuplicates.Count > 0)
         {
             var warningMessage = "Обнаружены дублирования KKS-кодов стендов:\n\n" +
-                string.Join("\n", kksDuplicates.Select(g => $"- {g.Key} ({g.Count()} шт.)")) +
-                "\n\nПродолжить генерацию отчета?";
+                                 string.Join("\n", kksDuplicates.Select(g => $"- {g.Key} ({g.Count()} шт.)")) +
+                                 "\n\nПродолжить генерацию отчета?";
 
             var confirmationResult = _notificationService.ShowConfirmation(warningMessage);
 
@@ -1894,7 +1886,7 @@ public class ProjectViewModel : BaseViewModel
         //если тех карты - вызываем доп окно
         if (typeGenerator == ReportType.TechnologicalCards)
         {
-            var reportTypeWindow = new TechCardElecrticDialog()
+            var reportTypeWindow = new TechCardElecrticDialog
             {
                 Owner = Application.Current.MainWindow
             };
@@ -1903,7 +1895,7 @@ public class ProjectViewModel : BaseViewModel
             //если пользователь что-то выбрал
             if (dialogResult == true && reportTypeWindow.SelectedOption != TechCardElecticDialogResult.Cancel)
             {
-                bool includeElectric = (reportTypeWindow.SelectedOption == TechCardElecticDialogResult.WithElectric);
+                var includeElectric = reportTypeWindow.SelectedOption == TechCardElecticDialogResult.WithElectric;
                 var reportSettings = _serviceProvider.GetRequiredService<ReportSettings>();
                 reportSettings.TechCardIncludeElectric = includeElectric;
             }
@@ -1913,7 +1905,6 @@ public class ProjectViewModel : BaseViewModel
                 return;
             }
         }
-
 
 
         // Генерация отчета — перегрузка в _reportService разберётся сама

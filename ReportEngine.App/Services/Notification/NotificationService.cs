@@ -34,6 +34,4 @@ public class NotificationService : INotificationService
         var result = window.ShowDialog();
         return result == true;
     }
-
-
 }

@@ -27,6 +27,4 @@ public class GenericEquipModel<T, TEquip> : BaseViewModel
         get => _selectedBaseEquip;
         set => Set(ref _selectedBaseEquip, value);
     }
-
-   
 }

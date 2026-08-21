@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
-using Npgsql;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Store;
 using ReportEngine.Shared.Config.Directory;
@@ -12,7 +11,7 @@ namespace ReportEngine.App;
 
 public static class StartUp
 {
-    private static Mutex _mutex = null;
+    private static Mutex _mutex;
 
     public static bool CanConnect;
 
@@ -44,7 +43,6 @@ public static class StartUp
             CanConnect = CheckDbConnection(context);
 
             if (CanConnect)
-            {
                 try
                 {
                     host.Services
@@ -57,7 +55,6 @@ public static class StartUp
                 {
                     Log.Fatal(ex, "Ошибка загрузки ParameterStore");
                 }
-            }
 
             app.MainWindow = mainWindow;
 
@@ -89,10 +86,7 @@ public static class StartUp
     {
         var canConnect = context.Database.CanConnect();
 
-        if (!canConnect)
-        {
-            ShowErrorWindow("Отсутствует подключение к БД");
-        }
+        if (!canConnect) ShowErrorWindow("Отсутствует подключение к БД");
 
         return canConnect;
     }

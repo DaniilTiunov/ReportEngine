@@ -18,6 +18,7 @@ namespace ReportEngine.App.ViewModels;
 
 public class AllSortamentsViewModel : BaseViewModel
 {
+    private readonly List<string> _comboBoxUnits = new() { "шт", "м", "компл.", "ед." };
 
     private readonly Dictionary<string, Type> _equipTypeMap = new()
     {
@@ -45,9 +46,6 @@ public class AllSortamentsViewModel : BaseViewModel
         { "Прочие", typeof(Other) },
         { "Тара", typeof(Container) }
     };
-
-
-    private readonly List<string> _comboBoxUnits = new List<string> { "шт", "м", "компл.", "ед." };
 
     // Словарь текущих задач загрузки по ключу группы — предотвращает параллельный доступ
     private readonly ConcurrentDictionary<string, Task> _loadingTasks = new();
@@ -127,7 +125,6 @@ public class AllSortamentsViewModel : BaseViewModel
                 Header = GenericEquipMapper.GetColumnName(property.Name),
                 Binding = new Binding(property.Name)
             };
-
 
 
             if (property.Name == "Name")

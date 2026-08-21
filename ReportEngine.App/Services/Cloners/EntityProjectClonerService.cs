@@ -1,5 +1,6 @@
 ﻿using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Enums;
 using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.App.Services.Cloners;
@@ -23,6 +24,9 @@ public class EntityProjectClonerService
     public async Task CloneProjectEntity(ProjectInfo sourceProject)
     {
         var sourceStands = await _projectInfoRepository.GetProjectWithStandsAsync(sourceProject.Id);
+        var projectInfos = await _projectInfoRepository.GetAllAsync();
+
+        var maxNumber = projectInfos.Max(p => p.Number);
 
         var newProject = new ProjectInfo
         {
@@ -38,13 +42,13 @@ public class EntityProjectClonerService
             IsGalvanized = sourceProject.IsGalvanized,
             Description = sourceProject.Description,
             Object = sourceProject.Object,
-            Number = sourceProject.Number + 1,
+            Number = maxNumber + 1,
             OutOfProduction = sourceProject.OutOfProduction,
             OrderCustomer = sourceProject.OrderCustomer,
             RequestProduction = sourceProject.RequestProduction,
             StandCount = sourceProject.StandCount,
             StartDate = sourceProject.StartDate,
-            Status = sourceProject.Status,
+            Status = ProjectStatus.Копия,
             Stands = new List<Stand>()
         };
 

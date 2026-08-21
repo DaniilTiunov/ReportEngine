@@ -65,10 +65,6 @@ public class ComponentListReportGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
     {
-
-
-
-
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
 
         using (var wb = new XLWorkbook())

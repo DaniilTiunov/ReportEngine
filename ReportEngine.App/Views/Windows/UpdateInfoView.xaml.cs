@@ -21,7 +21,6 @@ public partial class UpdateInfoView : Window
         _exceptionService = exceptionService;
         LoadUpdateHistory();
         DataContext = this;
-        
     }
 
     public List<UpdateInfo> Updates { get; set; }

@@ -18,11 +18,8 @@ public class SessionService : INotifyPropertyChanged
         _userRepository = userRepository;
 
         if (StartUp.CanConnect)
-        {
             FirstStartSession();
-        }
         else
-        {
             CurrentUser = new User
             {
                 Id = 0,
@@ -30,7 +27,6 @@ public class SessionService : INotifyPropertyChanged
                 SecondName = "Гость",
                 LastName = "Гость"
             };
-        }
     }
 
     public User? CurrentUser
@@ -62,7 +58,7 @@ public class SessionService : INotifyPropertyChanged
 
     public async void SignOut()
     {
-        if (CurrentUser == null) { return; }
+        if (CurrentUser == null) return;
 
         await _auditService.LogEventAsync(
             CurrentUser.UserLogin,

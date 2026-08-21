@@ -1,20 +1,22 @@
 ﻿<Window
-    x:Class="ReportEngine.App.Views.Windows.AboutProgram"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="О программе"
-    Width="450"
-    Height="350"
     Background="{DynamicResource PrimaryColor}"
     FontFamily="Bahnschrift"
     FontSize="14"
     Foreground="{DynamicResource PrimaryForeground}"
+    Height="350"
     ResizeMode="NoResize"
+    Title="О программе"
+    Width="450"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    windowHelpers:WindowBehavior.CloseOnEscape="True"
+    x:Class="ReportEngine.App.Views.Windows.AboutProgram"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:windowHelpers="clr-namespace:ReportEngine.App.Views.Windows.WindowHelpers"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <WindowChrome.WindowChrome>
         <WindowChrome
@@ -26,10 +28,10 @@
     <Border Style="{DynamicResource WindowBorder}">
         <DockPanel>
             <Border
-                x:Name="WindowTitle"
-                Height="34"
                 Background="#2D2D30"
-                DockPanel.Dock="Top">
+                DockPanel.Dock="Top"
+                Height="34"
+                x:Name="WindowTitle">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -38,32 +40,32 @@
 
                     <StackPanel
                         Margin="10,0,0,0"
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal">
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
                         <Image
-                            Width="18"
                             Height="18"
                             Margin="0,0,8,0"
-                            Source="/Resources/Icons/estimate_cost_icon_213382.ico" />
+                            Source="/Resources/Icons/estimate_cost_icon_213382.ico"
+                            Width="18" />
                         <TextBlock
-                            VerticalAlignment="Center"
                             FontSize="14"
                             Foreground="White"
-                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
+                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}"
+                            VerticalAlignment="Center" />
                     </StackPanel>
 
                     <StackPanel
                         Grid.Column="1"
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal">
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
                         <Button
-                            x:Name="CloseButton"
-                            Width="40"
-                            Height="30"
-                            Margin="10,0,10,0"
                             Click="CloseButton_Click"
                             FontSize="16"
-                            ToolTip="Закрыть">
+                            Height="30"
+                            Margin="10,0,10,0"
+                            ToolTip="Закрыть"
+                            Width="40"
+                            x:Name="CloseButton">
                             ✕
                         </Button>
                     </StackPanel>
@@ -78,9 +80,9 @@
                 </Grid.RowDefinitions>
 
                 <Border
+                    Background="{DynamicResource PrimaryColor}"
                     Grid.Row="0"
-                    Padding="10"
-                    Background="{DynamicResource PrimaryColor}">
+                    Padding="10">
                     <Image
                         MaxHeight="70"
                         Source="/Resources/Images/logo.png"
@@ -89,26 +91,26 @@
 
                 <StackPanel
                     Grid.Row="1"
-                    Margin="10"
                     HorizontalAlignment="Center"
+                    Margin="10"
                     VerticalAlignment="Center">
                     <TextBlock
-                        Margin="0,0,0,20"
                         FontSize="16"
                         FontWeight="Bold"
+                        Margin="0,0,0,20"
                         Text="{Binding Version, StringFormat=Версия приложения: \{0\}}"
                         TextAlignment="Center" />
                 </StackPanel>
 
                 <StackPanel
                     Grid.Row="2"
-                    Margin="0,0,0,20"
                     HorizontalAlignment="Center"
+                    Margin="0,0,0,20"
                     VerticalAlignment="Bottom">
                     <TextBlock
-                        Margin="0,0,0,5"
                         FontSize="14"
                         FontWeight="Bold"
+                        Margin="0,0,0,5"
                         Text="ЗАО «ЭТАЛОН-ПРИБОР»"
                         TextAlignment="Center" />
                     <TextBlock

@@ -392,24 +392,20 @@ public class ProjectInfoRepository : IProjectInfoRepository
             .AsNoTracking()
             .AsSplitQuery()
             .Include(p => p.Stands)
-                .ThenInclude(s => s.StandDrainages)
-                    .ThenInclude(sd => sd.Drainage)
-                        .ThenInclude(d => d.Purposes)
-
+            .ThenInclude(s => s.StandDrainages)
+            .ThenInclude(sd => sd.Drainage)
+            .ThenInclude(d => d.Purposes)
             .Include(p => p.Stands)
-                .ThenInclude(s => s.ObvyazkiInStand)
-                    .ThenInclude(o => o.AdditionalComponents)
-
+            .ThenInclude(s => s.ObvyazkiInStand)
+            .ThenInclude(o => o.AdditionalComponents)
             .Include(p => p.Stands)
-                .ThenInclude(s => s.StandElectricalComponent)
-                    .ThenInclude(sec => sec.ElectricalComponent)
-                        .ThenInclude(e => e.Purposes)
-
+            .ThenInclude(s => s.StandElectricalComponent)
+            .ThenInclude(sec => sec.ElectricalComponent)
+            .ThenInclude(e => e.Purposes)
             .Include(p => p.Stands)
-                .ThenInclude(s => s.StandAdditionalEquips)
-                    .ThenInclude(sae => sae.AdditionalEquip)
-                        .ThenInclude(e => e.Purposes)
-
+            .ThenInclude(s => s.StandAdditionalEquips)
+            .ThenInclude(sae => sae.AdditionalEquip)
+            .ThenInclude(e => e.Purposes)
             .FirstOrDefaultAsync(p => p.Id == projectId);
     }
 }

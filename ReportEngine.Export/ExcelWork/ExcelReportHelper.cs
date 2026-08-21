@@ -1007,8 +1007,6 @@ public static class ExcelReportHelper
     }
 
 
-
-
     //форматирует цену
     public static string FormatPrice(float? price)
     {
