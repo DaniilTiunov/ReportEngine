@@ -28,6 +28,7 @@ public class EntityStandClonerService
             StandSummCost = standComponents.StandSummCost,
             DesigneStand = standComponents.DesigneStand,
             NN = standComponents.NN,
+            Number = standComponents.Number,
             MaterialLine = standComponents.MaterialLine,
             Armature = standComponents.Armature,
             TreeSocket = standComponents.TreeSocket,
