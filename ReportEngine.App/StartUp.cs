@@ -72,11 +72,8 @@ public static class StartUp
         }
         finally
         {
-            if (_mutex != null)
-            {
-                _mutex.ReleaseMutex();
-                _mutex.Dispose();
-            }
+            ReleaseMutex();
+            DisposeMutex();
 
             Log.CloseAndFlush();
         }
@@ -115,6 +112,22 @@ public static class StartUp
         {
             Console.WriteLine($"КРИТИЧЕСКАЯ ОШИБКА: {errorMessage}");
             Console.WriteLine($"Ошибка при показе окна: {ex.Message}");
+        }
+    }
+
+
+    public static void ReleaseMutex()
+    {
+        _mutex?.ReleaseMutex();
+    }
+
+    public static void DisposeMutex()
+    {
+        if (_mutex != null)
+        {
+            _mutex.Close();
+            _mutex.Dispose();
+            _mutex = null;
         }
     }
 }
