@@ -75,7 +75,7 @@ public partial class MainWindow : Window //Это так называемый "C
 
     private void ShowAboutProgram(object sender, RoutedEventArgs e) //Просто простые синхронные операции
     {
-        var aboutWindow = new AboutProgram();
+        var aboutWindow = new AboutProgram(_exceptionService);
         aboutWindow.Show();
     }
 
