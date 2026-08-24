@@ -49,6 +49,16 @@ public partial class AllSortamentsView : Window
         if (e.Source is not TabControl) return;
         if ((sender as TabControl)?.SelectedItem is not TabItem selectedTab) return;
 
+        // Перед сменой данных отменяем текущее редактирование в DataGrid —
+        // когда колонки/ItemsSource меняются во время редактирования.
+        try
+        {
+            if (!EquipDataGrid.IsReadOnly) EquipDataGrid.CancelEdit(DataGridEditingUnit.Row);
+        }
+        catch
+        {
+        }
+
         ResetAllSubTabControls();
 
         var groupKey = selectedTab.Tag as string;
@@ -75,10 +85,6 @@ public partial class AllSortamentsView : Window
         if (_viewModel.SelectedEquip != null && _isDialog)
         {
             _viewModel.SelectionHandler?.Invoke(_viewModel.SelectedEquip);
-            Close();
-        }
-        else
-        {
             Close();
         }
     }

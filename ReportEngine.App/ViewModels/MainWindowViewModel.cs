@@ -40,6 +40,7 @@ public class MainWindowViewModel : BaseViewModel
     private readonly IServiceProvider _serviceProvider;
     private readonly SessionService _sessionService;
 
+
     #region Конструктор
 
     public MainWindowViewModel(
@@ -172,6 +173,8 @@ public class MainWindowViewModel : BaseViewModel
     public async void OnRecalculateProjectCommandExecuted(object e)
     {
         await _exceptionService.SafeExecuteAsync(RecalculateProjectAsync);
+
+        _notificationService.ShowInfo("Переформирование завершено");
     }
 
     public async void OnEditProjectCommandExecuted(object e)
@@ -195,13 +198,19 @@ public class MainWindowViewModel : BaseViewModel
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
+            var selectedProject = MainWindowModel.SelectedProject;
+
+            if (selectedProject == null)
+            {
+                _notificationService.ShowInfo("Проект не выбран");
+                return;
+            }
+
             await _dialogService.RunWithProgressDialogAsync(async () =>
             {
-                var newProject = MainWindowModel.SelectedProject;
+                await _entityProjectClonerService.CloneProjectEntity(selectedProject);
 
-                await _entityProjectClonerService.CloneProjectEntity(newProject);
-
-                MainWindowModel.AllProjects.Add(newProject);
+                await ShowAllProjectsAsync();
 
                 _logger.Success($"Скопирован проект {MainWindowModel.SelectedProject.OrderCustomer} Статус: Успешно");
             });
@@ -210,9 +219,20 @@ public class MainWindowViewModel : BaseViewModel
 
     public void OnOpenMainWindowCommandExecuted(object e)
     {
-        _exceptionService.SafeExecute(() =>
+        _ = _exceptionService.SafeExecuteAsync(async () =>
         {
             var projectViewModel = _serviceProvider.GetRequiredService<ProjectViewModel>();
+
+            //принудительно обновляем количество стендов при закрытии проекта и подгружаем свежие данные
+            //при пересчете всего проекта начинает подтормаживать, поэтому оставляем только обновление количества стендов
+            if (projectViewModel?.CurrentProjectModel != null &&
+                projectViewModel.CurrentProjectModel.CurrentProjectId != 0)
+            {
+                //await RecalculateProjectAsync();
+                await _calculationService.CalculateAndUpdateStandQuantity(projectViewModel.CurrentProjectModel);
+
+                await UpdateProjectStandsQuantity(projectViewModel.CurrentProjectModel.CurrentProjectId);
+            }
 
             //if (CheckUnsafeDetails(projectViewModel))
             //{
@@ -323,6 +343,21 @@ public class MainWindowViewModel : BaseViewModel
         _logger.Success("Проекты загружены. Статус: Успешно");
     }
 
+    //Обновление информации о проекте в коллекции AllProjects
+    public async Task UpdateProjectStandsQuantity(int projectId)
+    {
+        var project = await _projectRepository.GetByIdAsync(projectId);
+
+        if (project.Stands.Count == 0) return;
+
+        // всратая вставка, но пока быстро (до 1к проектов)
+        var index = MainWindowModel.AllProjects.IndexOf(MainWindowModel.AllProjects.First(p => p.Id == projectId));
+
+        if (index >= 0)
+            MainWindowModel.AllProjects[index] = project;
+    }
+
+
     public async Task DeleteSelectedProjectAsync()
     {
         var result = _notificationService.ShowConfirmation("Вы уверены, что хотите удалить проект?");
@@ -330,18 +365,28 @@ public class MainWindowViewModel : BaseViewModel
         if (!result)
             return;
 
+
         var currentProject = MainWindowModel.SelectedProject;
+
+
+        var deletingProjectInfo = new
+        {
+            currentProject.OrderCustomer, currentProject.Description
+        };
+
         await _projectRepository.DeleteAsync(currentProject);
         await ShowAllProjectsAsync();
 
         _notificationService.ShowInfo("Проект успешно удалён");
 
-        _logger.Success($"Удалён проект {MainWindowModel.SelectedProject.OrderCustomer} Статус: Успешно");
+        _logger.Success($"Удалён проект {deletingProjectInfo.Description} " +
+                        $"c заказом покупателя {deletingProjectInfo.OrderCustomer} " +
+                        $"Статус: Успешно");
 
         await _auditService.LogEventAsync(
             _sessionService.CurrentUser.UserLogin,
-            $"Пользователь {_sessionService.CurrentUser.UserLogin} удалил проект {currentProject.OrderCustomer}",
-            $"Удаление проекта с заказом покупателя {currentProject.OrderCustomer}");
+            $"Пользователь {_sessionService.CurrentUser.UserLogin} удалил проект {deletingProjectInfo.Description}",
+            $"Удаление проекта с заказом покупателя {deletingProjectInfo.OrderCustomer}");
     }
 
     private async Task RecalculateProjectAsync()
@@ -362,8 +407,6 @@ public class MainWindowViewModel : BaseViewModel
         await projectService.UpdateProjectAsync(projectViewModel.CurrentProjectModel);
 
         CollectionRefreshHelper.SafeRefreshCollection(MainWindowModel.AllProjects);
-
-        _notificationService.ShowInfo("Переформирование завершено");
     }
 
     #endregion Комманды главного окна

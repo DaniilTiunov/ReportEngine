@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
+using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Store;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
@@ -10,9 +11,21 @@ namespace ReportEngine.App;
 
 public static class StartUp
 {
+    private static Mutex _mutex;
+
+    public static bool CanConnect;
+
     [STAThread]
     public static void Main()
     {
+        _mutex = new Mutex(true, "Global\\ReportEngineApp", out var createdNew);
+
+        if (!createdNew)
+        {
+            MessageBox.Show("Приложение уже запущено", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
+
         try
         {
             SetCulture();
@@ -21,22 +34,27 @@ public static class StartUp
 
             var host = HostFactory.BuildHost(config);
 
+            var context = host.Services.GetRequiredService<ReAppContext>();
+
             var app = host.Services.GetRequiredService<App>();
 
             var mainWindow = host.Services.GetRequiredService<MainWindow>();
 
-            try
-            {
-                host.Services
-                    .GetRequiredService<ParametersStore>()
-                    .LoadSettingsDataAsync()
-                    .GetAwaiter()
-                    .GetResult();
-            }
-            catch (Exception ex)
-            {
-                Log.Fatal(ex, "Ошибка загрузки ParameterStore");
-            }
+            CanConnect = CheckDbConnection(context);
+
+            if (CanConnect)
+                try
+                {
+                    host.Services
+                        .GetRequiredService<ParametersStore>()
+                        .LoadSettingsDataAsync()
+                        .GetAwaiter()
+                        .GetResult();
+                }
+                catch (Exception ex)
+                {
+                    Log.Fatal(ex, "Ошибка загрузки ParameterStore");
+                }
 
             app.MainWindow = mainWindow;
 
@@ -54,11 +72,26 @@ public static class StartUp
         }
         finally
         {
+            if (_mutex != null)
+            {
+                _mutex.ReleaseMutex();
+                _mutex.Dispose();
+            }
+
             Log.CloseAndFlush();
         }
     }
 
-    public static void SetCulture()
+    private static bool CheckDbConnection(ReAppContext context)
+    {
+        var canConnect = context.Database.CanConnect();
+
+        if (!canConnect) ShowErrorWindow("Отсутствует подключение к БД");
+
+        return canConnect;
+    }
+
+    private static void SetCulture()
     {
         var culture = new CultureInfo("ru-RU");
 

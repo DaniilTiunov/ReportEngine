@@ -1312,8 +1312,14 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<float?>("Cost")
                         .HasColumnType("real");
 
+                    b.Property<float?>("Depth")
+                        .HasColumnType("real");
+
                     b.Property<int?>("ExportDays")
                         .HasColumnType("integer");
+
+                    b.Property<float?>("Height")
+                        .HasColumnType("real");
 
                     b.Property<string>("Measure")
                         .HasColumnType("text");
@@ -1322,6 +1328,9 @@ namespace ReportEngine.Domain.Migrations
                         .HasColumnType("text");
 
                     b.Property<float?>("Weight")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("Width")
                         .HasColumnType("real");
 
                     b.HasKey("Id");

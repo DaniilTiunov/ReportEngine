@@ -121,7 +121,7 @@ public class NameplatesReportGenerator : IReportGenerator
         var activeRow = 2;
         var standNumber = 1;
 
-        foreach (var stand in stands)
+        foreach (var stand in stands.OrderBy(stand => stand.Number))
         {
             ws.Cell("A" + activeRow).Value = standNumber;
 

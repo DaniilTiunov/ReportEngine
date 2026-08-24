@@ -92,6 +92,7 @@ public class EntityStandClonerService
                     Quantity = p.Quantity,
                     Measure = p.Measure,
                     CostPerUnit = p.CostPerUnit,
+                    IsAutoCalculationEnabled = p.IsAutoCalculationEnabled,
                     ExportDays = p.ExportDays
                 }).ToList()
             },
@@ -112,7 +113,11 @@ public class EntityStandClonerService
                 {
                     Id = 0,
                     Purpose = p.Purpose,
-                    Material = p.Material
+                    Material = p.Material,
+                    Quantity = p.Quantity,
+                    Measure = p.Measure,
+                    CostPerUnit = p.CostPerUnit,
+                    IsAutoCalculationEnabled = p.IsAutoCalculationEnabled
                 }).ToList()
             }
         }).ToList();
@@ -129,9 +134,12 @@ public class EntityStandClonerService
                 Name = sec.ElectricalComponent.Name,
                 Purposes = sec.ElectricalComponent.Purposes.Select(p => new ElectricalPurpose
                 {
-                    Id = 0,
                     Purpose = p.Purpose,
-                    Material = p.Material
+                    Material = p.Material,
+                    Quantity = p.Quantity,
+                    Measure = p.Measure,
+                    CostPerUnit = p.CostPerUnit,
+                    IsAutoCalculationEnabled = p.IsAutoCalculationEnabled
                 }).ToList()
             }
         }).ToList();

@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.CalculationParameters.Enums;
@@ -21,13 +20,14 @@ public class InitializeService
 
     public async Task InitializeStandDefaultPurposes(StandModel standForInitialize)
     {
-        var defaultSettings = new StandSettingsModel();
-        await defaultSettings.LoadStandsSettingsDataAsync();
+        //принудительно прогружаем настройки
+        await _parametersStore.LoadSettingsDataAsync();
+
 
         InitializeObvAdditionalPurposes(standForInitialize);
         InitializeDrainagePurposes(standForInitialize);
-        await InitializeElectricalComponent(standForInitialize, defaultSettings);
-        await InitializeAdditionalEquip(standForInitialize, defaultSettings);
+        await InitializeElectricalComponent(standForInitialize);
+        await InitializeAdditionalEquip(standForInitialize);
     }
 
     public void InitializeObvAdditionalPurposes(StandModel stand)
@@ -53,7 +53,7 @@ public class InitializeService
         };
     }
 
-    public async Task InitializeAdditionalEquip(StandModel stand, StandSettingsModel settings)
+    public async Task InitializeAdditionalEquip(StandModel stand)
     {
         const float nameplatesPerStand = 1.0f;
 
@@ -118,7 +118,7 @@ public class InitializeService
         };
     }
 
-    public async Task InitializeElectricalComponent(StandModel stand, StandSettingsModel settings)
+    public async Task InitializeElectricalComponent(StandModel stand)
     {
         float? usualConnectionBoxQuantity = 1.0f;
         float? usualCablesQuantity = 2.0f;
@@ -128,6 +128,9 @@ public class InitializeService
 
         var cableSixMmParameter = _parametersStore[CalculationParameterType.Equipments, "Cable6mm"];
         var cableSixMm = _parametersStore[cableSixMmParameter]?.Equipment;
+
+        var cableSixMmQuantityParameter = _parametersStore[CalculationParameterType.ElectricCost, "Cable6mmQuantity"];
+        var parameterConversionIsOk = float.TryParse(cableSixMmQuantityParameter.Value, out var cableSixMmQuantity);
 
         var cableFourMmParameter = _parametersStore[CalculationParameterType.Equipments, "Cable4mm"];
         var cableFourMm = _parametersStore[cableFourMmParameter]?.Equipment;
@@ -147,7 +150,8 @@ public class InitializeService
             new() { Purpose = "Металлорукав", Quantity = usualCablesQuantity, Measure = "м" },
             new()
             {
-                Purpose = "Кабель 6мм", Material = cableSixMm?.Name, Quantity = (float?)settings.SensorCountOnFrame,
+                Purpose = "Кабель 6мм", Material = cableSixMm?.Name,
+                Quantity = parameterConversionIsOk ? cableSixMmQuantity : 0.0f,
                 Measure = cableSixMm?.Measure, CostPerUnit = cableSixMm?.Cost
             },
             new()

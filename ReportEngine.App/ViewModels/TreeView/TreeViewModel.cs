@@ -1,7 +1,12 @@
-﻿using ReportEngine.App.AsyncCommands;
+﻿using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
+using ReportEngine.App.AsyncCommands;
+using ReportEngine.App.Enums;
 using ReportEngine.App.Model;
 using ReportEngine.App.Services.Calculation;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.Views.Windows.Dialog;
+using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Generators;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
@@ -12,11 +17,13 @@ public class TreeViewModel
 {
     private readonly ICalculationService _calculationService;
     private readonly IDialogService _dialogService;
-    private readonly INotificationService _notificationService;
-    private readonly ProjectModel _project;
-    private readonly IReportService _reportService;
-    private readonly UpdaterStandService _updaterStandService;
     private readonly FlatSummaryReportGenerator _flatSummaryReportGenerator;
+    private readonly INotificationService _notificationService;
+    private readonly ProjectViewModel _projectViewModel;
+    private readonly IReportService _reportService;
+
+    private readonly IServiceProvider _serviceProvider;
+    private readonly UpdaterStandService _updaterStandService;
 
     public TreeViewModel(
         ProjectViewModel projectViewModel,
@@ -25,7 +32,8 @@ public class TreeViewModel
         IDialogService dialogService,
         ICalculationService calculationService,
         UpdaterStandService updaterStandService,
-        FlatSummaryReportGenerator flatSummaryReportGenerator)
+        FlatSummaryReportGenerator flatSummaryReportGenerator,
+        IServiceProvider serviceProvider)
     {
         _notificationService = notificationService;
         _reportService = reportService;
@@ -33,10 +41,13 @@ public class TreeViewModel
         _calculationService = calculationService;
         _updaterStandService = updaterStandService;
         _flatSummaryReportGenerator = flatSummaryReportGenerator;
-        _project = projectViewModel.CurrentProjectModel;
+        _projectViewModel = projectViewModel;
+        _serviceProvider = serviceProvider;
 
         InitializeCommands();
     }
+
+    private ProjectModel _project => _projectViewModel.CurrentProjectModel;
 
     public IAsyncCommand CreateSummaryReportAsync { get; private set; }
     public IAsyncCommand CreateComponentsListReportAsync { get; private set; }
@@ -55,67 +66,68 @@ public class TreeViewModel
     {
         CreateSummaryReportAsync = CreateReportCommand(
             ReportType.SummaryReport,
-            $"""
-             Сводная ведомость создана по проекту:
-             Заказ покупателя: {_project.OrderCustomer}
-             Обозначение КД: {_project.Description}
-             """);
+            () => $"""
+                   Сводная ведомость создана по проекту:
+                   Заказ покупателя: {_project.OrderCustomer}
+                   Обозначение КД: {_project.Description}
+                   """);
+
         CreateComponentsListReportAsync = CreateReportCommand(
             ReportType.ComponentsListReport,
-            $"""
-             Ведомость комплектующих создана про проекту:
-             Заказ покупателя: {_project.OrderCustomer}
-             Обозначение КД: {_project.Description}
-             """);
+            () => $"""
+                   Ведомость комплектующих создана про проекту:
+                   Заказ покупателя: {_project.OrderCustomer}
+                   Обозначение КД: {_project.Description}
+                   """);
         CreateNamePlatesReportAsync = CreateReportCommand(
             ReportType.NameplatesReport,
-            $"""
-             Ведомость шильдиков и табличек создана по проекту:
-             Заказ покупателя: {_project.OrderCustomer}
-             Обозначение КД: {_project.Description}
-             """);
+            () => $"""
+                   Ведомость шильдиков и табличек создана по проекту:
+                   Заказ покупателя: {_project.OrderCustomer}
+                   Обозначение КД: {_project.Description}
+                   """);
         CreateMarksReportReportAsync = CreateReportCommand(
             ReportType.MarksReport,
-            $"""
-             Ведомость маркировки создана по проекту:
-             Заказ покупателя: {_project.OrderCustomer}
-             Обозначение КД: {_project.Description}
-             """);
+            () => $"""
+                   Ведомость маркировки создана по проекту:
+                   Заказ покупателя: {_project.OrderCustomer}
+                   Обозначение КД: {_project.Description}
+                   """);
         CreateProductionListReportAsync = CreateReportCommand(
             ReportType.ProductionReport,
-            $"""
-             Ведомость производства создана по проекту:
-             Заказ покупателя: {_project.OrderCustomer}
-             Обозначение КД: {_project.Description}
-             """);
+            () => $"""
+                   Ведомость производства создана по проекту:
+                   Заказ покупателя: {_project.OrderCustomer}
+                   Обозначение КД: {_project.Description}
+                   """);
         CreateFinPlanReportAsync = CreateReportCommand(
             ReportType.FinPlanReport,
-            $"""
-             Фин. план создан по проекту:
-             Заказ покупателя: {_project.OrderCustomer}
-             Обозначение КД: {_project.Description}
-             """);
+            () => $"""
+                   Фин. план создан по проекту:
+                   Заказ покупателя: {_project.OrderCustomer}
+                   Обозначение КД: {_project.Description}
+                   """);
         CreateContainersReportReportAsync = CreateReportCommand(
             ReportType.ContainerReport,
-            $"""
-             Ведомость тары создана по проекту:
-             Заказ покупателя: {_project.OrderCustomer}
-             Обозначение КД: {_project.Description}
-             """);
+            () => $"""
+                   Ведомость тары создана по проекту:
+                   Заказ покупателя: {_project.OrderCustomer}
+                   Обозначение КД: {_project.Description}
+                   """);
         CreatePassportReportAsync = CreateReportCommand(
             ReportType.PassportsReport,
-            $"""
-             Ведомость паспортов создана по проекту:
-             Заказ покупателя: {_project.OrderCustomer}
-             Обозначение КД: {_project.Description}
-             """);
+            () => $"""
+                   Ведомость паспортов создана по проекту:
+                   Заказ покупателя: {_project.OrderCustomer}
+                   Обозначение КД: {_project.Description}
+                   """);
         CreateTechCardsReportAsync = CreateReportCommand(
             ReportType.TechnologicalCards,
-            $"""
-             Ведомость технологических карт создана по проекту:
-             Заказ покупателя: {_project.OrderCustomer}
-             Обозначение КД: {_project.Description}
-             """);
+            () => $"""
+                   Ведомость технологических карт создана по проекту:
+                   Заказ покупателя: {_project.OrderCustomer}
+                   Обозначение КД: {_project.Description}
+                   """);
 
         CalculateProjectCommandAsync =
             new AsyncRelayCommand(CalculateProjectAsync);
@@ -125,20 +137,67 @@ public class TreeViewModel
             new AsyncRelayCommand(CreateFlatSummaryReportAsync);
     }
 
-    private IAsyncCommand CreateReportCommand(ReportType type, string successMessage)
+    private IAsyncCommand CreateReportCommand(ReportType type, Func<string> successMessageFactory)
     {
         return new AsyncRelayCommand(async _ =>
         {
+            var kksDuplicates = _project.Stands
+                .GroupBy(stand => stand.KKSCode)
+                .Where(group => group.Count() > 1)
+                .ToList();
+
+            if (kksDuplicates.Count > 0)
+            {
+                var warningMessage = "Обнаружены дублирования KKS-кодов стендов:\n\n" +
+                                     string.Join("\n", kksDuplicates.Select(g => $"- {g.Key} ({g.Count()} шт.)")) +
+                                     "\n\nПродолжить генерацию отчета?";
+
+                var confirmationResult = _notificationService.ShowConfirmation(warningMessage);
+
+                if (!confirmationResult)
+                {
+                    _notificationService.ShowInfo("Генерация отчета отменена");
+                    return;
+                }
+            }
+
+            //если тех карты - вызываем доп окно
+            if (type == ReportType.TechnologicalCards)
+            {
+                var reportTypeWindow = new TechCardElecrticDialog
+                {
+                    Owner = Application.Current.MainWindow
+                };
+                var dialogResult = reportTypeWindow.ShowDialog();
+
+                //если пользователь что-то выбрал
+                if (dialogResult == true && reportTypeWindow.SelectedOption != TechCardElecticDialogResult.Cancel)
+                {
+                    var includeElectric = reportTypeWindow.SelectedOption == TechCardElecticDialogResult.WithElectric;
+                    var reportSettings = _serviceProvider.GetRequiredService<ReportSettings>();
+                    reportSettings.TechCardIncludeElectric = includeElectric;
+                }
+                else
+                {
+                    _notificationService.ShowInfo("Генерация отчета отменена");
+                    return;
+                }
+            }
+
             await _dialogService.RunWithProgressDialogAsync(async () =>
             {
+                //TODO: добавить проверку на дублирования KKS 
+
+
                 await _reportService.GenerateReportAsync(
                     type,
                     _project.CurrentProjectId);
             });
 
-            _notificationService.ShowInfo(successMessage);
+            _notificationService.ShowInfo(successMessageFactory());
         });
     }
+
 
     private async Task CreateFlatSummaryReportAsync(object obj)
     {

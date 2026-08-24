@@ -64,13 +64,29 @@ def fillStandPage(stand, doc, project):
         parent = styles['Normal'],
         fontName ='Arial',
         encoding ='UTF-8',
-        fontSize = 6
+        fontSize = 6,
+        wordWrap = 'LTR'
     )
+
+
+
+    tableContentStyle = ParagraphStyle(
+        'TableContent',
+        parent = styles['Normal'],
+        fontName ='Arial',
+        encoding ='UTF-8',
+        fontSize = 6,
+        wordWrap = 'LTR',
+        alignment = TA_CENTER,
+        leading = 7
+    )
+
 
 
     #общие заголовки таблицы
     galvanizeStr = "Оцинковка" if project["IsGalvanized"] else "Покраска"
-    standTechCardHeaderTable = Table(data = [[ "Технологическая карта", str(galvanizeStr), str(project["Description"]) ]],
+
+    standTechCardHeaderTable = Table(data = [[ "Технологическая карта", PdfHelper.to_str(galvanizeStr), PdfHelper.to_str(project["RequestProduction"]) ]],
                                    colWidths= leftPartWidth/3)
     standTechCardHeaderTable.setStyle(TableStyle(cmds =
                                                  PdfHelper.commonTableStyleCmd +
@@ -82,7 +98,8 @@ def fillStandPage(stand, doc, project):
                                                  [('FONTNAME', (0, 0), (0, 0), "Arial-Bold")]
                                                  )) 
 
-    standNameData = [[ "Стенд датчиков КИПиА " + str(stand["Designation"]) ]]
+   
+    standNameData = [[ "Стенд датчиков КИПиА " + PdfHelper.to_str(stand["Designation"]) ]]
     standNameHeaderTable = Table(data = standNameData, colWidths = leftPartWidth)
     standNameHeaderTable.setStyle(TableStyle(cmds =
                                              PdfHelper.commonTableStyleCmd +
@@ -91,7 +108,7 @@ def fillStandPage(stand, doc, project):
                                              PdfHelper.visibleAllBordersTableStyleCmd ))  
     
 
-    standsInfoData = [[ str(stand["KKSCode"]) , str(stand["SerialNumber"]) ]]
+    standsInfoData = [[ PdfHelper.to_str(stand["KKSCode"]) , PdfHelper.to_str(stand["SerialNumber"]) ]]
     standInfoTable = Table(data = standsInfoData, colWidths = leftPartWidth/2)
     standInfoTable.setStyle(TableStyle(cmds =
                                        PdfHelper.commonTableStyleCmd +
@@ -113,7 +130,11 @@ def fillStandPage(stand, doc, project):
     framesTableData = framesTableHeaderData.copy()
 
     for frame in stand["Frames"]:
-        frameArray = [frame["Width"], frame["DocName"], frame["Quantity"]]
+        frameArray = [
+            Paragraph(PdfHelper.to_str(frame["Width"]), tableContentStyle), 
+            Paragraph(PdfHelper.to_str(frame["DocName"]), tableContentStyle), 
+            Paragraph(PdfHelper.to_str(frame["Quantity"]), tableContentStyle)
+        ]
         framesTableData.append(frameArray)
 
     framesTable = Table(data = framesTableData, colWidths = [leftPartWidth*0.15, leftPartWidth*0.75, leftPartWidth*0.1])
@@ -140,7 +161,12 @@ def fillStandPage(stand, doc, project):
     framePartsRecords = columnsHeaderTitles.copy()
 
     for frameMaterial in stand["FrameParts"]:
-        tableRecord = [frameMaterial["Name"], frameMaterial["Unit"], frameMaterial["Quantity"],""]
+        tableRecord = [
+            Paragraph(PdfHelper.to_str(frameMaterial["Name"]), tableContentStyle), 
+            Paragraph(PdfHelper.to_str(frameMaterial["Unit"]), tableContentStyle), 
+            Paragraph(PdfHelper.to_str(frameMaterial["Quantity"]), tableContentStyle),
+            Paragraph("", tableContentStyle)  # Пустая ячейка для "Факт"
+        ]
         framePartsRecords.append(tableRecord)
 
     framePartsTable = Table(data = framePartsRecords, colWidths = [leftPartWidth*0.68, leftPartWidth*0.12, leftPartWidth*0.1, leftPartWidth*0.1])
@@ -174,7 +200,12 @@ def fillStandPage(stand, doc, project):
     leftPartElementsCount+=1
 
     for mountPart in stand["MountParts"]:
-        tableRecord = [mountPart["Name"], mountPart["Unit"], mountPart["Quantity"],""]
+        tableRecord = [
+           Paragraph(PdfHelper.to_str(mountPart["Name"]), tableContentStyle), 
+           Paragraph(PdfHelper.to_str(mountPart["Unit"]), tableContentStyle), 
+           Paragraph(PdfHelper.to_str(mountPart["Quantity"]), tableContentStyle), 
+           Paragraph("", tableContentStyle)
+           ]
         mountPartsRecords.append(tableRecord)
         leftPartElementsCount+=1
     
@@ -197,7 +228,12 @@ def fillStandPage(stand, doc, project):
     rightPartElementsCount+=1
 
     for drainagePart in stand["DrainageParts"]:
-        tableRecord = [drainagePart["Name"], drainagePart["Unit"], drainagePart["Quantity"],""]
+        tableRecord = [
+            Paragraph(PdfHelper.to_str(drainagePart["Name"]), tableContentStyle),
+            Paragraph(PdfHelper.to_str(drainagePart["Unit"]), tableContentStyle), 
+            Paragraph(PdfHelper.to_str(drainagePart["Quantity"]), tableContentStyle),
+            Paragraph("", tableContentStyle)
+            ]
         drainagePartsRecords.append(tableRecord)
         rightPartElementsCount+=1
     
@@ -212,7 +248,7 @@ def fillStandPage(stand, doc, project):
                                             PdfHelper.firstColumnLeftTableStyleCmd ))
 
 
-    #таблица электрическх компонентов
+    #таблица электрических компонентов
     electricPartsHeaderTable = Table(data = [["Электрические компоненты"]], colWidths = rightPartWidth)
     electricPartsHeaderTable.setStyle(TableStyle(cmds =
                                               PdfHelper.commonTableStyleCmd +
@@ -225,7 +261,12 @@ def fillStandPage(stand, doc, project):
     rightPartElementsCount+=1
 
     for electricPart in stand["ElectricParts"]:
-        tableRecord = [electricPart["Name"], electricPart["Unit"], electricPart["Quantity"],""]
+        tableRecord = [
+            Paragraph(PdfHelper.to_str(electricPart["Name"]), tableContentStyle),
+            Paragraph(PdfHelper.to_str(electricPart["Unit"]), tableContentStyle), 
+            Paragraph(PdfHelper.to_str(electricPart["Quantity"]), tableContentStyle),
+            Paragraph("", tableContentStyle)
+            ]
         electricPartsRecords.append(tableRecord)
         rightPartElementsCount+=1
     
@@ -248,11 +289,19 @@ def fillStandPage(stand, doc, project):
 
 
     imageString = stand["ImageData"]
-    if imageString is not None:  
-        standBlueprint = PdfHelper.generateImageFromStr(imageString, rightPartWidth, sumHeight)  
+    blueprintOriginalWidth,blueprintOriginalHeight = 0,0
+
+
+    imageExist = imageString is not None
+
+    if imageExist:     
+         blueprintOriginalWidth,blueprintOriginalHeight = PdfHelper.getImageOriginalSizes(imageString)
+         newWidth, newHeight , _ = PdfHelper.scaleImageToFit(blueprintOriginalWidth,blueprintOriginalHeight,rightPartWidth,sumHeight)
+         standBlueprint = PdfHelper.generateImageFromStr(imageString, newWidth, newHeight)  
     else:
         standBlueprint = Paragraph(text = "Изображение отсутствует", style = cyrillicStyle)
-
+        
+    
 
     blueprintTable = Table(data = [[standBlueprint]], colWidths = rightPartWidth, rowHeights = sumHeight)
     blueprintTable.setStyle(TableStyle(cmds = PdfHelper.commonTableStyleCmd +
@@ -260,12 +309,21 @@ def fillStandPage(stand, doc, project):
                                               PdfHelper.usualFontTableStyleCmd + 
                                               PdfHelper.visibleAllBordersTableStyleCmd))
 
-    #выравнивание таблиц по кол-вам строк
-    rowsOffset = leftPartElementsCount - rightPartElementsCount
-    targetObject = mountPartsRecords if rowsOffset < 0 else electricPartsRecords
+    # #выравнивание таблиц по кол-вам строк
+    # rowsOffset = leftPartElementsCount - rightPartElementsCount
 
-    for _ in range(abs(rowsOffset)):
-        targetObject.append(["","","",""])
+    # targetObject = mountPartsRecords if rowsOffset < 0 else electricPartsRecords
+
+    # for _ in range(abs(rowsOffset-1)):
+
+    #     emptyRow = [
+    #         Paragraph("",tableContentStyle),
+    #         Paragraph("",tableContentStyle),
+    #         Paragraph("",tableContentStyle),
+    #         Paragraph("",tableContentStyle),
+    #         ]
+
+    #     targetObject.append(emptyRow)
 
 
     mountPartsTable = Table(data = mountPartsRecords, colWidths = [leftPartWidth*0.68, leftPartWidth*0.12, leftPartWidth*0.1, leftPartWidth*0.1])
@@ -298,11 +356,31 @@ def fillStandPage(stand, doc, project):
                 mountPartsHeaderTable, 
                 mountPartsTable ]
 
+
     rightPart = [ blueprintTable,
                  drainagePartsHeaderTable,
                  drainagePartsTable, 
                  electricPartsHeaderTable,  
                  electricPartsTable ]
+
+
+
+    #пытаемся выровнять левую и правую части таблицы дополнительным отступом
+    leftPartHeight = PdfHelper.get_column_height(leftPart, leftPartWidth)
+    rightPartHeight = PdfHelper.get_column_height(rightPart, rightPartWidth)
+
+    partsHeightOffset = leftPartHeight - rightPartHeight
+
+    if abs(partsHeightOffset) > 0:
+
+        targetObject = leftPart if partsHeightOffset < 0 else rightPart
+        targetWidht = leftPartWidth if partsHeightOffset < 0 else rightPartWidth
+
+        spacerTable = Table([[""]], rowHeights = [abs(partsHeightOffset)], colWidths=[targetWidht])
+        spacerTable.setStyle(TableStyle(cmds =PdfHelper.visibleAllBordersTableStyleCmd))
+
+        targetObject.append(spacerTable)
+
 
     sheetTable = Table(data = [[ leftPart, rightPart ]], colWidths = [leftPartWidth , rightPartWidth])
 
@@ -313,8 +391,15 @@ def fillStandPage(stand, doc, project):
                          #выравнивание по верху
                          [('VALIGN', (0, 0), (-1, -1), "TOP")] ))
 
+
+
+    #вытаскиваем параметр - с электрикой или без
+    includeElectric = project["ReportSettings"]["TechCardIncludeElectric"]
+
+    
+
     impulseLinesHeaderData = [["№\nимп.линии", "Наименование импульсной линии\n и код KKS", "Таблица соединений","","","","Примечание"],
-                          ["","","Цепь","Маркировка","Коробка","Клеммы",""]]
+                            ["","","Цепь","Маркировка","Коробка","Клеммы",""]]
 
     impulseLineTableData = impulseLinesHeaderData.copy()
     impulseLineNumber = 1
@@ -324,14 +409,28 @@ def fillStandPage(stand, doc, project):
 
         wires = []
         for wire in impulseLine["Wires"]:
-            wires.append( [wire["Circuit"],wire["Mark"],wire["ElectricBox"],wire["Terminal"]] )
 
-        descAndKKS = f"{impulseLine["Name"]} \n {impulseLine["CodeKKS"]}"
+            #в зависимости от параметра вставляем электрику или нет
+            if includeElectric:
+                wires.append([ Paragraph(wire["Circuit"],tableContentStyle),
+                               Paragraph(wire["Mark"],tableContentStyle),
+                               Paragraph(wire["ElectricBox"],tableContentStyle),
+                               Paragraph(wire["Terminal"],tableContentStyle) ])
+            else:
+                wires.append( ["","","",""] )
+
+
+        descAndKKS = [impulseLine["Name"],impulseLine["CodeKKS"]]
+        descAndKKSText = "<br/>".join(descAndKKS)
+        descAndKKS = Paragraph(descAndKKSText,tableContentStyle)
+
+        note = Paragraph(impulseLine["Annotation"],tableContentStyle)
 
         rowArray = [str(impulseLineNumber),descAndKKS]
         rowArray.extend(wires[0])
-        rowArray.extend("")
+        rowArray.extend([note])
         impulseLineTableData.append(rowArray)
+
 
         rowArray = ["",""]
         rowArray.extend(wires[1])
@@ -348,40 +447,42 @@ def fillStandPage(stand, doc, project):
 
 
 
-    impulseLineTable = Table(data = impulseLineTableData, colWidths = [sheetWidth * 0.075,sheetWidth * 0.275,sheetWidth * 0.1,sheetWidth * 0.15,sheetWidth * 0.15,sheetWidth * 0.1,sheetWidth * 0.15])
-    impulseLineTableStyleCmds = PdfHelper.commonTableStyleCmd.copy()
-    impulseLineTableStyleCmds.extend(PdfHelper.centerAlignTableStyleCmd +
-                                         PdfHelper.visibleAllBordersTableStyleCmd + 
-                                         PdfHelper.usualFontTableStyleCmd)
-    impulseLineTableStyleCmds.extend(#шапка
-                                     [('FONTNAME', (0, 0), (-1, 1), "Arial-Bold")] +
-                                     [('SPAN', (0, 0), (0,1) )] + 
-                                     [('SPAN', (1, 0), (1, 1) )] + 
-                                     [('SPAN', (-1, 0), (-1, 1) )] + 
-                                     [('SPAN', (2, 0), (5, 0) )] )
+        impulseLineTable = Table(data = impulseLineTableData, 
+                                 colWidths = [sheetWidth * 0.075,sheetWidth * 0.275,sheetWidth * 0.1,sheetWidth * 0.15,sheetWidth * 0.15,sheetWidth * 0.1,sheetWidth * 0.15])
+        impulseLineTableStyleCmds = PdfHelper.commonTableStyleCmd.copy()
+        impulseLineTableStyleCmds.extend(PdfHelper.centerAlignTableStyleCmd +
+                                             PdfHelper.visibleAllBordersTableStyleCmd + 
+                                             PdfHelper.usualFontTableStyleCmd)
 
-    recordsStartRow = 2
-    impulseLineRecordOffset = 2
+        impulseLineTableStyleCmds.extend(#шапка
+                                         [('FONTNAME', (0, 0), (-1, 1), "Arial-Bold")] +
+                                         [('SPAN', (0, 0), (0,1) )] + 
+                                         [('SPAN', (1, 0), (1, 1) )] + 
+                                         [('SPAN', (-1, 0), (-1, 1) )] + 
+                                         [('SPAN', (2, 0), (5, 0) )] )
 
-    currentRecordFirstRow = recordsStartRow
+        recordsStartRow = 2
+        impulseLineRecordOffset = 2
 
-    for impulseLineRecord in range(impulseLineNumber):
-        #формируем каждую запись
-        impulseLineTableStyleCmds.extend(
-                                     [('SPAN', (0, currentRecordFirstRow), (0,currentRecordFirstRow + impulseLineRecordOffset) )] + 
-                                     [('SPAN', (1, currentRecordFirstRow), (1, currentRecordFirstRow + impulseLineRecordOffset) )] + 
-                                     [('SPAN', (-1, currentRecordFirstRow), (-1, currentRecordFirstRow + impulseLineRecordOffset) )] 
-                                     )
-        currentRecordFirstRow+=impulseLineRecordOffset + 1
+        currentRecordFirstRow = recordsStartRow
+
+        for impulseLineRecord in range(impulseLineNumber):
+            #формируем каждую запись
+            impulseLineTableStyleCmds.extend(
+                                         [('SPAN', (0, currentRecordFirstRow), (0,currentRecordFirstRow + impulseLineRecordOffset) )] + 
+                                         [('SPAN', (1, currentRecordFirstRow), (1, currentRecordFirstRow + impulseLineRecordOffset) )] + 
+                                         [('SPAN', (-1, currentRecordFirstRow), (-1, currentRecordFirstRow + impulseLineRecordOffset) )] 
+                                         )
+            currentRecordFirstRow+=impulseLineRecordOffset + 1
                                          
-    impulseLineTable.setStyle(TableStyle(cmds= impulseLineTableStyleCmds ))
+        impulseLineTable.setStyle(TableStyle(cmds= impulseLineTableStyleCmds ))
 
     
     
 
     #собираем все объекты в массив и отдаем
     sheetElements = []   
-    sheetElements.append(sheetTable)
+    sheetElements.append(sheetTable) 
     sheetElements.append(impulseLineTable)
          
     return sheetElements
@@ -409,9 +510,9 @@ def fillConclusionPage(stand,doc,project):
     #таблица с инфой о стенде и лого
     standTable = [["","Значение"]]
     standTable.append(["Наименование", "Стенд датчиков КИПиА"])
-    standTable.append(["Обозначение по КД", str(stand["Designation"])])
+    standTable.append(["Обозначение по КД", PdfHelper.to_str(stand["Designation"])])
     standTable.append(["Чертеж", ""])
-    standTable.append(["Зав.номер", str(stand["SerialNumber"])])     
+    standTable.append(["Зав.номер", PdfHelper.to_str(stand["SerialNumber"])])     
     standInfoTable = Table(data = standTable, colWidths = [sheetWidth*0.2,sheetWidth*0.3])
 
     standInfoTable.setStyle(TableStyle(cmds = 

@@ -18,6 +18,8 @@ namespace ReportEngine.App.ViewModels;
 
 public class AllSortamentsViewModel : BaseViewModel
 {
+    private readonly List<string> _comboBoxUnits = new() { "шт", "м", "компл.", "ед." };
+
     private readonly Dictionary<string, Type> _equipTypeMap = new()
     {
         { "Трубы\\Жаропрочные", typeof(HeaterPipe) },
@@ -117,11 +119,13 @@ public class AllSortamentsViewModel : BaseViewModel
             if (property.Name == "Id")
                 continue;
 
-            var column = new DataGridTextColumn
+
+            DataGridColumn column = new DataGridTextColumn
             {
                 Header = GenericEquipMapper.GetColumnName(property.Name),
                 Binding = new Binding(property.Name)
             };
+
 
             if (property.Name == "Name")
                 column.Width = new DataGridLength(1, DataGridLengthUnitType.SizeToCells);

@@ -44,7 +44,7 @@ public class FlatSummaryReportGenerator
             foreach (var ws in wb.Worksheets) ws.Cells().Style.Font.FontName = "Times New Roman";
 
             var savePath = SettingsManager.GetReportDirectory();
-            var fileName = ExcelReportHelper.CreateReportName("Сводная ведомость", "xlsx");
+            var fileName = ExcelReportHelper.CreateReportName("Сводная ведомость для 1С", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
 
             wb.SaveAs(fullSavePath);

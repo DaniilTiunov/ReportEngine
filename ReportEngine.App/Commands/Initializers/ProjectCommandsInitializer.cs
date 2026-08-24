@@ -109,6 +109,9 @@ public static class ProjectCommandsInitializer
         vm.ProjectCommandProvider.UpdateObvInStandCommand =
             new RelayCommand(vm.OnUpdateObvInStandCommandExecuted, vm.CanAllCommandsExecute);
 
+        vm.ProjectCommandProvider.FillMarkInObvCommand =
+            new AsyncRelayCommand(vm.OnFillMarkInObvCommandExecuted, vm.CanAllCommandsExecute);
+
         vm.ProjectCommandProvider.CreateContainerBatchCommand =
             new RelayCommand(vm.OnCreateContainerStandCommandExecuted, vm.CanAllCommandsExecute);
 

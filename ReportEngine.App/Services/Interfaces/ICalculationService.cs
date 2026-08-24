@@ -5,4 +5,6 @@ namespace ReportEngine.App.Services.Interfaces;
 public interface ICalculationService
 {
     Task CalculateProjectAsync(ProjectModel project);
+
+    Task CalculateAndUpdateStandQuantity(ProjectModel project);
 }

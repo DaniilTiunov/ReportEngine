@@ -10,7 +10,6 @@ using ReportEngine.App.LLM;
 using ReportEngine.App.LLM.ViewModels;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels;
-using ReportEngine.App.ViewModels.CalculationSettings;
 using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Entities;
@@ -53,14 +52,11 @@ public partial class MainWindow : Window //Это так называемый "C
 
             MainWindow_StartUpState();
 
-            var canConnect = await _mainViewModel.CanAppConnect();
+            if (StartUp.CanConnect) await _mainViewModel.ShowAllProjectsAsync();
 
-            if (canConnect) await _mainViewModel.ShowAllProjectsAsync();
+            _projectsView = CollectionViewSource.GetDefaultView(
+                _mainViewModel.MainWindowModel.AllProjects);
 
-            await _mainViewModel.CheckDbConnectionAsync();
-            await LoadCalculationSettingsDataAsync();
-
-            _projectsView = CollectionViewSource.GetDefaultView(_mainViewModel.MainWindowModel.AllProjects);
             MainDataGrid.ItemsSource = _projectsView;
         });
     }
@@ -68,12 +64,6 @@ public partial class MainWindow : Window //Это так называемый "C
     private void MainDataGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
         _mainViewModel.OnEditProjectCommandExecuted(e);
-    }
-
-    private async Task LoadCalculationSettingsDataAsync()
-    {
-        var calcSettings = _serviceProvider.GetRequiredService<CalculationSettingsViewModel>();
-        await calcSettings.LoadSettingsAsync();
     }
 
     // Событие изменения состояния окна

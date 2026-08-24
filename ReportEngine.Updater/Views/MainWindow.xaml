@@ -1,0 +1,230 @@
+﻿<Window
+    FontFamily="Bahnschrift"
+    FontSize="14"
+    Height="800"
+    Title="MainWindow"
+    Width="1280"
+    WindowStyle="None"
+    mc:Ignorable="d"
+    x:Class="ReportEngine.Updater.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ReportEngine.Updater"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="0"
+            CornerRadius="0"
+            GlassFrameThickness="0" />
+    </WindowChrome.WindowChrome>
+
+    <Border Background="#666666">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!--  ===== ВЕРХНЯЯ ПАНЕЛЬ =====  -->
+            <Border
+                Background="#FFCCCCCC"
+                Grid.Row="0"
+                MouseLeftButtonDown="OnClickDrag"
+                Padding="20,15">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  Логотип и название  -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                        <TextBlock
+                            FontSize="28"
+                            Text="📦"
+                            VerticalAlignment="Center" />
+                        <TextBlock
+                            FontSize="22"
+                            FontWeight="Bold"
+                            Foreground="White"
+                            Margin="10,0,0,0"
+                            Text="Загрузчик обновлений"
+                            VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <!--  Текущая версия  -->
+                    <TextBlock
+                        FontSize="14"
+                        Foreground="White"
+                        Grid.Column="1"
+                        HorizontalAlignment="Center"
+                        Opacity="0.9"
+                        Text="{Binding CurrentVersion, StringFormat='Текущая версия: {0}'}"
+                        VerticalAlignment="Center" />
+
+                    <!--  Кнопка закрыть  -->
+                    <Button
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Click="OnClickClose"
+                        Content="✕"
+                        Cursor="Hand"
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        Grid.Column="2"
+                        Height="40"
+                        Padding="10,0"
+                        Width="40" />
+                </Grid>
+            </Border>
+
+            <!--  ===== ОСНОВНАЯ ЧАСТЬ =====  -->
+            <Grid Grid.Row="1" Margin="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="260" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!--  ЛЕВАЯ ПАНЕЛЬ - МЕНЮ  -->
+                <Border
+                    Background="White"
+                    CornerRadius="8"
+                    Grid.Column="0"
+                    Margin="0,0,10,0"
+                    Padding="10">
+
+                    <StackPanel>
+                        <!--  Заголовок меню  -->
+                        <TextBlock
+                            FontSize="12"
+                            FontWeight="Bold"
+                            Foreground="#666"
+                            Margin="10,5,0,15"
+                            Text="МЕНЮ" />
+
+                        <!--  Кнопки меню  -->
+                        <Button
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="Home"
+                            Content="🏠 Главная"
+                            HorizontalAlignment="Stretch"
+                            Margin="0,3"
+                            Padding="15,10" />
+
+                        <Button
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="Versions"
+                            Content="📋 Список версий"
+                            HorizontalAlignment="Stretch"
+                            Margin="0,3"
+                            Padding="15,10" />
+
+                        <Button
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="Settings"
+                            Content="⚙️ Настройки"
+                            HorizontalAlignment="Stretch"
+                            Margin="0,3"
+                            Padding="15,10" />
+
+                        <!--  Разделитель  -->
+                        <Rectangle
+                            Fill="#E0E0E0"
+                            Height="1"
+                            Margin="10,15,10,15" />
+
+                        <!--  Кнопка проверки обновлений  -->
+                        <Button
+                            Background="#4CAF50"
+                            Command="{Binding CheckUpdatesCommand}"
+                            Content="🔄 Проверить обновления"
+                            FontWeight="SemiBold"
+                            Foreground="White"
+                            HorizontalAlignment="Stretch"
+                            Margin="0,3"
+                            Padding="15,10" />
+
+                        <!--  Информация о статусе  -->
+                        <Border
+                            Background="#F5F5F5"
+                            CornerRadius="4"
+                            Margin="0,20,0,0"
+                            Padding="10">
+                            <StackPanel>
+                                <TextBlock
+                                    FontSize="11"
+                                    Foreground="#666"
+                                    Text="Статус:" />
+                                <TextBlock
+                                    FontSize="12"
+                                    FontWeight="SemiBold"
+                                    Text="{Binding StatusMessage}"
+                                    TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <!--  ПРАВАЯ ПАНЕЛЬ - КОНТЕНТ  -->
+                <Border
+                    Background="White"
+                    CornerRadius="8"
+                    Grid.Column="1"
+                    Padding="20">
+
+                    <ContentControl Content="{Binding CurrentView}" />
+                </Border>
+            </Grid>
+
+            <!--  ===== НИЖНЯЯ ПАНЕЛЬ (статус-бар) =====  -->
+            <Border
+                Background="#F5F5F5"
+                BorderBrush="#E0E0E0"
+                BorderThickness="0,1,0,0"
+                Grid.Row="2"
+                Padding="15,8">
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  Сообщение статуса  -->
+                    <TextBlock
+                        FontSize="12"
+                        Foreground="#666"
+                        Grid.Column="0"
+                        Text="{Binding StatusMessage}"
+                        VerticalAlignment="Center" />
+
+                    <!--  Прогресс  -->
+                    <StackPanel
+                        Grid.Column="1"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
+
+                        <ProgressBar
+                            Height="6"
+                            Margin="0,0,10,0"
+                            Maximum="100"
+                            Minimum="0"
+                            Value="{Binding Progress}"
+                            Width="150" />
+
+                        <TextBlock
+                            FontSize="12"
+                            Foreground="#666"
+                            TextAlignment="Right"
+                            Width="35" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

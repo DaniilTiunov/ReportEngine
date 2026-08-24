@@ -1,0 +1,115 @@
+<UserControl
+    x:Class="ReportEngine.Updater.Views.VersionsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!--  Заголовок  -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,15">
+            <TextBlock
+                FontSize="20"
+                FontWeight="Bold"
+                Text="📋 Список доступных версий" />
+            <TextBlock
+                FontSize="13"
+                Foreground="#666"
+                Text="Выберите версию для установки" />
+        </StackPanel>
+
+        <!--  Список версий  -->
+        <ListView
+            Grid.Row="1"
+            ItemsSource="{Binding Releases}"
+            ScrollViewer.VerticalScrollBarVisibility="Auto"
+            SelectedItem="{Binding SelectedRelease}">
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border Margin="0,2" Padding="12,10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="140" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="80" />
+                            </Grid.ColumnDefinitions>
+
+                            <!--  Версия  -->
+                            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                <TextBlock FontSize="16" Text="📦 " />
+                                <TextBlock
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Text="{Binding Version}"
+                                    VerticalAlignment="Center" />
+                            </StackPanel>
+
+                            <!--  Changelog  -->
+                            <TextBlock
+                                Foreground="#666"
+                                Grid.Column="1"
+                                Margin="10,0,10,0"
+                                Text="{Binding Changelog}"
+                                TextTrimming="CharacterEllipsis"
+                                VerticalAlignment="Center" />
+
+                            <!--  Дата  -->
+                            <TextBlock
+                                FontSize="12"
+                                Foreground="#999"
+                                Grid.Column="2"
+                                Text="{Binding Date, StringFormat='dd.MM.yyyy'}"
+                                VerticalAlignment="Center" />
+
+                            <!--  Статус  -->
+                            <Border
+                                Background="{Binding IsStable, Converter={StaticResource BoolToColor}, ConverterParameter=Stable}"
+                                CornerRadius="4"
+                                Grid.Column="3"
+                                HorizontalAlignment="Center"
+                                Padding="8,3"
+                                VerticalAlignment="Center">
+                                <TextBlock
+                                    FontSize="11"
+                                    Foreground="White"
+                                    Text="{Binding IsStable, Converter={StaticResource BoolToText}, ConverterParameter=Status}" />
+                            </Border>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <!--  Кнопки действий  -->
+        <StackPanel
+            Grid.Row="2"
+            Margin="0,15,0,0"
+            Orientation="Horizontal">
+
+            <Button
+                Background="#4CAF50"
+                Command="{Binding UpdateCommand}"
+                Content="⬇️ Установить выбранную версию"
+                Cursor="Hand"
+                FontWeight="SemiBold"
+                Foreground="White"
+                Padding="25,10" />
+
+            <Button
+                Background="#2196F3"
+                Command="{Binding RefreshCommand}"
+                Content="🔄 Обновить список"
+                Cursor="Hand"
+                FontWeight="SemiBold"
+                Foreground="White"
+                Margin="10,0,0,0"
+                Padding="20,10" />
+        </StackPanel>
+    </Grid>
+</UserControl>

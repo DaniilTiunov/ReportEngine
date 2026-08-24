@@ -1,11 +1,11 @@
-# -*- mode: python ; coding: utf-8 -*-
+
 
 
 a = Analysis(
     ['MainLauncher.py'],
-    datas = [( '*.jpg', '.')],
     pathex=[],
     binaries=[],
+    datas = [( '*.jpg', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -29,7 +29,7 @@ exe = EXE(
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
-    console=True,
+    console=False,
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,

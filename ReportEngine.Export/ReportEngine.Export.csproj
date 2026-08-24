@@ -7,6 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Compile Remove="PythonModule\build\**"/>
+        <EmbeddedResource Remove="PythonModule\build\**"/>
+        <None Remove="PythonModule\build\**"/>
+    </ItemGroup>
+
+    <ItemGroup>
         <None Remove="PythonModule\MainLauncher.exe"/>
         <None Remove="PythonModule\MainLauncher.py"/>
     </ItemGroup>
@@ -96,6 +102,10 @@
         <None Update="ReportTemplates\TechnologicalCards_template.docx">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="PythonModule\dist\"/>
     </ItemGroup>
 
 </Project>

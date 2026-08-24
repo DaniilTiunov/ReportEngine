@@ -4,6 +4,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork;
 using ReportEngine.Export.ExcelWork.Enums;
@@ -15,11 +16,13 @@ namespace ReportEngine.Export.PDFWork.Services.Generators;
 
 public class PassportsGenerator : IReportGenerator
 {
+    private readonly ParametersStore _parametersStore;
     private readonly IProjectInfoRepository _projectInfoRepository;
 
-    public PassportsGenerator(IProjectInfoRepository projectRepository)
+    public PassportsGenerator(IProjectInfoRepository projectRepository, ParametersStore parametersStore)
     {
         _projectInfoRepository = projectRepository;
+        _parametersStore = parametersStore;
     }
 
     public ReportType Type => ReportType.PassportsReport;
@@ -27,13 +30,14 @@ public class PassportsGenerator : IReportGenerator
     public async Task GenerateAsync(int projectId)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        await _parametersStore.LoadSettingsDataAsync();
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
         var savePath = SettingsManager.GetReportDirectory();
         var fileName = ExcelReportHelper.CreateReportName("Паспорт", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
 
-        var dataObject = JsonCreator.CreateProjectJson(project);
+        var dataObject = await JsonCreator.CreateProjectJson(project, _parametersStore);
         var options = new JsonSerializerOptions
         {
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -43,13 +47,15 @@ public class PassportsGenerator : IReportGenerator
         var jsonSavePath = DirectoryHelper.GetJsonSavePath();
         File.WriteAllText(jsonSavePath, jsonObject, Encoding.UTF8);
 
-        var startInfo = new ProcessStartInfo();
-        startInfo.FileName = exeFilePath;
-        startInfo.Arguments = $"--script passport --jsonPath \"{jsonSavePath}\" --outputFilePath \"{fullSavePath}\"";
-        startInfo.UseShellExecute = false;
-        startInfo.RedirectStandardOutput = true;
-        startInfo.RedirectStandardError = true;
-        startInfo.CreateNoWindow = true;
+        var startInfo = new ProcessStartInfo
+        {
+            FileName = exeFilePath,
+            Arguments = $"--script passport --jsonPath \"{jsonSavePath}\" --outputFilePath \"{fullSavePath}\"",
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            CreateNoWindow = true
+        };
 
         using (var process = Process.Start(startInfo))
         {
@@ -84,13 +90,14 @@ public class PassportsGenerator : IReportGenerator
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        await _parametersStore.LoadSettingsDataAsync();
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
         var savePath = SettingsManager.GetReportDirectory();
         var fileName = ExcelReportHelper.CreateReportName("Паспорт", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
 
-        var dataObject = JsonCreator.CreateProjectJson(project, selectedStands);
+        var dataObject = await JsonCreator.CreateProjectJson(project, _parametersStore, selectedStands);
         var options = new JsonSerializerOptions
         {
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -100,13 +107,15 @@ public class PassportsGenerator : IReportGenerator
         var jsonSavePath = DirectoryHelper.GetJsonSavePath();
         File.WriteAllText(jsonSavePath, jsonObject, Encoding.UTF8);
 
-        var startInfo = new ProcessStartInfo();
-        startInfo.FileName = exeFilePath;
-        startInfo.Arguments = $"--script passport --jsonPath \"{jsonSavePath}\" --outputFilePath \"{fullSavePath}\"";
-        startInfo.UseShellExecute = false;
-        startInfo.RedirectStandardOutput = true;
-        startInfo.RedirectStandardError = true;
-        startInfo.CreateNoWindow = true;
+        var startInfo = new ProcessStartInfo
+        {
+            FileName = exeFilePath,
+            Arguments = $"--script passport --jsonPath \"{jsonSavePath}\" --outputFilePath \"{fullSavePath}\"",
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            CreateNoWindow = true
+        };
 
         using (var process = Process.Start(startInfo))
         {

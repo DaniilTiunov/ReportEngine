@@ -191,13 +191,16 @@ public class ProductionReportGenerator : IReportGenerator
 
         if (selectedStands != null) sourceData = selectedStands;
 
+        sourceData = sourceData.OrderBy(stand => stand.Number).ToList();
+
         //выводим стенды
-        var standsRecords = sourceData.Select(stand => new StandInfoData
-        {
-            Name = new ValidatedField<string?>(stand.Design, true),
-            KKS = new ValidatedField<string?>(stand.KKSCode, true),
-            SerialNumber = new ValidatedField<string?>(stand.SerialNumber, true)
-        });
+        var standsRecords = sourceData
+            .Select(stand => new StandInfoData
+            {
+                Name = new ValidatedField<string?>(stand.Design, true),
+                KKS = new ValidatedField<string?>(stand.KKSCode, true),
+                SerialNumber = new ValidatedField<string?>(stand.SerialNumber, true)
+            });
 
         foreach (var standRecord in standsRecords)
         {
@@ -234,6 +237,8 @@ public class ProductionReportGenerator : IReportGenerator
         var sourceData = project.Stands;
 
         if (selectedStands != null) sourceData = selectedStands;
+
+        sourceData = sourceData.OrderBy(stand => stand.Number).ToList();
 
         var generatedData = ExcelReportHelper.GeneratePartsData(sourceData);
 
