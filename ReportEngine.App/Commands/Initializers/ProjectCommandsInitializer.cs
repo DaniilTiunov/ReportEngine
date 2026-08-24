@@ -40,43 +40,14 @@ public static class ProjectCommandsInitializer
         vm.ProjectCommandProvider.CalculateProjectCommand =
             new RelayCommand(vm.OnCalculateProjectCommandExecuted, vm.CanAllCommandsExecute);
 
-        vm.ProjectCommandProvider.CreateComponentsListReportCommand =
-            new RelayCommand(vm.OnComponentsListReportCommandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.CreateSummaryReportCommand =
-            new RelayCommand(vm.OnCreateSummaryReportCommandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.OpenAllSortamentsDialogCommand =
-            new RelayCommand(vm.OnOpenAllSortamentsDialogExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.CreateMarkReportCommand =
-            new RelayCommand(vm.OnCreateMarksReportCommandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.CreateNameplatesReportCommand =
-            new RelayCommand(vm.OnCreateNameplatesReportCommandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.CreateProductionReportCommand =
-            new RelayCommand(vm.OnCreateProductionReportCommandExecuted, vm.CanAllCommandsExecute);
-
         vm.ProjectCommandProvider.DeleteSelectedStandCommand =
             new RelayCommand(vm.OnDeleteSelectedStandFromProjectExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.RemoveObvFromStandCommand =
             new RelayCommand(vm.OnRemoveObvCommandExecuted, vm.CanAllCommandsExecute);
 
-        vm.ProjectCommandProvider.CreateContainerReportCommand =
-            new RelayCommand(vm.OnCreateContainerReportCommandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.CreateFinplanReportCommand =
-            new RelayCommand(vm.OnCreateFinplanReportCommandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.CreatePassportReportCommand =
-            new RelayCommand(vm.OnCreatePassportReportCommandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.CreateTechnologicalCardsReportCommand =
-            new RelayCommand(vm.OnCreateTechnologicalCardsCommandExecute, vm.CanAllCommandsExecute);
-
-
+        vm.ProjectCommandProvider.OpenAllSortamentsDialogCommand =
+             new RelayCommand(vm.OnOpenAllSortamentsDialogExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.SaveChangesInStandCommand =
             new RelayCommand(vm.OnSaveChangesInStandCommandExecuted, vm.CanAllCommandsExecute);

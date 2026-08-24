@@ -21,24 +21,14 @@ public class ProjectCommandProvider
     public ICommand AddCustomAdditionalEquipToStandCommand { get; set; }
     public ICommand SelectObvFromDialogCommand { get; set; }
     public ICommand CalculateProjectCommand { get; set; }
-    public ICommand CreateComponentsListReportCommand { get; set; }
-    public ICommand CreateSummaryReportCommand { get; set; }
     public ICommand OpenAllSortamentsDialogCommand { get; set; }
     public ICommand DeleteSelectedStandCommand { get; set; }
-    public ICommand CreateMarkReportCommand { get; set; }
-    public ICommand CreateMarkReportAsyncCommand { get; set; }
-    public ICommand CreateNameplatesReportCommand { get; set; }
-    public ICommand CreateProductionReportCommand { get; set; }
-    public ICommand CreateFinplanReportCommand { get; set; }
     public ICommand RemoveObvFromStandCommand { get; set; }
     public ICommand UpdateObvInStandCommand { get; set; }
     public ICommand FillMarkInObvCommand { get; set; }
     public ICommand CopyObvyazkaToStandsCommand { get; set; }
-    public ICommand CreatePassportReportCommand { get; set; }
-    public ICommand CreateTechnologicalCardsReportCommand { get; set; }
     public ICommand FillStandFieldsFromObvyazkaCommand { get; set; }
     public ICommand RemoveFrameStandCommand { get; set; }
-    public ICommand CreateContainerReportCommand { get; set; }
     public ICommand SaveChangesInStandCommand { get; set; }
     public ICommand DeleteElectricalComponentFromStandCommand { get; set; }
     public ICommand UpdateElectricalComponentInStandCommand { get; set; }
@@ -54,7 +44,6 @@ public class ProjectCommandProvider
     public ICommand DeleteBatchCommand { get; set; }
     public ICommand AddStandToContainerCommand { get; set; }
     public ICommand RemoveStandFromContainerCommand { get; set; }
-    public ICommand CreateContainerReportCommandAsync { get; set; }
     public ICommand ShowCompanyDialogCommand { get; set; }
     public ICommand ShowFrameDialogCommand { get; set; }
     public ICommand ShowSubjectDialogCommand { get; set; }

@@ -711,65 +711,11 @@ public class ProjectViewModel : BaseViewModel
             stand.SelectedObvyazkaInStand = tmp;
         });
     }
-
+    
     public async void OnCalculateProjectCommandExecuted(object p)
     {
         await _exceptionService.SafeExecuteAsync(CalculateProjectAsync);
     }
-
-
-    #region Отчеты по проекту
-
-
-    public async void OnComponentsListReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() =>
-            CreateReportAsync(ReportType.ComponentsListReport, "комплектующих"));
-    }
-
-    public async void OnCreateSummaryReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportAsync(ReportType.SummaryReport, "сводная"));
-    }
-
-    public async void OnCreateMarksReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportAsync(ReportType.MarksReport, "маркировки"));
-    }
-
-    public async void OnCreateNameplatesReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() =>
-            CreateReportAsync(ReportType.NameplatesReport, "шильдики и таблички"));
-    }
-
-    public async void OnCreateContainerReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportAsync(ReportType.ContainerReport, "тара"));
-    }
-
-    public async void OnCreateProductionReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportAsync(ReportType.ProductionReport, "производство"));
-    }
-
-    public async void OnCreateFinplanReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportAsync(ReportType.FinPlanReport, "финплан"));
-    }
-
-    public async void OnCreatePassportReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportAsync(ReportType.PassportsReport, "паспорта"));
-    }
-
-    public async void OnCreateTechnologicalCardsCommandExecute(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await CreateReportAsync(ReportType.TechnologicalCards, "технологические карты"));
-    }
-
-    #endregion
 
 
     #region Отчеты по выбранным стендам
@@ -1912,50 +1858,19 @@ public class ProjectViewModel : BaseViewModel
         _notificationService.ShowInfo("Расчёт завершён");
     }
 
-    //private async Task CreateReportAsync(
-    //    ReportType typeGenerator,
-    //    string reportName)
-    //{
-    //    var hasDuplicates = CurrentProjectModel.Stands
-    //        .GroupBy(stand => stand.KKSCode)
-    //        .Any(group => group.Count() > 1);
-
-    //    if (hasDuplicates)
-    //    {
-    //        var confirmationResult = _notificationService.ShowConfirmation(
-    //            "Обнаружены дублирования KKS-кодов стендов.\nПродолжить?");
-
-    //        if (!confirmationResult)
-    //        {
-    //            _notificationService.ShowInfo("Генерация отчета отменена");
-    //            return;
-    //        }
-    //    }
-
-    //    await _dialogService.RunWithProgressDialogAsync(() =>
-    //        _reportService.GenerateReportAsync(typeGenerator, CurrentProjectModel.CurrentProjectId));
-
-    //    if (_notificationService.ShowConfirmation(
-    //            $"Ведомость {reportName} создана!\nОткрыть папку с отчётами?"))
-    //    {
-    //        var reportDir = SettingsManager.GetReportDirectory();
-    //        Process.Start("explorer.exe", reportDir);
-    //    }
-    //}
-
     private async Task CreateReportAsync(
         ReportType typeGenerator,
         string reportName,
-        List<Stand>? selectedStands = null)
+        List<Stand> selectedStands)
     {
-        // Используем либо переданные стенды, либо все из проекта
 
-        
-        var standsToUse = selectedStands;
+        if (selectedStands == null || selectedStands.Count == 0)
+        {
+            _notificationService.ShowError("Стенды не выбраны!");
+            return;
+        }
 
-
-
-        var kksDuplicates = standsToUse
+        var kksDuplicates = selectedStands
             .GroupBy(stand => stand.KKSCode)
             .Where(group => group.Count() > 1)
             .ToList();
@@ -2002,7 +1917,7 @@ public class ProjectViewModel : BaseViewModel
 
         // Генерация отчета — перегрузка в _reportService разберётся сама
         await _dialogService.RunWithProgressDialogAsync(() =>
-            _reportService.GenerateReportAsync(typeGenerator, CurrentProjectModel.CurrentProjectId, standsToUse));
+            _reportService.GenerateReportAsync(typeGenerator, CurrentProjectModel.CurrentProjectId, selectedStands));
 
         // Открытие папки с отчетами
         if (_notificationService.ShowConfirmation(
