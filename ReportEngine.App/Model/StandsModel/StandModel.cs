@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using ReportEngine.App.Model.CalculationModels;
 using ReportEngine.App.Model.FormedEquipsModels;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
@@ -751,68 +750,7 @@ public class StandModel : BaseViewModel
         get => _drainagePurposesChanges;
         set => Set(ref _drainagePurposesChanges, value);
     }
-
-    public StandSettingsModel DefaultStandSettings { get; set; } = new();
-
-    public void InitializeObvAdditionalPurposes()
-    {
-        ObvyazkaAdditionalComponents = new ObservableCollection<ObvyazkaAdditionalEquipPurpose>
-        {
-            new() { Purpose = "Доп.компонент" }
-        };
-    }
-
-    public void InitializeDrainagePurposes()
-    {
-        const float endPipeQuantityPerStand = 0.2f;
-        const float pipePlugQuantityPerStand = 2.0f;
-
-        AllDrainagePurposesInStand = new ObservableCollection<DrainagePurpose>
-        {
-            new() { Purpose = "Основная труба", Measure = "м" },
-            new() { Purpose = "Патрубок", Quantity = endPipeQuantityPerStand, Measure = "м" },
-            new() { Purpose = "Заглушка основной трубы", Quantity = pipePlugQuantityPerStand, Measure = "м" },
-            new() { Purpose = "Кронштейн дренажа" },
-            new() { Purpose = "Клапан" }
-        };
-    }
-
-    public void InitializeAdditionalEquip()
-    {
-        const float nameplatesPerStand = 1.0f;
-
-        //AllAdditionalEquipPurposesInStand = new ObservableCollection<AdditionalEquipPurpose>
-        //    {
-        //        new() { Purpose = "Шильдик", Material = DefaultStandSettings.NamePlate, Quantity = nameplatesPerStand, Measure = DefaultStandSettings.NamePlateMeasure},
-        //        new() { Purpose = "Швеллер", Material = DefaultStandSettings.SteelChannel, Measure = DefaultStandSettings.SteelChannelMeasure },
-        //        new() { Purpose = "Хомуты" , Material = DefaultStandSettings.Clamp, Measure = DefaultStandSettings.ClampMeasure},
-        //        new() { Purpose = "Табличка", Material = DefaultStandSettings.NameTable, Measure = DefaultStandSettings.NameTableMeasure},
-        //        new() { Purpose = "Кронштейн универсальный",Material = DefaultStandSettings.BracketUniversal, Measure = DefaultStandSettings.BracketUniversalMeasure},
-        //        new() { Purpose = "Кронштейн перепадчика",Material = DefaultStandSettings.BracketForDif, Measure = DefaultStandSettings.BracketForDifMeasure},
-        //        new() { Purpose = "Кронштейн абсолютника", Material = DefaultStandSettings.BracketForAbs, Measure = DefaultStandSettings.BracketForAbsMeasure}
-        //    };
-    }
-
-    public void InitializeElectricalComponent()
-    {
-        float? usualConnectionBoxQuantity = 1.0f;
-        float? usualCablesQuantity = 2.0f;
-
-
-        //AllElectricalPurposesInStand = new ObservableCollection<ElectricalPurpose>
-        //    {
-        //        new() { Purpose = "Клеммная коробка" ,Quantity = usualConnectionBoxQuantity, Measure = "шт"},
-        //        new() { Purpose = "Кабельные вводы" , Quantity = 1, Measure = "шт"},
-        //        new() { Purpose = "Сигнальный кабель", Material = DefaultStandSettings.SignalCable, Quantity = usualCablesQuantity , Measure = DefaultStandSettings.SignalCableMeasure},
-        //        new() { Purpose = "Металлорукав" , Quantity = usualCablesQuantity, Measure = "м"},
-        //        new() { Purpose = "Кабель 6мм", Material = DefaultStandSettings.CabelSixMm, Quantity = (float?) DefaultStandSettings.SensorCountOnFrame , Measure = DefaultStandSettings.CabelSixMmMeasure},
-        //        new() { Purpose = "Кабель 4мм", Material = DefaultStandSettings.CabelFourMm, Quantity = usualCablesQuantity, Measure = DefaultStandSettings.CabelFourMmMeasure },
-        //        new() { Purpose = "Кронштейн коробки" },
-        //        new() { Purpose = "Клемма", Material = DefaultStandSettings.Terminal, Measure = DefaultStandSettings.TerminalMeasure }
-        //    };
-    }
-
-
+    
     public int CountSensorsQuantity()
     {
         return ObvyazkiInStand
@@ -900,15 +838,5 @@ public class StandModel : BaseViewModel
 
                 return sensorsQuantity;
             });
-    }
-
-    public async Task InitializeDefaultPurposes()
-    {
-        await DefaultStandSettings.LoadStandsSettingsDataAsync();
-
-        InitializeElectricalComponent();
-        InitializeAdditionalEquip();
-        InitializeDrainagePurposes();
-        InitializeObvAdditionalPurposes();
     }
 }

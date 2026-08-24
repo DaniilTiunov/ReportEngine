@@ -12,9 +12,6 @@
         </Content>
         <None Remove="Config\settings.ini"/>
         <None Remove="Config\updateInfo.json"/>
-        <Content Include="Config\settings.ini">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
         <Content Include="Config\updateInfo.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>

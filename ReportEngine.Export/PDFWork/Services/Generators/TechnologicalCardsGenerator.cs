@@ -11,7 +11,7 @@ using ReportEngine.Export.ExcelWork;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.IniHeleprs;
+using ReportEngine.Shared.Config.JsonHelpers;
 
 namespace ReportEngine.Export.PDFWork.Services.Generators;
 
@@ -53,7 +53,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
 
-        var savePath = SettingsManager.GetReportDirectory();
+        var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
         var fileName = ExcelReportHelper.CreateReportName("Технологические карты", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
 
@@ -120,7 +120,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
 
-        var savePath = SettingsManager.GetReportDirectory();
+        var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
         var fileName = ExcelReportHelper.CreateReportName("Технологические карты", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
 

@@ -50,10 +50,19 @@ public class JsonHandler
         File.WriteAllText(jsonFilePath, newJson);
     }
 
-    public static string GetCurrentVersion(string jsonFilePath)
+    public static string GetSaveReportDirectory(string jsonFilePath)
     {
         var json = File.ReadAllText(jsonFilePath);
         var appSettings = JsonSerializer.Deserialize<AppSettings>(json);
-        return appSettings.AboutProgram.Version;
+        return appSettings.PathSettings.SaveReportDirectory;
+    }
+    
+    public static void SetSaveReportDirectory(string jsonFilePath, string newSaveReportDirectory)
+    {
+        var json = File.ReadAllText(jsonFilePath);
+        var appSettings = JsonSerializer.Deserialize<AppSettings>(json);
+        appSettings.PathSettings.SaveReportDirectory = newSaveReportDirectory;
+        var newJson = JsonSerializer.Serialize(appSettings, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(jsonFilePath, newJson);
     }
 }

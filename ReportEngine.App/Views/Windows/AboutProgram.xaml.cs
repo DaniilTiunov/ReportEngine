@@ -5,7 +5,7 @@ using ReportEngine.Shared.Config.JsonHelpers;
 namespace ReportEngine.App.Views.Windows;
 
 /// <summary>
-///     Логика взаимодействия для AboutProgram.xaml
+///     Логика взаимодействия для PathSettings.xaml
 /// </summary>
 public partial class AboutProgram : Window
 {
@@ -15,7 +15,7 @@ public partial class AboutProgram : Window
         DataContext = this;
     }
 
-    public string Version => JsonHandler.GetCurrentVersion(DirectoryHelper.GetConfigPath());
+    
 
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
