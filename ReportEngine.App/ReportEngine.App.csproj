@@ -417,10 +417,6 @@
         <Resource Include="Resources\Images\refresh-button.png">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Resource>
-        <None Remove="appSecrets.json"/>
-        <Content Include="appSecrets.json">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
     </ItemGroup>
 
     <ItemGroup>
