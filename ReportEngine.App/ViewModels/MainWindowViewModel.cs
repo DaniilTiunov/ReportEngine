@@ -210,9 +210,11 @@ public class MainWindowViewModel : BaseViewModel
             {
                 await _entityProjectClonerService.CloneProjectEntity(selectedProject);
 
+                _logger.Success($"Скопирован проект {selectedProject.OrderCustomer} Статус: Успешно");
+
                 await ShowAllProjectsAsync();
 
-                _logger.Success($"Скопирован проект {MainWindowModel.SelectedProject.OrderCustomer} Статус: Успешно");
+                
             });
         });
     }

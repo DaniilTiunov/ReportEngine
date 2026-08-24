@@ -98,7 +98,7 @@
                         FontSize="16"
                         FontWeight="Bold"
                         Margin="0,0,0,20"
-                        Text="{Binding Version, StringFormat=Версия приложения: \{0\}}"
+                        Text="{Binding Version}"
                         TextAlignment="Center" />
                 </StackPanel>
 
@@ -115,7 +115,12 @@
                         TextAlignment="Center" />
                     <TextBlock
                         FontSize="10"
-                        Text="@Все права защищены"
+                        Margin="0,0,0,5"
+                        Text="Разработчики: Тиунов Д.А., Рева А.А."
+                        TextAlignment="Center" />
+                    <TextBlock
+                        FontSize="10"
+                        Text="2026 г. Все права защищены ©"
                         TextAlignment="Center" />
                 </StackPanel>
             </Grid>

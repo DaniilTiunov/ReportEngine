@@ -712,114 +712,151 @@ public class ProjectViewModel : BaseViewModel
             stand.SelectedObvyazkaInStand = tmp;
         });
     }
-
+    
     public async void OnCalculateProjectCommandExecuted(object p)
     {
         await _exceptionService.SafeExecuteAsync(CalculateProjectAsync);
     }
 
-    public async void OnComponentsListReportCommandExecuted(object p)
+
+    #region Отчеты по выбранным стендам
+
+    public async void OnCreateSelectedStandsComponentsListReportCommandExecuted(object p)
     {
         await _exceptionService.SafeExecuteAsync(() =>
-            CreateReportAsync(ReportType.ComponentsListReport, "комплектующих"));
+            CreateReportAsync(ReportType.ComponentsListReport, "комплектующих", StandsListHelper.SelectedStands));
     }
 
-    public async void OnSelectedComponentsListReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(()
-            => CreateReportAsync(ReportType.ComponentsListReport, "комплектующих", StandsListHelper.SelectedStands));
-    }
-
-    public async void OnCreateSummaryReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportAsync(ReportType.SummaryReport, "сводная"));
-    }
-
-    public async void OnCreateSelectedSummaryReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(()
-            => CreateReportAsync(ReportType.SummaryReport, "сводная", StandsListHelper.SelectedStands));
-    }
-
-    public async void OnCreateMarksReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportAsync(ReportType.MarksReport, "маркировки"));
-    }
-
-    public async void OnSelectedCreateMarksReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(()
-            => CreateReportAsync(ReportType.MarksReport, "маркировки", StandsListHelper.SelectedStands));
-    }
-
-    public async void OnCreateNameplatesReportCommandExecuted(object p)
+    public async void OnCreateSelectedStandsSummaryReportCommandExecuted(object p)
     {
         await _exceptionService.SafeExecuteAsync(() =>
-            CreateReportAsync(ReportType.NameplatesReport, "шильдики и таблички"));
+            CreateReportAsync(ReportType.SummaryReport, "сводная", StandsListHelper.SelectedStands));
     }
 
-    public async void OnCreateSelectedNameplatesReportCommandExecuted(object p)
+    public async void OnCreateSelectedStandsMarksReportCommandExecuted(object p)
     {
-        await _exceptionService.SafeExecuteAsync(()
-            => CreateReportAsync(ReportType.NameplatesReport, "шильдики и таблички", StandsListHelper.SelectedStands));
+        await _exceptionService.SafeExecuteAsync(() =>
+            CreateReportAsync(ReportType.MarksReport, "маркировки", StandsListHelper.SelectedStands));
     }
 
-    public async void OnCreateContainerReportCommandExecuted(object p)
+    public async void OnCreateSelectedStandsNameplatesReportCommandExecuted(object p)
     {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportAsync(ReportType.ContainerReport, "тара"));
+        await _exceptionService.SafeExecuteAsync(() =>
+            CreateReportAsync(ReportType.NameplatesReport, "шильдики и таблички", StandsListHelper.SelectedStands));
     }
 
-    public async void OnSelectedCreateContainerReportCommandExecuted(object p)
+    public async void OnCreateSelectedStandsContainerReportCommandExecuted(object p)
     {
-        await _exceptionService.SafeExecuteAsync(()
-            => CreateReportAsync(ReportType.ContainerReport, "тара", StandsListHelper.SelectedStands));
+        await _exceptionService.SafeExecuteAsync(() =>
+            CreateReportAsync(ReportType.ContainerReport, "тара", StandsListHelper.SelectedStands));
     }
 
-    public async void OnCreateProductionReportCommandExecuted(object p)
+    public async void OnCreateSelectedStandsProductionReportCommandExecuted(object p)
     {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportAsync(ReportType.ProductionReport, "производство"));
+        await _exceptionService.SafeExecuteAsync(() =>
+            CreateReportAsync(ReportType.ProductionReport, "производство", StandsListHelper.SelectedStands));
     }
 
-    public async void OnCreateSelectedProductionReportCommandExecuted(object p)
+    public async void OnCreateSelectedStandsFinplanReportCommandExecuted(object p)
     {
-        await _exceptionService.SafeExecuteAsync(()
-            => CreateReportAsync(ReportType.ProductionReport, "производство", StandsListHelper.SelectedStands));
+        await _exceptionService.SafeExecuteAsync(() =>
+            CreateReportAsync(ReportType.FinPlanReport, "финплан", StandsListHelper.SelectedStands));
     }
 
-    public async void OnCreateFinplanReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportAsync(ReportType.FinPlanReport, "финплан"));
-    }
-
-    public async void OnCreateSelectedFinplanReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(()
-            => CreateReportAsync(ReportType.FinPlanReport, "финплан", StandsListHelper.SelectedStands));
-    }
-
-    public async void OnCreatePassportReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportAsync(ReportType.PassportsReport, "паспорта"));
-    }
-
-    public async void OnCreateSelectedPassportReportCommandExecuted(object p)
+    public async void OnCreateSelectedStandsPassportReportCommandExecuted(object p)
     {
         await _exceptionService.SafeExecuteAsync(() =>
             CreateReportAsync(ReportType.PassportsReport, "паспорта", StandsListHelper.SelectedStands));
     }
 
-    public async void OnCreateTechnologicalCardsCommandExecute(object p)
+    public async void OnCreateSelectedStandsTechnologicalCardsCommandExecute(object p)
     {
         await _exceptionService.SafeExecuteAsync(async () =>
-            await CreateReportAsync(ReportType.TechnologicalCards, "технологические карты"));
+            await CreateReportAsync(ReportType.TechnologicalCards, "технологические карты", StandsListHelper.SelectedStands));
     }
 
-    public async void OnCreateSelectedTechnologicalCardsCommandExecute(object p)
+
+    #endregion
+
+
+    #region Отчеты по выбранной упаковке
+
+
+    //валидация выбранной упаковки
+    private Task CreateReportForSelectedBatchAsync(ReportType type, string name)
     {
-        await _exceptionService.SafeExecuteAsync(async ()
-            => await CreateReportAsync(ReportType.TechnologicalCards, "технологические карты",
-                StandsListHelper.SelectedStands));
+        var selectedBatch = CurrentProjectModel.SelectedContainerBatch;
+
+        if (selectedBatch == null)
+        {
+            _notificationService.ShowError("Партия не выбрана!");
+            return Task.CompletedTask;
+        }
+
+        var batchStands = selectedBatch.Containers
+            .SelectMany(container => container.Stands)
+            .ToList();
+
+        if (batchStands.Count == 0)
+        {
+            _notificationService.ShowError("Выбранная партия не содержит стендов!");
+            return Task.CompletedTask;
+        }
+
+        return CreateReportAsync(type, name, batchStands);
     }
+
+
+
+    public async void OnCreateSelectedBatchSummaryReportCommandExecuted(object p)
+    {
+        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.SummaryReport, "сводная"));
+    }
+
+    public async void OnSelectedBatchComponentsListReportCommandExecuted(object p)
+    {
+        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.ComponentsListReport, "комплектующих"));
+    }
+
+    public async void OnCreateSelectedBatchNameplatesReportCommandExecuted(object p)
+    {
+        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.NameplatesReport, "шильдики и таблички"));
+    }
+
+    public async void OnSelectedBatchCreateMarksReportCommandExecuted(object p)
+    {
+        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.MarksReport, "маркировки"));
+    }
+
+    public async void OnSelectedBatchCreateContainerReportCommandExecuted(object p)
+    {
+        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.ContainerReport, "тара"));
+    }
+
+
+    public async void OnCreateSelectedBatchProductionReportCommandExecuted(object p)
+    {
+        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.ProductionReport, "производство"));
+    }
+
+    public async void OnCreateSelectedBatchFinplanReportCommandExecuted(object p)
+    {
+        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.FinPlanReport, "финплан"));
+    }
+
+    public async void OnCreateSelectedBatchPassportReportCommandExecuted(object p)
+    {
+        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.PassportsReport, "паспорта"));
+    }
+
+    public async void OnCreateSelectedBatchTechnologicalCardsCommandExecute(object p)
+    {
+        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.TechnologicalCards, "технологические карты"));
+    }
+
+    #endregion
+
+
 
     public async void OnSaveChangesInStandCommandExecuted(object obj)
     {
@@ -1824,13 +1861,11 @@ public class ProjectViewModel : BaseViewModel
 
     private async Task CreateReportAsync(
         ReportType typeGenerator,
-        string reportName)
+        string reportName,
+        List<Stand> selectedStands)
     {
-        var hasDuplicates = CurrentProjectModel.Stands
-            .GroupBy(stand => stand.KKSCode)
-            .Any(group => group.Count() > 1);
 
-        if (hasDuplicates)
+        if (selectedStands == null || selectedStands.Count == 0)
         {
             var confirmationResult = _notificationService.ShowConfirmation(
                 "Обнаружены дублирования KKS-кодов стендов.\nПродолжить?");
@@ -1851,19 +1886,8 @@ public class ProjectViewModel : BaseViewModel
             var reportDir = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetReportsDirectory());
             Process.Start("explorer.exe", reportDir);
         }
-    }
 
-    private async Task CreateReportAsync(
-        ReportType typeGenerator,
-        string reportName,
-        List<Stand>? selectedStands = null)
-    {
-        // Используем либо переданные стенды, либо все из проекта
-        var standsToUse = selectedStands;
-        var etaonStands = CurrentProjectModel.Stands;
-
-
-        var kksDuplicates = standsToUse
+        var kksDuplicates = selectedStands
             .GroupBy(stand => stand.KKSCode)
             .Where(group => group.Count() > 1)
             .ToList();
@@ -1910,7 +1934,7 @@ public class ProjectViewModel : BaseViewModel
 
         // Генерация отчета — перегрузка в _reportService разберётся сама
         await _dialogService.RunWithProgressDialogAsync(() =>
-            _reportService.GenerateReportAsync(typeGenerator, CurrentProjectModel.CurrentProjectId, standsToUse));
+            _reportService.GenerateReportAsync(typeGenerator, CurrentProjectModel.CurrentProjectId, selectedStands));
 
         // Открытие папки с отчетами
         if (_notificationService.ShowConfirmation(

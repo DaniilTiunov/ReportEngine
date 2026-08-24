@@ -84,7 +84,7 @@ public class SummaryReportGenerator : IReportGenerator
             // Калькуляция
             var calculationSheet = wb.Worksheets.Add("Калькуляция");
             CreateCalcullationTableHeader(calculationSheet, project);
-            await FillCalculationTable(calculationSheet, project);
+            await FillCalculationTable(calculationSheet, project, pipes);
 
             // Применяем оформление ко всему документу
             foreach (var ws in wb.Worksheets) ws.Cells().Style.Font.FontName = "Times New Roman";
@@ -144,7 +144,7 @@ public class SummaryReportGenerator : IReportGenerator
             // Калькуляция
             var calculationSheet = wb.Worksheets.Add("Калькуляция");
             CreateCalcullationTableHeader(calculationSheet, project);
-            await FillCalculationTable(calculationSheet, project, selectedStands);
+            await FillCalculationTable(calculationSheet, project, pipes, selectedStands);
 
             // Применяем оформление ко всему документу
             foreach (var ws in wb.Worksheets) ws.Cells().Style.Font.FontName = "Times New Roman";
@@ -572,7 +572,7 @@ public class SummaryReportGenerator : IReportGenerator
     }
 
     //заполняет лист калькуляции
-    private async Task FillCalculationTable(IXLWorksheet ws, ProjectInfo project, List<Stand>? selectedStands = null)
+    private async Task FillCalculationTable(IXLWorksheet ws, ProjectInfo project, IEnumerable<StainlessPipe> pipes, List<Stand>? selectedStands = null)
     {
         var activeRow = 7;
 
@@ -581,6 +581,11 @@ public class SummaryReportGenerator : IReportGenerator
         var sourceStands = project.Stands;
 
         if (selectedStands != null) sourceStands = selectedStands;
+
+        //предварительно сортируем по номеру
+        sourceStands = sourceStands
+            .OrderBy(stand => stand.Number)
+            .ToList();
 
         //var standsRecords = sourceStands
         //    .GroupBy(stand => stand.Design)
@@ -622,6 +627,9 @@ public class SummaryReportGenerator : IReportGenerator
                 var generatedPartsData = ExcelReportHelper.GeneratePartsData(new List<Stand> { stand });
                 var partsRecords = ExcelReportHelper.GenerateAllPartsCollection(generatedPartsData);
 
+                var generatedLaborData = ExcelReportHelper.GenerateLaborData(new List<Stand> { stand },_parametersStore, project, pipes);
+                var laborRecords = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);
+
                 var exportDays = partsRecords.Max(part => part.ExportDays.Value);
                 var name = stand.Design;
                 var kks = stand.KKSCode;
@@ -629,7 +637,10 @@ public class SummaryReportGenerator : IReportGenerator
                 var quantity = 1;
                 var weight = stand.Weight.RoundUp(1);
                 var width = stand.Width;
-                var cost = (float)stand.StandSummCost;
+
+                var standCostSum = partsRecords.Sum(pr => pr.CommonCost.Value) + laborRecords.Sum(pr => pr.CommonCost.Value);
+                var cost = standCostSum ?? 0;
+
 
                 var commonCost = (quantity * cost).Ceiling();
 
@@ -746,7 +757,7 @@ public class SummaryReportGenerator : IReportGenerator
         totalLabelRange.Style.Font.SetBold();
 
         var totalValueCell = ws.Cell($"K{activeRow}");
-        ;
+        
         totalValueCell.Value = ExcelReportHelper.FormatPrice(totalPrice);
         totalValueCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
         totalValueCell.Style.Font.SetBold();

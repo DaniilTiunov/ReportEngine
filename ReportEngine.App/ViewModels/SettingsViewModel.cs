@@ -179,6 +179,9 @@ public class SettingsViewModel : BaseViewModel
 
             JsonHandler.SetConnectionString(configPath, newConnectionString);
 
+            StartUp.ReleaseMutex();
+            StartUp.DisposeMutex();
+
             Process.Start(new ProcessStartInfo
             {
                 FileName = Process.GetCurrentProcess().MainModule!.FileName!,

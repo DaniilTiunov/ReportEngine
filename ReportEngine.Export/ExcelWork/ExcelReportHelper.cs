@@ -593,7 +593,7 @@ public static class ExcelReportHelper
                 frameProductionHumanCostSum.isValid && frameProductionMoneyCostSum.isValid)
         };
 
-
+        
         //трудозатраты на обвязки
         var allObvHumanCosts = stands
             .SelectMany(stand => stand.ObvyazkiInStand)

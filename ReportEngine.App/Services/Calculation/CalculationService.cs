@@ -43,7 +43,7 @@ public class CalculationService : ICalculationService
         project.Cost = standsCost + galvanizedCost;
 
         project.HumanCost = (project.Stands
-                                 .Sum(ObvHumanCostCalculation)
+                               .Sum(ObvHumanCostCalculation)
                              + CalculatePaintAndSandBlustHumanCost(project)
                              + ObvProdTime(project)
                              + ObvAllTest(project)

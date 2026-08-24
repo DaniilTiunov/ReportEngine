@@ -95,7 +95,7 @@
 
                                     <TreeViewItem Header="Маркировка" Tag="MarksReport">
                                         <TreeViewItem.InputBindings>
-                                            <MouseBinding Command="{Binding CreateMarksReportReportAsync}" Gesture="LeftDoubleClick" />
+                                            <MouseBinding Command="{Binding CreateMarksReportAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
 
@@ -113,7 +113,7 @@
 
                                     <TreeViewItem Header="Отчёт тара" Tag="ContainersReport">
                                         <TreeViewItem.InputBindings>
-                                            <MouseBinding Command="{Binding CreateContainersReportReportAsync}" Gesture="LeftDoubleClick" />
+                                            <MouseBinding Command="{Binding CreateContainersReportAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
 
