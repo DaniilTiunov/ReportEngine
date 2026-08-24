@@ -8,7 +8,8 @@ using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.IniHeleprs;
+using ReportEngine.Shared.Config.Directory;
+using ReportEngine.Shared.Config.JsonHelpers;
 using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
@@ -88,7 +89,7 @@ public class SummaryReportGenerator : IReportGenerator
             // Применяем оформление ко всему документу
             foreach (var ws in wb.Worksheets) ws.Cells().Style.Font.FontName = "Times New Roman";
 
-            var savePath = SettingsManager.GetReportDirectory();
+            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
             var fileName = ExcelReportHelper.CreateReportName("Сводная ведомость", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
 
@@ -148,7 +149,7 @@ public class SummaryReportGenerator : IReportGenerator
             // Применяем оформление ко всему документу
             foreach (var ws in wb.Worksheets) ws.Cells().Style.Font.FontName = "Times New Roman";
 
-            var savePath = SettingsManager.GetReportDirectory();
+            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
             var fileName = ExcelReportHelper.CreateReportName("Сводная ведомость", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
 

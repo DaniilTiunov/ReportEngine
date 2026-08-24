@@ -31,7 +31,8 @@ using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.IniHeleprs;
+using ReportEngine.Shared.Config.Directory;
+using ReportEngine.Shared.Config.JsonHelpers;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -1866,8 +1867,24 @@ public class ProjectViewModel : BaseViewModel
 
         if (selectedStands == null || selectedStands.Count == 0)
         {
-            _notificationService.ShowError("Стенды не выбраны!");
-            return;
+            var confirmationResult = _notificationService.ShowConfirmation(
+                "Обнаружены дублирования KKS-кодов стендов.\nПродолжить?");
+
+            if (!confirmationResult)
+            {
+                _notificationService.ShowInfo("Генерация отчета отменена");
+                return;
+            }
+        }
+
+        await _dialogService.RunWithProgressDialogAsync(() =>
+            _reportService.GenerateReportAsync(typeGenerator, CurrentProjectModel.CurrentProjectId));
+
+        if (_notificationService.ShowConfirmation(
+                $"Ведомость {reportName} создана!\nОткрыть папку с отчётами?"))
+        {
+            var reportDir = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetReportsDirectory());
+            Process.Start("explorer.exe", reportDir);
         }
 
         var kksDuplicates = selectedStands
@@ -1923,7 +1940,7 @@ public class ProjectViewModel : BaseViewModel
         if (_notificationService.ShowConfirmation(
                 $"Ведомость {reportName} создана!\nОткрыть папку с отчётами?"))
         {
-            var reportDir = SettingsManager.GetReportDirectory();
+            var reportDir = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetReportsDirectory());
             Process.Start("explorer.exe", reportDir);
         }
     }

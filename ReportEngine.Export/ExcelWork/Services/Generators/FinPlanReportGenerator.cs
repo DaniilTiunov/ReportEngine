@@ -7,7 +7,8 @@ using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.IniHeleprs;
+using ReportEngine.Shared.Config.Directory;
+using ReportEngine.Shared.Config.JsonHelpers;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -90,7 +91,7 @@ public class FinPlanReportGenerator : IReportGenerator
                 ws.Columns().AdjustToContents();
             }
 
-            var savePath = SettingsManager.GetReportDirectory();
+            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
 
             var fileName = ExcelReportHelper.CreateReportName("Финплан", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
@@ -154,7 +155,7 @@ public class FinPlanReportGenerator : IReportGenerator
                 ws.Columns().AdjustToContents();
             }
 
-            var savePath = SettingsManager.GetReportDirectory();
+            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
 
             var fileName = ExcelReportHelper.CreateReportName("Финплан", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);

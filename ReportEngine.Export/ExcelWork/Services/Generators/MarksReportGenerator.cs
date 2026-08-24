@@ -4,7 +4,8 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.IniHeleprs;
+using ReportEngine.Shared.Config.Directory;
+using ReportEngine.Shared.Config.JsonHelpers;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -36,7 +37,7 @@ public class MarksReportGenerator : IReportGenerator
             ws.Cells().Style.Alignment.WrapText = true;
             ws.Columns().AdjustToContents();
 
-            var savePath = SettingsManager.GetReportDirectory();
+            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
 
             var fileName = ExcelReportHelper.CreateReportName("Маркировка", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
@@ -63,7 +64,7 @@ public class MarksReportGenerator : IReportGenerator
             ws.Cells().Style.Alignment.WrapText = true;
             ws.Columns().AdjustToContents();
 
-            var savePath = SettingsManager.GetReportDirectory();
+            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
 
             var fileName = ExcelReportHelper.CreateReportName("Маркировка", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);

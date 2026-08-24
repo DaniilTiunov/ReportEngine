@@ -14,7 +14,6 @@ using ReportEngine.App.Services.Logger;
 using ReportEngine.App.Services.Navigation;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels;
-using ReportEngine.App.ViewModels.CalculationSettings;
 using ReportEngine.App.ViewModels.Contacts;
 using ReportEngine.App.ViewModels.FormedEquips;
 using ReportEngine.App.ViewModels.TreeView;
@@ -224,7 +223,6 @@ public class HostFactory
         services.AddScoped<FormedDrainagesViewModel>();
         services.AddScoped<AllSortamentsViewModel>();
         services.AddScoped<SettingsViewModel>();
-        services.AddScoped<CalculationSettingsViewModel>();
         services.AddScoped<AuthWindowViewModel>();
         services.AddScoped<SubjectViewModel>();
         services.AddScoped<RenumeratorViewModel>();
@@ -264,7 +262,6 @@ public class HostFactory
         services.AddTransient<ProjectPreview>();
         services.AddTransient<AllSortamentsView>();
         services.AddTransient<SettingsWindow>();
-        services.AddTransient<CalculationSettingsWindow>();
         services.AddTransient<StandsContainerView>();
         services.AddTransient<AuthWindow>();
         services.AddTransient<SubjectsView>();

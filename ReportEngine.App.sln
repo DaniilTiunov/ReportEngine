@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportEngine.AtomicServices
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportApp.Benchmarks", "ReportApp.Benchmarks\ReportApp.Benchmarks.csproj", "{11D355D2-9B8D-4A57-AD73-0C926FFB9BEA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportEngine.Updater", "ReportEngine.Updater\ReportEngine.Updater.csproj", "{A9F8A422-161E-4CB8-86B0-D887B021E689}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +81,10 @@ Global
 		{11D355D2-9B8D-4A57-AD73-0C926FFB9BEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11D355D2-9B8D-4A57-AD73-0C926FFB9BEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11D355D2-9B8D-4A57-AD73-0C926FFB9BEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9F8A422-161E-4CB8-86B0-D887B021E689}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9F8A422-161E-4CB8-86B0-D887B021E689}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9F8A422-161E-4CB8-86B0-D887B021E689}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9F8A422-161E-4CB8-86B0-D887B021E689}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

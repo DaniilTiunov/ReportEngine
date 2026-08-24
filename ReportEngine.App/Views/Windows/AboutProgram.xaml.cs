@@ -9,7 +9,7 @@ using ReportEngine.Shared.Config.JsonHelpers;
 namespace ReportEngine.App.Views.Windows;
 
 /// <summary>
-///     Логика взаимодействия для AboutProgram.xaml
+///     Логика взаимодействия для PathSettings.xaml
 /// </summary>
 public partial class AboutProgram : Window
 {
