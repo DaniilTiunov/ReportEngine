@@ -13,8 +13,6 @@ public class ReportService : IReportService
         _generators = generators;
     }
 
-    //TODO: пофиксить все эти перегрузки в других местах тоже
-
     public async Task GenerateReportAsync(ReportType generatorType, int projectId)
     {
         var generator = _generators.FirstOrDefault(generator => generator.Type == generatorType);

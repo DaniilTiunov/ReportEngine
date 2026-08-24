@@ -712,7 +712,7 @@ public class ProjectViewModel : BaseViewModel
             stand.SelectedObvyazkaInStand = tmp;
         });
     }
-    
+
     public async void OnCalculateProjectCommandExecuted(object p)
     {
         await _exceptionService.SafeExecuteAsync(CalculateProjectAsync);
@@ -724,55 +724,55 @@ public class ProjectViewModel : BaseViewModel
     public async void OnCreateSelectedStandsComponentsListReportCommandExecuted(object p)
     {
         await _exceptionService.SafeExecuteAsync(() =>
-            CreateReportAsync(ReportType.ComponentsListReport, "комплектующих", StandsListHelper.SelectedStands));
+            CreateReportAsync(ReportType.ComponentsListReport, "Ведомость комплектующих", StandsListHelper.SelectedStands));
     }
 
     public async void OnCreateSelectedStandsSummaryReportCommandExecuted(object p)
     {
         await _exceptionService.SafeExecuteAsync(() =>
-            CreateReportAsync(ReportType.SummaryReport, "сводная", StandsListHelper.SelectedStands));
+            CreateReportAsync(ReportType.SummaryReport, "Сводная ведомость", StandsListHelper.SelectedStands));
     }
 
     public async void OnCreateSelectedStandsMarksReportCommandExecuted(object p)
     {
         await _exceptionService.SafeExecuteAsync(() =>
-            CreateReportAsync(ReportType.MarksReport, "маркировки", StandsListHelper.SelectedStands));
+            CreateReportAsync(ReportType.MarksReport, "Ведомость маркировки", StandsListHelper.SelectedStands));
     }
 
     public async void OnCreateSelectedStandsNameplatesReportCommandExecuted(object p)
     {
         await _exceptionService.SafeExecuteAsync(() =>
-            CreateReportAsync(ReportType.NameplatesReport, "шильдики и таблички", StandsListHelper.SelectedStands));
+            CreateReportAsync(ReportType.NameplatesReport, "Ведомость шильдиков и табличек", StandsListHelper.SelectedStands));
     }
 
     public async void OnCreateSelectedStandsContainerReportCommandExecuted(object p)
     {
         await _exceptionService.SafeExecuteAsync(() =>
-            CreateReportAsync(ReportType.ContainerReport, "тара", StandsListHelper.SelectedStands));
+            CreateReportAsync(ReportType.ContainerReport, "Тара", StandsListHelper.SelectedStands));
     }
 
     public async void OnCreateSelectedStandsProductionReportCommandExecuted(object p)
     {
         await _exceptionService.SafeExecuteAsync(() =>
-            CreateReportAsync(ReportType.ProductionReport, "производство", StandsListHelper.SelectedStands));
+            CreateReportAsync(ReportType.ProductionReport, "Ведомость производства", StandsListHelper.SelectedStands));
     }
 
     public async void OnCreateSelectedStandsFinplanReportCommandExecuted(object p)
     {
         await _exceptionService.SafeExecuteAsync(() =>
-            CreateReportAsync(ReportType.FinPlanReport, "финплан", StandsListHelper.SelectedStands));
+            CreateReportAsync(ReportType.FinPlanReport, "Финансовый план", StandsListHelper.SelectedStands));
     }
 
     public async void OnCreateSelectedStandsPassportReportCommandExecuted(object p)
     {
         await _exceptionService.SafeExecuteAsync(() =>
-            CreateReportAsync(ReportType.PassportsReport, "паспорта", StandsListHelper.SelectedStands));
+            CreateReportAsync(ReportType.PassportsReport, "Паспорт", StandsListHelper.SelectedStands));
     }
 
     public async void OnCreateSelectedStandsTechnologicalCardsCommandExecute(object p)
     {
         await _exceptionService.SafeExecuteAsync(async () =>
-            await CreateReportAsync(ReportType.TechnologicalCards, "технологические карты", StandsListHelper.SelectedStands));
+            await CreateReportAsync(ReportType.TechnologicalCards, "Технологические карты", StandsListHelper.SelectedStands));
     }
 
 
@@ -1867,31 +1867,14 @@ public class ProjectViewModel : BaseViewModel
 
         if (selectedStands == null || selectedStands.Count == 0)
         {
-            var confirmationResult = _notificationService.ShowConfirmation(
-                "Обнаружены дублирования KKS-кодов стендов.\nПродолжить?");
-
-            if (!confirmationResult)
-            {
-                _notificationService.ShowInfo("Генерация отчета отменена");
-                return;
-            }
-        }
-
-        await _dialogService.RunWithProgressDialogAsync(() =>
-            _reportService.GenerateReportAsync(typeGenerator, CurrentProjectModel.CurrentProjectId));
-
-        if (_notificationService.ShowConfirmation(
-                $"Ведомость {reportName} создана!\nОткрыть папку с отчётами?"))
-        {
-            var reportDir = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetReportsDirectory());
-            Process.Start("explorer.exe", reportDir);
+            _notificationService.ShowConfirmation("Стенды не выбраны!");
+            return;
         }
 
         var kksDuplicates = selectedStands
             .GroupBy(stand => stand.KKSCode)
             .Where(group => group.Count() > 1)
             .ToList();
-
 
         if (kksDuplicates.Count > 0)
         {
@@ -1907,6 +1890,7 @@ public class ProjectViewModel : BaseViewModel
                 return;
             }
         }
+
 
         //если тех карты - вызываем доп окно
         if (typeGenerator == ReportType.TechnologicalCards)
@@ -1931,16 +1915,14 @@ public class ProjectViewModel : BaseViewModel
             }
         }
 
-
         // Генерация отчета — перегрузка в _reportService разберётся сама
         await _dialogService.RunWithProgressDialogAsync(() =>
             _reportService.GenerateReportAsync(typeGenerator, CurrentProjectModel.CurrentProjectId, selectedStands));
 
-        // Открытие папки с отчетами
         if (_notificationService.ShowConfirmation(
-                $"Ведомость {reportName} создана!\nОткрыть папку с отчётами?"))
+                $"Отчёт \"{reportName}\" по выбранным стендам создана!\nОткрыть папку с отчётами?"))
         {
-            var reportDir = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetReportsDirectory());
+            var reportDir = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
             Process.Start("explorer.exe", reportDir);
         }
     }
