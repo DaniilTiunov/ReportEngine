@@ -15,6 +15,9 @@ public partial class AboutProgram : Window
 {
     private readonly ExceptionService _exceptionService;
 
+
+    public string Version { get; private set; } = String.Empty;
+
     public AboutProgram(ExceptionService exceptionService)
     {
         InitializeComponent();
@@ -61,9 +64,6 @@ public partial class AboutProgram : Window
         });
     }
 
-
-
-    public string Version { get; private set; } = String.Empty;
 
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
