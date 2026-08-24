@@ -209,7 +209,7 @@ public class HostFactory
         services.AddScoped<IReportGenerator, FinPlanReportGenerator>();
         services.AddScoped<IReportGenerator, PassportsGenerator>();
         services.AddScoped<IReportGenerator, TechnologicalCardsGenerator>();
-        services.AddScoped<FlatSummaryReportGenerator>();
+        services.AddScoped<IReportGenerator, FlatSummaryReportGenerator>();
         services.AddSingleton<ReportSettings>();
     }
 

@@ -1912,36 +1912,36 @@ public class ProjectViewModel : BaseViewModel
         _notificationService.ShowInfo("Расчёт завершён");
     }
 
-    private async Task CreateReportAsync(
-        ReportType typeGenerator,
-        string reportName)
-    {
-        var hasDuplicates = CurrentProjectModel.Stands
-            .GroupBy(stand => stand.KKSCode)
-            .Any(group => group.Count() > 1);
+    //private async Task CreateReportAsync(
+    //    ReportType typeGenerator,
+    //    string reportName)
+    //{
+    //    var hasDuplicates = CurrentProjectModel.Stands
+    //        .GroupBy(stand => stand.KKSCode)
+    //        .Any(group => group.Count() > 1);
 
-        if (hasDuplicates)
-        {
-            var confirmationResult = _notificationService.ShowConfirmation(
-                "Обнаружены дублирования KKS-кодов стендов.\nПродолжить?");
+    //    if (hasDuplicates)
+    //    {
+    //        var confirmationResult = _notificationService.ShowConfirmation(
+    //            "Обнаружены дублирования KKS-кодов стендов.\nПродолжить?");
 
-            if (!confirmationResult)
-            {
-                _notificationService.ShowInfo("Генерация отчета отменена");
-                return;
-            }
-        }
+    //        if (!confirmationResult)
+    //        {
+    //            _notificationService.ShowInfo("Генерация отчета отменена");
+    //            return;
+    //        }
+    //    }
 
-        await _dialogService.RunWithProgressDialogAsync(() =>
-            _reportService.GenerateReportAsync(typeGenerator, CurrentProjectModel.CurrentProjectId));
+    //    await _dialogService.RunWithProgressDialogAsync(() =>
+    //        _reportService.GenerateReportAsync(typeGenerator, CurrentProjectModel.CurrentProjectId));
 
-        if (_notificationService.ShowConfirmation(
-                $"Ведомость {reportName} создана!\nОткрыть папку с отчётами?"))
-        {
-            var reportDir = SettingsManager.GetReportDirectory();
-            Process.Start("explorer.exe", reportDir);
-        }
-    }
+    //    if (_notificationService.ShowConfirmation(
+    //            $"Ведомость {reportName} создана!\nОткрыть папку с отчётами?"))
+    //    {
+    //        var reportDir = SettingsManager.GetReportDirectory();
+    //        Process.Start("explorer.exe", reportDir);
+    //    }
+    //}
 
     private async Task CreateReportAsync(
         ReportType typeGenerator,
@@ -1949,8 +1949,10 @@ public class ProjectViewModel : BaseViewModel
         List<Stand>? selectedStands = null)
     {
         // Используем либо переданные стенды, либо все из проекта
+
+        
         var standsToUse = selectedStands;
-        var etaonStands = CurrentProjectModel.Stands;
+
 
 
         var kksDuplicates = standsToUse

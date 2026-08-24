@@ -4,16 +4,17 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.DTO;
+using ReportEngine.Export.ExcelWork.Enums;
+using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.IniHeleprs;
 using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
-public class FlatSummaryReportGenerator
+public class FlatSummaryReportGenerator : IReportGenerator
 {
     private readonly IGenericBaseRepository<StainlessPipe, StainlessPipe> _pipesRepository;
     private readonly IProjectInfoRepository _projectInfoRepository;
-    private readonly IEnumerable<StainlessPipe> _stainlessPipes;
 
     public FlatSummaryReportGenerator(
         IProjectInfoRepository projectInfoRepository,
@@ -22,6 +23,40 @@ public class FlatSummaryReportGenerator
         _projectInfoRepository = projectInfoRepository;
         _pipesRepository = serviceProvider.GetRequiredService<IGenericBaseRepository<StainlessPipe, StainlessPipe>>();
     }
+
+    public ReportType Type => ReportType.FlatSummaryReport;
+
+
+
+    public async Task GenerateAsync(int projectId)
+    {
+        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        var pipes = await _pipesRepository.GetAllAsync();
+
+        using (var wb = new XLWorkbook())
+        {
+            // Сводная ведомость
+            var summarySheet = wb.Worksheets.Add("1C");
+
+            await FillCommonListTable(summarySheet, project, pipes);
+
+            summarySheet.Columns().Style.Alignment.WrapText = false;
+            summarySheet.Rows().Style.Alignment.WrapText = false;
+            summarySheet.Columns().AdjustToContents();
+            summarySheet.Rows().AdjustToContents();
+
+            // Применяем оформление ко всему документу
+            foreach (var ws in wb.Worksheets) ws.Cells().Style.Font.FontName = "Times New Roman";
+
+            var savePath = SettingsManager.GetReportDirectory();
+            var fileName = ExcelReportHelper.CreateReportName("Сводная ведомость для 1С", "xlsx");
+            var fullSavePath = Path.Combine(savePath, fileName);
+
+            wb.SaveAs(fullSavePath);
+        }
+    }
+
+
 
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
     {
@@ -50,6 +85,7 @@ public class FlatSummaryReportGenerator
             wb.SaveAs(fullSavePath);
         }
     }
+
 
     private async Task FillCommonListTable(
         IXLWorksheet ws,
