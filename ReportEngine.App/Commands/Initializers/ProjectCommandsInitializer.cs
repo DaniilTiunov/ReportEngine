@@ -76,6 +76,8 @@ public static class ProjectCommandsInitializer
         vm.ProjectCommandProvider.CreateTechnologicalCardsReportCommand =
             new RelayCommand(vm.OnCreateTechnologicalCardsCommandExecute, vm.CanAllCommandsExecute);
 
+
+
         vm.ProjectCommandProvider.SaveChangesInStandCommand =
             new RelayCommand(vm.OnSaveChangesInStandCommandExecuted, vm.CanAllCommandsExecute);
 
@@ -179,37 +181,41 @@ public static class ProjectCommandsInitializer
             new RelayCommand(vm.OnAddStandFromAllStandsCommandExecuted, vm.CanAllCommandsExecute);
 
 
-        vm.ProjectCommandProvider.SelectedSummaryReportCommand =
-            new RelayCommand(vm.OnCreateSelectedSummaryReportCommandExecuted, vm.CanAllCommandsExecute);
 
-        vm.ProjectCommandProvider.SelectedComponentReportCommand =
-            new RelayCommand(vm.OnSelectedComponentsListReportCommandExecuted, vm.CanAllCommandsExecute);
+        //отчеты по выбранным стендам
 
-        vm.ProjectCommandProvider.SelectedNamePlatesReportCommand =
-            new RelayCommand(vm.OnCreateSelectedNameplatesReportCommandExecuted, vm.CanAllCommandsExecute);
+        vm.ProjectCommandProvider.SelectedStandsSummaryReportCommand =
+            new RelayCommand(vm.OnCreateSelectedStandsSummaryReportCommandExecuted, vm.CanAllCommandsExecute);
 
-        vm.ProjectCommandProvider.SelectedMarksReportCommand =
-            new RelayCommand(vm.OnSelectedCreateMarksReportCommandExecuted, vm.CanAllCommandsExecute);
+        vm.ProjectCommandProvider.SelectedStandsComponentReportCommand =
+            new RelayCommand(vm.OnCreateSelectedStandsComponentsListReportCommandExecuted, vm.CanAllCommandsExecute);
 
-        vm.ProjectCommandProvider.SelectedContainerReportCommand =
-            new RelayCommand(vm.OnSelectedCreateContainerReportCommandExecuted, vm.CanAllCommandsExecute);
+        vm.ProjectCommandProvider.SelectedStandsNamePlatesReportCommand =
+            new RelayCommand(vm.OnCreateSelectedStandsNameplatesReportCommandExecuted, vm.CanAllCommandsExecute);
 
-        vm.ProjectCommandProvider.SelectedProductionReportCommand =
-            new RelayCommand(vm.OnCreateSelectedProductionReportCommandExecuted, vm.CanAllCommandsExecute);
+        vm.ProjectCommandProvider.SelectedStandsMarksReportCommand =
+            new RelayCommand(vm.OnCreateSelectedStandsMarksReportCommandExecuted, vm.CanAllCommandsExecute);
 
-        vm.ProjectCommandProvider.SelectedFinPlaneReportCommand =
-            new RelayCommand(vm.OnCreateSelectedFinplanReportCommandExecuted, vm.CanAllCommandsExecute);
+        vm.ProjectCommandProvider.SelectedStandsContainerReportCommand =
+            new RelayCommand(vm.OnCreateSelectedStandsContainerReportCommandExecuted, vm.CanAllCommandsExecute);
 
-        vm.ProjectCommandProvider.SelectedPassportReportCommand =
-            new RelayCommand(vm.OnCreateSelectedPassportReportCommandExecuted, vm.CanAllCommandsExecute);
+        vm.ProjectCommandProvider.SelectedStandsProductionReportCommand =
+            new RelayCommand(vm.OnCreateSelectedStandsProductionReportCommandExecuted, vm.CanAllCommandsExecute);
 
-        vm.ProjectCommandProvider.SelectedTechnoCardsReportCommand =
-            new RelayCommand(vm.OnCreateSelectedTechnologicalCardsCommandExecute, vm.CanAllCommandsExecute);
+        vm.ProjectCommandProvider.SelectedStandsFinPlaneReportCommand =
+            new RelayCommand(vm.OnCreateSelectedStandsFinplanReportCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.SelectedStandsPassportReportCommand =
+            new RelayCommand(vm.OnCreateSelectedStandsPassportReportCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.ProjectCommandProvider.SelectedStandsTechnoCardsReportCommand =
+            new RelayCommand(vm.OnCreateSelectedStandsTechnologicalCardsCommandExecute, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.DeleteSelectedStandsCommand =
             new RelayCommand(vm.OnDeleteSelectedStandsCommandExecuted, vm.CanAllCommandsExecute);
 
 
+        //отчеты по выбранной упаковке
 
         vm.ProjectCommandProvider.SelectedBatchSummaryReportCommand =
             new RelayCommand(vm.OnCreateSelectedBatchSummaryReportCommandExecuted, vm.CanAllCommandsExecute);

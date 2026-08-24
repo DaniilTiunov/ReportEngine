@@ -71,15 +71,15 @@ public class ProjectCommandProvider
     public ICommand RenumerateObvInStandCommand { get; set; }
 
     // Команды по отчетам выбранных стендов
-    public ICommand SelectedSummaryReportCommand { get; set; }
-    public ICommand SelectedComponentReportCommand { get; set; }
-    public ICommand SelectedMarksReportCommand { get; set; }
-    public ICommand SelectedNamePlatesReportCommand { get; set; }
-    public ICommand SelectedContainerReportCommand { get; set; }
-    public ICommand SelectedProductionReportCommand { get; set; }
-    public ICommand SelectedFinPlaneReportCommand { get; set; }
-    public ICommand SelectedPassportReportCommand { get; set; }
-    public ICommand SelectedTechnoCardsReportCommand { get; set; }
+    public ICommand SelectedStandsSummaryReportCommand { get; set; }
+    public ICommand SelectedStandsComponentReportCommand { get; set; }
+    public ICommand SelectedStandsMarksReportCommand { get; set; }
+    public ICommand SelectedStandsNamePlatesReportCommand { get; set; }
+    public ICommand SelectedStandsContainerReportCommand { get; set; }
+    public ICommand SelectedStandsProductionReportCommand { get; set; }
+    public ICommand SelectedStandsFinPlaneReportCommand { get; set; }
+    public ICommand SelectedStandsPassportReportCommand { get; set; }
+    public ICommand SelectedStandsTechnoCardsReportCommand { get; set; }
     public ICommand OnAddStandFromAllStandsCommand { get; set; }
     public ICommand DeleteSelectedStandsCommand { get; set; }
 
