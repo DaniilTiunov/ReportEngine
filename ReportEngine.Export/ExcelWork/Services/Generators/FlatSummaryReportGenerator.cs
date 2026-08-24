@@ -4,7 +4,8 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.DTO;
-using ReportEngine.Shared.Config.IniHeleprs;
+using ReportEngine.Shared.Config.Directory;
+using ReportEngine.Shared.Config.JsonHelpers;
 using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
@@ -43,7 +44,7 @@ public class FlatSummaryReportGenerator
             // Применяем оформление ко всему документу
             foreach (var ws in wb.Worksheets) ws.Cells().Style.Font.FontName = "Times New Roman";
 
-            var savePath = SettingsManager.GetReportDirectory();
+            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
             var fileName = ExcelReportHelper.CreateReportName("Сводная ведомость для 1С", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
 

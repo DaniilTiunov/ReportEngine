@@ -55,9 +55,6 @@ public static class MainWindowCommandsInitializer
         vm.MainWindowCommandProvider.OpenAllSubjectsCommand =
             new RelayCommand(vm.OpenOthersWindowCommandExecuted<SubjectsView>, vm.CanAllCommandsExecute);
 
-        vm.MainWindowCommandProvider.OpenCalculationSettingsWindow =
-            new RelayCommand(vm.OpenOthersWindowCommandExecuted<CalculationSettingsWindow>, vm.CanAllCommandsExecute);
-
         vm.MainWindowCommandProvider.OpenTreeViewCommand =
             new RelayCommand(vm.OpenAnotherControlsCommandExecuted<TreeProjectView>, vm.CanAllCommandsExecute);
 

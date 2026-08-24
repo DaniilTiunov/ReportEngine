@@ -20,8 +20,7 @@ public partial class MainWindow : Window
 
         InitializeComponent();
     }
-
-    public string Version => JsonHandler.GetCurrentVersion(DirectoryHelper.GetConfigPath());
+    
 
     private void StartStandardApp(object sender, RoutedEventArgs e)
     {

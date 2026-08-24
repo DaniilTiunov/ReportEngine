@@ -4,6 +4,6 @@ public class AppSettings
 {
     public ConnectionStrings ConnectionStrings { get; set; }
     public AtomicConnectionString AtomicConnectionString { get; set; }
-    public AboutProgram AboutProgram { get; set; }
+    public PathSettings PathSettings { get; set; }
     public DatabaseSettings DatabaseSettings { get; set; }
 }
