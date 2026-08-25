@@ -1,6 +1,6 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 
-namespace ReportEngine.App.Extensions;
+namespace ReportEngine.Extensions.Extensions;
 
 public static class CollectionExtensions
 {

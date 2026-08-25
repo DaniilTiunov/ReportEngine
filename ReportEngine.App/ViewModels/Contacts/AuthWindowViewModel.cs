@@ -1,11 +1,11 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 using ReportEngine.App.Commands;
-using ReportEngine.App.Extensions;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Extensions.Extensions;
 
 namespace ReportEngine.App.ViewModels.Contacts;
 

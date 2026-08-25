@@ -250,11 +250,7 @@
                 <MenuItem Header="Справка">
                     <MenuItem Click="ShowAboutProgram" Header="О программе" />
                     <Separator />
-                    <MenuItem Click="OpenHelp" Header="Помощь" />
-                    <Separator />
-                    <MenuItem Click="AutoUpdate" Header="Обновить приложение" />
-                    <Separator />
-                    <MenuItem Click="ShowUpdateIndo" Header="История обновлений" />
+                    <MenuItem Click="ShowUpdateIndo" Header="Об этой версии" />
                 </MenuItem>
 
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAuthWindowCommand}" Header="Авторизация" />
