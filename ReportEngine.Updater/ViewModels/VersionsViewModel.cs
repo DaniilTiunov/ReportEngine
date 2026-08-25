@@ -1,11 +1,11 @@
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ReportEngine.Shared.Config.JsonHelpers;
-using ReportEngine.Updater.Config;
 using ReportEngine.Updater.Helpers;
 using ReportEngine.Updater.Models;
 using ReportEngine.Updater.Services;
@@ -15,47 +15,65 @@ namespace ReportEngine.Updater.ViewModels;
 
 public partial class VersionsViewModel : BaseViewModel
 {
-    private readonly UpdateSettingsService _updateSettingsService;
     private readonly DirectoryService _directoryService;
-    
-    [ObservableProperty]
-    private ObservableCollection<Release> _releases = new ();
-    
-    [ObservableProperty]
+    private readonly NotificationService _notificationService;
+    private readonly UpdateSettingsService _updateSettingsService;
+
+    [ObservableProperty] 
+    private ObservableCollection<Release> _releases = new();
+
+    [ObservableProperty] 
     private Release? _selectedRelease = new();
-    
+
     public VersionsViewModel(
         UpdateSettingsService updateSettingsService,
-        DirectoryService directoryService)
+        DirectoryService directoryService,
+        NotificationService notificationService)
     {
         _updateSettingsService = updateSettingsService;
         _directoryService = directoryService;
-        
+        _notificationService = notificationService;
+
         _ = LoadReleasesAsync();
 
         RefreshCommand = new AsyncRelayCommand(Refresh);
         InstallCommand = new AsyncRelayCommand(InstallSelectedReleaseAsync);
     }
-    
+
     public ICommand RefreshCommand { get; set; }
     public ICommand InstallCommand { get; set; }
 
     private async Task Refresh()
     {
         Releases.Clear();
-        
+
         await LoadReleasesAsync();
+        
+        _notificationService.ShowInfo("Версии загружены");
     }
 
     private async Task InstallSelectedReleaseAsync()
     {
-        string distPath = await _updateSettingsService.GetPath(
-            jsonConfigPath: UpdateSettingsHelper.GetUpdateSettingsPath(),
-            selector: path => path.LocalPath);
-        
+        var distPath = await _updateSettingsService.GetPath(
+            UpdateSettingsHelper.GetUpdateSettingsPath(),
+            path => path.LocalPath);
+
         _directoryService.Copy(SelectedRelease.Path, distPath);
+
+        var result = _notificationService.ShowConfirmation("""
+                                                           Установка прошла успешно
+                                                           Открыть директорию с версиями?
+                                                           """);
+
+        if (result)
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "explorer.exe",
+                Arguments = distPath,
+                UseShellExecute = true
+            });
     }
-    
+
     private async Task LoadReleasesAsync()
     {
         var releasesDirectories = await GetDirectoriesAsync();
@@ -72,11 +90,11 @@ public partial class VersionsViewModel : BaseViewModel
                 Info = updateInfo,
                 Path = releasesDirectory
             };
-            
+
             Releases.Add(release);
         }
     }
-    
+
     private async Task<IEnumerable<string>> GetDirectoriesAsync()
     {
         var serverVersionsPath = await _updateSettingsService.GetPath(

@@ -37,15 +37,17 @@ public class UpdateSettingsService
         return selector(settings.UpdatePaths) ?? string.Empty;
     }
 
-    public async Task SetPath(
-        string jsonConfigPath,
-        Action<UpdatePaths, string> setter,
-        string path)
+    public async Task SetRemotePath(string jsonConfigPath, string newRemotePath)
     {
         var settings = await GetUpdateSettingsJson(jsonConfigPath);
+        settings.UpdatePaths.RemotePath = newRemotePath;
+        await SetUpdateSettingsJson(jsonConfigPath, settings);
+    }
 
-        setter(settings.UpdatePaths, path);
-
+    public async Task SetLocalPath(string jsonConfigPath, string newLocalPath)
+    {
+        var settings = await GetUpdateSettingsJson(jsonConfigPath);
+        settings.UpdatePaths.LocalPath = newLocalPath;
         await SetUpdateSettingsJson(jsonConfigPath, settings);
     }
 }

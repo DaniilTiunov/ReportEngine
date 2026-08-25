@@ -198,44 +198,6 @@ public partial class MainWindow : Window //Это так называемый "C
         }
     }
 
-    private void AutoUpdate(object sender, RoutedEventArgs e)
-    {
-        try
-        {
-            var localPath = AppDomain.CurrentDomain.BaseDirectory;
-            var updaterPath = Path.Combine(localPath, "ReportUpdater.exe");
-
-            if (!File.Exists(updaterPath))
-            {
-                MessageBox.Show("ReportUpdater.exe не найден!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            Process.Start(updaterPath);
-
-            // Завершаем текущий WPF
-            Application.Current.Shutdown();
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Ошибка запуска обновления: {ex.Message}");
-        }
-    }
-
-    private void OpenHelp(object sender, RoutedEventArgs e)
-    {
-        var helpPath = Path.Combine(DirectoryHelper.GetDirectory(), "Help", "HelpDesk.chm");
-
-        _exceptionService.SafeExecute(() =>
-        {
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = helpPath,
-                UseShellExecute = true
-            });
-        });
-    }
-
     private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
         if (_projectsView == null)

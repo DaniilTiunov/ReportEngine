@@ -41,7 +41,8 @@
                         Margin="0,0,10,0"
                         Text="{Binding RemotePath}" />
                     <Button
-                        Command="{Binding BrowseServerCommand}"
+                        Command="{Binding BrowseCommand}"
+                        CommandParameter="Remote"
                         Content="Обзор..."
                         Grid.Column="1"
                         Padding="15,8" />
@@ -62,7 +63,8 @@
                         Margin="0,0,10,0"
                         Text="{Binding LocalPath}" />
                     <Button
-                        Command="{Binding BrowseLocalCommand}"
+                        Command="{Binding BrowseCommand}"
+                        CommandParameter="Local"
                         Content="Обзор..."
                         Grid.Column="1"
                         Padding="15,8" />
@@ -84,7 +86,7 @@
                     <TextBlock
                         FontSize="12"
                         Foreground="#666"
-                        Text="⚠️ Изменение путей может повлиять на работу обновлений.                                      Убедитесь, что новые пути корректны."
+                        Text="⚠️ Изменение путей может повлиять на работу обновлений. Убедитесь, что новые пути корректны."
                         TextWrapping="Wrap" />
                 </Border>
             </StackPanel>
@@ -97,22 +99,12 @@
             Orientation="Horizontal">
             <Button
                 Background="#4CAF50"
-                Command="{Binding SaveCommand}"
+                Command="{Binding SaveSettingsCommand}"
                 Content="💾 Сохранить настройки"
                 Cursor="Hand"
                 FontWeight="SemiBold"
                 Foreground="White"
                 Padding="30,10" />
-
-            <Button
-                Background="#FF9800"
-                Command="{Binding ResetCommand}"
-                Content="🔄 Сбросить"
-                Cursor="Hand"
-                FontWeight="SemiBold"
-                Foreground="White"
-                Margin="10,0,0,0"
-                Padding="20,10" />
         </StackPanel>
     </Grid>
 </UserControl>

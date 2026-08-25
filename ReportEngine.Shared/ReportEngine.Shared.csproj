@@ -26,4 +26,8 @@
         <PackageReference Include="Serilog.Sinks.File" Version="7.0.0"/>
     </ItemGroup>
 
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+      <Exec Command="if exist &quot;$(TargetDir)updateInfo.json&quot; del &quot;$(TargetDir)updateInfo.json&quot;" />
+    </Target>
+
 </Project>

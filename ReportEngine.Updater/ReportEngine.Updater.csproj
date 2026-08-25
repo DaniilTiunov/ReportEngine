@@ -1,53 +1,47 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <OutputType>WinExe</OutputType>
-        <TargetFramework>net8.0-windows</TargetFramework>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <UseWPF>true</UseWPF>
-        <ApplicationIcon>Assets\JawboneUpdater_35722.ico</ApplicationIcon>
-    </PropertyGroup>
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Assets\JawboneUpdater_35722.ico</ApplicationIcon>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <Page Update="Views\MainWindow.xaml">
-        <Generator>MSBuild:Compile</Generator>
-        <XamlRuntime>Wpf</XamlRuntime>
-        <SubType>Designer</SubType>
-      </Page>
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.10" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Assets\" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ReportEngine.Extensions\ReportEngine.Extensions.csproj" />
+    <ProjectReference Include="..\ReportEngine.Shared\ReportEngine.Shared.csproj" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
-      <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.10" />
-      <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.10" />
-    </ItemGroup>
+  <ItemGroup>
+    <Content Include="Config\updateSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\ReportEngine.Extensions\ReportEngine.Extensions.csproj" />
-      <ProjectReference Include="..\ReportEngine.Shared\ReportEngine.Shared.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <None Update="updateInfo.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
-    <ItemGroup>
-      <None Remove="Config\updateSettings.json" />
-      <Content Include="Config\updateSettings.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-    </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\JawboneUpdater_35722.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\sync.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
 
-    <ItemGroup>
-      <None Remove="Assets\sync.ico" />
-      <Resource Include="Assets\sync.ico">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Resource>
-      <None Remove="Assets\JawboneUpdater_35722.ico" />
-      <Resource Include="Assets\JawboneUpdater_35722.ico">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Resource>
-    </ItemGroup>
-
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="if exist &quot;$(TargetDir)updateInfo.json&quot; del &quot;$(TargetDir)updateInfo.json&quot;" />
+  </Target>
 </Project>
