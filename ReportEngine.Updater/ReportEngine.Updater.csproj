@@ -6,6 +6,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UseWPF>true</UseWPF>
+        <ApplicationIcon>Assets\JawboneUpdater_35722.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
@@ -17,16 +18,36 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Services\" />
+      <Folder Include="Assets\" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
       <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.10" />
       <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.10" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\ReportEngine.Extensions\ReportEngine.Extensions.csproj" />
       <ProjectReference Include="..\ReportEngine.Shared\ReportEngine.Shared.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Config\updateSettings.json" />
+      <Content Include="Config\updateSettings.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Assets\sync.ico" />
+      <Resource Include="Assets\sync.ico">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Resource>
+      <None Remove="Assets\JawboneUpdater_35722.ico" />
+      <Resource Include="Assets\JawboneUpdater_35722.ico">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Resource>
     </ItemGroup>
 
 </Project>

@@ -2,10 +2,10 @@
 using System.Windows.Input;
 using Microsoft.EntityFrameworkCore;
 using ReportEngine.App.Commands;
-using ReportEngine.App.Extensions;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Extensions.Extensions;
 
 namespace ReportEngine.App.ViewModels;
 

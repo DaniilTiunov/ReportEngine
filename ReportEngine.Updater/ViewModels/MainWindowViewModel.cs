@@ -1,4 +1,5 @@
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.Updater.Commands;
 using ReportEngine.Updater.ViewModels.Base;
@@ -6,9 +7,11 @@ using ReportEngine.Updater.Views;
 
 namespace ReportEngine.Updater.ViewModels;
 
-public class MainWindowViewModel : BaseViewModel
+public partial class MainWindowViewModel : BaseViewModel
 {
     private readonly IServiceProvider _serviceProvider;
+    
+    [ObservableProperty]
     private object _currentView;
 
     public MainWindowViewModel(IServiceProvider serviceProvider)
@@ -16,12 +19,6 @@ public class MainWindowViewModel : BaseViewModel
         _serviceProvider = serviceProvider;
         
         NavigateCommand = new RelayCommand(Navigate);
-    }
-
-    public object CurrentView
-    {
-        get => _currentView;
-        set => Set(ref _currentView, value);
     }
     
     public ICommand NavigateCommand { get; set; }
@@ -31,13 +28,13 @@ public class MainWindowViewModel : BaseViewModel
         switch (obj)
         {
             case "Home":
-                CurrentView = _serviceProvider.GetRequiredService<HomeView>();
+                CurrentView  = _serviceProvider.GetRequiredService<HomeView>();
                 break;
             case "Versions":
-                CurrentView = _serviceProvider.GetRequiredService<VersionsView>();
+                CurrentView  = _serviceProvider.GetRequiredService<VersionsView>();
                 break;
             case "Settings":
-                CurrentView = _serviceProvider.GetRequiredService<SettingsView>();
+                CurrentView  = _serviceProvider.GetRequiredService<SettingsView>();
                 break;
         }
     }

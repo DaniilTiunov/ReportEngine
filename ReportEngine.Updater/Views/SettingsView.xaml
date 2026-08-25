@@ -39,7 +39,7 @@
                     <TextBox
                         Grid.Column="0"
                         Margin="0,0,10,0"
-                        Text="{Binding ServerPath}" />
+                        Text="{Binding RemotePath}" />
                     <Button
                         Command="{Binding BrowseServerCommand}"
                         Content="Обзор..."
@@ -68,27 +68,11 @@
                         Padding="15,8" />
                 </Grid>
 
-                <!--  Количество хранимых версий  -->
-                <TextBlock
-                    FontWeight="SemiBold"
-                    Margin="0,15,0,5"
-                    Text="Количество хранимых версий" />
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="120" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <TextBox
-                        Grid.Column="0"
-                        Text="{Binding KeepVersions}"
-                        TextAlignment="Center" />
-                    <TextBlock
-                        FontSize="12"
-                        Foreground="#666"
-                        Grid.Column="1"
-                        Margin="10,0,0,0"
-                        Text="(старые версии будут автоматически удаляться)"
-                        VerticalAlignment="Center" />
                 </Grid>
 
                 <!--  Информация  -->

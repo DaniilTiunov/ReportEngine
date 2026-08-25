@@ -1,5 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ReportEngine.Updater.Config;
+using ReportEngine.Updater.Services;
 using ReportEngine.Updater.ViewModels;
 using ReportEngine.Updater.Views;
 
@@ -21,12 +23,14 @@ public class AppHostBuilder
 
     private static void ConfigureAppServices(IServiceCollection services)
     {
-        services.AddSingleton<MainWindow>();
         services.AddSingleton<App>();
+        services.AddScoped<UpdateSettingsService>();
+        services.AddScoped<DirectoryService>();
     }
 
     private static void ConfigureViews(IServiceCollection services)
     {
+        services.AddSingleton<MainWindow>();
         services.AddTransient<HomeView>();
         services.AddTransient<VersionsView>();
         services.AddTransient<SettingsView>();
@@ -35,5 +39,7 @@ public class AppHostBuilder
     private static void ConfigureViewModels(IServiceCollection services)
     {
         services.AddScoped<MainWindowViewModel>();
+        services.AddScoped<SettingsViewModel>();
+        services.AddScoped<VersionsViewModel>();
     }
 }

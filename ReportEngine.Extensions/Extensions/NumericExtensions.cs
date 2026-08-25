@@ -1,4 +1,4 @@
-﻿namespace ReportEngine.App.Extensions;
+namespace ReportEngine.Extensions.Extensions;
 
 public static class NumericExtensions
 {

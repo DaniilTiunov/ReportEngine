@@ -13,7 +13,8 @@ using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Generators;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.IniHeleprs;
+using ReportEngine.Shared.Config.Directory;
+using ReportEngine.Shared.Config.JsonHelpers;
 
 namespace ReportEngine.App.ViewModels.TreeView;
 
@@ -390,7 +391,7 @@ public class TreeViewModel
 
        if (confirmationResult)
        {
-            var reportDir = SettingsManager.GetReportDirectory();
+            var reportDir = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
             Process.Start("explorer.exe", reportDir);
        }
        return confirmationResult;

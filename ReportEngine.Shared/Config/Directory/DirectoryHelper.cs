@@ -1,6 +1,6 @@
 ﻿namespace ReportEngine.Shared.Config.Directory;
 
-public class DirectoryHelper
+public static class DirectoryHelper
 {
     public static string GetDirectory()
     {

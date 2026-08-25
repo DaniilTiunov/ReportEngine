@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
-using ReportEngine.App.Extensions;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Extensions.Extensions;
 
 namespace ReportEngine.App.ViewModels;
 

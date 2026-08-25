@@ -1,222 +1,531 @@
 ﻿# Publish-Release.ps1
-# Скрипт для публикации релизной сборки ReportEngine на сервер
+# Скрипт публикации ReportEngine.App + ReportEngine.Updater
 
 param(
-    [Parameter(Mandatory=$true)]
-    [string]$Version,              # Например: 1.0.3
-    
-    [Parameter(Mandatory=$false)]
+    [Parameter(Mandatory = $true)]
+    [string]$Version,
+
+    [Parameter(Mandatory = $false)]
     [string]$Changelog = "Очередное обновление",
-    
-    [Parameter(Mandatory=$false)]
+
+    [Parameter(Mandatory = $false)]
     [bool]$IsStable = $false
 )
 
-# ===== КОНФИГУРАЦИЯ =====
+# ============================================================
+# КОНФИГУРАЦИЯ
+# ============================================================
+
 $BuildPath = "C:\Work\Prjs\ReportEngine\ReportEngine.App\bin\Release\net8.0-windows"
+
+$UpdaterBuildPath = "C:\Work\Prjs\ReportEngine\ReportEngine.Updater\bin\Release\net8.0-windows"
+
 $ServerRoot = "P:\00 ОКП АСУ\01 Группа разработки ПО\Тиунов\releases"
 
-# ===== ЦВЕТНОЙ ВЫВОД (ИСПРАВЛЕННАЯ ВЕРСИЯ) =====
+$UpdaterServerPath = Join-Path $ServerRoot "Updater"
+
+
+# ============================================================
+# ЦВЕТНОЙ ВЫВОД
+# ============================================================
+
 function Write-ColorOutput {
     param(
         [string]$Color,
         [string]$Message
     )
-    
-    # Сохраняем текущий цвет
+
     $currentColor = $host.UI.RawUI.ForegroundColor
-    
+
     try {
-        # Преобразуем строку в ConsoleColor
         $consoleColor = [System.ConsoleColor]::$Color
         $host.UI.RawUI.ForegroundColor = $consoleColor
+
         Write-Output $Message
     }
     catch {
-        # Если цвет не распознан, пишем белым
         Write-Output $Message
     }
     finally {
-        # Восстанавливаем цвет
         $host.UI.RawUI.ForegroundColor = $currentColor
     }
 }
 
-# ===== ПРОВЕРКИ =====
-Write-ColorOutput -Color "Green" -Message "========================================"
-Write-ColorOutput -Color "Green" -Message "🚀 Публикация ReportEngine v$Version"
-Write-ColorOutput -Color "Green" -Message "========================================"
-Write-ColorOutput -Color "Cyan" -Message "`n📂 Локальная сборка: $BuildPath"
-Write-ColorOutput -Color "Cyan" -Message "📂 Сервер: $ServerRoot"
 
-# 1. Проверяем локальную сборку
+# ============================================================
+# КОПИРОВАНИЕ СБОРКИ
+# ============================================================
+
+function Copy-Build {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$SourcePath,
+
+        [Parameter(Mandatory = $true)]
+        [string]$DestinationPath
+    )
+
+    $files = Get-ChildItem `
+        -Path $SourcePath `
+        -File `
+        -Recurse
+
+    $totalFiles = $files.Count
+    $copied = 0
+
+    foreach ($file in $files) {
+
+        $relativePath = $file.FullName.Substring(
+            $SourcePath.Length + 1
+        )
+
+        $destinationFile = Join-Path `
+            $DestinationPath `
+            $relativePath
+
+        $destinationDirectory = Split-Path `
+            $destinationFile `
+            -Parent
+
+        if (-not (Test-Path $destinationDirectory)) {
+            New-Item `
+                -ItemType Directory `
+                -Path $destinationDirectory `
+                -Force |
+                Out-Null
+        }
+
+        Copy-Item `
+            -Path $file.FullName `
+            -Destination $destinationFile `
+            -Force
+
+        $copied++
+
+        if ($totalFiles -gt 0) {
+
+            $percent = [math]::Round(
+                ($copied / $totalFiles) * 100
+            )
+
+            Write-Progress `
+                -Activity "Копирование файлов" `
+                -Status "$percent% завершено" `
+                -PercentComplete $percent
+        }
+    }
+
+    Write-Progress `
+        -Activity "Копирование файлов" `
+        -Completed
+
+    return $copied
+}
+
+
+# ============================================================
+# НАЧАЛО
+# ============================================================
+
+Write-ColorOutput `
+    -Color "Green" `
+    -Message "========================================"
+
+Write-ColorOutput `
+    -Color "Green" `
+    -Message "🚀 Публикация ReportEngine v$Version"
+
+Write-ColorOutput `
+    -Color "Green" `
+    -Message "========================================"
+
+Write-ColorOutput `
+    -Color "Cyan" `
+    -Message "`n📂 App:     $BuildPath"
+
+Write-ColorOutput `
+    -Color "Cyan" `
+    -Message "📂 Updater: $UpdaterBuildPath"
+
+Write-ColorOutput `
+    -Color "Cyan" `
+    -Message "📂 Сервер:  $ServerRoot"
+
+
+# ============================================================
+# ПРОВЕРКА APP
+# ============================================================
+
 if (-not (Test-Path $BuildPath)) {
-    Write-ColorOutput -Color "Red" -Message "`n❌ Папка со сборкой не найдена!"
-    Write-ColorOutput -Color "Red" -Message "   Путь: $BuildPath"
-    Write-ColorOutput -Color "Yellow" -Message "`n💡 Соберите проект в Release:"
-    Write-ColorOutput -Color "Yellow" -Message "   dotnet build -c Release"
-    Write-ColorOutput -Color "Yellow" -Message "   или через Visual Studio: Сборка -> Собрать решение (Release)"
+
+    Write-ColorOutput `
+        -Color "Red" `
+        -Message "`n❌ Папка со сборкой App не найдена!"
+
+    Write-ColorOutput `
+        -Color "Red" `
+        -Message "   $BuildPath"
+
+    Write-ColorOutput `
+        -Color "Yellow" `
+        -Message "`n💡 Соберите ReportEngine.App в Release."
+
     exit 1
 }
 
-# 2. Проверяем наличие EXE файла
-$exeFiles = Get-ChildItem -Path $BuildPath -Filter "*.exe" -File
-if ($exeFiles.Count -eq 0) {
-    Write-ColorOutput -Color "Red" -Message "`n❌ В папке нет .exe файлов!"
+Write-ColorOutput `
+    -Color "Green" `
+    -Message "`n✅ Сборка App найдена"
+
+
+# ============================================================
+# ПРОВЕРКА UPDATER
+# ============================================================
+
+if (-not (Test-Path $UpdaterBuildPath)) {
+
+    Write-ColorOutput `
+        -Color "Red" `
+        -Message "`n❌ Папка со сборкой Updater не найдена!"
+
+    Write-ColorOutput `
+        -Color "Red" `
+        -Message "   $UpdaterBuildPath"
+
+    Write-ColorOutput `
+        -Color "Yellow" `
+        -Message "`n💡 Соберите ReportEngine.Updater в Release."
+
     exit 1
 }
 
-$mainExe = $exeFiles[0].Name
-$exeSize = [math]::Round($exeFiles[0].Length / 1MB, 2)
-Write-ColorOutput -Color "Green" -Message "`n✅ Найден основной файл: $mainExe ($exeSize MB)"
+Write-ColorOutput `
+    -Color "Green" `
+    -Message "✅ Сборка Updater найдена"
 
-# 3. Проверяем доступность сервера
+
+# ============================================================
+# ПОИСК EXE APP
+# ============================================================
+
+$mainExe = Get-ChildItem `
+    -Path $BuildPath `
+    -Filter "*.exe" `
+    -File |
+    Select-Object -First 1
+
+if ($null -eq $mainExe) {
+
+    Write-ColorOutput `
+        -Color "Red" `
+        -Message "`n❌ В сборке App нет .exe!"
+
+    exit 1
+}
+
+$mainExeSize = [math]::Round(
+    $mainExe.Length / 1MB,
+    2
+)
+
+Write-ColorOutput `
+    -Color "Green" `
+    -Message "✅ App: $($mainExe.Name) ($mainExeSize MB)"
+
+
+# ============================================================
+# ПОИСК EXE UPDATER
+# ============================================================
+
+$updaterExe = Get-ChildItem `
+    -Path $UpdaterBuildPath `
+    -Filter "*.exe" `
+    -File |
+    Select-Object -First 1
+
+if ($null -eq $updaterExe) {
+
+    Write-ColorOutput `
+        -Color "Red" `
+        -Message "`n❌ В сборке Updater нет .exe!"
+
+    exit 1
+}
+
+$updaterExeSize = [math]::Round(
+    $updaterExe.Length / 1MB,
+    2
+)
+
+Write-ColorOutput `
+    -Color "Green" `
+    -Message "✅ Updater: $($updaterExe.Name) ($updaterExeSize MB)"
+
+
+# ============================================================
+# ПРОВЕРКА СЕРВЕРА
+# ============================================================
+
 if (-not (Test-Path $ServerRoot)) {
-    Write-ColorOutput -Color "Red" -Message "`n❌ Сервер недоступен!"
-    Write-ColorOutput -Color "Red" -Message "   Путь: $ServerRoot"
-    Write-ColorOutput -Color "Yellow" -Message "`n💡 Проверьте:"
-    Write-ColorOutput -Color "Yellow" -Message "   - Подключен ли диск P:"
-    Write-ColorOutput -Color "Yellow" -Message "   - Есть ли доступ к сети"
+
+    Write-ColorOutput `
+        -Color "Red" `
+        -Message "`n❌ Сервер недоступен!"
+
+    Write-ColorOutput `
+        -Color "Red" `
+        -Message "   $ServerRoot"
+
+    Write-ColorOutput `
+        -Color "Yellow" `
+        -Message "`n💡 Проверьте:"
+
+    Write-ColorOutput `
+        -Color "Yellow" `
+        -Message "   - Подключен ли диск P:"
+
+    Write-ColorOutput `
+        -Color "Yellow" `
+        -Message "   - Есть ли доступ к сети"
+
     exit 1
 }
-Write-ColorOutput -Color "Green" -Message "✅ Сервер доступен"
 
-# ===== СОЗДАЁМ ПАПКУ ВЕРСИИ =====
-$releaseFolder = "$Version"
-$releasePath = Join-Path $ServerRoot $releaseFolder
+Write-ColorOutput `
+    -Color "Green" `
+    -Message "✅ Сервер доступен"
+
+
+# ============================================================
+# СОЗДАНИЕ ПАПКИ РЕЛИЗА
+# ============================================================
+
+$releaseFolder = $Version
+
+$releasePath = Join-Path `
+    $ServerRoot `
+    $releaseFolder
+
 
 if (Test-Path $releasePath) {
-    Write-ColorOutput -Color "Yellow" -Message "`n⚠️  Папка $releaseFolder уже существует на сервере"
+
+    Write-ColorOutput `
+        -Color "Yellow" `
+        -Message "`n⚠️ Папка $releaseFolder уже существует"
+
     $answer = Read-Host "❓ Перезаписать? (y/n)"
-    if ($answer -ne 'y') {
-        Write-ColorOutput -Color "Red" -Message "❌ Публикация отменена"
+
+    if ($answer -ne "y") {
+
+        Write-ColorOutput `
+            -Color "Red" `
+            -Message "❌ Публикация отменена"
+
         exit 0
     }
-    Write-ColorOutput -Color "Yellow" -Message "🗑️  Удаляем старую версию..."
-    Remove-Item -Path $releasePath -Recurse -Force
+
+    Write-ColorOutput `
+        -Color "Yellow" `
+        -Message "🗑️ Удаляем старую версию..."
+
+    Remove-Item `
+        -Path $releasePath `
+        -Recurse `
+        -Force
 }
 
-# Создаём новую папку
-New-Item -ItemType Directory -Path $releasePath -Force | Out-Null
-Write-ColorOutput -Color "Green" -Message "`n✅ Создана папка на сервере: $releaseFolder"
 
-# ===== КОПИРУЕМ ФАЙЛЫ =====
-Write-ColorOutput -Color "Cyan" -Message "`n📁 Копирование файлов..."
+New-Item `
+    -ItemType Directory `
+    -Path $releasePath `
+    -Force |
+    Out-Null
 
-# Получаем список всех файлов
-$files = Get-ChildItem -Path $BuildPath -File -Recurse
-$totalFiles = $files.Count
-$copied = 0
+Write-ColorOutput `
+    -Color "Green" `
+    -Message "`n✅ Создана папка релиза: $releaseFolder"
 
-foreach ($file in $files) {
-    $relativePath = $file.FullName.Substring($BuildPath.Length + 1)
-    $destFile = Join-Path $releasePath $relativePath
-    $destDir = Split-Path $destFile -Parent
-    
-    # Создаём папку назначения
-    if (-not (Test-Path $destDir)) {
-        New-Item -ItemType Directory -Path $destDir -Force | Out-Null
-    }
-    
-    # Копируем файл
-    Copy-Item -Path $file.FullName -Destination $destFile -Force
-    
-    $copied++
-    $percent = [math]::Round(($copied / $totalFiles) * 100)
-    Write-Progress -Activity "Копирование файлов" -Status "$percent% завершено" -PercentComplete $percent
-}
 
-Write-Progress -Activity "Копирование файлов" -Completed
-Write-ColorOutput -Color "Green" -Message "✅ Скопировано $copied файлов"
+# ============================================================
+# КОПИРОВАНИЕ APP
+# ============================================================
 
-# ===== СОЗДАЁМ version.json =====
-$versionJson = @{
+Write-ColorOutput `
+    -Color "Cyan" `
+    -Message "`n📁 Копирование ReportEngine.App..."
+
+$appFiles = Copy-Build `
+    -SourcePath $BuildPath `
+    -DestinationPath $releasePath
+
+Write-ColorOutput `
+    -Color "Green" `
+    -Message "✅ Скопировано файлов App: $appFiles"
+
+
+# ============================================================
+# СОЗДАНИЕ UPDATEINFO.JSON
+# ============================================================
+
+$updateInfo = @{
     Version = $Version
-    ReleaseDate = (Get-Date).ToString("yyyy-MM-ddTHH:mm:ss")
-    IsStable = $IsStable
-    Changelog = $Changelog
-    MainExe = $mainExe
-    TotalFiles = $totalFiles
-} | ConvertTo-Json
+    Date = (Get-Date).ToString("dd.MM.yyyy")
 
-$versionJsonPath = Join-Path $releasePath "version.json"
-$versionJson | Out-File -FilePath $versionJsonPath -Encoding UTF8
-Write-ColorOutput -Color "Green" -Message "✅ Создан version.json"
-
-# ===== ОБНОВЛЯЕМ МАНИФЕСТ =====
-$manifestPath = Join-Path $ServerRoot "releases.xml"
-
-# Загружаем или создаём манифест
-if (Test-Path $manifestPath) {
-    [xml]$manifest = Get-Content $manifestPath -Encoding UTF8
-    Write-ColorOutput -Color "Green" -Message "✅ Загружен существующий манифест"
-} else {
-    $manifest = [xml]@'
-<?xml version="1.0" encoding="utf-8"?>
-<Releases>
-</Releases>
-'@
-    Write-ColorOutput -Color "Yellow" -Message "⚠️  Манифест не найден, создан новый"
+    Sections = @{
+        Added = @()
+        Changed = @()
+        Fixed = @()
+    }
 }
 
-# Создаём узел новой версии
-$releaseNode = $manifest.CreateElement("Release")
+$updateInfoPath = Join-Path `
+    $releasePath `
+    "updateInfo.json"
 
-# Добавляем все элементы
-$versionNode = $manifest.CreateElement("Version")
-$versionNode.InnerText = $Version
-$releaseNode.AppendChild($versionNode) | Out-Null
+$updateInfo |
+    ConvertTo-Json -Depth 5 |
+    Out-File `
+        -FilePath $updateInfoPath `
+        -Encoding UTF8
 
-$folderNode = $manifest.CreateElement("Folder")
-$folderNode.InnerText = $releaseFolder
-$releaseNode.AppendChild($folderNode) | Out-Null
+Write-ColorOutput `
+    -Color "Green" `
+    -Message "✅ Создан updateInfo.json"
 
-$dateNode = $manifest.CreateElement("Date")
-$dateNode.InnerText = (Get-Date).ToString("yyyy-MM-ddTHH:mm:ss")
-$releaseNode.AppendChild($dateNode) | Out-Null
 
-$stableNode = $manifest.CreateElement("IsStable")
-$stableNode.InnerText = $IsStable.ToString().ToLower()
-$releaseNode.AppendChild($stableNode) | Out-Null
+# ============================================================
+# ПУБЛИКАЦИЯ UPDATER
+# ============================================================
 
-$changelogNode = $manifest.CreateElement("Changelog")
-$changelogNode.InnerText = $Changelog
-$releaseNode.AppendChild($changelogNode) | Out-Null
+Write-ColorOutput `
+    -Color "Cyan" `
+    -Message "`n📦 Публикация ReportEngine.Updater"
 
-# Добавляем в начало (новые версии сверху)
-if ($manifest.Releases.Release) {
-    $manifest.Releases.InsertBefore($releaseNode, $manifest.Releases.ChildNodes[0]) | Out-Null
-} else {
-    $manifest.Releases.AppendChild($releaseNode) | Out-Null
+if (Test-Path $UpdaterServerPath) {
+
+    Write-ColorOutput `
+        -Color "Yellow" `
+        -Message "🗑️ Удаляем старую версию Updater..."
+
+    Remove-Item `
+        -Path $UpdaterServerPath `
+        -Recurse `
+        -Force
 }
 
-# Сохраняем
-$manifest.Save($manifestPath)
-Write-ColorOutput -Color "Green" -Message "✅ Обновлён releases.xml"
+New-Item `
+    -ItemType Directory `
+    -Path $UpdaterServerPath `
+    -Force |
+    Out-Null
 
-# ===== ИТОГОВАЯ ИНФОРМАЦИЯ =====
-Write-ColorOutput -Color "Green" -Message "`n========================================"
-Write-ColorOutput -Color "Green" -Message "✅ Публикация завершена успешно!"
-Write-ColorOutput -Color "Green" -Message "========================================"
-Write-ColorOutput -Color "Cyan" -Message "`n📌 Информация о релизе:"
-Write-ColorOutput -Color "Cyan" -Message "   Версия:     $Version"
-Write-ColorOutput -Color "Cyan" -Message "   Папка:      $releaseFolder"
-Write-ColorOutput -Color "Cyan" -Message "   Файлов:     $totalFiles"
-Write-ColorOutput -Color "Cyan" -Message "   Основной:   $mainExe"
-Write-ColorOutput -Color "Cyan" -Message "   Changelog:  $Changelog"
-Write-ColorOutput -Color "Cyan" -Message "   Stable:     $IsStable"
-Write-ColorOutput -Color "Cyan" -Message "`n📍 Путь на сервере:"
-Write-ColorOutput -Color "Cyan" -Message "   $releasePath"
-Write-ColorOutput -Color "Cyan" -Message "`n📋 Манифест:"
-Write-ColorOutput -Color "Cyan" -Message "   $manifestPath"
+$updaterFiles = Copy-Build `
+    -SourcePath $UpdaterBuildPath `
+    -DestinationPath $UpdaterServerPath
 
-Write-ColorOutput -Color "Yellow" -Message "`n💡 Пользователи увидят новую версию при следующей проверке обновлений"
+Write-ColorOutput `
+    -Color "Green" `
+    -Message "✅ Updater опубликован"
 
-# ===== ОПЦИОНАЛЬНО: ОТКРЫТЬ ПАПКУ =====
-Write-ColorOutput -Color "White" -Message ""
-$showFolder = Read-Host "❓ Открыть папку с релизом на сервере? (y/n)"
-if ($showFolder -eq 'y') {
+Write-ColorOutput `
+    -Color "Green" `
+    -Message "   Файлов: $updaterFiles"
+
+Write-ColorOutput `
+    -Color "Green" `
+    -Message "   Путь:   $UpdaterServerPath"
+
+
+# ============================================================
+# ИТОГ
+# ============================================================
+
+$totalFiles = $appFiles + $updaterFiles
+
+Write-ColorOutput `
+    -Color "Green" `
+    -Message "`n========================================"
+
+Write-ColorOutput `
+    -Color "Green" `
+    -Message "✅ Публикация завершена успешно!"
+
+Write-ColorOutput `
+    -Color "Green" `
+    -Message "========================================"
+
+Write-ColorOutput `
+    -Color "Cyan" `
+    -Message "`n📌 Информация о релизе:"
+
+Write-ColorOutput `
+    -Color "Cyan" `
+    -Message "   Версия:     $Version"
+
+Write-ColorOutput `
+    -Color "Cyan" `
+    -Message "   Папка:      $releaseFolder"
+
+Write-ColorOutput `
+    -Color "Cyan" `
+    -Message "   App файлов: $appFiles"
+
+Write-ColorOutput `
+    -Color "Cyan" `
+    -Message "   Updater:    $updaterFiles"
+
+Write-ColorOutput `
+    -Color "Cyan" `
+    -Message "   Всего:      $totalFiles"
+
+Write-ColorOutput `
+    -Color "Cyan" `
+    -Message "   App:        $($mainExe.Name)"
+
+Write-ColorOutput `
+    -Color "Cyan" `
+    -Message "   Updater:    $($updaterExe.Name)"
+
+Write-ColorOutput `
+    -Color "Cyan" `
+    -Message "   Stable:     $IsStable"
+
+Write-ColorOutput `
+    -Color "Cyan" `
+    -Message "`n📍 Релиз:"
+
+Write-ColorOutput `
+    -Color "Cyan" `
+    -Message "   $releasePath"
+
+Write-ColorOutput `
+    -Color "Cyan" `
+    -Message "`n📍 Updater:"
+
+Write-ColorOutput `
+    -Color "Cyan" `
+    -Message "   $UpdaterServerPath"
+
+Write-ColorOutput `
+    -Color "Yellow" `
+    -Message "`n💡 Пользователи увидят новую версию при следующей проверке обновлений"
+
+
+# ============================================================
+# ОТКРЫТИЕ ПАПКИ
+# ============================================================
+
+Write-ColorOutput `
+    -Color "White" `
+    -Message ""
+
+$showFolder = Read-Host `
+    "❓ Открыть папку релиза на сервере? (y/n)"
+
+if ($showFolder -eq "y") {
     explorer $releasePath
 }
 
-Write-ColorOutput -Color "Green" -Message "`n🎉 Готово!"
+Write-ColorOutput `
+    -Color "Green" `
+    -Message "`n🎉 Готово!"
