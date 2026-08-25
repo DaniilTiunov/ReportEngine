@@ -420,9 +420,12 @@ def fillStandPage(stand, doc, project):
                 wires.append( ["","","",""] )
 
 
+
         descAndKKS = [impulseLine["Name"],impulseLine["CodeKKS"]]
         descAndKKSText = "<br/>".join(descAndKKS)
         descAndKKS = Paragraph(descAndKKSText,tableContentStyle)
+
+
 
         note = Paragraph(impulseLine["Annotation"],tableContentStyle)
 
@@ -445,16 +448,24 @@ def fillStandPage(stand, doc, project):
         impulseLineNumber+=1
 
 
+        
+        impulseLineTableColumnSizes = [sheetWidth * 0.075,
+                                       sheetWidth * 0.275,
+                                       sheetWidth * 0.1,
+                                       sheetWidth * 0.15,
+                                       sheetWidth * 0.15,
+                                       sheetWidth * 0.1,
+                                       sheetWidth * 0.15]
 
+        impulseLineTable = Table(data = impulseLineTableData, colWidths = impulseLineTableColumnSizes)
 
-        impulseLineTable = Table(data = impulseLineTableData, 
-                                 colWidths = [sheetWidth * 0.075,sheetWidth * 0.275,sheetWidth * 0.1,sheetWidth * 0.15,sheetWidth * 0.15,sheetWidth * 0.1,sheetWidth * 0.15])
         impulseLineTableStyleCmds = PdfHelper.commonTableStyleCmd.copy()
+
         impulseLineTableStyleCmds.extend(PdfHelper.centerAlignTableStyleCmd +
                                              PdfHelper.visibleAllBordersTableStyleCmd + 
                                              PdfHelper.usualFontTableStyleCmd)
-
-        impulseLineTableStyleCmds.extend(#шапка
+        #шапка
+        impulseLineTableStyleCmds.extend(
                                          [('FONTNAME', (0, 0), (-1, 1), "Arial-Bold")] +
                                          [('SPAN', (0, 0), (0,1) )] + 
                                          [('SPAN', (1, 0), (1, 1) )] + 
@@ -462,19 +473,27 @@ def fillStandPage(stand, doc, project):
                                          [('SPAN', (2, 0), (5, 0) )] )
 
         recordsStartRow = 2
-        impulseLineRecordOffset = 2
+        rowsPerRecord = 3
 
-        currentRecordFirstRow = recordsStartRow
+        currentRow = recordsStartRow
+        recordEndRow = 0
 
         for impulseLineRecord in range(impulseLineNumber):
+
             #формируем каждую запись
+            
+            recordEndRow = currentRow + rowsPerRecord - 1
+
             impulseLineTableStyleCmds.extend(
-                                         [('SPAN', (0, currentRecordFirstRow), (0,currentRecordFirstRow + impulseLineRecordOffset) )] + 
-                                         [('SPAN', (1, currentRecordFirstRow), (1, currentRecordFirstRow + impulseLineRecordOffset) )] + 
-                                         [('SPAN', (-1, currentRecordFirstRow), (-1, currentRecordFirstRow + impulseLineRecordOffset) )] 
-                                         )
-            currentRecordFirstRow+=impulseLineRecordOffset + 1
-                                         
+                                         [('SPAN', (0, currentRow), (0, recordEndRow))] +  #номер имп линии
+                                         [('SPAN', (1, currentRow), (1, recordEndRow))] +   #наименование имп линии  
+                                         [('SPAN', (4, currentRow), (4, recordEndRow))] +  #коробка
+                                         [('SPAN', (-1, currentRow), (-1, recordEndRow))]   #примечание     
+                                         ) 
+            currentRow +=rowsPerRecord
+
+
+
         impulseLineTable.setStyle(TableStyle(cmds= impulseLineTableStyleCmds ))
 
     
