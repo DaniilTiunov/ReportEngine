@@ -55,6 +55,7 @@ public class AppHostBuilder
         services.AddTransient<VersionsView>();
         services.AddTransient<SettingsView>();
         services.AddTransient<NotifyWindow>();
+        services.AddTransient<LaunchAppView>();
     }
 
     private static void ConfigureViewModels(IServiceCollection services)
@@ -62,5 +63,6 @@ public class AppHostBuilder
         services.AddScoped<MainWindowViewModel>();
         services.AddScoped<SettingsViewModel>();
         services.AddScoped<VersionsViewModel>();
+        services.AddScoped<LaunchAppViewModel>();
     }
 }

@@ -15,17 +15,17 @@ public class DirectoryService
     
     public async Task<IEnumerable<string>> GetDirectoriesAsync(Func<UpdatePaths, string> selector)
     {
-        var serverVersionsPath = await _jsonSettingsService.GetPathAsync(
+        var settingsPath = await _jsonSettingsService.GetPathAsync(
             UpdateSettingsHelper.GetUpdateSettingsPath(),
             selector);
 
-        var ReleasesDirectories = Directory
+        var selectedDirectories = Directory
             .EnumerateDirectories(
-                serverVersionsPath,
+                settingsPath,
                 "*",
                 SearchOption.TopDirectoryOnly);
 
-        return ReleasesDirectories;
+        return selectedDirectories;
     }
     
     public void Copy(

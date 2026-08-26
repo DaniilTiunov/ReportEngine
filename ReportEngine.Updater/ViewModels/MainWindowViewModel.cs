@@ -57,6 +57,9 @@ public partial class MainWindowViewModel : BaseViewModel
             case "Versions":
                 CurrentView = _serviceProvider.GetRequiredService<VersionsView>();
                 break;
+            case "Launch":
+                CurrentView = _serviceProvider.GetRequiredService<LaunchAppView>();
+                break;
             case "Settings":
                 CurrentView = _serviceProvider.GetRequiredService<SettingsView>();
                 break;
