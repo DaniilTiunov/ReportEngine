@@ -1,9 +1,33 @@
 using System.IO;
+using ReportEngine.Updater.Config;
+using ReportEngine.Updater.Helpers;
 
 namespace ReportEngine.Updater.Services;
 
 public class DirectoryService
 {
+    private readonly JsonSettingsService _jsonSettingsService;
+    
+    public DirectoryService(JsonSettingsService jsonSettingsService)
+    {
+        _jsonSettingsService = jsonSettingsService;
+    }
+    
+    public async Task<IEnumerable<string>> GetDirectoriesAsync(Func<UpdatePaths, string> selector)
+    {
+        var settingsPath = await _jsonSettingsService.GetPathAsync(
+            UpdateSettingsHelper.GetUpdateSettingsPath(),
+            selector);
+
+        var selectedDirectories = Directory
+            .EnumerateDirectories(
+                settingsPath,
+                "*",
+                SearchOption.TopDirectoryOnly);
+
+        return selectedDirectories;
+    }
+    
     public void Copy(
         string sourceDirectory,
         string destinationDirectory)
@@ -20,7 +44,7 @@ public class DirectoryService
 
         CopyDirectory(source, destination);
     }
-
+    
     private void CopyDirectory(
         DirectoryInfo source,
         string destinationDirectory)

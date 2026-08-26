@@ -1,7 +1,10 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
@@ -82,7 +85,6 @@ public class MainWindowViewModel : BaseViewModel
 
     public User? CurrentUser => _sessionService.CurrentUser;
     public string? CurrentUserLogin => _sessionService.CurrentUser?.UserLogin;
-
     public string DatabaseMode => JsonHandler.GetDatabaseMode(DirectoryHelper.GetConfigPath());
 
     private void SessionChanged(object? sender, PropertyChangedEventArgs e)

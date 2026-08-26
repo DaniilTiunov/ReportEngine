@@ -13,7 +13,7 @@ namespace ReportEngine.Updater.ViewModels;
 
 public partial class SettingsViewModel : BaseViewModel
 {
-    private readonly UpdateSettingsService _updateSettingsService;
+    private readonly JsonSettingsService _jsonSettingsService;
     private readonly NotificationService _notificationService;
     
     [ObservableProperty]
@@ -23,10 +23,10 @@ public partial class SettingsViewModel : BaseViewModel
     private string _remotePath;
 
     public SettingsViewModel(
-        UpdateSettingsService updateSettingsService,
+        JsonSettingsService jsonSettingsService,
         NotificationService notificationService)
     {
-        _updateSettingsService = updateSettingsService;
+        _jsonSettingsService = jsonSettingsService;
         _notificationService = notificationService;
 
         _ = LoadSettingsAsync();
@@ -64,11 +64,11 @@ public partial class SettingsViewModel : BaseViewModel
     private async Task LoadSettingsAsync()
     {
         var settingsPath = UpdateSettingsHelper.GetUpdateSettingsPath();
-        LocalPath = await _updateSettingsService.GetPath(
+        LocalPath = await _jsonSettingsService.GetPathAsync(
             jsonConfigPath: settingsPath,
             selector: json => json.LocalPath);
 
-        RemotePath = await _updateSettingsService.GetPath(
+        RemotePath = await _jsonSettingsService.GetPathAsync(
             jsonConfigPath: settingsPath,
             selector: json => json.RemotePath);
     }
@@ -78,11 +78,11 @@ public partial class SettingsViewModel : BaseViewModel
         var newLocalPath = LocalPath;
         var newRemotePath = RemotePath;
         
-        await _updateSettingsService.SetLocalPath(
+        await _jsonSettingsService.SetLocalPathAsync(
             UpdateSettingsHelper.GetUpdateSettingsPath(),
             newLocalPath);
         
-        await _updateSettingsService.SetRemotePath(
+        await _jsonSettingsService.SetRemotePathAsync(
             UpdateSettingsHelper.GetUpdateSettingsPath(),
             newRemotePath);
         

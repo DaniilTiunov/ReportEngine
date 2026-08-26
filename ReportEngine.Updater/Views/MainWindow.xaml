@@ -4,6 +4,7 @@
     Height="800"
     Title="MainWindow"
     Width="1280"
+    WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d"
     x:Class="ReportEngine.Updater.Views.MainWindow"
@@ -86,13 +87,15 @@
             <!--  ===== ОСНОВНАЯ ЧАСТЬ =====  -->
             <Grid Grid.Row="1" Margin="20">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="260" />
+                    <ColumnDefinition Width="290" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
                 <!--  ЛЕВАЯ ПАНЕЛЬ - МЕНЮ  -->
                 <Border
                     Background="White"
+                    BorderBrush="Black"
+                    BorderThickness="2"
                     CornerRadius="8"
                     Grid.Column="0"
                     Margin="0,0,10,0"
@@ -126,6 +129,14 @@
 
                         <Button
                             Command="{Binding NavigateCommand}"
+                            CommandParameter="Launch"
+                            Content="🚀 Установленные"
+                            HorizontalAlignment="Stretch"
+                            Margin="0,3"
+                            Padding="15,10" />
+
+                        <Button
+                            Command="{Binding NavigateCommand}"
                             CommandParameter="Settings"
                             Content="⚙️ Настройки"
                             HorizontalAlignment="Stretch"
@@ -148,31 +159,14 @@
                             HorizontalAlignment="Stretch"
                             Margin="0,3"
                             Padding="15,10" />
-
-                        <!--  Информация о статусе  -->
-                        <Border
-                            Background="#F5F5F5"
-                            CornerRadius="4"
-                            Margin="0,20,0,0"
-                            Padding="10">
-                            <StackPanel>
-                                <TextBlock
-                                    FontSize="11"
-                                    Foreground="#666"
-                                    Text="Статус:" />
-                                <TextBlock
-                                    FontSize="12"
-                                    FontWeight="SemiBold"
-                                    Text="{Binding StatusMessage}"
-                                    TextWrapping="Wrap" />
-                            </StackPanel>
-                        </Border>
                     </StackPanel>
                 </Border>
 
                 <!--  ПРАВАЯ ПАНЕЛЬ - КОНТЕНТ  -->
                 <Border
                     Background="White"
+                    BorderBrush="Black"
+                    BorderThickness="2"
                     CornerRadius="8"
                     Grid.Column="1"
                     Padding="20">
@@ -180,30 +174,6 @@
                     <ContentControl Content="{Binding CurrentView}" />
                 </Border>
             </Grid>
-
-            <!--  ===== НИЖНЯЯ ПАНЕЛЬ (статус-бар) =====  -->
-            <Border
-                Background="#F5F5F5"
-                BorderBrush="#E0E0E0"
-                BorderThickness="0,1,0,0"
-                Grid.Row="2"
-                Padding="15,8">
-
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <!--  Сообщение статуса  -->
-                    <TextBlock
-                        FontSize="12"
-                        Foreground="#666"
-                        Grid.Column="0"
-                        Text="{Binding StatusMessage}"
-                        VerticalAlignment="Center" />
-                </Grid>
-            </Border>
         </Grid>
     </Border>
 </Window>

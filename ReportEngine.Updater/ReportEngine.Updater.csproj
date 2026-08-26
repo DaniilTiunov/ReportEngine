@@ -39,6 +39,19 @@
     <Resource Include="Assets\sync.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <None Remove="Resources\Icons\estimate_cost_icon_213382.ico" />
+    <None Remove="Resources\Icons\Icon_Error.png" />
+    <Resource Include="Resources\Icons\Icon_Error.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <None Remove="Resources\Icons\IconConfirm.png" />
+    <Resource Include="Resources\Icons\IconConfirm.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <None Remove="Resources\Icons\IconInfo.png" />
+    <Resource Include="Resources\Icons\IconInfo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

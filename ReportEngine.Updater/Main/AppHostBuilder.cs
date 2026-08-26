@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ReportEngine.Updater.Config;
@@ -15,6 +17,21 @@ public class AppHostBuilder
         return Host.CreateDefaultBuilder()
             .ConfigureServices(services =>
             {
+                // Настройка JSON опций
+                services.AddSingleton<JsonSerializerOptions>(provider =>
+                {
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true,
+                        WriteIndented = true,
+                        Converters = 
+                        { 
+                            new JsonStringEnumConverter() 
+                        }
+                    };
+                    return options;
+                });
+
                 ConfigureAppServices(services);
                 ConfigureViews(services);
                 ConfigureViewModels(services);
@@ -26,8 +43,9 @@ public class AppHostBuilder
     {
         services.AddSingleton<App>();
         services.AddSingleton<NotificationService>();
-        services.AddScoped<UpdateSettingsService>();
+        services.AddScoped<JsonSettingsService>();
         services.AddScoped<DirectoryService>();
+        services.AddScoped<UpdateService>();
     }
 
     private static void ConfigureViews(IServiceCollection services)
@@ -37,6 +55,7 @@ public class AppHostBuilder
         services.AddTransient<VersionsView>();
         services.AddTransient<SettingsView>();
         services.AddTransient<NotifyWindow>();
+        services.AddTransient<LaunchAppView>();
     }
 
     private static void ConfigureViewModels(IServiceCollection services)
@@ -44,5 +63,6 @@ public class AppHostBuilder
         services.AddScoped<MainWindowViewModel>();
         services.AddScoped<SettingsViewModel>();
         services.AddScoped<VersionsViewModel>();
+        services.AddScoped<LaunchAppViewModel>();
     }
 }
