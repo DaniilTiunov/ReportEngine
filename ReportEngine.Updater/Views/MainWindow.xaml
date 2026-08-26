@@ -4,6 +4,7 @@
     Height="800"
     Title="MainWindow"
     Width="1280"
+    WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d"
     x:Class="ReportEngine.Updater.Views.MainWindow"
@@ -126,6 +127,14 @@
 
                         <Button
                             Command="{Binding NavigateCommand}"
+                            CommandParameter="Launch"
+                            Content="🚀 Запуск приложения"
+                            HorizontalAlignment="Stretch"
+                            Margin="0,3"
+                            Padding="15,10" />
+
+                        <Button
+                            Command="{Binding NavigateCommand}"
                             CommandParameter="Settings"
                             Content="⚙️ Настройки"
                             HorizontalAlignment="Stretch"
@@ -148,25 +157,6 @@
                             HorizontalAlignment="Stretch"
                             Margin="0,3"
                             Padding="15,10" />
-
-                        <!--  Информация о статусе  -->
-                        <Border
-                            Background="#F5F5F5"
-                            CornerRadius="4"
-                            Margin="0,20,0,0"
-                            Padding="10">
-                            <StackPanel>
-                                <TextBlock
-                                    FontSize="11"
-                                    Foreground="#666"
-                                    Text="Статус:" />
-                                <TextBlock
-                                    FontSize="12"
-                                    FontWeight="SemiBold"
-                                    Text="{Binding StatusMessage}"
-                                    TextWrapping="Wrap" />
-                            </StackPanel>
-                        </Border>
                     </StackPanel>
                 </Border>
 

@@ -22,7 +22,13 @@ $UpdaterBuildPath = "C:\Work\Prjs\ReportEngine\ReportEngine.Updater\bin\Release\
 
 $ServerRoot = "P:\00 ОКП АСУ\01 Группа разработки ПО\Тиунов\releases"
 
+$LatestReleaseLocal = "C:\Work\Prjs\ReportEngine\latest.json"
+
+$LatestReleaseServerDir = "P:\00 ОКП АСУ\01 Группа разработки ПО\Тиунов\releases"
+$LatestReleaseServer = Join-Path $LatestReleaseServerDir "latest.json"
+
 $UpdaterServerPath = Join-Path $ServerRoot "Updater"
+$UpdateInfoServerPath = Join-Path $UpdaterServerPath "Config\updateInfo.json"
 
 
 # ============================================================
@@ -76,7 +82,7 @@ function Copy-Build {
     foreach ($file in $files) {
 
         $relativePath = $file.FullName.Substring(
-            $SourcePath.Length + 1
+                $SourcePath.Length + 1
         )
 
         $destinationFile = Join-Path `
@@ -92,7 +98,7 @@ function Copy-Build {
                 -ItemType Directory `
                 -Path $destinationDirectory `
                 -Force |
-                Out-Null
+                    Out-Null
         }
 
         Copy-Item `
@@ -105,7 +111,7 @@ function Copy-Build {
         if ($totalFiles -gt 0) {
 
             $percent = [math]::Round(
-                ($copied / $totalFiles) * 100
+                    ($copied / $totalFiles) * 100
             )
 
             Write-Progress `
@@ -212,7 +218,7 @@ $mainExe = Get-ChildItem `
     -Path $BuildPath `
     -Filter "*.exe" `
     -File |
-    Select-Object -First 1
+        Select-Object -First 1
 
 if ($null -eq $mainExe) {
 
@@ -224,8 +230,8 @@ if ($null -eq $mainExe) {
 }
 
 $mainExeSize = [math]::Round(
-    $mainExe.Length / 1MB,
-    2
+        $mainExe.Length / 1MB,
+        2
 )
 
 Write-ColorOutput `
@@ -241,7 +247,7 @@ $updaterExe = Get-ChildItem `
     -Path $UpdaterBuildPath `
     -Filter "*.exe" `
     -File |
-    Select-Object -First 1
+        Select-Object -First 1
 
 if ($null -eq $updaterExe) {
 
@@ -253,8 +259,8 @@ if ($null -eq $updaterExe) {
 }
 
 $updaterExeSize = [math]::Round(
-    $updaterExe.Length / 1MB,
-    2
+        $updaterExe.Length / 1MB,
+        2
 )
 
 Write-ColorOutput `
@@ -311,22 +317,7 @@ if (Test-Path $releasePath) {
 
     Write-ColorOutput `
         -Color "Yellow" `
-        -Message "`n⚠️ Папка $releaseFolder уже существует"
-
-    $answer = Read-Host "❓ Перезаписать? (y/n)"
-
-    if ($answer -ne "y") {
-
-        Write-ColorOutput `
-            -Color "Red" `
-            -Message "❌ Публикация отменена"
-
-        exit 0
-    }
-
-    Write-ColorOutput `
-        -Color "Yellow" `
-        -Message "🗑️ Удаляем старую версию..."
+        -Message "`n⚠️ Папка $releaseFolder уже существует, перезаписываю..."
 
     Remove-Item `
         -Path $releasePath `
@@ -339,7 +330,7 @@ New-Item `
     -ItemType Directory `
     -Path $releasePath `
     -Force |
-    Out-Null
+        Out-Null
 
 Write-ColorOutput `
     -Color "Green" `
@@ -383,8 +374,8 @@ $updateInfoPath = Join-Path `
     "updateInfo.json"
 
 $updateInfo |
-    ConvertTo-Json -Depth 5 |
-    Out-File `
+        ConvertTo-Json -Depth 5 |
+        Out-File `
         -FilePath $updateInfoPath `
         -Encoding UTF8
 
@@ -417,7 +408,7 @@ New-Item `
     -ItemType Directory `
     -Path $UpdaterServerPath `
     -Force |
-    Out-Null
+        Out-Null
 
 $updaterFiles = Copy-Build `
     -SourcePath $UpdaterBuildPath `
@@ -434,6 +425,63 @@ Write-ColorOutput `
 Write-ColorOutput `
     -Color "Green" `
     -Message "   Путь:   $UpdaterServerPath"
+
+
+# ============================================================
+# УДАЛЕНИЕ UPDATEINFO.JSON В ПАПКЕ UPDATER
+# ============================================================
+
+Write-ColorOutput `
+    -Color "Cyan" `
+    -Message "`n🗑️ Проверка updateInfo.json в Updater..."
+
+if (Test-Path $UpdateInfoServerPath) {
+    Remove-Item -Path $UpdateInfoServerPath -Force
+    Write-ColorOutput `
+        -Color "Green" `
+        -Message "✅ updateInfo.json удален из Updater"
+    Write-ColorOutput `
+        -Color "Cyan" `
+        -Message "   $UpdateInfoServerPath"
+} else {
+    Write-ColorOutput `
+        -Color "Yellow" `
+        -Message "⚠️ updateInfo.json не найден в Updater"
+}
+
+
+# ============================================================
+# КОПИРОВАНИЕ LATEST.JSON НА СЕРВЕР
+# ============================================================
+
+Write-ColorOutput `
+    -Color "Cyan" `
+    -Message "`n📋 Копирование latest.json..."
+
+if (Test-Path $LatestReleaseLocal) {
+    try {
+        Copy-Item -Path $LatestReleaseLocal -Destination $LatestReleaseServer -Force
+
+        Write-ColorOutput `
+            -Color "Green" `
+            -Message "✅ latest.json скопирован на сервер"
+        Write-ColorOutput `
+            -Color "Cyan" `
+            -Message "   Источник: $LatestReleaseLocal"
+        Write-ColorOutput `
+            -Color "Cyan" `
+            -Message "   Назначение: $LatestReleaseServer"
+    }
+    catch {
+        Write-ColorOutput `
+            -Color "Red" `
+            -Message "❌ Ошибка копирования latest.json: $_"
+    }
+} else {
+    Write-ColorOutput `
+        -Color "Yellow" `
+        -Message "⚠️ latest.json не найден локально: $LatestReleaseLocal"
+}
 
 
 # ============================================================
@@ -493,7 +541,6 @@ Write-ColorOutput `
 Write-ColorOutput `
     -Color "Cyan" `
     -Message "`n📍 Релиз:"
-
 Write-ColorOutput `
     -Color "Cyan" `
     -Message "   $releasePath"
@@ -501,10 +548,16 @@ Write-ColorOutput `
 Write-ColorOutput `
     -Color "Cyan" `
     -Message "`n📍 Updater:"
-
 Write-ColorOutput `
     -Color "Cyan" `
     -Message "   $UpdaterServerPath"
+
+Write-ColorOutput `
+    -Color "Cyan" `
+    -Message "`n📋 latest.json:"
+Write-ColorOutput `
+    -Color "Cyan" `
+    -Message "   $LatestReleaseServer"
 
 Write-ColorOutput `
     -Color "Yellow" `

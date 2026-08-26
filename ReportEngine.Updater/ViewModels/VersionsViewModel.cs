@@ -17,7 +17,8 @@ public partial class VersionsViewModel : BaseViewModel
 {
     private readonly DirectoryService _directoryService;
     private readonly NotificationService _notificationService;
-    private readonly UpdateSettingsService _updateSettingsService;
+    private readonly JsonSettingsService _jsonSettingsService;
+    private readonly UpdateService _updateService;
 
     [ObservableProperty] 
     private ObservableCollection<Release> _releases = new();
@@ -26,13 +27,15 @@ public partial class VersionsViewModel : BaseViewModel
     private Release? _selectedRelease = new();
 
     public VersionsViewModel(
-        UpdateSettingsService updateSettingsService,
+        JsonSettingsService jsonSettingsService,
         DirectoryService directoryService,
-        NotificationService notificationService)
+        NotificationService notificationService,
+        UpdateService updateService)
     {
-        _updateSettingsService = updateSettingsService;
+        _jsonSettingsService = jsonSettingsService;
         _directoryService = directoryService;
         _notificationService = notificationService;
+        _updateService = updateService;
 
         _ = LoadReleasesAsync();
 
@@ -54,7 +57,7 @@ public partial class VersionsViewModel : BaseViewModel
 
     private async Task InstallSelectedReleaseAsync()
     {
-        var distPath = await _updateSettingsService.GetPath(
+        var distPath = await _jsonSettingsService.GetPathAsync(
             UpdateSettingsHelper.GetUpdateSettingsPath(),
             path => path.LocalPath);
 
@@ -72,15 +75,17 @@ public partial class VersionsViewModel : BaseViewModel
                 Arguments = distPath,
                 UseShellExecute = true
             });
+        
     }
 
     private async Task LoadReleasesAsync()
     {
-        var releasesDirectories = await GetDirectoriesAsync();
+        var releasesDirectories = await _directoryService.GetDirectoriesAsync(
+            paths => paths.RemotePath);
 
         foreach (var releasesDirectory in releasesDirectories)
         {
-            var updateInfo = await GetUpdaterInfoAsync(releasesDirectory);
+            var updateInfo = await _updateService.GetUpdaterInfoAsync(releasesDirectory);
 
             if (updateInfo == null)
                 continue;
@@ -93,37 +98,5 @@ public partial class VersionsViewModel : BaseViewModel
 
             Releases.Add(release);
         }
-    }
-
-    private async Task<IEnumerable<string>> GetDirectoriesAsync()
-    {
-        var serverVersionsPath = await _updateSettingsService.GetPath(
-            UpdateSettingsHelper.GetUpdateSettingsPath(),
-            path => path.RemotePath);
-
-        var ReleasesDirectories = Directory
-            .EnumerateDirectories(
-                serverVersionsPath,
-                "*",
-                SearchOption.TopDirectoryOnly);
-
-        return ReleasesDirectories;
-    }
-
-    private async Task<UpdateInfo?> GetUpdaterInfoAsync(string releaseDirectory)
-    {
-        var path = Path.Combine(
-            releaseDirectory,
-            "Config",
-            "updateInfo.json");
-
-        if (!File.Exists(path))
-            return null;
-
-        var json = await File.ReadAllTextAsync(path);
-
-        var updates = JsonSerializer.Deserialize<List<UpdateInfo>>(json);
-
-        return updates?.FirstOrDefault();
     }
 }
