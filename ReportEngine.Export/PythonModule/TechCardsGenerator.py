@@ -46,14 +46,13 @@ class MySplittableTable(Table):
            impulseTableInfo[self.standNumber]["pages"].append(
                {
                    "pageNumber" : nowPageCount + 1,
-                   "hasHeader"  : nowPageCount == 0,
+                   "hasHeader"  : True,
                    "rowsCount"  : rows_on_page
                 })
 
            #обновляем количество страниц
            impulseTableInfo[self.standNumber]["pagesCount"] = len(impulseTableInfo[self.standNumber]["pages"])
 
-           print(f"impulseTableInfo after onSplit: {impulseTableInfo}" )
 
         # Вызываем родительский метод, если он необходим
         super().onSplit(R0) 
@@ -475,6 +474,11 @@ def fillStandPage(stand, project, tableSplittingInfo = None):
     sheetElements = []   
     sheetElements.append(sheetTable) 
 
+
+
+    if not testExecution:
+        ProcessSplitInfo(stand)
+    
     impulseLineTable = CreateImpulseLinesTable(stand,project,tableSplittingInfo)
     sheetElements.append(impulseLineTable)
          
@@ -488,7 +492,6 @@ def fillStandPage(stand, project, tableSplittingInfo = None):
 
 #генерация таблицы импульсных линий
 def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
-
 
     #вписываем в рамку
     sheetWidth = portraitParams['frameWidth'] * 0.99
@@ -531,13 +534,15 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
 
     impulseLineTableData = impulseLinesHeaderData.copy()
     
-
+    #если проход чистовой - обрабатываем инфу о стенде
+    if not testExecution:
+        ProcessSplitInfo(stand);
 
 
     #вытаскиваем нужную инфу
     impulseLineNumber = 1
 
-    for impulseLine in stand["ImpulseLines"]:
+    for i,impulseLine in enumerate(stand["ImpulseLines"]):
 
         wires = []
         for wire in impulseLine["Wires"]:
@@ -575,11 +580,14 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
         rowArray.extend("")
         impulseLineTableData.append(rowArray)
 
-
-
-        
-
         impulseLineNumber+=1
+
+
+    #если проход чистовой - убираем лишние данные 
+    if not testExecution:
+
+
+
 
 
     #оформляем таблицу   
@@ -591,7 +599,7 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
                                     sheetWidth * 0.1,
                                     sheetWidth * 0.15]
 
-
+    #здесь вычеркивать ненужные записи
 
     impulseLineTable = MySplittableTable(data = impulseLineTableData, 
                                             colWidths = impulseLineTableColumnSizes, 
@@ -638,142 +646,45 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
 
 
 
-    #если генерация окончательная -  объединяем ячейки
+    #если генерация окончательная -  отрисовываем все по правильному
     if not testExecution:
             
-
-        ProcessSplitInfo(stand);
-
-
-
-
         #вытаскиваем стенд из словаря
         standNN = stand["Number"]
-        pageRows = tableSplittingInfo.get(standNN);
+        standTableData = tableSplittingInfo.get(standNN);
 
         print("---------------------")
         print(f"standNN: {standNN}")
         print("---------------------")
 
         
-        #если данных по стенду нет - оформляем всю таблицу
-        if pageRows is None:
+        if standTableData is not None:
+            
+            standPages = standTableData["pages"]
 
-            print("Not found in splittingDict")
+            for i, pageInfo in enumerate(standPages):
 
+                startDataRowIndex = pageInfo["startDataRowIndex"]
+                endDataRowIndex = pageInfo["endDataRowIndex"]
 
-            tableDataStartRow = recordsStartRow
-            tableDataEndRow = (rowsPerRecord * impulseLineNumber) - 1
-            tableDataMiddleRow = (tableDataStartRow + tableDataEndRow) // 2
-
-
-            print(f"tableDataStartRow: {tableDataStartRow}") 
-            print(f"tableDataEndRow: {tableDataEndRow}") 
-            print(f"tableDataMiddleRow: {tableDataMiddleRow}") 
-
-            #применяем оформление к одной странице
-            impulseLineTableStyleCmds.extend([
-
-                # Убираем сетку внутри блоков 
-                ('INNERGRID', (4, tableDataStartRow), (4, tableDataEndRow), 2, colors.white),   #коробка
-                ('INNERGRID', (-1, tableDataStartRow), (-1, tableDataEndRow), 2, colors.white),   #примечание
-
-                # прорисовываем вертикальные границы заново 
-                ('LINEBEFORE', (4, tableDataStartRow), (4, tableDataEndRow), 1, colors.black), #коробка
-                ('LINEAFTER', (4, tableDataStartRow), (4, tableDataEndRow), 1, colors.black),
-
-                ('LINEBEFORE', (-1, tableDataStartRow), (-1, tableDataEndRow), 1, colors.black), #примечание
-                ('LINEAFTER', (-1, tableDataStartRow), (-1, tableDataEndRow), 1, colors.black),
-
-                #скрываем текст
-                ('TEXTCOLOR', (4, tableDataStartRow), (4, tableDataEndRow), colors.white),  #коробка
-                ('TEXTCOLOR', (-1, tableDataStartRow), (-1, tableDataEndRow), colors.white), #примечание
-            ])
-
-
-
-
-
-
-        #если данные по стенду есть - оформляем постранично
-        if pageRows is not None:
-
-            print("Found in splittingDict")
-
-            pageStartRow = recordsStartRow
-            allRecordsCount = 0
-
-            for pageNumber, rowsOnPage in enumerate(pageRows):
-             
-                print(f"pageNumber: {pageNumber}") 
-                print("****************************")
-
-                print(f"pageStartRow in start: {pageStartRow}")
-
-                dataRowsOnPage = rowsOnPage - headerRows             #удаляем строки шапки
-                recordsOnPage = dataRowsOnPage // rowsPerRecord      #по 3 строки в каждой записи
-
-
-                         
-                print(f"dataRowsOnPage: {dataRowsOnPage}")
-                print(f"recordsOnPage: {recordsOnPage}")
-
-
-                pageStartRow = pageStartRow                    #высчитываем стартовую строку таблицы на текущей странице
-                pageEndRow = pageStartRow + dataRowsOnPage -1  #высчитываем конечную строку таблицы на текущей странице
-
-                pageDataMiddleRecord = (allRecordsCount + recordsOnPage) // 2    #высчитываем среднюю запись на странице, в которую вставим данные
-
-                print(f"pageStartRow in cycle: {pageStartRow}")
-                print(f"pageEndRow in cycle: {pageEndRow}")
-                print(f"pageDataMiddleRecord in cycle: {pageDataMiddleRecord}")
-
-
-
-
-                #применяем стили к нужным ячейка (удаляем внутреннюю сетку)
+                #применяем оформление к одной странице
                 impulseLineTableStyleCmds.extend([
+
                     # Убираем сетку внутри блоков 
-                    ('INNERGRID', (4, pageStartRow), (4, pageEndRow), 2, colors.white),   #коробка
-                    ('INNERGRID', (-1, pageStartRow), (-1, pageEndRow), 2, colors.white),   #примечание
+                    ('INNERGRID', (4, startDataRowIndex), (4, endDataRowIndex), 2, colors.white),   #коробка
+                    ('INNERGRID', (-1, startDataRowIndex), (-1, endDataRowIndex), 2, colors.white),   #примечание
 
-    
                     # прорисовываем вертикальные границы заново 
-                    ('LINEBEFORE', (4, pageStartRow), (4, pageEndRow), 1, colors.black), #коробка
-                    ('LINEAFTER', (4, pageStartRow), (4, pageEndRow), 1, colors.black),
+                    ('LINEBEFORE', (4, startDataRowIndex), (4, endDataRowIndex), 1, colors.black), #коробка
+                    ('LINEAFTER', (4, startDataRowIndex), (4, endDataRowIndex), 1, colors.black),   #коробка
 
-                    ('LINEBEFORE', (-1, pageStartRow), (-1, pageEndRow), 1, colors.black), #примечание
-                    ('LINEAFTER', (-1, pageStartRow), (-1, pageEndRow), 1, colors.black)
+                    ('LINEBEFORE', (-1, startDataRowIndex), (-1, endDataRowIndex), 1, colors.black), #примечание
+                    ('LINEAFTER', (-1, startDataRowIndex), (-1, endDataRowIndex), 1, colors.black)  #примечание
+ 
                 ])
-
-
-                # прорисовываем внутренню сетку заново в соседних столбцах 
-                impulseLineTableStyleCmds.extend([
-                    ('INNERGRID', (3, pageStartRow), (3, pageEndRow), 1, colors.black),   #маркировка
-                    ('INNERGRID', (-2, pageStartRow), (-2, pageEndRow), 1, colors.black),   #клеммы
-                ])
-
-
-
-
-                        
-
-                pageStartRow = pageEndRow + 1             #перескакиваем на след строку
-                #pageStartRow = pageStartRow + headerRows  #перескакиваем через шапку
-
-                print(f"pageStartRow on end: {pageStartRow}")
-                print(f"pageEndRow on end: {pageEndRow}")
-       
-                allRecordsCount += recordsOnPage
 
 
     impulseLineTable.setStyle(TableStyle(cmds= impulseLineTableStyleCmds ))
-
-
-    if testExecution:
-       print("Test execution")
-    else:
-       print("Report execution")
 
     return impulseLineTable
 
@@ -786,12 +697,15 @@ def ProcessSplitInfo(stand):
     recordsStartRow = 2
     rowsPerRecord = 3
 
+
+    impulseLineStartRecordIndex = 1
+
     #вытаскиваем кол-во импульсных линий
     impulseLineCount = len(stand["ImpulseLines"])
 
     #вытаскиваем стенд из словаря
     standNN = stand["Number"]
-    standData = tableSplittingInfo.get(standNN);
+    standData = impulseTableInfo.get(standNN);
 
     standDataExist = standData is not None
 
@@ -804,19 +718,80 @@ def ProcessSplitInfo(stand):
               }
 
         # Добавляем единственную страницу
-        impulseTableInfo[self.standNumber]["pages"].append(
+        impulseTableInfo[standNN]["pages"].append(
             {
                 "pageNumber" : 1,
-                "hasHeader"  : False,
-                "rowsCount"  : rowsPerRecord * impulseLineCount
+                "hasHeader"  : True,
+                "rowsCount"  : (rowsPerRecord * impulseLineCount) + headerRows
             })
 
 
 
+   
+    standPages = impulseTableInfo[standNN]["pages"]
+    standPagesCount = impulseTableInfo[standNN]["pagesCount"]
+    pagesSplitted = impulseTableInfo[standNN]["isPageSplitted"]
+  
 
-            tableDataStartRow = recordsStartRow
-            tableDataEndRow = (rowsPerRecord * impulseLineNumber) - 1
-            tableDataMiddleRow = (tableDataStartRow + tableDataEndRow) // 2
+
+    tableDataStartRow = 0
+    tableDataEndRow = 0
+
+    #обрабатываем каждую страницу
+    for i, page in enumerate(standPages):
+
+        pageRowsCount =  impulseTableInfo[standNN]["pages"][i]["rowsCount"]
+        pageHasHeader = impulseTableInfo[standNN]["pages"][i]["hasHeader"]
+
+        
+        if (standPagesCount > 1 and i > 0):
+            tableDataStartRow = tableDataEndRow + 1
+        else:
+            tableDataStartRow = 0
+
+        tableDataRowsCount = pageRowsCount
+
+        #если есть заголовок - перескакиваем через него
+        if pageHasHeader:
+            tableDataStartRow += headerRows
+            tableDataRowsCount -= headerRows
+    
+        #высчитываем начальную, конечную и среднюю строки
+        tableDataEndRow = (tableDataStartRow + tableDataRowsCount) - 1
+        tableDataMiddleRow = (tableDataStartRow + tableDataEndRow) // 2
+
+        impulseTableInfo[standNN]["pages"][i]["startDataRowIndex"] = tableDataStartRow
+        impulseTableInfo[standNN]["pages"][i]["endDataRowIndex"] = tableDataEndRow
+        impulseTableInfo[standNN]["pages"][i]["middleDataRowIndex"] = tableDataMiddleRow
+
+
+
+        #высчитываем количество записей
+        tableRecordsCount = tableDataRowsCount // rowsPerRecord
+            
+
+        if (standPagesCount > 1 and i > 0):
+            tableStartRecord = tableEndRecord + 1
+        else:
+            tableStartRecord = impulseLineStartRecordIndex
+
+
+        #высчитываем начальную, конечную и среднюю записи
+        
+        tableEndRecord = (tableStartRecord + tableRecordsCount) - 1
+        tableMiddleRecord = (tableStartRecord + tableEndRecord) // 2
+
+
+        impulseTableInfo[standNN]["pages"][i]["recordsCount"] = tableRecordsCount
+        impulseTableInfo[standNN]["pages"][i]["startRecordIndex"] = tableStartRecord
+        impulseTableInfo[standNN]["pages"][i]["endRecordIndex"] = tableEndRecord
+        impulseTableInfo[standNN]["pages"][i]["middleRecordIndex"] = tableMiddleRecord
+
+
+
+
+            
+
 
 
 
@@ -970,6 +945,8 @@ def generateReport(jsonFilePath,outputFilePath):
 
     print(impulseTableInfo)
 
+    print("CLEAN EXECUTION")
+
     PdfHelper.registerFonts()
 
     data = PdfHelper.openJsonFile(jsonFilePath)
@@ -988,6 +965,9 @@ def generateReport(jsonFilePath,outputFilePath):
         elements.append(NextPageTemplate('portrait'))
         elements.append(PageBreak())
 
+
+
+    print(f"final object: {impulseTableInfo}")
     doc.build(elements)
 
     
@@ -996,6 +976,8 @@ def generateReport(jsonFilePath,outputFilePath):
 
 #тестовый проход, чтобы получить информацию о таблицах
 def generateTestReport(jsonFilePath):
+ 
+    print("TEST EXECUTION")
 
     #принудительно чистим
     global splitInfo
