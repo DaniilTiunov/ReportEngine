@@ -1,9 +1,18 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using DevExpress.XtraRichEdit.Commands;
 using ReportEngine.App.Display;
 using ReportEngine.App.Model;
+using ReportEngine.App.Model.StandsModel;
+using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.Services.Notification;
 using ReportEngine.Domain.Entities.Armautre;
+using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.Braces;
 using ReportEngine.Domain.Entities.Drainage;
@@ -12,14 +21,19 @@ using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Frame;
 using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Domain.Entities.Pipes;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.App.ViewModels;
 
 public class AllSortamentsViewModel : BaseViewModel
 {
+    private readonly GenericRepository _genericRepository;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly INotificationService _notificationService;
+    
+    private readonly ConcurrentDictionary<string, Task> _loadingTasks = new();
     private readonly List<string> _comboBoxUnits = new() { "шт", "м", "компл.", "ед." };
-
     private readonly Dictionary<string, Type> _equipTypeMap = new()
     {
         { "Трубы\\Жаропрочные", typeof(HeaterPipe) },
@@ -46,28 +60,91 @@ public class AllSortamentsViewModel : BaseViewModel
         { "Прочие", typeof(Other) },
         { "Тара", typeof(Container) }
     };
-
-    // Словарь текущих задач загрузки по ключу группы — предотвращает параллельный доступ
-    private readonly ConcurrentDictionary<string, Task> _loadingTasks = new();
-
-    private readonly IServiceProvider _serviceProvider;
-
+    private string _currentGroupKey;
+    private string _tabItemKey;
+    private BaseEquipModel _inputEquip = new();
     private IBaseEquip _selectedEquip;
+    private bool _showElectricalFields = false;
+    private bool _showContainerFields;
+    private bool _showMeasureComboBox;
 
-    public AllSortamentsViewModel(IServiceProvider serviceProvider)
+    public AllSortamentsViewModel(
+        IServiceProvider serviceProvider,
+        GenericRepository genericRepository, 
+        INotificationService notificationService)
     {
         _serviceProvider = serviceProvider;
+        _genericRepository = genericRepository;
+        _notificationService = notificationService;
+        
+        AddAsyncCommand = new AsyncRelayCommand(AddNewEquipAsync);
     }
 
     public AllSortamentsModel CurrentSortamentsModel { get; set; } = new();
 
+    public ICommand AddAsyncCommand { get; set; }
+    
     public IBaseEquip SelectedEquip
     {
         get => _selectedEquip;
         set => Set(ref _selectedEquip, value);
     }
+    
+    public string CurrentGroupKey
+    {
+        get => _currentGroupKey;
+        set
+        {
+            Set(ref _currentGroupKey, value);
+            UpdateAdditionalFieldsVisibility();
+        }
+    }
+
+    public string TabItemKey
+    {
+        get => _tabItemKey;
+        set => Set(ref _tabItemKey, value);
+    }
+
+    public BaseEquipModel InputEquip
+    {
+        get => _inputEquip;
+        set => Set(ref  _inputEquip, value);
+    }
+    
+    public bool ShowElectricalFields
+    {
+        get => _showElectricalFields;
+        set => Set(ref _showElectricalFields, value);
+    }
+
+    public bool ShowContainerFields
+    {
+        get => _showContainerFields;
+        set => Set(ref _showContainerFields, value);
+    }
+
+    public bool ShowMeasureComboBox
+    {
+        get => _showMeasureComboBox;
+        set
+        {
+            Set(ref _showMeasureComboBox, value);
+        }
+    }
+
+    public DataGrid TargetDataGrid { get; set; } = new();
 
     public Action<IBaseEquip>? SelectionHandler { get; set; }
+
+    private Type GetCurrentEquipType()
+    {
+        if (string.IsNullOrEmpty(CurrentGroupKey))
+            return null;
+
+        _equipTypeMap.TryGetValue(CurrentGroupKey, out var type);
+        return type;
+    }
 
     public async Task LoadGroupAsync(string groupKey)
     {
@@ -126,7 +203,6 @@ public class AllSortamentsViewModel : BaseViewModel
                 Binding = new Binding(property.Name)
             };
 
-
             if (property.Name == "Name")
                 column.Width = new DataGridLength(1, DataGridLengthUnitType.SizeToCells);
 
@@ -135,5 +211,65 @@ public class AllSortamentsViewModel : BaseViewModel
 
             dataGrid.Columns.Add(column);
         }
+    }
+
+    private async Task RefreshItems(IBaseEquip newEquip)
+    {
+        if (CurrentSortamentsModel.EquipGroups.TryGetValue(CurrentGroupKey, out var collection))
+        {
+            collection.Add(newEquip);
+        }
+        else
+        {
+            await LoadGroupAsync(CurrentGroupKey);
+        }
+    }
+    
+    private void UpdateAdditionalFieldsVisibility()
+    {
+        var type = GetCurrentEquipType();
+    
+        ShowElectricalFields = type != null && 
+                               (type.IsSubclassOf(typeof(BaseElectricComponent)) || 
+                                type == typeof(BaseElectricComponent));
+    
+        ShowContainerFields = type != null && type == typeof(Container);
+        
+        _showMeasureComboBox = !ShowContainerFields;
+        OnPropertyChanged(nameof(ShowMeasureComboBox));
+    }
+
+    private async Task AddNewEquipAsync()
+    {
+        var currentType = GetCurrentEquipType();
+        var newEquip = (IBaseEquip)Activator.CreateInstance(currentType)!;
+        
+        newEquip.Name = InputEquip.Name;
+        newEquip.Cost = InputEquip.Cost;
+        newEquip.ExportDays = InputEquip.ExportDays;
+        newEquip.Weight = InputEquip.Weight;
+        newEquip.Measure = InputEquip.Measure;
+        
+        if (newEquip is BaseElectricComponent electrical)
+        {
+            electrical.CabelInput = InputEquip.CabelInput;
+            electrical.Cabel = InputEquip.Cabel;
+            electrical.ElectricProtection = InputEquip.ElectricProtection;
+        }
+
+        if (newEquip is Container container)
+        {
+            container.Width = InputEquip.Width;
+            container.Height = InputEquip.Height;
+            container.Depth = InputEquip.Depth;
+        }
+        
+        await _genericRepository.AddAsync(newEquip);
+
+        GenerateDataGrid(currentType, TargetDataGrid);
+
+        await RefreshItems(newEquip);
+        
+        _notificationService.ShowInfo("Успешно добавлено");
     }
 }

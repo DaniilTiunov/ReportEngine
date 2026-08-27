@@ -10,9 +10,9 @@ namespace ReportEngine.App.Views.Windows;
 public partial class AllSortamentsView : Window
 {
     private readonly bool _isDialog;
-
     private readonly AllSortamentsViewModel _viewModel;
     private ICollectionView _equipView;
+    private string _currentGroupKey;
 
     public AllSortamentsView(AllSortamentsViewModel viewModel, bool isDialog = false)
     {
@@ -64,8 +64,14 @@ public partial class AllSortamentsView : Window
         var groupKey = selectedTab.Tag as string;
         if (string.IsNullOrWhiteSpace(groupKey)) return;
 
+        _viewModel.TabItemKey = groupKey;
+        
         await _viewModel.LoadGroupAsync(groupKey);
+        _viewModel.TargetDataGrid = EquipDataGrid;
         _viewModel.GenerateDataGridByTag(EquipDataGrid, groupKey);
+        
+        _currentGroupKey = groupKey;
+        _viewModel.CurrentGroupKey = groupKey;
 
         if (_viewModel.CurrentSortamentsModel.EquipGroups.TryGetValue(groupKey, out var collection))
             EquipDataGrid.ItemsSource = collection;

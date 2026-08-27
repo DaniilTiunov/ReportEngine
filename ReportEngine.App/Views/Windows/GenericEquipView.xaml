@@ -16,7 +16,15 @@
     xmlns:windowHelpers="clr-namespace:ReportEngine.App.Views.Windows.WindowHelpers"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <Window.Resources />
+    <Window.Resources>
+        <DataTemplate x:Key="MeasureCellTemplate">
+            <TextBlock Text="{Binding Measure}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="MeasureCellEditingTemplate">
+            <ComboBox ItemsSource="{Binding DataContext.Measures, RelativeSource={RelativeSource AncestorType=Window}}" SelectedItem="{Binding Measure, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        </DataTemplate>
+    </Window.Resources>
 
     <WindowChrome.WindowChrome>
         <WindowChrome
