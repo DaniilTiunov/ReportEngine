@@ -94,7 +94,7 @@
                 <!--  ЛЕВАЯ ПАНЕЛЬ - МЕНЮ  -->
                 <Border
                     Background="White"
-                    BorderBrush="Black"
+                    BorderBrush="#FFCCCCCC"
                     BorderThickness="2"
                     CornerRadius="8"
                     Grid.Column="0"
@@ -149,23 +149,13 @@
                             Height="1"
                             Margin="10,15,10,15" />
 
-                        <!--  Кнопка проверки обновлений  -->
-                        <Button
-                            Background="#4CAF50"
-                            Command="{Binding CheckUpdatesCommand}"
-                            Content="🔄 Проверить обновления"
-                            FontWeight="SemiBold"
-                            Foreground="White"
-                            HorizontalAlignment="Stretch"
-                            Margin="0,3"
-                            Padding="15,10" />
                     </StackPanel>
                 </Border>
 
                 <!--  ПРАВАЯ ПАНЕЛЬ - КОНТЕНТ  -->
                 <Border
                     Background="White"
-                    BorderBrush="Black"
+                    BorderBrush="#FFCCCCCC"
                     BorderThickness="2"
                     CornerRadius="8"
                     Grid.Column="1"

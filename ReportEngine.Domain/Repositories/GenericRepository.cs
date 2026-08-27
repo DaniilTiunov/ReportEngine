@@ -95,13 +95,41 @@ public class GenericRepository
         _handlers.Add(typeof(Container), async expr => await GetAsync((Expression<Func<Container, bool>>)expr));
     }
 
-    public async Task<T?> GetAsync<T>(
+    private async Task<T?> GetAsync<T>(
         Expression<Func<T, bool>> predicate)
         where T : class
     {
         return await _context.Set<T>()
             .FirstOrDefaultAsync(predicate);
     }
+
+    public async Task<IBaseEquip> CreateAndAddAsync(Type entityType)
+    {
+        if (!typeof(IBaseEquip).IsAssignableFrom(entityType))
+            throw new ArgumentException(
+                $"{entityType.Name} не реализует IBaseEquip");
+
+        var entity = (IBaseEquip)Activator.CreateInstance(entityType)!;
+
+        _context.Add(entity);
+        await _context.SaveChangesAsync();
+
+        return entity;
+    }
+    
+    public async Task AddAsync(IBaseEquip entity) 
+    {
+        await _context.AddAsync(entity);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync<TEntity>(TEntity entity)
+        where TEntity : class
+    {
+        _context.Set<TEntity>().Remove(entity);
+        await _context.SaveChangesAsync();
+    }
+    
 
     public async Task<List<T>> GetAllAsync<T>(Func<IQueryable<T>, IQueryable<T>> query)
         where T : class

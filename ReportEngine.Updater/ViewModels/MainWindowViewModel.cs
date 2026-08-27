@@ -86,6 +86,8 @@ public partial class MainWindowViewModel : BaseViewModel
         var localDirectories = await _directoryService.GetDirectoriesAsync(paths => paths.LocalPath);
 
         var latestReleaseInfo = await LoadLatestReleaseAsync();
+        
+        bool hasUpdateAvailable = false;
 
         foreach (var localDirectory in localDirectories)
         {
@@ -96,14 +98,20 @@ public partial class MainWindowViewModel : BaseViewModel
             
             if (IsUpdateAvailable(latestReleaseInfo, updateInfo))
             {
-                _notificationService.ShowInfo($"""
-                                               Доступна новая версия для загрузки: {latestReleaseInfo.Channel} {latestReleaseInfo.Version}
-                                               """);
+                hasUpdateAvailable = true;
+                break;
             }
-            else
-            {
-                _notificationService.ShowInfo("Все актуальные версии установлены!");
-            }
+        }
+        
+        if (hasUpdateAvailable)
+        {
+            _notificationService.ShowInfo($$"""
+                                            Доступна новая версия для загрузки: {{latestReleaseInfo.Channel}} {{latestReleaseInfo.Version}}
+                                            """);
+        }
+        else
+        {
+            _notificationService.ShowInfo("Все актуальные версии установлены!");
         }
     }
     

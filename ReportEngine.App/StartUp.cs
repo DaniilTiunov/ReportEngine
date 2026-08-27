@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
+using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Store;
 using ReportEngine.Shared.Config.Directory;
@@ -16,7 +17,7 @@ public static class StartUp
     public static bool CanConnect;
 
     [STAThread]
-    public static void Main()
+   public static void Main()
     {
         _mutex = new Mutex(true, "Global\\ReportEngineApp", out var createdNew);
 
@@ -29,22 +30,42 @@ public static class StartUp
         try
         {
             SetCulture();
+            
+            var splash = new SplashWindow();
+            splash.Show();
 
+            // Шаг 1
+            splash.SetStatusText("Загрузка файлов конфигурации...");
+            Thread.Sleep(500);
+            
             var config = JsonHandler.GetDatabaseMode(DirectoryHelper.GetConfigPath());
 
+            // Шаг 2
+            splash.SetStatusText("Сборка хоста...");
+            Thread.Sleep(500);
+            
             var host = HostFactory.BuildHost(config);
 
+            // Шаг 3
+            splash.SetStatusText("Регистрация контекста данных...");
+            Thread.Sleep(500);
+            
             var context = host.Services.GetRequiredService<ReAppContext>();
-
             var app = host.Services.GetRequiredService<App>();
 
-            var mainWindow = host.Services.GetRequiredService<MainWindow>();
-
+            // Шаг 4
+            splash.CheckDbStatus(context);
+            Thread.Sleep(500);
+            
             CanConnect = CheckDbConnection(context);
 
             if (CanConnect)
+            {
                 try
                 {
+                    splash.SetStatusText("Загрузка необходимых данных из базы данных...");
+                    Thread.Sleep(500);
+                    
                     host.Services
                         .GetRequiredService<ParametersStore>()
                         .LoadSettingsDataAsync()
@@ -55,10 +76,16 @@ public static class StartUp
                 {
                     Log.Fatal(ex, "Ошибка загрузки ParameterStore");
                 }
+            }
 
+            splash.SetStatusText("Запуск приложения...");
+
+            Thread.Sleep(500);
+            var mainWindow = host.Services.GetRequiredService<MainWindow>();
             app.MainWindow = mainWindow;
 
             mainWindow.Show();
+            splash.Close();
 
             Log.Information("Приложение запущено");
 
@@ -67,14 +94,12 @@ public static class StartUp
         catch (Exception ex)
         {
             ShowErrorWindow(ex.Message);
-
             Log.Fatal($"Ошибка запуска {ex.Message}");
         }
         finally
         {
             ReleaseMutex();
             DisposeMutex();
-
             Log.CloseAndFlush();
         }
     }
