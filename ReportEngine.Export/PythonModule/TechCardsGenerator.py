@@ -630,7 +630,7 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
         if i < 2:
             continue
 
-        for j in range(allTableColumnCount):
+        for j in range(allTableColumnCount+1):
 
             impulseLineTableData[i][j] = Paragraph(impulseLineTableData[i][j], tableContentStyle)
 
