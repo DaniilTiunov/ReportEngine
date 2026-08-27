@@ -511,13 +511,6 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
         leading = 7
     )
 
-    hiddenTextStyle = ParagraphStyle(
-    'HiddenText',
-        parent = tableContentStyle,
-        fontSize = 0,
-        leading = 7
-    )
-
 
     #если данных по разделению таблиц нет - тестовый проход
     testExecution = tableSplittingInfo is None
@@ -539,57 +532,85 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
         ProcessSplitInfo(stand);
 
 
-    #вытаскиваем нужную инфу
-    impulseLineNumber = 1
+ 
+    standImpulseLines = stand["ImpulseLines"]
 
-    for i,impulseLine in enumerate(stand["ImpulseLines"]):
+    #вытаскиваем и подготавливаем данные для вставки каждой импульсной линии
+    for i, impulseLine in enumerate(standImpulseLines,1):
+
+        #подготавливаем данные
+        impulseLineNumber = str(i)
+
+        impulseLineDescAndKKS = [impulseLine["Name"],impulseLine["CodeKKS"]]
+        impulseLineDescAndKKS= "<br/>".join(impulseLineDescAndKKS)
 
         wires = []
         for wire in impulseLine["Wires"]:
 
             #в зависимости от параметра вставляем электрику или нет
             if includeElectric:
-                wires.append([ Paragraph(wire["Circuit"],tableContentStyle),
-                               Paragraph(wire["Mark"],tableContentStyle),
-                               Paragraph(wire["ElectricBox"],tableContentStyle),
-                               Paragraph(wire["Terminal"],tableContentStyle) ])
+                wires.append([ wire["Circuit"], wire["Mark"], wire["ElectricBox"], wire["Terminal"] ])                
             else:
                 wires.append( ["","","",""] )
 
+        impulseLineNote = impulseLine["Annotation"]
 
+        #формируем строки таблицы
+        for j, wire in enumerate(wires):
 
-        descAndKKS = [impulseLine["Name"],impulseLine["CodeKKS"]]
+            if j == 0:
+                rowArray = [impulseLineNumber, impulseLineDescAndKKS]
+            else:
+                rowArray = ["", ""]
 
-        descAndKKSText = "<br/>".join(descAndKKS)
-        descAndKKS = Paragraph(descAndKKSText,tableContentStyle)
+            rowArray.extend(wire)
 
-        note = Paragraph(impulseLine["Annotation"],tableContentStyle)
+            if j == 0:
+                rowArray.extend([impulseLineNote])
+            else:
+                rowArray.extend([""])
 
-        rowArray = [str(impulseLineNumber),descAndKKS]
-        rowArray.extend(wires[0])
-        rowArray.extend([note])
-        impulseLineTableData.append(rowArray)
+            impulseLineTableData.append(rowArray)
 
-        rowArray = ["",""]
-        rowArray.extend(wires[1])
-        rowArray.extend("")
-        impulseLineTableData.append(rowArray)
+       
 
-        rowArray = ["",""]
-        rowArray.extend(wires[2])
-        rowArray.extend("")
-        impulseLineTableData.append(rowArray)
-
-        impulseLineNumber+=1
 
 
     #если проход чистовой - убираем лишние данные 
     if not testExecution:
 
+       #вытаскиваем стенд из словаря
+       standNN = stand["Number"]
+       standTableData = tableSplittingInfo.get(standNN);
 
+       if standTableData is not None:
+            
+        standPages = standTableData["pages"]
 
+        boxColumnIndex = 4
+        annotationColumnIndex = 6
 
+        #проходим по всем страницам
+        for p, pageInfo in enumerate(standPages):    
 
+            middleRecordFirstRowIndex = pageInfo["middleRecordFirstRowIndex"]
+
+        #проходимся по строкам таблицы
+        #стираем все данные по коробке и примечанию
+        for i, _ in enumerate(impulseLineTableData):
+
+            #шапку не трогаем
+            if i < 2:
+                continue
+
+            #среднюю запись не трогаем
+            if i == middleRecordFirstRowIndex:
+                continue
+
+            impulseLineTableData[i][boxColumnIndex] = ""
+            impulseLineTableData[i][annotationColumnIndex] = ""
+
+            
     #оформляем таблицу   
     impulseLineTableColumnSizes = [sheetWidth * 0.075,
                                     sheetWidth * 0.275,
@@ -599,13 +620,31 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
                                     sheetWidth * 0.1,
                                     sheetWidth * 0.15]
 
-    #здесь вычеркивать ненужные записи
+    allTableColumnCount = 6
+
+    #проходимся по строкам и столбцам таблицы 
+    #заводим все данные в Paragraph
+    for i, _ in enumerate(impulseLineTableData):
+
+        #шапку не трогаем
+        if i < 2:
+            continue
+
+        for j in range(allTableColumnCount):
+
+            impulseLineTableData[i][j] = Paragraph(impulseLineTableData[i][j], tableContentStyle)
+
+
+
+
 
     impulseLineTable = MySplittableTable(data = impulseLineTableData, 
                                             colWidths = impulseLineTableColumnSizes, 
                                             standNumber = stand["Number"], #передаем номер стенда
                                             repeatRows=2, #повторяем шапку на каждой странице
                                             splitByRow=1)  #разрешаем разделять по строкам
+
+
 
     impulseLineTableStyleCmds = PdfHelper.commonTableStyleCmd.copy()
 
@@ -630,7 +669,7 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
 
  
     #оформляем импульсные линии
-    for impulseLineRecord in range(impulseLineNumber):
+    for impulseLineRecord in range(len(standImpulseLines)):
 
         recordEndRow = currentRow + rowsPerRecord - 1
 
@@ -781,11 +820,24 @@ def ProcessSplitInfo(stand):
         tableEndRecord = (tableStartRecord + tableRecordsCount) - 1
         tableMiddleRecord = (tableStartRecord + tableEndRecord) // 2
 
-
         impulseTableInfo[standNN]["pages"][i]["recordsCount"] = tableRecordsCount
         impulseTableInfo[standNN]["pages"][i]["startRecordIndex"] = tableStartRecord
         impulseTableInfo[standNN]["pages"][i]["endRecordIndex"] = tableEndRecord
         impulseTableInfo[standNN]["pages"][i]["middleRecordIndex"] = tableMiddleRecord
+
+
+        if (standPagesCount > 1 and i > 0):
+            startRecordFirstRowIndex = tableDataEndRow + 1
+        else:
+            startRecordFirstRowIndex = impulseLineStartRecordIndex
+
+        startRecordFirstRowIndex = tableDataStartRow
+        endRecordFirstRowIndex = tableDataEndRow - rowsPerRecord + 1
+        middleRecordFirstRowIndex = startRecordFirstRowIndex + ((tableMiddleRecord - 1) * rowsPerRecord)
+
+        impulseTableInfo[standNN]["pages"][i]["startRecordFirstRowIndex"] = startRecordFirstRowIndex
+        impulseTableInfo[standNN]["pages"][i]["endRecordFirstRowIndex"] = endRecordFirstRowIndex
+        impulseTableInfo[standNN]["pages"][i]["middleRecordFirstRowIndex"] = middleRecordFirstRowIndex
 
 
 
