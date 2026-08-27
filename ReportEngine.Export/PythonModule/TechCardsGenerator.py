@@ -776,6 +776,10 @@ def ProcessSplitInfo(stand):
     tableDataStartRow = 0
     tableDataEndRow = 0
 
+    # Сумма записей на предыдущих страницах
+    rowsProceed = 0
+    recordsProcessed = 0  
+
     #обрабатываем каждую страницу
     for i, page in enumerate(standPages):
 
@@ -831,31 +835,21 @@ def ProcessSplitInfo(stand):
         else:
             startRecordFirstRowIndex = impulseLineStartRecordIndex
 
+        #высчитываем первую строчку начальной, конечной и средней записи
         startRecordFirstRowIndex = tableDataStartRow
         endRecordFirstRowIndex = tableDataEndRow - rowsPerRecord + 1
-        middleRecordFirstRowIndex = startRecordFirstRowIndex + ((tableMiddleRecord - 1) * rowsPerRecord)
+
+        middleRecordOnPage = tableMiddleRecord - recordsProcessed
+        middleRecordFirstRowIndex = startRecordFirstRowIndex + ((middleRecordOnPage - 1) * rowsPerRecord)
 
         impulseTableInfo[standNN]["pages"][i]["startRecordFirstRowIndex"] = startRecordFirstRowIndex
         impulseTableInfo[standNN]["pages"][i]["endRecordFirstRowIndex"] = endRecordFirstRowIndex
         impulseTableInfo[standNN]["pages"][i]["middleRecordFirstRowIndex"] = middleRecordFirstRowIndex
 
-
+        recordsProcessed += tableRecordsCount
 
 
             
-
-
-
-
-    
-
-
-
-
-
-
-
-
 
 
 def fillConclusionPage(stand,project):
