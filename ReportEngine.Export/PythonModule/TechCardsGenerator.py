@@ -494,9 +494,6 @@ def fillStandPage(stand, project, tableSplittingInfo = None):
 def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
 
 
-
-
-
     #вписываем в рамку
     sheetWidth = portraitParams['frameWidth'] * 0.99
     sheetHeight = portraitParams['frameHeight'] * 0.99
@@ -578,7 +575,7 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
 
        
 
-
+    headerRows = 2
 
     #если проход чистовой - убираем лишние данные 
     if not testExecution:
@@ -596,8 +593,7 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
         standPages = standTableData["pages"]
 
         boxColumnIndex = 4
-        annotationColumnIndex = 6
-        headerRows = 2
+        annotationColumnIndex = 6 
 
         #проходим по всем страницам
         for p, pageInfo in enumerate(standPages):    
@@ -622,10 +618,8 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
 
                 #среднюю запись не трогаем
                 if i == pageMiddleRecordFirstRowIndex:
-                    print(f"row: {i} skipped")
                     continue
 
-                print(f"row: {i} cleaned")
 
                 impulseLineTableData[i][boxColumnIndex] = ""
                 impulseLineTableData[i][annotationColumnIndex] = ""
@@ -650,7 +644,7 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
     for i, _ in enumerate(impulseLineTableData):
 
         #шапку не трогаем
-        if i < 2:
+        if i < headerRows:
             continue
 
         for j in range(allTableColumnCount+1):
@@ -683,7 +677,6 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
                                        ('SPAN', (2, 0), (5, 0) )
                                         ])
                                       
-    headerRows = 2
     recordsStartRow = 2
     rowsPerRecord = 3
 
