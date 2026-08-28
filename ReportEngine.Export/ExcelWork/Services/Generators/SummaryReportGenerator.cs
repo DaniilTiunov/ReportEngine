@@ -550,7 +550,13 @@ public class SummaryReportGenerator : IReportGenerator
         var allPartsList = ExcelReportHelper.GenerateAllPartsCollection(generatedPartsData);
         activeRow = CreateUsualTotalRecord(activeRow, "Итого по комплектующим", allPartsList, ws);
 
-        var generatedLaborData = ExcelReportHelper.GenerateLaborData(selectedStands, _parametersStore, project, pipes);
+
+
+        var generatedLaborData = (selectedStands != null) ?
+                                    ExcelReportHelper.GenerateLaborData(selectedStands, _parametersStore, project, pipes) :
+                                    ExcelReportHelper.GenerateLaborData(project.Stands, _parametersStore, project, pipes);
+
+
         var allLaborsList = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Трудозатраты", ws);
