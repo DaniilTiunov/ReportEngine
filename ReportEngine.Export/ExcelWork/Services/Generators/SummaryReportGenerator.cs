@@ -481,9 +481,8 @@ public class SummaryReportGenerator : IReportGenerator
         foreach (var property in generatedPartsData.GetType().GetProperties())
         {
             var propertyValue = property.GetValue(generatedPartsData);
-            var recordList = propertyValue as List<EquipmentRecord>;
 
-            if (recordList != null)
+            if (propertyValue is List<EquipmentRecord> recordList)
             {
                 var tempList = new List<EquipmentRecord>(recordList);
                 recordList.Clear();
