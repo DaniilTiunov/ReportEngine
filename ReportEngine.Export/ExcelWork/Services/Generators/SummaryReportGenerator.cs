@@ -147,7 +147,8 @@ public class SummaryReportGenerator : IReportGenerator
             await FillCalculationTable(calculationSheet, project, pipes, selectedStands);
 
             // Применяем оформление ко всему документу
-            foreach (var ws in wb.Worksheets) ws.Cells().Style.Font.FontName = "Times New Roman";
+            foreach (var ws in wb.Worksheets) 
+                ws.Cells().Style.Font.FontName = "Times New Roman";
 
             var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
             var fileName = ExcelReportHelper.CreateReportName("Сводная ведомость", "xlsx");
@@ -471,9 +472,10 @@ public class SummaryReportGenerator : IReportGenerator
 
         var containerBatches = _containerRepository.GetAllByProjectIdAsync(project.Id);
 
-        var generatedPartsData = ExcelReportHelper.GeneratePartsData(project.Stands);
+        var generatedPartsData = (selectedStands != null) 
+            ? ExcelReportHelper.GeneratePartsData(selectedStands)
+            : ExcelReportHelper.GeneratePartsData(project.Stands);
 
-        if (selectedStands != null) generatedPartsData = ExcelReportHelper.GeneratePartsData(selectedStands);
 
         //принудительно обнуляем сроки поставки, они там не нужны (вроде)
         foreach (var property in generatedPartsData.GetType().GetProperties())
@@ -548,7 +550,7 @@ public class SummaryReportGenerator : IReportGenerator
         var allPartsList = ExcelReportHelper.GenerateAllPartsCollection(generatedPartsData);
         activeRow = CreateUsualTotalRecord(activeRow, "Итого по комплектующим", allPartsList, ws);
 
-        var generatedLaborData = ExcelReportHelper.GenerateLaborData(project.Stands, _parametersStore, project, pipes);
+        var generatedLaborData = ExcelReportHelper.GenerateLaborData(selectedStands, _parametersStore, project, pipes);
         var allLaborsList = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Трудозатраты", ws);

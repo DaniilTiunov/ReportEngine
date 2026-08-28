@@ -7,14 +7,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Remove="PythonModule\build\**"/>
-        <EmbeddedResource Remove="PythonModule\build\**"/>
-        <None Remove="PythonModule\build\**"/>
+        <Compile Remove="PythonModule\build\**" />
+        <EmbeddedResource Remove="PythonModule\build\**" />
+        <None Remove="PythonModule\build\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="PythonModule\MainLauncher.exe"/>
-        <None Remove="PythonModule\MainLauncher.py"/>
+        <None Remove="PythonModule\MainLauncher.exe" />
+        <None Remove="PythonModule\MainLauncher.py" />
     </ItemGroup>
 
     <ItemGroup>
@@ -31,7 +31,7 @@
 
     <ItemGroup>
         <Content Include="PythonModule\MainLauncher.exe">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Include="PythonModule\MainLauncher.py">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -54,18 +54,18 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ReportEngine.Domain\ReportEngine.Domain.csproj"/>
-        <ProjectReference Include="..\ReportEngine.Shared\ReportEngine.Shared.csproj"/>
+        <ProjectReference Include="..\ReportEngine.Domain\ReportEngine.Domain.csproj" />
+        <ProjectReference Include="..\ReportEngine.Shared\ReportEngine.Shared.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="ClosedXML" Version="0.105.0"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10"/>
-        <PackageReference Include="System.Drawing.Common" Version="9.0.9"/>
-        <PackageReference Include="ClosedXML" Version="0.105.0"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10"/>
-        <PackageReference Include="System.Drawing.Common" Version="9.0.10"/>
-        <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0"/>
+        <PackageReference Include="ClosedXML" Version="0.105.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
+        <PackageReference Include="System.Drawing.Common" Version="9.0.9" />
+        <PackageReference Include="ClosedXML" Version="0.105.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
+        <PackageReference Include="System.Drawing.Common" Version="9.0.10" />
+        <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -102,10 +102,6 @@
         <None Update="ReportTemplates\TechnologicalCards_template.docx">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="PythonModule\dist\"/>
     </ItemGroup>
 
 </Project>

@@ -120,3 +120,7 @@ def get_column_height(elements, column_width):
         else:
             total += calculate_element_height(element, column_width)
     return total
+
+
+
+

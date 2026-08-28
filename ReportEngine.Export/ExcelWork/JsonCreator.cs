@@ -90,9 +90,11 @@ public static class JsonCreator
 
         var mountParts = mountPartsRecords.Select(record => RecordToJson(record));
 
+        var nextTerminalNumber = 1;
+
         var impulseLines = stand.ObvyazkiInStand
             .SelectMany(obv => ExcelReportHelper.CreateSensorsListFromObvyazka(obv))
-            .Select(record => SensorToJson(record, stand));
+            .Select(record => SensorToJson(record, stand, ref nextTerminalNumber));
 
         return new StandJsonObject
         {
@@ -137,7 +139,7 @@ public static class JsonCreator
     }
 
     //конвертация записи датчика в JSON объект
-    public static ImpulseLineRecordJsonObject SensorToJson(SensorRecordData record, Stand stand)
+    public static ImpulseLineRecordJsonObject SensorToJson(SensorRecordData record, Stand stand,ref int terminalNumber)
     {
         //находим название коробки в стенде
         var boxName = stand.StandElectricalComponent
@@ -145,12 +147,22 @@ public static class JsonCreator
             .First(purpose => !string.IsNullOrEmpty(purpose.Purpose) && purpose.Purpose.StartsWith("Клеммная коробка"))
             .Material;
 
+
+
+        bool terminalNumberNeeded = (!string.IsNullOrEmpty(record.SensorMarkPlus) || !string.IsNullOrEmpty(record.SensorMarkMinus));
+
         var wiresInfo = new List<WireRecord>
         {
-            new("+", $"{record.SensorMarkPlus}", boxName ?? "", "1"),
-            new("-", $"{record.SensorMarkMinus}", boxName ?? "", "2"),
-            new("Экран", "", boxName ?? "", "3")
+            new("+", $"{record.SensorMarkPlus}", boxName ?? "", terminalNumberNeeded ? (terminalNumber).ToString() : ""),
+            new("-", $"{record.SensorMarkMinus}", boxName ?? "", terminalNumberNeeded ? (terminalNumber + 1).ToString() : ""),
+            new("Экран", "", boxName ?? "", terminalNumberNeeded ? (terminalNumber + 2).ToString() : "")
         };
+
+        if (terminalNumberNeeded) 
+        {
+            terminalNumber += wiresInfo.Count;
+        }
+
 
         return new ImpulseLineRecordJsonObject
         {
