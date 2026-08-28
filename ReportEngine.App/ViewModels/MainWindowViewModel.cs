@@ -221,9 +221,9 @@ public class MainWindowViewModel : BaseViewModel
         });
     }
 
-    public void OnOpenMainWindowCommandExecuted(object e)
+    public async void OnOpenMainWindowCommandExecuted(object e)
     {
-        _ = _exceptionService.SafeExecuteAsync(async () =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             var projectViewModel = _serviceProvider.GetRequiredService<ProjectViewModel>();
 
@@ -351,14 +351,15 @@ public class MainWindowViewModel : BaseViewModel
     public async Task UpdateProjectStandsQuantity(int projectId)
     {
         var project = await _projectRepository.GetByIdAsync(projectId);
+        if (project == null || project.Stands.Count == 0) return;
 
-        if (project.Stands.Count == 0) return;
-
-        // всратая вставка, но пока быстро (до 1к проектов)
-        var index = MainWindowModel.AllProjects.IndexOf(MainWindowModel.AllProjects.First(p => p.Id == projectId));
-
-        if (index >= 0)
-            MainWindowModel.AllProjects[index] = project;
+        var existingProject = MainWindowModel.AllProjects.FirstOrDefault(p => p.Id == projectId);
+        if (existingProject != null)
+        {
+            var index = MainWindowModel.AllProjects.IndexOf(existingProject);
+            if (index >= 0)
+                MainWindowModel.AllProjects[index] = project;
+        }
     }
 
 
