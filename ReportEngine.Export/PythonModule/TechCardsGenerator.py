@@ -493,6 +493,10 @@ def fillStandPage(stand, project, tableSplittingInfo = None):
 #генерация таблицы импульсных линий
 def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
 
+
+
+
+
     #вписываем в рамку
     sheetWidth = portraitParams['frameWidth'] * 0.99
     sheetHeight = portraitParams['frameHeight'] * 0.99
@@ -583,32 +587,51 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
        standNN = stand["Number"]
        standTableData = tableSplittingInfo.get(standNN);
 
+       print("---------------------")
+       print(f"standNN: {standNN}")
+       print("---------------------")
+
        if standTableData is not None:
             
         standPages = standTableData["pages"]
 
         boxColumnIndex = 4
         annotationColumnIndex = 6
+        headerRows = 2
 
         #проходим по всем страницам
         for p, pageInfo in enumerate(standPages):    
 
-            middleRecordFirstRowIndex = pageInfo["middleRecordFirstRowIndex"]
+            pageStartDataRowIndex = pageInfo["startDataRowIndex"]
+            pageEndDataRowIndex = pageInfo["endDataRowIndex"]
+            pageMiddleRecordFirstRowIndex = pageInfo["middleRecordFirstRowIndex"]
 
-        #проходимся по строкам таблицы
-        #стираем все данные по коробке и примечанию
-        for i, _ in enumerate(impulseLineTableData):
+            
+            arrayStartIndex = pageStartDataRowIndex
+            arrayEndIndex = pageEndDataRowIndex
+            
+            #учитываем смещение по шапке
+            if p > 0 and pageInfo["hasHeader"]:
+                arrayStartIndex -= headerRows
+                arrayEndIndex -= headerRows
+                pageMiddleRecordFirstRowIndex -= headerRows
 
-            #шапку не трогаем
-            if i < 2:
-                continue
+            #проходимся по строкам таблицы
+            #стираем все данные по коробке и примечанию
+            for i in range(arrayStartIndex, arrayEndIndex):
 
-            #среднюю запись не трогаем
-            if i == middleRecordFirstRowIndex:
-                continue
+                #среднюю запись не трогаем
+                if i == pageMiddleRecordFirstRowIndex:
+                    print(f"row: {i} skipped")
+                    continue
 
-            impulseLineTableData[i][boxColumnIndex] = ""
-            impulseLineTableData[i][annotationColumnIndex] = ""
+                print(f"row: {i} cleaned")
+
+                impulseLineTableData[i][boxColumnIndex] = ""
+                impulseLineTableData[i][annotationColumnIndex] = ""
+
+
+
 
             
     #оформляем таблицу   
@@ -692,10 +715,6 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
         standNN = stand["Number"]
         standTableData = tableSplittingInfo.get(standNN);
 
-        print("---------------------")
-        print(f"standNN: {standNN}")
-        print("---------------------")
-
         
         if standTableData is not None:
             
@@ -726,6 +745,13 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
     impulseLineTable.setStyle(TableStyle(cmds= impulseLineTableStyleCmds ))
 
     return impulseLineTable
+
+
+
+
+
+
+
 
 
 
