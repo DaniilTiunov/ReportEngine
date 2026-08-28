@@ -28,7 +28,6 @@ class MySplittableTable(Table):
         rows_on_page = len(R0._cellvalues)            
 
         if self.standNumber is not None:
-           print(f"onSplit called with standNumber: {self.standNumber }" )
 
            # Если стенда еще нет в словаре - инициализируем данные для него
            if self.standNumber not in impulseTableInfo:
@@ -584,9 +583,6 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
        standNN = stand["Number"]
        standTableData = tableSplittingInfo.get(standNN);
 
-       print("---------------------")
-       print(f"standNN: {standNN}")
-       print("---------------------")
 
        if standTableData is not None:
             
@@ -1008,10 +1004,6 @@ def generateReport(jsonFilePath,outputFilePath):
     generateTestReport(jsonFilePath)
     
 
-    print(impulseTableInfo)
-
-    print("CLEAN EXECUTION")
-
     PdfHelper.registerFonts()
 
     data = PdfHelper.openJsonFile(jsonFilePath)
@@ -1031,8 +1023,6 @@ def generateReport(jsonFilePath,outputFilePath):
         elements.append(PageBreak())
 
 
-
-    print(f"final object: {impulseTableInfo}")
     doc.build(elements)
 
     
@@ -1042,7 +1032,6 @@ def generateReport(jsonFilePath,outputFilePath):
 #тестовый проход, чтобы получить информацию о таблицах
 def generateTestReport(jsonFilePath):
  
-    print("TEST EXECUTION")
 
     #принудительно чистим
     global splitInfo
