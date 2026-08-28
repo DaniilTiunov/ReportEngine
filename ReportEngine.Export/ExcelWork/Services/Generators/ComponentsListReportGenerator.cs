@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.DTO;
@@ -7,6 +6,8 @@ using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Helpers;
+using System.Diagnostics;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -126,7 +127,8 @@ public class ComponentListReportGenerator : IReportGenerator
         //    ws.Cell($"C{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
         //}
 
-        ws.Cell($"D{row}").Value = record.Quantity.Value?.ToString();
+
+        ws.Cell($"D{row}").Value = ExcelReportHelper.FormatPrice(record.Quantity.Value?.Ceiling());
 
         //if (!record.Quantity.IsValid)
         //{
