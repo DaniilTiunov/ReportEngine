@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -14,6 +16,7 @@ using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Shared.Config.Directory;
+using ReportEngine.Shared.Config.JsonHelpers;
 using AboutProgram = ReportEngine.App.Views.Windows.AboutProgram;
 
 namespace ReportEngine.App;
@@ -39,10 +42,39 @@ public partial class MainWindow : Window //Это так называемый "C
         _serviceProvider = serviceProvider;
         _exceptionService = exceptionService;
 
+        SetWindowTitle();
+        
         Loaded += MainWindow_Loaded;
         StateChanged += MainWindow_StateChanges;
     }
 
+    private void SetWindowTitle()
+    {
+        try
+        {
+            var filePath = DirectoryHelper.GetUpdateInfoPath();
+            if (File.Exists(filePath))
+            {
+                var json = File.ReadAllText(filePath);
+                var options = new JsonSerializerOptions
+                {
+                    Converters = { new JsonStringEnumConverter() }
+                };
+                var updates = JsonSerializer.Deserialize<List<UpdateInfo>>(json, options);
+                var update = updates?.FirstOrDefault();
+                
+                if (update != null)
+                {
+                    Title = $"Стенды КИПиА v{update.Version} ({update.Channel})";
+                    return;
+                }
+            }
+        }
+        catch { }
+        
+        Title = "Стенды КИПиА";
+    }
+    
     // Событие загрузки окна
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
@@ -196,44 +228,6 @@ public partial class MainWindow : Window //Это так называемый "C
         {
             MessageBox.Show($"Ошибка запуска: {ex.Message}");
         }
-    }
-
-    private void AutoUpdate(object sender, RoutedEventArgs e)
-    {
-        try
-        {
-            var localPath = AppDomain.CurrentDomain.BaseDirectory;
-            var updaterPath = Path.Combine(localPath, "ReportUpdater.exe");
-
-            if (!File.Exists(updaterPath))
-            {
-                MessageBox.Show("ReportUpdater.exe не найден!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            Process.Start(updaterPath);
-
-            // Завершаем текущий WPF
-            Application.Current.Shutdown();
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Ошибка запуска обновления: {ex.Message}");
-        }
-    }
-
-    private void OpenHelp(object sender, RoutedEventArgs e)
-    {
-        var helpPath = Path.Combine(DirectoryHelper.GetDirectory(), "Help", "HelpDesk.chm");
-
-        _exceptionService.SafeExecute(() =>
-        {
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = helpPath,
-                UseShellExecute = true
-            });
-        });
     }
 
     private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)

@@ -1,10 +1,10 @@
 ﻿using System.Collections.ObjectModel;
-using ReportEngine.App.Extensions;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities.CalculationParameters;
 using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Store;
+using ReportEngine.Extensions.Extensions;
 
 namespace ReportEngine.App.Services.Calculation;
 

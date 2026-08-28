@@ -16,6 +16,5 @@ public static class Startup
         
         mainWindow.Show();
         app.Run();
-        
     }
 }
