@@ -216,7 +216,7 @@ public class MainWindowViewModel : BaseViewModel
 
                 await ShowAllProjectsAsync();
 
-                
+
             });
         });
     }
@@ -253,6 +253,7 @@ public class MainWindowViewModel : BaseViewModel
             _navigation.CloseContent();
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
             mainWindow.MainContentControl.Content = mainWindow.MainGrid;
+            CollectionRefreshHelper.SafeRefreshCollection(MainWindowModel.AllProjects);
         });
     }
 
@@ -354,13 +355,22 @@ public class MainWindowViewModel : BaseViewModel
         if (project == null || project.Stands.Count == 0) return;
 
         var existingProject = MainWindowModel.AllProjects.FirstOrDefault(p => p.Id == projectId);
-        if (existingProject != null)
+
+        
+        if (existingProject == null)
         {
-            var index = MainWindowModel.AllProjects.IndexOf(existingProject);
-            if (index >= 0)
-                MainWindowModel.AllProjects[index] = project;
+            MainWindowModel.AllProjects.Add(project);
+            existingProject = MainWindowModel.AllProjects.FirstOrDefault(p => p.Id == projectId);
         }
+
+        var index = MainWindowModel.AllProjects.IndexOf(existingProject);
+        if (index >= 0)
+        {
+            MainWindowModel.AllProjects[index] = project;
+        }
+
     }
+
 
 
     public async Task DeleteSelectedProjectAsync()
@@ -376,7 +386,8 @@ public class MainWindowViewModel : BaseViewModel
 
         var deletingProjectInfo = new
         {
-            currentProject.OrderCustomer, currentProject.Description
+            currentProject.OrderCustomer,
+            currentProject.Description
         };
 
         await _projectRepository.DeleteAsync(currentProject);
