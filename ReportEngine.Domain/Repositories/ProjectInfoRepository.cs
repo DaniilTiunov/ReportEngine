@@ -69,47 +69,35 @@ public class ProjectInfoRepository : IProjectInfoRepository
 
         var existingProject = await _context.Set<ProjectInfo>()
             .FirstOrDefaultAsync(p => p.Id == project.Id);
+        
+        if (existingProject == null) return;
 
-        if (existingProject != null)
+        var standsList = existingProject.Stands.ToList();
+    
+        foreach (var stand in standsList)
         {
-            _context.Set<ProjectInfo>().Remove(existingProject);
-            await _context.SaveChangesAsync();
+            await DeleteStandAsync(project.Id, stand.Id);
         }
-
+        
+        _context.Set<ProjectInfo>().Remove(existingProject);
         await _context.SaveChangesAsync();
     }
 
     public async Task DeleteStandAsync(int projectId, int standId)
     {
-        if (standId == null)
-            return;
+        if (standId <= 0) return;
 
-        var existingStand = await _context.Set<Stand>()
-            .FirstOrDefaultAsync(s => s.Id == standId);
+        await DeleteStandAdditionalEquipmentsAsync(standId);
+        await DeleteStandElectricalComponentsAsync(standId);
+        await DeleteStandDrainagesAsync(standId);
 
-        if (existingStand != null)
-            _context.Set<Stand>().Remove(existingStand);
-
-        var additionalFormedEquips = await _context.Set<FormedAdditionalEquip>()
-            .Where(fe => _context.Set<StandAdditionalEquip>()
-                .Any(sae => sae.StandId == standId && sae.AdditionalEquipId == fe.Id))
-            .ToListAsync();
-
-        var electricalFormedEquips = await _context.Set<FormedElectricalComponent>()
-            .Where(fe => _context.Set<StandElectricalComponent>()
-                .Any(sae => sae.StandId == standId && sae.ElectricalComponentId == fe.Id))
-            .ToListAsync();
-
-        var drainagesFormedEquips = await _context.Set<FormedDrainage>()
-            .Where(fe => _context.Set<StandDrainage>()
-                .Any(sae => sae.StandId == standId && sae.DrainageId == fe.Id))
-            .ToListAsync();
-
-        _context.RemoveRange(additionalFormedEquips);
-        _context.RemoveRange(electricalFormedEquips);
-        _context.RemoveRange(drainagesFormedEquips);
-
-        await _context.SaveChangesAsync();
+        var stand = await _context.Stands.FirstOrDefaultAsync(s => s.Id == standId);
+    
+        if (stand != null)
+        {
+            _context.Set<Stand>().Remove(stand);
+            await _context.SaveChangesAsync();
+        }
     }
 
     public async Task<int> DeleteByIdAsync(int id)
@@ -385,31 +373,90 @@ public class ProjectInfoRepository : IProjectInfoRepository
             .Where(sae => sae.StandId == standId)
             .ToListAsync();
     }
-
-    public async Task<ProjectInfo?> GetFullProjectAsync(int projectId)
+    
+    private async Task DeleteStandAdditionalEquipmentsAsync(int standId)
     {
-        return await _context.Projects
-            .AsNoTracking()
-            .AsSplitQuery()
-            .Include(p => p.Stands)
-                .ThenInclude(s => s.StandDrainages)
-                    .ThenInclude(sd => sd.Drainage)
-                        .ThenInclude(d => d.Purposes)
+        // Находим все FormedAdditionalEquip для данного стенда с их связями
+        var additionalEquips = await _context.Set<FormedAdditionalEquip>()
+            .Where(fe => _context.Set<StandAdditionalEquip>()
+                .Any(sae => sae.StandId == standId && sae.AdditionalEquipId == fe.Id))
+            .Include(fe => fe.Purposes) // Если есть связанные Purposes
+            .Include(fe => fe.StandAdditionalEquips)
+            .ToListAsync();
 
-            .Include(p => p.Stands)
-                .ThenInclude(s => s.ObvyazkiInStand)
-                    .ThenInclude(o => o.AdditionalComponents)
+        if (!additionalEquips.Any())
+            return;
 
-            .Include(p => p.Stands)
-                .ThenInclude(s => s.StandElectricalComponent)
-                    .ThenInclude(sec => sec.ElectricalComponent)
-                        .ThenInclude(e => e.Purposes)
+        // Удаляем связанные StandAdditionalEquip
+        var standAdditionalEquips = additionalEquips
+            .SelectMany(fe => fe.StandAdditionalEquips)
+            .Where(sae => sae.StandId == standId)
+            .ToList();
+    
+        if (standAdditionalEquips.Any())
+            _context.Set<StandAdditionalEquip>().RemoveRange(standAdditionalEquips);
 
-            .Include(p => p.Stands)
-                .ThenInclude(s => s.StandAdditionalEquips)
-                    .ThenInclude(sae => sae.AdditionalEquip)
-                        .ThenInclude(e => e.Purposes)
+        // Удаляем сами FormedAdditionalEquip
+        _context.Set<FormedAdditionalEquip>().RemoveRange(additionalEquips);
+    }
+    
+    private async Task DeleteStandElectricalComponentsAsync(int standId)
+    {
+        // Находим все FormedElectricalComponent для данного стенда с их связями
+        var electricalComponents = await _context.Set<FormedElectricalComponent>()
+            .Where(fe => _context.Set<StandElectricalComponent>()
+                .Any(sae => sae.StandId == standId && sae.ElectricalComponentId == fe.Id))
+            .Include(fe => fe.Purposes) // Загружаем связанные ElectricalPurpose
+            .Include(fe => fe.StandElectricalComponents)
+            .ToListAsync();
 
-            .FirstOrDefaultAsync(p => p.Id == projectId);
+        if (!electricalComponents.Any())
+            return;
+
+        // Удаляем все связанные ElectricalPurpose
+        var allPurposes = electricalComponents
+            .SelectMany(fe => fe.Purposes)
+            .ToList();
+    
+        if (allPurposes.Any())
+            _context.Set<ElectricalPurpose>().RemoveRange(allPurposes);
+
+        // Удаляем связанные StandElectricalComponent
+        var standElectricalComponents = electricalComponents
+            .SelectMany(fe => fe.StandElectricalComponents)
+            .Where(sec => sec.StandId == standId)
+            .ToList();
+    
+        if (standElectricalComponents.Any())
+            _context.Set<StandElectricalComponent>().RemoveRange(standElectricalComponents);
+
+        // Удаляем сами FormedElectricalComponent
+        _context.Set<FormedElectricalComponent>().RemoveRange(electricalComponents);
+    }
+    
+    private async Task DeleteStandDrainagesAsync(int standId)
+    {
+        // Находим все FormedDrainage для данного стенда с их связями
+        var drainages = await _context.Set<FormedDrainage>()
+            .Where(fe => _context.Set<StandDrainage>()
+                .Any(sae => sae.StandId == standId && sae.DrainageId == fe.Id))
+            .Include(fe => fe.Purposes) // Если есть связанные Purposes
+            .Include(fe => fe.StandDrainages)
+            .ToListAsync();
+
+        if (!drainages.Any())
+            return;
+
+        // Удаляем связанные StandDrainage
+        var standDrainages = drainages
+            .SelectMany(fe => fe.StandDrainages)
+            .Where(sd => sd.StandId == standId)
+            .ToList();
+    
+        if (standDrainages.Any())
+            _context.Set<StandDrainage>().RemoveRange(standDrainages);
+
+        // Удаляем сами FormedDrainage
+        _context.Set<FormedDrainage>().RemoveRange(drainages);
     }
 }

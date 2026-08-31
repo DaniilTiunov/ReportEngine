@@ -5,7 +5,8 @@ using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.IniHeleprs;
+using ReportEngine.Shared.Config.Directory;
+using ReportEngine.Shared.Config.JsonHelpers;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -29,7 +30,7 @@ public class ComponentListReportGenerator : IReportGenerator
             var standNumber = 1;
 
             //заполняем листы по стендам
-            foreach (var stand in project.Stands)
+            foreach (var stand in project.Stands.OrderBy(stand => stand.Number))
             {
                 var ws = wb.Worksheets.Add($"{standNumber}");
 
@@ -54,7 +55,7 @@ public class ComponentListReportGenerator : IReportGenerator
                 ws.Rows().AdjustToContents();
             }
 
-            var savePath = SettingsManager.GetReportDirectory();
+            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
             var fileName = ExcelReportHelper.CreateReportName("Ведомость комплектующих", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
 
@@ -72,7 +73,7 @@ public class ComponentListReportGenerator : IReportGenerator
             var standNumber = 1;
 
             //заполняем листы по стендам
-            foreach (var stand in selectedStands)
+            foreach (var stand in selectedStands.OrderBy(stand => stand.Number))
             {
                 var ws = wb.Worksheets.Add($"{standNumber}");
 
@@ -97,7 +98,7 @@ public class ComponentListReportGenerator : IReportGenerator
                 ws.Rows().AdjustToContents();
             }
 
-            var savePath = SettingsManager.GetReportDirectory();
+            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
             var fileName = ExcelReportHelper.CreateReportName("Ведомость комплектующих", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
 

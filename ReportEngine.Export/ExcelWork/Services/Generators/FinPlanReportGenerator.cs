@@ -7,7 +7,8 @@ using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.IniHeleprs;
+using ReportEngine.Shared.Config.Directory;
+using ReportEngine.Shared.Config.JsonHelpers;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -35,8 +36,11 @@ public class FinPlanReportGenerator : IReportGenerator
     public async Task GenerateAsync(int projectId)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
-
         var pipes = await _pipesRepository.GetAllAsync();
+
+
+        //принудительно загружаем настройки при генерации отчета
+        await _parametersStore.LoadSettingsDataAsync();
 
         using (var wb = new XLWorkbook())
         {
@@ -87,7 +91,7 @@ public class FinPlanReportGenerator : IReportGenerator
                 ws.Columns().AdjustToContents();
             }
 
-            var savePath = SettingsManager.GetReportDirectory();
+            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
 
             var fileName = ExcelReportHelper.CreateReportName("Финплан", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
@@ -151,7 +155,7 @@ public class FinPlanReportGenerator : IReportGenerator
                 ws.Columns().AdjustToContents();
             }
 
-            var savePath = SettingsManager.GetReportDirectory();
+            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
 
             var fileName = ExcelReportHelper.CreateReportName("Финплан", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
@@ -168,7 +172,7 @@ public class FinPlanReportGenerator : IReportGenerator
         recordNameRange.Value = record.Name.Value;
 
         var recordPriceRange = ws.Range($"F{row}:G{row}").Merge();
-        recordPriceRange.Value = record.CommonCost.Value.ToString();
+        recordPriceRange.Value = ExcelReportHelper.FormatPrice(record.CommonCost.Value);
 
         var unitPriceRange = ws.Range($"H{row}:I{row}").Merge();
         unitPriceRange.Value = record.Unit.Value;
@@ -287,6 +291,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
         PasteSeparatorRow(activeRow, ws);
         activeRow++;
+
 
         var generatedLaborData = ExcelReportHelper.GenerateLaborData(sourceData, _parametersStore, project, pipes);
         var laborRecords = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);

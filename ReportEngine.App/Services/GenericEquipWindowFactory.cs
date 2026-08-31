@@ -63,11 +63,28 @@ public class GenericEquipWindowFactory
             if (property.Name == "Id")
                 continue;
 
-            DataGridColumn column = new DataGridTextColumn
+            DataGridColumn column;
+
+            // Для поля Measure используем DataGridTemplateColumn с шаблонами из ресурсов окна
+            if (property.Name.StartsWith("Measure"))
             {
-                Header = GenericEquipMapper.GetColumnName(property.Name),
-                Binding = new Binding(property.Name)
-            };
+                var templateColumn = new DataGridTemplateColumn
+                {
+                    Header = GenericEquipMapper.GetColumnName(property.Name),
+                    CellTemplate = window.FindResource("MeasureCellTemplate") as DataTemplate,
+                    CellEditingTemplate = window.FindResource("MeasureCellEditingTemplate") as DataTemplate
+                };
+
+                column = templateColumn;
+            }
+            else
+            {
+                column = new DataGridTextColumn
+                {
+                    Header = GenericEquipMapper.GetColumnName(property.Name),
+                    Binding = new Binding(property.Name)
+                };
+            }
 
             if (property.Name == "Name")
                 column.Width = new DataGridLength(1, DataGridLengthUnitType.SizeToCells);

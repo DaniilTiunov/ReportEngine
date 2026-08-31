@@ -21,23 +21,14 @@ public class ProjectCommandProvider
     public ICommand AddCustomAdditionalEquipToStandCommand { get; set; }
     public ICommand SelectObvFromDialogCommand { get; set; }
     public ICommand CalculateProjectCommand { get; set; }
-    public ICommand CreateComponentsListReportCommand { get; set; }
-    public ICommand CreateSummaryReportCommand { get; set; }
     public ICommand OpenAllSortamentsDialogCommand { get; set; }
     public ICommand DeleteSelectedStandCommand { get; set; }
-    public ICommand CreateMarkReportCommand { get; set; }
-    public ICommand CreateMarkReportAsyncCommand { get; set; }
-    public ICommand CreateNameplatesReportCommand { get; set; }
-    public ICommand CreateProductionReportCommand { get; set; }
-    public ICommand CreateFinplanReportCommand { get; set; }
     public ICommand RemoveObvFromStandCommand { get; set; }
     public ICommand UpdateObvInStandCommand { get; set; }
+    public ICommand FillMarkInObvCommand { get; set; }
     public ICommand CopyObvyazkaToStandsCommand { get; set; }
-    public ICommand CreatePassportReportCommand { get; set; }
-    public ICommand CreateTechnologicalCardsReportCommand { get; set; }
     public ICommand FillStandFieldsFromObvyazkaCommand { get; set; }
     public ICommand RemoveFrameStandCommand { get; set; }
-    public ICommand CreateContainerReportCommand { get; set; }
     public ICommand SaveChangesInStandCommand { get; set; }
     public ICommand DeleteElectricalComponentFromStandCommand { get; set; }
     public ICommand UpdateElectricalComponentInStandCommand { get; set; }
@@ -53,7 +44,6 @@ public class ProjectCommandProvider
     public ICommand DeleteBatchCommand { get; set; }
     public ICommand AddStandToContainerCommand { get; set; }
     public ICommand RemoveStandFromContainerCommand { get; set; }
-    public ICommand CreateContainerReportCommandAsync { get; set; }
     public ICommand ShowCompanyDialogCommand { get; set; }
     public ICommand ShowFrameDialogCommand { get; set; }
     public ICommand ShowSubjectDialogCommand { get; set; }
@@ -69,16 +59,29 @@ public class ProjectCommandProvider
     public ICommand SaveAllChangesInComponentsCommand { get; set; }
     public ICommand RenumerateObvInStandCommand { get; set; }
 
-    // Команды по отчтам выбранных стендов
-    public ICommand SelectedSummaryReportCommand { get; set; }
-    public ICommand SelectedComponentReportCommand { get; set; }
-    public ICommand SelectedMarksReportCommand { get; set; }
-    public ICommand SelectedNamePlatesReportCommand { get; set; }
-    public ICommand SelectedContainerReportCommand { get; set; }
-    public ICommand SelectedProductionReportCommand { get; set; }
-    public ICommand SelectedFinPlaneReportCommand { get; set; }
-    public ICommand SelectedPassportReportCommand { get; set; }
-    public ICommand SelectedTechnoCardsReportCommand { get; set; }
+    // Команды по отчетам выбранных стендов
+    public ICommand SelectedStandsSummaryReportCommand { get; set; }
+    public ICommand SelectedStandsComponentReportCommand { get; set; }
+    public ICommand SelectedStandsMarksReportCommand { get; set; }
+    public ICommand SelectedStandsNamePlatesReportCommand { get; set; }
+    public ICommand SelectedStandsContainerReportCommand { get; set; }
+    public ICommand SelectedStandsProductionReportCommand { get; set; }
+    public ICommand SelectedStandsFinPlaneReportCommand { get; set; }
+    public ICommand SelectedStandsPassportReportCommand { get; set; }
+    public ICommand SelectedStandsTechnoCardsReportCommand { get; set; }
     public ICommand OnAddStandFromAllStandsCommand { get; set; }
     public ICommand DeleteSelectedStandsCommand { get; set; }
+
+
+    //команды по отчетам выбранной партии
+    public ICommand SelectedBatchSummaryReportCommand { get; set; }
+    public ICommand SelectedBatchComponentReportCommand { get; set; }
+    public ICommand SelectedBatchMarksReportCommand { get; set; }
+    public ICommand SelectedBatchNamePlatesReportCommand { get; set; }
+    public ICommand SelectedBatchContainerReportCommand { get; set; }
+    public ICommand SelectedBatchProductionReportCommand { get; set; }
+    public ICommand SelectedBatchFinPlaneReportCommand { get; set; }
+    public ICommand SelectedBatchPassportReportCommand { get; set; }
+    public ICommand SelectedBatchTechnoCardsReportCommand { get; set; }
+
 }

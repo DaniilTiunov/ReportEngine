@@ -1,9 +1,11 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
 using ReportEngine.App.Commands.Providers;
-using ReportEngine.App.Extensions;
+using ReportEngine.App.Enums;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
@@ -14,6 +16,7 @@ using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Services.Logger;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels.Utils;
+using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.BaseEntities;
@@ -24,9 +27,12 @@ using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Store;
+using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.IniHeleprs;
+using ReportEngine.Extensions.Extensions;
+using ReportEngine.Shared.Config.Directory;
+using ReportEngine.Shared.Config.JsonHelpers;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -40,17 +46,18 @@ public class ProjectViewModel : BaseViewModel
     private readonly EntityStandClonerService _entityStandCloner;
     private readonly ExceptionService _exceptionService;
     private readonly InitializeService _initializeService;
+    private readonly UiLogger _logger;
     private readonly INotificationService _notificationService;
     private readonly ParametersStore _parametersStore;
     private readonly IProjectDataLoaderService _projectDataLoaderService;
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IProjectService _projectService;
     private readonly IReportService _reportService;
+    private readonly IServiceProvider _serviceProvider;
     private readonly SessionService _sessionService;
     private readonly IStandService _standService;
     private readonly UIValidatorService _uiValidatorService;
     private readonly UpdaterStandService _updaterStandService;
-    private readonly UiLogger _logger;
 
     public ProjectViewModel(
         IProjectInfoRepository projectRepository,
@@ -71,7 +78,8 @@ public class ProjectViewModel : BaseViewModel
         AuditService auditService,
         SessionService sessionService,
         ExceptionService exceptionService,
-        UiLogger logger)
+        UiLogger logger,
+        IServiceProvider serviceProvider)
     {
         _projectRepository = projectRepository;
         _dialogService = dialogService;
@@ -92,6 +100,7 @@ public class ProjectViewModel : BaseViewModel
         _auditService = auditService;
         _exceptionService = exceptionService;
         _logger = logger;
+        _serviceProvider = serviceProvider;
 
         NewStand = new StandModel { Number = 1 };
 
@@ -144,11 +153,17 @@ public class ProjectViewModel : BaseViewModel
             CurrentProjectModel.Object = _dialogService.ShowSubjectDialog());
     }
 
+
+    //добавление новой обвязки
     public async void OnOpenObvSettingsWindowCommandExecuted(object e)
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
             CurrentProjectModel.SelectedStand.ObvyazkaAdditionalComponents.Clear();
+
+
+            //перед открытием создания обвязки обновляем номер в окне
+            UpdateNewObvNN();
 
             _dialogService.ShowObvSettingsWindow(this);
         });
@@ -509,10 +524,10 @@ public class ProjectViewModel : BaseViewModel
     {
         var selectedStand = CurrentProjectModel?.SelectedStand;
 
-        if (Guard.ExitIfNull("Не был выбран стенд", _notificationService, selectedStand))
+        if (Guard.ExitIfNull("Не был выбран стенд!", _notificationService, selectedStand))
             return;
 
-        if (Guard.ExitIfNull("Не был выбран тип обвязки", _notificationService, SelectedObvyazka))
+        if (Guard.ExitIfNull("Не был выбран тип обвязки!", _notificationService, SelectedObvyazka))
             return;
 
 
@@ -526,7 +541,7 @@ public class ProjectViewModel : BaseViewModel
         if (!freeNN)
             return;
 
-
+        //Валидация по количеству датчиков в обвязке
         //var isCorrectSensorsData = _uiValidatorService.ValidateSensorsQuantityInNewObv(this);
 
         //if (!isCorrectSensorsData)
@@ -534,7 +549,23 @@ public class ProjectViewModel : BaseViewModel
 
         await _exceptionService.SafeExecuteAsync(async () =>
         {
-            await AddObvToStandAsync();
+            var entity = await _standService.CreateObvyazkaAsync(selectedStand, SelectedObvyazka);
+
+            if (Guard.ExitIfNull("Не удалось создать обвязку!", _notificationService, entity))
+                return;
+
+            await _standService.AddObvyazkaToStandAsync(selectedStand.Id, entity);
+
+            //сравнение по типу
+            var isAlreadyExist =
+                CurrentProjectModel.ObvyazkiInProject.Any(obv => obv.ObvyazkaName == entity.ObvyazkaName);
+
+            if (!isAlreadyExist)
+                CurrentProjectModel.ObvyazkiInProject.Add(entity);
+
+            CollectionRefreshHelper.SafeRefreshCollection(
+                CurrentProjectModel.SelectedStand.ObvyazkaAdditionalComponents);
+
             await LoadObvyazkiAsync(); // Перезагрузить данные из БД
 
             UpdateNewObvNN();
@@ -552,22 +583,40 @@ public class ProjectViewModel : BaseViewModel
                 CurrentProjectModel.SelectedStand));
     }
 
+
+    //TODO: перенести в отдельный  метод
     public async void OnUpdateAdditionalEquipFromObvCommandExecuted(object e)
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
             var stand = CurrentProjectModel.SelectedStand;
 
-            if (Guard.ExitIfNull("Стенд не выбран!", _notificationService, stand))
-                return;
-
-            var obvyazki = stand.ObvyazkaAdditionalComponents.ToList();
-
-            foreach (var obv in obvyazki)
+            if (stand == null)
             {
-                if (obv.Id == 0) obv.ObvyazkaInStandId = stand.SelectedObvyazkaInStand?.Id;
+                _notificationService.ShowError("Стенд не выбран!");
+                return;
+            }
 
-                await _standService.UpdateAdditionalPurposeFromObvAsync(obv, obv.ObvyazkaInStandId ?? 0);
+            if (stand.SelectedObvyazkaInStand == null)
+            {
+                _notificationService.ShowError("Обвязка не выбрана!");
+                return;
+            }
+
+            if (stand.SelectedObvyazkaInStand.Id == 0)
+            {
+                _notificationService.ShowError("Сначала сохраните обвязку!");
+                return;
+            }
+
+            var obvComponents = stand.ObvyazkaAdditionalComponents.ToList();
+
+            foreach (var obvComponent in obvComponents)
+            {
+                if (obvComponent.Id == 0) obvComponent.ObvyazkaInStandId = stand.SelectedObvyazkaInStand?.Id;
+
+                await _standService.UpdateAdditionalPurposeFromObvAsync(obvComponent,
+                    obvComponent.ObvyazkaInStandId ?? 0);
             }
 
             _notificationService.ShowInfo("Все комплектующие обвязок сохранены");
@@ -669,108 +718,145 @@ public class ProjectViewModel : BaseViewModel
         await _exceptionService.SafeExecuteAsync(CalculateProjectAsync);
     }
 
-    public async void OnComponentsListReportCommandExecuted(object p)
+
+    #region Отчеты по выбранным стендам
+
+    public async void OnCreateSelectedStandsComponentsListReportCommandExecuted(object p)
     {
         await _exceptionService.SafeExecuteAsync(() =>
-            CreateReportAsync(ReportType.ComponentsListReport, "комплектующих"));
+            CreateReportAsync(ReportType.ComponentsListReport, "Ведомость комплектующих", StandsListHelper.SelectedStands));
     }
 
-    public async void OnSelectedComponentsListReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(()
-            => CreateReportAsync(ReportType.ComponentsListReport, "комплектующих", StandsListHelper.SelectedStands));
-    }
-
-    public async void OnCreateSummaryReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportAsync(ReportType.SummaryReport, "сводная"));
-    }
-
-    public async void OnCreateSelectedSummaryReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(()
-            => CreateReportAsync(ReportType.SummaryReport, "сводная", StandsListHelper.SelectedStands));
-    }
-
-    public async void OnCreateMarksReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportAsync(ReportType.MarksReport, "маркировки"));
-    }
-
-    public async void OnSelectedCreateMarksReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(()
-            => CreateReportAsync(ReportType.MarksReport, "маркировки", StandsListHelper.SelectedStands));
-    }
-
-    public async void OnCreateNameplatesReportCommandExecuted(object p)
+    public async void OnCreateSelectedStandsSummaryReportCommandExecuted(object p)
     {
         await _exceptionService.SafeExecuteAsync(() =>
-            CreateReportAsync(ReportType.NameplatesReport, "шильдики и таблички"));
+            CreateReportAsync(ReportType.SummaryReport, "Сводная ведомость", StandsListHelper.SelectedStands));
     }
 
-    public async void OnCreateSelectedNameplatesReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(()
-            => CreateReportAsync(ReportType.NameplatesReport, "шильдики и таблички", StandsListHelper.SelectedStands));
-    }
-
-    public async void OnCreateContainerReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportAsync(ReportType.ContainerReport, "тара"));
-    }
-
-    public async void OnSelectedCreateContainerReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(()
-            => CreateReportAsync(ReportType.ContainerReport, "тара", StandsListHelper.SelectedStands));
-    }
-
-    public async void OnCreateProductionReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportAsync(ReportType.ProductionReport, "производство"));
-    }
-
-    public async void OnCreateSelectedProductionReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(()
-            => CreateReportAsync(ReportType.ProductionReport, "производство", StandsListHelper.SelectedStands));
-    }
-
-    public async void OnCreateFinplanReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportAsync(ReportType.FinPlanReport, "финплан"));
-    }
-
-    public async void OnCreateSelectedFinplanReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(()
-            => CreateReportAsync(ReportType.FinPlanReport, "финплан", StandsListHelper.SelectedStands));
-    }
-
-    public async void OnCreatePassportReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportAsync(ReportType.PassportsReport, "паспорта"));
-    }
-
-    public async void OnCreateSelectedPassportReportCommandExecuted(object p)
+    public async void OnCreateSelectedStandsMarksReportCommandExecuted(object p)
     {
         await _exceptionService.SafeExecuteAsync(() =>
-            CreateReportAsync(ReportType.PassportsReport, "паспорта", StandsListHelper.SelectedStands));
+            CreateReportAsync(ReportType.MarksReport, "Ведомость маркировки", StandsListHelper.SelectedStands));
     }
 
-    public async void OnCreateTechnologicalCardsCommandExecute(object p)
+    public async void OnCreateSelectedStandsNameplatesReportCommandExecuted(object p)
+    {
+        await _exceptionService.SafeExecuteAsync(() =>
+            CreateReportAsync(ReportType.NameplatesReport, "Ведомость шильдиков и табличек", StandsListHelper.SelectedStands));
+    }
+
+    public async void OnCreateSelectedStandsContainerReportCommandExecuted(object p)
+    {
+        await _exceptionService.SafeExecuteAsync(() =>
+            CreateReportAsync(ReportType.ContainerReport, "Тара", StandsListHelper.SelectedStands));
+    }
+
+    public async void OnCreateSelectedStandsProductionReportCommandExecuted(object p)
+    {
+        await _exceptionService.SafeExecuteAsync(() =>
+            CreateReportAsync(ReportType.ProductionReport, "Ведомость производства", StandsListHelper.SelectedStands));
+    }
+
+    public async void OnCreateSelectedStandsFinplanReportCommandExecuted(object p)
+    {
+        await _exceptionService.SafeExecuteAsync(() =>
+            CreateReportAsync(ReportType.FinPlanReport, "Финансовый план", StandsListHelper.SelectedStands));
+    }
+
+    public async void OnCreateSelectedStandsPassportReportCommandExecuted(object p)
+    {
+        await _exceptionService.SafeExecuteAsync(() =>
+            CreateReportAsync(ReportType.PassportsReport, "Паспорт", StandsListHelper.SelectedStands));
+    }
+
+    public async void OnCreateSelectedStandsTechnologicalCardsCommandExecute(object p)
     {
         await _exceptionService.SafeExecuteAsync(async () =>
-            await CreateReportAsync(ReportType.TechnologicalCards, "технологические карты"));
+            await CreateReportAsync(ReportType.TechnologicalCards, "Технологические карты", StandsListHelper.SelectedStands));
     }
 
-    public async void OnCreateSelectedTechnologicalCardsCommandExecute(object p)
+
+    #endregion
+
+
+    #region Отчеты по выбранной упаковке
+
+
+    //валидация выбранной упаковки
+    private Task CreateReportForSelectedBatchAsync(ReportType type, string name)
     {
-        await _exceptionService.SafeExecuteAsync(async ()
-            => await CreateReportAsync(ReportType.TechnologicalCards, "технологические карты",
-                StandsListHelper.SelectedStands));
+        var selectedBatch = CurrentProjectModel.SelectedContainerBatch;
+
+        if (selectedBatch == null)
+        {
+            _notificationService.ShowError("Партия не выбрана!");
+            return Task.CompletedTask;
+        }
+
+        var batchStands = selectedBatch.Containers
+            .SelectMany(container => container.Stands)
+            .ToList();
+
+        if (batchStands.Count == 0)
+        {
+            _notificationService.ShowError("Выбранная партия не содержит стендов!");
+            return Task.CompletedTask;
+        }
+
+        return CreateReportAsync(type, name, batchStands);
     }
+
+
+
+    public async void OnCreateSelectedBatchSummaryReportCommandExecuted(object p)
+    {
+        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.SummaryReport, "сводная"));
+    }
+
+    public async void OnSelectedBatchComponentsListReportCommandExecuted(object p)
+    {
+        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.ComponentsListReport, "комплектующих"));
+    }
+
+    public async void OnCreateSelectedBatchNameplatesReportCommandExecuted(object p)
+    {
+        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.NameplatesReport, "шильдики и таблички"));
+    }
+
+    public async void OnSelectedBatchCreateMarksReportCommandExecuted(object p)
+    {
+        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.MarksReport, "маркировки"));
+    }
+
+    public async void OnSelectedBatchCreateContainerReportCommandExecuted(object p)
+    {
+        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.ContainerReport, "тара"));
+    }
+
+
+    public async void OnCreateSelectedBatchProductionReportCommandExecuted(object p)
+    {
+        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.ProductionReport, "производство"));
+    }
+
+    public async void OnCreateSelectedBatchFinplanReportCommandExecuted(object p)
+    {
+        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.FinPlanReport, "финплан"));
+    }
+
+    public async void OnCreateSelectedBatchPassportReportCommandExecuted(object p)
+    {
+        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.PassportsReport, "паспорта"));
+    }
+
+    public async void OnCreateSelectedBatchTechnologicalCardsCommandExecute(object p)
+    {
+        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.TechnologicalCards, "технологические карты"));
+    }
+
+    #endregion
+
+
 
     public async void OnSaveChangesInStandCommandExecuted(object obj)
     {
@@ -882,15 +968,26 @@ public class ProjectViewModel : BaseViewModel
         {
             var selectedStandEntity = _dialogService.ShowSelectStandDialog();
 
+            if (selectedStandEntity == null) return;
+
             await _dialogService.RunWithProgressDialogAsync(async () =>
             {
                 var newStand = await _entityStandCloner.CloneStandEntity(selectedStandEntity);
 
+                newStand.Number = MaxStandNN + 1;
+
                 await _projectRepository.AddStandAsync(CurrentProjectModel.CurrentProjectId, newStand);
 
-                CurrentProjectModel.Stands.Add(StandDataConverter.ConvertToStandModel(newStand));
+                var convertedStandModel = StandDataConverter.ConvertToStandModel(newStand);
 
-                await LoadStandsDataAsync();
+                CurrentProjectModel.Stands.Add(convertedStandModel);
+
+                //подгружаем все данные нового стенда
+                await _standService.LoadStandsDataAsync([convertedStandModel]);
+                await _standService.LoadObvyazkiInStandsAsync([convertedStandModel]);
+                await _standService.LoadPurposesInStands([convertedStandModel]);
+
+                CurrentProjectModel.SelectedStand = convertedStandModel;
             });
 
             _notificationService.ShowInfo("Стенд успешно добавлен!");
@@ -1057,11 +1154,14 @@ public class ProjectViewModel : BaseViewModel
             if (!freeNN)
                 return;
 
+            //Валидация по количеству датчиков в обвязке
             // var isCorrectSensorsData = _uiValidatorService.ValidateSensorsQuantityInNewObv(this);
 
             // if (!isCorrectSensorsData)
             //   return;
 
+
+            //TODO: здесь бы по хорошему встроить сохранение всех доп комплектующих в обвязке
 
             await _projectService.UpdateObvInStandAsync(CurrentProjectModel);
 
@@ -1070,6 +1170,64 @@ public class ProjectViewModel : BaseViewModel
             OnPropertyChanged(nameof(CurrentProjectModel.SelectedStand.NewElectricalComponent.Purposes));
         });
     }
+
+
+    public async Task OnFillMarkInObvCommandExecuted(object obv)
+    {
+        await _exceptionService.SafeExecuteAsync(async () =>
+        {
+            var proj = CurrentProjectModel;
+            var selectedStand = proj.SelectedStand;
+
+            if (selectedStand == null) return;
+
+            var projectHasMarkPlus = !string.IsNullOrEmpty(proj.MarkPlus);
+            var projectHasMarkMinus = !string.IsNullOrEmpty(proj.MarkMinus);
+
+            //если совсем нет маркировки в проекте
+            if (!projectHasMarkPlus && !projectHasMarkMinus)
+            {
+                _notificationService.ShowError("Отсутствует маркировка в проекте!");
+                return;
+            }
+
+            var firstSensorHasKKS = !string.IsNullOrEmpty(selectedStand.FirstSensorKKS);
+            var secondSensorHasKKS = !string.IsNullOrEmpty(selectedStand.SecondSensorKKS);
+            var thirdSensorHasKKS = !string.IsNullOrEmpty(selectedStand.ThirdSensorKKS);
+
+            if (projectHasMarkPlus)
+            {
+                selectedStand.FirstSensorMarkPlus = firstSensorHasKKS
+                    ? selectedStand.FirstSensorKKS + proj.MarkPlus
+                    : selectedStand.FirstSensorMarkPlus;
+
+                selectedStand.SecondSensorMarkPlus = secondSensorHasKKS
+                    ? selectedStand.SecondSensorKKS + proj.MarkPlus
+                    : selectedStand.SecondSensorMarkPlus;
+
+
+                selectedStand.ThirdSensorMarkPlus = thirdSensorHasKKS
+                    ? selectedStand.ThirdSensorKKS + proj.MarkPlus
+                    : selectedStand.ThirdSensorMarkPlus;
+            }
+
+            if (projectHasMarkMinus)
+            {
+                selectedStand.FirstSensorMarkMinus = firstSensorHasKKS
+                    ? selectedStand.FirstSensorKKS + proj.MarkMinus
+                    : selectedStand.FirstSensorMarkMinus;
+
+                selectedStand.SecondSensorMarkMinus = secondSensorHasKKS
+                    ? selectedStand.SecondSensorKKS + proj.MarkMinus
+                    : selectedStand.SecondSensorMarkMinus;
+
+                selectedStand.ThirdSensorMarkMinus = thirdSensorHasKKS
+                    ? selectedStand.ThirdSensorKKS + proj.MarkMinus
+                    : selectedStand.ThirdSensorMarkMinus;
+            }
+        });
+    }
+
 
     public async void OnCreateContainerStandCommandExecuted(object obj)
     {
@@ -1350,6 +1508,10 @@ public class ProjectViewModel : BaseViewModel
         CurrentProjectModel.SelectedStand = newStandModel;
 
         await CreateDefaultPurposesAsync(newStandModel);
+
+        //костылек - после создания стенда данные по доп комплектующим не были синхронизированы
+        //после создания стенда тут же запрашиваем обновленные данные по доп комплектующими
+        await _standService.LoadStandsDataAsync([newStandModel]);
 
         UpdateNewStandNN();
 
@@ -1699,16 +1861,28 @@ public class ProjectViewModel : BaseViewModel
 
     private async Task CreateReportAsync(
         ReportType typeGenerator,
-        string reportName)
+        string reportName,
+        List<Stand> selectedStands)
     {
-        var hasDuplicates = CurrentProjectModel.Stands
-            .GroupBy(stand => stand.KKSCode)
-            .Any(group => group.Count() > 1);
 
-        if (hasDuplicates)
+        if (selectedStands == null || selectedStands.Count == 0)
         {
-            var confirmationResult = _notificationService.ShowConfirmation(
-                "Обнаружены дублирования KKS-кодов стендов.\nПродолжить?");
+            _notificationService.ShowConfirmation("Стенды не выбраны!");
+            return;
+        }
+
+        var kksDuplicates = selectedStands
+            .GroupBy(stand => stand.KKSCode)
+            .Where(group => group.Count() > 1)
+            .ToList();
+
+        if (kksDuplicates.Count > 0)
+        {
+            var warningMessage = "Обнаружены дублирования KKS-кодов стендов:\n\n" +
+                                 string.Join("\n", kksDuplicates.Select(g => $"- {g.Key} ({g.Count()} шт.)")) +
+                                 "\n\nПродолжить генерацию отчета?";
+
+            var confirmationResult = _notificationService.ShowConfirmation(warningMessage);
 
             if (!confirmationResult)
             {
@@ -1717,37 +1891,24 @@ public class ProjectViewModel : BaseViewModel
             }
         }
 
-        await _dialogService.RunWithProgressDialogAsync(() =>
-            _reportService.GenerateReportAsync(typeGenerator, CurrentProjectModel.CurrentProjectId));
 
-        if (_notificationService.ShowConfirmation(
-                $"Ведомость {reportName} создана!\nОткрыть папку с отчётами?"))
+        //если тех карты - вызываем доп окно
+        if (typeGenerator == ReportType.TechnologicalCards)
         {
-            var reportDir = SettingsManager.GetReportDirectory();
-            Process.Start("explorer.exe", reportDir);
-        }
-    }
+            var reportTypeWindow = new TechCardElecrticDialog
+            {
+                Owner = Application.Current.MainWindow
+            };
+            var dialogResult = reportTypeWindow.ShowDialog();
 
-    private async Task CreateReportAsync(
-        ReportType typeGenerator,
-        string reportName,
-        List<Stand>? selectedStands = null)
-    {
-        // Используем либо переданные стенды, либо все из проекта
-        var standsToUse = selectedStands;
-        var etaonStands = CurrentProjectModel.Stands;
-
-        // Проверяем на дубликаты KKS
-        var hasDuplicates = standsToUse
-            .GroupBy(stand => stand.KKSCode)
-            .Any(group => group.Count() > 1);
-
-        if (hasDuplicates)
-        {
-            var confirmationResult = _notificationService.ShowConfirmation(
-                "Обнаружены дублирования KKS-кодов стендов.\nПродолжить?");
-
-            if (!confirmationResult)
+            //если пользователь что-то выбрал
+            if (dialogResult == true && reportTypeWindow.SelectedOption != TechCardElecticDialogResult.Cancel)
+            {
+                var includeElectric = reportTypeWindow.SelectedOption == TechCardElecticDialogResult.WithElectric;
+                var reportSettings = _serviceProvider.GetRequiredService<ReportSettings>();
+                reportSettings.TechCardIncludeElectric = includeElectric;
+            }
+            else
             {
                 _notificationService.ShowInfo("Генерация отчета отменена");
                 return;
@@ -1756,13 +1917,12 @@ public class ProjectViewModel : BaseViewModel
 
         // Генерация отчета — перегрузка в _reportService разберётся сама
         await _dialogService.RunWithProgressDialogAsync(() =>
-            _reportService.GenerateReportAsync(typeGenerator, CurrentProjectModel.CurrentProjectId, standsToUse));
+            _reportService.GenerateReportAsync(typeGenerator, CurrentProjectModel.CurrentProjectId, selectedStands));
 
-        // Открытие папки с отчетами
         if (_notificationService.ShowConfirmation(
-                $"Ведомость {reportName} создана!\nОткрыть папку с отчётами?"))
+                $"Отчёт \"{reportName}\" по выбранным стендам создана!\nОткрыть папку с отчётами?"))
         {
-            var reportDir = SettingsManager.GetReportDirectory();
+            var reportDir = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
             Process.Start("explorer.exe", reportDir);
         }
     }

@@ -383,3 +383,6 @@ ReportEngine.App/appSecrets.json
 .idea/.idea.ReportEngine.App/.idea
 
 .idea/
+/ReportEngine.Export/PythonModule/build/MainLauncher
+/ReportEngine.Export/PythonModule/dist
+/ReportEngine.Export/PythonModule/TechnologicalCards_temp.json

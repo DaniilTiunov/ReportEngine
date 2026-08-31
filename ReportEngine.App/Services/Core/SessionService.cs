@@ -17,7 +17,16 @@ public class SessionService : INotifyPropertyChanged
         _auditService = auditService;
         _userRepository = userRepository;
 
-        FirstStartSession();
+        if (StartUp.CanConnect)
+            FirstStartSession();
+        else
+            CurrentUser = new User
+            {
+                Id = 0,
+                Name = "Гость",
+                SecondName = "Гость",
+                LastName = "Гость"
+            };
     }
 
     public User? CurrentUser
@@ -33,7 +42,7 @@ public class SessionService : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    public async void FirstStartSession()
+    private async void FirstStartSession()
     {
         _currentUser = await _userRepository.GetByUserLoginAsync("Гость");
     }
@@ -49,10 +58,12 @@ public class SessionService : INotifyPropertyChanged
 
     public async void SignOut()
     {
+        if (CurrentUser == null) return;
+
         await _auditService.LogEventAsync(
             CurrentUser.UserLogin,
-            "Выполнен выход в систему",
-            $"Пользователь {CurrentUser.UserLogin} вышёл из систему");
+            "Выполнен выход из системы",
+            $"Пользователь {CurrentUser.UserLogin} вышёл из системы");
 
         CurrentUser = null;
     }

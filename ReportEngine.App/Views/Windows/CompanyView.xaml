@@ -1,20 +1,22 @@
 ﻿<Window
-    x:Class="ReportEngine.App.Views.Windows.CompanyView"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="Заказчики"
-    Width="1000"
-    Height="600"
     Background="{DynamicResource PrimaryColor}"
     FontFamily="Bahnschrift"
     FontSize="14"
     Foreground="{DynamicResource PrimaryForeground}"
+    Height="600"
     ResizeMode="CanResize"
+    Title="Заказчики"
+    Width="1000"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    windowHelpers:WindowBehavior.CloseOnEscape="True"
+    x:Class="ReportEngine.App.Views.Windows.CompanyView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:windowHelpers="clr-namespace:ReportEngine.App.Views.Windows.WindowHelpers"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <WindowChrome.WindowChrome>
         <WindowChrome
@@ -26,11 +28,11 @@
     <Border Style="{DynamicResource WindowBorder}">
         <DockPanel>
             <Border
-                x:Name="FormedFrameWindowTitle"
-                Height="34"
                 Background="#2D2D30"
                 DockPanel.Dock="Top"
-                MouseLeftButtonDown="Window_MouseLeftButtonDown">
+                Height="34"
+                MouseLeftButtonDown="Window_MouseLeftButtonDown"
+                x:Name="FormedFrameWindowTitle">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -39,51 +41,51 @@
 
                     <StackPanel
                         Margin="10,0,0,0"
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal">
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
                         <Image
-                            Width="18"
                             Height="18"
                             Margin="0,0,8,0"
-                            Source="/Resources/Icons/estimate_cost_icon_213382.ico" />
+                            Source="/Resources/Icons/estimate_cost_icon_213382.ico"
+                            Width="18" />
                         <TextBlock
-                            VerticalAlignment="Center"
                             FontSize="14"
                             Foreground="White"
-                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
+                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}"
+                            VerticalAlignment="Center" />
                     </StackPanel>
 
                     <StackPanel
                         Grid.Column="1"
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal">
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
                         <Button
-                            x:Name="MinimizeButton"
-                            Width="40"
-                            Height="30"
                             Click="MinimizeButton_Click"
                             FontSize="16"
-                            ToolTip="Свернуть">
+                            Height="30"
+                            ToolTip="Свернуть"
+                            Width="40"
+                            x:Name="MinimizeButton">
                             ─
                         </Button>
                         <Button
-                            x:Name="MaxRestoreButton"
-                            Width="40"
-                            Height="30"
-                            Margin="10,0,0,0"
                             Click="MaxRestoreButton_Click"
                             FontSize="16"
-                            ToolTip="Развернуть">
+                            Height="30"
+                            Margin="10,0,0,0"
+                            ToolTip="Развернуть"
+                            Width="40"
+                            x:Name="MaxRestoreButton">
                             ▢
                         </Button>
                         <Button
-                            x:Name="CloseButton"
-                            Width="40"
-                            Height="30"
-                            Margin="10,0,10,0"
                             Click="CloseButton_Click"
                             FontSize="16"
-                            ToolTip="Закрыть">
+                            Height="30"
+                            Margin="10,0,10,0"
+                            ToolTip="Закрыть"
+                            Width="40"
+                            x:Name="CloseButton">
                             ✕
                         </Button>
                     </StackPanel>
@@ -103,34 +105,34 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock
-                    Grid.Row="0"
                     Grid.Column="0"
-                    Margin="0,0,30,0"
+                    Grid.Row="0"
                     HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Text="Поиск:" />
+                    Margin="0,0,30,0"
+                    Text="Поиск:"
+                    VerticalAlignment="Center" />
 
                 <TextBox
-                    x:Name="SearchTextBox"
-                    Grid.Row="0"
                     Grid.Column="1"
+                    Grid.Row="0"
                     Margin="0,0,0,0"
+                    TextChanged="SearchTextBox_TextChanged"
                     VerticalAlignment="Center"
-                    TextChanged="SearchTextBox_TextChanged" />
+                    x:Name="SearchTextBox" />
 
                 <DataGrid
-                    x:Name="CompaniesDataGrid"
-                    Grid.Row="1"
-                    Grid.ColumnSpan="4"
-                    Margin="10,14,5,75"
                     CanUserAddRows="True"
                     CanUserDeleteRows="True"
                     CanUserReorderColumns="True"
                     CanUserSortColumns="True"
+                    Grid.ColumnSpan="4"
+                    Grid.Row="1"
+                    Margin="10,14,5,75"
                     MouseDoubleClick="CompaniesDataGrid_MouseDoubleClick"
                     RowHeaderWidth="40"
                     SelectedItem="{Binding CurrentCompany.SelectedCompany, Mode=TwoWay}"
-                    SelectionUnit="FullRow">
+                    SelectionUnit="FullRow"
+                    x:Name="CompaniesDataGrid">
                     <DataGrid.ContextMenu>
                         <ContextMenu>
                             <MenuItem Command="{Binding LoadAllCompaniesCommand}" Header="Показать всех" />
@@ -143,17 +145,17 @@
                     </DataGrid.ContextMenu>
                     <DataGrid.Columns>
                         <DataGridTextColumn
-                            Width="90"
                             Binding="{Binding Number, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                            Header="Номер" />
+                            Header="Номер"
+                            Width="90" />
                         <DataGridTextColumn
-                            Width="*"
                             Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                            Header="Название организации" />
+                            Header="Название организации"
+                            Width="*" />
                         <DataGridTextColumn
-                            Width="150"
                             Binding="{Binding RegisterDate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                            Header="Дата регистрации" />
+                            Header="Дата регистрации"
+                            Width="150" />
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

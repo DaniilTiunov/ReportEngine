@@ -1,17 +1,21 @@
 ﻿<Window
-    x:Class="ReportEngine.App.Views.Windows.AllSortamentsView"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="Просмотр всего сортамента"
-    Width="1100"
-    Height="450"
     Background="{DynamicResource PrimaryColor}"
     FontFamily="Bahnschrift"
     Foreground="{DynamicResource PrimaryForeground}"
+    Height="650"
+    Title="Просмотр всего сортамента"
+    Width="1300"
+    WindowStartupLocation="CenterScreen"
     WindowStyle="None"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    windowHelpers:WindowBehavior.CloseOnEscape="True"
+    x:Class="ReportEngine.App.Views.Windows.AllSortamentsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:converters="clr-namespace:ReportEngine.App.Display"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:windowHelpers="clr-namespace:ReportEngine.App.Views.Windows.WindowHelpers"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <WindowChrome.WindowChrome>
         <WindowChrome
@@ -20,14 +24,20 @@
             GlassFrameThickness="0" />
     </WindowChrome.WindowChrome>
 
+    <Window.Resources>
+        <ResourceDictionary>
+            <converters:BoolToVisibility x:Key="BoolToVisibility" />
+        </ResourceDictionary>
+    </Window.Resources>
+
     <Border Style="{DynamicResource WindowBorder}">
         <DockPanel>
             <Border
-                x:Name="FormedFrameWindowTitle"
-                Height="34"
                 Background="#2D2D30"
                 DockPanel.Dock="Top"
-                MouseLeftButtonDown="Window_MouseLeftButtonDown">
+                Height="34"
+                MouseLeftButtonDown="Window_MouseLeftButtonDown"
+                x:Name="FormedFrameWindowTitle">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -36,51 +46,51 @@
 
                     <StackPanel
                         Margin="10,0,0,0"
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal">
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
                         <Image
-                            Width="18"
                             Height="18"
                             Margin="0,0,8,0"
-                            Source="/Resources/Icons/estimate_cost_icon_213382.ico" />
+                            Source="/Resources/Icons/estimate_cost_icon_213382.ico"
+                            Width="18" />
                         <TextBlock
-                            VerticalAlignment="Center"
                             FontSize="14"
                             Foreground="White"
-                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
+                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}"
+                            VerticalAlignment="Center" />
                     </StackPanel>
 
                     <StackPanel
                         Grid.Column="1"
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal">
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
                         <Button
-                            x:Name="MinimizeButton"
-                            Width="40"
-                            Height="30"
                             Click="MinimizeButton_Click"
                             FontSize="16"
-                            ToolTip="Свернуть">
+                            Height="30"
+                            ToolTip="Свернуть"
+                            Width="40"
+                            x:Name="MinimizeButton">
                             ─
                         </Button>
                         <Button
-                            x:Name="MaxRestoreButton"
-                            Width="40"
-                            Height="30"
-                            Margin="10,0,0,0"
                             Click="MaxRestoreButton_Click"
                             FontSize="16"
-                            ToolTip="Развернуть">
+                            Height="30"
+                            Margin="10,0,0,0"
+                            ToolTip="Развернуть"
+                            Width="40"
+                            x:Name="MaxRestoreButton">
                             ▢
                         </Button>
                         <Button
-                            x:Name="CloseButton"
-                            Width="40"
-                            Height="30"
-                            Margin="10,0,10,0"
                             Click="CloseButton_Click"
                             FontSize="16"
-                            ToolTip="Закрыть">
+                            Height="30"
+                            Margin="10,0,10,0"
+                            ToolTip="Закрыть"
+                            Width="40"
+                            x:Name="CloseButton">
                             ✕
                         </Button>
                     </StackPanel>
@@ -88,107 +98,294 @@
             </Border>
 
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="40" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-                <TabControl x:Name="MainTabControl" Grid.Row="0">
-                    <TabItem Header="Трубы">
-                        <TabControl x:Name="SubTab" SelectionChanged="SubTabControl_SelectionChanged">
-                            <TabItem Header="Жаропрочные" Tag="Трубы\Жаропрочные" />
-                            <TabItem Header="Нержавеющие" Tag="Трубы\Нержавеющие" />
-                            <TabItem Header="Углеродистые" Tag="Трубы\Углеродистые" />
-                        </TabControl>
-                    </TabItem>
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
 
-                    <TabItem Header="Арматуры">
-                        <TabControl SelectionChanged="SubTabControl_SelectionChanged">
-                            <TabItem Header="Жаропрочные" Tag="Арматуры\Жаропрочные" />
-                            <TabItem Header="Нержавеющие" Tag="Арматуры\Нержавеющие" />
-                            <TabItem Header="Углеродистые" Tag="Арматуры\Углеродистые" />
-                        </TabControl>
-                    </TabItem>
+                    <TabControl Grid.Row="0" x:Name="MainTabControl">
+                        <TabItem Header="Трубы">
+                            <TabControl SelectionChanged="SubTabControl_SelectionChanged" x:Name="SubTab">
+                                <TabItem Header="Жаропрочные" Tag="Трубы\Жаропрочные" />
+                                <TabItem Header="Нержавеющие" Tag="Трубы\Нержавеющие" />
+                                <TabItem Header="Углеродистые" Tag="Трубы\Углеродистые" />
+                            </TabControl>
+                        </TabItem>
 
-                    <TabItem Header="Тройники и КМЧ">
-                        <TabControl SelectionChanged="SubTabControl_SelectionChanged">
-                            <TabItem Header="Жаропрочные" Tag="Тройники и КМЧ\Жаропрочные" />
-                            <TabItem Header="Нержавеющие" Tag="Тройники и КМЧ\Нержавеющие" />
-                            <TabItem Header="Углеродистые" Tag="Тройники и КМЧ\Углеродистые" />
-                        </TabControl>
-                    </TabItem>
+                        <TabItem Header="Арматуры">
+                            <TabControl SelectionChanged="SubTabControl_SelectionChanged">
+                                <TabItem Header="Жаропрочные" Tag="Арматуры\Жаропрочные" />
+                                <TabItem Header="Нержавеющие" Tag="Арматуры\Нержавеющие" />
+                                <TabItem Header="Углеродистые" Tag="Арматуры\Углеродистые" />
+                            </TabControl>
+                        </TabItem>
 
-                    <TabItem Header="Дренаж">
-                        <TabControl SelectionChanged="SubTabControl_SelectionChanged">
-                            <TabItem Header="Дренажи и крепления" Tag="Дренажи и крепления" />
-                        </TabControl>
-                    </TabItem>
+                        <TabItem Header="Тройники и КМЧ">
+                            <TabControl SelectionChanged="SubTabControl_SelectionChanged">
+                                <TabItem Header="Жаропрочные" Tag="Тройники и КМЧ\Жаропрочные" />
+                                <TabItem Header="Нержавеющие" Tag="Тройники и КМЧ\Нержавеющие" />
+                                <TabItem Header="Углеродистые" Tag="Тройники и КМЧ\Углеродистые" />
+                            </TabControl>
+                        </TabItem>
 
-                    <TabItem Header="Рамные комплектующие">
-                        <TabControl SelectionChanged="SubTabControl_SelectionChanged">
-                            <TabItem Header="Детали рамы" Tag="Детали рамы" />
-                            <TabItem Header="Комплектующие для стойки" Tag="Комплектующие для стойки" />
-                            <TabItem Header="Прокат" Tag="Прокат" />
-                        </TabControl>
-                    </TabItem>
+                        <TabItem Header="Дренаж">
+                            <TabControl SelectionChanged="SubTabControl_SelectionChanged">
+                                <TabItem Header="Дренажи и крепления" Tag="Дренажи и крепления" />
+                            </TabControl>
+                        </TabItem>
 
-                    <TabItem Header="Кронштейны">
-                        <TabControl SelectionChanged="SubTabControl_SelectionChanged">
-                            <TabItem Header="Крепление датчиков" Tag="Крепление датчиков" />
-                            <TabItem Header="Крепление дренажа" Tag="Крепление дренажа" />
-                            <TabItem Header="Крепление клеммных коробок" Tag="Крепление клеммных коробок" />
-                        </TabControl>
-                    </TabItem>
+                        <TabItem Header="Рамные комплектующие">
+                            <TabControl SelectionChanged="SubTabControl_SelectionChanged">
+                                <TabItem Header="Детали рамы" Tag="Детали рамы" />
+                                <TabItem Header="Комплектующие для стойки" Tag="Комплектующие для стойки" />
+                                <TabItem Header="Прокат" Tag="Прокат" />
+                            </TabControl>
+                        </TabItem>
 
-                    <TabItem Header="Электрические компоненты">
-                        <TabControl SelectionChanged="SubTabControl_SelectionChanged">
-                            <TabItem Header="Кабельная продукция" Tag="Кабельная продукция" />
-                            <TabItem Header="Кабельные вводы" Tag="Кабельные вводы" />
-                            <TabItem Header="Клеммные коробки" Tag="Клеммные коробки" />
-                            <TabItem Header="Обогрев" Tag="Обогрев" />
-                            <TabItem Header="Средства прокладки и защиты кабеля" Tag="Средства прокладки" />
-                        </TabControl>
-                    </TabItem>
+                        <TabItem Header="Кронштейны">
+                            <TabControl SelectionChanged="SubTabControl_SelectionChanged">
+                                <TabItem Header="Крепление датчиков" Tag="Крепление датчиков" />
+                                <TabItem Header="Крепление дренажа" Tag="Крепление дренажа" />
+                                <TabItem Header="Крепление клеммных коробок" Tag="Крепление клеммных коробок" />
+                            </TabControl>
+                        </TabItem>
 
-                    <TabItem Header="Прочие">
-                        <TabControl x:Name="OtherTab" SelectionChanged="SubTabControl_SelectionChanged">
-                            <TabItem Header="Прочие" Tag="Прочие" />
-                        </TabControl>
-                    </TabItem>
+                        <TabItem Header="Электрические компоненты">
+                            <TabControl SelectionChanged="SubTabControl_SelectionChanged">
+                                <TabItem Header="Кабельная продукция" Tag="Кабельная продукция" />
+                                <TabItem Header="Кабельные вводы" Tag="Кабельные вводы" />
+                                <TabItem Header="Клеммные коробки" Tag="Клеммные коробки" />
+                                <TabItem Header="Обогрев" Tag="Обогрев" />
+                                <TabItem Header="Средства прокладки и защиты кабеля" Tag="Средства прокладки" />
+                            </TabControl>
+                        </TabItem>
 
-                    <TabItem Header="Тара">
-                        <TabControl x:Name="ConTab" SelectionChanged="SubTabControl_SelectionChanged">
-                            <TabItem Header="Тара" Tag="Тара" />
-                        </TabControl>
-                    </TabItem>
-                </TabControl>
+                        <TabItem Header="Прочие">
+                            <TabControl SelectionChanged="SubTabControl_SelectionChanged" x:Name="OtherTab">
+                                <TabItem Header="Прочие" Tag="Прочие" />
+                            </TabControl>
+                        </TabItem>
 
-                <TextBox
-                    x:Name="SearchTextBox"
-                    Grid.Row="1"
-                    Width="436"
-                    Margin="72,9,0,10"
-                    HorizontalAlignment="Left"
-                    FontFamily="Bahnschrift"
-                    FontSize="16"
-                    TextChanged="SearchTextBox_TextChanged" />
+                        <TabItem Header="Тара">
+                            <TabControl SelectionChanged="SubTabControl_SelectionChanged" x:Name="ConTab">
+                                <TabItem Header="Тара" Tag="Тара" />
+                            </TabControl>
+                        </TabItem>
+                    </TabControl>
 
-                <TextBlock
-                    Grid.Row="1"
-                    Margin="10,9,1042,10"
-                    FontFamily="Bahnschrift"
-                    FontSize="16"
-                    Text="Поиск:" />
+                    <TextBox
+                        FontFamily="Bahnschrift"
+                        FontSize="16"
+                        Grid.Row="1"
+                        HorizontalAlignment="Left"
+                        Margin="72,9,0,10"
+                        TextChanged="SearchTextBox_TextChanged"
+                        Width="436"
+                        x:Name="SearchTextBox" />
 
-                <DataGrid
-                    x:Name="EquipDataGrid"
-                    Grid.Row="2"
-                    Margin="5"
-                    AutoGenerateColumns="False"
-                    FontFamily="Bahnschrift"
-                    MouseDoubleClick="SelectEquip_DoubleClick"
-                    SelectedItem="{Binding SelectedEquip, Mode=TwoWay}" />
+                    <TextBlock
+                        FontFamily="Bahnschrift"
+                        FontSize="16"
+                        Grid.Row="1"
+                        Margin="10,9,1042,10"
+                        Text="Поиск:" />
+
+                    <DataGrid
+                        AutoGenerateColumns="False"
+                        FontFamily="Bahnschrift"
+                        Grid.Row="2"
+                        Margin="5"
+                        MouseDoubleClick="SelectEquip_DoubleClick"
+                        SelectedItem="{Binding SelectedEquip, Mode=TwoWay}"
+                        x:Name="EquipDataGrid" />
+                </Grid>
+
+                <!--  Правая панель с Expander  -->
+                <Border
+                    Background="#2D2D30"
+                    BorderBrush="#3D3D40"
+                    BorderThickness="1,0,0,0"
+                    Grid.Column="1"
+                    Margin="5,0,0,0"
+                    MinWidth="350">
+                    <Expander
+                        FontSize="14"
+                        FontWeight="SemiBold"
+                        Foreground="White"
+                        Header="Добавить позицию"
+                        IsExpanded="False"
+                        Margin="5">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel Margin="10" Orientation="Vertical">
+                                <!--  Название  -->
+                                <TextBlock
+                                    FontSize="12"
+                                    Foreground="Gray"
+                                    Margin="0,5,0,5"
+                                    Text="Название" />
+                                <TextBox
+                                    FontSize="14"
+                                    Height="30"
+                                    Margin="0,0,0,10"
+                                    Text="{Binding InputEquip.Name}" />
+
+                                <!--  Вес  -->
+                                <TextBlock
+                                    FontSize="12"
+                                    Foreground="Gray"
+                                    Margin="0,5,0,5"
+                                    Text="Вес (кг)" />
+                                <TextBox
+                                    FontSize="14"
+                                    Height="30"
+                                    Margin="0,0,0,10"
+                                    Text="{Binding InputEquip.Weight}" />
+
+                                <!--  Дни экспорта  -->
+                                <TextBlock
+                                    FontSize="12"
+                                    Foreground="Gray"
+                                    Margin="0,5,0,5"
+                                    Text="Дни экспорта" />
+
+                                <TextBox
+                                    FontSize="14"
+                                    Height="30"
+                                    Margin="0,0,0,10"
+                                    Text="{Binding InputEquip.ExportDays}" />
+
+                                <!--  Единица измерения  -->
+                                <TextBlock
+                                    FontSize="12"
+                                    Foreground="Gray"
+                                    Margin="0,5,0,5"
+                                    Text="Единица измерения"
+                                    Visibility="{Binding ShowMeasureComboBox, Converter={StaticResource BoolToVisibility}}" />
+
+                                <ComboBox
+                                    FontSize="14"
+                                    Height="30"
+                                    Margin="0,0,0,10"
+                                    Text="{Binding InputEquip.Measure}"
+                                    Visibility="{Binding ShowMeasureComboBox, Converter={StaticResource BoolToVisibility}}">
+                                    <ComboBoxItem Content="" />
+                                    <ComboBoxItem Content="шт" />
+                                    <ComboBoxItem Content="м" />
+                                    <ComboBoxItem Content="кг" />
+                                    <ComboBoxItem Content="т" />
+                                    <ComboBoxItem Content="м²" />
+                                    <ComboBoxItem Content="м³" />
+                                </ComboBox>
+
+                                <!--  Стоимость  -->
+                                <TextBlock
+                                    FontSize="12"
+                                    Foreground="Gray"
+                                    Margin="0,5,0,5"
+                                    Text="Стоимость (руб)" />
+                                <TextBox
+                                    FontSize="14"
+                                    Height="30"
+                                    Margin="0,0,0,15"
+                                    Text="{Binding InputEquip.Cost}" />
+
+
+                                <StackPanel Visibility="{Binding ShowElectricalFields, Converter={StaticResource BoolToVisibility}}">
+                                    <TextBlock
+                                        FontSize="12"
+                                        Foreground="Gray"
+                                        Margin="0,5,0,5"
+                                        Text="Кабельный ввод" />
+                                    <TextBox
+                                        FontSize="14"
+                                        Height="30"
+                                        Margin="0,0,0,10"
+                                        Text="{Binding InputEquip.CabelInput}" />
+
+                                    <TextBlock
+                                        FontSize="12"
+                                        Foreground="Gray"
+                                        Margin="0,5,0,5"
+                                        Text="Кабель" />
+                                    <TextBox
+                                        FontSize="14"
+                                        Height="30"
+                                        Margin="0,0,0,10"
+                                        Text="{Binding InputEquip.Cabel}" />
+
+                                    <TextBlock
+                                        FontSize="12"
+                                        Foreground="Gray"
+                                        Margin="0,5,0,5"
+                                        Text="Электрозащита" />
+                                    <TextBox
+                                        FontSize="14"
+                                        Height="30"
+                                        Margin="0,0,0,10"
+                                        Text="{Binding InputEquip.ElectricProtection}" />
+                                </StackPanel>
+
+                                <!--  Дополнительные поля для контейнеров  -->
+                                <StackPanel Visibility="{Binding ShowContainerFields, Converter={StaticResource BoolToVisibility}}">
+                                    <TextBlock
+                                        FontSize="12"
+                                        Foreground="Gray"
+                                        Margin="0,5,0,5"
+                                        Text="Ширина (мм)" />
+                                    <TextBox
+                                        FontSize="14"
+                                        Height="30"
+                                        Margin="0,0,0,10"
+                                        Text="{Binding InputEquip.Width}" />
+
+                                    <TextBlock
+                                        FontSize="12"
+                                        Foreground="Gray"
+                                        Margin="0,5,0,5"
+                                        Text="Высота (мм)" />
+                                    <TextBox
+                                        FontSize="14"
+                                        Height="30"
+                                        Margin="0,0,0,10"
+                                        Text="{Binding InputEquip.Height}" />
+
+                                    <TextBlock
+                                        FontSize="12"
+                                        Foreground="Gray"
+                                        Margin="0,5,0,5"
+                                        Text="Глубина (мм)" />
+                                    <TextBox
+                                        FontSize="14"
+                                        Height="30"
+                                        Margin="0,0,0,10"
+                                        Text="{Binding InputEquip.Depth}" />
+                                </StackPanel>
+
+                                <!--  Кнопка Добавить  -->
+                                <Button
+                                    Background="#007ACC"
+                                    BorderThickness="0"
+                                    Command="{Binding AddAsyncCommand}"
+                                    FontSize="16"
+                                    FontWeight="SemiBold"
+                                    Foreground="White"
+                                    Height="40">
+                                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                        <TextBlock Text="➕ " />
+                                        <TextBlock Text="Добавить" />
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Expander>
+                </Border>
             </Grid>
         </DockPanel>
     </Border>

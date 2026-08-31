@@ -97,7 +97,7 @@ public class DialogService : IDialogService
             using var scope = _serviceProvider.CreateScope();
             var viewModel = scope.ServiceProvider.GetRequiredService<AllSortamentsViewModel>();
 
-            viewModel.SelectionHandler = item => { selected = item; };
+            viewModel.SelectionHandler = item => selected = item;
 
             var window = new AllSortamentsView(viewModel, true);
 

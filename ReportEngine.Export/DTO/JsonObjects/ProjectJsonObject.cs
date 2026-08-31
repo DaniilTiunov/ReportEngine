@@ -26,7 +26,9 @@ public class ProjectJsonObject
     public string? MarkMinus { get; set; } //Маркировка -
     public bool IsGalvanized { get; set; } //Оцинковка
     public float HumanCost { get; set; } //Трудозатраты
-    public string? Manager { get; set; } //Руоводитель
+    public string? Manager { get; set; } //Руководитель
 
     public ICollection<StandJsonObject> Stands { get; set; } = new List<StandJsonObject>();
+
+    public ReportSettings ReportSettings { get; set; } = new();
 }

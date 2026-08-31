@@ -5,7 +5,8 @@ using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.IniHeleprs;
+using ReportEngine.Shared.Config.Directory;
+using ReportEngine.Shared.Config.JsonHelpers;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -42,7 +43,7 @@ public class ProductionReportGenerator : IReportGenerator
             ws.Cells().Style.Alignment.WrapText = true;
             ws.Columns().AdjustToContents();
 
-            var savePath = SettingsManager.GetReportDirectory();
+            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
 
             var fileName = ExcelReportHelper.CreateReportName("Отчет по производству", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
@@ -74,7 +75,7 @@ public class ProductionReportGenerator : IReportGenerator
             ws.Cells().Style.Alignment.WrapText = true;
             ws.Columns().AdjustToContents();
 
-            var savePath = SettingsManager.GetReportDirectory();
+            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
 
             var fileName = ExcelReportHelper.CreateReportName("Отчет по производству", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
@@ -191,13 +192,16 @@ public class ProductionReportGenerator : IReportGenerator
 
         if (selectedStands != null) sourceData = selectedStands;
 
+        sourceData = sourceData.OrderBy(stand => stand.Number).ToList();
+
         //выводим стенды
-        var standsRecords = sourceData.Select(stand => new StandInfoData
-        {
-            Name = new ValidatedField<string?>(stand.Design, true),
-            KKS = new ValidatedField<string?>(stand.KKSCode, true),
-            SerialNumber = new ValidatedField<string?>(stand.SerialNumber, true)
-        });
+        var standsRecords = sourceData
+            .Select(stand => new StandInfoData
+            {
+                Name = new ValidatedField<string?>(stand.Design, true),
+                KKS = new ValidatedField<string?>(stand.KKSCode, true),
+                SerialNumber = new ValidatedField<string?>(stand.SerialNumber, true)
+            });
 
         foreach (var standRecord in standsRecords)
         {
@@ -234,6 +238,8 @@ public class ProductionReportGenerator : IReportGenerator
         var sourceData = project.Stands;
 
         if (selectedStands != null) sourceData = selectedStands;
+
+        sourceData = sourceData.OrderBy(stand => stand.Number).ToList();
 
         var generatedData = ExcelReportHelper.GeneratePartsData(sourceData);
 

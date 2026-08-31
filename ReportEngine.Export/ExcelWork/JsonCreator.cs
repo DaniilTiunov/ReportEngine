@@ -1,29 +1,26 @@
 ﻿using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.CalculationParameters.Enums;
+using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.DTO.JsonObjects;
-using ReportEngine.Shared.Config.IniHelpers;
-using ReportEngine.Shared.Config.IniHelpers.CalculationSettings;
-using ReportEngine.Shared.Config.IniHelpers.CalculationSettingsData;
+using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.Export.ExcelWork;
 
 public static class JsonCreator
 {
     //создание JSON объекта проекта
-    public static ProjectJsonObject CreateProjectJson(ProjectInfo project, List<Stand>? selectedStands = null)
+    public static async Task<ProjectJsonObject> CreateProjectJson(ProjectInfo project, ParametersStore parametersStore,
+        List<Stand>? selectedStands = null)
     {
-        var standSettings = CalculationSettingsManager.Load<StandSettings, StandSettingsData>();
-
-        var sourceData = project.Stands;
-
-        if (selectedStands != null) sourceData = selectedStands;
+        var sourceData = selectedStands ?? project.Stands;
 
         return new ProjectJsonObject
         {
-            SeniorEngineer = standSettings.SeniorEngineer,
-            ResponsibleForAccept = standSettings.ResponsibleForAccept,
-            SecondLevelSpecialist = standSettings.SecondLevelSpecialist,
-            OSiL = standSettings.OSiL,
+            SeniorEngineer = parametersStore[CalculationParameterType.StandCost, "LeadEngineer"].Value,
+            ResponsibleForAccept = parametersStore[CalculationParameterType.StandCost, "AcceptanceSupervisor"].Value,
+            SecondLevelSpecialist = parametersStore[CalculationParameterType.StandCost, "SpecialistL2"].Value,
+            OSiL = parametersStore[CalculationParameterType.StandCost, "OsilRep"].Value,
 
             Number = project.Number,
             Id = project.Id,
@@ -44,7 +41,10 @@ public static class JsonCreator
             IsGalvanized = project.IsGalvanized,
             HumanCost = project.HumanCost,
             Manager = project.Manager,
-            Stands = sourceData.Select(CreateStandJson).ToList()
+            Stands = sourceData
+                .OrderBy(stand => stand.Number)
+                .Select(CreateStandJson)
+                .ToList()
         };
     }
 
@@ -85,18 +85,22 @@ public static class JsonCreator
         mountPartsRecords.AddRange(parts.KmchList);
         mountPartsRecords.AddRange(parts.SensorsHolders);
         mountPartsRecords.AddRange(parts.OthersParts);
+        mountPartsRecords.AddRange(parts.Supplies);
+
 
         var mountParts = mountPartsRecords.Select(record => RecordToJson(record));
 
+        var nextTerminalNumber = 1;
+
         var impulseLines = stand.ObvyazkiInStand
             .SelectMany(obv => ExcelReportHelper.CreateSensorsListFromObvyazka(obv))
-            .Select(record => SensorToJson(record));
+            .Select(record => SensorToJson(record, stand, ref nextTerminalNumber));
 
         return new StandJsonObject
         {
             Number = stand.Number,
-            KKSCode = stand.KKSCode,
-            Designation = stand.Design,
+            KKSCode = stand.KKSCode ?? "",
+            Designation = stand.Design ?? "",
             Devices = stand.Devices,
             BraceType = stand.BraceType,
             Width = stand.Width,
@@ -109,7 +113,7 @@ public static class JsonCreator
             Armature = stand.Armature,
             TreeSocket = stand.TreeSocket,
             KMCH = stand.KMCH,
-            Description = stand.DesigneStand,
+            Description = stand.DesigneStand ?? "",
             Comments = stand.Comments,
             ContainerStandId = stand.ContainerStandId,
             ImageData = stand.ImageData,
@@ -130,26 +134,42 @@ public static class JsonCreator
         {
             Name = record?.Name.Value,
             Unit = record?.Unit.Value,
-            Quantity = record?.Quantity.Value
+            Quantity = record?.Quantity.Value.Round(1)
         };
     }
 
     //конвертация записи датчика в JSON объект
-    public static ImpulseLineRecordJsonObject SensorToJson(SensorRecordData record)
+    public static ImpulseLineRecordJsonObject SensorToJson(SensorRecordData record, Stand stand,ref int terminalNumber)
     {
+        //находим название коробки в стенде
+        var boxName = stand.StandElectricalComponent
+            .SelectMany(sec => sec.ElectricalComponent.Purposes)
+            .First(purpose => !string.IsNullOrEmpty(purpose.Purpose) && purpose.Purpose.StartsWith("Клеммная коробка"))
+            .Material;
+
+
+
+        bool terminalNumberNeeded = (!string.IsNullOrEmpty(record.SensorMarkPlus) || !string.IsNullOrEmpty(record.SensorMarkMinus));
+
         var wiresInfo = new List<WireRecord>
         {
-            new("+", $"{record.SensorMarkPlus}", "Коробка КС-1", "1"),
-            new("-", $"{record.SensorMarkMinus}", "Коробка КС-1", "2"),
-            new("Экран", "", "Коробка КС-1", "3")
+            new("+", $"{record.SensorMarkPlus}", boxName ?? "", terminalNumberNeeded ? (terminalNumber).ToString() : ""),
+            new("-", $"{record.SensorMarkMinus}", boxName ?? "", terminalNumberNeeded ? (terminalNumber + 1).ToString() : ""),
+            new("Экран", "", boxName ?? "", terminalNumberNeeded ? (terminalNumber + 2).ToString() : "")
         };
+
+        if (terminalNumberNeeded) 
+        {
+            terminalNumber += wiresInfo.Count;
+        }
+
 
         return new ImpulseLineRecordJsonObject
         {
-            Name = record.SensorDescription,
-            CodeKKS = record.SensorKKS,
+            Name = ExcelReportHelper.RemoveControlSymbols(record.SensorDescription),
+            CodeKKS = ExcelReportHelper.RemoveControlSymbols(record.SensorKKS),
             Wires = wiresInfo,
-            Annotation = ""
+            Annotation = ExcelReportHelper.RemoveControlSymbols(stand.DesigneStand)
         };
     }
 }

@@ -10,9 +10,9 @@ namespace ReportEngine.App.Views.Windows;
 public partial class AllSortamentsView : Window
 {
     private readonly bool _isDialog;
-
     private readonly AllSortamentsViewModel _viewModel;
     private ICollectionView _equipView;
+    private string _currentGroupKey;
 
     public AllSortamentsView(AllSortamentsViewModel viewModel, bool isDialog = false)
     {
@@ -49,13 +49,29 @@ public partial class AllSortamentsView : Window
         if (e.Source is not TabControl) return;
         if ((sender as TabControl)?.SelectedItem is not TabItem selectedTab) return;
 
+        // Перед сменой данных отменяем текущее редактирование в DataGrid —
+        // когда колонки/ItemsSource меняются во время редактирования.
+        try
+        {
+            if (!EquipDataGrid.IsReadOnly) EquipDataGrid.CancelEdit(DataGridEditingUnit.Row);
+        }
+        catch
+        {
+        }
+
         ResetAllSubTabControls();
 
         var groupKey = selectedTab.Tag as string;
         if (string.IsNullOrWhiteSpace(groupKey)) return;
 
+        _viewModel.TabItemKey = groupKey;
+        
         await _viewModel.LoadGroupAsync(groupKey);
+        _viewModel.TargetDataGrid = EquipDataGrid;
         _viewModel.GenerateDataGridByTag(EquipDataGrid, groupKey);
+        
+        _currentGroupKey = groupKey;
+        _viewModel.CurrentGroupKey = groupKey;
 
         if (_viewModel.CurrentSortamentsModel.EquipGroups.TryGetValue(groupKey, out var collection))
             EquipDataGrid.ItemsSource = collection;
@@ -75,10 +91,6 @@ public partial class AllSortamentsView : Window
         if (_viewModel.SelectedEquip != null && _isDialog)
         {
             _viewModel.SelectionHandler?.Invoke(_viewModel.SelectedEquip);
-            Close();
-        }
-        else
-        {
             Close();
         }
     }

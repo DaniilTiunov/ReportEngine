@@ -2,24 +2,32 @@
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.IniHeleprs;
+using ReportEngine.Shared.Config.JsonHelpers;
 
 namespace ReportEngine.Export.PDFWork.Services.Generators;
 
 public class TechnologicalCardsGenerator : IReportGenerator
 {
+    private readonly ParametersStore _parametersStore;
     private readonly IProjectInfoRepository _projectInfoRepository;
+    private readonly IServiceProvider _serviceProvider;
 
-    public TechnologicalCardsGenerator(IProjectInfoRepository projectInfoRepository)
+
+    public TechnologicalCardsGenerator(IProjectInfoRepository projectInfoRepository, ParametersStore parametersStore,
+        IServiceProvider serviceProvider)
     {
         _projectInfoRepository = projectInfoRepository;
+        _parametersStore = parametersStore;
+        _serviceProvider = serviceProvider;
     }
 
     public ReportType Type => ReportType.TechnologicalCards;
@@ -27,8 +35,13 @@ public class TechnologicalCardsGenerator : IReportGenerator
     public async Task GenerateAsync(int projectId)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        await _parametersStore.LoadSettingsDataAsync();
 
-        var dataObject = JsonCreator.CreateProjectJson(project);
+        var dataObject = await JsonCreator.CreateProjectJson(project, _parametersStore);
+
+        //впихиваем доп опции генерации
+        dataObject.ReportSettings = _serviceProvider.GetRequiredService<ReportSettings>();
+
         var options = new JsonSerializerOptions
         {
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -40,17 +53,19 @@ public class TechnologicalCardsGenerator : IReportGenerator
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
 
-        var savePath = SettingsManager.GetReportDirectory();
+        var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
         var fileName = ExcelReportHelper.CreateReportName("Технологические карты", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
 
-        var startInfo = new ProcessStartInfo();
-        startInfo.FileName = exeFilePath;
-        startInfo.Arguments = $"--script techcard --jsonPath \"{jsonSavePath}\" --outputFilePath \"{fullSavePath}\"";
-        startInfo.UseShellExecute = false;
-        startInfo.RedirectStandardOutput = true;
-        startInfo.RedirectStandardError = true;
-        startInfo.CreateNoWindow = true;
+        var startInfo = new ProcessStartInfo
+        {
+            FileName = exeFilePath,
+            Arguments = $"--script techcard --jsonPath \"{jsonSavePath}\" --outputFilePath \"{fullSavePath}\"",
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            CreateNoWindow = true
+        };
 
         using (var process = Process.Start(startInfo))
         {
@@ -82,11 +97,18 @@ public class TechnologicalCardsGenerator : IReportGenerator
         }
     }
 
+
+    //перегрузка для выбранных стендов
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        await _parametersStore.LoadSettingsDataAsync();
 
-        var dataObject = JsonCreator.CreateProjectJson(project, selectedStands);
+        var dataObject = await JsonCreator.CreateProjectJson(project, _parametersStore, selectedStands);
+
+        //впихиваем доп опции генерации
+        dataObject.ReportSettings = _serviceProvider.GetRequiredService<ReportSettings>();
+
         var options = new JsonSerializerOptions
         {
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -98,17 +120,19 @@ public class TechnologicalCardsGenerator : IReportGenerator
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
 
-        var savePath = SettingsManager.GetReportDirectory();
+        var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
         var fileName = ExcelReportHelper.CreateReportName("Технологические карты", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
 
-        var startInfo = new ProcessStartInfo();
-        startInfo.FileName = exeFilePath;
-        startInfo.Arguments = $"--script techcard --jsonPath \"{jsonSavePath}\" --outputFilePath \"{fullSavePath}\"";
-        startInfo.UseShellExecute = false;
-        startInfo.RedirectStandardOutput = true;
-        startInfo.RedirectStandardError = true;
-        startInfo.CreateNoWindow = true;
+        var startInfo = new ProcessStartInfo
+        {
+            FileName = exeFilePath,
+            Arguments = $"--script techcard --jsonPath \"{jsonSavePath}\" --outputFilePath \"{fullSavePath}\"",
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            CreateNoWindow = true
+        };
 
         using (var process = Process.Start(startInfo))
         {

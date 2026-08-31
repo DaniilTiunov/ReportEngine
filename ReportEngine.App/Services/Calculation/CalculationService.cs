@@ -1,4 +1,4 @@
-﻿using ReportEngine.App.Extensions;
+﻿using ReportEngine.Extensions.Extensions;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
@@ -24,6 +24,9 @@ public class CalculationService : ICalculationService
 
     public async Task CalculateProjectAsync(ProjectModel project)
     {
+        //принудительно загружаем настройки
+        await _parametersStore.LoadSettingsDataAsync();
+
         CalculateStandsCount(project);
 
         foreach (var stand in project.Stands)
@@ -40,7 +43,7 @@ public class CalculationService : ICalculationService
         project.Cost = standsCost + galvanizedCost;
 
         project.HumanCost = (project.Stands
-                                 .Sum(ObvHumanCostCalculation)
+                               .Sum(ObvHumanCostCalculation)
                              + CalculatePaintAndSandBlustHumanCost(project)
                              + ObvProdTime(project)
                              + ObvAllTest(project)
@@ -50,8 +53,19 @@ public class CalculationService : ICalculationService
         await _projectService.UpdateStandEntity(project);
     }
 
+    //обновляем только количество стендов
+    public async Task CalculateAndUpdateStandQuantity(ProjectModel project)
+    {
+        CalculateStandsCount(project);
+        await _projectService.UpdateProjectAsync(project);
+    }
+
+
     private void CalculateStandsCount(ProjectModel project)
     {
+        if (project.Stands.Count == 0)
+            return;
+
         project.StandCount = project.Stands.Count;
     }
 

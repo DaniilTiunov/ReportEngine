@@ -5,6 +5,60 @@ from reportlab.lib.units import mm
 from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT, TA_JUSTIFY
 import PdfHelper
 from reportlab.lib import colors
+import io
+
+
+
+impulseTableInfo  = {}
+
+class MySplittableTable(Table):
+
+
+    def __init__(self, *args, **kwargs):
+
+        # Сохраняем внешние данные
+        self.standNumber = kwargs.pop('standNumber', None) 
+        super().__init__(*args, **kwargs)
+
+
+
+    def onSplit(self, R0):
+        
+        # Мы можем узнать количество строк в первой части
+        rows_on_page = len(R0._cellvalues)            
+
+        if self.standNumber is not None:
+
+           # Если стенда еще нет в словаре - инициализируем данные для него
+           if self.standNumber not in impulseTableInfo:
+              impulseTableInfo[self.standNumber] = {
+                      "isPageSplitted": True,
+                      "pagesCount" : 0,
+                      "pages": []
+                      
+              }
+
+           #высчитываем количество страниц на данный момент
+           nowPageCount = len(impulseTableInfo[self.standNumber]["pages"])
+
+           # Добавляем новую страницу
+           impulseTableInfo[self.standNumber]["pages"].append(
+               {
+                   "pageNumber" : nowPageCount + 1,
+                   "hasHeader"  : True,
+                   "rowsCount"  : rows_on_page
+                })
+
+           #обновляем количество страниц
+           impulseTableInfo[self.standNumber]["pagesCount"] = len(impulseTableInfo[self.standNumber]["pages"])
+
+
+        # Вызываем родительский метод, если он необходим
+        super().onSplit(R0) 
+
+
+
+
 
 
 landscapeParams = {
@@ -48,8 +102,53 @@ portraitTemplate = PageTemplate(
 
 
 
-def fillStandPage(stand, doc, project):
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def fillStandPage(stand, project, tableSplittingInfo = None):
     
+    #инициализируем стили листа
+    styles = getSampleStyleSheet()
+
+    tableContentStyle = ParagraphStyle(
+        'TableContent',
+        parent = styles['Normal'],
+        fontName ='Arial',
+        encoding ='UTF-8',
+        fontSize = 6,
+        wordWrap = 'LTR',
+        alignment = TA_CENTER,
+        leading = 7
+    )
+
+
+    cyrillicStyle = ParagraphStyle(
+        'Normal',
+        parent = styles['Normal'],
+        fontName ='Arial',
+        encoding ='UTF-8',
+        fontSize = 6,
+        wordWrap = 'LTR'
+    )
+
+
+    testExecution = tableSplittingInfo is None
+
     #вписываем в рамку
     sheetWidth = portraitParams['frameWidth'] * 0.99
     sheetHeight = portraitParams['frameHeight'] * 0.99
@@ -57,20 +156,14 @@ def fillStandPage(stand, doc, project):
     leftPartWidth = 0.55 * sheetWidth
     rightPartWidth = 0.45 * sheetWidth
     
-    styles = getSampleStyleSheet()
+    
 
-    cyrillicStyle = ParagraphStyle(
-        'Normal',
-        parent = styles['Normal'],
-        fontName ='Arial',
-        encoding ='UTF-8',
-        fontSize = 6
-    )
 
 
     #общие заголовки таблицы
     galvanizeStr = "Оцинковка" if project["IsGalvanized"] else "Покраска"
-    standTechCardHeaderTable = Table(data = [[ "Технологическая карта", str(galvanizeStr), str(project["Description"]) ]],
+
+    standTechCardHeaderTable = Table(data = [[ "Технологическая карта", PdfHelper.to_str(galvanizeStr), PdfHelper.to_str(project["RequestProduction"]) ]],
                                    colWidths= leftPartWidth/3)
     standTechCardHeaderTable.setStyle(TableStyle(cmds =
                                                  PdfHelper.commonTableStyleCmd +
@@ -82,7 +175,8 @@ def fillStandPage(stand, doc, project):
                                                  [('FONTNAME', (0, 0), (0, 0), "Arial-Bold")]
                                                  )) 
 
-    standNameData = [[ "Стенд датчиков КИПиА " + str(stand["Designation"]) ]]
+   
+    standNameData = [[ "Стенд датчиков КИПиА " + PdfHelper.to_str(stand["Designation"]) ]]
     standNameHeaderTable = Table(data = standNameData, colWidths = leftPartWidth)
     standNameHeaderTable.setStyle(TableStyle(cmds =
                                              PdfHelper.commonTableStyleCmd +
@@ -91,7 +185,7 @@ def fillStandPage(stand, doc, project):
                                              PdfHelper.visibleAllBordersTableStyleCmd ))  
     
 
-    standsInfoData = [[ str(stand["KKSCode"]) , str(stand["SerialNumber"]) ]]
+    standsInfoData = [[ PdfHelper.to_str(stand["KKSCode"]) , PdfHelper.to_str(stand["SerialNumber"]) ]]
     standInfoTable = Table(data = standsInfoData, colWidths = leftPartWidth/2)
     standInfoTable.setStyle(TableStyle(cmds =
                                        PdfHelper.commonTableStyleCmd +
@@ -113,7 +207,11 @@ def fillStandPage(stand, doc, project):
     framesTableData = framesTableHeaderData.copy()
 
     for frame in stand["Frames"]:
-        frameArray = [frame["Width"], frame["DocName"], frame["Quantity"]]
+        frameArray = [
+            Paragraph(PdfHelper.to_str(frame["Width"]), tableContentStyle), 
+            Paragraph(PdfHelper.to_str(frame["DocName"]), tableContentStyle), 
+            Paragraph(PdfHelper.to_str(frame["Quantity"]), tableContentStyle)
+        ]
         framesTableData.append(frameArray)
 
     framesTable = Table(data = framesTableData, colWidths = [leftPartWidth*0.15, leftPartWidth*0.75, leftPartWidth*0.1])
@@ -140,7 +238,12 @@ def fillStandPage(stand, doc, project):
     framePartsRecords = columnsHeaderTitles.copy()
 
     for frameMaterial in stand["FrameParts"]:
-        tableRecord = [frameMaterial["Name"], frameMaterial["Unit"], frameMaterial["Quantity"],""]
+        tableRecord = [
+            Paragraph(PdfHelper.to_str(frameMaterial["Name"]), tableContentStyle), 
+            Paragraph(PdfHelper.to_str(frameMaterial["Unit"]), tableContentStyle), 
+            Paragraph(PdfHelper.to_str(frameMaterial["Quantity"]), tableContentStyle),
+            Paragraph("", tableContentStyle)  # Пустая ячейка для "Факт"
+        ]
         framePartsRecords.append(tableRecord)
 
     framePartsTable = Table(data = framePartsRecords, colWidths = [leftPartWidth*0.68, leftPartWidth*0.12, leftPartWidth*0.1, leftPartWidth*0.1])
@@ -174,7 +277,12 @@ def fillStandPage(stand, doc, project):
     leftPartElementsCount+=1
 
     for mountPart in stand["MountParts"]:
-        tableRecord = [mountPart["Name"], mountPart["Unit"], mountPart["Quantity"],""]
+        tableRecord = [
+           Paragraph(PdfHelper.to_str(mountPart["Name"]), tableContentStyle), 
+           Paragraph(PdfHelper.to_str(mountPart["Unit"]), tableContentStyle), 
+           Paragraph(PdfHelper.to_str(mountPart["Quantity"]), tableContentStyle), 
+           Paragraph("", tableContentStyle)
+           ]
         mountPartsRecords.append(tableRecord)
         leftPartElementsCount+=1
     
@@ -197,7 +305,12 @@ def fillStandPage(stand, doc, project):
     rightPartElementsCount+=1
 
     for drainagePart in stand["DrainageParts"]:
-        tableRecord = [drainagePart["Name"], drainagePart["Unit"], drainagePart["Quantity"],""]
+        tableRecord = [
+            Paragraph(PdfHelper.to_str(drainagePart["Name"]), tableContentStyle),
+            Paragraph(PdfHelper.to_str(drainagePart["Unit"]), tableContentStyle), 
+            Paragraph(PdfHelper.to_str(drainagePart["Quantity"]), tableContentStyle),
+            Paragraph("", tableContentStyle)
+            ]
         drainagePartsRecords.append(tableRecord)
         rightPartElementsCount+=1
     
@@ -212,7 +325,7 @@ def fillStandPage(stand, doc, project):
                                             PdfHelper.firstColumnLeftTableStyleCmd ))
 
 
-    #таблица электрическх компонентов
+    #таблица электрических компонентов
     electricPartsHeaderTable = Table(data = [["Электрические компоненты"]], colWidths = rightPartWidth)
     electricPartsHeaderTable.setStyle(TableStyle(cmds =
                                               PdfHelper.commonTableStyleCmd +
@@ -225,7 +338,12 @@ def fillStandPage(stand, doc, project):
     rightPartElementsCount+=1
 
     for electricPart in stand["ElectricParts"]:
-        tableRecord = [electricPart["Name"], electricPart["Unit"], electricPart["Quantity"],""]
+        tableRecord = [
+            Paragraph(PdfHelper.to_str(electricPart["Name"]), tableContentStyle),
+            Paragraph(PdfHelper.to_str(electricPart["Unit"]), tableContentStyle), 
+            Paragraph(PdfHelper.to_str(electricPart["Quantity"]), tableContentStyle),
+            Paragraph("", tableContentStyle)
+            ]
         electricPartsRecords.append(tableRecord)
         rightPartElementsCount+=1
     
@@ -248,11 +366,19 @@ def fillStandPage(stand, doc, project):
 
 
     imageString = stand["ImageData"]
-    if imageString is not None:  
-        standBlueprint = PdfHelper.generateImageFromStr(imageString, rightPartWidth, sumHeight)  
+    blueprintOriginalWidth,blueprintOriginalHeight = 0,0
+
+
+    imageExist = imageString is not None
+
+    if imageExist:     
+         blueprintOriginalWidth,blueprintOriginalHeight = PdfHelper.getImageOriginalSizes(imageString)
+         newWidth, newHeight , _ = PdfHelper.scaleImageToFit(blueprintOriginalWidth,blueprintOriginalHeight,rightPartWidth,sumHeight)
+         standBlueprint = PdfHelper.generateImageFromStr(imageString, newWidth, newHeight)  
     else:
         standBlueprint = Paragraph(text = "Изображение отсутствует", style = cyrillicStyle)
-
+        
+    
 
     blueprintTable = Table(data = [[standBlueprint]], colWidths = rightPartWidth, rowHeights = sumHeight)
     blueprintTable.setStyle(TableStyle(cmds = PdfHelper.commonTableStyleCmd +
@@ -260,12 +386,21 @@ def fillStandPage(stand, doc, project):
                                               PdfHelper.usualFontTableStyleCmd + 
                                               PdfHelper.visibleAllBordersTableStyleCmd))
 
-    #выравнивание таблиц по кол-вам строк
-    rowsOffset = leftPartElementsCount - rightPartElementsCount
-    targetObject = mountPartsRecords if rowsOffset < 0 else electricPartsRecords
+    # #выравнивание таблиц по кол-вам строк
+    # rowsOffset = leftPartElementsCount - rightPartElementsCount
 
-    for _ in range(abs(rowsOffset)):
-        targetObject.append(["","","",""])
+    # targetObject = mountPartsRecords if rowsOffset < 0 else electricPartsRecords
+
+    # for _ in range(abs(rowsOffset-1)):
+
+    #     emptyRow = [
+    #         Paragraph("",tableContentStyle),
+    #         Paragraph("",tableContentStyle),
+    #         Paragraph("",tableContentStyle),
+    #         Paragraph("",tableContentStyle),
+    #         ]
+
+    #     targetObject.append(emptyRow)
 
 
     mountPartsTable = Table(data = mountPartsRecords, colWidths = [leftPartWidth*0.68, leftPartWidth*0.12, leftPartWidth*0.1, leftPartWidth*0.1])
@@ -298,11 +433,31 @@ def fillStandPage(stand, doc, project):
                 mountPartsHeaderTable, 
                 mountPartsTable ]
 
+
     rightPart = [ blueprintTable,
                  drainagePartsHeaderTable,
                  drainagePartsTable, 
                  electricPartsHeaderTable,  
                  electricPartsTable ]
+
+
+
+    #пытаемся выровнять левую и правую части таблицы дополнительным отступом
+    leftPartHeight = PdfHelper.get_column_height(leftPart, leftPartWidth)
+    rightPartHeight = PdfHelper.get_column_height(rightPart, rightPartWidth)
+
+    partsHeightOffset = leftPartHeight - rightPartHeight
+
+    if abs(partsHeightOffset) > 0:
+
+        targetObject = leftPart if partsHeightOffset < 0 else rightPart
+        targetWidht = leftPartWidth if partsHeightOffset < 0 else rightPartWidth
+
+        spacerTable = Table([[""]], rowHeights = [abs(partsHeightOffset)], colWidths=[targetWidht])
+        spacerTable.setStyle(TableStyle(cmds =PdfHelper.visibleAllBordersTableStyleCmd))
+
+        targetObject.append(spacerTable)
+
 
     sheetTable = Table(data = [[ leftPart, rightPart ]], colWidths = [leftPartWidth , rightPartWidth])
 
@@ -313,87 +468,412 @@ def fillStandPage(stand, doc, project):
                          #выравнивание по верху
                          [('VALIGN', (0, 0), (-1, -1), "TOP")] ))
 
-    impulseLinesHeaderData = [["№\nимп.линии", "Наименование импульсной линии\n и код KKS", "Таблица соединений","","","","Примечание"],
-                          ["","","Цепь","Маркировка","Коробка","Клеммы",""]]
-
-    impulseLineTableData = impulseLinesHeaderData.copy()
-    impulseLineNumber = 1
-
-
-    for impulseLine in stand["ImpulseLines"]:
-
-        wires = []
-        for wire in impulseLine["Wires"]:
-            wires.append( [wire["Circuit"],wire["Mark"],wire["ElectricBox"],wire["Terminal"]] )
-
-        descAndKKS = f"{impulseLine["Name"]} \n {impulseLine["CodeKKS"]}"
-
-        rowArray = [str(impulseLineNumber),descAndKKS]
-        rowArray.extend(wires[0])
-        rowArray.extend("")
-        impulseLineTableData.append(rowArray)
-
-        rowArray = ["",""]
-        rowArray.extend(wires[1])
-        rowArray.extend("")
-        impulseLineTableData.append(rowArray)
-
-        rowArray = ["",""]
-        rowArray.extend(wires[2])
-        rowArray.extend("")
-        impulseLineTableData.append(rowArray)
-
-        impulseLineNumber+=1
-
-
-
-
-    impulseLineTable = Table(data = impulseLineTableData, colWidths = [sheetWidth * 0.075,sheetWidth * 0.275,sheetWidth * 0.1,sheetWidth * 0.15,sheetWidth * 0.15,sheetWidth * 0.1,sheetWidth * 0.15])
-    impulseLineTableStyleCmds = PdfHelper.commonTableStyleCmd.copy()
-    impulseLineTableStyleCmds.extend(PdfHelper.centerAlignTableStyleCmd +
-                                         PdfHelper.visibleAllBordersTableStyleCmd + 
-                                         PdfHelper.usualFontTableStyleCmd)
-    impulseLineTableStyleCmds.extend(#шапка
-                                     [('FONTNAME', (0, 0), (-1, 1), "Arial-Bold")] +
-                                     [('SPAN', (0, 0), (0,1) )] + 
-                                     [('SPAN', (1, 0), (1, 1) )] + 
-                                     [('SPAN', (-1, 0), (-1, 1) )] + 
-                                     [('SPAN', (2, 0), (5, 0) )] )
-
-    recordsStartRow = 2
-    impulseLineRecordOffset = 2
-
-    currentRecordFirstRow = recordsStartRow
-
-    for impulseLineRecord in range(impulseLineNumber):
-        #формируем каждую запись
-        impulseLineTableStyleCmds.extend(
-                                     [('SPAN', (0, currentRecordFirstRow), (0,currentRecordFirstRow + impulseLineRecordOffset) )] + 
-                                     [('SPAN', (1, currentRecordFirstRow), (1, currentRecordFirstRow + impulseLineRecordOffset) )] + 
-                                     [('SPAN', (-1, currentRecordFirstRow), (-1, currentRecordFirstRow + impulseLineRecordOffset) )] 
-                                     )
-        currentRecordFirstRow+=impulseLineRecordOffset + 1
-                                         
-    impulseLineTable.setStyle(TableStyle(cmds= impulseLineTableStyleCmds ))
-
-    
-    
 
     #собираем все объекты в массив и отдаем
     sheetElements = []   
-    sheetElements.append(sheetTable)
+    sheetElements.append(sheetTable) 
+
+
+
+    if not testExecution:
+        ProcessSplitInfo(stand)
+    
+    impulseLineTable = CreateImpulseLinesTable(stand,project,tableSplittingInfo)
     sheetElements.append(impulseLineTable)
          
+
+
     return sheetElements
 
 
 
-def fillConclusionPage(stand,doc,project):
+
+
+#генерация таблицы импульсных линий
+def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
+
+
+    #вписываем в рамку
+    sheetWidth = portraitParams['frameWidth'] * 0.99
+    sheetHeight = portraitParams['frameHeight'] * 0.99
+
+    #инициализируем стили листа
+    styles = getSampleStyleSheet()
+
+    tableContentStyle = ParagraphStyle(
+        'TableContent',
+        parent = styles['Normal'],
+        fontName ='Arial',
+        encoding ='UTF-8',
+        fontSize = 6,
+        wordWrap = 'LTR',
+        alignment = TA_CENTER,
+        leading = 7
+    )
+
+
+    #если данных по разделению таблиц нет - тестовый проход
+    testExecution = tableSplittingInfo is None
+
+    #вытаскиваем параметр - с электрикой или без
+    includeElectric = project["ReportSettings"]["TechCardIncludeElectric"]
+
+    
+    #формируем заголовок шапки
+    impulseLinesHeaderData = [ 
+        ["№\nимп.линии", "Наименование импульсной линии\n и код KKS", "Таблица соединений","","","","Примечание"],
+        ["","","Цепь","Маркировка","Коробка","Клеммы",""] ]
+        
+
+    impulseLineTableData = impulseLinesHeaderData.copy()
+    
+    #если проход чистовой - обрабатываем инфу о стенде
+    if not testExecution:
+        ProcessSplitInfo(stand);
+
+
+ 
+    standImpulseLines = stand["ImpulseLines"]
+
+    #вытаскиваем и подготавливаем данные для вставки каждой импульсной линии
+    for i, impulseLine in enumerate(standImpulseLines,1):
+
+        #подготавливаем данные
+        impulseLineNumber = str(i)
+
+        impulseLineDescAndKKS = [impulseLine["Name"],impulseLine["CodeKKS"]]
+        impulseLineDescAndKKS= "<br/>".join(impulseLineDescAndKKS)
+
+        wires = []
+        for wire in impulseLine["Wires"]:
+
+            #в зависимости от параметра вставляем электрику или нет
+            if includeElectric:
+                wires.append([ wire["Circuit"], wire["Mark"], wire["ElectricBox"], wire["Terminal"] ])                
+            else:
+                wires.append( ["","","",""] )
+
+        impulseLineNote = impulseLine["Annotation"]
+
+        #формируем строки таблицы
+        for j, wire in enumerate(wires):
+
+            if j == 0:
+                rowArray = [impulseLineNumber, impulseLineDescAndKKS]
+            else:
+                rowArray = ["", ""]
+
+            rowArray.extend(wire)
+
+            if j == 0:
+                rowArray.extend([impulseLineNote])
+            else:
+                rowArray.extend([""])
+
+            impulseLineTableData.append(rowArray)
+
+       
+
+    headerRows = 2
+
+    #если проход чистовой - убираем лишние данные 
+    if not testExecution:
+
+       #вытаскиваем стенд из словаря
+       standNN = stand["Number"]
+       standTableData = tableSplittingInfo.get(standNN);
+
+
+       if standTableData is not None:
+            
+        standPages = standTableData["pages"]
+
+        boxColumnIndex = 4
+        annotationColumnIndex = 6 
+
+        #проходим по всем страницам
+        for p, pageInfo in enumerate(standPages):    
+
+            pageStartDataRowIndex = pageInfo["startDataRowIndex"]
+            pageEndDataRowIndex = pageInfo["endDataRowIndex"]
+            pageMiddleRecordFirstRowIndex = pageInfo["middleRecordFirstRowIndex"]
+
+            
+            arrayStartIndex = pageStartDataRowIndex
+            arrayEndIndex = pageEndDataRowIndex
+            
+            #учитываем смещение по шапке
+            if p > 0 and pageInfo["hasHeader"]:
+                arrayStartIndex -= headerRows
+                arrayEndIndex -= headerRows
+                pageMiddleRecordFirstRowIndex -= headerRows
+
+            #проходимся по строкам таблицы
+            #стираем все данные по коробке и примечанию
+            for i in range(arrayStartIndex, arrayEndIndex):
+
+                #среднюю запись не трогаем
+                if i == pageMiddleRecordFirstRowIndex:
+                    continue
+
+
+                impulseLineTableData[i][boxColumnIndex] = ""
+                impulseLineTableData[i][annotationColumnIndex] = ""
+
+
+
+
+            
+    #оформляем таблицу   
+    impulseLineTableColumnSizes = [sheetWidth * 0.075,
+                                    sheetWidth * 0.275,
+                                    sheetWidth * 0.1,
+                                    sheetWidth * 0.15,
+                                    sheetWidth * 0.15,
+                                    sheetWidth * 0.1,
+                                    sheetWidth * 0.15]
+
+    allTableColumnCount = 6
+
+    #проходимся по строкам и столбцам таблицы 
+    #заводим все данные в Paragraph
+    for i, _ in enumerate(impulseLineTableData):
+
+        #шапку не трогаем
+        if i < headerRows:
+            continue
+
+        for j in range(allTableColumnCount+1):
+
+            impulseLineTableData[i][j] = Paragraph(impulseLineTableData[i][j], tableContentStyle)
+
+
+
+
+
+    impulseLineTable = MySplittableTable(data = impulseLineTableData, 
+                                            colWidths = impulseLineTableColumnSizes, 
+                                            standNumber = stand["Number"], #передаем номер стенда
+                                            repeatRows=2, #повторяем шапку на каждой странице
+                                            splitByRow=1)  #разрешаем разделять по строкам
+
+
+
+    impulseLineTableStyleCmds = PdfHelper.commonTableStyleCmd.copy()
+
+    impulseLineTableStyleCmds.extend(PdfHelper.centerAlignTableStyleCmd +
+                                            PdfHelper.visibleAllBordersTableStyleCmd + 
+                                            PdfHelper.usualFontTableStyleCmd)
+    #оформляем шапку
+    impulseLineTableStyleCmds.extend([ ('FONTNAME', (0, 0), (-1, 1), "Arial-Bold"),
+                                       ('SPAN', (0, 0), (0,1) ),
+                                       ('SPAN', (1, 0), (1, 1) ),
+                                       ('SPAN', (-1, 0), (-1, 1) ),
+                                       ('SPAN', (-1, 0), (-1, 1) ),
+                                       ('SPAN', (2, 0), (5, 0) )
+                                        ])
+                                      
+    recordsStartRow = 2
+    rowsPerRecord = 3
+
+    currentRow = recordsStartRow
+    recordEndRow = 0
+
+ 
+    #оформляем импульсные линии
+    for impulseLineRecord in range(len(standImpulseLines)):
+
+        recordEndRow = currentRow + rowsPerRecord - 1
+
+        impulseLineTableStyleCmds.extend([
+            ('SPAN', (0, currentRow), (0, recordEndRow)),  #номер имп линии
+            ('SPAN', (1, currentRow), (1, recordEndRow)),   #наименование имп линии  
+            ('SPAN', (4, currentRow), (4, recordEndRow)),   #коробка
+            ('SPAN', (-1, currentRow), (-1, recordEndRow)) #примечание 
+            ])      
+                                        
+
+        currentRow +=rowsPerRecord
+
+
+
+    #если генерация окончательная -  отрисовываем все по правильному
+    if not testExecution:
+            
+        #вытаскиваем стенд из словаря
+        standNN = stand["Number"]
+        standTableData = tableSplittingInfo.get(standNN);
+
+        
+        if standTableData is not None:
+            
+            standPages = standTableData["pages"]
+
+            for i, pageInfo in enumerate(standPages):
+
+                startDataRowIndex = pageInfo["startDataRowIndex"]
+                endDataRowIndex = pageInfo["endDataRowIndex"]
+
+                #применяем оформление к одной странице
+                impulseLineTableStyleCmds.extend([
+
+                    # Убираем сетку внутри блоков 
+                    ('INNERGRID', (4, startDataRowIndex), (4, endDataRowIndex), 2, colors.white),   #коробка
+                    ('INNERGRID', (-1, startDataRowIndex), (-1, endDataRowIndex), 2, colors.white),   #примечание
+
+                    # прорисовываем вертикальные границы заново 
+                    ('LINEBEFORE', (4, startDataRowIndex), (4, endDataRowIndex), 1, colors.black), #коробка
+                    ('LINEAFTER', (4, startDataRowIndex), (4, endDataRowIndex), 1, colors.black),   #коробка
+
+                    ('LINEBEFORE', (-1, startDataRowIndex), (-1, endDataRowIndex), 1, colors.black), #примечание
+                    ('LINEAFTER', (-1, startDataRowIndex), (-1, endDataRowIndex), 1, colors.black)  #примечание
+ 
+                ])
+
+
+    impulseLineTable.setStyle(TableStyle(cmds= impulseLineTableStyleCmds ))
+
+    return impulseLineTable
+
+
+
+
+
+
+
+
+
+
+
+def ProcessSplitInfo(stand):
+
+    headerRows = 2
+    recordsStartRow = 2
+    rowsPerRecord = 3
+
+
+    impulseLineStartRecordIndex = 1
+
+    #вытаскиваем кол-во импульсных линий
+    impulseLineCount = len(stand["ImpulseLines"])
+
+    #вытаскиваем стенд из словаря
+    standNN = stand["Number"]
+    standData = impulseTableInfo.get(standNN);
+
+    standDataExist = standData is not None
+
+    #если его там нет - инициализируем
+    if not standDataExist:
+        impulseTableInfo[standNN] = {
+                      "isPageSplitted": False,
+                      "pagesCount" : 1,
+                      "pages": []                      
+              }
+
+        # Добавляем единственную страницу
+        impulseTableInfo[standNN]["pages"].append(
+            {
+                "pageNumber" : 1,
+                "hasHeader"  : True,
+                "rowsCount"  : (rowsPerRecord * impulseLineCount) + headerRows
+            })
+
+
+
+   
+    standPages = impulseTableInfo[standNN]["pages"]
+    standPagesCount = impulseTableInfo[standNN]["pagesCount"]
+    pagesSplitted = impulseTableInfo[standNN]["isPageSplitted"]
+  
+
+
+    tableDataStartRow = 0
+    tableDataEndRow = 0
+
+    # Сумма записей на предыдущих страницах
+    rowsProceed = 0
+    recordsProcessed = 0  
+
+    #обрабатываем каждую страницу
+    for i, page in enumerate(standPages):
+
+        pageRowsCount =  impulseTableInfo[standNN]["pages"][i]["rowsCount"]
+        pageHasHeader = impulseTableInfo[standNN]["pages"][i]["hasHeader"]
+
+        
+        if (standPagesCount > 1 and i > 0):
+            tableDataStartRow = tableDataEndRow + 1
+        else:
+            tableDataStartRow = 0
+
+        tableDataRowsCount = pageRowsCount
+
+        #если есть заголовок - перескакиваем через него
+        if pageHasHeader:
+            tableDataStartRow += headerRows
+            tableDataRowsCount -= headerRows
+    
+        #высчитываем начальную, конечную и среднюю строки
+        tableDataEndRow = (tableDataStartRow + tableDataRowsCount) - 1
+        tableDataMiddleRow = (tableDataStartRow + tableDataEndRow) // 2
+
+        impulseTableInfo[standNN]["pages"][i]["startDataRowIndex"] = tableDataStartRow
+        impulseTableInfo[standNN]["pages"][i]["endDataRowIndex"] = tableDataEndRow
+        impulseTableInfo[standNN]["pages"][i]["middleDataRowIndex"] = tableDataMiddleRow
+
+
+
+        #высчитываем количество записей
+        tableRecordsCount = tableDataRowsCount // rowsPerRecord
+            
+
+        if (standPagesCount > 1 and i > 0):
+            tableStartRecord = tableEndRecord + 1
+        else:
+            tableStartRecord = impulseLineStartRecordIndex
+
+
+        #высчитываем начальную, конечную и среднюю записи
+        
+        tableEndRecord = (tableStartRecord + tableRecordsCount) - 1
+        tableMiddleRecord = (tableStartRecord + tableEndRecord) // 2
+
+        impulseTableInfo[standNN]["pages"][i]["recordsCount"] = tableRecordsCount
+        impulseTableInfo[standNN]["pages"][i]["startRecordIndex"] = tableStartRecord
+        impulseTableInfo[standNN]["pages"][i]["endRecordIndex"] = tableEndRecord
+        impulseTableInfo[standNN]["pages"][i]["middleRecordIndex"] = tableMiddleRecord
+
+
+        if (standPagesCount > 1 and i > 0):
+            startRecordFirstRowIndex = tableDataEndRow + 1
+        else:
+            startRecordFirstRowIndex = impulseLineStartRecordIndex
+
+        #высчитываем первую строчку начальной, конечной и средней записи
+        startRecordFirstRowIndex = tableDataStartRow
+        endRecordFirstRowIndex = tableDataEndRow - rowsPerRecord + 1
+
+        middleRecordOnPage = tableMiddleRecord - recordsProcessed
+        middleRecordFirstRowIndex = startRecordFirstRowIndex + ((middleRecordOnPage - 1) * rowsPerRecord)
+
+        impulseTableInfo[standNN]["pages"][i]["startRecordFirstRowIndex"] = startRecordFirstRowIndex
+        impulseTableInfo[standNN]["pages"][i]["endRecordFirstRowIndex"] = endRecordFirstRowIndex
+        impulseTableInfo[standNN]["pages"][i]["middleRecordFirstRowIndex"] = middleRecordFirstRowIndex
+
+        recordsProcessed += tableRecordsCount
+
+
+            
+
+
+def fillConclusionPage(stand,project):
 
     #вписываем в рамку
     sheetWidth = landscapeParams['frameWidth'] * 0.99
     sheetHeight = landscapeParams['frameHeight'] * 0.99
 
+    #инициализируем стили листа
     styles = getSampleStyleSheet()
 
     cyrillicStyle = ParagraphStyle(
@@ -404,14 +884,12 @@ def fillConclusionPage(stand,doc,project):
         fontSize = 7
     )
 
-
-
     #таблица с инфой о стенде и лого
     standTable = [["","Значение"]]
     standTable.append(["Наименование", "Стенд датчиков КИПиА"])
-    standTable.append(["Обозначение по КД", str(stand["Designation"])])
+    standTable.append(["Обозначение по КД", PdfHelper.to_str(stand["Designation"])])
     standTable.append(["Чертеж", ""])
-    standTable.append(["Зав.номер", str(stand["SerialNumber"])])     
+    standTable.append(["Зав.номер", PdfHelper.to_str(stand["SerialNumber"])])     
     standInfoTable = Table(data = standTable, colWidths = [sheetWidth*0.2,sheetWidth*0.3])
 
     standInfoTable.setStyle(TableStyle(cmds = 
@@ -515,7 +993,16 @@ def fillConclusionPage(stand,doc,project):
     return sheetElements
 
 
+
+
+
+
+#основной генератор отчета
 def generateReport(jsonFilePath,outputFilePath):
+
+    #сначала делаем тестовый проход, чтобы узнать как поделились таблицы
+    generateTestReport(jsonFilePath)
+    
 
     PdfHelper.registerFonts()
 
@@ -526,17 +1013,57 @@ def generateReport(jsonFilePath,outputFilePath):
     elements = []
 
     for stand in data["Stands"]:      
-        standSheet = fillStandPage(stand,doc,data)
+        standSheet = fillStandPage(stand,data, tableSplittingInfo = impulseTableInfo) # теперь передаем инфу в заполнитель
         elements.extend(standSheet)  
         elements.append(NextPageTemplate('landscape'))
         elements.append(PageBreak())
-        conclusionSheet = fillConclusionPage(stand,doc,data)
+        conclusionSheet = fillConclusionPage(stand,data)
+        elements.extend(conclusionSheet)
+        elements.append(NextPageTemplate('portrait'))
+        elements.append(PageBreak())
+
+
+    doc.build(elements)
+
+    
+
+
+
+#тестовый проход, чтобы получить информацию о таблицах
+def generateTestReport(jsonFilePath):
+ 
+
+    #принудительно чистим
+    global splitInfo
+    impulseTableInfo ={}
+
+
+    #временный буфер в памяти для тестового проекта
+    buffer = io.BytesIO()
+
+
+    PdfHelper.registerFonts()
+
+    data = PdfHelper.openJsonFile(jsonFilePath)
+    doc = SimpleDocTemplate(buffer, pagesize=A4)  
+    doc.addPageTemplates([portraitTemplate,landscapeTemplate])
+
+    elements = []
+
+    for stand in data["Stands"]:      
+        standSheet = fillStandPage(stand,data)
+        elements.extend(standSheet)  
+        elements.append(NextPageTemplate('landscape'))
+        elements.append(PageBreak())
+        conclusionSheet = fillConclusionPage(stand,data)
         elements.extend(conclusionSheet)
         elements.append(NextPageTemplate('portrait'))
         elements.append(PageBreak())
 
     doc.build(elements)
 
+    #чистим буфер
+    buffer.close()
     
 if __name__ == "__main__":
     generateReport()

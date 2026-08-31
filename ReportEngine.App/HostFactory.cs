@@ -14,7 +14,6 @@ using ReportEngine.App.Services.Logger;
 using ReportEngine.App.Services.Navigation;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels;
-using ReportEngine.App.ViewModels.CalculationSettings;
 using ReportEngine.App.ViewModels.Contacts;
 using ReportEngine.App.ViewModels.FormedEquips;
 using ReportEngine.App.ViewModels.TreeView;
@@ -42,6 +41,7 @@ using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Store;
+using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Services;
 using ReportEngine.Export.ExcelWork.Services.Generators;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
@@ -208,7 +208,8 @@ public class HostFactory
         services.AddScoped<IReportGenerator, FinPlanReportGenerator>();
         services.AddScoped<IReportGenerator, PassportsGenerator>();
         services.AddScoped<IReportGenerator, TechnologicalCardsGenerator>();
-        services.AddScoped<FlatSummaryReportGenerator>();
+        services.AddScoped<IReportGenerator, FlatSummaryReportGenerator>();
+        services.AddSingleton<ReportSettings>();
     }
 
     private static void ConfigureViewModels(IServiceCollection services)
@@ -222,7 +223,6 @@ public class HostFactory
         services.AddScoped<FormedDrainagesViewModel>();
         services.AddScoped<AllSortamentsViewModel>();
         services.AddScoped<SettingsViewModel>();
-        services.AddScoped<CalculationSettingsViewModel>();
         services.AddScoped<AuthWindowViewModel>();
         services.AddScoped<SubjectViewModel>();
         services.AddScoped<RenumeratorViewModel>();
@@ -262,7 +262,6 @@ public class HostFactory
         services.AddTransient<ProjectPreview>();
         services.AddTransient<AllSortamentsView>();
         services.AddTransient<SettingsWindow>();
-        services.AddTransient<CalculationSettingsWindow>();
         services.AddTransient<StandsContainerView>();
         services.AddTransient<AuthWindow>();
         services.AddTransient<SubjectsView>();

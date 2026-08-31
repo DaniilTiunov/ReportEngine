@@ -218,6 +218,69 @@ public partial class ProjectPreview : UserControl
         }), DispatcherPriority.Loaded);
     }
 
+    private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        _projectViewModel.OnEditObvSettingsCommandExecuted(e);
+    }
+
+    private void StandListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        _projectViewModel.OnOpenEditStandCommandExecuted(e);
+    }
+
+    private void DeleteSelectedEntity_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key != Key.Delete) return;
+
+        var focusedElement = Keyboard.FocusedElement as DependencyObject;
+        if (focusedElement == null) return;
+
+        // Ищем родительский ListView (вверх по дереву)
+        var parentListView = FindVisualParent<ListView>(focusedElement);
+
+        // Получаем провайдер команд
+        dynamic vm = DataContext;
+        if (vm?.ProjectCommandProvider == null) return;
+
+        // Если фокус на списке обвязок - удаляем обвязку
+        if (parentListView == ObvyazkiListView) // x:Name="ObvyazkiListView"
+        {
+            var command = vm.ProjectCommandProvider.RemoveObvFromStandCommand;
+            if (command?.CanExecute(null) == true)
+            {
+                command.Execute(null);
+                e.Handled = true;
+            }
+        }
+        // Если фокус на списке стендов - удаляем стенд
+        else if (parentListView == StandsList) // x:Name="StandsList"
+        {
+            var command = vm.ProjectCommandProvider.DeleteSelectedStandsCommand;
+            if (command?.CanExecute(null) == true)
+            {
+                command.Execute(null);
+                e.Handled = true;
+            }
+        }
+    }
+
+    private static T FindVisualParent<T>(DependencyObject obj) where T : DependencyObject
+    {
+        if (obj == null) return null;
+
+        var parent = VisualTreeHelper.GetParent(obj);
+
+        while (parent != null)
+        {
+            if (parent is T t)
+                return t;
+
+            parent = VisualTreeHelper.GetParent(parent);
+        }
+
+        return null;
+    }
+
     private static T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
     {
         for (var i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
@@ -233,15 +296,5 @@ public partial class ProjectPreview : UserControl
         }
 
         return null;
-    }
-
-    private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-    {
-        _projectViewModel.OnEditObvSettingsCommandExecuted(e);
-    }
-
-    private void StandListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-    {
-        _projectViewModel.OnOpenEditStandCommandExecuted(e);
     }
 }

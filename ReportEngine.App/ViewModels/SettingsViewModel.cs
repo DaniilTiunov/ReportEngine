@@ -9,7 +9,6 @@ using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.App.Views.Settings.SettingsControls;
 using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.IniHeleprs;
 using ReportEngine.Shared.Config.JsonHelpers;
 
 namespace ReportEngine.App.ViewModels;
@@ -126,7 +125,7 @@ public class SettingsViewModel : BaseViewModel
 
     public void LoadSettings()
     {
-        SaveReportDirPath = SettingsManager.GetReportDirectory();
+        SaveReportDirPath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
         ConnectionString = JsonHandler.GetConnectionString(DirectoryHelper.GetConfigPath());
         ConnectionStringParse(ConnectionString);
     }
@@ -162,7 +161,7 @@ public class SettingsViewModel : BaseViewModel
 
     public void SaveSettings()
     {
-        SettingsManager.SetReportDirectory(SaveReportDirPath);
+        JsonHandler.SetSaveReportDirectory(DirectoryHelper.GetConfigPath(), SaveReportDirPath);
 
         var configPath = DirectoryHelper.GetConfigPath();
         var currentConnectionString = JsonHandler.GetConnectionString(configPath);
@@ -179,6 +178,9 @@ public class SettingsViewModel : BaseViewModel
                 return;
 
             JsonHandler.SetConnectionString(configPath, newConnectionString);
+
+            StartUp.ReleaseMutex();
+            StartUp.DisposeMutex();
 
             Process.Start(new ProcessStartInfo
             {
