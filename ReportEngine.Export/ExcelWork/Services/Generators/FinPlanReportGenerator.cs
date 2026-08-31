@@ -230,7 +230,7 @@ public class FinPlanReportGenerator : IReportGenerator
             nameRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
             var valueRange = ws.Range($"D{activeRow}:I{activeRow}").Merge();
-            ;
+            
             valueRange.Value = record.Value;
 
             valueRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);
@@ -300,21 +300,19 @@ public class FinPlanReportGenerator : IReportGenerator
         laborTotalCostRecord.Name = new ValidatedField<string?>("Трудозатраты", true);
         laborTotalCostRecord.Unit = new ValidatedField<string?>("чел. * мес.", true);
         //костылек для правильного отображения
+
         laborTotalCostRecord.CommonCost = laborTotalCostRecord.Quantity;
 
         var laborValueRange = PasteRecord(activeRow, laborTotalCostRecord, ws);
         sumCellList.Add(laborValueRange);
         activeRow++;
 
-        var laborFundRecord = new EquipmentRecord
-        {
-            ExportDays = new ValidatedField<int?>(null, true),
-            Name = new ValidatedField<string?>("Фонд оплаты труда", true),
-            Unit = new ValidatedField<string?>("руб.", true),
-            Quantity = new ValidatedField<float?>(null, true),
-            CostPerUnit = new ValidatedField<float?>(null, true),
-            CommonCost = new ValidatedField<float?>(null, true)
-        };
+
+        var laborFundRecord = ExcelReportHelper.GenerateTotalRecord(laborRecords);
+
+
+        laborFundRecord.Name = new ValidatedField<string?>("Фонд оплаты труда", true);
+        laborFundRecord.Unit = new ValidatedField<string?>("руб.", true);
 
         var laborFundValueRange = PasteRecord(activeRow, laborFundRecord, ws);
         sumCellList.Add(laborFundValueRange);
