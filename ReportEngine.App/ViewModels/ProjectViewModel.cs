@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
+using DevExpress.CodeParser;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
@@ -2226,18 +2227,30 @@ public class ProjectViewModel : BaseViewModel
         const int cableInputsPerSensor = 2;
         var cableInputsRecord = electricComponents.FirstOrDefault(purpose => purpose.Purpose == "Кабельные вводы");
 
-        var cableInputsQuantity = 0;
+        
 
         var sensorsQuantity = selectedStand.CountElectricSensorsQuantity();
 
+        int cableInputsQuantity = 0;
 
-        if (cableInputsRecord != null && cableInputsRecord.IsAutoCalculationEnabled == true)
+        if (cableInputsRecord != null)
         {
-            cableInputsQuantity = sensorsQuantity * cableInputsPerSensor;
-            cableInputsRecord.Quantity = cableInputsQuantity;
+            if (cableInputsRecord.IsAutoCalculationEnabled == true)
+            {
+                cableInputsQuantity = sensorsQuantity * cableInputsPerSensor;
+                cableInputsRecord.Quantity = cableInputsQuantity;
 
-            selectedStand.ElectricalPurposesChanges = true;
+                selectedStand.ElectricalPurposesChanges = true;
+            }
+            else
+            {
+                cableInputsQuantity = (int)(cableInputsRecord.Quantity ?? 0.0);
+            }
         }
+
+
+
+
 
         //сигнальный кабель
 

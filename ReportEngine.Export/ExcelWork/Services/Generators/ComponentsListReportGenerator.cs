@@ -128,7 +128,7 @@ public class ComponentListReportGenerator : IReportGenerator
         //}
 
 
-        ws.Cell($"D{row}").Value = ExcelReportHelper.FormatPrice(record.Quantity.Value?.Ceiling());
+        ws.Cell($"D{row}").Value = record.Quantity.Value.RoundUp(1).ToString();
 
         //if (!record.Quantity.IsValid)
         //{

@@ -170,7 +170,7 @@ public class SummaryReportGenerator : IReportGenerator
 
         ws.Cell($"C{row}").Value = record?.Unit.Value;
 
-        ws.Cell($"D{row}").Value = record?.Quantity.Value?.Round(2).ToString();
+        ws.Cell($"D{row}").Value = record?.Quantity.Value?.Round(1).ToString();
 
         ws.Cell($"E{row}").Value = ExcelReportHelper.FormatPrice(record?.CostPerUnit.Value);
 
