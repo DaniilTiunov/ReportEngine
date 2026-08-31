@@ -7,6 +7,7 @@ using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -303,8 +304,8 @@ public class ProductionReportGenerator : IReportGenerator
     {
         ws.Cell($"A{row}").Value = record.Name.Value;
         ws.Cell($"B{row}").Value = record.Unit.Value;
-        ws.Cell($"C{row}").Value = record.Quantity.Value?.ToString();
-        ws.Cell($"D{row}").Value = record.Quantity.Value?.ToString();
+        ws.Cell($"C{row}").Value = record.Quantity.Value.RoundUp(1).ToString();
+        ws.Cell($"D{row}").Value = record.Quantity.Value.RoundUp(1).ToString();
 
         //if (!record.Name.IsValid)
         //{
