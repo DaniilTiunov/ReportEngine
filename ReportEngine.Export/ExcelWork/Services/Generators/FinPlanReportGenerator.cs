@@ -299,6 +299,8 @@ public class FinPlanReportGenerator : IReportGenerator
 
         laborTotalCostRecord.Name = new ValidatedField<string?>("Трудозатраты", true);
         laborTotalCostRecord.Unit = new ValidatedField<string?>("чел. * мес.", true);
+        //костылек для правильного отображения
+        laborTotalCostRecord.CommonCost = laborTotalCostRecord.Quantity;
 
         var laborValueRange = PasteRecord(activeRow, laborTotalCostRecord, ws);
         sumCellList.Add(laborValueRange);
