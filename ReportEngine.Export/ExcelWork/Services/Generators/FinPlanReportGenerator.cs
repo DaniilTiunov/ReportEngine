@@ -309,7 +309,7 @@ public class FinPlanReportGenerator : IReportGenerator
         laborTotalCostRecord.CommonCost = laborTotalCostRecord.Quantity;
 
         var laborValueRange = PasteRecord(activeRow, laborTotalCostRecord, ws);
-        sumCellList.Add(laborValueRange);
+        //sumCellList.Add(laborValueRange);
         activeRow++;
 
 
@@ -337,7 +337,7 @@ public class FinPlanReportGenerator : IReportGenerator
         };
 
         var bussinessTripValueRange = PasteRecord(activeRow, bussinessTripCostsRecord, ws);
-        sumCellList.Add(bussinessTripValueRange);
+        //sumCellList.Add(bussinessTripValueRange);
         activeRow++;
 
         var customerDeliveryRecord = new EquipmentRecord
