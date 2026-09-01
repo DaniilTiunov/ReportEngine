@@ -1330,8 +1330,6 @@ public class ProjectViewModel : BaseViewModel
         await _exceptionService.SafeExecuteAsync(async () =>
         {
             await _standService.LoadStandsDataAsync(CurrentProjectModel.Stands);
-            await _standService.LoadAllStandsDataAsync(CurrentProjectModel.CurrentProjectId,
-                CurrentProjectModel.Stands);
         });
     }
 

@@ -6,7 +6,9 @@
     x:Class="ReportEngine.App.Views.Controls.TreeProjectView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:avalonDock="https://github.com/Dirkster99/AvalonDock"
+    xmlns:converters="clr-namespace:ReportEngine.App.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
@@ -15,6 +17,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Resources/Dictionaries/Styles/GigaChadUI.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <converters:HeaderToIconConverter x:Key="HeaderToIconConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -34,104 +37,341 @@
                             CanHide="False"
                             Title=" Навигация по проекту">
 
-
                             <!--  Первое дерево  -->
-                            <TreeView FontSize="14" x:Name="NavigationTree">
+                            <TreeView FontSize="16" x:Name="NavigationTree">
+                                <!--  ПРОЕКТ  -->
+                                <TreeViewItem IsExpanded="True">
+                                    <TreeViewItem.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon
+                                                Foreground="{DynamicResource MaterialDesignBody}"
+                                                Height="20"
+                                                Kind="Folder"
+                                                Margin="0,0,8,0"
+                                                Width="20" />
+                                            <TextBlock Text="Проект" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </TreeViewItem.Header>
 
-                                <TreeViewItem Header="Проект" IsExpanded="True">
-                                    <TreeViewItem
-                                        Header="Карточка проекта"
-                                        MouseDoubleClick="OpenCurrentView"
-                                        Tag="ProjectCard" />
+                                    <!--  Карточка проекта  -->
+                                    <TreeViewItem MouseDoubleClick="OpenCurrentView" Tag="ProjectCard">
+                                        <TreeViewItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon
+                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Height="18"
+                                                    Kind="CardOutline"
+                                                    Margin="0,0,8,0"
+                                                    Width="18" />
+                                                <TextBlock Text="Карточка проекта" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </TreeViewItem.Header>
+                                    </TreeViewItem>
 
-                                    <TreeViewItem Header="Редактирование стенда" IsExpanded="True">
-                                        <TreeViewItem
-                                            Header="Расчёт стенда"
-                                            MouseDoubleClick="OpenCurrentView"
-                                            Tag="ProjectPreview" />
-                                        <TreeViewItem
-                                            Header="Формирование упаковки"
-                                            MouseDoubleClick="OpenCurrentView"
-                                            Tag="StandsContainer" />
-                                        <TreeViewItem
-                                            Header="Предпросмотр документов"
-                                            MouseDoubleClick="OpenCurrentView"
-                                            Tag="DockViewer" />
+                                    <!--  Редактирование стенда  -->
+                                    <TreeViewItem IsExpanded="True">
+                                        <TreeViewItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon
+                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Height="18"
+                                                    Kind="Pencil"
+                                                    Margin="0,0,8,0"
+                                                    Width="18" />
+                                                <TextBlock Text="Редактирование стенда" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </TreeViewItem.Header>
+
+                                        <!--  Расчёт стенда  -->
+                                        <TreeViewItem MouseDoubleClick="OpenCurrentView" Tag="ProjectPreview">
+                                            <TreeViewItem.Header>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon
+                                                        Foreground="{DynamicResource MaterialDesignBody}"
+                                                        Height="18"
+                                                        Kind="Calculator"
+                                                        Margin="0,0,8,0"
+                                                        Width="18" />
+                                                    <TextBlock Text="Расчёт стенда" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </TreeViewItem.Header>
+                                        </TreeViewItem>
+
+                                        <!--  Формирование упаковки  -->
+                                        <TreeViewItem MouseDoubleClick="OpenCurrentView" Tag="StandsContainer">
+                                            <TreeViewItem.Header>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon
+                                                        Foreground="{DynamicResource MaterialDesignBody}"
+                                                        Height="18"
+                                                        Kind="PackageVariant"
+                                                        Margin="0,0,8,0"
+                                                        Width="18" />
+                                                    <TextBlock Text="Формирование упаковки" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </TreeViewItem.Header>
+                                        </TreeViewItem>
+
+                                        <!--  Предпросмотр документов  -->
+                                        <TreeViewItem MouseDoubleClick="OpenCurrentView" Tag="DockViewer">
+                                            <TreeViewItem.Header>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon
+                                                        Foreground="{DynamicResource MaterialDesignBody}"
+                                                        Height="18"
+                                                        Kind="FileDocumentOutline"
+                                                        Margin="0,0,8,0"
+                                                        Width="18" />
+                                                    <TextBlock Text="Предпросмотр документов" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </TreeViewItem.Header>
+                                        </TreeViewItem>
                                     </TreeViewItem>
                                 </TreeViewItem>
 
-                                <TreeViewItem Header="Расчёт проекта" IsExpanded="True">
-                                    <TreeViewItem Header="Рассчитать проект" Tag="CalculateProject">
+                                <!--  РАСЧЁТ ПРОЕКТА  -->
+                                <TreeViewItem IsExpanded="True">
+                                    <TreeViewItem.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon
+                                                Foreground="{DynamicResource MaterialDesignBody}"
+                                                Height="18"
+                                                Kind="Calculator"
+                                                Margin="0,0,8,0"
+                                                Width="18" />
+                                            <TextBlock Text="Расчёт проекта" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </TreeViewItem.Header>
+
+                                    <TreeViewItem Tag="CalculateProject">
+                                        <TreeViewItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon
+                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Height="16"
+                                                    Kind="Play"
+                                                    Margin="0,0,8,0"
+                                                    Width="16" />
+                                                <TextBlock Text="Рассчитать проект" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </TreeViewItem.Header>
                                         <TreeViewItem.InputBindings>
                                             <MouseBinding Command="{Binding CalculateProjectCommandAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
 
-                                    <TreeViewItem Header="Пересчёт" Tag="CalculateProject">
+                                    <TreeViewItem Tag="CalculateProject">
+                                        <TreeViewItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon
+                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Height="16"
+                                                    Kind="Refresh"
+                                                    Margin="0,0,8,0"
+                                                    Width="16" />
+                                                <TextBlock Text="Пересчёт" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </TreeViewItem.Header>
                                         <TreeViewItem.InputBindings>
                                             <MouseBinding Command="{Binding RecalculateProjectCommandAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
                                 </TreeViewItem>
 
-                                <TreeViewItem Header="Отчёты" IsExpanded="True">
-                                    <TreeViewItem Header="Сводная ведомость" Tag="SummaryReport">
+                                <!--  ОТЧЁТЫ  -->
+                                <TreeViewItem IsExpanded="True">
+                                    <TreeViewItem.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon
+                                                Foreground="{DynamicResource MaterialDesignBody}"
+                                                Height="18"
+                                                Kind="FileMultiple"
+                                                Margin="0,0,8,0"
+                                                Width="18" />
+                                            <TextBlock Text="Отчёты" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </TreeViewItem.Header>
+
+                                    <TreeViewItem Tag="SummaryReport">
+                                        <TreeViewItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon
+                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Height="16"
+                                                    Kind="FileDocument"
+                                                    Margin="0,0,8,0"
+                                                    Width="16" />
+                                                <TextBlock Text="Сводная ведомость" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </TreeViewItem.Header>
                                         <TreeViewItem.InputBindings>
                                             <MouseBinding Command="{Binding CreateSummaryReportAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
 
-                                    <TreeViewItem Header="Ведомость комплектующих" Tag="ComponentsList">
+                                    <TreeViewItem Tag="ComponentsList">
+                                        <TreeViewItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon
+                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Height="16"
+                                                    Kind="FormatListBulleted"
+                                                    Margin="0,0,8,0"
+                                                    Width="16" />
+                                                <TextBlock Text="Ведомость комплектующих" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </TreeViewItem.Header>
                                         <TreeViewItem.InputBindings>
                                             <MouseBinding Command="{Binding CreateComponentsListReportAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
 
-                                    <TreeViewItem Header="Шильдики и таблички" Tag="NamePlates">
+                                    <TreeViewItem Tag="NamePlates">
+                                        <TreeViewItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon
+                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Height="16"
+                                                    Kind="Tag"
+                                                    Margin="0,0,8,0"
+                                                    Width="16" />
+                                                <TextBlock Text="Шильдики и таблички" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </TreeViewItem.Header>
                                         <TreeViewItem.InputBindings>
                                             <MouseBinding Command="{Binding CreateNamePlatesReportAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
 
-                                    <TreeViewItem Header="Маркировка" Tag="MarksReport">
+                                    <TreeViewItem Tag="MarksReport">
+                                        <TreeViewItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon
+                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Height="16"
+                                                    Kind="Label"
+                                                    Margin="0,0,8,0"
+                                                    Width="16" />
+                                                <TextBlock Text="Маркировка" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </TreeViewItem.Header>
                                         <TreeViewItem.InputBindings>
                                             <MouseBinding Command="{Binding CreateMarksReportAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
 
-                                    <TreeViewItem Header="Производство" Tag="ProductionList">
+                                    <TreeViewItem Tag="ProductionList">
+                                        <TreeViewItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon
+                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Height="16"
+                                                    Kind="Factory"
+                                                    Margin="0,0,8,0"
+                                                    Width="16" />
+                                                <TextBlock Text="Производство" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </TreeViewItem.Header>
                                         <TreeViewItem.InputBindings>
                                             <MouseBinding Command="{Binding CreateProductionListReportAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
 
-                                    <TreeViewItem Header="Фин. план" Tag="FinPlan">
+                                    <TreeViewItem Tag="FinPlan">
+                                        <TreeViewItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon
+                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Height="16"
+                                                    Kind="CurrencyUsd"
+                                                    Margin="0,0,8,0"
+                                                    Width="16" />
+                                                <TextBlock Text="Фин. план" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </TreeViewItem.Header>
                                         <TreeViewItem.InputBindings>
                                             <MouseBinding Command="{Binding CreateFinPlanReportAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
 
-                                    <TreeViewItem Header="Отчёт тара" Tag="ContainersReport">
+                                    <TreeViewItem Tag="ContainersReport">
+                                        <TreeViewItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon
+                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Height="16"
+                                                    Kind="PackageVariant"
+                                                    Margin="0,0,8,0"
+                                                    Width="16" />
+                                                <TextBlock Text="Отчёт тара" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </TreeViewItem.Header>
                                         <TreeViewItem.InputBindings>
                                             <MouseBinding Command="{Binding CreateContainersReportAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
 
-                                    <TreeViewItem Header="Паспорт" Tag="Passport">
+                                    <TreeViewItem Tag="Passport">
+                                        <TreeViewItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon
+                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Height="16"
+                                                    Kind="FileAccount"
+                                                    Margin="0,0,8,0"
+                                                    Width="16" />
+                                                <TextBlock Text="Паспорт" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </TreeViewItem.Header>
                                         <TreeViewItem.InputBindings>
                                             <MouseBinding Command="{Binding CreatePassportReportAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
 
-                                    <TreeViewItem Header="Технологические карты" Tag="TechCards">
+                                    <TreeViewItem Tag="TechCards">
+                                        <TreeViewItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon
+                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Height="16"
+                                                    Kind="Card"
+                                                    Margin="0,0,8,0"
+                                                    Width="16" />
+                                                <TextBlock Text="Технологические карты" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </TreeViewItem.Header>
                                         <TreeViewItem.InputBindings>
                                             <MouseBinding Command="{Binding CreateTechCardsReportAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
                                     </TreeViewItem>
                                 </TreeViewItem>
 
-                                <TreeViewItem Header="1C" IsExpanded="True">
-                                    <TreeViewItem Header="Сводная ведомость (1C)" Tag="SummaryReport">
+                                <!--  1C  -->
+                                <TreeViewItem IsExpanded="True">
+                                    <TreeViewItem.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon
+                                                Foreground="{DynamicResource MaterialDesignBody}"
+                                                Height="18"
+                                                Kind="Database"
+                                                Margin="0,0,8,0"
+                                                Width="18" />
+                                            <TextBlock Text="1C" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </TreeViewItem.Header>
+
+                                    <TreeViewItem Tag="SummaryReport">
+                                        <TreeViewItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon
+                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Height="16"
+                                                    Kind="FileDocument"
+                                                    Margin="0,0,8,0"
+                                                    Width="16" />
+                                                <TextBlock Text="Сводная ведомость (1C)" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </TreeViewItem.Header>
                                         <TreeViewItem.InputBindings>
                                             <MouseBinding Command="{Binding CreateFlatSummaryReportCommandAsync}" Gesture="LeftDoubleClick" />
                                         </TreeViewItem.InputBindings>
@@ -152,7 +392,11 @@
             Width="2" />
 
 
-        <TabControl Grid.Column="2" x:Name="MainTabControl">
+        <TabControl
+            Grid.Column="2"
+            HorizontalContentAlignment="Stretch"
+            VerticalContentAlignment="Stretch"
+            x:Name="MainTabControl">
             <TabControl.Resources>
                 <Style TargetType="TabItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />

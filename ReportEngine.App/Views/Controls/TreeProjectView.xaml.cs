@@ -39,6 +39,23 @@ public partial class TreeProjectView : UserControl, IDisposable
 
         _disposed = true;
     }
+    
+    private string GetHeaderText(TreeViewItem item)
+    {
+        if (item.Header is StackPanel stackPanel)
+        {
+            // Ищем TextBlock в StackPanel
+            foreach (var child in stackPanel.Children)
+            {
+                if (child is TextBlock textBlock)
+                {
+                    return textBlock.Text;
+                }
+            }
+        }
+        // Если Header - простая строка (для элементов без иконок)
+        return item.Header?.ToString() ?? string.Empty;
+    }
 
     private void OpenCurrentView(object sender, MouseButtonEventArgs e)
     {
@@ -47,7 +64,7 @@ public partial class TreeProjectView : UserControl, IDisposable
             var treeViewItem = NavigationTree.SelectedItem as TreeViewItem;
             if (treeViewItem?.Tag != null)
             {
-                var header = treeViewItem.Header.ToString();
+                var header = GetHeaderText(treeViewItem);
                 var tag = treeViewItem.Tag.ToString();
                 LoadTreeContent(tag, header);
             }
@@ -91,6 +108,8 @@ public partial class TreeProjectView : UserControl, IDisposable
             {
                 Tag = tag,
                 Content = content,
+                HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                VerticalContentAlignment = VerticalAlignment.Stretch, 
                 Style = (Style)FindResource(typeof(TabItem))
             };
 
