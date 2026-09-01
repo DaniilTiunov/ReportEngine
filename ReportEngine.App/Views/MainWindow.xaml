@@ -257,11 +257,6 @@
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAuditContentCommand}" Header="Аудит" />
 
                 <MenuItem
-                    Click="OpenAssistant_Click"
-                    DockPanel.Dock="Right"
-                    Header="ИИ помощник" />
-
-                <MenuItem
                     Click="OpenLogger_Click"
                     Header="Логгер"
                     HorizontalAlignment="Right"
