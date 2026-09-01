@@ -9,6 +9,7 @@ using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Helpers;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -171,8 +172,12 @@ public class FinPlanReportGenerator : IReportGenerator
         var recordNameRange = ws.Range($"A{row}:E{row}").Merge();
         recordNameRange.Value = record.Name.Value;
 
+
+        
         var recordPriceRange = ws.Range($"F{row}:G{row}").Merge();
-        recordPriceRange.Value = ExcelReportHelper.FormatPrice(record.CommonCost.Value);
+        recordPriceRange.SetValue(record.CommonCost.Value.Ceiling());
+        recordPriceRange.Style.NumberFormat.Format = "# ##0";
+
 
         var unitPriceRange = ws.Range($"H{row}:I{row}").Merge();
         unitPriceRange.Value = record.Unit.Value;
