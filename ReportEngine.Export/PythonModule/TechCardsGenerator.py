@@ -136,6 +136,18 @@ def fillStandPage(stand, project, tableSplittingInfo = None):
         leading = 7
     )
 
+    otherHeaderStyle = ParagraphStyle(
+        'otherHeader',
+        parent = styles['Normal'],
+        fontName ='Arial-Bold',
+        encoding ='UTF-8',
+        fontSize = 7,
+        wordWrap = 'LTR',
+        alignment = TA_CENTER,
+        leading = 7
+
+    )
+
 
     cyrillicStyle = ParagraphStyle(
         'Normal',
@@ -146,6 +158,8 @@ def fillStandPage(stand, project, tableSplittingInfo = None):
         wordWrap = 'LTR'
     )
 
+
+    invisibleText = '&nbsp;'
 
     testExecution = tableSplittingInfo is None
 
@@ -325,17 +339,19 @@ def fillStandPage(stand, project, tableSplittingInfo = None):
                                             PdfHelper.firstColumnLeftTableStyleCmd ))
 
 
+
     #таблица электрических компонентов
-    electricPartsHeaderTable = Table(data = [["Электрические компоненты"]], colWidths = rightPartWidth)
+    electricPartsHeaderTable = Table(data = [[ Paragraph("Электрические компоненты",otherHeaderStyle)]], colWidths = rightPartWidth)
     electricPartsHeaderTable.setStyle(TableStyle(cmds =
                                               PdfHelper.commonTableStyleCmd +
                                               PdfHelper.centerAlignTableStyleCmd + 
                                               PdfHelper.boldFontTableStyleCmd + 
-                                              PdfHelper.visibleAllBordersTableStyleCmd ))
+                                              PdfHelper.visibleAllBordersTableStyleCmd 
+                                              ))
     rightPartElementsCount+=1
 
-    electricPartsRecords = columnsHeaderTitles.copy()
-    rightPartElementsCount+=1
+    electricPartsRecords = []
+    #rightPartElementsCount+=1
 
     for electricPart in stand["ElectricParts"]:
         tableRecord = [
@@ -386,21 +402,21 @@ def fillStandPage(stand, project, tableSplittingInfo = None):
                                               PdfHelper.usualFontTableStyleCmd + 
                                               PdfHelper.visibleAllBordersTableStyleCmd))
 
-    # #выравнивание таблиц по кол-вам строк
-    # rowsOffset = leftPartElementsCount - rightPartElementsCount
+    #выравнивание таблиц по кол-вам строк
+    rowsOffset = leftPartElementsCount - rightPartElementsCount
 
-    # targetObject = mountPartsRecords if rowsOffset < 0 else electricPartsRecords
+    targetObject = mountPartsRecords if rowsOffset < 0 else electricPartsRecords
 
-    # for _ in range(abs(rowsOffset-1)):
+    for _ in range(abs(rowsOffset)) :
 
-    #     emptyRow = [
-    #         Paragraph("",tableContentStyle),
-    #         Paragraph("",tableContentStyle),
-    #         Paragraph("",tableContentStyle),
-    #         Paragraph("",tableContentStyle),
-    #         ]
+        emptyRow = [
+            Paragraph(invisibleText,tableContentStyle),
+            Paragraph(invisibleText,tableContentStyle),
+            Paragraph(invisibleText,tableContentStyle),
+            Paragraph(invisibleText,tableContentStyle)
+            ]
 
-    #     targetObject.append(emptyRow)
+        targetObject.append(emptyRow)
 
 
     mountPartsTable = Table(data = mountPartsRecords, colWidths = [leftPartWidth*0.68, leftPartWidth*0.12, leftPartWidth*0.1, leftPartWidth*0.1])
@@ -419,8 +435,6 @@ def fillStandPage(stand, project, tableSplittingInfo = None):
                                             PdfHelper.centerAlignTableStyleCmd + 
                                             PdfHelper.usualFontTableStyleCmd + 
                                             PdfHelper.visibleAllBordersTableStyleCmd+
-                                            #шапка жирным
-                                            [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] +
                                             PdfHelper.firstColumnLeftTableStyleCmd))
 
     leftPart = [ standTechCardHeaderTable,
@@ -443,20 +457,20 @@ def fillStandPage(stand, project, tableSplittingInfo = None):
 
 
     #пытаемся выровнять левую и правую части таблицы дополнительным отступом
-    leftPartHeight = PdfHelper.get_column_height(leftPart, leftPartWidth)
-    rightPartHeight = PdfHelper.get_column_height(rightPart, rightPartWidth)
+    # leftPartHeight = PdfHelper.get_column_height(leftPart, leftPartWidth)
+    # rightPartHeight = PdfHelper.get_column_height(rightPart, rightPartWidth)
 
-    partsHeightOffset = leftPartHeight - rightPartHeight
+    # partsHeightOffset = leftPartHeight - rightPartHeight
 
-    if abs(partsHeightOffset) > 0:
+    # if abs(partsHeightOffset) > 0:
 
-        targetObject = leftPart if partsHeightOffset < 0 else rightPart
-        targetWidht = leftPartWidth if partsHeightOffset < 0 else rightPartWidth
+    #     targetObject = leftPart if partsHeightOffset < 0 else rightPart
+    #     targetWidht = leftPartWidth if partsHeightOffset < 0 else rightPartWidth
 
-        spacerTable = Table([[""]], rowHeights = [abs(partsHeightOffset)], colWidths=[targetWidht])
-        spacerTable.setStyle(TableStyle(cmds =PdfHelper.visibleAllBordersTableStyleCmd))
+    #     spacerTable = Table([[""]], rowHeights = [abs(partsHeightOffset)], colWidths=[targetWidht])
+    #     spacerTable.setStyle(TableStyle(cmds =PdfHelper.visibleAllBordersTableStyleCmd))
 
-        targetObject.append(spacerTable)
+    #     targetObject.append(spacerTable)
 
 
     sheetTable = Table(data = [[ leftPart, rightPart ]], colWidths = [leftPartWidth , rightPartWidth])
