@@ -1228,56 +1228,7 @@ public class ProjectViewModel : BaseViewModel
             }
         });
     }
-
-
-    public async void OnCreateContainerStandCommandExecuted(object obj)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await _containerService.CreateBatchAsync(CurrentProjectModel));
-    }
-
-    public async void OnDeleteBatchCommandExecuted(object obj)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await _containerService.DeleteBatchAsync(CurrentProjectModel));
-    }
-
-    public async void OnRefreshBatchesCommandCommandExecuted(object obj)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await _containerService.LoadBatchesAsync(CurrentProjectModel));
-    }
-
-    public async void OnAddContainerToBatchCommandExecuted(object obj)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await _containerService.AddContainerToBatchAsync(CurrentProjectModel));
-    }
-
-    public async void OnDeleteContainerCommandExecuted(object obj)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await _containerService.RemoveContainerFromBatchAsync(CurrentProjectModel));
-    }
-
-    public async Task OnUpdateSelectedContainerExecuted(object obj)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await _containerService.UpdateSelectedContainerAsync(CurrentProjectModel));
-    }
-
-    public async void OnAddStandToContainerCommandExecuted(object obj)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await _containerService.AddStandToContainerAsync(CurrentProjectModel));
-    }
-
-    public async void OnRemoveStandFromContainerCommandExecuted(object obj)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await _containerService.RemoveStandFromContainerAsync(CurrentProjectModel));
-    }
-
+    
     public void ResetProject()
     {
         // Совместимый синхронный вызов, чтобы не дедлокалось в процессе загрузки
@@ -1369,6 +1320,7 @@ public class ProjectViewModel : BaseViewModel
 
             await LoadObvyazkiAsync();
             await LoadStandsDataAsync();
+            await LoadPurposesInStandsAsync();
 
             OnPropertyChanged(nameof(CurrentStandModel));
         });

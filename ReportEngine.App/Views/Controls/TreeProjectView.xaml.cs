@@ -15,16 +15,19 @@ public partial class TreeProjectView : UserControl, IDisposable
 {
     private readonly ExceptionService _exceptionService;
     private readonly ProjectViewModel _projectViewModel;
+    private readonly ContainersViewModel _containersViewModel;
     private bool _disposed;
 
     public TreeProjectView(
         TreeViewModel treeViewModel,
         ProjectViewModel projectViewModel,
-        ExceptionService exceptionService)
+        ExceptionService exceptionService, 
+        ContainersViewModel containersViewModel)
     {
         InitializeComponent();
         _projectViewModel = projectViewModel;
         _exceptionService = exceptionService;
+        _containersViewModel = containersViewModel;
         DataContext = treeViewModel;
     }
 
@@ -131,7 +134,7 @@ public partial class TreeProjectView : UserControl, IDisposable
             {
                 "ProjectCard" => ApplyAnimation(new ProjectCardView(_projectViewModel)),
                 "ProjectPreview" => ApplyAnimation(new ProjectPreview(_projectViewModel)),
-                "StandsContainer" => ApplyAnimation(new StandsContainerView(_projectViewModel)),
+                "StandsContainer" => ApplyAnimation(new StandsContainerView(_containersViewModel)),
                 "DockViewer" => ApplyAnimation(new DockViewerView(new DockViewerViewModel()))
             };
         }
