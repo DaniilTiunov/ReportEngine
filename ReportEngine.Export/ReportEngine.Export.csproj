@@ -68,40 +68,4 @@
         <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
     </ItemGroup>
 
-    <ItemGroup>
-        <None Update="ReportTemplates\Finplan587.xlsx">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="ReportTemplates\passports.pdf">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="ReportTemplates\Passport_template.docx">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="ReportTemplates\Ведомость комплектующих.xlsx">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="ReportTemplates\Маркировка.xlsx">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="ReportTemplates\Отчет по производству.xlsx">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="ReportTemplates\Сводная ведомость_04.08.25 09_37_49.xls">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="ReportTemplates\Тара.xlsx">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="ReportTemplates\Технологические карты.pdf">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="ReportTemplates\Шильдики_таблички.xlsx">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="ReportTemplates\TechnologicalCards_template.docx">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-    </ItemGroup>
-
 </Project>
