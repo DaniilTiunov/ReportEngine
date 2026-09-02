@@ -8,8 +8,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
-using ReportEngine.App.LLM;
-using ReportEngine.App.LLM.ViewModels;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.Views.Controls;
@@ -207,27 +205,6 @@ public partial class MainWindow : Window //Это так называемый "C
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
         Application.Current.Shutdown();
-    }
-
-    private void OpenLauncher(object sender, RoutedEventArgs e)
-    {
-        try
-        {
-            var localPath = AppDomain.CurrentDomain.BaseDirectory;
-            var updaterPath = Path.Combine(localPath, "ReportEngine.Launcher.exe");
-
-            if (!File.Exists(updaterPath))
-            {
-                MessageBox.Show("Лаунчер не найден!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            Process.Start(updaterPath);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Ошибка запуска: {ex.Message}");
-        }
     }
 
     private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)

@@ -15,7 +15,6 @@ public partial class AllStandsView : Window
     {
         InitializeComponent();
         DataContext = allStandsViewModel;
-        _allStandsViewModel = allStandsViewModel;
     }
 
     private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -53,11 +52,6 @@ public partial class AllStandsView : Window
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
         Close();
-    }
-
-    private async void Window_Loaded(object sender, RoutedEventArgs e)
-    {
-        await _allStandsViewModel.GetAllProjectsAsync();
     }
 
     private void StandsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
