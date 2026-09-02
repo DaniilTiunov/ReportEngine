@@ -322,7 +322,7 @@ public class StandService : IStandService
         if (stand == null || obv == null)
             return;
 
-        var obvWeight = obv.Obvyazka.Weight;
+       // var obvWeight = obv.Obvyazka.Weight;
 
         stand.NN = obv.NN ?? 0;
         stand.ObvyazkaName = obv.ObvyazkaName;
