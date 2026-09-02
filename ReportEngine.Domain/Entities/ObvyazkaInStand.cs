@@ -70,8 +70,5 @@ public class ObvyazkaInStand
     public string? ThirdSensorMarkMinus { get; set; }
     public string? ThirdSensorDescription { get; set; }
 
-    [NotMapped]
-    public float? ObvWeight { get; set; }
-
     public virtual ICollection<ObvyazkaAdditionalEquipPurpose>? AdditionalComponents { get; set; }
 }

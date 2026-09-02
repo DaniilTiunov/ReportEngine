@@ -353,8 +353,6 @@ public class ProjectService : IProjectService
         obv.ThirdSensorDescription = stand.ThirdSensorDescription;
         obv.ImageName = stand.ImageName;
        
-
-        obv.ObvWeight = stand.ObvWeight;
         obv.Weight = stand.ObvWeight +  StandService.CountObvComponentsWeight(stand);
 
         await UpdateObvyazka(projectModel, projectModel.SelectedStand.SelectedObvyazkaInStand);

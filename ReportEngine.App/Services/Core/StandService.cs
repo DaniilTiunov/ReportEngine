@@ -269,7 +269,7 @@ public class StandService : IStandService
                 .ToList(),
 
 
-            ObvWeight = selectedObvyazka.Weight,
+            
             Weight = selectedObvyazka.Weight + CountObvComponentsWeight(standModel)
 
         };
@@ -282,6 +282,8 @@ public class StandService : IStandService
     {
         if (stand == null || obv == null)
             return;
+
+        var obvWeight = obv.Obvyazka.Weight;
 
         stand.NN = obv.NN ?? 0;
         stand.ObvyazkaName = obv.ObvyazkaName;
@@ -297,7 +299,7 @@ public class StandService : IStandService
         stand.KMCH = obv.KMCH;
         stand.KMCHCount = obv.KMCHCount;
         stand.KMCHMeasure = obv.KMCHMeasure;
-        stand.ObvWeight = obv.ObvWeight;
+        stand.Weight = obv.Weight ?? 0;
 
         stand.MaterialLineCostPerUnit = obv.MaterialLineCostPerUnit;
         stand.TreeSocketMaterialCostPerUnit = obv.TreeSocketMaterialCostPerUnit;

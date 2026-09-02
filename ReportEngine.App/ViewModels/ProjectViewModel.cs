@@ -702,7 +702,7 @@ public class ProjectViewModel : BaseViewModel
             var stand = CurrentProjectModel.SelectedStand;
 
 
-
+            stand.ObvWeight = SelectedObvyazka.Weight;
             stand.MaterialLineCount = SelectedObvyazka.LineLength;
             stand.ArmatureCount = SelectedObvyazka.ZraCount;
             stand.TreeSocketMaterialCount = SelectedObvyazka.TreeSocket;
