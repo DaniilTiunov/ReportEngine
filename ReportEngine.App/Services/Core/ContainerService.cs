@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using ReportEngine.App.Model;
+using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.Domain.Entities;
@@ -23,41 +24,44 @@ public class ContainerService
         _exceptionService = exceptionService;
     }
 
-    public async Task CreateBatchAsync(ProjectModel projectModel)
+    public async Task<ContainerBatch> CreateBatchAsync(int projectId)
     {
-        if (projectModel?.CurrentProjectId == 0)
+        if (projectId == 0)
         {
             _notificationService.ShowInfo("Сначала выберите проект!");
-            return;
+            return null;
         }
 
+        var newBatch = new ContainerBatch();
+        
         await _exceptionService.SafeExecuteAsync(async () =>
         {
             var existing = await _containerRepository
-                .GetAllByProjectIdAsync(projectModel.CurrentProjectId);
+                .GetAllByProjectIdAsync(projectId);
 
             var nextOrder = existing.Any()
                 ? existing.Max(b => b.BatchOrder) + 1
                 : 1;
 
-            var batch = new ContainerBatch
+            var newBatch = new ContainerBatch
             {
-                ProjectInfoId = projectModel.CurrentProjectId,
+                ProjectInfoId = projectId,
                 Name = $"Партия {nextOrder}",
                 BatchOrder = nextOrder
             };
 
-            await _containerRepository.AddAsync(batch);
+            await _containerRepository.AddAsync(newBatch);
 
-            await LoadAllData(projectModel);
+            _notificationService.ShowInfo($"Партия создана {newBatch.Name}");
 
-            _notificationService.ShowInfo("Партия создана");
         });
+        
+        return newBatch;
     }
 
-    public async Task DeleteBatchAsync(ProjectModel projectModel)
+    public async Task DeleteBatchAsync(int batchId)
     {
-        if (projectModel?.SelectedContainerBatch == null)
+        if (batchId == null)
         {
             _notificationService.ShowInfo("Выберите партию!");
             return;
@@ -65,73 +69,48 @@ public class ContainerService
 
         await _exceptionService.SafeExecuteAsync(async () =>
         {
-            await _containerRepository
-                .DeleteByIdAsync(projectModel.SelectedContainerBatch.Id);
-
-
-            await RecalculateAndUpdateAllBatches(projectModel);
-
-
-            await LoadAllData(projectModel);
-
-            projectModel.SelectedContainerBatch = null;
-
+            await _containerRepository.DeleteByIdAsync(batchId);
+            
+            await RecalculateAndUpdateAllBatches(batchId);
+            
             _notificationService.ShowInfo("Партия удалена");
         });
     }
 
-    public async Task AddContainerToBatchAsync(ProjectModel projectModel)
+    public async Task AddContainerToBatchAsync(int projectId, int batchId, ContainerStand container)
     {
-        if (projectModel?.SelectedContainerBatch == null)
+        if (projectId == null)
         {
             _notificationService.ShowInfo("Выберите партию!");
             return;
         }
 
-        if (projectModel.SelectedContainerStand == null)
-        {
-            _notificationService.ShowInfo("Выберите тару!");
-            return;
-        }
-
         await _exceptionService.SafeExecuteAsync(async () =>
         {
-            await _containerRepository.AddContainerToBatchAsync(
-                projectModel.SelectedContainerBatch.Id,
-                projectModel.SelectedContainerStand);
+            await _containerRepository.AddContainerToBatchAsync(batchId, container);
 
-            await RecalculateAndUpdateAllBatches(projectModel);
-
-            await LoadAllData(projectModel);
-
+            await RecalculateAndUpdateAllBatches(projectId);
+            
             _notificationService.ShowInfo("Тара добавлена");
         });
     }
 
-    public async Task RemoveContainerFromBatchAsync(ProjectModel projectModel)
+    public async Task RemoveContainerFromBatchAsync(int projectId, 
+        int batchId,
+        int containerId)
     {
-        if (projectModel?.SelectedContainerBatch == null)
+        if (projectId == null || batchId == null || containerId == null)
         {
             _notificationService.ShowInfo("Выберите партию!");
             return;
         }
-
-        if (projectModel.SelectedContainerStand == null)
-        {
-            _notificationService.ShowInfo("Выберите тару!");
-            return;
-        }
-
+        
         await _exceptionService.SafeExecuteAsync(async () =>
         {
-            await _containerRepository.RemoveContainerFromBatchAsync(
-                projectModel.SelectedContainerBatch.Id,
-                projectModel.SelectedContainerStand.Id);
+            await _containerRepository.RemoveContainerFromBatchAsync(batchId, containerId);
 
-            await RecalculateAndUpdateAllBatches(projectModel);
-
-            await LoadAllData(projectModel);
-
+            await RecalculateAndUpdateAllBatches(projectId);
+            
             _notificationService.ShowInfo("Тара удалена");
         });
     }
@@ -151,9 +130,9 @@ public class ContainerService
         await _containerRepository.UpdateAsync(container);
     }
 
-    public async Task RecalculateAndUpdateAllBatches(ProjectModel projectModel)
+    public async Task RecalculateAndUpdateAllBatches(int projectId)
     {
-        var allBatches = await _containerRepository.GetAllProjectBatchesInfoAsync(projectModel.CurrentProjectId);
+        var allBatches = await _containerRepository.GetAllProjectBatchesInfoAsync(projectId);
 
         foreach (var batch in allBatches)
         {
@@ -162,58 +141,41 @@ public class ContainerService
         }
     }
 
-    public async Task AddStandToContainerAsync(ProjectModel projectModel)
+    public async Task AddStandToContainerAsync(int projectId, 
+        int containerId, 
+        int standId)
     {
-        if (projectModel?.SelectedContainerStand == null)
+        if (projectId == null)
         {
             _notificationService.ShowInfo("Выберите тару!");
             return;
         }
 
-        if (projectModel?.SelectedStandInProject == null)
-        {
-            _notificationService.ShowInfo("Выберите стенд!");
-            return;
-        }
-
         await _exceptionService.SafeExecuteAsync(async () =>
         {
-            await _containerRepository.AddStandToContainerAsync(
-                projectModel.SelectedContainerStand.Id,
-                projectModel.SelectedStandInProject.Id);
+            await _containerRepository.AddStandToContainerAsync(containerId, standId);
 
-            await RecalculateAndUpdateAllBatches(projectModel);
-
-            await LoadAllData(projectModel);
+            await RecalculateAndUpdateAllBatches(projectId);
 
             _notificationService.ShowInfo("Стенд добавлен");
         });
     }
 
-    public async Task RemoveStandFromContainerAsync(ProjectModel projectModel)
+    public async Task RemoveStandFromContainerAsync(int projectId, 
+        int containerId, 
+        int standId)
     {
-        if (projectModel?.SelectedContainerStand == null)
+        if (projectId == null)
         {
             _notificationService.ShowInfo("Выберите упаковку!");
             return;
         }
 
-
-        if (projectModel?.SelectedStandInContainer == null)
-        {
-            _notificationService.ShowInfo("Выберите стенд!");
-            return;
-        }
-
         await _exceptionService.SafeExecuteAsync(async () =>
         {
-            await _containerRepository.RemoveStandFromContainerAsync(
-                projectModel.SelectedContainerStand.Id,
-                projectModel.SelectedStandInContainer.Id);
+            await _containerRepository.RemoveStandFromContainerAsync(containerId, standId);
 
-            await RecalculateAndUpdateAllBatches(projectModel);
-
-            await LoadAllData(projectModel);
+            await RecalculateAndUpdateAllBatches(projectId);
 
             _notificationService.ShowInfo("Стенд удалён");
         });

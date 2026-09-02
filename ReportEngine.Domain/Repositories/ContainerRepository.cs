@@ -82,7 +82,7 @@ public class ContainerRepository : IContainerRepository
 
         var batch = await _context.ContainersBatch
             .Include(b => b.Containers)
-            .ThenInclude(c => c.Stands)
+                .ThenInclude(c => c.Stands)
             .FirstOrDefaultAsync(b => b.Id == id);
 
         if (batch == null) return 0;
@@ -115,19 +115,19 @@ public class ContainerRepository : IContainerRepository
     {
         return await _context.ContainersBatch
             .Include(b => b.Containers)
-            .ThenInclude(c => c.Stands)
+                .ThenInclude(c => c.Stands)
             .FirstOrDefaultAsync(b => b.Id == id);
     }
 
     public async Task<IEnumerable<ContainerBatch>> GetAllByProjectIdAsync(int projectId)
     {
         return await _context.ContainersBatch
-            .Include(b => b.Containers)
-            .ThenInclude(c => c.Stands)
-            .ThenInclude(s => s.StandFrames)
-            .ThenInclude(sf => sf.Frame)
-            .Where(b => b.ProjectInfoId == projectId)
             .AsNoTracking()
+            .Include(b => b.Containers)
+                .ThenInclude(c => c.Stands)
+                    .ThenInclude(s => s.StandFrames)
+                        .ThenInclude(sf => sf.Frame)
+            .Where(b => b.ProjectInfoId == projectId)
             .ToListAsync();
     }
 

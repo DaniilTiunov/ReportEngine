@@ -39,10 +39,10 @@ public class ProjectInfoRepository : IProjectInfoRepository
     public async Task<IEnumerable<ProjectInfo>> GetAllWithSandsAsync()
     {
         return await _context.Set<ProjectInfo>()
-            .Include(p => p.Stands)
-            .ThenInclude(s => s.StandAdditionalEquips)
-            .ThenInclude(sae => sae.AdditionalEquip.Purposes)
             .AsNoTracking()
+            .Include(p => p.Stands)
+                .ThenInclude(s => s.StandAdditionalEquips)
+                    .ThenInclude(sae => sae.AdditionalEquip.Purposes)
             .ToListAsync();
     }
 
@@ -458,5 +458,48 @@ public class ProjectInfoRepository : IProjectInfoRepository
 
         // Удаляем сами FormedDrainage
         _context.Set<FormedDrainage>().RemoveRange(drainages);
+    }
+    
+    
+    public async Task<List<StandFrame>> GetAllFramesInStandsAsync(int[] standIds)
+    {
+        return await _context.StandFrames
+            .AsNoTracking()
+            .Include(sf => sf.Frame)
+            .ThenInclude(f => f.Components)
+            .Where(sf => standIds.Contains(sf.StandId))
+            .ToListAsync();
+    }
+    
+    public async Task<List<StandDrainage>> GetAllDrainagesInStandsAsync(int[] standIds)
+    {
+        return await _context.StandDrainages
+            .AsNoTracking()
+            .Include(sd => sd.Drainage)
+            .ThenInclude(d => d.Purposes)
+            .Where(sd => standIds.Contains(sd.StandId))
+            .ToListAsync();
+    }
+    
+    public async Task<List<StandElectricalComponent>> GetAllElectricalComponentsInStandsAsync(
+        int[] standIds)
+    {
+        return await _context.StandElectricalComponents
+            .AsNoTracking()
+            .Include(sec => sec.ElectricalComponent)
+            .ThenInclude(e => e.Purposes)
+            .Where(sec => standIds.Contains(sec.StandId))
+            .ToListAsync();
+    }
+    
+    public async Task<List<StandAdditionalEquip>> GetAllAdditionalEquipsInStandsAsync(
+        int[] standIds)
+    {
+        return await _context.StandAdditionalEquips
+            .AsNoTracking()
+            .Include(sae => sae.AdditionalEquip)
+            .ThenInclude(e => e.Purposes)
+            .Where(sae => standIds.Contains(sae.StandId))
+            .ToListAsync();
     }
 }

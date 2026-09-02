@@ -1,278 +1,500 @@
 ﻿<UserControl
-    Background="{DynamicResource PrimaryColor}"
-    FontSize="16"
-    Foreground="{DynamicResource PrimaryForeground}"
-    HorizontalAlignment="Stretch"
-    VerticalAlignment="Stretch"
-    d:DesignHeight="700"
-    d:DesignWidth="800"
+    d:DesignHeight="800"
+    d:DesignWidth="1200"
     mc:Ignorable="d"
     x:Class="ReportEngine.App.Views.Controls.StandsContainerView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ReportEngine.Export.ExcelWork.Enums;assembly=ReportEngine.Export"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <UserControl.InputBindings>
-        <KeyBinding
-            Command="{Binding ProjectCommandProvider.RefreshBatchesCommand}"
-            CommandParameter="{x:Null}"
-            Key="F5" />
-    </UserControl.InputBindings>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
+        <!--  Верхняя панель с кнопками  -->
+        <Border
+            BorderBrush="Gray"
+            BorderThickness="1"
+            Grid.Row="0"
+            Margin="0,0,0,10"
+            Padding="10">
+            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                <Button
+                    Command="{Binding CreateBatchCommand}"
+                    Content="➕ Создать партию"
+                    FontSize="15"
+                    Margin="2" />
+                <Button
+                    Command="{Binding RefreshBatchesCommand}"
+                    Content="🔄 Обновить"
+                    FontSize="15"
+                    Margin="2" />
+                <Separator Margin="5,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+            </StackPanel>
+        </Border>
 
-    <ScrollViewer
-        HorizontalAlignment="Stretch"
-        Margin="10"
-        VerticalAlignment="Stretch"
-        Width="Auto">
-        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+        <!--  Основная область  -->
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="500" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
-
             </Grid.ColumnDefinitions>
 
-            <GroupBox
+            <!--  Левая панель: Список партий  -->
+            <Border
+                BorderBrush="Gray"
+                BorderThickness="1"
                 Grid.Column="0"
-                Grid.Row="0"
-                Header="Партии упаковок проекта"
-                Margin="5"
-                Padding="5">
-                <DockPanel LastChildFill="True">
-                    <DataGrid
-                        AutoGenerateColumns="False"
-                        BeginningEdit="DataGrid_BeginningEdit"
-                        CanUserAddRows="True"
-                        CanUserDeleteRows="True"
-                        EnableColumnVirtualization="False"
-                        ItemsSource="{Binding CurrentProjectModel.ContainerBatchesInProject}"
-                        MouseDoubleClick="DataGrid_MouseDoubleClick"
-                        SelectedItem="{Binding CurrentProjectModel.SelectedContainerBatch}">
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Command="{Binding ProjectCommandProvider.CreateContainerBatchCommand}"
-                                          Header="Добавить партию" />
+                Margin="0,0,5,0"
+                Padding="10">
+                <DockPanel>
+                    <TextBlock
+                        DockPanel.Dock="Top"
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        Margin="0,0,0,8"
+                        Text="📦 Партии" />
 
-                                <MenuItem Command="{Binding ProjectCommandProvider.DeleteBatchCommand}"
-                                          Header="Удалить партию" />
-                                <Separator />
-                                <MenuItem Command="{Binding ProjectCommandProvider.UpdateContainerCommand}"
-                                          Header="Сохранить изменения" />
-                                <MenuItem Command="{Binding ProjectCommandProvider.RefreshBatchesCommand}"
-                                          Header="Обновить список" />
-                                <Separator />
-                                <MenuItem Header="Создать отчет по выбранной партии">
-                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedBatchSummaryReportCommand}" Header="Сводная ведомость" />
-                                    <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedBatchComponentReportCommand}" Header="Ведомость комплектующих" />
-                                    <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedBatchNamePlatesReportCommand}" Header="Шильдики и таблички" />
-                                    <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedBatchMarksReportCommand}" Header="Маркировка" />
-                                    <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedBatchContainerReportCommand}" Header="Тара" />
-                                    <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedBatchProductionReportCommand}" Header="Производство" />
-                                    <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedBatchFinPlaneReportCommand}" Header="Фин. план" />
-                                    <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedBatchPassportReportCommand}" Header="Паспорт" />
-                                    <Separator />
-                                    <MenuItem Command="{Binding ProjectCommandProvider.SelectedBatchTechnoCardsReportCommand}" Header="Технологические карты" />
-                                </MenuItem>
+                    <!--  🔥 КОМПАКТНАЯ ПАНЕЛЬ ОТЧЁТОВ  -->
+                    <Border
+                        Background="{DynamicResource SecondaryColor}"
+                        BorderBrush="{DynamicResource BorderColor}"
+                        BorderThickness="1"
+                        CornerRadius="6"
+                        DockPanel.Dock="Bottom"
+                        Margin="0,5,0,5"
+                        Padding="5">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
-                        <DataGrid.Columns>
-                            <DataGridTextColumn
-                                Binding="{Binding BatchOrder}"
-                                Header="№"
-                                Width="Auto" />
-                            <DataGridTextColumn
-                                Binding="{Binding Name}"
-                                Header="Имя"
-                                Width="*" />
-                            <DataGridTextColumn
-                                Binding="{Binding ContainersCount}"
-                                Header="Количество тары"
-                                Width="Auto" />
-                            <DataGridTextColumn
-                                Binding="{Binding StandsCount}"
-                                Header="Количество стендов"
-                                Width="Auto" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </DockPanel>
-            </GroupBox>
+                            <TextBlock
+                                FontSize="14"
+                                FontWeight="SemiBold"
+                                Foreground="{DynamicResource StandLabelColor}"
+                                Grid.Column="0"
+                                Margin="5,0,10,0"
+                                Text="📄 Отчёт:"
+                                VerticalAlignment="Center" />
 
-            <GroupBox
-                Grid.Column="2"
-                Grid.Row="0"
-                Margin="5"
-                MinHeight="300"
-                Padding="5">
-                <GroupBox.Header>
-                    <TextBlock>
-                        <Run Text="Партия упаковок №" />
-                        <Run
+                            <ComboBox
+                                FontSize="14"
+                                Grid.Column="1"
+                                Margin="0,0,5,0"
+                                SelectedValue="{Binding SelectedReportType}"
+                                SelectedValuePath="Tag"
+                                VerticalAlignment="Center">
+                                <ComboBoxItem Content="📊 Сводная ведомость" Tag="{x:Static local:ReportType.SummaryReport}" />
+                                <ComboBoxItem Content="🔧 Ведомость комплектующих" Tag="{x:Static local:ReportType.ComponentsListReport}" />
+                                <ComboBoxItem Content="🏷 Шильдики и таблички" Tag="{x:Static local:ReportType.NameplatesReport}" />
+                                <ComboBoxItem Content="✏️ Маркировка" Tag="{x:Static local:ReportType.MarksReport}" />
+                                <ComboBoxItem Content="📦 Тара" Tag="{x:Static local:ReportType.ContainerReport}" />
+                                <ComboBoxItem Content="🏭 Производство" Tag="{x:Static local:ReportType.ProductionReport}" />
+                                <ComboBoxItem Content="💰 Фин. план" Tag="{x:Static local:ReportType.FinPlanReport}" />
+                                <ComboBoxItem Content="📋 Паспорт" Tag="{x:Static local:ReportType.PassportsReport}" />
+                                <ComboBoxItem Content="📑 Тех. карты" Tag="{x:Static local:ReportType.TechnologicalCards}" />
+                                <ComboBoxItem Content="📊 Сводная ведомость 1С" Tag="{x:Static local:ReportType.FlatSummaryReport}" />
+                            </ComboBox>
+
+                            <Button
+                                Command="{Binding GenerateSelectedReportCommand}"
+                                Content="▶ Создать"
+                                FontSize="14"
+                                Grid.Column="2"
+                                Margin="2"
+                                Padding="8,4" />
+                        </Grid>
+                    </Border>
+
+                    <!--  Кнопки управления партиями  -->
+                    <StackPanel
+                        DockPanel.Dock="Bottom"
+                        Margin="0,5,0,0"
+                        Orientation="Horizontal">
+                        <Button
+                            Command="{Binding CreateBatchCommand}"
+                            Content="➕ Создать"
                             FontSize="14"
-                            FontWeight="Bold"
-                            Text="{Binding CurrentProjectModel.SelectedContainerBatch.BatchOrder, TargetNullValue='(ошибка привязки)'}" />
-                    </TextBlock>
-                </GroupBox.Header>
-                <DockPanel LastChildFill="True">
-                    <DataGrid
-                        BeginningEdit="DataGrid_BeginningEdit"
-                        CanUserAddRows="True"
-                        CanUserDeleteRows="True"
-                        IsReadOnly="False"
-                        ItemsSource="{Binding CurrentProjectModel.ContainerStandsInSelectedBatch}"
-                        MouseDoubleClick="DataGrid_MouseDoubleClick"
-                        SelectedItem="{Binding CurrentProjectModel.SelectedContainerStand}">
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Command="{Binding ProjectCommandProvider.UpdateContainerCommand}"
-                                          Header="Сохранить изменения" />
-                                <Separator />
-                                <MenuItem Command="{Binding ProjectCommandProvider.DeleteContainerCommand}"
-                                          Header="Удалить упаковку" />
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
-                        <DataGrid.Columns>
-                            <DataGridTextColumn
-                                Binding="{Binding Name}"
-                                Header="Тара"
-                                Width="*" />
-                            <DataGridTextColumn
-                                Binding="{Binding StandsCount}"
-                                Header="Количество стендов"
-                                Width="Auto" />
-                            <DataGridTextColumn
-                                Binding="{Binding StandsWeight}"
-                                Header="Масса стендов"
-                                Width="Auto" />
-                            <DataGridTextColumn
-                                Binding="{Binding ContainerWeight}"
-                                Header="Общая масса"
-                                Width="Auto" />
-                            <DataGridTextColumn
-                                Binding="{Binding ContainerCost}"
-                                Header="Стоимость"
-                                Width="Auto" />
-                            <DataGridTemplateColumn Header="Выбрать">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button
-                                            Command="{Binding DataContext.ProjectCommandProvider.OpenAllSortamentsDialogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="{Binding}"
-                                            Content="Выбрать"
-                                            Margin="2,0,2,0"
-                                            Padding="5,0,5,0" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                            Margin="2" />
+                        <Button
+                            Command="{Binding RemoveSelectedBatchCommand}"
+                            Content="🗑 Удалить"
+                            FontSize="14"
+                            Margin="2" />
+                    </StackPanel>
+
+                    <!--  Список партий  -->
+                    <ListBox
+                        Background="{DynamicResource SecondaryColor}"
+                        Foreground="{DynamicResource PrimaryForeground}"
+                        ItemsSource="{Binding AllProjectBatches}"
+                        Margin="0,5,0,0"
+                        SelectedItem="{Binding SelectedBatch}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="0,2" Padding="8,6">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock
+                                            FontWeight="Bold"
+                                            Grid.Column="0"
+                                            Margin="0,0,10,0"
+                                            Text="{Binding BatchOrder}" />
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Text="{Binding Name}"
+                                            TextTrimming="CharacterEllipsis" />
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                            <TextBlock Margin="0,0,5,0" Text="{Binding ContainersCount}" />
+                                            <TextBlock Text="📦" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="3" Orientation="Horizontal">
+                                            <TextBlock Margin="10,0,0,0" Text="{Binding StandsCount}" />
+                                            <TextBlock Text=" Стенды" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </DockPanel>
-            </GroupBox>
+            </Border>
 
-            <StackPanel
+            <!--  Центральная панель: Контейнеры выбранной партии  -->
+            <Border
+                BorderBrush="Gray"
+                BorderThickness="1"
                 Grid.Column="1"
-                Grid.Row="1"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center">
+                Margin="5,0,5,0"
+                Padding="10">
+                <DockPanel>
+                    <TextBlock
+                        DockPanel.Dock="Top"
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        Margin="0,0,0,8">
+                        <Run Text="📋 Контейнеры" />
+                        <Run Text="{Binding SelectedBatch.Name, StringFormat=' ({0})'}" />
+                    </TextBlock>
 
-                <Button
-                    Command="{Binding ProjectCommandProvider.AddStandToContainerCommand}"
-                    Content="&lt;&lt;&lt; Добавить"
-                    Margin="5"
-                    Width="120" />
+                    <StackPanel
+                        DockPanel.Dock="Bottom"
+                        Margin="0,5,0,0"
+                        Orientation="Horizontal">
+                        <Button
+                            Command="{Binding AddContainerToBatchCommand}"
+                            Content="➕ Добавить"
+                            FontSize="15"
+                            Margin="2" />
+                        <Button
+                            Command="{Binding RemoveContainerFromBatchCommand}"
+                            Content="🗑 Удалить"
+                            FontSize="15"
+                            Margin="2" />
+                    </StackPanel>
 
-                <Button
-                    Command="{Binding ProjectCommandProvider.RemoveStandFromContainerCommand}"
-                    Content="Удалить &gt;&gt;&gt;"
-                    Margin="5"
-                    Width="120" />
-            </StackPanel>
+                    <ListBox
+                        Background="{DynamicResource SecondaryColor}"
+                        Foreground="{DynamicResource PrimaryForeground}"
+                        ItemsSource="{Binding SelectedBatch.Containers}"
+                        Margin="0,5,0,0"
+                        SelectedItem="{Binding SelectedStandContainer}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="0,2" Padding="8,6">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
 
-            <GroupBox
+                                        <TextBlock Grid.Column="0" Text="{Binding Name}" />
+
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Margin="10,0,2,0"
+                                            Text="Стендов:" />
+                                        <TextBlock
+                                            Grid.Column="2"
+                                            Margin="0,0,10,0"
+                                            Text="{Binding StandsCount}" />
+
+                                        <TextBlock
+                                            Grid.Column="3"
+                                            Margin="10,0,2,0"
+                                            Text="Вес стендов:" />
+                                        <TextBlock
+                                            Grid.Column="4"
+                                            Margin="0,0,10,0"
+                                            Text="{Binding StandsWeight}" />
+
+                                        <TextBlock Grid.Column="5" Text="кг" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+            </Border>
+
+            <!--  Правая панель: Стенды  -->
+            <Border
+                Background="{DynamicResource SecondaryColor}"
+                BorderBrush="Gray"
+                BorderThickness="1"
                 Grid.Column="2"
-                Grid.Row="1"
-                Header="Стенды проекта"
-                Margin="5"
-                Padding="5">
-                <DataGrid
-                    AutoGenerateColumns="False"
-                    CanUserAddRows="False"
-                    IsReadOnly="True"
-                    ItemsSource="{Binding CurrentProjectModel.Stands}"
-                    SelectedItem="{Binding CurrentProjectModel.SelectedStandInProject}">
-                    <DataGrid.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Command="{Binding ProjectCommandProvider.AddStandToContainerCommand}"
-                                      Header="Добавить выбранный стенд в контейнер" />
-                        </ContextMenu>
-                    </DataGrid.ContextMenu>
+                Margin="5,0,0,0"
+                Padding="10">
+                <DockPanel>
+                    <TextBlock
+                        DockPanel.Dock="Top"
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        Margin="0,0,0,8">
+                        <Run Text="📐 Стенды" />
+                        <Run Text="{Binding SelectedContainer.Name, StringFormat=' ({0})'}" />
+                    </TextBlock>
 
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding KKSCode}" Header="KKS" />
-                        <DataGridTextColumn
-                            Binding="{Binding SerialNumber}"
-                            Header="Серийный номер"
-                            Width="140" />
-                        <DataGridTextColumn Binding="{Binding Weight}" Header="KKS" />
-                        <DataGridTextColumn
-                            Binding="{Binding Width}"
-                            Header="Ширина"
-                            Width="80" />
-                        <DataGridTextColumn
-                            Binding="{Binding Weight}"
-                            Header="Вес стенда"
-                            Width="80" />
-                    </DataGrid.Columns>
-                </DataGrid>
-            </GroupBox>
+                    <!--  Панель управления стендами  -->
+                    <StackPanel DockPanel.Dock="Bottom" Margin="0,5,0,0">
+                        <Border Margin="0,0,0,5" Padding="5">
+                            <TextBlock FontSize="15" Text="Выберите стенд для добавления/удаления" />
+                        </Border>
 
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
-            <GroupBox
-                Grid.Row="1"
-                Header="Стенды внутри тары"
-                Margin="5"
-                MinHeight="50">
-                <DataGrid
-                    AutoGenerateColumns="False"
-                    IsReadOnly="True"
-                    ItemsSource="{Binding CurrentProjectModel.StandsInSelectedContainer}"
-                    Margin="5"
-                    SelectedItem="{Binding CurrentProjectModel.SelectedStandInContainer}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn
-                            Binding="{Binding KKSCode}"
-                            Header="KKS"
-                            Width="*" />
-                        <DataGridTextColumn
-                            Binding="{Binding SerialNumber}"
-                            Header="Серийный номер"
-                            Width="200" />
-                        <DataGridTextColumn
-                            Binding="{Binding Width}"
-                            Header="Ширина"
-                            Width="100" />
-                        <DataGridTextColumn
-                            Binding="{Binding Weight}"
-                            Header="Вес стенда"
-                            Width="100" />
-                    </DataGrid.Columns>
-                </DataGrid>
-            </GroupBox>
+                            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                <Button
+                                    Command="{Binding AddStandToContainerCommand}"
+                                    Content="← Добавить"
+                                    FontSize="15"
+                                    Margin="2" />
+                                <Button
+                                    Command="{Binding RemoveStandFromContainerCommand}"
+                                    Content="Удалить →"
+                                    FontSize="15"
+                                    Margin="2" />
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+
+                    <TabControl
+                        Background="{DynamicResource SecondaryColor}"
+                        Foreground="{DynamicResource PrimaryForeground}"
+                        Margin="0,5,0,0">
+                        <TabItem
+                            Background="{DynamicResource SecondaryColor}"
+                            Foreground="{DynamicResource PrimaryForeground}"
+                            Header="📦 В контейнере">
+                            <ListBox
+                                Background="{DynamicResource SecondaryColor}"
+                                BorderThickness="0"
+                                Foreground="{DynamicResource PrimaryForeground}"
+                                ItemsSource="{Binding SelectedStandContainer.Stands}"
+                                SelectedItem="{Binding SelectedStand}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border
+                                            Background="{DynamicResource StandCardBackground}"
+                                            BorderBrush="{DynamicResource StandCardBorder}"
+                                            BorderThickness="1"
+                                            CornerRadius="8"
+                                            Cursor="Hand"
+                                            Margin="0,3"
+                                            Padding="12,10">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                            <Setter Property="Background" Value="{DynamicResource StandInContainerSelected}" />
+                                                            <Setter Property="BorderBrush" Value="{DynamicResource StandInContainerBorderSelected}" />
+                                                            <Setter Property="BorderThickness" Value="2" />
+                                                        </DataTrigger>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background" Value="{DynamicResource StandCardHover}" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <!--  KKS  -->
+                                                <TextBlock
+                                                    FontWeight="SemiBold"
+                                                    Foreground="{DynamicResource StandLabelColor}"
+                                                    Grid.Column="0"
+                                                    Text="KKS:"
+                                                    VerticalAlignment="Center" />
+                                                <TextBlock
+                                                    FontWeight="SemiBold"
+                                                    Foreground="{DynamicResource StandKKSSColor}"
+                                                    Grid.Column="1"
+                                                    Margin="5,0,15,0"
+                                                    Text="{Binding KKSCode}"
+                                                    VerticalAlignment="Center" />
+
+                                                <!--  Серийный номер  -->
+                                                <TextBlock
+                                                    FontWeight="SemiBold"
+                                                    Foreground="{DynamicResource StandLabelColor}"
+                                                    Grid.Column="2"
+                                                    Text="Серийный:"
+                                                    VerticalAlignment="Center" />
+                                                <TextBlock
+                                                    Foreground="{DynamicResource PrimaryForeground}"
+                                                    Grid.Column="3"
+                                                    Margin="5,0,15,0"
+                                                    Text="{Binding SerialNumber}"
+                                                    TextTrimming="CharacterEllipsis"
+                                                    VerticalAlignment="Center" />
+
+                                                <!--  Вес  -->
+                                                <TextBlock
+                                                    FontWeight="SemiBold"
+                                                    Foreground="{DynamicResource StandLabelColor}"
+                                                    Grid.Column="4"
+                                                    Text="⚖️ Вес:"
+                                                    VerticalAlignment="Center" />
+                                                <TextBlock
+                                                    FontWeight="SemiBold"
+                                                    Foreground="{DynamicResource StandWeightColor}"
+                                                    Grid.Column="5"
+                                                    Margin="5,0,0,0"
+                                                    Text="{Binding Weight, StringFormat='{}{0} кг'}"
+                                                    VerticalAlignment="Center" />
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </TabItem>
+
+                        <TabItem
+                            Background="{DynamicResource SecondaryColor}"
+                            Foreground="{DynamicResource PrimaryForeground}"
+                            Header="➕ Доступные">
+                            <ListBox
+                                Background="{DynamicResource SecondaryColor}"
+                                BorderThickness="0"
+                                Foreground="{DynamicResource PrimaryForeground}"
+                                ItemsSource="{Binding AvailableStands}"
+                                SelectedItem="{Binding SelectedStand}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border
+                                            Background="{DynamicResource StandCardBackground}"
+                                            BorderBrush="{DynamicResource StandCardBorder}"
+                                            BorderThickness="1"
+                                            CornerRadius="8"
+                                            Cursor="Hand"
+                                            Margin="0,3"
+                                            Padding="12,10">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                            <Setter Property="Background" Value="{DynamicResource StandAvailableSelected}" />
+                                                            <Setter Property="BorderBrush" Value="{DynamicResource StandAvailableBorderSelected}" />
+                                                            <Setter Property="BorderThickness" Value="2" />
+                                                        </DataTrigger>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background" Value="{DynamicResource StandCardHover}" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <!--  KKS  -->
+                                                <TextBlock
+                                                    FontWeight="SemiBold"
+                                                    Foreground="{DynamicResource StandLabelColor}"
+                                                    Grid.Column="0"
+                                                    Text="KKS:"
+                                                    VerticalAlignment="Center" />
+                                                <TextBlock
+                                                    FontWeight="SemiBold"
+                                                    Foreground="{DynamicResource StandKKSSColor}"
+                                                    Grid.Column="1"
+                                                    Margin="5,0,15,0"
+                                                    Text="{Binding KKSCode}"
+                                                    VerticalAlignment="Center" />
+
+                                                <!--  Серийный номер  -->
+                                                <TextBlock
+                                                    FontWeight="SemiBold"
+                                                    Foreground="{DynamicResource StandLabelColor}"
+                                                    Grid.Column="2"
+                                                    Text="Серийный:"
+                                                    VerticalAlignment="Center" />
+                                                <TextBlock
+                                                    Foreground="{DynamicResource PrimaryForeground}"
+                                                    Grid.Column="3"
+                                                    Margin="5,0,15,0"
+                                                    Text="{Binding SerialNumber}"
+                                                    TextTrimming="CharacterEllipsis"
+                                                    VerticalAlignment="Center" />
+
+                                                <!--  Вес  -->
+                                                <TextBlock
+                                                    FontWeight="SemiBold"
+                                                    Foreground="{DynamicResource StandLabelColor}"
+                                                    Grid.Column="4"
+                                                    Text="⚖️ Вес:"
+                                                    VerticalAlignment="Center" />
+                                                <TextBlock
+                                                    FontWeight="SemiBold"
+                                                    Foreground="{DynamicResource StandWeightColor}"
+                                                    Grid.Column="5"
+                                                    Margin="5,0,0,0"
+                                                    Text="{Binding Weight, StringFormat='{}{0} кг'}"
+                                                    VerticalAlignment="Center" />
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </TabItem>
+                    </TabControl>
+                </DockPanel>
+            </Border>
         </Grid>
-    </ScrollViewer>
+    </Grid>
 </UserControl>

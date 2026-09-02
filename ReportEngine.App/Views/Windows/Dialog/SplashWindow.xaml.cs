@@ -15,6 +15,8 @@ public partial class SplashWindow : Window
     [ObservableProperty] private ReleaseChannel _channel;
 
     [ObservableProperty] private string _version;
+    
+    [ObservableProperty] private string _statusText;
 
     public SplashWindow()
     {
@@ -44,16 +46,16 @@ public partial class SplashWindow : Window
 
     public void CheckDbStatus(ReAppContext dbContext)
     {
-        StatusText.Text = "Проверка подключения к базе данных...";
+        StatusText = "Проверка подключения к базе данных...";
 
         if (dbContext.Database.CanConnect())
-            StatusText.Text = "Подключение к базе данных установлено...";
+            StatusText = "Подключение к базе данных установлено...";
         else
-            StatusText.Text = "Подключение к базе данных не установлено...";
+            StatusText = "Подключение к базе данных не установлено...";
     }
 
     public void SetStatusText(string statusText)
     {
-        StatusText.Text = statusText;
+        StatusText = statusText;
     }
 }

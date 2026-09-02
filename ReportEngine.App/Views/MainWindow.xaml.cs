@@ -8,8 +8,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
-using ReportEngine.App.LLM;
-using ReportEngine.App.LLM.ViewModels;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.Views.Controls;
@@ -209,27 +207,6 @@ public partial class MainWindow : Window //Это так называемый "C
         Application.Current.Shutdown();
     }
 
-    private void OpenLauncher(object sender, RoutedEventArgs e)
-    {
-        try
-        {
-            var localPath = AppDomain.CurrentDomain.BaseDirectory;
-            var updaterPath = Path.Combine(localPath, "ReportEngine.Launcher.exe");
-
-            if (!File.Exists(updaterPath))
-            {
-                MessageBox.Show("Лаунчер не найден!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            Process.Start(updaterPath);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Ошибка запуска: {ex.Message}");
-        }
-    }
-
     private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
         if (_projectsView == null)
@@ -254,38 +231,7 @@ public partial class MainWindow : Window //Это так называемый "C
 
         _projectsView.Refresh();
     }
-
-    private void OpenAssistant_Click(object sender, RoutedEventArgs e)
-    {
-        try
-        {
-            if (AiAssistantContainer.Visibility == Visibility.Collapsed)
-            {
-                AiAssistantContainer.Visibility = Visibility.Visible;
-
-                if (AiAssistantHost.Content == null)
-                {
-                    var viewModel = _serviceProvider.GetRequiredService<ChatWithAiViewModel>();
-                    var chatView = new ChatWithAi(viewModel);
-                    AiAssistantHost.Content = chatView;
-                }
-            }
-            else
-            {
-                AiAssistantContainer.Visibility = Visibility.Collapsed;
-            }
-        }
-        catch (Exception exception)
-        {
-            MessageBox.Show(exception.Message);
-        }
-    }
-
-    private void CloseAiAssistant_Click(object sender, RoutedEventArgs e)
-    {
-        AiAssistantContainer.Visibility = Visibility.Collapsed;
-    }
-
+    
     private void OpenLogger_Click(object sender, RoutedEventArgs e)
     {
         if (LogContainer.Visibility == Visibility.Collapsed)

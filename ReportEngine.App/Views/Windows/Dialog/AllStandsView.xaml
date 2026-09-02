@@ -3,9 +3,8 @@
     FontFamily="Bahnschrift"
     FontSize="14"
     Foreground="{DynamicResource PrimaryForeground}"
-    Loaded="Window_Loaded"
     ResizeMode="CanResize"
-    Title="Все стенды"
+    Title="🏗️ Все стенды"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d"
@@ -42,15 +41,16 @@
                         Margin="10,0,0,0"
                         Orientation="Horizontal"
                         VerticalAlignment="Center">
-                        <Image
-                            Height="18"
+                        <TextBlock
+                            FontSize="16"
                             Margin="0,0,8,0"
-                            Source="/Resources/Icons/estimate_cost_icon_213382.ico"
-                            Width="18" />
+                            VerticalAlignment="Center">
+                            🏗️
+                        </TextBlock>
                         <TextBlock
                             FontSize="14"
                             Foreground="White"
-                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}"
+                            Text="🗂️ Все стенды"
                             VerticalAlignment="Center" />
                     </StackPanel>
 
@@ -62,7 +62,7 @@
                             Click="MinimizeButton_Click"
                             FontSize="16"
                             Height="30"
-                            ToolTip="Свернуть"
+                            ToolTip="Свернуть ➖"
                             Width="40"
                             x:Name="MinimizeButton">
                             ─
@@ -72,7 +72,7 @@
                             FontSize="16"
                             Height="30"
                             Margin="10,0,0,0"
-                            ToolTip="Развернуть"
+                            ToolTip="Развернуть ⬜"
                             Width="40"
                             x:Name="MaxRestoreButton">
                             ▢
@@ -82,7 +82,7 @@
                             FontSize="16"
                             Height="30"
                             Margin="10,0,10,0"
-                            ToolTip="Закрыть"
+                            ToolTip="Закрыть ✕"
                             Width="40"
                             x:Name="CloseButton">
                             ✕
@@ -91,7 +91,7 @@
                 </Grid>
             </Border>
 
-            <Grid>
+            <Grid Margin="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -100,7 +100,23 @@
                 <GroupBox
                     FontSize="16"
                     Grid.Column="0"
-                    Header="Все проекты">
+                    Header="📋 Все проекты"
+                    Margin="0,0,5,0">
+                    <GroupBox.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontSize="18" Margin="0,0,8,0">📋</TextBlock>
+                                <TextBlock FontWeight="SemiBold" Text="Все проекты" />
+                                <TextBlock
+                                    FontSize="12"
+                                    Foreground="Gray"
+                                    Margin="10,0,0,0"
+                                    Text="{Binding Items.Count, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    VerticalAlignment="Center" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </GroupBox.HeaderTemplate>
+
                     <ListView
                         BorderThickness="3"
                         ItemsSource="{Binding AllProjects}"
@@ -109,9 +125,9 @@
                         x:Name="ProjectList">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn DisplayMemberBinding="{Binding Company}" Header="Заказчик" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Object}" Header="Объект" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Description}" Header="Обозначение по КД" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Company}" Header="🏢 Заказчик" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Object}" Header="📍 Объект" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Description}" Header="📄 Обозначение по КД" />
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -120,7 +136,23 @@
                 <GroupBox
                     FontSize="16"
                     Grid.Column="1"
-                    Header="Стенды в проекте">
+                    Header="🏗️ Стенды в проекте"
+                    Margin="5,0,0,0">
+                    <GroupBox.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontSize="18" Margin="0,0,8,0">🏗️</TextBlock>
+                                <TextBlock FontWeight="SemiBold" Text="Стенды в проекте" />
+                                <TextBlock
+                                    FontSize="12"
+                                    Foreground="Gray"
+                                    Margin="10,0,0,0"
+                                    Text="{Binding Items.Count, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    VerticalAlignment="Center" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </GroupBox.HeaderTemplate>
+
                     <ListView
                         BorderThickness="3"
                         ItemsSource="{Binding SelectedProject.Stands}"
@@ -130,9 +162,9 @@
                         x:Name="StandsList">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn DisplayMemberBinding="{Binding KKSCode}" Header="Код ККС" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Design}" Header="Обозначение стенда" />
-                                <GridViewColumn DisplayMemberBinding="{Binding SerialNumber}" Header="Серийный номер" />
+                                <GridViewColumn DisplayMemberBinding="{Binding KKSCode}" Header="🔢 Код ККС" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Design}" Header="📐 Обозначение стенда" />
+                                <GridViewColumn DisplayMemberBinding="{Binding SerialNumber}" Header="🔢 Серийный номер" />
                             </GridView>
                         </ListView.View>
                     </ListView>

@@ -85,30 +85,6 @@ public static class ProjectCommandsInitializer
         vm.ProjectCommandProvider.FillMarkInObvCommand =
             new AsyncRelayCommand(vm.OnFillMarkInObvCommandExecuted, vm.CanAllCommandsExecute);
 
-        vm.ProjectCommandProvider.CreateContainerBatchCommand =
-            new RelayCommand(vm.OnCreateContainerStandCommandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.RefreshBatchesCommand =
-            new RelayCommand(vm.OnRefreshBatchesCommandCommandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.AddContainerToBatchCommand =
-            new RelayCommand(vm.OnAddContainerToBatchCommandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.DeleteContainerCommand =
-            new RelayCommand(vm.OnDeleteContainerCommandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.UpdateContainerCommand =
-            new AsyncRelayCommand(vm.OnUpdateSelectedContainerExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.DeleteBatchCommand =
-            new RelayCommand(vm.OnDeleteBatchCommandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.AddStandToContainerCommand =
-            new RelayCommand(vm.OnAddStandToContainerCommandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.RemoveStandFromContainerCommand =
-            new RelayCommand(vm.OnRemoveStandFromContainerCommandExecuted, vm.CanAllCommandsExecute);
-
         vm.ProjectCommandProvider.ShowCompanyDialogCommand =
             new RelayCommand(vm.OnShowCompanyDialogExecuted, vm.CanAllCommandsExecute);
 
@@ -150,11 +126,8 @@ public static class ProjectCommandsInitializer
 
         vm.ProjectCommandProvider.OnAddStandFromAllStandsCommand =
             new RelayCommand(vm.OnAddStandFromAllStandsCommandExecuted, vm.CanAllCommandsExecute);
-
-
-
+        
         //отчеты по выбранным стендам
-
         vm.ProjectCommandProvider.SelectedStandsSummaryReportCommand =
             new RelayCommand(vm.OnCreateSelectedStandsSummaryReportCommandExecuted, vm.CanAllCommandsExecute);
 
@@ -184,39 +157,6 @@ public static class ProjectCommandsInitializer
 
         vm.ProjectCommandProvider.DeleteSelectedStandsCommand =
             new RelayCommand(vm.OnDeleteSelectedStandsCommandExecuted, vm.CanAllCommandsExecute);
-
-
-        //отчеты по выбранной упаковке
-
-        vm.ProjectCommandProvider.SelectedBatchSummaryReportCommand =
-            new RelayCommand(vm.OnCreateSelectedBatchSummaryReportCommandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.SelectedBatchComponentReportCommand =
-            new RelayCommand(vm.OnSelectedBatchComponentsListReportCommandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.SelectedBatchNamePlatesReportCommand =
-            new RelayCommand(vm.OnCreateSelectedBatchNameplatesReportCommandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.SelectedBatchMarksReportCommand =
-            new RelayCommand(vm.OnSelectedBatchCreateMarksReportCommandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.SelectedBatchContainerReportCommand =
-            new RelayCommand(vm.OnSelectedBatchCreateContainerReportCommandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.SelectedBatchProductionReportCommand =
-            new RelayCommand(vm.OnCreateSelectedBatchProductionReportCommandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.SelectedBatchFinPlaneReportCommand =
-            new RelayCommand(vm.OnCreateSelectedBatchFinplanReportCommandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.SelectedBatchPassportReportCommand =
-            new RelayCommand(vm.OnCreateSelectedBatchPassportReportCommandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.SelectedBatchTechnoCardsReportCommand =
-            new RelayCommand(vm.OnCreateSelectedBatchTechnologicalCardsCommandExecute, vm.CanAllCommandsExecute);
-
-
-
     }
 
     public static void InitializeGenericCommands(ProjectViewModel vm)

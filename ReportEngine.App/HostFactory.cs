@@ -1,10 +1,6 @@
 ﻿using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ReportEngine.App.LLM;
-using ReportEngine.App.LLM.Interfaces;
-using ReportEngine.App.LLM.Services;
-using ReportEngine.App.LLM.ViewModels;
 using ReportEngine.App.Services;
 using ReportEngine.App.Services.Calculation;
 using ReportEngine.App.Services.Cloners;
@@ -20,7 +16,6 @@ using ReportEngine.App.ViewModels.TreeView;
 using ReportEngine.App.ViewModels.Utils;
 using ReportEngine.App.Views;
 using ReportEngine.App.Views.Controls;
-using ReportEngine.App.Views.Settings;
 using ReportEngine.App.Views.Settings.CalculationParameters;
 using ReportEngine.App.Views.Settings.CalculationParameters.Controls;
 using ReportEngine.App.Views.Settings.SettingsControls;
@@ -50,7 +45,7 @@ using Serilog;
 
 namespace ReportEngine.App;
 
-public class HostFactory
+public static class HostFactory
 {
     public static IHost BuildHost(string dbMode)
     {
@@ -192,7 +187,6 @@ public class HostFactory
         services.AddScoped<EntityProjectClonerService>();
         services.AddScoped<ParameterGroupService>();
         services.AddScoped<AuditService>();
-        services.AddScoped<IAiChatService, GigachatAiService>();
         services.AddHttpClient();
     }
 
@@ -233,8 +227,8 @@ public class HostFactory
         services.AddScoped<AllStandsViewModel>();
         services.AddScoped<CalculationParametersViewModel>();
         services.AddScoped<AuditViewModel>();
-        services.AddScoped<ChatWithAiViewModel>();
         services.AddScoped<TreeViewModel>();
+        services.AddScoped<ContainersViewModel>();
     }
 
     private static void ConfigureViews(IServiceCollection services)
@@ -257,8 +251,6 @@ public class HostFactory
         services.AddTransient<ProjectCardView>();
         services.AddTransient<CompanyView>();
         services.AddTransient<FormedFrameView>();
-        services.AddTransient<FormedDrainagesView>();
-        services.AddTransient<FrameDrainagesView>();
         services.AddTransient<ProjectPreview>();
         services.AddTransient<AllSortamentsView>();
         services.AddTransient<SettingsWindow>();
@@ -284,6 +276,5 @@ public class HostFactory
         services.AddTransient<SandBlastView>();
         services.AddTransient<ElectricCostView>();
         services.AddTransient<AuditEventsView>();
-        services.AddTransient<ChatWithAi>();
     }
 }
