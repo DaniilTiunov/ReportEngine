@@ -1,12 +1,13 @@
 ﻿<Window
-    Background="{DynamicResource PrimaryColor}"
+    AllowsTransparency="True"
+    Background="Transparent"
     FontFamily="Bahnschrift"
     Foreground="{DynamicResource PrimaryForeground}"
     MaxHeight="600"
     ResizeMode="NoResize"
     SizeToContent="Height"
     Topmost="True"
-    Width="400"
+    Width="450"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d"
@@ -18,20 +19,143 @@
     xmlns:windowHelpers="clr-namespace:ReportEngine.App.Views.Windows.WindowHelpers"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <Window.Resources>
+        <!--  Тень для окна  -->
+        <DropShadowEffect
+            BlurRadius="30"
+            Color="#000000"
+            Opacity="0.25"
+            ShadowDepth="0"
+            x:Key="WindowShadow" />
+
+        <!--  Стиль для заголовка окна  -->
+        <Style TargetType="TextBlock" x:Key="TitleTextStyle">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontFamily" Value="Bahnschrift" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <!--  Стиль для кнопки закрытия  -->
+        <Style TargetType="Button" x:Key="CloseButtonStyle">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Height" Value="30" />
+            <Setter Property="Width" Value="40" />
+            <Setter Property="Margin" Value="10,0,10,0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="ToolTip" Value="Закрыть" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="4"
+                            Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#E81123" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#C40E1E" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--  Стиль для кнопок действия  -->
+        <Style TargetType="Button" x:Key="ActionButtonStyle">
+            <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Padding" Value="20,8" />
+            <Setter Property="Margin" Value="5,0" />
+            <Setter Property="Width" Value="90" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="4"
+                            Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource PrimaryHueDarkBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#2A2D5A" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" Value="#555555" />
+                                <Setter Property="Foreground" Value="#999999" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--  Стиль для кнопки "Отмена"  -->
+        <Style
+            BasedOn="{StaticResource ActionButtonStyle}"
+            TargetType="Button"
+            x:Key="CancelButtonStyle">
+            <Setter Property="Background" Value="#444444" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#555555" />
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#333333" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!--  Стиль для текста сообщения  -->
+        <Style TargetType="TextBlock" x:Key="MessageTextStyle">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+            <Setter Property="FontFamily" Value="Bahnschrift" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Margin" Value="5" />
+        </Style>
+    </Window.Resources>
+
     <WindowChrome.WindowChrome>
         <WindowChrome
             CaptionHeight="0"
-            CornerRadius="0"
+            CornerRadius="10"
             GlassFrameThickness="0" />
     </WindowChrome.WindowChrome>
 
-    <Border Style="{DynamicResource WindowBorder}">
-        <Border>
+    <!--  Основной контейнер с тенью и рамкой  -->
+    <Border CornerRadius="10" Effect="{StaticResource WindowShadow}">
+        <Border
+            Background="{DynamicResource PrimaryColor}"
+            BorderBrush="{DynamicResource PrimaryForeground}"
+            BorderThickness="3"
+            CornerRadius="10">
             <DockPanel>
+                <!--  Заголовок  -->
                 <Border
                     Background="#2D2D30"
+                    CornerRadius="10,10,0,0"
                     DockPanel.Dock="Top"
-                    Height="34"
+                    Height="40"
                     MouseLeftButtonDown="Window_MouseLeftButtonDown">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -39,8 +163,9 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
+                        <!--  Заголовок с иконкой  -->
                         <StackPanel
-                            Margin="10,0,0,0"
+                            Margin="12,0,0,0"
                             Orientation="Horizontal"
                             VerticalAlignment="Center">
                             <Image
@@ -48,24 +173,17 @@
                                 Margin="0,0,8,0"
                                 Width="18"
                                 x:Name="TitleIcon" />
-                            <TextBlock
-                                FontSize="14"
-                                Foreground="White"
-                                VerticalAlignment="Center"
-                                x:Name="TitleText" />
+                            <TextBlock Style="{StaticResource TitleTextStyle}" x:Name="TitleText" />
                         </StackPanel>
 
+                        <!--  Кнопка закрытия  -->
                         <StackPanel
                             Grid.Column="1"
                             Orientation="Horizontal"
                             VerticalAlignment="Center">
                             <Button
                                 Click="CloseButton_Click"
-                                FontSize="16"
-                                Height="30"
-                                Margin="10,0,10,0"
-                                ToolTip="Закрыть"
-                                Width="40"
+                                Style="{StaticResource CloseButtonStyle}"
                                 x:Name="CloseButton">
                                 ✕
                             </Button>
@@ -73,7 +191,8 @@
                     </Grid>
                 </Border>
 
-                <Grid Margin="10">
+                <!--  Основной контент  -->
+                <Grid Margin="20,15,20,15">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
@@ -83,28 +202,30 @@
                     <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
-                            <!--  для иконки  -->
                             <ColumnDefinition Width="*" />
-                            <!--  для текста  -->
                         </Grid.ColumnDefinitions>
 
-                        <!--  Иконка предупреждения  -->
-                        <Image
+                        <!--  Иконка уведомления  -->
+                        <Border
+                            Background="{DynamicResource SecondaryColor}"
+                            CornerRadius="8"
                             Grid.Column="0"
-                            Height="48"
-                            Margin="0,0,10,0"
+                            Height="52"
+                            Margin="0,0,12,0"
                             VerticalAlignment="Top"
-                            Width="48"
-                            x:Name="IconImage" />
+                            Width="52">
+                            <Image
+                                Height="36"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Width="36"
+                                x:Name="IconImage" />
+                        </Border>
 
                         <!--  Текст уведомления  -->
                         <TextBlock
-                            FontSize="16"
                             Grid.Column="1"
-                            HorizontalAlignment="Left"
-                            Margin="5"
-                            TextWrapping="Wrap"
-                            VerticalAlignment="Top"
+                            Style="{StaticResource MessageTextStyle}"
                             x:Name="MessageText" />
                     </Grid>
 
@@ -112,23 +233,22 @@
                     <StackPanel
                         Grid.Row="1"
                         HorizontalAlignment="Right"
-                        Margin="0,10,0,0"
+                        Margin="0,15,0,0"
                         Orientation="Horizontal">
                         <Button
                             Click="OkButton_Click"
-                            Content="ОК"
-                            Margin="5,0"
-                            Width="80"
-                            x:Name="OkButton" />
+                            Style="{StaticResource ActionButtonStyle}"
+                            x:Name="OkButton">
+                            ОК
+                        </Button>
                         <Button
                             Click="CancelButton_Click"
-                            Content="Отмена"
-                            Margin="5,0"
-                            Width="80"
-                            x:Name="CancelButton" />
+                            Style="{StaticResource CancelButtonStyle}"
+                            x:Name="CancelButton">
+                            Отмена
+                        </Button>
                     </StackPanel>
                 </Grid>
-
             </DockPanel>
         </Border>
     </Border>
