@@ -204,14 +204,14 @@ public partial class ProjectPreview : UserControl
         }), DispatcherPriority.Loaded);
     }
 
-    private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    private async void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-        _projectViewModel.OnEditObvSettingsCommandExecuted(e);
+        await _projectViewModel.OnEditObvSettingsCommandExecuted();
     }
 
-    private void StandListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    private async void StandListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-        _projectViewModel.OnOpenEditStandCommandExecuted(e);
+        await _projectViewModel.OnOpenEditStandCommandExecuted();
     }
 
     private void DeleteSelectedEntity_KeyDown(object sender, KeyEventArgs e)

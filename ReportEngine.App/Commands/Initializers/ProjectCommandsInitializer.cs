@@ -1,4 +1,4 @@
-﻿using ReportEngine.App.AsyncCommands;
+﻿using CommunityToolkit.Mvvm.Input;
 using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Commands.Initializers;
@@ -11,152 +11,152 @@ public static class ProjectCommandsInitializer
             return;
 
         vm.ProjectCommandProvider.UpdateStandsAfterEquipsCommand =
-            new RelayCommand(vm.OnUpdateStandsAfterEquipsCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnUpdateStandsAfterEquipsCommandExecuted);
 
         vm.ProjectCommandProvider.CreateNewCardCommand =
-            new RelayCommand(vm.OnCreateNewCardCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnCreateNewCardCommandExecuted);
 
         vm.ProjectCommandProvider.AddNewStandCommand =
-            new RelayCommand(vm.OnAddNewStandCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnAddNewStandCommandExecuted);
 
         vm.ProjectCommandProvider.CopyStandsCommand =
-            new RelayCommand(vm.OnCopyStandsCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnCopyStandsCommandExecuted);
 
         vm.ProjectCommandProvider.SaveChangesCommand =
-            new RelayCommand(vm.OnSaveChangesCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnSaveChangesCommandExecuted);
 
         vm.ProjectCommandProvider.AddFrameToStandCommand =
-            new RelayCommand(vm.OnAddFrameToStandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnAddFrameToStandExecuted);
 
         vm.ProjectCommandProvider.AddDrainageToStandCommand =
-            new RelayCommand(vm.OnAddDrainageToStandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnAddDrainageToStandExecuted);
 
         vm.ProjectCommandProvider.SelectObvFromDialogCommand =
             new RelayCommand(vm.OnSelectObvCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.CopyObvyazkaToStandsCommand =
-            new RelayCommand(vm.OnCopyObvyazkaToStandsCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnCopyObvyazkaToStandsCommandExecuted);
 
         vm.ProjectCommandProvider.CalculateProjectCommand =
-            new RelayCommand(vm.OnCalculateProjectCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnCalculateProjectCommandExecuted);
 
         vm.ProjectCommandProvider.DeleteSelectedStandCommand =
-            new RelayCommand(vm.OnDeleteSelectedStandFromProjectExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnDeleteSelectedStandFromProjectExecuted);
 
         vm.ProjectCommandProvider.RemoveObvFromStandCommand =
-            new RelayCommand(vm.OnRemoveObvCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnRemoveObvCommandExecuted);
 
         vm.ProjectCommandProvider.OpenAllSortamentsDialogCommand =
-             new RelayCommand(vm.OnOpenAllSortamentsDialogExecuted, vm.CanAllCommandsExecute);
+            new RelayCommand(vm.OnOpenAllSortamentsDialogExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.SaveChangesInStandCommand =
-            new RelayCommand(vm.OnSaveChangesInStandCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnSaveChangesInStandCommandExecuted);
 
         vm.ProjectCommandProvider.DeleteElectricalComponentFromStandCommand =
-            new AsyncRelayCommand(vm.OnDeleteElectricalComponentFromStandCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnDeleteElectricalComponentFromStandCommandExecuted);
 
         vm.ProjectCommandProvider.UpdateElectricalComponentInStandCommand =
-            new AsyncRelayCommand(vm.OnUpdateElectricalComponentInStandCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnUpdateElectricalComponentInStandCommandExecuted);
 
         vm.ProjectCommandProvider.DeleteAdditionalComponentFromStandCommand =
-            new AsyncRelayCommand(vm.OnDeleteAdditionalComponentFromStandCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnDeleteAdditionalComponentFromStandCommandExecuted);
 
         vm.ProjectCommandProvider.UpdateAdditionalComponentInStandCommand =
-            new AsyncRelayCommand(vm.OnUpdateAdditionalComponentInStandCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnUpdateAdditionalComponentInStandCommandExecuted);
 
         vm.ProjectCommandProvider.DeleteDrainageComponentFromStandCommand =
-            new AsyncRelayCommand(vm.OnDeleteDrainageComponentFromStandCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnDeleteDrainageComponentFromStandCommandExecuted);
 
         vm.ProjectCommandProvider.RemoveFrameStandCommand =
-            new RelayCommand(vm.OnRemoveFrameFromStandCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnRemoveFrameFromStandCommandExecuted);
 
         vm.ProjectCommandProvider.UpdateDrainageComponentInStandCommand =
-            new AsyncRelayCommand(vm.OnUpdateDrainageComponentInStandCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnUpdateDrainageComponentInStandCommandExecuted);
 
         vm.ProjectCommandProvider.SaveObvCommand =
-            new RelayCommand(vm.OnAddObvCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnAddObvCommandExecuted);
 
         vm.ProjectCommandProvider.FillStandFieldsFromObvyazkaCommand =
-            new RelayCommand(vm.OnEditObvSettingsCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnEditObvSettingsCommandExecuted);
 
         vm.ProjectCommandProvider.UpdateObvInStandCommand =
-            new RelayCommand(vm.OnUpdateObvInStandCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnUpdateObvInStandCommandExecuted);
 
         vm.ProjectCommandProvider.FillMarkInObvCommand =
-            new AsyncRelayCommand(vm.OnFillMarkInObvCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnFillMarkInObvCommandExecuted);
 
         vm.ProjectCommandProvider.ShowCompanyDialogCommand =
-            new RelayCommand(vm.OnShowCompanyDialogExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnShowCompanyDialogExecuted);
 
         vm.ProjectCommandProvider.ShowFrameDialogCommand =
-            new RelayCommand(vm.OnShowFrameDialogExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnShowFrameDialogExecuted);
 
         vm.ProjectCommandProvider.ShowSubjectDialogCommand =
-            new RelayCommand(vm.OnShowSubjectDialogExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnShowSubjectDialogExecuted);
 
         vm.ProjectCommandProvider.RenumerateStandsCommand =
-            new RelayCommand(vm.OnRenumerateStandsCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnRenumerateStandsCommandExecuted);
 
         vm.ProjectCommandProvider.OpenObvSettingsWindowCommand =
-            new RelayCommand(vm.OnOpenObvSettingsWindowCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnOpenObvSettingsWindowCommandExecuted);
 
         vm.ProjectCommandProvider.OpenCreateNewStandCommand =
-            new RelayCommand(vm.OnOpenCreateNewStandCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnOpenCreateNewStandCommandExecuted);
 
         vm.ProjectCommandProvider.OpenEditStandCommand =
-            new RelayCommand(vm.OnOpenEditStandCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnOpenEditStandCommandExecuted);
 
         vm.ProjectCommandProvider.FillObvFieldsTiEditCommand =
-            new RelayCommand(vm.OnFillObvFieldsCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnFillObvFieldsCommandExecuted);
 
         vm.ProjectCommandProvider.DeleteAdditionalEquipFromObvCommand =
-            new RelayCommand(vm.OnDeleteAdditionalEquipFromObvCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnDeleteAdditionalEquipFromObvCommandExecuted);
 
         vm.ProjectCommandProvider.UpdateAdditionalEquipFromObvCommand =
-            new RelayCommand(vm.OnUpdateAdditionalEquipFromObvCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnUpdateAdditionalEquipFromObvCommandExecuted);
 
         vm.ProjectCommandProvider.AdditionalTestCommand =
-            new RelayCommand(vm.OnAdditionalTestCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnAdditionalTestCommandExecuted);
 
         vm.ProjectCommandProvider.SaveAllChangesInComponentsCommand =
-            new RelayCommand(vm.OnSaveAllChangesInComponentsCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnSaveAllChangesInComponentsCommandExecuted);
 
         vm.ProjectCommandProvider.RenumerateObvInStandCommand =
             new RelayCommand(vm.OnRenumerateObvInStandAsyncCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.ProjectCommandProvider.OnAddStandFromAllStandsCommand =
-            new RelayCommand(vm.OnAddStandFromAllStandsCommandExecuted, vm.CanAllCommandsExecute);
-        
+            new AsyncRelayCommand(vm.OnAddStandFromAllStandsCommandExecuted);
+
         //отчеты по выбранным стендам
         vm.ProjectCommandProvider.SelectedStandsSummaryReportCommand =
-            new RelayCommand(vm.OnCreateSelectedStandsSummaryReportCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnCreateSelectedStandsSummaryReportCommandExecuted);
 
         vm.ProjectCommandProvider.SelectedStandsComponentReportCommand =
-            new RelayCommand(vm.OnCreateSelectedStandsComponentsListReportCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnCreateSelectedStandsComponentsListReportCommandExecuted);
 
         vm.ProjectCommandProvider.SelectedStandsNamePlatesReportCommand =
-            new RelayCommand(vm.OnCreateSelectedStandsNameplatesReportCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnCreateSelectedStandsNameplatesReportCommandExecuted);
 
         vm.ProjectCommandProvider.SelectedStandsMarksReportCommand =
-            new RelayCommand(vm.OnCreateSelectedStandsMarksReportCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnCreateSelectedStandsMarksReportCommandExecuted);
 
         vm.ProjectCommandProvider.SelectedStandsContainerReportCommand =
-            new RelayCommand(vm.OnCreateSelectedStandsContainerReportCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnCreateSelectedStandsContainerReportCommandExecuted);
 
         vm.ProjectCommandProvider.SelectedStandsProductionReportCommand =
-            new RelayCommand(vm.OnCreateSelectedStandsProductionReportCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnCreateSelectedStandsProductionReportCommandExecuted);
 
         vm.ProjectCommandProvider.SelectedStandsFinPlaneReportCommand =
-            new RelayCommand(vm.OnCreateSelectedStandsFinplanReportCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnCreateSelectedStandsFinplanReportCommandExecuted);
 
         vm.ProjectCommandProvider.SelectedStandsPassportReportCommand =
-            new RelayCommand(vm.OnCreateSelectedStandsPassportReportCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnCreateSelectedStandsPassportReportCommandExecuted);
 
         vm.ProjectCommandProvider.SelectedStandsTechnoCardsReportCommand =
-            new RelayCommand(vm.OnCreateSelectedStandsTechnologicalCardsCommandExecute, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnCreateSelectedStandsTechnologicalCardsCommandExecute);
 
         vm.ProjectCommandProvider.DeleteSelectedStandsCommand =
-            new RelayCommand(vm.OnDeleteSelectedStandsCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnDeleteSelectedStandsCommandExecuted);
     }
 
     public static void InitializeGenericCommands(ProjectViewModel vm)

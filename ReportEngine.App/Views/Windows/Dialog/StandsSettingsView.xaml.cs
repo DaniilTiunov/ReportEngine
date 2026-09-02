@@ -55,8 +55,8 @@ public partial class StandsSettingsView : Window
         Close();
     }
 
-    private void StandsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private async void StandsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        _projectViewModel.OnFillStandFieldsFromSelectedStandCommandExecuted(sender);
+        await _projectViewModel.OnFillStandFieldsFromSelectedStandCommandExecuted();
     }
 }
