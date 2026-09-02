@@ -73,6 +73,8 @@ public class MainWindowViewModel : BaseViewModel
 
         _sessionService.PropertyChanged += SessionChanged;
 
+        _ = CheckDbConnectionAsync();
+        
         InitializeMainWindowCommands();
         InitializeGenericEquipCommands();
     }
@@ -172,16 +174,17 @@ public class MainWindowViewModel : BaseViewModel
         }
     }
 
-    public async void OnRecalculateProjectCommandExecuted(object e)
+    public async Task OnRecalculateProjectCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(RecalculateProjectAsync);
 
         _notificationService.ShowInfo("Переформирование завершено");
     }
 
-    public async void OnEditProjectCommandExecuted(object e)
+    public async Task OnEditProjectCommandExecuted()
     {
-        if (MainWindowModel.SelectedProject == null) return;
+        if (MainWindowModel.SelectedProject == null) 
+            return;
 
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -196,7 +199,7 @@ public class MainWindowViewModel : BaseViewModel
         });
     }
 
-    public async void OnCopyProjectCommandExecuted(object e)
+    public async Task OnCopyProjectCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -221,39 +224,42 @@ public class MainWindowViewModel : BaseViewModel
         });
     }
 
-    public async void OnOpenMainWindowCommandExecuted(object e)
+    public async Task OnOpenMainWindowCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
             var projectViewModel = _serviceProvider.GetRequiredService<ProjectViewModel>();
 
-            //принудительно обновляем количество стендов при закрытии проекта и подгружаем свежие данные
-            //при пересчете всего проекта начинает подтормаживать, поэтому оставляем только обновление количества стендов
-            if (projectViewModel?.CurrentProjectModel != null &&
-                projectViewModel.CurrentProjectModel.CurrentProjectId != 0)
+            await _dialogService.RunWithProgressDialogAsync(async () =>
             {
-                //await RecalculateProjectAsync();
-                await _calculationService.CalculateAndUpdateStandQuantity(projectViewModel.CurrentProjectModel);
+                //принудительно обновляем количество стендов при закрытии проекта и подгружаем свежие данные
+                //при пересчете всего проекта начинает подтормаживать, поэтому оставляем только обновление количества стендов
+                if (projectViewModel?.CurrentProjectModel != null &&
+                    projectViewModel.CurrentProjectModel.CurrentProjectId != 0)
+                {
+                    //await RecalculateProjectAsync();
+                    await _calculationService.CalculateAndUpdateStandQuantity(projectViewModel.CurrentProjectModel);
 
-                await UpdateProjectStandsQuantity(projectViewModel.CurrentProjectModel.CurrentProjectId);
-            }
+                    await UpdateProjectStandsQuantity(projectViewModel.CurrentProjectModel.CurrentProjectId);
+                }
 
-            //if (CheckUnsafeDetails(projectViewModel))
-            //{
-            //    var result = _notificationService.ShowConfirmation("У вас есть несохраненные изменения. \nВы уверены, что хотите вернуться на главный экран?", "Подтверждение");
-            //    if (!result)
-            //        return;
-            //}
+                //if (CheckUnsafeDetails(projectViewModel))
+                //{
+                //    var result = _notificationService.ShowConfirmation("У вас есть несохраненные изменения. \nВы уверены, что хотите вернуться на главный экран?", "Подтверждение");
+                //    if (!result)
+                //        return;
+                //}
 
-            //if(projectViewModel.CurrentProjectModel.Stands.Count == 0 || projectViewModel.CurrentProjectModel.Stands == null)
-            //{
-            //    _navigation.CloseContent();
-            //}
+                //if(projectViewModel.CurrentProjectModel.Stands.Count == 0 || projectViewModel.CurrentProjectModel.Stands == null)
+                //{
+                //    _navigation.CloseContent();
+                //}
 
-            _navigation.CloseContent();
-            var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
-            mainWindow.MainContentControl.Content = mainWindow.MainGrid;
-            CollectionRefreshHelper.SafeRefreshCollection(MainWindowModel.AllProjects);
+                _navigation.CloseContent();
+                var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+                mainWindow.MainContentControl.Content = mainWindow.MainGrid;
+                CollectionRefreshHelper.SafeRefreshCollection(MainWindowModel.AllProjects);
+            });
         });
     }
 
@@ -304,25 +310,25 @@ public class MainWindowViewModel : BaseViewModel
         });
     }
 
-    public async void OnCheckDbConnectionCommandExecuted(object e)
+    public async Task OnCheckDbConnectionCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(CheckDbConnectionAsync);
     }
 
-    public async void OnShowAllProjectsCommandExecuted(object e)
+    public async Task OnShowAllProjectsCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(ShowAllProjectsAsync);
     }
 
-    public async void OnDeleteSelectedProjectExecuted(object e)
+    public async Task OnDeleteSelectedProjectExecuted()
     {
         await _exceptionService.SafeExecuteAsync(DeleteSelectedProjectAsync);
     }
 
-    public async Task CheckDbConnectionAsync()
+    private async Task CheckDbConnectionAsync()
     {
         var context = _serviceProvider.GetRequiredService<ReAppContext>();
-        MainWindowModel.IsConnected = context.Database.CanConnect();
+        MainWindowModel.IsConnected = await context.Database.CanConnectAsync();
         MainWindowModel.ConnectionStatusMessage =
             MainWindowModel.IsConnected ? "Соединение установлено" : "Соединение не установлено";
     }
@@ -349,7 +355,7 @@ public class MainWindowViewModel : BaseViewModel
     }
 
     //Обновление информации о проекте в коллекции AllProjects
-    public async Task UpdateProjectStandsQuantity(int projectId)
+    private async Task UpdateProjectStandsQuantity(int projectId)
     {
         var project = await _projectRepository.GetByIdAsync(projectId);
         if (project == null || project.Stands.Count == 0) return;

@@ -91,9 +91,9 @@ public partial class MainWindow : Window //Это так называемый "C
         });
     }
 
-    private void MainDataGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+    private async void MainDataGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-        _mainViewModel.OnEditProjectCommandExecuted(e);
+        await _mainViewModel.OnEditProjectCommandExecuted();
     }
 
     // Событие изменения состояния окна

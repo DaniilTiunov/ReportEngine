@@ -1,3 +1,4 @@
+using CommunityToolkit.Mvvm.Input;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.Views;
 using ReportEngine.App.Views.Controls;
@@ -59,28 +60,28 @@ public static class MainWindowCommandsInitializer
             new RelayCommand(vm.OpenAnotherControlsCommandExecuted<TreeProjectView>, vm.CanAllCommandsExecute);
 
         vm.MainWindowCommandProvider.ChekDbConnectionCommand =
-            new RelayCommand(vm.OnCheckDbConnectionCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnCheckDbConnectionCommandExecuted);
 
         vm.MainWindowCommandProvider.ShowAllProjectsCommand =
-            new RelayCommand(vm.OnShowAllProjectsCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnShowAllProjectsCommandExecuted);
 
         vm.MainWindowCommandProvider.DeleteSelectedProjectCommand =
-            new RelayCommand(vm.OnDeleteSelectedProjectExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnDeleteSelectedProjectExecuted);
 
         vm.MainWindowCommandProvider.OpenMainWindowCommand =
-            new RelayCommand(vm.OnOpenMainWindowCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnOpenMainWindowCommandExecuted);
 
         vm.MainWindowCommandProvider.EditProjectCommand =
-            new RelayCommand(vm.OnEditProjectCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnEditProjectCommandExecuted);
 
         vm.MainWindowCommandProvider.RecalculateProjectCommand =
-            new RelayCommand(vm.OnRecalculateProjectCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnRecalculateProjectCommandExecuted);
 
         vm.MainWindowCommandProvider.OpenAllStandsCommand =
             new RelayCommand(vm.OpenOthersWindowCommandExecuted<AllStandsView>, vm.CanAllCommandsExecute);
 
         vm.MainWindowCommandProvider.CopySelectedProjectCommand =
-            new RelayCommand(vm.OnCopyProjectCommandExecuted, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.OnCopyProjectCommandExecuted);
 
         vm.MainWindowCommandProvider.OpenCalculationParametersCommand =
             new RelayCommand(vm.OnOpenCalculationParametersCommandExecuted, vm.CanAllCommandsExecute);

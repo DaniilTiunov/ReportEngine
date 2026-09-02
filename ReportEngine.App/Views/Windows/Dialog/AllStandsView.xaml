@@ -42,12 +42,6 @@
                         Orientation="Horizontal"
                         VerticalAlignment="Center">
                         <TextBlock
-                            FontSize="16"
-                            Margin="0,0,8,0"
-                            VerticalAlignment="Center">
-                            🏗️
-                        </TextBlock>
-                        <TextBlock
                             FontSize="14"
                             Foreground="White"
                             Text="🗂️ Все стенды"
@@ -125,9 +119,18 @@
                         x:Name="ProjectList">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn DisplayMemberBinding="{Binding Company}" Header="🏢 Заказчик" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Object}" Header="📍 Объект" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Description}" Header="📄 Обозначение по КД" />
+                                <GridViewColumn
+                                    DisplayMemberBinding="{Binding Company}"
+                                    Header="🏢 Заказчик"
+                                    Width="*" />
+                                <GridViewColumn
+                                    DisplayMemberBinding="{Binding Object}"
+                                    Header="📍 Объект"
+                                    Width="*" />
+                                <GridViewColumn
+                                    DisplayMemberBinding="{Binding Description}"
+                                    Header="📄 Обозначение по КД"
+                                    Width="*" />
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -162,9 +165,18 @@
                         x:Name="StandsList">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn DisplayMemberBinding="{Binding KKSCode}" Header="🔢 Код ККС" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Design}" Header="📐 Обозначение стенда" />
-                                <GridViewColumn DisplayMemberBinding="{Binding SerialNumber}" Header="🔢 Серийный номер" />
+                                <GridViewColumn
+                                    DisplayMemberBinding="{Binding KKSCode}"
+                                    Header="🔢 Код ККС"
+                                    Width="*" />
+                                <GridViewColumn
+                                    DisplayMemberBinding="{Binding Design}"
+                                    Header="📐 Обозначение стенда"
+                                    Width="*" />
+                                <GridViewColumn
+                                    DisplayMemberBinding="{Binding SerialNumber}"
+                                    Header="🔢 Серийный номер"
+                                    Width="*" />
                             </GridView>
                         </ListView.View>
                     </ListView>
