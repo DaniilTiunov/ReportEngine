@@ -44,7 +44,7 @@
                                     <TreeViewItem.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon
-                                                Foreground="{DynamicResource MaterialDesignBody}"
+                                                Foreground="{DynamicResource PrimaryForeground}"
                                                 Height="20"
                                                 Kind="Folder"
                                                 Margin="0,0,8,0"
@@ -58,7 +58,7 @@
                                         <TreeViewItem.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <materialDesign:PackIcon
-                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
                                                     Height="18"
                                                     Kind="CardOutline"
                                                     Margin="0,0,8,0"
@@ -73,7 +73,7 @@
                                         <TreeViewItem.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <materialDesign:PackIcon
-                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
                                                     Height="18"
                                                     Kind="Pencil"
                                                     Margin="0,0,8,0"
@@ -87,7 +87,7 @@
                                             <TreeViewItem.Header>
                                                 <StackPanel Orientation="Horizontal">
                                                     <materialDesign:PackIcon
-                                                        Foreground="{DynamicResource MaterialDesignBody}"
+                                                        Foreground="{DynamicResource PrimaryForeground}"
                                                         Height="18"
                                                         Kind="Calculator"
                                                         Margin="0,0,8,0"
@@ -102,7 +102,7 @@
                                             <TreeViewItem.Header>
                                                 <StackPanel Orientation="Horizontal">
                                                     <materialDesign:PackIcon
-                                                        Foreground="{DynamicResource MaterialDesignBody}"
+                                                        Foreground="{DynamicResource PrimaryForeground}"
                                                         Height="18"
                                                         Kind="PackageVariant"
                                                         Margin="0,0,8,0"
@@ -117,7 +117,7 @@
                                             <TreeViewItem.Header>
                                                 <StackPanel Orientation="Horizontal">
                                                     <materialDesign:PackIcon
-                                                        Foreground="{DynamicResource MaterialDesignBody}"
+                                                        Foreground="{DynamicResource PrimaryForeground}"
                                                         Height="18"
                                                         Kind="FileDocumentOutline"
                                                         Margin="0,0,8,0"
@@ -134,7 +134,7 @@
                                     <TreeViewItem.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon
-                                                Foreground="{DynamicResource MaterialDesignBody}"
+                                                Foreground="{DynamicResource PrimaryForeground}"
                                                 Height="18"
                                                 Kind="Calculator"
                                                 Margin="0,0,8,0"
@@ -147,7 +147,7 @@
                                         <TreeViewItem.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <materialDesign:PackIcon
-                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
                                                     Height="16"
                                                     Kind="Play"
                                                     Margin="0,0,8,0"
@@ -164,7 +164,7 @@
                                         <TreeViewItem.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <materialDesign:PackIcon
-                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
                                                     Height="16"
                                                     Kind="Refresh"
                                                     Margin="0,0,8,0"
@@ -183,7 +183,7 @@
                                     <TreeViewItem.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon
-                                                Foreground="{DynamicResource MaterialDesignBody}"
+                                                Foreground="{DynamicResource PrimaryForeground}"
                                                 Height="18"
                                                 Kind="FileMultiple"
                                                 Margin="0,0,8,0"
@@ -196,7 +196,7 @@
                                         <TreeViewItem.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <materialDesign:PackIcon
-                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
                                                     Height="16"
                                                     Kind="FileDocument"
                                                     Margin="0,0,8,0"
@@ -213,7 +213,7 @@
                                         <TreeViewItem.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <materialDesign:PackIcon
-                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
                                                     Height="16"
                                                     Kind="FormatListBulleted"
                                                     Margin="0,0,8,0"
@@ -230,7 +230,7 @@
                                         <TreeViewItem.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <materialDesign:PackIcon
-                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
                                                     Height="16"
                                                     Kind="Tag"
                                                     Margin="0,0,8,0"
@@ -247,7 +247,7 @@
                                         <TreeViewItem.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <materialDesign:PackIcon
-                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
                                                     Height="16"
                                                     Kind="Label"
                                                     Margin="0,0,8,0"
@@ -264,7 +264,7 @@
                                         <TreeViewItem.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <materialDesign:PackIcon
-                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
                                                     Height="16"
                                                     Kind="Factory"
                                                     Margin="0,0,8,0"
@@ -281,7 +281,7 @@
                                         <TreeViewItem.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <materialDesign:PackIcon
-                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
                                                     Height="16"
                                                     Kind="CurrencyUsd"
                                                     Margin="0,0,8,0"
@@ -298,7 +298,7 @@
                                         <TreeViewItem.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <materialDesign:PackIcon
-                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
                                                     Height="16"
                                                     Kind="PackageVariant"
                                                     Margin="0,0,8,0"
@@ -315,7 +315,7 @@
                                         <TreeViewItem.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <materialDesign:PackIcon
-                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
                                                     Height="16"
                                                     Kind="FileAccount"
                                                     Margin="0,0,8,0"
@@ -332,7 +332,7 @@
                                         <TreeViewItem.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <materialDesign:PackIcon
-                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
                                                     Height="16"
                                                     Kind="Card"
                                                     Margin="0,0,8,0"
@@ -351,7 +351,7 @@
                                     <TreeViewItem.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon
-                                                Foreground="{DynamicResource MaterialDesignBody}"
+                                                Foreground="{DynamicResource PrimaryForeground}"
                                                 Height="18"
                                                 Kind="Database"
                                                 Margin="0,0,8,0"
@@ -364,7 +364,7 @@
                                         <TreeViewItem.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <materialDesign:PackIcon
-                                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
                                                     Height="16"
                                                     Kind="FileDocument"
                                                     Margin="0,0,8,0"

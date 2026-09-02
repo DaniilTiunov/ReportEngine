@@ -162,8 +162,8 @@ public class ContainerService
     }
 
     public async Task RemoveStandFromContainerAsync(int projectId, 
-        int batchId, 
-        int containerId)
+        int containerId, 
+        int standId)
     {
         if (projectId == null)
         {
@@ -173,7 +173,7 @@ public class ContainerService
 
         await _exceptionService.SafeExecuteAsync(async () =>
         {
-            await _containerRepository.RemoveStandFromContainerAsync(batchId, containerId);
+            await _containerRepository.RemoveStandFromContainerAsync(containerId, standId);
 
             await RecalculateAndUpdateAllBatches(projectId);
 
