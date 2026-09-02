@@ -46,13 +46,19 @@ public class UIValidatorService
 
         var isAlreadyExist = true;
 
+
         if (!excludeSelected)
+        {
             isAlreadyExist = obvCollection
                 .Any(obv => obv.NN == newObvNN);
+        }
         else if (selectedObv != null)
+        {
             isAlreadyExist = obvCollection
-                .Where(obv => obv != selectedObv)
-                .Any(obv => obv.NN == newObvNN);
+               .Any(obv => obv.NN != selectedObv.NN && obv.NN == newObvNN)
+;
+        }
+
 
         if (isAlreadyExist)
         {

@@ -38,6 +38,8 @@ public class StandModel : BaseViewModel
     private int? _armatureExportDays;
     private string? _armatureMeasure;
 
+    private float? _armatureWeight;
+
     // Тип крепления датчика
     private string _braceType;
 
@@ -90,6 +92,10 @@ public class StandModel : BaseViewModel
     // MIME тип или краткое описание типа изображения (например "image/png")
     private string? _imageType;
 
+    //имя чертежа стенда
+    private string? _imageName;
+
+
     // KKS-код стенда
     private string _kksCode;
 
@@ -101,6 +107,8 @@ public class StandModel : BaseViewModel
     private int? _kMCHExportDays;
     private string? _kmchMeasure;
 
+    private float? _kmchWeight;
+
     // Материал линии
     private string _materialLine;
 
@@ -109,6 +117,8 @@ public class StandModel : BaseViewModel
 
     private int? _materialLineExportDays;
     private string? _materialLineMeasure;
+
+    private float? _materialLineWeight;
 
     // Объект для создания нового дополнительного комплектующего
     private FormedAdditionalEquip _newAdditionalEquip = new();
@@ -204,6 +214,17 @@ public class StandModel : BaseViewModel
     private string? _treeSocketMaterialCostPerUnit;
     private float? _treeSocketMaterialCount;
     private string? _treeSocketMaterialMeasure;
+
+    private float? _treeSocketMaterialWeight;
+
+    //Чистый вес обвязки
+    private float? _obvWeight;
+
+    public float? ObvWeight
+    {
+        get => _obvWeight;
+        set => Set(ref _obvWeight, value);
+    }
 
     // Масса стенда
     private float _weight;
@@ -366,41 +387,12 @@ public class StandModel : BaseViewModel
         set => Set(ref _materialLineCostPerUnit, value);
     }
 
-    public string? ArmatureCostPerUnit
+    public float? MaterialLineWeight
     {
-        get => _armatureCostPerUnit;
-        set => Set(ref _armatureCostPerUnit, value);
+        get => _materialLineWeight;
+        set => Set(ref _materialLineWeight, value);
     }
 
-    public int? ArmatureExportDays
-    {
-        get => _armatureExportDays;
-        set => Set(ref _armatureExportDays, value);
-    }
-
-    public string? KMCHCostPerUnit
-    {
-        get => _kmchCostPerUnit;
-        set => Set(ref _kmchCostPerUnit, value);
-    }
-
-    public int? KMCHExportDays
-    {
-        get => _kMCHExportDays;
-        set => Set(ref _kMCHExportDays, value);
-    }
-
-    public string? TreeSocketMaterialCostPerUnit
-    {
-        get => _treeSocketMaterialCostPerUnit;
-        set => Set(ref _treeSocketMaterialCostPerUnit, value);
-    }
-
-    public int? TreeSocketExportDays
-    {
-        get => _treeSocketExportDays;
-        set => Set(ref _treeSocketExportDays, value);
-    }
 
     // Арматура
     public string Armature
@@ -421,6 +413,25 @@ public class StandModel : BaseViewModel
         set => Set(ref _armatureMeasure, value);
     }
 
+    public string? ArmatureCostPerUnit
+    {
+        get => _armatureCostPerUnit;
+        set => Set(ref _armatureCostPerUnit, value);
+    }
+
+    public int? ArmatureExportDays
+    {
+        get => _armatureExportDays;
+        set => Set(ref _armatureExportDays, value);
+    }
+
+    public float? ArmatureWeight
+    {
+        get => _armatureWeight;
+        set => Set(ref _armatureWeight, value);
+    }
+
+
     // Информация о тройнике/разветвителе
     public string TreeSocket
     {
@@ -440,11 +451,26 @@ public class StandModel : BaseViewModel
         set => Set(ref _treeSocketMaterialMeasure, value);
     }
 
-    public int StandSensorsQuantity
+    public string? TreeSocketMaterialCostPerUnit
     {
-        get => _standSensorsQuantity;
-        set => Set(ref _standSensorsQuantity, value);
+        get => _treeSocketMaterialCostPerUnit;
+        set => Set(ref _treeSocketMaterialCostPerUnit, value);
     }
+
+    public int? TreeSocketExportDays
+    {
+        get => _treeSocketExportDays;
+        set => Set(ref _treeSocketExportDays, value);
+    }
+
+    public float? TreeSocketWeight
+    {
+        get => _treeSocketMaterialWeight;
+        set => Set(ref _treeSocketMaterialWeight, value);
+    }
+
+
+
 
     // КМЧ
     public string KMCH
@@ -464,6 +490,27 @@ public class StandModel : BaseViewModel
         get => _kmchMeasure;
         set => Set(ref _kmchMeasure, value);
     }
+
+    public string? KMCHCostPerUnit
+    {
+        get => _kmchCostPerUnit;
+        set => Set(ref _kmchCostPerUnit, value);
+    }
+
+    public int? KMCHExportDays
+    {
+        get => _kMCHExportDays;
+        set => Set(ref _kMCHExportDays, value);
+    }
+
+    public float? KMCHWeight
+    {
+        get => _kmchWeight;
+        set => Set(ref _kmchWeight, value);
+    }
+
+
+
 
     // Тип первого датчика
     public string FirstSensorType
@@ -574,6 +621,12 @@ public class StandModel : BaseViewModel
         set => Set(ref _sensor, value);
     }
 
+    public int StandSensorsQuantity
+    {
+        get => _standSensorsQuantity;
+        set => Set(ref _standSensorsQuantity, value);
+    }
+
     // Описание стенда
     public string? DesignStand
     {
@@ -593,6 +646,13 @@ public class StandModel : BaseViewModel
     {
         get => _imageType;
         set => Set(ref _imageType, value);
+    }
+
+    //Наименование чертежа 
+    public string? ImageName
+    {
+        get => _imageName;
+        set => Set(ref _imageName, value);
     }
 
     // Коллекция всех доступных рам

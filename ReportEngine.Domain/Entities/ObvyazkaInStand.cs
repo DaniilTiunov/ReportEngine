@@ -5,6 +5,7 @@ namespace ReportEngine.Domain.Entities;
 
 public class ObvyazkaInStand
 {
+
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
@@ -68,6 +69,9 @@ public class ObvyazkaInStand
     public string? ThirdSensorMarkPlus { get; set; }
     public string? ThirdSensorMarkMinus { get; set; }
     public string? ThirdSensorDescription { get; set; }
+
+    [NotMapped]
+    public float? ObvWeight { get; set; }
 
     public virtual ICollection<ObvyazkaAdditionalEquipPurpose>? AdditionalComponents { get; set; }
 }
