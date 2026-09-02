@@ -13,6 +13,7 @@
         <DocumentationFile>C:\Work\Prjs\ReportEngine\Documentation.xml</DocumentationFile>
         <UseWindowsForms>False</UseWindowsForms>
         <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+        <UseUTF8>true</UseUTF8>
     </PropertyGroup>
 
     <ItemGroup>

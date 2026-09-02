@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Text;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.Views.Windows.Dialog;

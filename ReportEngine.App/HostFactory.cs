@@ -259,7 +259,6 @@ public class HostFactory
         services.AddTransient<CompanyView>();
         services.AddTransient<FormedFrameView>();
         services.AddTransient<FormedDrainagesView>();
-        services.AddTransient<FrameDrainagesView>();
         services.AddTransient<ProjectPreview>();
         services.AddTransient<AllSortamentsView>();
         services.AddTransient<SettingsWindow>();
