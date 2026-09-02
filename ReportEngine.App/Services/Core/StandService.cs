@@ -240,6 +240,8 @@ public class StandService : IStandService
 
         if (selectedObvyazka == null || selectedObvyazka.Id <= 0) return Task.FromResult<ObvyazkaInStand>(null);
 
+
+
         var entity = new ObvyazkaInStand
         {
             LineLength = selectedObvyazka.LineLength,
@@ -249,12 +251,11 @@ public class StandService : IStandService
             Clamp = selectedObvyazka.Clamp,
             WidthOnFrame = selectedObvyazka.WidthOnFrame,
             OtherLineCount = selectedObvyazka.OtherLineCount,
-            Weight = selectedObvyazka.Weight,
             TreeSocketCount = selectedObvyazka.TreeSocket,
             HumanCost = selectedObvyazka.HumanCost,
-            ImageName = selectedObvyazka.ImageName,
+            
             ObvyazkaId = selectedObvyazka.Id,
-
+            ImageName = standModel.ImageName,
             ObvyazkaName = standModel.ObvyazkaName,
             StandId = standModel.Id,
             NN = standModel.NN,
@@ -304,16 +305,24 @@ public class StandService : IStandService
                     ExportDays = component.ExportDays,
                     Id = 0
                 })
-                .ToList()
+                .ToList(),
+
+
+            
+            Weight = selectedObvyazka.Weight + CountObvComponentsWeight(standModel)
+
         };
 
         return Task.FromResult(entity);
     }
 
+
     public async void FillStandFieldsFromObvyazka(StandModel stand, ObvyazkaInStand obv)
     {
         if (stand == null || obv == null)
             return;
+
+        var obvWeight = obv.Obvyazka.Weight;
 
         stand.NN = obv.NN ?? 0;
         stand.ObvyazkaName = obv.ObvyazkaName;
@@ -329,6 +338,7 @@ public class StandService : IStandService
         stand.KMCH = obv.KMCH;
         stand.KMCHCount = obv.KMCHCount;
         stand.KMCHMeasure = obv.KMCHMeasure;
+        stand.Weight = obv.Weight ?? 0;
 
         stand.MaterialLineCostPerUnit = obv.MaterialLineCostPerUnit;
         stand.TreeSocketMaterialCostPerUnit = obv.TreeSocketMaterialCostPerUnit;
@@ -350,6 +360,7 @@ public class StandService : IStandService
         stand.ThirdSensorMarkPlus = obv.ThirdSensorMarkPlus;
         stand.ThirdSensorMarkMinus = obv.ThirdSensorMarkMinus;
         stand.ThirdSensorDescription = obv.ThirdSensorDescription;
+        stand.ImageName = obv.ImageName;
 
         var additionalComponents = await GetAdditionalComponentsAsync(obv);
 
@@ -497,6 +508,27 @@ public class StandService : IStandService
         return new List<ObvyazkaAdditionalEquipPurpose>();
     }
 
+    public static float CountObvComponentsWeight(StandModel standModel)
+    {
+        //суммируем в обвязку веса всех комплектующих
+        float commonWeight = 0.0f;
+
+        commonWeight += (standModel.MaterialLineWeight * standModel.MaterialLineCount) ?? 0.0f;
+        commonWeight += (standModel.TreeSocketWeight * standModel.TreeSocketMaterialCount) ?? 0.0f;
+        commonWeight += (standModel.KMCHWeight * standModel.KMCHCount) ?? 0.0f;
+        commonWeight += (standModel.ArmatureWeight * standModel.ArmatureCount) ?? 0.0f;
+
+
+        foreach (var obvComponent in standModel.ObvyazkaAdditionalComponents)
+        {
+            commonWeight += (obvComponent.Weight * obvComponent.Quantity) ?? 0.0f;
+        }
+ 
+        return commonWeight;
+    }
+
+
+}
     private async Task<List<StandFrame>> GetFramesAsync(int[] standIds)
     {
         await using var scope = _scopeFactory.CreateAsyncScope();

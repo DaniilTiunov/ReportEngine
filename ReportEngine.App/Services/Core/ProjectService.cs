@@ -310,8 +310,10 @@ public class ProjectService : IProjectService
         if (Guard.ExitIfNull("Сначала создайте проект!", _notificationService, projectModel))
             return;
 
+       
         var stand = projectModel.SelectedStand;
         var obv = stand?.SelectedObvyazkaInStand;
+
 
         if (Guard.ExitIfNull("Сначала создайте стенд или выберите обвязку!", _notificationService, stand, obv))
             return;
@@ -349,6 +351,9 @@ public class ProjectService : IProjectService
         obv.ThirdSensorMarkPlus = stand.ThirdSensorMarkPlus;
         obv.ThirdSensorMarkMinus = stand.ThirdSensorMarkMinus;
         obv.ThirdSensorDescription = stand.ThirdSensorDescription;
+        obv.ImageName = stand.ImageName;
+       
+        obv.Weight = stand.ObvWeight +  StandService.CountObvComponentsWeight(stand);
 
         await UpdateObvyazka(projectModel, projectModel.SelectedStand.SelectedObvyazkaInStand);
 

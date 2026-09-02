@@ -475,7 +475,7 @@
                         <Image
                             MaxHeight="200"
                             MaxWidth="200"
-                            Source="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand.ImageName, Converter={StaticResource ObvyazkaImagePathConverter}}"
+                            Source="{Binding CurrentProjectModel.SelectedStand.ImageName, Converter={StaticResource ObvyazkaImagePathConverter}}"
                             Stretch="Uniform"
                             ToolTip="Изображение обвязки"
                             VerticalAlignment="Top" />
