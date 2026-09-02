@@ -39,10 +39,10 @@ public class ProjectInfoRepository : IProjectInfoRepository
     public async Task<IEnumerable<ProjectInfo>> GetAllWithSandsAsync()
     {
         return await _context.Set<ProjectInfo>()
-            .Include(p => p.Stands)
-            .ThenInclude(s => s.StandAdditionalEquips)
-            .ThenInclude(sae => sae.AdditionalEquip.Purposes)
             .AsNoTracking()
+            .Include(p => p.Stands)
+                .ThenInclude(s => s.StandAdditionalEquips)
+                    .ThenInclude(sae => sae.AdditionalEquip.Purposes)
             .ToListAsync();
     }
 

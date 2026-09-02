@@ -73,9 +73,6 @@ public static class MainWindowCommandsInitializer
         vm.MainWindowCommandProvider.EditProjectCommand =
             new RelayCommand(vm.OnEditProjectCommandExecuted, vm.CanAllCommandsExecute);
 
-        vm.MainWindowCommandProvider.OpenAllDrainagesCommand =
-            new RelayCommand(vm.OpenOthersWindowCommandExecuted<FormedDrainagesView>, vm.CanAllCommandsExecute);
-
         vm.MainWindowCommandProvider.RecalculateProjectCommand =
             new RelayCommand(vm.OnRecalculateProjectCommandExecuted, vm.CanAllCommandsExecute);
 
