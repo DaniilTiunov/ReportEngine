@@ -526,10 +526,8 @@ public class StandService : IStandService
  
         return commonWeight;
     }
-
-
-}
-    private async Task<List<StandFrame>> GetFramesAsync(int[] standIds)
+    
+     private async Task<List<StandFrame>> GetFramesAsync(int[] standIds)
     {
         await using var scope = _scopeFactory.CreateAsyncScope();
 
