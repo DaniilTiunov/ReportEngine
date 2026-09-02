@@ -235,6 +235,7 @@ public class HostFactory
         services.AddScoped<AuditViewModel>();
         services.AddScoped<ChatWithAiViewModel>();
         services.AddScoped<TreeViewModel>();
+        services.AddScoped<ContainersViewModel>();
     }
 
     private static void ConfigureViews(IServiceCollection services)

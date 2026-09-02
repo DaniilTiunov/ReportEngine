@@ -328,18 +328,6 @@
         <Setter Property="FontSize" Value="15" />
         <Setter Property="Padding" Value="8,6" />
         <Setter Property="Margin" Value="0,2" />
-        <Setter Property="HeaderTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock
-                            FontWeight="Normal"
-                            Text="{Binding}"
-                            VerticalAlignment="Center" />
-                    </StackPanel>
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
         <Style.Triggers>
             <!--  Выделение элемента  -->
             <Trigger Property="IsSelected" Value="True">
@@ -718,5 +706,76 @@
     <Style BasedOn="{StaticResource MahApps.Styles.ProgressBar}" TargetType="ProgressBar">
         <Setter Property="Background" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+    </Style>
+
+    <Style TargetType="Button" x:Key="ActionButtonStyle">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}" />
+        <Setter Property="Padding" Value="10,5" />
+        <Setter Property="Margin" Value="2" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="4"
+                        Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource ButtonHoverBackground}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource ButtonPressedBackground}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" Value="{DynamicResource ButtonDisabledBackground}" />
+                            <Setter Property="Foreground" Value="{DynamicResource ButtonDisabledForeground}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--  Стиль для элементов списка  -->
+    <Style TargetType="Border" x:Key="ListItemStyle">
+        <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="8,6" />
+        <Setter Property="Margin" Value="0,2" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource RowHoverColor}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--  Стиль для информационной панели  -->
+    <Style TargetType="Border" x:Key="InfoPanelStyle">
+        <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="5" />
+    </Style>
+
+    <!--  Стиль заголовка  -->
+    <Style TargetType="TextBlock" x:Key="HeaderStyle">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentColor}" />
+        <Setter Property="Margin" Value="0,0,0,8" />
+    </Style>
+
+    <!--  Стиль карточки  -->
+    <Style TargetType="Border" x:Key="CardPanelStyle">
+        <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Padding" Value="10" />
     </Style>
 </ResourceDictionary>

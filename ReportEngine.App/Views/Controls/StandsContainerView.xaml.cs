@@ -14,22 +14,13 @@ namespace ReportEngine.App.Views.Controls;
 /// </summary>
 public partial class StandsContainerView : UserControl
 {
-    private readonly ProjectViewModel _projectViewModel;
+    private readonly ContainersViewModel _viewModel;
     private bool _allowEdit;
 
-    public StandsContainerView(ProjectViewModel projectViewModel)
+    public StandsContainerView(ContainersViewModel _viewModel)
     {
-        _projectViewModel = projectViewModel;
-
+        DataContext = _viewModel;
         InitializeComponent();
-        DataContext = projectViewModel;
-
-        Loaded += StandsContainerView_Loaded;
-    }
-
-    private async void StandsContainerView_Loaded(object sender, RoutedEventArgs e)
-    {
-        await _projectViewModel.LoadContainersInfoAsync();
     }
 
     private void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)

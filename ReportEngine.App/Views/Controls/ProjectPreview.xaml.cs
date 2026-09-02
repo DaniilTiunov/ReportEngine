@@ -10,7 +10,6 @@ using System.Windows.Threading;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ViewModels;
-using ReportEngine.App.Views.Windows.Dialog;
 
 namespace ReportEngine.App.Views.Controls;
 
@@ -38,23 +37,10 @@ public partial class ProjectPreview : UserControl
 
     private async Task InitializeDataAndRecalculateAsync(ProjectViewModel projectViewModel)
     {
-        var progress = new ProgressDialog();
-
-        progress.Show();
-
-        try
-        {
-            await InitializeDataAsync(projectViewModel);
-
-            projectViewModel.OnObvyazkiInStandChanged();
-            projectViewModel.OnFramesInStandChanged();
-            projectViewModel.UpdateNewStandNN();
-            projectViewModel.OnStandsInProjectChanged();
-        }
-        finally
-        {
-            progress.Close();
-        }
+        projectViewModel.OnObvyazkiInStandChanged();
+        projectViewModel.OnFramesInStandChanged();
+        projectViewModel.UpdateNewStandNN();
+        projectViewModel.OnStandsInProjectChanged();
     }
 
     private async Task InitializeDataAsync(ProjectViewModel projectViewModel)

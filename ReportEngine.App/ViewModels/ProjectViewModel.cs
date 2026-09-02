@@ -778,87 +778,7 @@ public class ProjectViewModel : BaseViewModel
 
 
     #endregion
-
-
-    #region Отчеты по выбранной упаковке
-
-
-    //валидация выбранной упаковки
-    private Task CreateReportForSelectedBatchAsync(ReportType type, string name)
-    {
-        var selectedBatch = CurrentProjectModel.SelectedContainerBatch;
-
-        if (selectedBatch == null)
-        {
-            _notificationService.ShowError("Партия не выбрана!");
-            return Task.CompletedTask;
-        }
-
-        var batchStands = selectedBatch.Containers
-            .SelectMany(container => container.Stands)
-            .ToList();
-
-        if (batchStands.Count == 0)
-        {
-            _notificationService.ShowError("Выбранная партия не содержит стендов!");
-            return Task.CompletedTask;
-        }
-
-        return CreateReportAsync(type, name, batchStands);
-    }
-
-
-
-    public async void OnCreateSelectedBatchSummaryReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.SummaryReport, "сводная"));
-    }
-
-    public async void OnSelectedBatchComponentsListReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.ComponentsListReport, "комплектующих"));
-    }
-
-    public async void OnCreateSelectedBatchNameplatesReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.NameplatesReport, "шильдики и таблички"));
-    }
-
-    public async void OnSelectedBatchCreateMarksReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.MarksReport, "маркировки"));
-    }
-
-    public async void OnSelectedBatchCreateContainerReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.ContainerReport, "тара"));
-    }
-
-
-    public async void OnCreateSelectedBatchProductionReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.ProductionReport, "производство"));
-    }
-
-    public async void OnCreateSelectedBatchFinplanReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.FinPlanReport, "финплан"));
-    }
-
-    public async void OnCreateSelectedBatchPassportReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.PassportsReport, "паспорта"));
-    }
-
-    public async void OnCreateSelectedBatchTechnologicalCardsCommandExecute(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.TechnologicalCards, "технологические карты"));
-    }
-
-    #endregion
-
-
-
+    
     public async void OnSaveChangesInStandCommandExecuted(object obj)
     {
         await _exceptionService.SafeExecuteAsync(SaveChangesInStandAsync);
@@ -1228,56 +1148,7 @@ public class ProjectViewModel : BaseViewModel
             }
         });
     }
-
-
-    public async void OnCreateContainerStandCommandExecuted(object obj)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await _containerService.CreateBatchAsync(CurrentProjectModel));
-    }
-
-    public async void OnDeleteBatchCommandExecuted(object obj)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await _containerService.DeleteBatchAsync(CurrentProjectModel));
-    }
-
-    public async void OnRefreshBatchesCommandCommandExecuted(object obj)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await _containerService.LoadBatchesAsync(CurrentProjectModel));
-    }
-
-    public async void OnAddContainerToBatchCommandExecuted(object obj)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await _containerService.AddContainerToBatchAsync(CurrentProjectModel));
-    }
-
-    public async void OnDeleteContainerCommandExecuted(object obj)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await _containerService.RemoveContainerFromBatchAsync(CurrentProjectModel));
-    }
-
-    public async Task OnUpdateSelectedContainerExecuted(object obj)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await _containerService.UpdateSelectedContainerAsync(CurrentProjectModel));
-    }
-
-    public async void OnAddStandToContainerCommandExecuted(object obj)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await _containerService.AddStandToContainerAsync(CurrentProjectModel));
-    }
-
-    public async void OnRemoveStandFromContainerCommandExecuted(object obj)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await _containerService.RemoveStandFromContainerAsync(CurrentProjectModel));
-    }
-
+    
     public void ResetProject()
     {
         // Совместимый синхронный вызов, чтобы не дедлокалось в процессе загрузки
@@ -1330,8 +1201,6 @@ public class ProjectViewModel : BaseViewModel
         await _exceptionService.SafeExecuteAsync(async () =>
         {
             await _standService.LoadStandsDataAsync(CurrentProjectModel.Stands);
-            await _standService.LoadAllStandsDataAsync(CurrentProjectModel.CurrentProjectId,
-                CurrentProjectModel.Stands);
         });
     }
 
@@ -1371,6 +1240,7 @@ public class ProjectViewModel : BaseViewModel
 
             await LoadObvyazkiAsync();
             await LoadStandsDataAsync();
+            await LoadPurposesInStandsAsync();
 
             OnPropertyChanged(nameof(CurrentStandModel));
         });
