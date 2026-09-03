@@ -22,7 +22,9 @@ public class TechnologicalCardsGenerator : IReportGenerator
     private readonly IServiceProvider _serviceProvider;
 
 
-    public TechnologicalCardsGenerator(IProjectInfoRepository projectInfoRepository, ParametersStore parametersStore,
+    public TechnologicalCardsGenerator(
+        IProjectInfoRepository projectInfoRepository, 
+        ParametersStore parametersStore,
         IServiceProvider serviceProvider)
     {
         _projectInfoRepository = projectInfoRepository;

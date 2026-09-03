@@ -23,21 +23,97 @@
     <Window.Resources>
         <converters:ObvyazkaImagePathConverter x:Key="ObvyazkaImagePathConverter" />
 
+        <DropShadowEffect
+            BlurRadius="30"
+            Color="#000000"
+            Opacity="0.25"
+            ShadowDepth="0"
+            x:Key="WindowShadow" />
+
+        <Style TargetType="Border" x:Key="WindowBorder">
+            <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryForeground}" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Effect" Value="{StaticResource WindowShadow}" />
+        </Style>
+
+        <Style TargetType="Button" x:Key="CloseButtonStyle">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Height" Value="30" />
+            <Setter Property="Width" Value="40" />
+            <Setter Property="Margin" Value="10,0,10,0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="4"
+                            Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#E81123" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#C40E1E" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Button" x:Key="WindowControlButtonStyle">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Height" Value="30" />
+            <Setter Property="Width" Value="40" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="4"
+                            Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#555555" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#333333" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <WindowChrome.WindowChrome>
         <WindowChrome
             CaptionHeight="0"
-            CornerRadius="0"
+            CornerRadius="10"
             GlassFrameThickness="0" />
     </WindowChrome.WindowChrome>
 
-    <Border Style="{DynamicResource WindowBorder}">
+    <Border Style="{StaticResource WindowBorder}">
         <DockPanel>
             <Border
                 Background="#2D2D30"
+                CornerRadius="10,10,0,0"
                 DockPanel.Dock="Top"
-                Height="34"
+                Height="40"
                 MouseLeftButtonDown="Window_MouseLeftButtonDown">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -46,7 +122,7 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel
-                        Margin="10,0,0,0"
+                        Margin="12,0,0,0"
                         Orientation="Horizontal"
                         VerticalAlignment="Center">
                         <Image
@@ -56,6 +132,7 @@
                             Width="18" />
                         <TextBlock
                             FontSize="14"
+                            FontWeight="SemiBold"
                             Foreground="White"
                             Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}"
                             VerticalAlignment="Center" />
@@ -67,32 +144,23 @@
                         VerticalAlignment="Center">
                         <Button
                             Click="MinimizeButton_Click"
-                            FontSize="16"
-                            Height="30"
+                            Style="{StaticResource WindowControlButtonStyle}"
                             ToolTip="Свернуть"
-                            Width="40"
                             x:Name="MinimizeButton">
-                            ─
+                            <TextBlock Text="─" />
                         </Button>
                         <Button
                             Click="MaxRestoreButton_Click"
-                            FontSize="16"
-                            Height="30"
-                            Margin="10,0,0,0"
+                            Style="{StaticResource WindowControlButtonStyle}"
                             ToolTip="Развернуть"
-                            Width="40"
                             x:Name="MaxRestoreButton">
-                            ▢
+                            <TextBlock Text="□" />
                         </Button>
                         <Button
                             Click="CloseButton_Click"
-                            FontSize="16"
-                            Height="30"
-                            Margin="10,0,10,0"
-                            ToolTip="Закрыть"
-                            Width="40"
+                            Style="{StaticResource CloseButtonStyle}"
                             x:Name="CloseButton">
-                            ✕
+                            <TextBlock Text="✕" />
                         </Button>
                     </StackPanel>
                 </Grid>
@@ -109,6 +177,7 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
+                    <!--  Обвязки и датчики в стенде  -->
                     <GroupBox
                         BorderThickness="0"
                         Grid.Column="0"
@@ -459,6 +528,7 @@
                         </Grid>
                     </GroupBox>
 
+                    <!--  Изображение обвязки  -->
                     <Border
                         Background="WhiteSmoke"
                         BorderBrush="LightGray"
@@ -481,6 +551,7 @@
                             VerticalAlignment="Top" />
                     </Border>
 
+                    <!--  Датчики в обвязке  -->
                     <GroupBox
                         BorderThickness="0"
                         Grid.Row="1"
@@ -499,7 +570,6 @@
                             </TextBlock>
                         </GroupBox.Header>
                         <Grid>
-
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -578,7 +648,7 @@
                                 Margin="0,0,5,0"
                                 Text="{Binding CurrentProjectModel.SelectedStand.FirstSensorDescription}"
                                 TextWrapping="Wrap" />
-                            <!--  <Border  -->
+
                             <TextBlock
                                 Grid.Column="0"
                                 Grid.Row="5"
@@ -633,7 +703,7 @@
                                 Margin="0,0,5,0"
                                 Text="{Binding CurrentProjectModel.SelectedStand.SecondSensorDescription}"
                                 TextWrapping="Wrap" />
-                            <!--  <Border  -->
+
                             <TextBlock
                                 Grid.Column="0"
                                 Grid.Row="10"
@@ -698,24 +768,25 @@
                                 Rows="1">
                                 <Button
                                     Command="{Binding ProjectCommandProvider.SaveObvCommand}"
-                                    Content="Добавить&#10;  новую"
+                                    Content="Добавить новую"
                                     Margin="5,0" />
                                 <Button
                                     Command="{Binding ProjectCommandProvider.UpdateObvInStandCommand}"
-                                    Content="Сохранить &#10;изменения"
+                                    Content="Сохранить изменения"
                                     Margin="5,0" />
                                 <Button
                                     Command="{Binding ProjectCommandProvider.AdditionalTestCommand}"
-                                    Content="    Заполнить&#10;доп.компоненты"
+                                    Content="Заполнить доп.компоненты"
                                     Margin="5,0" />
                                 <Button
                                     Command="{Binding ProjectCommandProvider.FillMarkInObvCommand}"
-                                    Content=" Заполнить&#10;маркировку"
+                                    Content="Заполнить маркировку"
                                     Margin="5,0" />
                             </UniformGrid>
                         </Grid>
                     </GroupBox>
 
+                    <!--  Обвязки в проекте  -->
                     <GroupBox
                         BorderThickness="0"
                         Grid.Column="1"

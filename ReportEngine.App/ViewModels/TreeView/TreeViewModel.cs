@@ -83,11 +83,7 @@ public class TreeViewModel
         RecalculateProjectCommandAsync = new AsyncRelayCommand(OnRecalculateProjectAsync);
 
     }
-
-
-
-
-
+    
     private async Task OnCreateSummaryReportAsync(object arg)
     {
         var continueWithDuplicates = CheckDuplicates();

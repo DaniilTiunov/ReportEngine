@@ -144,9 +144,15 @@ public static class JsonCreator
         //находим название коробки в стенде
         var boxName = stand.StandElectricalComponent
             .SelectMany(sec => sec.ElectricalComponent.Purposes)
-            .First(purpose => !string.IsNullOrEmpty(purpose.Purpose) && purpose.Purpose.StartsWith("Клеммная коробка"))
+            .FirstOrDefault(purpose => !string.IsNullOrEmpty(purpose.Purpose) && purpose.Purpose.StartsWith("Клеммная коробка"))?
             .Material;
 
+        if (boxName == null)
+        {
+            throw new InvalidOperationException(
+                $"Не найдена обвязка/датчик для технологической карты. " +
+                $"Стенд: №{stand.Number}, KKS: {stand.KKSCode}");
+        }
 
 
         bool terminalNumberNeeded = (!string.IsNullOrEmpty(record.SensorMarkPlus) || !string.IsNullOrEmpty(record.SensorMarkMinus));
