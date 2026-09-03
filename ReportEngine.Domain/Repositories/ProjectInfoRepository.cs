@@ -41,8 +41,7 @@ public class ProjectInfoRepository : IProjectInfoRepository
         return await _context.Set<ProjectInfo>()
             .AsNoTracking()
             .Include(p => p.Stands)
-                .ThenInclude(s => s.StandAdditionalEquips)
-                    .ThenInclude(sae => sae.AdditionalEquip.Purposes)
+            .AsSplitQuery()
             .ToListAsync();
     }
 

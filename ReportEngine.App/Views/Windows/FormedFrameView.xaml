@@ -1,10 +1,15 @@
 ﻿<Window
-    Background="{DynamicResource PrimaryColor}"
+    AllowsTransparency="True"
+    Background="Transparent"
     FontFamily="Bahnschrift"
     FontSize="14"
     Foreground="{DynamicResource PrimaryForeground}"
+    Height="800"
+    MinHeight="700"
+    MinWidth="1100"
     ResizeMode="CanResize"
     Title="Создание и редактирование рам"
+    Width="1300"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d"
@@ -20,556 +25,659 @@
     <WindowChrome.WindowChrome>
         <WindowChrome
             CaptionHeight="0"
-            CornerRadius="0"
-            GlassFrameThickness="0" />
+            CornerRadius="12"
+            GlassFrameThickness="0"
+            ResizeBorderThickness="6" />
     </WindowChrome.WindowChrome>
 
     <Window.Resources>
         <ResourceDictionary>
             <converters:FrameComponentsCountConverter x:Key="FrameComponentsCountConverter" />
+
+            <DropShadowEffect
+                BlurRadius="30"
+                Color="#000000"
+                Opacity="0.2"
+                ShadowDepth="0"
+                x:Key="WindowShadow" />
         </ResourceDictionary>
     </Window.Resources>
 
-    <Border Style="{DynamicResource WindowBorder}">
-        <DockPanel>
-            <Border
-                Background="#2D2D30"
-                DockPanel.Dock="Top"
-                Height="34"
-                MouseLeftButtonDown="Window_MouseLeftButtonDown"
-                x:Name="FormedFrameWindowTitle">
-                <Grid>
+    <Border
+        ClipToBounds="True"
+        CornerRadius="12"
+        Effect="{StaticResource WindowShadow}">
+        <Border
+            Background="{DynamicResource PrimaryColor}"
+            BorderBrush="{DynamicResource WindowBorderColor}"
+            BorderThickness="1"
+            CornerRadius="12">
+            <DockPanel>
+                <!--  Заголовок окна  -->
+                <Border
+                    Background="#2D2D30"
+                    CornerRadius="12,12,0,0"
+                    DockPanel.Dock="Top"
+                    Height="40"
+                    MouseLeftButtonDown="Window_MouseLeftButtonDown"
+                    x:Name="FormedFrameWindowTitle">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel
+                            Margin="12,0,0,0"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center">
+                            <Image
+                                Height="18"
+                                Margin="0,0,8,0"
+                                Source="/Resources/Icons/estimate_cost_icon_213382.ico"
+                                Width="18" />
+                            <TextBlock
+                                FontSize="14"
+                                FontWeight="SemiBold"
+                                Foreground="White"
+                                Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}"
+                                VerticalAlignment="Center" />
+                        </StackPanel>
+
+                        <StackPanel
+                            Grid.Column="1"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center">
+                            <Button
+                                Click="MinimizeButton_Click"
+                                Height="30"
+                                Margin="0,0,5,0"
+                                Style="{StaticResource CloseButtonStyle}"
+                                ToolTip="Свернуть"
+                                Width="40"
+                                x:Name="MinimizeButton">
+                                ─
+                            </Button>
+                            <Button
+                                Click="MaxRestoreButton_Click"
+                                Height="30"
+                                Margin="5,0"
+                                Style="{StaticResource CloseButtonStyle}"
+                                ToolTip="Развернуть"
+                                Width="40"
+                                x:Name="MaxRestoreButton">
+                                ▢
+                            </Button>
+                            <Button
+                                Click="CloseButton_Click"
+                                Height="30"
+                                Margin="5,0,10,0"
+                                Style="{StaticResource CloseButtonStyle}"
+                                ToolTip="Закрыть"
+                                Width="40"
+                                x:Name="CloseButton">
+                                ✕
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!--  Основное содержимое  -->
+                <Grid Margin="12,12,12,12">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="0.75*" />
                     </Grid.ColumnDefinitions>
 
-                    <StackPanel
-                        Margin="10,0,0,0"
-                        Orientation="Horizontal"
-                        VerticalAlignment="Center">
-                        <Image
-                            Height="18"
-                            Margin="0,0,8,0"
-                            Source="/Resources/Icons/estimate_cost_icon_213382.ico"
-                            Width="18" />
-                        <TextBlock
-                            FontSize="14"
-                            Foreground="White"
-                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}"
-                            VerticalAlignment="Center" />
-                    </StackPanel>
+                    <!--  Левая часть: Список рам и параметры  -->
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-                    <StackPanel
-                        Grid.Column="1"
-                        Orientation="Horizontal"
-                        VerticalAlignment="Center">
-                        <Button
-                            Click="MinimizeButton_Click"
-                            FontSize="16"
-                            Height="30"
-                            ToolTip="Свернуть"
-                            Width="40"
-                            x:Name="MinimizeButton">
-                            ─
-                        </Button>
-                        <Button
-                            Click="MaxRestoreButton_Click"
-                            FontSize="16"
-                            Height="30"
-                            Margin="10,0,0,0"
-                            ToolTip="Развернуть"
-                            Width="40"
-                            x:Name="MaxRestoreButton">
-                            ▢
-                        </Button>
-                        <Button
-                            Click="CloseButton_Click"
-                            FontSize="16"
-                            Height="30"
-                            Margin="10,0,10,0"
-                            ToolTip="Закрыть"
-                            Width="40"
-                            x:Name="CloseButton">
-                            ✕
-                        </Button>
-                    </StackPanel>
-                </Grid>
-            </Border>
-
-            <!--  Window content  -->
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="0.75*" />
-                </Grid.ColumnDefinitions>
-
-                <!--  Левая часть: Список рам и параметры  -->
-                <Grid Grid.Column="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <!--  Список рам  -->
-                    <GroupBox
-                        Grid.Row="0"
-                        Header="Список рам"
-                        Margin="10">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <DataGrid
-                                AutoGenerateColumns="False"
-                                BeginningEdit="DataGrid_BeginningEdit"
-                                CanUserAddRows="False"
-                                Grid.Column="0"
-                                ItemsSource="{Binding FormedFrameModel.AllFrames}"
-                                Margin="5"
-                                MouseDoubleClick="DataGrid_MouseDoubleClick"
-                                SelectedItem="{Binding FormedFrameModel.SelectedFrame}">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
-                                    <DataGridTextColumn Binding="{Binding FrameType}" Header="Тип" />
-                                    <DataGridTextColumn Binding="{Binding Width}" Header="Ширина" />
-                                    <DataGridTextColumn Binding="{Binding Height}" Header="Высота" />
-                                    <DataGridTextColumn Binding="{Binding Depth}" Header="Глубина" />
-                                    <DataGridTextColumn Binding="{Binding Weight}" Header="Масса" />
-                                    <DataGridTextColumn Binding="{Binding Designe}" Header="Описание по КД" />
-                                </DataGrid.Columns>
-                            </DataGrid>
-                            <GroupBox
-                                Grid.Column="1"
-                                Header="Комплектующие рамы"
-                                Margin="5">
-                                <DataGrid
-                                    AutoGenerateColumns="False"
-                                    BeginningEdit="DataGrid_BeginningEdit"
-                                    CanUserAddRows="False"
-                                    IsReadOnly="False"
-                                    ItemsSource="{Binding FormedFrameModel.DisplayedComponents}"
-                                    Margin="5"
-                                    MouseDoubleClick="DataGrid_MouseDoubleClick"
-                                    SelectedItem="{Binding FormedFrameModel.SelectedComponentInFrame}">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Binding="{Binding Component.Name}" Header="Наименование" />
-                                        <DataGridTextColumn Binding="{Binding CostComponent, StringFormat={}{0:N2}}"
-                                                            Header="Цена за ед." />
-                                        <DataGridTextColumn Binding="{Binding Measure}" Header="Ед. изм." />
-
-                                        <!--  Кол-во и Длина в одном столбце  -->
-                                        <DataGridTemplateColumn Header="Кол-во">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <TextBlock
-                                                            Text="{Binding Converter={StaticResource FrameComponentsCountConverter}}" />
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-
-                                            <!--  Если нужно редактирование  -->
-                                            <DataGridTemplateColumn.CellEditingTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <TextBox
-                                                            Text="{Binding Count, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                            Width="50" />
-
-                                                        <TextBlock Margin="5,0" Text=" / " />
-
-                                                        <TextBox
-                                                            Text="{Binding Length, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                            Width="70" />
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellEditingTemplate>
-                                        </DataGridTemplateColumn>
-
-                                        <!--  Кнопка отдельно  -->
-                                        <DataGridTemplateColumn Header="Действия">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <Button
-                                                        Command="{Binding DataContext.RemoveComponentCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                        CommandParameter="{Binding}"
-                                                        Content="Удалить" />
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </GroupBox>
-                        </Grid>
-                    </GroupBox>
-
-                    <!--  Добавление новой рамы  -->
-                    <GroupBox
-                        Grid.Row="1"
-                        Header="Добавление новой рамы"
-                        Margin="10">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-
-                            <TextBlock
-                                Grid.Column="0"
-                                Grid.Row="0"
-                                Margin="5"
-                                VerticalAlignment="Center">
-                                <Run Text="Наименование:" />
-                            </TextBlock>
-                            <TextBox
-                                Grid.Column="1"
-                                Grid.Row="0"
-                                Margin="5"
-                                Text="{Binding FormedFrameModel.NewFrame.Name}" />
-
-                            <TextBlock
-                                Grid.Column="0"
-                                Grid.Row="1"
-                                Margin="5"
-                                VerticalAlignment="Center">
-                                <Run Text="Тип:" />
-                            </TextBlock>
-                            <TextBox
-                                Grid.Column="1"
-                                Grid.Row="1"
-                                Margin="5"
-                                Text="{Binding FormedFrameModel.NewFrame.FrameType}" />
-
-                            <TextBlock
-                                Grid.Column="0"
-                                Grid.Row="2"
-                                Margin="5"
-                                VerticalAlignment="Center">
-                                <Run Text="Ширина:" />
-                            </TextBlock>
-                            <TextBox
-                                Grid.Column="1"
-                                Grid.Row="2"
-                                Margin="5"
-                                Text="{Binding FormedFrameModel.NewFrame.Width}" />
-
-                            <TextBlock
-                                Grid.Column="0"
-                                Grid.Row="3"
-                                Margin="5"
-                                VerticalAlignment="Center">
-                                <Run Text="Высота:" />
-                            </TextBlock>
-                            <TextBox
-                                Grid.Column="1"
-                                Grid.Row="3"
-                                Margin="5"
-                                Text="{Binding FormedFrameModel.NewFrame.Height}" />
-
-                            <TextBlock
-                                Grid.Column="0"
-                                Grid.Row="4"
-                                Margin="5"
-                                VerticalAlignment="Center">
-                                <Run Text="Глубина:" />
-                            </TextBlock>
-                            <TextBox
-                                Grid.Column="1"
-                                Grid.Row="4"
-                                Margin="5"
-                                Text="{Binding FormedFrameModel.NewFrame.Depth}" />
-
-                            <TextBlock
-                                Grid.Column="0"
-                                Grid.Row="5"
-                                Margin="5"
-                                VerticalAlignment="Center">
-                                <Run Text="Масса:" />
-                            </TextBlock>
-                            <TextBox
-                                Grid.Column="1"
-                                Grid.Row="5"
-                                Margin="5"
-                                Text="{Binding FormedFrameModel.NewFrame.Weight}" />
-
-                            <TextBlock
-                                Grid.Column="0"
-                                Grid.Row="6"
-                                Margin="5"
-                                VerticalAlignment="Center">
-                                <Run Text="Обозначение по КД:" />
-                            </TextBlock>
-                            <TextBox
-                                Grid.Column="1"
-                                Grid.Row="6"
-                                Margin="5"
-                                Text="{Binding FormedFrameModel.NewFrame.Designe}" />
-
-                        </Grid>
-                    </GroupBox>
-
-                    <!--  Редактирование рамы из списка  -->
-                    <GroupBox
-                        Grid.Row="2"
-                        Header="Редактирование рамы из списка"
-                        Margin="10">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-
-                            <TextBlock
-                                Grid.Column="0"
-                                Grid.Row="0"
-                                Margin="5"
-                                VerticalAlignment="Center">
-                                <Run Text="Наименование:" />
-                            </TextBlock>
-                            <TextBox
-                                Grid.Column="1"
-                                Grid.Row="0"
-                                Margin="5"
-                                Text="{Binding FormedFrameModel.SelectedFrame.Name}" />
-
-                            <TextBlock
-                                Grid.Column="0"
-                                Grid.Row="1"
-                                Margin="5"
-                                VerticalAlignment="Center">
-                                <Run Text="Тип:" />
-                            </TextBlock>
-                            <TextBox
-                                Grid.Column="1"
-                                Grid.Row="1"
-                                Margin="5"
-                                Text="{Binding FormedFrameModel.SelectedFrame.FrameType}" />
-
-                            <TextBlock
-                                Grid.Column="0"
-                                Grid.Row="2"
-                                Margin="5"
-                                VerticalAlignment="Center">
-                                <Run Text="Ширина:" />
-                            </TextBlock>
-                            <TextBox
-                                Grid.Column="1"
-                                Grid.Row="2"
-                                Margin="5"
-                                Text="{Binding FormedFrameModel.SelectedFrame.Width}" />
-
-                            <TextBlock
-                                Grid.Column="0"
-                                Grid.Row="3"
-                                Margin="5"
-                                VerticalAlignment="Center">
-                                <Run Text="Высота:" />
-                            </TextBlock>
-                            <TextBox
-                                Grid.Column="1"
-                                Grid.Row="3"
-                                Margin="5"
-                                Text="{Binding FormedFrameModel.SelectedFrame.Height}" />
-
-                            <TextBlock
-                                Grid.Column="0"
-                                Grid.Row="4"
-                                Margin="5"
-                                VerticalAlignment="Center">
-                                <Run Text="Глубина:" />
-                            </TextBlock>
-                            <TextBox
-                                Grid.Column="1"
-                                Grid.Row="4"
-                                Margin="5"
-                                Text="{Binding FormedFrameModel.SelectedFrame.Depth}" />
-
-                            <TextBlock
-                                Grid.Column="0"
-                                Grid.Row="5"
-                                Margin="5"
-                                VerticalAlignment="Center">
-                                <Run Text="Масса:" />
-                            </TextBlock>
-                            <TextBox
-                                Grid.Column="1"
-                                Grid.Row="5"
-                                Margin="5"
-                                Text="{Binding FormedFrameModel.SelectedFrame.Weight}" />
-
-                            <TextBlock
-                                Grid.Column="0"
-                                Grid.Row="6"
-                                Margin="5"
-                                VerticalAlignment="Center">
-                                <Run Text="Обозначение по КД:" />
-                            </TextBlock>
-                            <TextBox
-                                Grid.Column="1"
-                                Grid.Row="6"
-                                Margin="5"
-                                Text="{Binding FormedFrameModel.SelectedFrame.Designe}" />
-                        </Grid>
-                    </GroupBox>
-
-                    <!--  Кнопки управления  -->
-                    <StackPanel
-                        Grid.Row="3"
-                        HorizontalAlignment="Center"
-                        Margin="10"
-                        Orientation="Horizontal">
-                        <Button
-                            Command="{Binding AddNewFrameCommand}"
-                            Content="Добавить новую"
-                            Margin="5" />
-                        <Button
-                            Command="{Binding SaveChangesCommand}"
-                            Content="Сохранить изменения"
-                            Margin="5" />
-                        <Button
-                            Command="{Binding DeleteFrameCommand}"
-                            Content="Удалить выбранную раму"
-                            Margin="5" />
-                    </StackPanel>
-                </Grid>
-
-                <!--  Правая часть: Комплектующие  -->
-                <Grid Grid.Column="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <!--  Вкладки для различных категорий комплектующих  -->
-                    <TabControl Grid.Row="0" Margin="10">
-                        <TabItem Header="Детали рамы">
+                        <!--  Карточка: Список рам  -->
+                        <Border
+                            Grid.Row="0"
+                            Margin="0,0,10,10"
+                            Style="{StaticResource CardPanelStyle}">
                             <StackPanel>
-                                <DataGrid
-                                    AutoGenerateColumns="False"
-                                    BeginningEdit="DataGrid_BeginningEdit"
-                                    CanUserAddRows="False"
-                                    ItemsSource="{Binding FormedFrameModel.FrameDetails}"
-                                    Margin="5"
-                                    MouseDoubleClick="DataGrid_MouseDoubleClick"
-                                    SelectedItem="{Binding FormedFrameModel.SelectedComponentForAdd}">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
-                                        <DataGridTextColumn Binding="{Binding Cost}" Header="Цена" />
-                                        <DataGridTextColumn Binding="{Binding Measure}" Header="Единица измерения" />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <StackPanel Margin="5,0,0,5" Orientation="Horizontal">
+                                <TextBlock
+                                    Margin="0,0,0,8"
+                                    Style="{StaticResource HeaderStyle}"
+                                    Text="Список рам" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <ScrollViewer
+                                        Grid.Column="0"
+                                        MaxHeight="300"
+                                        VerticalScrollBarVisibility="Auto">
+                                        <DataGrid
+                                            AutoGenerateColumns="False"
+                                            BeginningEdit="DataGrid_BeginningEdit"
+                                            CanUserAddRows="False"
+                                            ItemsSource="{Binding FormedFrameModel.AllFrames}"
+                                            Margin="5"
+                                            MinHeight="100"
+                                            MouseDoubleClick="DataGrid_MouseDoubleClick"
+                                            SelectedItem="{Binding FormedFrameModel.SelectedFrame}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn
+                                                    Binding="{Binding Name}"
+                                                    Header="Наименование"
+                                                    Width="*" />
+                                                <DataGridTextColumn
+                                                    Binding="{Binding FrameType}"
+                                                    Header="Тип"
+                                                    Width="Auto" />
+                                                <DataGridTextColumn
+                                                    Binding="{Binding Width}"
+                                                    Header="Ширина"
+                                                    Width="Auto" />
+                                                <DataGridTextColumn
+                                                    Binding="{Binding Height}"
+                                                    Header="Высота"
+                                                    Width="Auto" />
+                                                <DataGridTextColumn
+                                                    Binding="{Binding Depth}"
+                                                    Header="Глубина"
+                                                    Width="Auto" />
+                                                <DataGridTextColumn
+                                                    Binding="{Binding Weight}"
+                                                    Header="Масса"
+                                                    Width="Auto" />
+                                                <DataGridTextColumn
+                                                    Binding="{Binding Designe}"
+                                                    Header="Описание по КД"
+                                                    Width="*" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </ScrollViewer>
+
+                                    <Border
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Grid.Column="1"
+                                        Margin="10,5,5,5"
+                                        Style="{StaticResource CardPanelStyle}">
+                                        <StackPanel>
+                                            <TextBlock
+                                                FontWeight="SemiBold"
+                                                Foreground="{DynamicResource AccentColor}"
+                                                Margin="0,0,0,8"
+                                                Text="Комплектующие рамы" />
+                                            <ScrollViewer MaxHeight="300" VerticalScrollBarVisibility="Auto">
+                                                <DataGrid
+                                                    AutoGenerateColumns="False"
+                                                    BeginningEdit="DataGrid_BeginningEdit"
+                                                    CanUserAddRows="False"
+                                                    IsReadOnly="False"
+                                                    ItemsSource="{Binding FormedFrameModel.DisplayedComponents}"
+                                                    Margin="5"
+                                                    MinHeight="100"
+                                                    MouseDoubleClick="DataGrid_MouseDoubleClick"
+                                                    SelectedItem="{Binding FormedFrameModel.SelectedComponentInFrame}">
+                                                    <DataGrid.Columns>
+                                                        <DataGridTextColumn
+                                                            Binding="{Binding Component.Name}"
+                                                            Header="Наименование"
+                                                            Width="*" />
+                                                        <DataGridTextColumn
+                                                            Binding="{Binding CostComponent, StringFormat={}{0:N2}}"
+                                                            Header="Цена за ед."
+                                                            Width="Auto" />
+                                                        <DataGridTextColumn
+                                                            Binding="{Binding Measure}"
+                                                            Header="Ед. изм."
+                                                            Width="Auto" />
+                                                        <DataGridTemplateColumn Header="Кол-во" Width="Auto">
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <TextBlock Text="{Binding Converter={StaticResource FrameComponentsCountConverter}}" />
+                                                                    </StackPanel>
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                            <DataGridTemplateColumn.CellEditingTemplate>
+                                                                <DataTemplate>
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <TextBox Text="{Binding Count, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="40" />
+                                                                        <TextBlock Margin="5,0" Text=" / " />
+                                                                        <TextBox Text="{Binding Length, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="60" />
+                                                                    </StackPanel>
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellEditingTemplate>
+                                                        </DataGridTemplateColumn>
+                                                        <DataGridTemplateColumn Header="Действия" Width="Auto">
+                                                            <DataGridTemplateColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <Button
+                                                                        Command="{Binding DataContext.RemoveComponentCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                        CommandParameter="{Binding}"
+                                                                        Content="Удалить"
+                                                                        FontSize="11"
+                                                                        Height="24"
+                                                                        Margin="2"
+                                                                        Padding="8,2"
+                                                                        Style="{StaticResource CancelButtonStyle}"
+                                                                        Width="Auto" />
+                                                                </DataTemplate>
+                                                            </DataGridTemplateColumn.CellTemplate>
+                                                        </DataGridTemplateColumn>
+                                                    </DataGrid.Columns>
+                                                </DataGrid>
+                                            </ScrollViewer>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!--  Карточка: Добавление новой рамы  -->
+                        <Border
+                            Grid.Row="1"
+                            Margin="0,5,10,5"
+                            Style="{StaticResource CardPanelStyle}">
+                            <StackPanel>
+                                <TextBlock
+                                    Margin="0,0,0,8"
+                                    Style="{StaticResource HeaderStyle}"
+                                    Text="Добавление новой рамы" />
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="140" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
                                     <TextBlock
-                                        Foreground="{DynamicResource PrimaryForeground}"
-                                        Margin="0,0,5,0"
-                                        Text="Кол-во:"
+                                        Grid.Column="0"
+                                        Grid.Row="0"
+                                        Margin="0,5"
+                                        Text="Наименование:"
                                         VerticalAlignment="Center" />
                                     <TextBox
-                                        Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                        Width="60" />
-                                </StackPanel>
-                                <Button
-                                    Command="{Binding AddDetailsCommand}"
-                                    CommandParameter="FrameDetail"
-                                    Content="Добавить комплектующую"
-                                    Margin="5" />
-                            </StackPanel>
-                        </TabItem>
-                        <TabItem Header="Комплектующие для стойки">
-                            <StackPanel>
-                                <DataGrid
-                                    AutoGenerateColumns="False"
-                                    BeginningEdit="DataGrid_BeginningEdit"
-                                    CanUserAddRows="False"
-                                    ItemsSource="{Binding FormedFrameModel.PillarEqiups}"
-                                    Margin="5"
-                                    MouseDoubleClick="DataGrid_MouseDoubleClick"
-                                    SelectedItem="{Binding FormedFrameModel.SelectedComponentForAdd}">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
-                                        <DataGridTextColumn Binding="{Binding Cost}" Header="Цена" />
-                                        <DataGridTextColumn Binding="{Binding Measure}" Header="Единица измерения" />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <StackPanel Margin="5,0,0,5" Orientation="Horizontal">
+                                        Grid.Column="1"
+                                        Grid.Row="0"
+                                        Margin="0,5"
+                                        Text="{Binding FormedFrameModel.NewFrame.Name}" />
+
                                     <TextBlock
-                                        Foreground="{DynamicResource PrimaryForeground}"
-                                        Margin="0,0,5,0"
-                                        Text="Кол-во:"
+                                        Grid.Column="0"
+                                        Grid.Row="1"
+                                        Margin="0,5"
+                                        Text="Тип:"
                                         VerticalAlignment="Center" />
                                     <TextBox
-                                        Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                        Width="60" />
-                                </StackPanel>
-                                <Button
-                                    Command="{Binding AddDetailsCommand}"
-                                    CommandParameter="PillarEqiup"
-                                    Content="Добавить комплектующую"
-                                    Margin="5" />
+                                        Grid.Column="1"
+                                        Grid.Row="1"
+                                        Margin="0,5"
+                                        Text="{Binding FormedFrameModel.NewFrame.FrameType}" />
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Grid.Row="2"
+                                        Margin="0,5"
+                                        Text="Ширина:"
+                                        VerticalAlignment="Center" />
+                                    <TextBox
+                                        Grid.Column="1"
+                                        Grid.Row="2"
+                                        Margin="0,5"
+                                        Text="{Binding FormedFrameModel.NewFrame.Width}" />
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Grid.Row="3"
+                                        Margin="0,5"
+                                        Text="Высота:"
+                                        VerticalAlignment="Center" />
+                                    <TextBox
+                                        Grid.Column="1"
+                                        Grid.Row="3"
+                                        Margin="0,5"
+                                        Text="{Binding FormedFrameModel.NewFrame.Height}" />
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Grid.Row="4"
+                                        Margin="0,5"
+                                        Text="Глубина:"
+                                        VerticalAlignment="Center" />
+                                    <TextBox
+                                        Grid.Column="1"
+                                        Grid.Row="4"
+                                        Margin="0,5"
+                                        Text="{Binding FormedFrameModel.NewFrame.Depth}" />
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Grid.Row="5"
+                                        Margin="0,5"
+                                        Text="Масса:"
+                                        VerticalAlignment="Center" />
+                                    <TextBox
+                                        Grid.Column="1"
+                                        Grid.Row="5"
+                                        Margin="0,5"
+                                        Text="{Binding FormedFrameModel.NewFrame.Weight}" />
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Grid.Row="6"
+                                        Margin="0,5"
+                                        Text="Обозначение по КД:"
+                                        VerticalAlignment="Center" />
+                                    <TextBox
+                                        Grid.Column="1"
+                                        Grid.Row="6"
+                                        Margin="0,5"
+                                        Text="{Binding FormedFrameModel.NewFrame.Designe}" />
+                                </Grid>
                             </StackPanel>
-                        </TabItem>
-                        <TabItem Header="Прокат">
+                        </Border>
+
+                        <!--  Карточка: Редактирование рамы из списка  -->
+                        <Border
+                            Grid.Row="2"
+                            Margin="0,5,10,5"
+                            Style="{StaticResource CardPanelStyle}">
                             <StackPanel>
-                                <DataGrid
-                                    AutoGenerateColumns="False"
-                                    BeginningEdit="DataGrid_BeginningEdit"
-                                    CanUserAddRows="False"
-                                    ItemsSource="{Binding FormedFrameModel.FrameRolls}"
-                                    Margin="5"
-                                    MouseDoubleClick="DataGrid_MouseDoubleClick"
-                                    SelectedItem="{Binding FormedFrameModel.SelectedComponentForAdd}">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
-                                        <DataGridTextColumn Binding="{Binding Cost}" Header="Цена" />
-                                        <DataGridTextColumn Binding="{Binding Measure}" Header="Единица измерения" />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <StackPanel Margin="5,0,0,5" Orientation="Horizontal">
-                                    <StackPanel Margin="5,0,0,5" Orientation="Horizontal">
-                                        <TextBlock
-                                            Foreground="{DynamicResource PrimaryForeground}"
-                                            Margin="0,0,5,0"
-                                            Text="Кол-во:"
-                                            VerticalAlignment="Center" />
-                                        <TextBox
-                                            Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                            Width="60" />
+                                <TextBlock
+                                    Margin="0,0,0,8"
+                                    Style="{StaticResource HeaderStyle}"
+                                    Text="Редактирование рамы из списка" />
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="140" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Grid.Row="0"
+                                        Margin="0,5"
+                                        Text="Наименование:"
+                                        VerticalAlignment="Center" />
+                                    <TextBox
+                                        Grid.Column="1"
+                                        Grid.Row="0"
+                                        Margin="0,5"
+                                        Text="{Binding FormedFrameModel.SelectedFrame.Name}" />
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Grid.Row="1"
+                                        Margin="0,5"
+                                        Text="Тип:"
+                                        VerticalAlignment="Center" />
+                                    <TextBox
+                                        Grid.Column="1"
+                                        Grid.Row="1"
+                                        Margin="0,5"
+                                        Text="{Binding FormedFrameModel.SelectedFrame.FrameType}" />
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Grid.Row="2"
+                                        Margin="0,5"
+                                        Text="Ширина:"
+                                        VerticalAlignment="Center" />
+                                    <TextBox
+                                        Grid.Column="1"
+                                        Grid.Row="2"
+                                        Margin="0,5"
+                                        Text="{Binding FormedFrameModel.SelectedFrame.Width}" />
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Grid.Row="3"
+                                        Margin="0,5"
+                                        Text="Высота:"
+                                        VerticalAlignment="Center" />
+                                    <TextBox
+                                        Grid.Column="1"
+                                        Grid.Row="3"
+                                        Margin="0,5"
+                                        Text="{Binding FormedFrameModel.SelectedFrame.Height}" />
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Grid.Row="4"
+                                        Margin="0,5"
+                                        Text="Глубина:"
+                                        VerticalAlignment="Center" />
+                                    <TextBox
+                                        Grid.Column="1"
+                                        Grid.Row="4"
+                                        Margin="0,5"
+                                        Text="{Binding FormedFrameModel.SelectedFrame.Depth}" />
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Grid.Row="5"
+                                        Margin="0,5"
+                                        Text="Масса:"
+                                        VerticalAlignment="Center" />
+                                    <TextBox
+                                        Grid.Column="1"
+                                        Grid.Row="5"
+                                        Margin="0,5"
+                                        Text="{Binding FormedFrameModel.SelectedFrame.Weight}" />
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Grid.Row="6"
+                                        Margin="0,5"
+                                        Text="Обозначение по КД:"
+                                        VerticalAlignment="Center" />
+                                    <TextBox
+                                        Grid.Column="1"
+                                        Grid.Row="6"
+                                        Margin="0,5"
+                                        Text="{Binding FormedFrameModel.SelectedFrame.Designe}" />
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!--  Кнопки управления  -->
+                        <StackPanel
+                            Grid.Row="3"
+                            HorizontalAlignment="Center"
+                            Margin="0,10,10,0"
+                            Orientation="Horizontal">
+                            <Button
+                                Command="{Binding AddNewFrameCommand}"
+                                Content="Добавить новую"
+                                Margin="5,0"
+                                Style="{StaticResource ActionButtonStyle}"
+                                Width="150" />
+                            <Button
+                                Command="{Binding SaveChangesCommand}"
+                                Content="Сохранить изменения"
+                                Margin="5,0"
+                                Style="{StaticResource ActionButtonStyle}"
+                                Width="180" />
+                            <Button
+                                Command="{Binding DeleteFrameCommand}"
+                                Content="Удалить выбранную раму"
+                                Margin="5,0"
+                                Style="{StaticResource CancelButtonStyle}"
+                                Width="200" />
+                        </StackPanel>
+                    </Grid>
+
+                    <!--  Правая часть: Комплектующие  -->
+                    <Grid Grid.Column="1" Margin="10,0,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <Border
+                            Margin="0"
+                            Padding="5"
+                            Style="{StaticResource CardPanelStyle}">
+                            <TabControl Margin="0,0,0,5" x:Name="ComponentsTabControl">
+                                <TabItem Header="Детали рамы">
+                                    <StackPanel Margin="0,5">
+                                        <ScrollViewer MaxHeight="300" VerticalScrollBarVisibility="Auto">
+                                            <DataGrid
+                                                AutoGenerateColumns="False"
+                                                BeginningEdit="DataGrid_BeginningEdit"
+                                                CanUserAddRows="False"
+                                                ItemsSource="{Binding FormedFrameModel.FrameDetails}"
+                                                Margin="0,5"
+                                                MinHeight="100"
+                                                MouseDoubleClick="DataGrid_MouseDoubleClick"
+                                                SelectedItem="{Binding FormedFrameModel.SelectedComponentForAdd}">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn
+                                                        Binding="{Binding Name}"
+                                                        Header="Наименование"
+                                                        Width="*" />
+                                                    <DataGridTextColumn
+                                                        Binding="{Binding Cost}"
+                                                        Header="Цена"
+                                                        Width="Auto" />
+                                                    <DataGridTextColumn
+                                                        Binding="{Binding Measure}"
+                                                        Header="Ед. изм."
+                                                        Width="Auto" />
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </ScrollViewer>
+                                        <StackPanel Margin="5,5,0,5" Orientation="Horizontal">
+                                            <TextBlock
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Margin="0,0,5,0"
+                                                Text="Кол-во:"
+                                                VerticalAlignment="Center" />
+                                            <TextBox Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="60" />
+                                        </StackPanel>
+                                        <Button
+                                            Command="{Binding AddDetailsCommand}"
+                                            CommandParameter="FrameDetail"
+                                            Content="Добавить комплектующую"
+                                            Margin="5,5,5,10"
+                                            Style="{StaticResource ActionButtonStyle}" />
                                     </StackPanel>
-                                </StackPanel>
-                                <Button
-                                    Command="{Binding AddDetailsCommand}"
-                                    CommandParameter="FrameRoll"
-                                    Content="Добавить комплектующую"
-                                    Margin="5" />
-                            </StackPanel>
-                        </TabItem>
-                    </TabControl>
+                                </TabItem>
+                                <TabItem Header="Комплектующие для стойки">
+                                    <StackPanel Margin="0,5">
+                                        <ScrollViewer MaxHeight="300" VerticalScrollBarVisibility="Auto">
+                                            <DataGrid
+                                                AutoGenerateColumns="False"
+                                                BeginningEdit="DataGrid_BeginningEdit"
+                                                CanUserAddRows="False"
+                                                ItemsSource="{Binding FormedFrameModel.PillarEqiups}"
+                                                Margin="0,5"
+                                                MinHeight="100"
+                                                MouseDoubleClick="DataGrid_MouseDoubleClick"
+                                                SelectedItem="{Binding FormedFrameModel.SelectedComponentForAdd}">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn
+                                                        Binding="{Binding Name}"
+                                                        Header="Наименование"
+                                                        Width="*" />
+                                                    <DataGridTextColumn
+                                                        Binding="{Binding Cost}"
+                                                        Header="Цена"
+                                                        Width="Auto" />
+                                                    <DataGridTextColumn
+                                                        Binding="{Binding Measure}"
+                                                        Header="Ед. изм."
+                                                        Width="Auto" />
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </ScrollViewer>
+                                        <StackPanel Margin="5,5,0,5" Orientation="Horizontal">
+                                            <TextBlock
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Margin="0,0,5,0"
+                                                Text="Кол-во:"
+                                                VerticalAlignment="Center" />
+                                            <TextBox Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="60" />
+                                        </StackPanel>
+                                        <Button
+                                            Command="{Binding AddDetailsCommand}"
+                                            CommandParameter="PillarEqiup"
+                                            Content="Добавить комплектующую"
+                                            Margin="5,5,5,10"
+                                            Style="{StaticResource ActionButtonStyle}" />
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem Header="Прокат">
+                                    <StackPanel Margin="0,5">
+                                        <ScrollViewer MaxHeight="300" VerticalScrollBarVisibility="Auto">
+                                            <DataGrid
+                                                AutoGenerateColumns="False"
+                                                BeginningEdit="DataGrid_BeginningEdit"
+                                                CanUserAddRows="False"
+                                                ItemsSource="{Binding FormedFrameModel.FrameRolls}"
+                                                Margin="0,5"
+                                                MinHeight="100"
+                                                MouseDoubleClick="DataGrid_MouseDoubleClick"
+                                                SelectedItem="{Binding FormedFrameModel.SelectedComponentForAdd}">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn
+                                                        Binding="{Binding Name}"
+                                                        Header="Наименование"
+                                                        Width="*" />
+                                                    <DataGridTextColumn
+                                                        Binding="{Binding Cost}"
+                                                        Header="Цена"
+                                                        Width="Auto" />
+                                                    <DataGridTextColumn
+                                                        Binding="{Binding Measure}"
+                                                        Header="Ед. изм."
+                                                        Width="Auto" />
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </ScrollViewer>
+                                        <StackPanel Margin="5,5,0,5" Orientation="Horizontal">
+                                            <TextBlock
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Margin="0,0,5,0"
+                                                Text="Кол-во:"
+                                                VerticalAlignment="Center" />
+                                            <TextBox Text="{Binding FormedFrameModel.ComponentLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="60" />
+                                        </StackPanel>
+                                        <Button
+                                            Command="{Binding AddDetailsCommand}"
+                                            CommandParameter="FrameRoll"
+                                            Content="Добавить комплектующую"
+                                            Margin="5,5,5,10"
+                                            Style="{StaticResource ActionButtonStyle}" />
+                                    </StackPanel>
+                                </TabItem>
+                            </TabControl>
+                        </Border>
+                    </Grid>
                 </Grid>
-            </Grid>
-        </DockPanel>
+            </DockPanel>
+        </Border>
     </Border>
 </Window>

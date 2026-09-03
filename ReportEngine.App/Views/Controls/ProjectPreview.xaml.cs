@@ -37,10 +37,26 @@ public partial class ProjectPreview : UserControl
 
     private async Task InitializeDataAndRecalculateAsync(ProjectViewModel projectViewModel)
     {
-        projectViewModel.OnObvyazkiInStandChanged();
-        projectViewModel.OnFramesInStandChanged();
-        projectViewModel.UpdateNewStandNN();
-        projectViewModel.OnStandsInProjectChanged();
+        await BackgroundExecutor.ExecuteAsync(
+            backgroundWork: async () =>
+            {
+                projectViewModel.OnObvyazkiInStandChanged();
+                projectViewModel.OnFramesInStandChanged();
+                projectViewModel.OnStandsInProjectChanged();
+            },
+            uiUpdate: () =>
+            {
+                // Обновление UI после работы
+                var selectedStand = projectViewModel.CurrentProjectModel.SelectedStand;
+                if (selectedStand != null)
+                {
+                    CollectionRefreshHelper.SafeRefreshCollection(
+                        selectedStand.AllAdditionalEquipPurposesInStand);
+                }
+            },
+            initialDelay: 10,
+            priority: DispatcherPriority.Background
+        );
     }
 
     private async Task InitializeDataAsync(ProjectViewModel projectViewModel)
