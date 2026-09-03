@@ -70,5 +70,22 @@ public class ObvyazkaInStand
     public string? ThirdSensorMarkMinus { get; set; }
     public string? ThirdSensorDescription { get; set; }
 
+
+    //ссылки на сущности, которые могут быть в составе обвязки
+    public int? MaterialLineId { get; set; }
+    public string? MaterialLineType { get; set; }
+
+
+    public int? TreeSocketId { get; set; }
+    public string? TreeSocketType { get; set; }
+
+    public int? KMCHId { get; set; }
+    public string? KMCHType { get; set; }
+
+
+    public int? ArmatureId { get; set; }
+    public string? ArmatureType { get; set; }
+
+
     public virtual ICollection<ObvyazkaAdditionalEquipPurpose>? AdditionalComponents { get; set; }
 }

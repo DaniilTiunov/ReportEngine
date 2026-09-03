@@ -1,7 +1,9 @@
 ﻿using System.Collections.ObjectModel;
+using DevExpress.XtraRichEdit.Import.Rtf;
 using ReportEngine.App.Model.FormedEquipsModels;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.BaseEntities.Interface;
 
 namespace ReportEngine.App.Model.StandsModel;
 
@@ -37,8 +39,6 @@ public class StandModel : BaseViewModel
     private float? _armatureCount;
     private int? _armatureExportDays;
     private string? _armatureMeasure;
-
-    private float? _armatureWeight;
 
     // Тип крепления датчика
     private string _braceType;
@@ -107,7 +107,6 @@ public class StandModel : BaseViewModel
     private int? _kMCHExportDays;
     private string? _kmchMeasure;
 
-    private float? _kmchWeight;
 
     // Материал линии
     private string _materialLine;
@@ -117,8 +116,6 @@ public class StandModel : BaseViewModel
 
     private int? _materialLineExportDays;
     private string? _materialLineMeasure;
-
-    private float? _materialLineWeight;
 
     // Объект для создания нового дополнительного комплектующего
     private FormedAdditionalEquip _newAdditionalEquip = new();
@@ -215,16 +212,8 @@ public class StandModel : BaseViewModel
     private float? _treeSocketMaterialCount;
     private string? _treeSocketMaterialMeasure;
 
-    private float? _treeSocketMaterialWeight;
-
     //Чистый вес обвязки
-    private float? _obvWeight;
-
-    public float? ObvWeight
-    {
-        get => _obvWeight;
-        set => Set(ref _obvWeight, value);
-    }
+    public float? ObvWeight { get; set; }
 
     // Масса стенда
     private float _weight;
@@ -387,11 +376,9 @@ public class StandModel : BaseViewModel
         set => Set(ref _materialLineCostPerUnit, value);
     }
 
-    public float? MaterialLineWeight
-    {
-        get => _materialLineWeight;
-        set => Set(ref _materialLineWeight, value);
-    }
+    public IBaseEquip? MaterialLineEquip { get; set; }
+
+
 
 
     // Арматура
@@ -425,11 +412,7 @@ public class StandModel : BaseViewModel
         set => Set(ref _armatureExportDays, value);
     }
 
-    public float? ArmatureWeight
-    {
-        get => _armatureWeight;
-        set => Set(ref _armatureWeight, value);
-    }
+    public IBaseEquip? ArmatureEquip { get; set; }
 
 
     // Информация о тройнике/разветвителе
@@ -463,13 +446,7 @@ public class StandModel : BaseViewModel
         set => Set(ref _treeSocketExportDays, value);
     }
 
-    public float? TreeSocketWeight
-    {
-        get => _treeSocketMaterialWeight;
-        set => Set(ref _treeSocketMaterialWeight, value);
-    }
-
-
+    public IBaseEquip? TreeSocketEquip { get; set; }
 
 
     // КМЧ
@@ -503,13 +480,8 @@ public class StandModel : BaseViewModel
         set => Set(ref _kMCHExportDays, value);
     }
 
-    public float? KMCHWeight
-    {
-        get => _kmchWeight;
-        set => Set(ref _kmchWeight, value);
-    }
 
-
+    public IBaseEquip? KMCHEquip { get; set; }
 
 
     // Тип первого датчика

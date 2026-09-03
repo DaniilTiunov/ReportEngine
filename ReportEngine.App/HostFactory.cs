@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using ReportEngine.App.Services;
 using ReportEngine.App.Services.Calculation;
 using ReportEngine.App.Services.Cloners;
+using ReportEngine.App.Services.Converters;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Services.Logger;
@@ -187,6 +188,7 @@ public static class HostFactory
         services.AddScoped<EntityProjectClonerService>();
         services.AddScoped<ParameterGroupService>();
         services.AddScoped<AuditService>();
+        services.AddScoped<ConverterService>();
         services.AddHttpClient();
     }
 
