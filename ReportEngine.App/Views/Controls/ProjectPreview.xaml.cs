@@ -37,26 +37,9 @@ public partial class ProjectPreview : UserControl
 
     private async Task InitializeDataAndRecalculateAsync(ProjectViewModel projectViewModel)
     {
-        await BackgroundExecutor.ExecuteAsync(
-            backgroundWork: async () =>
-            {
-                projectViewModel.OnObvyazkiInStandChanged();
-                projectViewModel.OnFramesInStandChanged();
-                projectViewModel.OnStandsInProjectChanged();
-            },
-            uiUpdate: () =>
-            {
-                // Обновление UI после работы
-                var selectedStand = projectViewModel.CurrentProjectModel.SelectedStand;
-                if (selectedStand != null)
-                {
-                    CollectionRefreshHelper.SafeRefreshCollection(
-                        selectedStand.AllAdditionalEquipPurposesInStand);
-                }
-            },
-            initialDelay: 10,
-            priority: DispatcherPriority.Background
-        );
+        await projectViewModel.OnObvyazkiInStandChanged();
+        await projectViewModel.OnFramesInStandChanged();
+        await projectViewModel.OnStandsInProjectChanged();
     }
 
     private async Task InitializeDataAsync(ProjectViewModel projectViewModel)
@@ -94,16 +77,7 @@ public partial class ProjectPreview : UserControl
         scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta);
         e.Handled = true;
     }
-
-    private void Image_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        if (sender is Control c)
-        {
-            c.Focus();
-            e.Handled = true;
-        }
-    }
-
+    
     private void OnPasteCanExecute(object sender, CanExecuteRoutedEventArgs e)
     {
         if (DataContext is ProjectViewModel projectViewModel &&

@@ -7,7 +7,7 @@ namespace ReportEngine.App.AppHelpers;
 
 public static class CollectionRefreshHelper
 {
-    public static void SafeRefreshCollection(object collection)
+    public static async Task SafeRefreshCollection(object collection)
     {
         try
         {
