@@ -975,4 +975,6 @@
         <Setter Property="Margin" Value="0,0,0,8" />
     </Style>
 
+    <RectConverter x:Key="RectConverter" />
+
 </ResourceDictionary>

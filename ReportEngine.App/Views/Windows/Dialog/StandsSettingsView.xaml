@@ -1,14 +1,17 @@
 ﻿<Window
-    Background="{DynamicResource PrimaryColor}"
+    AllowsTransparency="True"
+    Background="Transparent"
     FontFamily="Bahnschrift"
     FontSize="14"
     Foreground="{DynamicResource PrimaryForeground}"
+    Height="800"
+    MinHeight="600"
+    MinWidth="1000"
     ResizeMode="CanResize"
     Title="Создание и редактирование стендов"
+    Width="1200"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
-    d:DesignHeight="900"
-    d:DesignWidth="1500"
     mc:Ignorable="d"
     windowHelpers:WindowBehavior.CloseOnEscape="True"
     x:Class="ReportEngine.App.Views.Windows.Dialog.StandsSettingsView"
@@ -18,342 +21,383 @@
     xmlns:windowHelpers="clr-namespace:ReportEngine.App.Views.Windows.WindowHelpers"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <!--  Окно с тенью и закруглением  -->
     <WindowChrome.WindowChrome>
         <WindowChrome
             CaptionHeight="0"
-            CornerRadius="0"
-            GlassFrameThickness="0" />
+            CornerRadius="12"
+            GlassFrameThickness="0"
+            ResizeBorderThickness="6" />
     </WindowChrome.WindowChrome>
-    <Border Style="{DynamicResource WindowBorder}">
-        <DockPanel>
-            <Border
-                Background="#2D2D30"
-                DockPanel.Dock="Top"
-                Height="34"
-                MouseLeftButtonDown="Window_MouseLeftButtonDown">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
 
-                    <StackPanel
-                        Margin="10,0,0,0"
-                        Orientation="Horizontal"
-                        VerticalAlignment="Center">
-                        <Image
-                            Height="18"
-                            Margin="0,0,8,0"
-                            Source="/Resources/Icons/estimate_cost_icon_213382.ico"
-                            Width="18" />
-                        <TextBlock
-                            FontSize="14"
-                            Foreground="White"
-                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}"
-                            VerticalAlignment="Center" />
-                    </StackPanel>
+    <Window.Resources>
+        <DropShadowEffect
+            BlurRadius="30"
+            Color="#000000"
+            Opacity="0.2"
+            ShadowDepth="0"
+            x:Key="WindowShadow" />
+    </Window.Resources>
 
-                    <StackPanel
-                        Grid.Column="1"
-                        Orientation="Horizontal"
-                        VerticalAlignment="Center">
-                        <Button
-                            Click="MinimizeButton_Click"
-                            FontSize="16"
-                            Height="30"
-                            ToolTip="Свернуть"
-                            Width="40"
-                            x:Name="MinimizeButton">
-                            ─
-                        </Button>
-                        <Button
-                            Click="MaxRestoreButton_Click"
-                            FontSize="16"
-                            Height="30"
-                            Margin="10,0,0,0"
-                            ToolTip="Развернуть"
-                            Width="40"
-                            x:Name="MaxRestoreButton">
-                            ▢
-                        </Button>
-                        <Button
-                            Click="CloseButton_Click"
-                            FontSize="16"
-                            Height="30"
-                            Margin="10,0,10,0"
-                            ToolTip="Закрыть"
-                            Width="40"
-                            x:Name="CloseButton">
-                            ✕
-                        </Button>
-                    </StackPanel>
-                </Grid>
-            </Border>
-
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <GroupBox Grid.Column="0">
-                    <GroupBox.Header>
-                        <TextBlock>
-                            <Run
-                                FontSize="16"
-                                FontWeight="Bold"
-                                Text="Cтенд в проекте - " />
-                            <Run
-                                FontSize="16"
-                                FontWeight="Bold"
-                                Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(нет данных)'}" />
-                        </TextBlock>
-                    </GroupBox.Header>
+    <!--  Основной контейнер с тенью и рамкой  -->
+    <Border
+        ClipToBounds="True"
+        CornerRadius="12"
+        Effect="{StaticResource WindowShadow}">
+        <Border
+            Background="{DynamicResource PrimaryColor}"
+            BorderBrush="{DynamicResource WindowBorderColor}"
+            BorderThickness="1"
+            CornerRadius="12">
+            <DockPanel>
+                <!--  Заголовок окна  -->
+                <Border
+                    Background="#2D2D30"
+                    CornerRadius="12,12,0,0"
+                    DockPanel.Dock="Top"
+                    Height="40"
+                    MouseLeftButtonDown="Window_MouseLeftButtonDown">
                     <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="40" />
-                        </Grid.RowDefinitions>
-
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="160" />
-                            <ColumnDefinition Width="200" />
-                            <ColumnDefinition Width="160" />
-                            <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock
-                            Grid.Column="0"
-                            Grid.Row="0"
-                            Margin="0,5"
-                            Text="№ п/п:"
-                            VerticalAlignment="Center" />
-                        <TextBox
-                            Grid.Column="1"
-                            Grid.Row="0"
-                            Margin="0,5,150,5"
-                            Text="{Binding NewStand.Number, Mode=TwoWay}"
-                            Width="50" />
-                        <TextBlock
-                            Grid.Column="2"
-                            Grid.Row="0"
-                            Margin="10,5,0,5"
-                            Text="KKS-код стенда:"
-                            VerticalAlignment="Center" />
-                        <TextBox
-                            Grid.Column="3"
-                            Grid.Row="0"
-                            Margin="0,5"
-                            Text="{Binding NewStand.KKSCode, Mode=TwoWay}" />
-
-                        <!--  Обозначение стенда  -->
-                        <TextBlock
-                            Grid.Column="0"
-                            Grid.Row="1"
-                            Margin="0,5"
-                            Text="Обозначение стенда:"
-                            VerticalAlignment="Center" />
-                        <TextBox
-                            Grid.Column="1"
-                            Grid.ColumnSpan="3"
-                            Grid.Row="1"
-                            Margin="0,5"
-                            Text="{Binding NewStand.Design, Mode=TwoWay}" />
-
-                        <!--  Приборы и чекбокс  -->
-                        <TextBlock
-                            Grid.Column="0"
-                            Grid.Row="2"
-                            Margin="0,5"
-                            Text="Приборы:"
-                            VerticalAlignment="Center" />
-                        <TextBox
-                            Grid.Column="1"
-                            Grid.Row="2"
-                            Margin="0,5,150,5"
-                            Text="{Binding NewStand.Devices, Mode=TwoWay}"
-                            Width="50" />
-
-                        <!--  Тип крепления датчика + кнопка  -->
-                        <TextBlock
-                            Grid.Column="0"
-                            Grid.Row="3"
-                            Margin="0,5"
-                            Text="Тип крепления датчика:"
-                            VerticalAlignment="Center" />
-                        <ComboBox
-                            Grid.Column="1"
-                            Grid.Row="3"
-                            ItemsSource="{Binding NewStand.BraceSensor}"
-                            Margin="0,5"
-                            SelectedItem="{Binding NewStand.BraceType, Mode=TwoWay}" />
-
-                        <TextBlock
-                            Grid.Column="2"
-                            Grid.Row="4"
-                            Margin="10,5,0,5"
-                            Text="Ширина:"
-                            VerticalAlignment="Center" />
-                        <TextBox
-                            Grid.Column="3"
-                            Grid.Row="4"
-                            Margin="0,5,100,5"
-                            Text="{Binding NewStand.Width, Mode=TwoWay}"
-                            Width="100" />
-
-                        <!--  Серийный номер  -->
-                        <TextBlock
-                            Grid.Column="0"
-                            Grid.Row="5"
-                            Margin="0,5"
-                            Text="Серийный номер:"
-                            VerticalAlignment="Center" />
-                        <TextBox
-                            Grid.Column="1"
-                            Grid.ColumnSpan="3"
-                            Grid.Row="5"
-                            Margin="0,5"
-                            Text="{Binding NewStand.SerialNumber, Mode=TwoWay}" />
-
-                        <!--  Масса  -->
-                        <TextBlock
-                            Grid.Column="0"
-                            Grid.Row="6"
-                            Margin="0,5"
-                            Text="Масса:"
-                            VerticalAlignment="Center" />
-                        <TextBox
-                            Grid.Column="1"
-                            Grid.Row="6"
-                            Margin="0,5,100,5"
-                            Text="{Binding NewStand.Weight, Mode=TwoWay}"
-                            Width="100" />
-
-                        <!--  Сумма стенда  -->
-                        <TextBlock
-                            Grid.Column="0"
-                            Grid.Row="7"
-                            Margin="0,5"
-                            Text="Сумма стенда:"
-                            VerticalAlignment="Center" />
-                        <TextBox
-                            Grid.Column="1"
-                            Grid.Row="7"
-                            Margin="0,5,100,5"
-                            Text="{Binding NewStand.StandSummCost, Mode=TwoWay}"
-                            Width="100" />
-
-                        <!--  Комментарии  -->
-                        <TextBlock
-                            Grid.Column="0"
-                            Grid.Row="9"
-                            Margin="0,5"
-                            Text="Комментарии:"
-                            VerticalAlignment="Center" />
-                        <TextBox
-                            Grid.Column="1"
-                            Grid.ColumnSpan="3"
-                            Grid.Row="9"
-                            Margin="0,5"
-                            Text="{Binding NewStand.Comments, Mode=TwoWay}" />
-
-                        <!--  Примечание  -->
-                        <TextBlock
-                            Grid.Column="0"
-                            Grid.Row="10"
-                            Margin="0,5"
-                            Text="Примечание:"
-                            VerticalAlignment="Top" />
-                        <TextBox
-                            AcceptsReturn="True"
-                            Grid.Column="1"
-                            Grid.ColumnSpan="3"
-                            Grid.Row="10"
-                            Height="100"
-                            Margin="0,5"
-                            Text="{Binding NewStand.DesignStand, Mode=TwoWay}"
-                            TextWrapping="Wrap" />
+                        <StackPanel
+                            Margin="12,0,0,0"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center">
+                            <Image
+                                Height="18"
+                                Margin="0,0,8,0"
+                                Source="/Resources/Icons/estimate_cost_icon_213382.ico"
+                                Width="18" />
+                            <TextBlock
+                                FontSize="14"
+                                FontWeight="SemiBold"
+                                Foreground="White"
+                                Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}"
+                                VerticalAlignment="Center" />
+                        </StackPanel>
 
                         <StackPanel
-                            Grid.Column="0"
-                            Grid.ColumnSpan="4"
-                            Grid.Row="11"
-                            HorizontalAlignment="Right"
-                            Margin="0,10,0,0"
-                            Orientation="Horizontal">
-
+                            Grid.Column="1"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center">
                             <Button
-                                Command="{Binding ProjectCommandProvider.AddNewStandCommand}"
-                                Content="Добавить новый"
-                                Margin="0,0,10,0"
-                                Width="150"
-                                x:Name="CreateStandButton" />
-
+                                Click="MinimizeButton_Click"
+                                Height="30"
+                                Margin="0,0,5,0"
+                                Style="{StaticResource CloseButtonStyle}"
+                                ToolTip="Свернуть"
+                                Width="40"
+                                x:Name="MinimizeButton">
+                                ─
+                            </Button>
                             <Button
-                                Command="{Binding ProjectCommandProvider.SaveChangesInStandCommand}"
-                                Content="Сохранить изменения"
-                                Margin="0,0,10,0"
-                                Width="220"
-                                x:Name="EditStandbutton" />
+                                Click="MaxRestoreButton_Click"
+                                Height="30"
+                                Margin="5,0"
+                                Style="{StaticResource CloseButtonStyle}"
+                                ToolTip="Развернуть"
+                                Width="40"
+                                x:Name="MaxRestoreButton">
+                                ▢
+                            </Button>
+                            <Button
+                                Click="CloseButton_Click"
+                                Height="30"
+                                Margin="5,0,10,0"
+                                Style="{StaticResource CloseButtonStyle}"
+                                ToolTip="Закрыть"
+                                Width="40"
+                                x:Name="CloseButton">
+                                ✕
+                            </Button>
                         </StackPanel>
                     </Grid>
-                </GroupBox>
+                </Border>
 
-                <GroupBox
-                    Grid.Column="1"
-                    Header="Список стендов"
-                    Margin="5,5,5,0"
-                    MinHeight="250"
-                    Padding="5">
-                    <ListView
-                        ItemsSource="{Binding CurrentProjectModel.Stands}"
-                        Margin="5,0,5,5"
-                        SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}"
-                        SelectionChanged="StandsList_SelectionChanged"
-                        x:Name="StandsList">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn
-                                    DisplayMemberBinding="{Binding Number}"
-                                    Header="№"
-                                    Width="40" />
-                                <GridViewColumn
-                                    DisplayMemberBinding="{Binding KKSCode}"
-                                    Header="KKS"
-                                    Width="120" />
-                                <GridViewColumn
-                                    DisplayMemberBinding="{Binding Design}"
-                                    Header="Обозначение"
-                                    Width="200" />
-                                <GridViewColumn
-                                    DisplayMemberBinding="{Binding SerialNumber}"
-                                    Header="Серийный номер"
-                                    Width="200" />
-                            </GridView>
-                        </ListView.View>
-                        <ListView.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Command="{Binding ProjectCommandProvider.CopyStandsCommand}"
-                                          Header="Создать копию на основе прототипа" />
-                                <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}"
-                                          Header="Удалить стенд из проекта" />
-                                <Separator />
-                                <MenuItem Command="{Binding ProjectCommandProvider.RenumerateStandsCommand}"
-                                          Header="Пронумеровать стенды..." />
-                            </ContextMenu>
-                        </ListView.ContextMenu>
-                    </ListView>
-                </GroupBox>
-            </Grid>
-        </DockPanel>
+                <!--  Основное содержимое  -->
+                <Grid Margin="20,15,20,15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  Левая панель: редактирование стенда  -->
+                    <Border
+                        Grid.Column="0"
+                        Margin="0,0,10,0"
+                        Style="{StaticResource CardPanelStyle}">
+                        <StackPanel>
+                            <!--  Заголовок карточки  -->
+                            <TextBlock Margin="0,0,0,12" Style="{StaticResource HeaderStyle}">
+                                <Run Text="Стенд в проекте – " />
+                                <Run FontWeight="Bold" Text="{Binding CurrentProjectModel.SelectedStand.KKSCode, TargetNullValue='(не выбран)'}" />
+                            </TextBlock>
+
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="140" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="140" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <!--  № п/п  -->
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="0"
+                                    Margin="0,5"
+                                    Text="№ п/п:"
+                                    VerticalAlignment="Center" />
+                                <TextBox
+                                    Grid.Column="1"
+                                    Grid.Row="0"
+                                    HorizontalAlignment="Left"
+                                    Margin="0,5"
+                                    Text="{Binding NewStand.Number, Mode=TwoWay}"
+                                    Width="60" />
+
+                                <!--  KKS-код  -->
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Grid.Row="0"
+                                    Margin="10,5,0,5"
+                                    Text="KKS-код:"
+                                    VerticalAlignment="Center" />
+                                <TextBox
+                                    Grid.Column="3"
+                                    Grid.Row="0"
+                                    Margin="0,5"
+                                    Text="{Binding NewStand.KKSCode, Mode=TwoWay}" />
+
+                                <!--  Обозначение  -->
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="1"
+                                    Margin="0,5"
+                                    Text="Обозначение:"
+                                    VerticalAlignment="Center" />
+                                <TextBox
+                                    Grid.Column="1"
+                                    Grid.ColumnSpan="3"
+                                    Grid.Row="1"
+                                    Margin="0,5"
+                                    Text="{Binding NewStand.Design, Mode=TwoWay}" />
+
+                                <!--  Приборы  -->
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="2"
+                                    Margin="0,5"
+                                    Text="Приборы:"
+                                    VerticalAlignment="Center" />
+                                <TextBox
+                                    Grid.Column="1"
+                                    Grid.Row="2"
+                                    HorizontalAlignment="Left"
+                                    Margin="0,5"
+                                    Text="{Binding NewStand.Devices, Mode=TwoWay}"
+                                    Width="60" />
+
+                                <!--  Тип крепления  -->
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="3"
+                                    Margin="0,5"
+                                    Text="Тип крепления:"
+                                    VerticalAlignment="Center" />
+                                <ComboBox
+                                    Grid.Column="1"
+                                    Grid.Row="3"
+                                    ItemsSource="{Binding NewStand.BraceSensor}"
+                                    Margin="0,5"
+                                    SelectedItem="{Binding NewStand.BraceType, Mode=TwoWay}" />
+
+                                <!--  Ширина  -->
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Grid.Row="4"
+                                    Margin="10,5,0,5"
+                                    Text="Ширина:"
+                                    VerticalAlignment="Center" />
+                                <TextBox
+                                    Grid.Column="3"
+                                    Grid.Row="4"
+                                    HorizontalAlignment="Left"
+                                    Margin="0,5"
+                                    Text="{Binding NewStand.Width, Mode=TwoWay}"
+                                    Width="100" />
+
+                                <!--  Серийный номер  -->
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="5"
+                                    Margin="0,5"
+                                    Text="Серийный номер:"
+                                    VerticalAlignment="Center" />
+                                <TextBox
+                                    Grid.Column="1"
+                                    Grid.ColumnSpan="3"
+                                    Grid.Row="5"
+                                    Margin="0,5"
+                                    Text="{Binding NewStand.SerialNumber, Mode=TwoWay}" />
+
+                                <!--  Масса  -->
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="6"
+                                    Margin="0,5"
+                                    Text="Масса:"
+                                    VerticalAlignment="Center" />
+                                <TextBox
+                                    Grid.Column="1"
+                                    Grid.Row="6"
+                                    HorizontalAlignment="Left"
+                                    Margin="0,5"
+                                    Text="{Binding NewStand.Weight, Mode=TwoWay}"
+                                    Width="100" />
+
+                                <!--  Сумма стенда  -->
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="7"
+                                    Margin="0,5"
+                                    Text="Сумма стенда:"
+                                    VerticalAlignment="Center" />
+                                <TextBox
+                                    Grid.Column="1"
+                                    Grid.Row="7"
+                                    HorizontalAlignment="Left"
+                                    Margin="0,5"
+                                    Text="{Binding NewStand.StandSummCost, Mode=TwoWay}"
+                                    Width="100" />
+
+                                <!--  Комментарии  -->
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="8"
+                                    Margin="0,5"
+                                    Text="Комментарии:"
+                                    VerticalAlignment="Center" />
+                                <TextBox
+                                    Grid.Column="1"
+                                    Grid.ColumnSpan="3"
+                                    Grid.Row="8"
+                                    Margin="0,5"
+                                    Text="{Binding NewStand.Comments, Mode=TwoWay}" />
+
+                                <!--  Примечание  -->
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Grid.Row="9"
+                                    Margin="0,5"
+                                    Text="Примечание:"
+                                    VerticalAlignment="Top" />
+                                <TextBox
+                                    AcceptsReturn="True"
+                                    Grid.Column="1"
+                                    Grid.ColumnSpan="3"
+                                    Grid.Row="9"
+                                    Height="100"
+                                    Margin="0,5"
+                                    Text="{Binding NewStand.DesignStand, Mode=TwoWay}"
+                                    TextWrapping="Wrap" />
+
+                                <!--  Кнопки действий  -->
+                                <StackPanel
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="4"
+                                    Grid.Row="10"
+                                    HorizontalAlignment="Right"
+                                    Margin="0,15,0,0"
+                                    Orientation="Horizontal">
+                                    <Button
+                                        Command="{Binding ProjectCommandProvider.AddNewStandCommand}"
+                                        Content="Добавить новый"
+                                        Margin="0,0,10,0"
+                                        Style="{StaticResource ActionButtonStyle}"
+                                        Width="150"
+                                        x:Name="CreateStandButton" />
+                                    <Button
+                                        Command="{Binding ProjectCommandProvider.SaveChangesInStandCommand}"
+                                        Content="Сохранить изменения"
+                                        Margin="0,0,10,0"
+                                        Style="{StaticResource ActionButtonStyle}"
+                                        Width="220"
+                                        x:Name="EditStandbutton" />
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!--  Правая панель: список стендов  -->
+                    <Border
+                        Grid.Column="1"
+                        Margin="10,0,0,0"
+                        Style="{StaticResource CardPanelStyle}">
+                        <StackPanel>
+                            <TextBlock
+                                Margin="0,0,0,12"
+                                Style="{StaticResource HeaderStyle}"
+                                Text="Список стендов" />
+
+                            <ListView
+                                ItemsSource="{Binding CurrentProjectModel.Stands}"
+                                Margin="0,0,0,5"
+                                MinHeight="250"
+                                SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}"
+                                SelectionChanged="StandsList_SelectionChanged"
+                                x:Name="StandsList">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn
+                                            DisplayMemberBinding="{Binding Number}"
+                                            Header="№"
+                                            Width="40" />
+                                        <GridViewColumn
+                                            DisplayMemberBinding="{Binding KKSCode}"
+                                            Header="KKS"
+                                            Width="120" />
+                                        <GridViewColumn
+                                            DisplayMemberBinding="{Binding Design}"
+                                            Header="Обозначение"
+                                            Width="200" />
+                                        <GridViewColumn
+                                            DisplayMemberBinding="{Binding SerialNumber}"
+                                            Header="Серийный номер"
+                                            Width="200" />
+                                    </GridView>
+                                </ListView.View>
+                                <ListView.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Command="{Binding ProjectCommandProvider.CopyStandsCommand}" Header="Создать копию на основе прототипа" />
+                                        <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}" Header="Удалить стенд из проекта" />
+                                        <Separator />
+                                        <MenuItem Command="{Binding ProjectCommandProvider.RenumerateStandsCommand}" Header="Пронумеровать стенды…" />
+                                    </ContextMenu>
+                                </ListView.ContextMenu>
+                            </ListView>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </DockPanel>
+        </Border>
     </Border>
 </Window>

@@ -2,10 +2,12 @@
     AllowsTransparency="True"
     Background="Transparent"
     FontFamily="Bahnschrift"
+    FontSize="14"
     Foreground="{DynamicResource PrimaryForeground}"
     MaxHeight="600"
     ResizeMode="NoResize"
     SizeToContent="Height"
+    Title="Уведомление"
     Topmost="True"
     Width="450"
     WindowStartupLocation="CenterScreen"
@@ -20,7 +22,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Window.Resources>
-        <!--  Тень для окна  -->
         <DropShadowEffect
             BlurRadius="30"
             Color="#000000"
@@ -138,12 +139,16 @@
     <WindowChrome.WindowChrome>
         <WindowChrome
             CaptionHeight="0"
-            CornerRadius="10"
-            GlassFrameThickness="0" />
+            CornerRadius="12"
+            GlassFrameThickness="0"
+            ResizeBorderThickness="0" />
     </WindowChrome.WindowChrome>
 
     <!--  Основной контейнер с тенью и рамкой  -->
-    <Border CornerRadius="10" Effect="{StaticResource WindowShadow}">
+    <Border
+        ClipToBounds="True"
+        CornerRadius="12"
+        Effect="{StaticResource WindowShadow}">
         <Border
             Background="{DynamicResource PrimaryColor}"
             BorderBrush="{DynamicResource PrimaryForeground}"
