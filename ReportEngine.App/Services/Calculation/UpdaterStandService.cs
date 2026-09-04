@@ -105,7 +105,7 @@ public class UpdaterStandService
         }
     }
 
-    public async Task<List<TablesChanges>> GetUnprocessedChangesAsync(ProjectModel project)
+    private async Task<List<TablesChanges>> GetUnprocessedChangesAsync(ProjectModel project)
     {
         return await _context.TablesChanges
             .Where(c => c.Processed == false)

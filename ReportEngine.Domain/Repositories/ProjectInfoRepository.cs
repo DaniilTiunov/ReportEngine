@@ -48,7 +48,10 @@ public class ProjectInfoRepository : IProjectInfoRepository
     public async Task<ProjectInfo> GetByIdAsync(int id)
     {
         return await _context.Set<ProjectInfo>()
-            .FirstOrDefaultAsync(x => x.Id == id);
+            .AsSplitQuery()
+            .Include(p => p.Stands)
+            .FirstOrDefaultAsync(x => x.Id == id) 
+               ?? throw new ArgumentException("Проект не найден");
     }
 
     public async Task UpdateAsync(ProjectInfo project)

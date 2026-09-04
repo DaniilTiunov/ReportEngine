@@ -37,7 +37,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
     public async Task GenerateAsync(int projectId)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
-        await _parametersStore.LoadSettingsDataAsync();
+        //await _parametersStore.LoadSettingsDataAsync();
 
         var dataObject = await JsonCreator.CreateProjectJson(project, _parametersStore);
 
@@ -51,7 +51,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
         };
         var jsonObject = JsonSerializer.Serialize(dataObject, options);
         var jsonSavePath = DirectoryHelper.GetJsonSavePath();
-        File.WriteAllText(jsonSavePath, jsonObject, Encoding.UTF8);
+        await File.WriteAllTextAsync(jsonSavePath, jsonObject, Encoding.UTF8);
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
 
@@ -104,7 +104,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
-        await _parametersStore.LoadSettingsDataAsync();
+        //await _parametersStore.LoadSettingsDataAsync();
 
         var dataObject = await JsonCreator.CreateProjectJson(project, _parametersStore, selectedStands);
 
@@ -118,7 +118,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
         };
         var jsonObject = JsonSerializer.Serialize(dataObject, options);
         var jsonSavePath = DirectoryHelper.GetJsonSavePath();
-        File.WriteAllText(jsonSavePath, jsonObject, Encoding.UTF8);
+        await File.WriteAllTextAsync(jsonSavePath, jsonObject, Encoding.UTF8);
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
 

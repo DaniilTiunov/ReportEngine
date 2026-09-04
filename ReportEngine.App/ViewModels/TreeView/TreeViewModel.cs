@@ -277,8 +277,6 @@ public class TreeViewModel
             return;
         }
 
-
-
         await _dialogService.RunWithProgressDialogAsync(async () =>
         {
             await _reportService.GenerateReportAsync(

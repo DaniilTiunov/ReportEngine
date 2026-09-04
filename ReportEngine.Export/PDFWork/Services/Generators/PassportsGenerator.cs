@@ -30,7 +30,7 @@ public class PassportsGenerator : IReportGenerator
     public async Task GenerateAsync(int projectId)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
-        await _parametersStore.LoadSettingsDataAsync();
+        //await _parametersStore.LoadSettingsDataAsync();
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
         var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
@@ -90,7 +90,7 @@ public class PassportsGenerator : IReportGenerator
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
     {
         var project = await _projectInfoRepository.GetByIdAsync(projectId);
-        await _parametersStore.LoadSettingsDataAsync();
+        //await _parametersStore.LoadSettingsDataAsync();
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
         var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
