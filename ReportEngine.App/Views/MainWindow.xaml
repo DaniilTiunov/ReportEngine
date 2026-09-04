@@ -29,6 +29,7 @@
             Command="{Binding MainWindowCommandProvider.ShowAllProjectsCommand}"
             CommandParameter="{x:Null}"
             Key="F5" />
+        <KeyBinding Command="{Binding MainWindowCommandProvider.OpenTreeViewCommand}" Gesture="Ctrl+Shift+N" />
     </Window.InputBindings>
 
     <Window.Resources>
@@ -123,13 +124,11 @@
             </Border>
 
             <!--  Меню  -->
-            <!--  Меню  -->
             <Menu
                 DockPanel.Dock="Top"
                 FontFamily="Bahnschrift"
                 FontSize="14"
                 Height="25">
-
                 <Menu.ItemsPanel>
                     <ItemsPanelTemplate>
                         <DockPanel HorizontalAlignment="Stretch" />
@@ -246,7 +245,6 @@
                 </MenuItem>
 
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenFormedFramesCommand}" Header="🖼️ Создание и редактирование рам" />
-
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllStandsCommand}" Header="🏗️ Стенды" />
 
                 <MenuItem Header="🛠️ Инструменты">
@@ -263,7 +261,6 @@
 
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAuthWindowCommand}" Header="🔐 Авторизация" />
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAuditContentCommand}" Header="📋 Аудит" />
-
                 <MenuItem
                     Click="OpenLogger_Click"
                     Header="📜 Логгер"
@@ -273,68 +270,89 @@
 
             <!--  StatusBar  -->
             <StatusBar
+                Background="{DynamicResource SecondaryColor}"
+                BorderBrush="{DynamicResource BorderMediumColor}"
+                BorderThickness="0,1,0,0"
                 DockPanel.Dock="Bottom"
                 FontFamily="Bahnschrift"
-                Height="30">
-                <StatusBarItem>
-                    <TextBlock
-                        FontSize="14"
-                        Margin="5,0,0,0"
-                        Text="Текущий пользователь:" />
+                Height="34">
+                <StatusBar.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+                    </ItemsPanelTemplate>
+                </StatusBar.ItemsPanel>
+
+                <!--  Пользователь  -->
+                <StatusBarItem Grid.Column="0">
+                    <TextBlock FontSize="14" Text="👤" />
                 </StatusBarItem>
-                <StatusBarItem>
+                <StatusBarItem Grid.Column="1">
                     <TextBlock
                         FontSize="14"
-                        FontWeight="Bold"
-                        Margin="5,0,0,0"
+                        Margin="4,0,0,0"
                         Text="{Binding CurrentUserLogin}" />
                 </StatusBarItem>
-                <StatusBarItem>
-                    <TextBlock
-                        FontSize="14"
-                        Margin="5,0,0,0"
-                        Text="Права доступа:" />
+
+                <StatusBarItem Grid.Column="2">
+                    <Separator Margin="10,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
                 </StatusBarItem>
-                <StatusBarItem>
+
+                <!--  Права доступа  -->
+                <StatusBarItem Grid.Column="3">
                     <TextBlock
-                        FontSize="14"
-                        FontWeight="Bold"
-                        Margin="5,0,0,0"
+                        FontSize="12"
+                        Foreground="{DynamicResource PrimaryForeground}"
+                        Opacity="0.8"
                         Text="{Binding CurrentUser.SystemRole, Converter={StaticResource TranslateUserRole}}" />
                 </StatusBarItem>
 
-                <StatusBarItem HorizontalAlignment="Right">
-                    <TextBlock
-                        FontSize="14"
-                        Margin="5,0,0,0"
-                        Text="Режим работы базы данных:" />
-                </StatusBarItem>
-                <StatusBarItem HorizontalAlignment="Right">
-                    <TextBlock
-                        FontSize="14"
-                        FontWeight="Bold"
-                        Margin="5,0,0,0"
-                        Text="{Binding DatabaseMode}" />
+                <StatusBarItem Grid.Column="4">
+                    <Separator Margin="10,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
                 </StatusBarItem>
 
-                <StatusBarItem HorizontalAlignment="Stretch">
-                    <Separator Visibility="Hidden" />
-                </StatusBarItem>
-
-                <StatusBarItem HorizontalAlignment="Right">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock FontSize="14" Text="Статус подключения к серверу:" />
+                <!--  База данных  -->
+                <StatusBarItem Grid.Column="5">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontSize="14" Text="🗄️" />
                         <TextBlock
-                            FontSize="14"
-                            Margin="5,0,0,0"
-                            Text="{Binding MainWindowModel.ConnectionStatusMessage}"
-                            Width="191" />
+                            FontSize="13"
+                            Margin="4,0,0,0"
+                            Text="{Binding DatabaseMode}" />
+                    </StackPanel>
+                </StatusBarItem>
+
+                <StatusBarItem Grid.Column="6">
+                    <Separator Margin="10,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+                </StatusBarItem>
+
+                <!--  Статус подключения  -->
+                <StatusBarItem Grid.Column="7">
+                    <StackPanel Orientation="Horizontal">
                         <Button
                             BorderThickness="0"
                             Command="{Binding MainWindowCommandProvider.ChekDbConnectionCommand}"
-                            Content="{StaticResource refresh-button.png}"
-                            Height="24"
-                            Margin="0,0,0,0" />
+                            Cursor="Hand"
+                            ToolTip="Проверить подключение">
+                            <materialDesign:PackIcon
+                                Height="16"
+                                Kind="DatabaseOutline"
+                                Width="16" />
+                        </Button>
+                        <TextBlock
+                            FontSize="13"
+                            Margin="4,0,0,0"
+                            Text="{Binding MainWindowModel.ConnectionStatusMessage}" />
                     </StackPanel>
                 </StatusBarItem>
             </StatusBar>
@@ -345,34 +363,90 @@
                     HorizontalContentAlignment="Stretch"
                     VerticalContentAlignment="Stretch"
                     x:Name="MainContentControl">
-
                     <Grid x:Name="MainGrid">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="35" />
+                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
-                        <StackPanel Grid.Row="0" Orientation="Horizontal">
-                            <TextBlock
-                                FontSize="16"
-                                Margin="5,5,10,10"
-                                Text="Поиск: " />
-                            <TextBox
-                                Background="{DynamicResource SecondaryColor}"
-                                FontSize="16"
-                                Height="23"
-                                Margin="0,5,0,5"
-                                Text=""
-                                TextChanged="SearchTextBox_TextChanged"
-                                Width="500"
-                                x:Name="SearchTextBox" />
-                        </StackPanel>
+                        <!--  Поисковая панель  -->
+                        <Border
+                            Background="{DynamicResource SecondaryColor}"
+                            BorderBrush="{DynamicResource BorderMediumColor}"
+                            BorderThickness="0,0,0,1"
+                            Grid.Row="0"
+                            Padding="10,5">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
+                                <StackPanel
+                                    Grid.Column="0"
+                                    Orientation="Horizontal"
+                                    VerticalAlignment="Center">
+                                    <TextBlock
+                                        FontSize="14"
+                                        Foreground="{DynamicResource PrimaryForeground}"
+                                        Opacity="0.7"
+                                        Text="🔍"
+                                        VerticalAlignment="Center" />
+                                    <TextBlock
+                                        FontSize="14"
+                                        Margin="8,0,0,0"
+                                        Text="Поиск"
+                                        VerticalAlignment="Center" />
+                                </StackPanel>
+
+                                <TextBox
+                                    Background="{DynamicResource PrimaryColor}"
+                                    BorderBrush="{DynamicResource BorderMediumColor}"
+                                    BorderThickness="1"
+                                    FontSize="14"
+                                    Grid.Column="1"
+                                    Height="28"
+                                    Margin="10,0,10,0"
+                                    Padding="8,0"
+                                    TextChanged="SearchTextBox_TextChanged"
+                                    VerticalContentAlignment="Center"
+                                    x:Name="SearchTextBox">
+                                    <TextBox.Style>
+                                        <Style TargetType="TextBox">
+                                            <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+                                            <Setter Property="CaretBrush" Value="{DynamicResource PrimaryForeground}" />
+                                            <Style.Triggers>
+                                                <Trigger Property="Text" Value="">
+                                                    <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBox.Style>
+                                </TextBox>
+
+                                <Button
+                                    Background="{DynamicResource PrimaryColor}"
+                                    BorderThickness="0"
+                                    Command="{Binding MainWindowCommandProvider.ShowAllProjectsCommand}"
+                                    Cursor="Hand"
+                                    Grid.Column="2"
+                                    Height="28"
+                                    ToolTip="Обновить список">
+                                    <materialDesign:PackIcon
+                                        Height="18"
+                                        Kind="Refresh"
+                                        Width="18" />
+                                </Button>
+                            </Grid>
+                        </Border>
+
+                        <!--  DataGrid  -->
                         <DataGrid
                             AutoGenerateColumns="False"
                             Grid.Row="1"
                             IsReadOnly="True"
-                            Margin="0,5,0,5"
+                            Margin="0,0,0,5"
                             MouseDoubleClick="MainDataGrid_OnMouseDoubleClick"
                             SelectedItem="{Binding MainWindowModel.SelectedProject}"
                             SelectionUnit="FullRow"
@@ -380,6 +454,30 @@
                             <DataGrid.RowStyle>
                                 <Style TargetType="DataGridRow">
                                     <Setter Property="Background" Value="{Binding Status, Converter={StaticResource ProjectStatusBrushConverter}}" />
+                                    <Setter Property="ToolTip">
+                                        <Setter.Value>
+                                            <ToolTip>
+                                                <Border
+                                                    Background="{DynamicResource PrimaryColor}"
+                                                    CornerRadius="5"
+                                                    Padding="10">
+                                                    <StackPanel>
+                                                        <TextBlock
+                                                            FontSize="14"
+                                                            FontWeight="Bold"
+                                                            Text="{Binding Number, StringFormat='📋 Проект №{0}'}" />
+                                                        <Separator Margin="0,5,0,5" />
+                                                        <TextBlock Text="{Binding Company, StringFormat='🏢 Заказчик: {0}'}" />
+                                                        <TextBlock Text="{Binding Object, StringFormat='📍 Объект: {0}'}" />
+                                                        <TextBlock Text="{Binding Status, StringFormat='📊 Статус: {0}'}" />
+                                                        <TextBlock Text="{Binding Manager, StringFormat='👤 Руководитель: {0}'}" />
+                                                        <TextBlock Text="{Binding StandCount, StringFormat='🏗️ Стендов: {0}'}" />
+                                                        <TextBlock Text="{Binding StartDate, StringFormat='📅 Старт: {0:dd.MM.yyyy}'}" />
+                                                    </StackPanel>
+                                                </Border>
+                                            </ToolTip>
+                                        </Setter.Value>
+                                    </Setter>
                                 </Style>
                             </DataGrid.RowStyle>
                             <DataGrid.Columns>
@@ -472,34 +570,26 @@
                     VerticalAlignment="Bottom"
                     Visibility="Collapsed"
                     x:Name="LogContainer">
-
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="35" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
-                        <!--  Заголовок  -->
                         <Border
                             Background="{DynamicResource BorderMediumColor}"
                             CornerRadius="3"
                             Grid.Row="0">
                             <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-
                                 <TextBlock
                                     FontSize="15"
                                     Foreground="{DynamicResource PrimaryForeground}"
                                     Margin="10,0,0,0"
                                     Text="📋 Логи"
                                     VerticalAlignment="Center" />
-
                             </Grid>
                         </Border>
 
-                        <!--  Контент логов  -->
                         <ContentControl
                             Grid.Row="1"
                             HorizontalContentAlignment="Stretch"

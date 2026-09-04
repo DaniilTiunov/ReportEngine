@@ -41,7 +41,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
 
         //принудительно загружаем настройки при генерации отчета
-        await _parametersStore.LoadSettingsDataAsync();
+        //await _parametersStore.LoadSettingsDataAsync();
 
         using (var wb = new XLWorkbook())
         {

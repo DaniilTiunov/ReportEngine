@@ -41,15 +41,17 @@ public class ProjectInfoRepository : IProjectInfoRepository
         return await _context.Set<ProjectInfo>()
             .AsNoTracking()
             .Include(p => p.Stands)
-                .ThenInclude(s => s.StandAdditionalEquips)
-                    .ThenInclude(sae => sae.AdditionalEquip.Purposes)
+            .AsSplitQuery()
             .ToListAsync();
     }
 
     public async Task<ProjectInfo> GetByIdAsync(int id)
     {
         return await _context.Set<ProjectInfo>()
-            .FirstOrDefaultAsync(x => x.Id == id);
+            .AsSplitQuery()
+            .Include(p => p.Stands)
+            .FirstOrDefaultAsync(x => x.Id == id) 
+               ?? throw new ArgumentException("Проект не найден");
     }
 
     public async Task UpdateAsync(ProjectInfo project)

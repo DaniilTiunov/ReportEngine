@@ -187,7 +187,6 @@ public static class HostFactory
         services.AddScoped<EntityProjectClonerService>();
         services.AddScoped<ParameterGroupService>();
         services.AddScoped<AuditService>();
-        services.AddHttpClient();
     }
 
     private static void ConfigureReportsServices(IServiceCollection services)
