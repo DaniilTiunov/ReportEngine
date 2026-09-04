@@ -48,9 +48,43 @@ public class ProjectInfoRepository : IProjectInfoRepository
 
     public async Task<ProjectInfo> GetByIdAsync(int id)
     {
-        return await _context.Set<ProjectInfo>()
+        return await _context.Projects
             .FirstOrDefaultAsync(x => x.Id == id);
     }
+
+
+    public async Task<ProjectInfo> GetFullProjectbyIdAsync(int id)
+    {
+        return await _context.Projects
+            .AsSplitQuery()
+            .AsNoTracking()
+            .Include(p => p.Stands)
+                .ThenInclude(s => s.StandFrames)
+                    .ThenInclude(sf => sf.Frame)
+                        .ThenInclude(f => f.Components)
+            .Include(p => p.Stands)
+                .ThenInclude(s => s.StandAdditionalEquips)
+                    .ThenInclude(sae => sae.AdditionalEquip)
+                        .ThenInclude(ae => ae.Purposes)
+            .Include(p => p.Stands)
+                .ThenInclude(s => s.StandElectricalComponent)
+                    .ThenInclude(sec => sec.ElectricalComponent)
+                        .ThenInclude(ec => ec.Purposes)
+            .Include(p => p.Stands)
+                .ThenInclude(s => s.StandDrainages)
+                    .ThenInclude(sd => sd.Drainage)
+            .Include(p => p.Stands)
+                .ThenInclude(s => s.ObvyazkiInStand)
+                    .ThenInclude(o => o.Obvyazka)
+            .Include(p => p.Stands)
+                .ThenInclude(s => s.ObvyazkiInStand)
+                    .ThenInclude(o => o.AdditionalComponents)
+            .FirstOrDefaultAsync(x => x.Id == id);
+    }
+
+
+
+
 
     public async Task UpdateAsync(ProjectInfo project)
     {

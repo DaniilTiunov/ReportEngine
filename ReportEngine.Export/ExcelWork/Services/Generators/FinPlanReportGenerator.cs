@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
@@ -18,10 +19,10 @@ public class FinPlanReportGenerator : IReportGenerator
     private readonly IContainerRepository _containerRepository;
     private readonly ParametersStore _parametersStore;
     private readonly IGenericBaseRepository<StainlessPipe, StainlessPipe> _pipesRepository;
-    private readonly IProjectInfoRepository _projectInfoRepository;
+    private readonly ProjectInfoRepository _projectInfoRepository;
 
     public FinPlanReportGenerator(
-        IProjectInfoRepository projectInfoRepository,
+        ProjectInfoRepository projectInfoRepository,
         IContainerRepository containerRepository,
         ParametersStore parametersStore,
         IServiceProvider serviceProvider)
@@ -36,7 +37,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId)
     {
-        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
         var pipes = await _pipesRepository.GetAllAsync();
 
 
@@ -103,7 +104,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
     {
-        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
 
         var pipes = await _pipesRepository.GetAllAsync();
 

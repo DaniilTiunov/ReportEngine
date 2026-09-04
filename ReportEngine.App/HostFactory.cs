@@ -125,6 +125,7 @@ public static class HostFactory
         services.AddScoped<IPurposesRepository<ElectricalPurpose>, FormedElectricalRepository>();
         services.AddScoped<IPurposesRepository<DrainagePurpose>, FormedDrainagesRepository>();
         services.AddScoped<CalculationRepository>();
+        services.AddScoped<ProjectInfoRepository>();
     }
 
     private static void ConfigureGenericRepositories(IServiceCollection services)

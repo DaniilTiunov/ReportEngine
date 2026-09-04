@@ -2,6 +2,7 @@
 using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
@@ -12,9 +13,9 @@ namespace ReportEngine.Export.ExcelWork.Services.Generators;
 public class ContainerReportGenerator : IReportGenerator
 {
     private readonly IContainerRepository _containerRepository;
-    private readonly IProjectInfoRepository _projectInfoRepository;
+    private readonly ProjectInfoRepository _projectInfoRepository;
 
-    public ContainerReportGenerator(IProjectInfoRepository projectInfoRepository,
+    public ContainerReportGenerator(ProjectInfoRepository projectInfoRepository,
         IContainerRepository containerRepository)
     {
         _projectInfoRepository = projectInfoRepository;
@@ -25,7 +26,7 @@ public class ContainerReportGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId)
     {
-        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
 
         using (var wb = new XLWorkbook())
         {
@@ -52,7 +53,7 @@ public class ContainerReportGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
     {
-        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
 
         using (var wb = new XLWorkbook())
         {

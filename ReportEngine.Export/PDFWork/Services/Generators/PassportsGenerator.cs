@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
@@ -17,9 +18,9 @@ namespace ReportEngine.Export.PDFWork.Services.Generators;
 public class PassportsGenerator : IReportGenerator
 {
     private readonly ParametersStore _parametersStore;
-    private readonly IProjectInfoRepository _projectInfoRepository;
+    private readonly ProjectInfoRepository _projectInfoRepository;
 
-    public PassportsGenerator(IProjectInfoRepository projectRepository, ParametersStore parametersStore)
+    public PassportsGenerator(ProjectInfoRepository projectRepository, ParametersStore parametersStore)
     {
         _projectInfoRepository = projectRepository;
         _parametersStore = parametersStore;
@@ -29,7 +30,7 @@ public class PassportsGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId)
     {
-        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
         await _parametersStore.LoadSettingsDataAsync();
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
@@ -89,7 +90,7 @@ public class PassportsGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
     {
-        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
         await _parametersStore.LoadSettingsDataAsync();
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
