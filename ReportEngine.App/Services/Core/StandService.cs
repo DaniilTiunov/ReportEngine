@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
+using ReportEngine.App.Services.Converters;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
@@ -28,6 +29,8 @@ public class StandService : IStandService
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IServiceScopeFactory _scopeFactory;
 
+    private readonly ConverterService _converterService;
+
     public StandService(
         IProjectInfoRepository projectRepository,
         IFrameRepository frameRepository,
@@ -41,6 +44,7 @@ public class StandService : IStandService
         IPurposesRepository<ElectricalPurpose> electricalPurposesRepository,
         IPurposesRepository<DrainagePurpose> drainagesPurposesRepository,
         IServiceScopeFactory scopeFactory,
+        ConverterService converterService,
         ReAppContext context)
     {
         _scopeFactory = scopeFactory;
@@ -56,6 +60,7 @@ public class StandService : IStandService
         _electricalPurposesRepository = electricalPurposesRepository;
         _drainagesPurposesRepository = drainagesPurposesRepository;
         _context = context;
+        _converterService = converterService;
     }
 
     public async Task<IEnumerable<FormedFrame>> LoadAllAvailableFrameAsync()
@@ -230,17 +235,15 @@ public class StandService : IStandService
         await _projectRepository.AddAdditionalEquipToStandAsync(standId, entity.Id);
     }
 
-    public Task<ObvyazkaInStand> CreateObvyazkaAsync(StandModel standModel, Obvyazka selectedObvyazka)
+    public async Task<ObvyazkaInStand> CreateObvyazkaAsync(StandModel standModel, Obvyazka selectedObvyazka)
     {
         if (standModel == null)
         {
             _notificationService.ShowError("Стенд не выбран!");
-            return Task.FromResult<ObvyazkaInStand>(null);
+            return null;
         }
 
-        if (selectedObvyazka == null || selectedObvyazka.Id <= 0) return Task.FromResult<ObvyazkaInStand>(null);
-
-
+        if (selectedObvyazka == null || selectedObvyazka.Id <= 0) return null;
 
         var entity = new ObvyazkaInStand
         {
@@ -264,21 +267,25 @@ public class StandService : IStandService
             MaterialLineMeasure = standModel.MaterialLineMeasure,
             MaterialLineCostPerUnit = standModel.MaterialLineCostPerUnit,
             MaterialLineExportDays = standModel.MaterialLineExportDays,
+
             Armature = standModel.Armature,
             ArmatureCount = standModel.ArmatureCount,
             ArmatureMeasure = standModel.ArmatureMeasure,
             ArmatureCostPerUnit = standModel.ArmatureCostPerUnit,
             ArmatureExportDays = standModel.ArmatureExportDays,
+
             TreeSocket = standModel.TreeSocket,
             TreeSocketMaterialCount = standModel.TreeSocketMaterialCount,
             TreeSocketMaterialMeasure = standModel.TreeSocketMaterialMeasure,
             TreeSocketMaterialCostPerUnit = standModel.TreeSocketMaterialCostPerUnit,
             TreeSocketExportDays = standModel.TreeSocketExportDays,
+
             KMCH = standModel.KMCH,
             KMCHCount = standModel.KMCHCount,
             KMCHMeasure = standModel.KMCHMeasure,
             KMCHCostPerUnit = standModel.KMCHCostPerUnit,
             KMCHExportDays = standModel.KMCHExportDays,
+
             FirstSensorType = standModel.FirstSensorType,
             FirstSensorKKS = standModel.FirstSensorKKS,
             FirstSensorMarkPlus = standModel.FirstSensorMarkPlus,
@@ -306,14 +313,14 @@ public class StandService : IStandService
                     Id = 0
                 })
                 .ToList(),
-
-
-            
-            Weight = selectedObvyazka.Weight + CountObvComponentsWeight(standModel)
-
         };
 
-        return Task.FromResult(entity);
+
+        _converterService.ConvertStandEquipsToObvyazkaInStandData(standModel, entity);
+
+        entity.Weight = CountObvComponentsWeight(standModel);
+
+        return entity;
     }
 
 
@@ -322,7 +329,17 @@ public class StandService : IStandService
         if (stand == null || obv == null)
             return;
 
-       // var obvWeight = obv.Obvyazka.Weight;
+        // костыль для получения полной сущности
+        var originalFullObv = await _obvyazkaInStandRepository.GetFullObvFromStandAsync(obv.Id);
+
+        await _converterService.ConvertObvyazkaInStandDataToStandEquips(stand, obv);
+
+        if (originalFullObv?.Obvyazka == null)
+        {
+            _notificationService.ShowError("Не найдены данные по обвязке");
+            return;
+        }
+
 
         stand.NN = obv.NN ?? 0;
         stand.ObvyazkaName = obv.ObvyazkaName;
@@ -338,7 +355,7 @@ public class StandService : IStandService
         stand.KMCH = obv.KMCH;
         stand.KMCHCount = obv.KMCHCount;
         stand.KMCHMeasure = obv.KMCHMeasure;
-        stand.Weight = obv.Weight ?? 0;
+
 
         stand.MaterialLineCostPerUnit = obv.MaterialLineCostPerUnit;
         stand.TreeSocketMaterialCostPerUnit = obv.TreeSocketMaterialCostPerUnit;
@@ -362,10 +379,13 @@ public class StandService : IStandService
         stand.ThirdSensorDescription = obv.ThirdSensorDescription;
         stand.ImageName = obv.ImageName;
 
-        var additionalComponents = await GetAdditionalComponentsAsync(obv);
+        stand.ObvWeight = originalFullObv.Obvyazka.Weight;
 
+        var additionalComponents = await GetAdditionalComponentsAsync(obv);
         stand.ObvyazkaAdditionalComponents.Clear();
-        foreach (var additionalEqip in additionalComponents) stand.ObvyazkaAdditionalComponents.Add(additionalEqip);
+
+        foreach (var additionalEqip in additionalComponents)
+            stand.ObvyazkaAdditionalComponents.Add(additionalEqip);
     }
 
     public async Task DeleteAdditionalPurposeFromObvAsync(ObvyazkaAdditionalEquipPurpose obv, StandModel standModel)
@@ -513,10 +533,10 @@ public class StandService : IStandService
         //суммируем в обвязку веса всех комплектующих
         float commonWeight = 0.0f;
 
-        commonWeight += (standModel.MaterialLineWeight * standModel.MaterialLineCount) ?? 0.0f;
-        commonWeight += (standModel.TreeSocketWeight * standModel.TreeSocketMaterialCount) ?? 0.0f;
-        commonWeight += (standModel.KMCHWeight * standModel.KMCHCount) ?? 0.0f;
-        commonWeight += (standModel.ArmatureWeight * standModel.ArmatureCount) ?? 0.0f;
+        commonWeight += (standModel.MaterialLineEquip?.Weight * standModel.MaterialLineCount) ?? 0.0f;
+        commonWeight += (standModel.TreeSocketEquip?.Weight * standModel.TreeSocketMaterialCount) ?? 0.0f;
+        commonWeight += (standModel.KMCHEquip?.Weight * standModel.KMCHCount) ?? 0.0f;
+        commonWeight += (standModel.ArmatureEquip?.Weight * standModel.ArmatureCount) ?? 0.0f;
 
 
         foreach (var obvComponent in standModel.ObvyazkaAdditionalComponents)
@@ -565,5 +585,49 @@ public class StandService : IStandService
             .GetRequiredService<IProjectInfoRepository>();
 
         return await repository.GetAllAdditionalEquipsInStandsAsync(standIds);
+    }
+
+
+
+
+
+    private async Task<IBaseEquip?> GetBaseEquip(string? typeName, int? id)
+    {
+        if (string.IsNullOrEmpty(typeName) || !id.HasValue)
+            return null;
+
+        var entityType = Type.GetType(typeName);
+
+        if (entityType == null)
+            return null;
+
+        return await _context.FindAsync(entityType, id) as IBaseEquip;
+    }
+
+
+
+    public async Task ParseObvyazkaInStandToStandEquips(StandModel stand, ObvyazkaInStand obv)
+    {
+        stand.MaterialLineEquip = await GetBaseEquip(obv.MaterialLineType, obv.MaterialLineId);
+        stand.TreeSocketEquip = await this.GetBaseEquip(obv.TreeSocketType, obv.TreeSocketId);
+        stand.KMCHEquip = await this.GetBaseEquip(obv.KMCHType, obv.KMCHId);
+        stand.ArmatureEquip = await this.GetBaseEquip(obv.ArmatureType, obv.ArmatureId);
+    }
+
+
+
+    public void ParseIBaseEquipsToObvyazkaInStand(StandModel stand,ObvyazkaInStand obv)
+    {
+        obv.MaterialLineId = stand.MaterialLineEquip?.Id;
+        obv.MaterialLineType = stand.MaterialLineEquip?.GetType().AssemblyQualifiedName;
+
+        obv.TreeSocketId = stand.TreeSocketEquip?.Id;
+        obv.TreeSocketType = stand.TreeSocketEquip?.GetType().AssemblyQualifiedName;
+
+        obv.KMCHId = stand.KMCHEquip?.Id;
+        obv.KMCHType = stand.KMCHEquip?.GetType().AssemblyQualifiedName;
+
+        obv.ArmatureId = stand.ArmatureEquip?.Id;
+        obv.ArmatureType = stand.ArmatureEquip?.GetType().AssemblyQualifiedName;
     }
 }

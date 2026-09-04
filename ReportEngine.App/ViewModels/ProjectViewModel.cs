@@ -263,7 +263,8 @@ public class ProjectViewModel : BaseViewModel
                     measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays,
-                    weight => CurrentProjectModel.SelectedStand.MaterialLineWeight = weight);
+                    equip => CurrentProjectModel.SelectedStand.MaterialLineEquip = equip
+                    );
                 break;
 
             case "Нержавеющие":
@@ -272,7 +273,8 @@ public class ProjectViewModel : BaseViewModel
                     measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays,
-                    weight => CurrentProjectModel.SelectedStand.MaterialLineWeight = weight);
+                    equip => CurrentProjectModel.SelectedStand.MaterialLineEquip = equip
+                    );
                 break;
 
             case "Углеродистые":
@@ -281,7 +283,8 @@ public class ProjectViewModel : BaseViewModel
                     measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays,
-                    weight => CurrentProjectModel.SelectedStand.MaterialLineWeight = weight);
+                    equip => CurrentProjectModel.SelectedStand.MaterialLineEquip = equip
+                    );
                 break;
         }
 
@@ -303,7 +306,8 @@ public class ProjectViewModel : BaseViewModel
                     measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays,
-                    weight => CurrentProjectModel.SelectedStand.ArmatureWeight = weight);
+                    equip => CurrentProjectModel.SelectedStand.ArmatureEquip = equip
+                    );
                 break;
 
             case "Нержавеющие":
@@ -312,7 +316,8 @@ public class ProjectViewModel : BaseViewModel
                     measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays,
-                    weight => CurrentProjectModel.SelectedStand.ArmatureWeight = weight);
+                    equip => CurrentProjectModel.SelectedStand.ArmatureEquip = equip
+                    );
                 break;
 
             case "Углеродистые":
@@ -321,7 +326,8 @@ public class ProjectViewModel : BaseViewModel
                     measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays,
-                    weight => CurrentProjectModel.SelectedStand.ArmatureWeight = weight);
+                    equip => CurrentProjectModel.SelectedStand.ArmatureEquip = equip
+                    );
                 break;
         }
 
@@ -343,7 +349,8 @@ public class ProjectViewModel : BaseViewModel
                     measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays,
-                    weight => CurrentProjectModel.SelectedStand.TreeSocketWeight = weight);
+                    equip => CurrentProjectModel.SelectedStand.TreeSocketEquip = equip
+                    );
                 break;
 
             case "Нержавеющие":
@@ -352,7 +359,8 @@ public class ProjectViewModel : BaseViewModel
                     measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays,
-                    weight => CurrentProjectModel.SelectedStand.TreeSocketWeight = weight);
+                    equip => CurrentProjectModel.SelectedStand.TreeSocketEquip = equip
+                    );
                 break;
 
             case "Углеродистые":
@@ -361,7 +369,8 @@ public class ProjectViewModel : BaseViewModel
                     measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays,
-                    weight => CurrentProjectModel.SelectedStand.TreeSocketWeight = weight);
+                    equip => CurrentProjectModel.SelectedStand.TreeSocketEquip = equip
+                    );
                 break;
         }
 
@@ -383,7 +392,8 @@ public class ProjectViewModel : BaseViewModel
                     measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays,
-                    weight => CurrentProjectModel.SelectedStand.KMCHWeight = weight);
+                    equip => CurrentProjectModel.SelectedStand.KMCHEquip = equip
+                    );
                 break;
 
             case "Нержавеющие":
@@ -392,7 +402,8 @@ public class ProjectViewModel : BaseViewModel
                     measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays,
-                    weight => CurrentProjectModel.SelectedStand.KMCHWeight = weight);
+                    equip => CurrentProjectModel.SelectedStand.KMCHEquip = equip
+                    );
                 break;
 
             case "Углеродистые":
@@ -401,7 +412,8 @@ public class ProjectViewModel : BaseViewModel
                     measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays,
-                    weight => CurrentProjectModel.SelectedStand.KMCHWeight = weight);
+                    equip => CurrentProjectModel.SelectedStand.KMCHEquip = equip
+                    );
                 break;
         }
 
@@ -775,6 +787,7 @@ public class ProjectViewModel : BaseViewModel
 
             CurrentProjectModel.SelectedStand.ElectricalPurposesChanges = false;
             OnPropertyChanged(nameof(CurrentProjectModel.SelectedStand.ElectricalPurposesChanges));
+
 
             _notificationService.ShowInfo("Все электрические компоненты сохранены");
         });
@@ -1513,11 +1526,12 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(NewStand));
     }
 
-    private void SelectEquipment<T>(Action<string> setProperty,
+    private void SelectEquipment<T>(
+        Action<string> setProperty,
         Action<string> setMeasure,
         Action<string> setCost,
         Action<int> setExportDays,
-        Action<float> setWeight)
+        Action<IBaseEquip> setEquip)
         where T : class, IBaseEquip, new()
     {
         _exceptionService.SafeExecute(() =>
@@ -1529,9 +1543,14 @@ public class ProjectViewModel : BaseViewModel
                 setMeasure(equipment.Measure);
                 setCost(equipment.Cost.ToString());
                 setExportDays((int)equipment.ExportDays);
+                
             }
 
-            if (equipment is BaseEquip baseEquip) setWeight((float)baseEquip.Weight);
+            if (equipment is IBaseEquip baseEquip)
+            {
+                setEquip(baseEquip);
+            }
+
         });
     }
 

@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
@@ -15,10 +16,10 @@ namespace ReportEngine.Export.ExcelWork.Services.Generators;
 public class FlatSummaryReportGenerator : IReportGenerator
 {
     private readonly IGenericBaseRepository<StainlessPipe, StainlessPipe> _pipesRepository;
-    private readonly IProjectInfoRepository _projectInfoRepository;
+    private readonly ProjectInfoRepository _projectInfoRepository;
 
     public FlatSummaryReportGenerator(
-        IProjectInfoRepository projectInfoRepository,
+        ProjectInfoRepository projectInfoRepository,
         IServiceProvider serviceProvider)
     {
         _projectInfoRepository = projectInfoRepository;
@@ -31,7 +32,7 @@ public class FlatSummaryReportGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId)
     {
-        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
         var pipes = await _pipesRepository.GetAllAsync();
 
         using (var wb = new XLWorkbook())
@@ -61,7 +62,7 @@ public class FlatSummaryReportGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
     {
-        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
         var pipes = await _pipesRepository.GetAllAsync();
 
         using (var wb = new XLWorkbook())

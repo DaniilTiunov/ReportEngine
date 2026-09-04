@@ -1,8 +1,10 @@
 ﻿using System.Collections.ObjectModel;
+using DevExpress.DocumentView;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
+using ReportEngine.App.Services.Converters;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.Domain.Entities;
@@ -29,6 +31,8 @@ public class ProjectService : IProjectService
     private readonly IStandService _standService;
     private readonly IBaseRepository<Subject> _subjectRepository;
 
+    private readonly ConverterService _converterService;
+
     public ProjectService(
         IProjectInfoRepository projectRepository,
         INotificationService notificationService,
@@ -42,7 +46,8 @@ public class ProjectService : IProjectService
         ObvyazkaInStandRepository obvyazkaInStandRepository,
         AuditService auditService,
         SessionService sessionService,
-        ExceptionService exceptionService)
+        ExceptionService exceptionService,
+        ConverterService converterService)
     {
         _drainagesRepository = drainagesRepository;
         _additionalEquipsRepository = additionalEquipsRepository;
@@ -57,6 +62,7 @@ public class ProjectService : IProjectService
         _auditService = auditService;
         _sessionService = sessionService;
         _exceptionService = exceptionService;
+        _converterService = converterService;
     }
 
     public int GetStandsInProjectCount(ProjectModel projectModel)
@@ -352,8 +358,10 @@ public class ProjectService : IProjectService
         obv.ThirdSensorMarkMinus = stand.ThirdSensorMarkMinus;
         obv.ThirdSensorDescription = stand.ThirdSensorDescription;
         obv.ImageName = stand.ImageName;
-       
-        obv.Weight = stand.ObvWeight +  StandService.CountObvComponentsWeight(stand);
+
+        obv.Weight = StandService.CountObvComponentsWeight(stand);
+        _converterService.ConvertStandEquipsToObvyazkaInStandData(stand, obv);
+
 
         await UpdateObvyazka(projectModel, projectModel.SelectedStand.SelectedObvyazkaInStand);
 
@@ -477,21 +485,29 @@ public class ProjectService : IProjectService
                 obv.MaterialLineCount = selectedObvyazka.MaterialLineCount;
                 obv.MaterialLineMeasure = selectedObvyazka.MaterialLineMeasure;
                 obv.MaterialLineExportDays = selectedObvyazka.MaterialLineExportDays;
+                obv.MaterialLineId = selectedObvyazka.MaterialLineId;
+                obv.MaterialLineType = selectedObvyazka.MaterialLineType;
 
                 obv.Armature = selectedObvyazka.Armature;
                 obv.ArmatureCount = selectedObvyazka.ArmatureCount;
                 obv.ArmatureMeasure = selectedObvyazka.ArmatureMeasure;
                 obv.ArmatureExportDays = selectedObvyazka.ArmatureExportDays;
+                obv.ArmatureId = selectedObvyazka.ArmatureId;
+                obv.ArmatureType = selectedObvyazka.ArmatureType;
 
                 obv.TreeSocket = selectedObvyazka.TreeSocket;
                 obv.TreeSocketMaterialCount = selectedObvyazka.TreeSocketMaterialCount;
                 obv.TreeSocketMaterialMeasure = selectedObvyazka.TreeSocketMaterialMeasure;
                 obv.TreeSocketExportDays = selectedObvyazka.TreeSocketExportDays;
+                obv.TreeSocketId = selectedObvyazka.TreeSocketId;
+                obv.TreeSocketType = selectedObvyazka.TreeSocketType;
 
                 obv.KMCH = selectedObvyazka.KMCH;
                 obv.KMCHCount = selectedObvyazka.KMCHCount;
                 obv.KMCHMeasure = selectedObvyazka.KMCHMeasure;
                 obv.KMCHExportDays = selectedObvyazka.KMCHExportDays;
+                obv.KMCHId = selectedObvyazka.KMCHId;
+                obv.KMCHType = selectedObvyazka.KMCHType;
 
                 obv.LineLength = selectedObvyazka.LineLength;
                 obv.ZraCount = selectedObvyazka.ZraCount;

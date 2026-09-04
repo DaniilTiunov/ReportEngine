@@ -1,8 +1,8 @@
-﻿using System.Diagnostics;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Pipes;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
@@ -11,6 +11,7 @@ using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.JsonHelpers;
 using ReportEngine.Shared.Helpers;
+using System.Diagnostics;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -19,10 +20,10 @@ public class SummaryReportGenerator : IReportGenerator
     private readonly IContainerRepository _containerRepository;
     private readonly ParametersStore _parametersStore;
     private readonly IGenericBaseRepository<StainlessPipe, StainlessPipe> _pipesRepository;
-    private readonly IProjectInfoRepository _projectInfoRepository;
+    private readonly ProjectInfoRepository _projectInfoRepository;
 
     public SummaryReportGenerator(
-        IProjectInfoRepository projectInfoRepository,
+        ProjectInfoRepository projectInfoRepository,
         IContainerRepository containerRepository,
         ParametersStore parametersStore,
         IServiceProvider serviceProvider)
@@ -37,7 +38,7 @@ public class SummaryReportGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId)
     {
-        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
         var pipes = await _pipesRepository.GetAllAsync();
 
         //принудительно загружаем настройки при генерации отчета
@@ -100,7 +101,7 @@ public class SummaryReportGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
     {
-        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
         var pipes = await _pipesRepository.GetAllAsync();
 
         using (var wb = new XLWorkbook())

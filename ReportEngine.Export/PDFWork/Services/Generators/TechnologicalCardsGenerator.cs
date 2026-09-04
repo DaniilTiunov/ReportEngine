@@ -4,6 +4,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
@@ -18,12 +19,12 @@ namespace ReportEngine.Export.PDFWork.Services.Generators;
 public class TechnologicalCardsGenerator : IReportGenerator
 {
     private readonly ParametersStore _parametersStore;
-    private readonly IProjectInfoRepository _projectInfoRepository;
+    private readonly ProjectInfoRepository _projectInfoRepository;
     private readonly IServiceProvider _serviceProvider;
 
 
     public TechnologicalCardsGenerator(
-        IProjectInfoRepository projectInfoRepository, 
+        ProjectInfoRepository projectInfoRepository, 
         ParametersStore parametersStore,
         IServiceProvider serviceProvider)
     {
@@ -36,8 +37,8 @@ public class TechnologicalCardsGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId)
     {
-        var project = await _projectInfoRepository.GetByIdAsync(projectId);
-        //await _parametersStore.LoadSettingsDataAsync();
+        var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
+        await _parametersStore.LoadSettingsDataAsync();
 
         var dataObject = await JsonCreator.CreateProjectJson(project, _parametersStore);
 
@@ -103,8 +104,8 @@ public class TechnologicalCardsGenerator : IReportGenerator
     //перегрузка для выбранных стендов
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
     {
-        var project = await _projectInfoRepository.GetByIdAsync(projectId);
-        //await _parametersStore.LoadSettingsDataAsync();
+        var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
+        await _parametersStore.LoadSettingsDataAsync();
 
         var dataObject = await JsonCreator.CreateProjectJson(project, _parametersStore, selectedStands);
 
