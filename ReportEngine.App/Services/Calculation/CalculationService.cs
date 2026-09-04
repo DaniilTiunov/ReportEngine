@@ -72,14 +72,6 @@ public class CalculationService : ICalculationService
 
     private void CalculateStandsWeight(StandModel standModel)
     {
-
-        if (standModel.KKSCode == "MAA18GZ011")
-        {
-            ;
-        }
-
-
-
         standModel.Weight = 0;
 
         standModel.Weight += standModel.FramesInStand.Sum(fr => fr.Weight);
@@ -94,10 +86,6 @@ public class CalculationService : ICalculationService
 
         standModel.Weight += standModel.ObvyazkiInStand.Sum(ec => ec.Weight) ?? 0.0f;
     }
-
-
-
-    
 
 
 
