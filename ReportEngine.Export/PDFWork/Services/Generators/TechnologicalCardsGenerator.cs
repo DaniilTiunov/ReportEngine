@@ -38,7 +38,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
     public async Task GenerateAsync(int projectId)
     {
         var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
-        await _parametersStore.LoadSettingsDataAsync();
+        //await _parametersStore.LoadSettingsDataAsync();
 
         var dataObject = await JsonCreator.CreateProjectJson(project, _parametersStore);
 
@@ -59,7 +59,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
         var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
         var fileName = ExcelReportHelper.CreateReportName("Технологические карты", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
-
+        
         var startInfo = new ProcessStartInfo
         {
             FileName = exeFilePath,
@@ -105,7 +105,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
     {
         var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
-        await _parametersStore.LoadSettingsDataAsync();
+        //await _parametersStore.LoadSettingsDataAsync();
 
         var dataObject = await JsonCreator.CreateProjectJson(project, _parametersStore, selectedStands);
 
