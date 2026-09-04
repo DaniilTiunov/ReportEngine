@@ -86,7 +86,7 @@ public partial class TreeProjectView : UserControl, IDisposable
             {
                 var icon = GetIconKind(treeViewItem);
                 var header = GetHeaderText(treeViewItem);
-                var tag = treeViewItem.Tag.ToString();
+                var tag = treeViewItem.Tag.ToString() ?? string.Empty;
                 LoadTreeContent(tag, header, icon);
             }
         });

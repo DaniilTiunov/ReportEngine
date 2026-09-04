@@ -28,6 +28,7 @@ public class ParametersStore
     public async Task LoadSettingsDataAsync()
     {
         _allSettings.Clear();
+        _parameterEquipsPairs.Clear();
 
         _allSettings[CalculationParameterType.ElectricCost] =
             await _calculationRepository.GetByKeysAsync(CalculationParameterType.ElectricCost,

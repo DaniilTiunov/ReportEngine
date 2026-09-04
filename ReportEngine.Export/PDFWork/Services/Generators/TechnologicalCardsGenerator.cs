@@ -52,7 +52,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
         };
         var jsonObject = JsonSerializer.Serialize(dataObject, options);
         var jsonSavePath = DirectoryHelper.GetJsonSavePath();
-        File.WriteAllText(jsonSavePath, jsonObject, Encoding.UTF8);
+        await File.WriteAllTextAsync(jsonSavePath, jsonObject, Encoding.UTF8);
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
 
@@ -119,7 +119,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
         };
         var jsonObject = JsonSerializer.Serialize(dataObject, options);
         var jsonSavePath = DirectoryHelper.GetJsonSavePath();
-        File.WriteAllText(jsonSavePath, jsonObject, Encoding.UTF8);
+        await File.WriteAllTextAsync(jsonSavePath, jsonObject, Encoding.UTF8);
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
 
