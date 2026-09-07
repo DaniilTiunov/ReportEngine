@@ -3,7 +3,7 @@
     FontFamily="Bahnschrift"
     Foreground="{DynamicResource PrimaryForeground}"
     ResizeMode="CanResize"
-    Title="Стенды КИПиА"
+    Title="КИПАРИС:PCM"
     WindowStartupLocation="CenterScreen"
     WindowState="Normal"
     WindowStyle="None"

@@ -452,4 +452,10 @@
             <SubType>Designer</SubType>
         </Page>
     </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="ReportEngine.App">
+        <HintPath>bin\Debug\net8.0-windows\ReportEngine.App.dll</HintPath>
+      </Reference>
+    </ItemGroup>
 </Project>

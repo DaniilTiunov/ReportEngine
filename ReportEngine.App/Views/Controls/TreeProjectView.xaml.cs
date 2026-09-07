@@ -5,6 +5,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using MaterialDesignThemes.Wpf;
+using ReportEngine.App.Dds;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.TreeView;
@@ -17,18 +18,21 @@ public partial class TreeProjectView : UserControl, IDisposable
     private readonly ExceptionService _exceptionService;
     private readonly ProjectViewModel _projectViewModel;
     private readonly ContainersViewModel _containersViewModel;
+    private readonly DdsService _ddsService;
     private bool _disposed;
 
     public TreeProjectView(
         TreeViewModel treeViewModel,
         ProjectViewModel projectViewModel,
-        ExceptionService exceptionService, 
-        ContainersViewModel containersViewModel)
+        ExceptionService exceptionService,
+        ContainersViewModel containersViewModel,
+        DdsService ddsService)
     {
         InitializeComponent();
         _projectViewModel = projectViewModel;
         _exceptionService = exceptionService;
         _containersViewModel = containersViewModel;
+        _ddsService = ddsService;
         DataContext = treeViewModel;
     }
 
@@ -151,7 +155,7 @@ public partial class TreeProjectView : UserControl, IDisposable
             return tag switch
             {
                 "ProjectCard" => ApplyAnimation(new ProjectCardView(_projectViewModel)),
-                "ProjectPreview" => ApplyAnimation(new ProjectPreview(_projectViewModel)),
+                "ProjectPreview" => ApplyAnimation(new ProjectPreview(_projectViewModel, _ddsService)),
                 "StandsContainer" => ApplyAnimation(new StandsContainerView(_containersViewModel)),
                 "DockViewer" => ApplyAnimation(new DockViewerView(new DockViewerViewModel()))
             };

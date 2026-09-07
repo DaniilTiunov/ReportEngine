@@ -1,6 +1,7 @@
 ﻿using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ReportEngine.App.Dds;
 using ReportEngine.App.Services;
 using ReportEngine.App.Services.Calculation;
 using ReportEngine.App.Services.Cloners;
@@ -190,7 +191,9 @@ public static class HostFactory
         services.AddScoped<ParameterGroupService>();
         services.AddScoped<AuditService>();
         services.AddScoped<ConverterService>();
-        services.AddHttpClient();
+        services.AddSingleton<DdsService>();
+        services.AddHostedService<DdsService>();
+        
     }
 
     private static void ConfigureReportsServices(IServiceCollection services)

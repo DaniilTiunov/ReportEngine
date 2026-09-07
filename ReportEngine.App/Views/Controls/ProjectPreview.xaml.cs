@@ -8,6 +8,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using ReportEngine.App.AppHelpers;
+using ReportEngine.App.Dds;
+using ReportEngine.App.Dds.Enums;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ViewModels;
 
@@ -16,13 +18,15 @@ namespace ReportEngine.App.Views.Controls;
 public partial class ProjectPreview : UserControl
 {
     private readonly ProjectViewModel _projectViewModel;
+    private readonly DdsService _ddsService;
     private bool _allowEdit;
 
-    public ProjectPreview(ProjectViewModel projectViewModel)
+    public ProjectPreview(ProjectViewModel projectViewModel, DdsService ddsService)
     {
         InitializeComponent();
         DataContext = projectViewModel;
         _projectViewModel = projectViewModel;
+        _ddsService = ddsService;
 
         CommandBindings.Add(
             new CommandBinding(

@@ -13,7 +13,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="PythonModule\MainLauncher.exe" />
         <None Remove="PythonModule\MainLauncher.py" />
     </ItemGroup>
 
@@ -30,9 +29,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="PythonModule\MainLauncher.exe">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
         <Content Include="PythonModule\MainLauncher.py">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
@@ -50,6 +46,10 @@
         </Content>
         <Content Include="PythonModule\TechCardsGenerator.py">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <None Remove="PythonModule\MainLauncher.exe" />
+        <Content Include="PythonModule\MainLauncher.exe">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
 

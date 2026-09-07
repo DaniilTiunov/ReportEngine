@@ -1,6 +1,5 @@
 
 
-
 a = Analysis(
     ['MainLauncher.py'],
     pathex=[],
