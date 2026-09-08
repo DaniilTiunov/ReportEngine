@@ -3,7 +3,7 @@
     Background="Transparent"
     Height="480"
     Title="Загрузка"
-    Width="720"
+    Width="800"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d"
@@ -123,7 +123,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Style="{StaticResource TitleTextStyle}">
                                     <TextBlock.Text>
-                                        <MultiBinding StringFormat="Стенды КИПиА v{0}">
+                                        <MultiBinding StringFormat="КИПАРИС:PCM v{0}">
                                             <Binding Path="Version" />
                                         </MultiBinding>
                                     </TextBlock.Text>

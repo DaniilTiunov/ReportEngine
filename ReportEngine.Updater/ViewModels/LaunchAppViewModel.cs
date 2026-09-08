@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ReportEngine.Updater.Helpers;
 using ReportEngine.Updater.Models;
 using ReportEngine.Updater.Services;
 using ReportEngine.Updater.ViewModels.Base;
@@ -15,6 +16,7 @@ public partial class LaunchAppViewModel : BaseViewModel
     private readonly DirectoryService _directoryService;
     private readonly UpdateService _updateService;
     private readonly NotificationService _notificationService;
+    private readonly JsonSettingsService _jsonSettingsService;
     
     [ObservableProperty]
     private ObservableCollection<Release> _localReleases = new();
@@ -25,23 +27,35 @@ public partial class LaunchAppViewModel : BaseViewModel
     public LaunchAppViewModel(
         DirectoryService directoryService,
         UpdateService updateService,
-        NotificationService notificationService
-        )
+        NotificationService notificationService, 
+        JsonSettingsService jsonSettingsService)
     {
         _directoryService = directoryService;
         _updateService = updateService;
         _notificationService = notificationService;
-        
+        _jsonSettingsService = jsonSettingsService;
+
         _ = LoadReleasesAsync();
 
         RefreshCommand = new AsyncRelayCommand(LoadReleasesAsync);
         LaunchCommand = new RelayCommand(LaunchApplicationAsync);
         CreateShortcutCommand = new RelayCommand(CreateShortcut);
+        OpenFolderCommand = new AsyncRelayCommand(OpenFolderAsync);
     }
     
     public ICommand RefreshCommand { get; set; }
     public ICommand LaunchCommand { get; set; }
     public ICommand CreateShortcutCommand { get; set; }
+    public ICommand OpenFolderCommand { get; set; }
+
+    private async Task OpenFolderAsync()
+    {
+        var localPath = await _jsonSettingsService.GetPathAsync(
+            UpdateSettingsHelper.GetUpdateSettingsPath(),
+            path => path.LocalPath);
+        
+        Process.Start("explorer.exe", localPath);
+    }
     
     private async Task LoadReleasesAsync()
     {

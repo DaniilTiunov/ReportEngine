@@ -63,14 +63,14 @@ public partial class MainWindow : Window //Это так называемый "C
                 
                 if (update != null)
                 {
-                    Title = $"Стенды КИПиА v{update.Version} ({update.Channel})";
+                    Title = $"КИПАРИС:PCM v{update.Version} ({update.Channel})";
                     return;
                 }
             }
         }
         catch { }
         
-        Title = "Стенды КИПиА";
+        Title = "КИПАРИС:PCM";
     }
     
     // Событие загрузки окна
