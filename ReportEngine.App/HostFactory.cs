@@ -1,6 +1,8 @@
 ﻿using System.Windows.Controls;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using ReportEngine.App.Dds;
 using ReportEngine.App.Services;
 using ReportEngine.App.Services.Calculation;
@@ -43,19 +45,29 @@ using ReportEngine.Export.ExcelWork.Services;
 using ReportEngine.Export.ExcelWork.Services.Generators;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Export.PDFWork.Services.Generators;
+using ReportEngine.Shared.Config.Directory;
+using ReportEngine.Shared.Config.Models;
+using ReportEngine.Shared.Services.Options;
 using Serilog;
 
 namespace ReportEngine.App;
 
 public static class HostFactory
 {
-    public static IHost BuildHost(string dbMode)
+    public static IHost BuildHost()
     {
         var uiLog = new AppLogsView();
 
         var theme = RichTextBoxLoggerTheme.Create();
 
         return Host.CreateDefaultBuilder()
+            .ConfigureAppConfiguration((config) =>
+            {
+                config.AddJsonFile(
+                    DirectoryHelper.GetConfigPath(),
+                    optional: false,
+                    reloadOnChange: true);
+            })
             .UseSerilog((context, services, config) =>
             {
                 config
@@ -79,8 +91,10 @@ public static class HostFactory
             .ConfigureServices(services =>
             {
                 services.AddSingleton(uiLog);
+                
+                ConfigureOptions(services);
                 // Регистрация контекста БД
-                ConfigureDatabase(services, dbMode);
+                ConfigureDatabase(services);
                 // Регистрация репозиториев
                 ConfigureRepositories(services);
                 // Регистрация обощённых репозиториев
@@ -99,12 +113,23 @@ public static class HostFactory
             .Build();
     }
 
-    private static void ConfigureDatabase(
-        IServiceCollection services,
-        string dbMode)
+    private static void ConfigureOptions(IServiceCollection services)
     {
-        services.AddDbContext<ReAppContext>(options =>
-            DbContextOptionsFactory.Configure(options, dbMode));
+        services.AddOptions<ReportEngineConfig>()
+            .Configure<IConfiguration>((settings, configuration) =>
+            {
+                configuration.Bind(settings);
+            })
+            .ValidateOnStart();
+    }
+    
+    private static void ConfigureDatabase(IServiceCollection services)
+    {
+        services.AddDbContext<ReAppContext>((serviceProvider, options) =>
+        {
+            var appSettings = serviceProvider.GetRequiredService<IOptions<ReportEngineConfig>>();
+            DbContextOptionsFactory.Configure(options, appSettings);  // Передаем IOptions
+        });
     }
 
 
@@ -169,6 +194,7 @@ public static class HostFactory
 
     private static void ConfigureApplicationServices(IServiceCollection services)
     {
+        services.AddSingleton<ReportEngineConfigService>();
         services.AddSingleton<UpdaterStandService>();
         services.AddSingleton<GenericEquipWindowFactory>();
         services.AddSingleton<NavigationService>();

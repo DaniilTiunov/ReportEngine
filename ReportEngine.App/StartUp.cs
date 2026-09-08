@@ -3,8 +3,6 @@ using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Store;
-using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
 using Serilog;
 
 namespace ReportEngine.App;
@@ -33,15 +31,9 @@ public static class StartUp
             SplashManager.Start();
 
             SplashManager.SetStatus(
-                "Загрузка файлов конфигурации...");
-
-            var config = JsonHandler.GetDatabaseMode(
-                DirectoryHelper.GetConfigPath());
-
-            SplashManager.SetStatus(
                 "Сборка хоста...");
 
-            var host = HostFactory.BuildHost(config);
+            var host = HostFactory.BuildHost();
             
             SplashManager.SetStatus(
                 "Регистрация контекста данных...");
@@ -74,8 +66,7 @@ public static class StartUp
 
             SplashManager.SetStatus(
                 "Запуск приложения...");
-            
-
+    
             var mainWindow =
                 host.Services.GetRequiredService<MainWindow>();
 

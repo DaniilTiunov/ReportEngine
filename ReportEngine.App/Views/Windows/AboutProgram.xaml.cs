@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Windows;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Config.Models;
 
 namespace ReportEngine.App.Views.Windows;
 

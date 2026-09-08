@@ -1,4 +1,4 @@
-﻿namespace ReportEngine.Shared.Config.JsonHelpers;
+﻿namespace ReportEngine.Shared.Config.Models;
 
 public class ConnectionStrings
 {

@@ -1,10 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
-using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
@@ -24,8 +21,7 @@ using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Repositories.Interfaces;
-using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -42,6 +38,7 @@ public class MainWindowViewModel : BaseViewModel
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IServiceProvider _serviceProvider;
     private readonly SessionService _sessionService;
+    private readonly ReportEngineConfigService _configService;
 
 
     #region Конструктор
@@ -57,7 +54,8 @@ public class MainWindowViewModel : BaseViewModel
         SessionService sessionService,
         AuditService auditService,
         UiLogger logger,
-        ExceptionService exceptionService)
+        ExceptionService exceptionService, 
+        ReportEngineConfigService configService)
     {
         _notificationService = notificationService;
         _calculationService = calculationService;
@@ -70,6 +68,7 @@ public class MainWindowViewModel : BaseViewModel
         _auditService = auditService;
         _logger = logger;
         _exceptionService = exceptionService;
+        _configService = configService;
 
         _sessionService.PropertyChanged += SessionChanged;
 
@@ -87,7 +86,7 @@ public class MainWindowViewModel : BaseViewModel
 
     public User? CurrentUser => _sessionService.CurrentUser;
     public string? CurrentUserLogin => _sessionService.CurrentUser?.UserLogin;
-    public string DatabaseMode => JsonHandler.GetDatabaseMode(DirectoryHelper.GetConfigPath());
+    public string DatabaseMode => _configService.GetDatabaseMode();
 
     private void SessionChanged(object? sender, PropertyChangedEventArgs e)
     {
@@ -128,19 +127,7 @@ public class MainWindowViewModel : BaseViewModel
     {
         return true;
     }
-
-    public void OnSetDbOffline(object e)
-    {
-        JsonHandler.SetDatabaseMode(DirectoryHelper.GetConfigPath(), "Offline");
-        RestartApp();
-    }
-
-    public void OnSetDbOnline(object e)
-    {
-        JsonHandler.SetDatabaseMode(DirectoryHelper.GetConfigPath(), "Online");
-        RestartApp();
-    }
-
+    
     private void RestartApp()
     {
         try

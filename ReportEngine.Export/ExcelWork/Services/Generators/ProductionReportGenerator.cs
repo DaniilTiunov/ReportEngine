@@ -7,18 +7,22 @@ using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
 using ReportEngine.Shared.Helpers;
+using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
 public class ProductionReportGenerator : IReportGenerator
 {
     private readonly ProjectInfoRepository _projectInfoRepository;
+    private readonly ReportEngineConfigService _configService;
 
-    public ProductionReportGenerator(ProjectInfoRepository projectInfoRepository)
+    public ProductionReportGenerator(
+        ProjectInfoRepository projectInfoRepository, 
+        ReportEngineConfigService configService)
     {
         _projectInfoRepository = projectInfoRepository;
+        _configService = configService;
     }
 
     ReportType IReportGenerator.Type => ReportType.ProductionReport;
@@ -45,7 +49,7 @@ public class ProductionReportGenerator : IReportGenerator
             ws.Cells().Style.Alignment.WrapText = true;
             ws.Columns().AdjustToContents();
 
-            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var savePath = _configService.GetSaveReportDirectory();
 
             var fileName = ExcelReportHelper.CreateReportName("Отчет по производству", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
@@ -77,7 +81,7 @@ public class ProductionReportGenerator : IReportGenerator
             ws.Cells().Style.Alignment.WrapText = true;
             ws.Columns().AdjustToContents();
 
-            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var savePath = _configService.GetSaveReportDirectory();
 
             var fileName = ExcelReportHelper.CreateReportName("Отчет по производству", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);

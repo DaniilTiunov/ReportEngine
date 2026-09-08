@@ -5,7 +5,7 @@ using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Config.Models;
 
 namespace ReportEngine.App.Views.Windows.Dialog;
 

@@ -6,7 +6,7 @@ using ReportEngine.Domain.Repositories;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -14,12 +14,16 @@ public class ContainerReportGenerator : IReportGenerator
 {
     private readonly IContainerRepository _containerRepository;
     private readonly ProjectInfoRepository _projectInfoRepository;
+    private readonly ReportEngineConfigService _configService;
 
-    public ContainerReportGenerator(ProjectInfoRepository projectInfoRepository,
-        IContainerRepository containerRepository)
+    public ContainerReportGenerator(
+        ProjectInfoRepository projectInfoRepository,
+        IContainerRepository containerRepository, 
+        ReportEngineConfigService configService)
     {
         _projectInfoRepository = projectInfoRepository;
         _containerRepository = containerRepository;
+        _configService = configService;
     }
 
     public ReportType Type => ReportType.ContainerReport;
@@ -41,7 +45,7 @@ public class ContainerReportGenerator : IReportGenerator
             ws.Cells().Style.Alignment.WrapText = true;
             ws.Columns().AdjustToContents();
 
-            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var savePath = _configService.GetSaveReportDirectory();
 
             var fileName = ExcelReportHelper.CreateReportName("Тара", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
@@ -68,7 +72,7 @@ public class ContainerReportGenerator : IReportGenerator
             ws.Cells().Style.Alignment.WrapText = true;
             ws.Columns().AdjustToContents();
 
-            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var savePath = _configService.GetSaveReportDirectory();
 
             var fileName = ExcelReportHelper.CreateReportName("Тара", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);

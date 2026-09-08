@@ -9,9 +9,9 @@ using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
 using ReportEngine.Shared.Helpers;
 using System.Diagnostics;
+using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -21,16 +21,19 @@ public class SummaryReportGenerator : IReportGenerator
     private readonly ParametersStore _parametersStore;
     private readonly IGenericBaseRepository<StainlessPipe, StainlessPipe> _pipesRepository;
     private readonly ProjectInfoRepository _projectInfoRepository;
+    private readonly ReportEngineConfigService _configService;
 
     public SummaryReportGenerator(
         ProjectInfoRepository projectInfoRepository,
         IContainerRepository containerRepository,
         ParametersStore parametersStore,
-        IServiceProvider serviceProvider)
+        IServiceProvider serviceProvider, 
+        ReportEngineConfigService configService)
     {
         _projectInfoRepository = projectInfoRepository;
         _containerRepository = containerRepository;
         _parametersStore = parametersStore;
+        _configService = configService;
         _pipesRepository = serviceProvider.GetRequiredService<IGenericBaseRepository<StainlessPipe, StainlessPipe>>();
     }
 
@@ -40,9 +43,6 @@ public class SummaryReportGenerator : IReportGenerator
     {
         var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
         var pipes = await _pipesRepository.GetAllAsync();
-
-        //принудительно загружаем настройки при генерации отчета
-        //await _parametersStore.LoadSettingsDataAsync();
 
         using (var wb = new XLWorkbook())
         {
@@ -90,7 +90,7 @@ public class SummaryReportGenerator : IReportGenerator
             // Применяем оформление ко всему документу
             foreach (var ws in wb.Worksheets) ws.Cells().Style.Font.FontName = "Times New Roman";
 
-            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var savePath = _configService.GetSaveReportDirectory();
             var fileName = ExcelReportHelper.CreateReportName("Сводная ведомость", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
 
@@ -151,7 +151,7 @@ public class SummaryReportGenerator : IReportGenerator
             foreach (var ws in wb.Worksheets) 
                 ws.Cells().Style.Font.FontName = "Times New Roman";
 
-            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var savePath = _configService.GetSaveReportDirectory();
             var fileName = ExcelReportHelper.CreateReportName("Сводная ведомость", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
 

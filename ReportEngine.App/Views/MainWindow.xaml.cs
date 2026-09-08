@@ -14,7 +14,7 @@ using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Config.Models;
 using AboutProgram = ReportEngine.App.Views.Windows.AboutProgram;
 
 namespace ReportEngine.App;

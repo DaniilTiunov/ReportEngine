@@ -19,7 +19,6 @@ using ReportEngine.App.ViewModels.Utils;
 using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
-using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 using ReportEngine.Domain.Entities.ElectricSockets;
@@ -31,8 +30,7 @@ using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Extensions.Extensions;
-using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -58,6 +56,7 @@ public class ProjectViewModel : BaseViewModel
     private readonly IStandService _standService;
     private readonly UIValidatorService _uiValidatorService;
     private readonly UpdaterStandService _updaterStandService;
+    private readonly ReportEngineConfigService _configService;
 
     public ProjectViewModel(
         IProjectInfoRepository projectRepository,
@@ -79,7 +78,8 @@ public class ProjectViewModel : BaseViewModel
         SessionService sessionService,
         ExceptionService exceptionService,
         UiLogger logger,
-        IServiceProvider serviceProvider)
+        IServiceProvider serviceProvider,
+        ReportEngineConfigService configService)
     {
         _projectRepository = projectRepository;
         _dialogService = dialogService;
@@ -101,6 +101,7 @@ public class ProjectViewModel : BaseViewModel
         _exceptionService = exceptionService;
         _logger = logger;
         _serviceProvider = serviceProvider;
+        _configService = configService;
 
         NewStand = new StandModel { Number = 1 };
 
@@ -1808,7 +1809,7 @@ public class ProjectViewModel : BaseViewModel
         if (_notificationService.ShowConfirmation(
                 $"Отчёт \"{reportName}\" по выбранным стендам создана!\nОткрыть папку с отчётами?"))
         {
-            var reportDir = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var reportDir = _configService.GetSaveReportDirectory();
             Process.Start("explorer.exe", reportDir);
         }
     }
