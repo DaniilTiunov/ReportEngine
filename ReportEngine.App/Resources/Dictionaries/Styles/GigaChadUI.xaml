@@ -577,13 +577,13 @@
     <!--  ======================================================  -->
     <!--  СТИЛИ ДЛЯ TabControl / TabItem / Dragablz  -->
     <!--  ======================================================  -->
-    <Style TargetType="TabControl">
+    <Style BasedOn="{StaticResource MahApps.Styles.TabControl}" TargetType="TabControl">
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
     </Style>
 
-    <Style TargetType="TabItem">
+    <Style BasedOn="{StaticResource MahApps.Styles.TabItem}" TargetType="TabItem">
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
@@ -881,7 +881,7 @@
     <!--  ======================================================  -->
     <!--  СТИЛИ ДЛЯ DatePicker / Calendar  -->
     <!--  ======================================================  -->
-    <Style BasedOn="{x:Null}" TargetType="DatePicker">
+    <Style BasedOn="{StaticResource MahApps.Styles.DatePicker}" TargetType="DatePicker">
         <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />

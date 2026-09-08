@@ -17,6 +17,10 @@
         <converters:ByteArrayImageConverter x:Key="ByteArrayImageConverter" />
     </UserControl.Resources>
 
+    <UserControl.InputBindings>
+        <KeyBinding Command="{Binding RefreshCommandAsync}" Key="F5" />
+    </UserControl.InputBindings>
+
     <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
         <!--  Главный грид  -->
         <Grid Margin="10">

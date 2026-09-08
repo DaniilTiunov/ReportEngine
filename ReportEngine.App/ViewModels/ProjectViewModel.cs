@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
@@ -105,11 +106,14 @@ public class ProjectViewModel : BaseViewModel
 
         NewStand = new StandModel { Number = 1 };
 
+        RefreshCommandAsync = new AsyncRelayCommand(RefreshProjectAsync);
+
         InitializeCommands();
         InitializeTime();
         InitializeGenericCommands();
     }
 
+    public IAsyncRelayCommand RefreshCommandAsync { get; set; }
     public ObservableCollection<FormedFrame> AllAvailableFrames { get; set; } = new();
     public ObservableCollection<FormedDrainage> AllAvailableDrainages { get; set; } = new();
     public ObservableCollection<FormedElectricalComponent> AllAvailableElectricalComponents { get; set; } = new();
@@ -130,6 +134,14 @@ public class ProjectViewModel : BaseViewModel
         return true;
     }
 
+    public async Task RefreshProjectAsync()
+    {
+        await _dialogService.RunWithProgressDialogAsync(async () =>
+        {
+            await LoadProjectInfoAsync(CurrentProjectModel.CurrentProjectId);
+        });
+    }
+    
     public void OnOpenAllSortamentsDialogExecuted(object e)
     {
         var selected = _dialogService.ShowAllSortamentsDialog(e);
@@ -1249,6 +1261,7 @@ public class ProjectViewModel : BaseViewModel
             CurrentProjectModel = loadedModel;
             CurrentStandModel = loadedModel.SelectedStand ?? new StandModel();
 
+            await LoadAllAvaileDataAsync();
             await LoadObvyazkiAsync();
             await LoadStandsDataAsync();
             await LoadPurposesInStandsAsync();

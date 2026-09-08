@@ -155,7 +155,7 @@ public partial class TreeProjectView : UserControl, IDisposable
             return tag switch
             {
                 "ProjectCard" => ApplyAnimation(new ProjectCardView(_projectViewModel)),
-                "ProjectPreview" => ApplyAnimation(new ProjectPreview(_projectViewModel, _ddsService)),
+                "ProjectPreview" => ApplyAnimation(new ProjectPreview(_projectViewModel)),
                 "StandsContainer" => ApplyAnimation(new StandsContainerView(_containersViewModel)),
                 "DockViewer" => ApplyAnimation(new DockViewerView(new DockViewerViewModel()))
             };

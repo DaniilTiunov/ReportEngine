@@ -8,8 +8,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using ReportEngine.App.AppHelpers;
-using ReportEngine.App.Dds;
-using ReportEngine.App.Dds.Enums;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ViewModels;
 
@@ -18,15 +16,13 @@ namespace ReportEngine.App.Views.Controls;
 public partial class ProjectPreview : UserControl
 {
     private readonly ProjectViewModel _projectViewModel;
-    private readonly DdsService _ddsService;
     private bool _allowEdit;
 
-    public ProjectPreview(ProjectViewModel projectViewModel, DdsService ddsService)
+    public ProjectPreview(ProjectViewModel projectViewModel)
     {
         InitializeComponent();
         DataContext = projectViewModel;
         _projectViewModel = projectViewModel;
-        _ddsService = ddsService;
 
         CommandBindings.Add(
             new CommandBinding(
@@ -34,42 +30,28 @@ public partial class ProjectPreview : UserControl
                 OnPasteExecuted,
                 OnPasteCanExecute));
 
-        Loaded += async (_, __) => await InitializeDataAndRecalculateAsync(_projectViewModel);
-
-        PreviewKeyDown += StandObvView_PreviewKeyDown;
+        //Loaded += OnLoaded;
     }
 
-    private async Task InitializeDataAndRecalculateAsync(ProjectViewModel projectViewModel)
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        Loaded -= OnLoaded;
+
+        Dispatcher.BeginInvoke(
+            DispatcherPriority.ContextIdle,
+            new Action(async () =>
+            {
+                await InitializeDataAndRecalculateAsync(
+                    _projectViewModel);
+            }));
+    }
+
+    private async Task InitializeDataAndRecalculateAsync(
+        ProjectViewModel projectViewModel)
     {
         await projectViewModel.OnObvyazkiInStandChanged();
         await projectViewModel.OnFramesInStandChanged();
         await projectViewModel.OnStandsInProjectChanged();
-    }
-
-    private async Task InitializeDataAsync(ProjectViewModel projectViewModel)
-    {
-        await projectViewModel.LoadStandsDataAsync();
-        await projectViewModel.LoadObvyazkiAsync();
-        await projectViewModel.LoadAllAvaileDataAsync();
-        await projectViewModel.LoadPurposesInStandsAsync();
-    }
-
-    // Защита от автоповтора F5
-    private async void StandObvView_PreviewKeyDown(object sender, KeyEventArgs e)
-    {
-        if (e.Key != Key.F5 || e.IsRepeat)
-            return;
-
-        e.Handled = true;
-
-        try
-        {
-            await InitializeDataAsync(_projectViewModel);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(ex.Message);
-        }
     }
 
     private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -81,7 +63,7 @@ public partial class ProjectPreview : UserControl
         scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta);
         e.Handled = true;
     }
-    
+
     private void OnPasteCanExecute(object sender, CanExecuteRoutedEventArgs e)
     {
         if (DataContext is ProjectViewModel projectViewModel &&
