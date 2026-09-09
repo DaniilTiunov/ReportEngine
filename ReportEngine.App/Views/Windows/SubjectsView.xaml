@@ -20,74 +20,78 @@
     xmlns:windowHelpers="clr-namespace:ReportEngine.App.Views.Windows.WindowHelpers"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <DockPanel>
 
-    <Border Style="{DynamicResource WindowBorder}">
-        <DockPanel>
+        <Separator
+            Background="{DynamicResource PrimaryForeground}"
+            BorderBrush="{DynamicResource PrimaryForeground}"
+            BorderThickness="3"
+            DockPanel.Dock="Top"
+            Foreground="{DynamicResource PrimaryForeground}"
+            Height="3"
+            Margin="20,0,20,8" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="90" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="90" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
+            <TextBlock
+                Grid.Column="0"
+                Grid.Row="0"
+                HorizontalAlignment="Right"
+                Margin="0,0,30,0"
+                Text="Поиск:"
+                VerticalAlignment="Center" />
 
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="90" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="90" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="50" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+            <TextBox
+                Grid.Column="1"
+                Grid.Row="0"
+                Margin="0,0,0,0"
+                TextChanged="SearchTextBox_TextChanged"
+                VerticalAlignment="Center"
+                x:Name="SearchTextBox" />
 
-                <TextBlock
-                    Grid.Column="0"
-                    Grid.Row="0"
-                    HorizontalAlignment="Right"
-                    Margin="0,0,30,0"
-                    Text="Поиск:"
-                    VerticalAlignment="Center" />
-
-                <TextBox
-                    Grid.Column="1"
-                    Grid.Row="0"
-                    Margin="0,0,0,0"
-                    TextChanged="SearchTextBox_TextChanged"
-                    VerticalAlignment="Center"
-                    x:Name="SearchTextBox" />
-
-                <DataGrid
-                    CanUserAddRows="True"
-                    CanUserDeleteRows="True"
-                    CanUserReorderColumns="True"
-                    CanUserSortColumns="True"
-                    Grid.ColumnSpan="4"
-                    Grid.Row="1"
-                    Margin="10,14,5,75"
-                    MouseDoubleClick="SubjectsDataGrid_MouseDoubleClick"
-                    RowHeaderWidth="40"
-                    SelectedItem="{Binding CurrentSubject.SelectedSubject, Mode=TwoWay}"
-                    SelectionUnit="FullRow"
-                    x:Name="SubjectsDataGrid">
-                    <DataGrid.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Command="{Binding LoadAllSubjectsCommand}" Header="Показать всех" />
-                            <Separator />
-                            <MenuItem Command="{Binding SaveChangesCommand}" Header="Сохранить изменения" />
-                            <MenuItem Command="{Binding AddNewSubjectCommand}" Header="Добавить" />
-                            <Separator />
-                            <MenuItem Command="{Binding DeleteSubjectCommand}" Header="Удалить" />
-                        </ContextMenu>
-                    </DataGrid.ContextMenu>
-                    <DataGrid.Columns>
-                        <DataGridTextColumn
-                            Binding="{Binding ObjectName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                            Header="Объект"
-                            Width="*" />
-                        <DataGridTextColumn
-                            Binding="{Binding CompanyName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                            Header="Управляющая компания"
-                            Width="*" />
-                    </DataGrid.Columns>
-                </DataGrid>
-            </Grid>
-        </DockPanel>
-    </Border>
+            <DataGrid
+                CanUserAddRows="True"
+                CanUserDeleteRows="True"
+                CanUserReorderColumns="True"
+                CanUserSortColumns="True"
+                Grid.ColumnSpan="4"
+                Grid.Row="1"
+                Margin="10,14,5,75"
+                MouseDoubleClick="SubjectsDataGrid_MouseDoubleClick"
+                RowHeaderWidth="40"
+                SelectedItem="{Binding CurrentSubject.SelectedSubject, Mode=TwoWay}"
+                SelectionUnit="FullRow"
+                x:Name="SubjectsDataGrid">
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="{Binding LoadAllSubjectsCommand}" Header="Показать всех" />
+                        <Separator />
+                        <MenuItem Command="{Binding SaveChangesCommand}" Header="Сохранить изменения" />
+                        <MenuItem Command="{Binding AddNewSubjectCommand}" Header="Добавить" />
+                        <Separator />
+                        <MenuItem Command="{Binding DeleteSubjectCommand}" Header="Удалить" />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Binding="{Binding ObjectName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                        Header="Объект"
+                        Width="*" />
+                    <DataGridTextColumn
+                        Binding="{Binding CompanyName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                        Header="Управляющая компания"
+                        Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </DockPanel>
 </mah:MetroWindow>

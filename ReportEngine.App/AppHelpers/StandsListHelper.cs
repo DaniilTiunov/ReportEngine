@@ -8,6 +8,8 @@ public static class StandsListHelper
 {
     public static List<Stand> SelectedStands { get; set; } = new();
 
+    public static List<Stand> SelectedContainersStands { get; set; } = new();
+    
     public static List<Stand> ReturnSelectedStands(IEnumerable<StandModel> standsModels)
     {
         var standsEntities = new List<Stand>();
@@ -28,7 +30,5 @@ public static class StandsListHelper
 
         foreach (var standModel in standsModels)
             SelectedStands.Add(StandDataConverter.ConvertToStandEntity(standModel));
-
-        var popa = SelectedStands;
     }
 }

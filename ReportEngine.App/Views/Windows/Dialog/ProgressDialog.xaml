@@ -17,6 +17,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="0"
+            CornerRadius="12"
+            GlassFrameThickness="0"
+            ResizeBorderThickness="0" />
+    </WindowChrome.WindowChrome>
+
     <Window.Resources>
         <!--  Тень  -->
         <DropShadowEffect
@@ -29,7 +37,7 @@
         <Style TargetType="TextBlock" x:Key="TitleTextStyle">
             <Setter Property="FontSize" Value="14" />
             <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
             <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
@@ -53,84 +61,91 @@
         </Style>
     </Window.Resources>
 
-    <!--  Всё это уже является Content самого Window  -->
-    <StackPanel
-        HorizontalAlignment="Center"
-        Margin="20,15,20,15"
-        VerticalAlignment="Center">
-        <!--  Спиннер  -->
+    <Border
+        Background="{DynamicResource PrimaryColor}"
+        BorderBrush="{DynamicResource WindowBorderColor}"
+        BorderThickness="1"
+        CornerRadius="12"
+        Effect="{StaticResource WindowShadow}"
+        Margin="16">
         <StackPanel
             HorizontalAlignment="Center"
-            Margin="0,0,0,15"
-            Orientation="Horizontal">
-            <Border
-                Background="{DynamicResource PrimaryHueMidBrush}"
-                CornerRadius="5"
-                Height="10"
-                Margin="0,0,8,0"
-                Width="10">
-                <Border.Triggers>
-                    <EventTrigger RoutedEvent="Loaded">
-                        <BeginStoryboard>
-                            <Storyboard RepeatBehavior="Forever">
-                                <DoubleAnimation
-                                    AutoReverse="True"
-                                    Duration="0:0:0.6"
-                                    From="0.2"
-                                    Storyboard.TargetProperty="Opacity"
-                                    To="1" />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger>
-                </Border.Triggers>
-            </Border>
-            <Border
-                Background="{DynamicResource PrimaryHueMidBrush}"
-                CornerRadius="5"
-                Height="10"
-                Margin="0,0,8,0"
-                Opacity="0.5"
-                Width="10">
-                <Border.Triggers>
-                    <EventTrigger RoutedEvent="Loaded">
-                        <BeginStoryboard>
-                            <Storyboard RepeatBehavior="Forever">
-                                <DoubleAnimation
-                                    AutoReverse="True"
-                                    BeginTime="0:0:0.2"
-                                    Duration="0:0:0.6"
-                                    From="0.2"
-                                    Storyboard.TargetProperty="Opacity"
-                                    To="1" />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger>
-                </Border.Triggers>
-            </Border>
-            <Border
-                Background="{DynamicResource PrimaryHueMidBrush}"
-                CornerRadius="5"
-                Height="10"
-                Opacity="0.3"
-                Width="10">
-                <Border.Triggers>
-                    <EventTrigger RoutedEvent="Loaded">
-                        <BeginStoryboard>
-                            <Storyboard RepeatBehavior="Forever">
-                                <DoubleAnimation
-                                    AutoReverse="True"
-                                    BeginTime="0:0:0.4"
-                                    Duration="0:0:0.6"
-                                    From="0.2"
-                                    Storyboard.TargetProperty="Opacity"
-                                    To="1" />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger>
-                </Border.Triggers>
-            </Border>
+            Margin="20,15"
+            VerticalAlignment="Center">
+            <!--  Спиннер  -->
+            <StackPanel
+                HorizontalAlignment="Center"
+                Margin="0,0,0,15"
+                Orientation="Horizontal">
+                <Border
+                    Background="{DynamicResource PrimaryHueMidBrush}"
+                    CornerRadius="5"
+                    Height="10"
+                    Margin="0,0,8,0"
+                    Width="10">
+                    <Border.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever">
+                                    <DoubleAnimation
+                                        AutoReverse="True"
+                                        Duration="0:0:0.6"
+                                        From="0.2"
+                                        Storyboard.TargetProperty="Opacity"
+                                        To="1" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Border.Triggers>
+                </Border>
+                <Border
+                    Background="{DynamicResource PrimaryHueMidBrush}"
+                    CornerRadius="5"
+                    Height="10"
+                    Margin="0,0,8,0"
+                    Opacity="0.5"
+                    Width="10">
+                    <Border.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever">
+                                    <DoubleAnimation
+                                        AutoReverse="True"
+                                        BeginTime="0:0:0.2"
+                                        Duration="0:0:0.6"
+                                        From="0.2"
+                                        Storyboard.TargetProperty="Opacity"
+                                        To="1" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Border.Triggers>
+                </Border>
+                <Border
+                    Background="{DynamicResource PrimaryHueMidBrush}"
+                    CornerRadius="5"
+                    Height="10"
+                    Opacity="0.3"
+                    Width="10">
+                    <Border.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever">
+                                    <DoubleAnimation
+                                        AutoReverse="True"
+                                        BeginTime="0:0:0.4"
+                                        Duration="0:0:0.6"
+                                        From="0.2"
+                                        Storyboard.TargetProperty="Opacity"
+                                        To="1" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Border.Triggers>
+                </Border>
+            </StackPanel>
+            <TextBlock Style="{StaticResource StatusTextStyle}" Text="Пожалуйста, подождите..." />
+            <ProgressBar Style="{StaticResource ProgressBarStyle}" />
         </StackPanel>
-        <TextBlock Style="{StaticResource StatusTextStyle}" Text="Пожалуйста, подождите..." />
-        <ProgressBar Style="{StaticResource ProgressBarStyle}" />
-    </StackPanel>
+    </Border>
 </Window>

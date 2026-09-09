@@ -56,6 +56,7 @@ public partial class ContainersViewModel : ObservableObject
     [ObservableProperty] private ContainerStand _selectedStandContainer = new();
     [ObservableProperty] private ObservableCollection<Stand> _standsInContainer = new();
     [ObservableProperty] private ObservableCollection<Stand> _standsInProject = new();
+    [ObservableProperty] private ObservableCollection<Stand> _selectedStands = new();
 
     public ContainersViewModel(
         ProjectViewModel projectViewModel,
@@ -91,6 +92,7 @@ public partial class ContainersViewModel : ObservableObject
     public ICommand AddStandToContainerCommand { get; set; }
     public ICommand RemoveStandFromContainerCommand { get; set; }
     public ICommand GenerateSelectedReportCommand { get; set; }
+    public ICommand AddContainersToBatchCommand { get; set; }
 
     private void InitCommands()
     {

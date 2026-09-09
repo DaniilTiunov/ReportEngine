@@ -29,49 +29,54 @@
     </mah:MetroWindow.Resources>
 
 
-    <Border Style="{DynamicResource WindowBorder}">
-        <DockPanel>
+    <DockPanel>
+        <Separator
+            Background="{DynamicResource PrimaryForeground}"
+            BorderBrush="{DynamicResource PrimaryForeground}"
+            BorderThickness="3"
+            DockPanel.Dock="Top"
+            Foreground="{DynamicResource PrimaryForeground}"
+            Height="3"
+            Margin="20,0,20,8" />
 
+        <Grid Margin="5,5,0,5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-            <Grid Margin="5,5,0,5">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+            <!--  Разделительная линия  -->
+            <Separator Grid.Row="1" Margin="0,0,0,5" />
 
-                <!--  Разделительная линия  -->
-                <Separator Grid.Row="1" Margin="0,0,0,5" />
+            <!--  DataGrid с контекстным меню  -->
+            <DataGrid
+                AutoGenerateColumns="False"
+                BeginningEdit="DataGrid_BeginningEdit"
+                CanUserAddRows="True"
+                CanUserDeleteRows="True"
+                CanUserSortColumns="True"
+                Grid.Row="2"
+                IsReadOnly="False"
+                ItemsSource="{Binding GenericEquipModel.BaseEquips}"
+                MouseDoubleClick="SelectEquip_DoubleClick"
+                SelectedItem="{Binding GenericEquipModel.SelectedBaseEquip, Mode=TwoWay}"
+                SelectionUnit="FullRow"
+                x:Name="GenericEquipDataGrid">
 
-                <!--  DataGrid с контекстным меню  -->
-                <DataGrid
-                    AutoGenerateColumns="False"
-                    BeginningEdit="DataGrid_BeginningEdit"
-                    CanUserAddRows="True"
-                    CanUserDeleteRows="True"
-                    CanUserSortColumns="True"
-                    Grid.Row="2"
-                    IsReadOnly="False"
-                    ItemsSource="{Binding GenericEquipModel.BaseEquips}"
-                    MouseDoubleClick="SelectEquip_DoubleClick"
-                    SelectedItem="{Binding GenericEquipModel.SelectedBaseEquip, Mode=TwoWay}"
-                    SelectionUnit="FullRow"
-                    x:Name="GenericEquipDataGrid">
-
-                    <DataGrid.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Command="{Binding ShowAllEquipCommand}" Header="Показать всё" />
-                            <Separator />
-                            <MenuItem Command="{Binding SaveChangesEquipCommand}" Header="Сохранить изменения" />
-                            <Separator />
-                            <MenuItem
-                                Command="{Binding RemoveEquipCommand}"
-                                Header="Удалить оборудование"
-                                IsEnabled="{Binding GenericEquipModel.SelectedBaseEquip}" />
-                        </ContextMenu>
-                    </DataGrid.ContextMenu>
-                </DataGrid>
-            </Grid>
-        </DockPanel>
-    </Border>
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="{Binding ShowAllEquipCommand}" Header="Показать всё" />
+                        <Separator />
+                        <MenuItem Command="{Binding SaveChangesEquipCommand}" Header="Сохранить изменения" />
+                        <Separator />
+                        <MenuItem
+                            Command="{Binding RemoveEquipCommand}"
+                            Header="Удалить оборудование"
+                            IsEnabled="{Binding GenericEquipModel.SelectedBaseEquip}" />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+            </DataGrid>
+        </Grid>
+    </DockPanel>
 </mah:MetroWindow>

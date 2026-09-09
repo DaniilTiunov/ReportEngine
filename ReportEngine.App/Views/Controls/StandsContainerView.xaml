@@ -199,6 +199,7 @@
                             Content="➕ Добавить"
                             FontSize="15"
                             Margin="2" />
+
                         <Button
                             Command="{Binding RemoveContainerFromBatchCommand}"
                             Content="🗑 Удалить"
@@ -282,6 +283,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0" Orientation="Horizontal">
@@ -290,6 +292,13 @@
                                     Content="← Добавить"
                                     FontSize="15"
                                     Margin="2" />
+
+                                <Button
+                                    Command="{Binding AddContainersToBatchCommand}"
+                                    Content="←← Добавить выбранные"
+                                    FontSize="15"
+                                    Margin="2" />
+
                                 <Button
                                     Command="{Binding RemoveStandFromContainerCommand}"
                                     Content="Удалить →"
@@ -345,6 +354,8 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
                                                 </Grid.ColumnDefinitions>
 
                                                 <!--  KKS  -->
@@ -377,17 +388,32 @@
                                                     TextTrimming="CharacterEllipsis"
                                                     VerticalAlignment="Center" />
 
-                                                <!--  Вес  -->
+                                                <!--  Ширина рамы  -->
                                                 <TextBlock
                                                     FontWeight="SemiBold"
                                                     Foreground="{DynamicResource StandLabelColor}"
                                                     Grid.Column="4"
+                                                    Text="Ширина:"
+                                                    VerticalAlignment="Center" />
+                                                <TextBlock
+                                                    Foreground="{DynamicResource PrimaryForeground}"
+                                                    Grid.Column="5"
+                                                    Margin="5,0,15,0"
+                                                    Text="{Binding Width}"
+                                                    TextTrimming="CharacterEllipsis"
+                                                    VerticalAlignment="Center" />
+
+                                                <!--  Вес  -->
+                                                <TextBlock
+                                                    FontWeight="SemiBold"
+                                                    Foreground="{DynamicResource StandLabelColor}"
+                                                    Grid.Column="6"
                                                     Text="⚖️ Вес:"
                                                     VerticalAlignment="Center" />
                                                 <TextBlock
                                                     FontWeight="SemiBold"
                                                     Foreground="{DynamicResource StandWeightColor}"
-                                                    Grid.Column="5"
+                                                    Grid.Column="7"
                                                     Margin="5,0,0,0"
                                                     Text="{Binding Weight, StringFormat='{}{0} кг'}"
                                                     VerticalAlignment="Center" />
@@ -407,7 +433,9 @@
                                 BorderThickness="0"
                                 Foreground="{DynamicResource PrimaryForeground}"
                                 ItemsSource="{Binding AvailableStands}"
-                                SelectedItem="{Binding SelectedStand}">
+                                SelectedItem="{Binding SelectedStand}"
+                                SelectionChanged="Selector_OnSelectionChanged"
+                                x:Name="AvailListBox">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <Border
@@ -440,6 +468,8 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
                                                 </Grid.ColumnDefinitions>
 
                                                 <!--  KKS  -->
@@ -472,17 +502,32 @@
                                                     TextTrimming="CharacterEllipsis"
                                                     VerticalAlignment="Center" />
 
-                                                <!--  Вес  -->
+                                                <!--  Ширина рамы  -->
                                                 <TextBlock
                                                     FontWeight="SemiBold"
                                                     Foreground="{DynamicResource StandLabelColor}"
                                                     Grid.Column="4"
+                                                    Text="Ширина:"
+                                                    VerticalAlignment="Center" />
+                                                <TextBlock
+                                                    Foreground="{DynamicResource PrimaryForeground}"
+                                                    Grid.Column="5"
+                                                    Margin="5,0,15,0"
+                                                    Text="{Binding Width}"
+                                                    TextTrimming="CharacterEllipsis"
+                                                    VerticalAlignment="Center" />
+
+                                                <!--  Вес  -->
+                                                <TextBlock
+                                                    FontWeight="SemiBold"
+                                                    Foreground="{DynamicResource StandLabelColor}"
+                                                    Grid.Column="6"
                                                     Text="⚖️ Вес:"
                                                     VerticalAlignment="Center" />
                                                 <TextBlock
                                                     FontWeight="SemiBold"
                                                     Foreground="{DynamicResource StandWeightColor}"
-                                                    Grid.Column="5"
+                                                    Grid.Column="7"
                                                     Margin="5,0,0,0"
                                                     Text="{Binding Weight, StringFormat='{}{0} кг'}"
                                                     VerticalAlignment="Center" />

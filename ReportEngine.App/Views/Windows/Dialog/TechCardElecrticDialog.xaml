@@ -32,70 +32,68 @@
     </mah:MetroWindow.Resources>
 
     <!--  Основной контейнер с тенью и рамкой  -->
-    <Border CornerRadius="12" Effect="{StaticResource WindowShadow}">
+    <DockPanel>
+        <!--  Заголовок окна  -->
+        <Separator
+            Background="{DynamicResource PrimaryForeground}"
+            BorderBrush="{DynamicResource PrimaryForeground}"
+            BorderThickness="3"
+            DockPanel.Dock="Top"
+            Foreground="{DynamicResource PrimaryForeground}"
+            Height="3"
+            Margin="20,0,20,8" />
+
         <Border
-            Background="{DynamicResource PrimaryColor}"
-            BorderBrush="{DynamicResource WindowBorderColor}"
-            BorderThickness="1"
-            CornerRadius="12">
-            <DockPanel>
-                <!--  Заголовок окна  -->
+            Background="{DynamicResource SecondaryColor}"
+            CornerRadius="0,0,12,12"
+            Padding="20,15">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
+                <!--  Текст сообщения  -->
+                <TextBlock
+                    FontSize="18"
+                    FontWeight="SemiBold"
+                    Foreground="{DynamicResource PrimaryForeground}"
+                    Grid.Row="0"
+                    HorizontalAlignment="Center"
+                    Margin="0,0,0,20"
+                    Text="Выберите тип технологической карты"
+                    TextWrapping="Wrap"
+                    x:Name="MessageText" />
 
-                <!--  Основной контент  -->
-                <Border
-                    Background="{DynamicResource SecondaryColor}"
-                    CornerRadius="0,0,12,12"
-                    Padding="20,15">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-
-                        <!--  Текст сообщения  -->
-                        <TextBlock
-                            FontSize="18"
-                            FontWeight="SemiBold"
-                            Foreground="{DynamicResource PrimaryForeground}"
-                            Grid.Row="0"
-                            HorizontalAlignment="Center"
-                            Margin="0,0,0,20"
-                            Text="Выберите тип технологической карты"
-                            TextWrapping="Wrap"
-                            x:Name="MessageText" />
-
-                        <!--  Кнопки действий  -->
-                        <StackPanel
-                            Grid.Row="1"
-                            HorizontalAlignment="Center"
-                            Margin="0,5"
-                            Orientation="Horizontal">
-                            <Button
-                                Click="WithButton_Click"
-                                Content="С электрикой"
-                                Margin="5,0"
-                                Style="{StaticResource ActionButtonStyle}"
-                                Width="130"
-                                x:Name="WithButton" />
-                            <Button
-                                Click="WithoutButton_Click"
-                                Content="Без электрики"
-                                Margin="5,0"
-                                Style="{StaticResource ActionButtonStyle}"
-                                Width="130"
-                                x:Name="WithoutButton" />
-                            <Button
-                                Click="CancelButton_Click"
-                                Content="Отмена"
-                                Margin="5,0"
-                                Style="{StaticResource CancelButtonStyle}"
-                                Width="130"
-                                x:Name="CancelButton" />
-                        </StackPanel>
-                    </Grid>
-                </Border>
-            </DockPanel>
+                <!--  Кнопки действий  -->
+                <StackPanel
+                    Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    Margin="0,5"
+                    Orientation="Horizontal">
+                    <Button
+                        Click="WithButton_Click"
+                        Content="С электрикой"
+                        Margin="5,0"
+                        Style="{StaticResource ActionButtonStyle}"
+                        Width="130"
+                        x:Name="WithButton" />
+                    <Button
+                        Click="WithoutButton_Click"
+                        Content="Без электрики"
+                        Margin="5,0"
+                        Style="{StaticResource ActionButtonStyle}"
+                        Width="130"
+                        x:Name="WithoutButton" />
+                    <Button
+                        Click="CancelButton_Click"
+                        Content="Отмена"
+                        Margin="5,0"
+                        Style="{StaticResource CancelButtonStyle}"
+                        Width="130"
+                        x:Name="CancelButton" />
+                </StackPanel>
+            </Grid>
         </Border>
-    </Border>
+    </DockPanel>
 </mah:MetroWindow>

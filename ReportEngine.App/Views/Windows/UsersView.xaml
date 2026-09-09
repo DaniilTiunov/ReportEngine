@@ -22,84 +22,88 @@
         <ResourceDictionary />
     </mah:MetroWindow.Resources>
 
+    <DockPanel>
+        <Separator
+            Background="{DynamicResource PrimaryForeground}"
+            BorderBrush="{DynamicResource PrimaryForeground}"
+            BorderThickness="3"
+            DockPanel.Dock="Top"
+            Foreground="{DynamicResource PrimaryForeground}"
+            Height="3"
+            Margin="20,0,20,8" />
 
-    <Border Style="{DynamicResource WindowBorder}">
-        <DockPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="89*" />
+                <ColumnDefinition Width="63*" />
+                <ColumnDefinition Width="43*" />
+                <ColumnDefinition Width="4*" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="89*" />
-                    <ColumnDefinition Width="63*" />
-                    <ColumnDefinition Width="43*" />
-                    <ColumnDefinition Width="4*" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <DataGrid
-                    CanUserAddRows="True"
-                    CanUserDeleteRows="True"
-                    CanUserReorderColumns="True"
-                    CanUserSortColumns="True"
-                    Grid.ColumnSpan="4"
-                    Grid.Row="1"
-                    ItemsSource="{Binding CurrentUser.AllUsers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    Margin="10,79,5,10"
-                    RowHeaderWidth="40"
-                    SelectedItem="{Binding CurrentUser.SelectedUser, Mode=TwoWay}"
-                    SelectionUnit="FullRow"
-                    x:Name="UsersDataGrid">
-                    <DataGrid.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Command="{Binding ShowAllUsersCommand}" Header="Показать всех" />
-                            <Separator />
-                            <MenuItem Command="{Binding SaveUserCommand}" Header="Сохранить изменения" />
-                            <MenuItem Command="{Binding AddNewUserCommand}" Header="Добавить" />
-                            <Separator />
-                            <MenuItem Command="{Binding DeleteUserCommand}" Header="Удалить" />
-                        </ContextMenu>
-                    </DataGrid.ContextMenu>
-                    <DataGrid.Columns>
-                        <DataGridTextColumn
-                            Binding="{Binding SecondName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                            Header="Фамилия"
-                            Width="*" />
-                        <DataGridTextColumn
-                            Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                            Header="Имя"
-                            Width="*" />
-                        <DataGridTextColumn
-                            Binding="{Binding LastName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                            Header="Отчество"
-                            Width="*" />
-                        <DataGridTextColumn
-                            Binding="{Binding Position, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                            Header="Должность"
-                            Width="*" />
-                        <DataGridTextColumn
-                            Binding="{Binding Cabinet, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                            Header="Кабинет"
-                            Width="*" />
-                        <DataGridTextColumn
-                            Binding="{Binding Email, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                            Header="Почта"
-                            Width="*" />
-                        <DataGridTextColumn
-                            Binding="{Binding PhoneContact, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                            Header="Номер для связи"
-                            Width="*" />
-                        <DataGridTextColumn
-                            Binding="{Binding UserLogin}"
-                            Header="Имя в системе"
-                            Width="*" />
-                    </DataGrid.Columns>
-                </DataGrid>
-            </Grid>
-        </DockPanel>
-    </Border>
+            <DataGrid
+                CanUserAddRows="True"
+                CanUserDeleteRows="True"
+                CanUserReorderColumns="True"
+                CanUserSortColumns="True"
+                Grid.ColumnSpan="4"
+                Grid.Row="1"
+                ItemsSource="{Binding CurrentUser.AllUsers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                Margin="10,79,5,10"
+                RowHeaderWidth="40"
+                SelectedItem="{Binding CurrentUser.SelectedUser, Mode=TwoWay}"
+                SelectionUnit="FullRow"
+                x:Name="UsersDataGrid">
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="{Binding ShowAllUsersCommand}" Header="Показать всех" />
+                        <Separator />
+                        <MenuItem Command="{Binding SaveUserCommand}" Header="Сохранить изменения" />
+                        <MenuItem Command="{Binding AddNewUserCommand}" Header="Добавить" />
+                        <Separator />
+                        <MenuItem Command="{Binding DeleteUserCommand}" Header="Удалить" />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Binding="{Binding SecondName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                        Header="Фамилия"
+                        Width="*" />
+                    <DataGridTextColumn
+                        Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                        Header="Имя"
+                        Width="*" />
+                    <DataGridTextColumn
+                        Binding="{Binding LastName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                        Header="Отчество"
+                        Width="*" />
+                    <DataGridTextColumn
+                        Binding="{Binding Position, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                        Header="Должность"
+                        Width="*" />
+                    <DataGridTextColumn
+                        Binding="{Binding Cabinet, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                        Header="Кабинет"
+                        Width="*" />
+                    <DataGridTextColumn
+                        Binding="{Binding Email, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                        Header="Почта"
+                        Width="*" />
+                    <DataGridTextColumn
+                        Binding="{Binding PhoneContact, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                        Header="Номер для связи"
+                        Width="*" />
+                    <DataGridTextColumn
+                        Binding="{Binding UserLogin}"
+                        Header="Имя в системе"
+                        Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </DockPanel>
 </mah:MetroWindow>

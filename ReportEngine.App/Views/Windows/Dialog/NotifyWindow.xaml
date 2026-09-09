@@ -9,6 +9,7 @@
     SizeToContent="Height"
     Title="Уведомление"
     Topmost="True"
+    UseLayoutRounding="True"
     Width="450"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
@@ -20,6 +21,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:windowHelpers="clr-namespace:ReportEngine.App.Views.Windows.WindowHelpers"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="0"
+            CornerRadius="14"
+            GlassFrameThickness="0"
+            ResizeBorderThickness="0" />
+    </WindowChrome.WindowChrome>
 
     <Window.Resources>
         <DropShadowEffect
@@ -33,7 +42,7 @@
         <Style TargetType="TextBlock" x:Key="TitleTextStyle">
             <Setter Property="FontSize" Value="14" />
             <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
             <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
@@ -41,7 +50,7 @@
         <!--  Стиль для кнопки закрытия  -->
         <Style TargetType="Button" x:Key="CloseButtonStyle">
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="FontSize" Value="16" />
             <Setter Property="Height" Value="30" />
@@ -113,13 +122,14 @@
             BasedOn="{StaticResource ActionButtonStyle}"
             TargetType="Button"
             x:Key="CancelButtonStyle">
-            <Setter Property="Background" Value="#444444" />
+            <Setter Property="Background" Value="{DynamicResource BorderColor}" />
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#555555" />
+                    <Setter Property="Background" Value="{DynamicResource BorderMediumColor}" />
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="#333333" />
+                    <Setter Property="Background" Value="{DynamicResource BorderLightColor}" />
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -136,125 +146,113 @@
         </Style>
     </Window.Resources>
 
-    <WindowChrome.WindowChrome>
-        <WindowChrome
-            CaptionHeight="0"
-            CornerRadius="12"
-            GlassFrameThickness="0"
-            ResizeBorderThickness="0" />
-    </WindowChrome.WindowChrome>
-
-    <!--  Основной контейнер с тенью и рамкой  -->
     <Border
-        ClipToBounds="True"
-        CornerRadius="12"
-        Effect="{StaticResource WindowShadow}">
-        <Border
-            Background="{DynamicResource PrimaryColor}"
-            BorderBrush="{DynamicResource PrimaryForeground}"
-            BorderThickness="3"
-            CornerRadius="10">
-            <DockPanel>
-                <!--  Заголовок  -->
-                <Border
-                    Background="{DynamicResource BorderColor}"
-                    CornerRadius="10,10,0,0"
-                    DockPanel.Dock="Top"
-                    Height="40"
-                    MouseLeftButtonDown="Window_MouseLeftButtonDown">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+        Background="{DynamicResource PrimaryColor}"
+        BorderBrush="{DynamicResource BorderColor}"
+        BorderThickness="1"
+        CornerRadius="14"
+        Effect="{StaticResource WindowShadow}"
+        Margin="16"
+        SnapsToDevicePixels="True">
+        <DockPanel Background="Transparent">
+            <Border
+                Background="{DynamicResource BorderColor}"
+                CornerRadius="13,13,0,0"
+                DockPanel.Dock="Top"
+                Height="40"
+                MouseLeftButtonDown="Window_MouseLeftButtonDown">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-                        <!--  Заголовок с иконкой  -->
-                        <StackPanel
-                            Margin="12,0,0,0"
-                            Orientation="Horizontal"
-                            VerticalAlignment="Center">
-                            <Image
-                                Height="18"
-                                Margin="0,0,8,0"
-                                Width="18"
-                                x:Name="TitleIcon" />
-                            <TextBlock Style="{StaticResource TitleTextStyle}" x:Name="TitleText" />
-                        </StackPanel>
-
-                        <!--  Кнопка закрытия  -->
-                        <StackPanel
-                            Grid.Column="1"
-                            Orientation="Horizontal"
-                            VerticalAlignment="Center">
-                            <Button
-                                Click="CloseButton_Click"
-                                Style="{StaticResource CloseButtonStyle}"
-                                x:Name="CloseButton">
-                                ✕
-                            </Button>
-                        </StackPanel>
-                    </Grid>
-                </Border>
-
-                <!--  Основной контент  -->
-                <Grid Margin="20,15,20,15">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <!--  Контент уведомления  -->
-                    <Grid Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
-                        <!--  Иконка уведомления  -->
-                        <Border
-                            Background="{DynamicResource SecondaryColor}"
-                            CornerRadius="8"
-                            Grid.Column="0"
-                            Height="52"
-                            Margin="0,0,12,0"
-                            VerticalAlignment="Top"
-                            Width="52">
-                            <Image
-                                Height="36"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Width="36"
-                                x:Name="IconImage" />
-                        </Border>
-
-                        <!--  Текст уведомления  -->
-                        <TextBlock
-                            Grid.Column="1"
-                            Style="{StaticResource MessageTextStyle}"
-                            x:Name="MessageText" />
-                    </Grid>
-
-                    <!--  Кнопки  -->
+                    <!--  Заголовок с иконкой  -->
                     <StackPanel
-                        Grid.Row="1"
-                        HorizontalAlignment="Right"
-                        Margin="0,15,0,0"
-                        Orientation="Horizontal">
+                        Margin="12,0,0,0"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
+                        <Image
+                            Height="18"
+                            Margin="0,0,8,0"
+                            Width="18"
+                            x:Name="TitleIcon" />
+                        <TextBlock Style="{StaticResource TitleTextStyle}" x:Name="TitleText" />
+                    </StackPanel>
+
+                    <!--  Кнопка закрытия  -->
+                    <StackPanel
+                        Grid.Column="1"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
                         <Button
-                            Click="OkButton_Click"
-                            Style="{StaticResource ActionButtonStyle}"
-                            x:Name="OkButton">
-                            ОК
-                        </Button>
-                        <Button
-                            Click="CancelButton_Click"
-                            Style="{StaticResource CancelButtonStyle}"
-                            x:Name="CancelButton">
-                            Отмена
+                            Click="CloseButton_Click"
+                            Style="{StaticResource CloseButtonStyle}"
+                            x:Name="CloseButton">
+                            ✕
                         </Button>
                     </StackPanel>
                 </Grid>
-            </DockPanel>
-        </Border>
+            </Border>
+
+            <!--  Основной контент  -->
+            <Grid Margin="20,15,20,15">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!--  Контент уведомления  -->
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  Иконка уведомления  -->
+                    <Border
+                        Background="{DynamicResource SecondaryColor}"
+                        CornerRadius="8"
+                        Grid.Column="0"
+                        Height="52"
+                        Margin="0,0,12,0"
+                        VerticalAlignment="Top"
+                        Width="52">
+                        <Image
+                            Height="36"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Width="36"
+                            x:Name="IconImage" />
+                    </Border>
+
+                    <!--  Текст уведомления  -->
+                    <TextBlock
+                        Grid.Column="1"
+                        Style="{StaticResource MessageTextStyle}"
+                        x:Name="MessageText" />
+                </Grid>
+
+                <!--  Кнопки  -->
+                <StackPanel
+                    Grid.Row="1"
+                    HorizontalAlignment="Right"
+                    Margin="0,15,0,0"
+                    Orientation="Horizontal">
+                    <Button
+                        Click="OkButton_Click"
+                        Style="{StaticResource ActionButtonStyle}"
+                        x:Name="OkButton">
+                        ОК
+                    </Button>
+                    <Button
+                        Click="CancelButton_Click"
+                        Style="{StaticResource CancelButtonStyle}"
+                        x:Name="CancelButton">
+                        Отмена
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </DockPanel>
     </Border>
 </Window>

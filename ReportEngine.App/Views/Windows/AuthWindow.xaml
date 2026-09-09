@@ -25,49 +25,53 @@
         <ResourceDictionary />
     </mah:MetroWindow.Resources>
 
-    <Border Style="{DynamicResource WindowBorder}">
-        <DockPanel>
-            <!--  Заголовок окна  -->
 
+    <DockPanel>
+        <Separator
+            Background="{DynamicResource PrimaryForeground}"
+            BorderBrush="{DynamicResource PrimaryForeground}"
+            BorderThickness="3"
+            DockPanel.Dock="Top"
+            Foreground="{DynamicResource PrimaryForeground}"
+            Height="3"
+            Margin="20,0,20,8" />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+            <StackPanel
+                Grid.Row="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+
+                <TextBlock Margin="0,0,0,10" Text="Выберите пользователя:" />
+
+                <ComboBox
+                    DisplayMemberPath="UserLogin"
+                    ItemsSource="{Binding AllUsers}"
+                    SelectedItem="{Binding SelectedUser, Mode=TwoWay}"
+                    Width="250"
+                    x:Name="UserComboBox" />
+
 
                 <StackPanel
-                    Grid.Row="1"
                     HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
-
-                    <TextBlock Margin="0,0,0,10" Text="Выберите пользователя:" />
-
-                    <ComboBox
-                        DisplayMemberPath="UserLogin"
-                        ItemsSource="{Binding AllUsers}"
-                        SelectedItem="{Binding SelectedUser, Mode=TwoWay}"
-                        Width="250"
-                        x:Name="UserComboBox" />
-
-
-                    <StackPanel
-                        HorizontalAlignment="Center"
-                        Margin="0,20,0,0"
-                        Orientation="Horizontal">
-                        <Button
-                            Command="{Binding LoginCommand}"
-                            Content="Войти"
-                            Margin="0,0,10,0"
-                            Width="120" />
-                        <Button
-                            Command="{Binding ExitCommand}"
-                            Content="Выход"
-                            Width="120" />
-                    </StackPanel>
+                    Margin="0,20,0,0"
+                    Orientation="Horizontal">
+                    <Button
+                        Command="{Binding LoginCommand}"
+                        Content="Войти"
+                        Margin="0,0,10,0"
+                        Width="120" />
+                    <Button
+                        Command="{Binding ExitCommand}"
+                        Content="Выход"
+                        Width="120" />
                 </StackPanel>
-            </Grid>
-        </DockPanel>
-    </Border>
+            </StackPanel>
+        </Grid>
+    </DockPanel>
 </mah:MetroWindow>

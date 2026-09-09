@@ -20,63 +20,67 @@
     xmlns:windowHelpers="clr-namespace:ReportEngine.App.Views.Windows.WindowHelpers"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <DockPanel>
+        <Separator
+            Background="{DynamicResource PrimaryForeground}"
+            BorderBrush="{DynamicResource PrimaryForeground}"
+            BorderThickness="3"
+            DockPanel.Dock="Top"
+            Foreground="{DynamicResource PrimaryForeground}"
+            Height="3"
+            Margin="20,0,20,8" />
 
-    <Border Style="{DynamicResource WindowBorder}">
-        <DockPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
+            <Border
+                Background="{DynamicResource PrimaryColor}"
+                Grid.Row="0"
+                Padding="10">
+                <Image
+                    MaxHeight="70"
+                    Source="/Resources/Images/logo.png"
+                    Stretch="Uniform" />
+            </Border>
 
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <Border
-                    Background="{DynamicResource PrimaryColor}"
-                    Grid.Row="0"
-                    Padding="10">
-                    <Image
-                        MaxHeight="70"
-                        Source="/Resources/Images/logo.png"
-                        Stretch="Uniform" />
-                </Border>
-
-                <StackPanel
-                    Grid.Row="1"
-                    HorizontalAlignment="Center"
-                    Margin="10"
-                    VerticalAlignment="Center">
-                    <TextBlock
-                        FontSize="16"
-                        FontWeight="Bold"
-                        Margin="0,0,0,20"
-                        Text="{Binding Version}"
-                        TextAlignment="Center" />
-                </StackPanel>
-
-                <StackPanel
-                    Grid.Row="2"
-                    HorizontalAlignment="Center"
+            <StackPanel
+                Grid.Row="1"
+                HorizontalAlignment="Center"
+                Margin="10"
+                VerticalAlignment="Center">
+                <TextBlock
+                    FontSize="16"
+                    FontWeight="Bold"
                     Margin="0,0,0,20"
-                    VerticalAlignment="Bottom">
-                    <TextBlock
-                        FontSize="14"
-                        FontWeight="Bold"
-                        Margin="0,0,0,5"
-                        Text="ЗАО «ЭТАЛОН-ПРИБОР»"
-                        TextAlignment="Center" />
-                    <TextBlock
-                        FontSize="10"
-                        Margin="0,0,0,5"
-                        Text="Разработчики: Тиунов Д.А., Рева А.А."
-                        TextAlignment="Center" />
-                    <TextBlock
-                        FontSize="10"
-                        Text="2026 г. Все права защищены ©"
-                        TextAlignment="Center" />
-                </StackPanel>
-            </Grid>
-        </DockPanel>
-    </Border>
+                    Text="{Binding Version}"
+                    TextAlignment="Center" />
+            </StackPanel>
+
+            <StackPanel
+                Grid.Row="2"
+                HorizontalAlignment="Center"
+                Margin="0,0,0,20"
+                VerticalAlignment="Bottom">
+                <TextBlock
+                    FontSize="14"
+                    FontWeight="Bold"
+                    Margin="0,0,0,5"
+                    Text="ЗАО «ЭТАЛОН-ПРИБОР»"
+                    TextAlignment="Center" />
+                <TextBlock
+                    FontSize="10"
+                    Margin="0,0,0,5"
+                    Text="Разработчики: Тиунов Д.А., Рева А.А."
+                    TextAlignment="Center" />
+                <TextBlock
+                    FontSize="10"
+                    Text="2026 г. Все права защищены ©"
+                    TextAlignment="Center" />
+            </StackPanel>
+        </Grid>
+    </DockPanel>
 </mah:MetroWindow>
