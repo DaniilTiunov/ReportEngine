@@ -15,10 +15,10 @@ namespace ReportEngine.App.Views.Controls;
 
 public partial class TreeProjectView : UserControl, IDisposable
 {
-    private readonly ExceptionService _exceptionService;
-    private readonly ProjectViewModel _projectViewModel;
     private readonly ContainersViewModel _containersViewModel;
     private readonly DdsService _ddsService;
+    private readonly ExceptionService _exceptionService;
+    private readonly ProjectViewModel _projectViewModel;
     private bool _disposed;
 
     public TreeProjectView(
@@ -47,20 +47,15 @@ public partial class TreeProjectView : UserControl, IDisposable
 
         _disposed = true;
     }
-    
+
     private string GetHeaderText(TreeViewItem item)
     {
         if (item.Header is StackPanel stackPanel)
-        {
             // Ищем TextBlock в StackPanel
             foreach (var child in stackPanel.Children)
-            {
                 if (child is TextBlock textBlock)
-                {
                     return textBlock.Text;
-                }
-            }
-        }
+
         // Если Header - простая строка (для элементов без иконок)
         return item.Header?.ToString() ?? string.Empty;
     }
@@ -68,16 +63,10 @@ public partial class TreeProjectView : UserControl, IDisposable
     private PackIconKind GetIconKind(TreeViewItem item)
     {
         if (item.Header is StackPanel stackPanel)
-        {
             foreach (var child in stackPanel.Children)
-            {
                 if (child is PackIcon icon)
-                {
                     return icon.Kind;
-                }
-            }
-        }
-        
+
         return PackIconKind.Folder;
     }
 
@@ -134,7 +123,7 @@ public partial class TreeProjectView : UserControl, IDisposable
                 Tag = tag,
                 Content = content,
                 HorizontalContentAlignment = HorizontalAlignment.Stretch,
-                VerticalContentAlignment = VerticalAlignment.Stretch, 
+                VerticalContentAlignment = VerticalAlignment.Stretch,
                 Style = (Style)FindResource(typeof(TabItem))
             };
 
@@ -169,7 +158,7 @@ public partial class TreeProjectView : UserControl, IDisposable
     }
 
     private UIElement CreateTabItemHeader(
-        string headerName, 
+        string headerName,
         TabItem parentTab,
         PackIconKind iconKind)
     {
@@ -208,7 +197,7 @@ public partial class TreeProjectView : UserControl, IDisposable
             VerticalAlignment = VerticalAlignment.Center,
             Style = (Style)FindResource(typeof(Button))
         };
-        
+
 
         closeButton.Tag = parentTab;
         closeButton.Click += CloseCurrentView;

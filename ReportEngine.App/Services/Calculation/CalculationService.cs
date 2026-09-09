@@ -1,11 +1,10 @@
-﻿using ReportEngine.Extensions.Extensions;
-using ReportEngine.App.Model;
+﻿using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 using ReportEngine.Domain.Store;
+using ReportEngine.Extensions.Extensions;
 using ReportEngine.Shared.Helpers;
-using ReportEngine.Domain.Entities;
 
 namespace ReportEngine.App.Services.Calculation;
 
@@ -44,7 +43,7 @@ public class CalculationService : ICalculationService
         project.Cost = standsCost + galvanizedCost;
 
         project.HumanCost = (project.Stands
-                               .Sum(ObvHumanCostCalculation)
+                                 .Sum(ObvHumanCostCalculation)
                              + CalculatePaintAndSandBlustHumanCost(project)
                              + ObvProdTime(project)
                              + ObvAllTest(project)
@@ -86,7 +85,6 @@ public class CalculationService : ICalculationService
 
         standModel.Weight += standModel.ObvyazkiInStand.Sum(ec => ec.Weight) ?? 0.0f;
     }
-
 
 
     private void CalculateStandsWidth(StandModel standModel)

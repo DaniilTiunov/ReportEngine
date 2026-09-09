@@ -18,6 +18,8 @@ public class StandService : IStandService
     private readonly IPurposesRepository<AdditionalEquipPurpose> _additionalPurposesRepository;
     private readonly IContainerRepository _containerRepository;
     private readonly ReAppContext _context;
+
+    private readonly ConverterService _converterService;
     private readonly IPurposesRepository<DrainagePurpose> _drainagesPurposesRepository;
     private readonly IPurposesRepository<ElectricalPurpose> _electricalPurposesRepository;
     private readonly IFormedAdditionalEquipsRepository _formedAdditionalEquipsRepository;
@@ -28,8 +30,6 @@ public class StandService : IStandService
     private readonly ObvyazkaInStandRepository _obvyazkaInStandRepository;
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IServiceScopeFactory _scopeFactory;
-
-    private readonly ConverterService _converterService;
 
     public StandService(
         IProjectInfoRepository projectRepository,
@@ -256,7 +256,7 @@ public class StandService : IStandService
             OtherLineCount = selectedObvyazka.OtherLineCount,
             TreeSocketCount = selectedObvyazka.TreeSocket,
             HumanCost = selectedObvyazka.HumanCost,
-            
+
             ObvyazkaId = selectedObvyazka.Id,
             ImageName = standModel.ImageName,
             ObvyazkaName = standModel.ObvyazkaName,
@@ -312,7 +312,7 @@ public class StandService : IStandService
                     ExportDays = component.ExportDays,
                     Id = 0
                 })
-                .ToList(),
+                .ToList()
         };
 
 
@@ -531,23 +531,21 @@ public class StandService : IStandService
     public static float CountObvComponentsWeight(StandModel standModel)
     {
         //суммируем в обвязку веса всех комплектующих
-        float commonWeight = 0.0f;
+        var commonWeight = 0.0f;
 
-        commonWeight += (standModel.MaterialLineEquip?.Weight * standModel.MaterialLineCount) ?? 0.0f;
-        commonWeight += (standModel.TreeSocketEquip?.Weight * standModel.TreeSocketMaterialCount) ?? 0.0f;
-        commonWeight += (standModel.KMCHEquip?.Weight * standModel.KMCHCount) ?? 0.0f;
-        commonWeight += (standModel.ArmatureEquip?.Weight * standModel.ArmatureCount) ?? 0.0f;
+        commonWeight += standModel.MaterialLineEquip?.Weight * standModel.MaterialLineCount ?? 0.0f;
+        commonWeight += standModel.TreeSocketEquip?.Weight * standModel.TreeSocketMaterialCount ?? 0.0f;
+        commonWeight += standModel.KMCHEquip?.Weight * standModel.KMCHCount ?? 0.0f;
+        commonWeight += standModel.ArmatureEquip?.Weight * standModel.ArmatureCount ?? 0.0f;
 
 
         foreach (var obvComponent in standModel.ObvyazkaAdditionalComponents)
-        {
-            commonWeight += (obvComponent.Weight * obvComponent.Quantity) ?? 0.0f;
-        }
- 
+            commonWeight += obvComponent.Weight * obvComponent.Quantity ?? 0.0f;
+
         return commonWeight;
     }
-    
-     private async Task<List<StandFrame>> GetFramesAsync(int[] standIds)
+
+    private async Task<List<StandFrame>> GetFramesAsync(int[] standIds)
     {
         await using var scope = _scopeFactory.CreateAsyncScope();
 
@@ -588,9 +586,6 @@ public class StandService : IStandService
     }
 
 
-
-
-
     private async Task<IBaseEquip?> GetBaseEquip(string? typeName, int? id)
     {
         if (string.IsNullOrEmpty(typeName) || !id.HasValue)
@@ -605,18 +600,16 @@ public class StandService : IStandService
     }
 
 
-
     public async Task ParseObvyazkaInStandToStandEquips(StandModel stand, ObvyazkaInStand obv)
     {
         stand.MaterialLineEquip = await GetBaseEquip(obv.MaterialLineType, obv.MaterialLineId);
-        stand.TreeSocketEquip = await this.GetBaseEquip(obv.TreeSocketType, obv.TreeSocketId);
-        stand.KMCHEquip = await this.GetBaseEquip(obv.KMCHType, obv.KMCHId);
-        stand.ArmatureEquip = await this.GetBaseEquip(obv.ArmatureType, obv.ArmatureId);
+        stand.TreeSocketEquip = await GetBaseEquip(obv.TreeSocketType, obv.TreeSocketId);
+        stand.KMCHEquip = await GetBaseEquip(obv.KMCHType, obv.KMCHId);
+        stand.ArmatureEquip = await GetBaseEquip(obv.ArmatureType, obv.ArmatureId);
     }
 
 
-
-    public void ParseIBaseEquipsToObvyazkaInStand(StandModel stand,ObvyazkaInStand obv)
+    public void ParseIBaseEquipsToObvyazkaInStand(StandModel stand, ObvyazkaInStand obv)
     {
         obv.MaterialLineId = stand.MaterialLineEquip?.Id;
         obv.MaterialLineType = stand.MaterialLineEquip?.GetType().AssemblyQualifiedName;

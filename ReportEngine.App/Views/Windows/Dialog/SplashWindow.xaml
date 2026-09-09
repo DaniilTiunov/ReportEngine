@@ -10,7 +10,6 @@
     x:Class="ReportEngine.App.Views.Windows.Dialog.SplashWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:ReportEngine.App.Views.Windows.Dialog"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
@@ -34,7 +33,7 @@
             <Setter Property="FontSize" Value="32" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Foreground" Value="#1A1A1A" />
-            <Setter Property="FontFamily" Value="Segoe UI" />
+            <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
         </Style>
 
         <!--  Стиль для подзаголовка (канал)  -->
@@ -42,7 +41,7 @@
             <Setter Property="FontSize" Value="16" />
             <Setter Property="FontWeight" Value="Light" />
             <Setter Property="Foreground" Value="#888888" />
-            <Setter Property="FontFamily" Value="Segoe UI" />
+            <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
             <Setter Property="Margin" Value="12,0,0,0" />
             <Setter Property="VerticalAlignment" Value="Bottom" />
         </Style>
@@ -51,14 +50,14 @@
         <Style TargetType="TextBlock" x:Key="SubTextStyle">
             <Setter Property="FontSize" Value="11" />
             <Setter Property="Foreground" Value="#999999" />
-            <Setter Property="FontFamily" Value="Segoe UI" />
+            <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
         </Style>
 
         <!--  Стиль для статусного текста  -->
         <Style TargetType="TextBlock" x:Key="StatusTextStyle">
             <Setter Property="FontSize" Value="16" />
             <Setter Property="Foreground" Value="#444444" />
-            <Setter Property="FontFamily" Value="Segoe UI" />
+            <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="Margin" Value="0,0,0,20" />
         </Style>
@@ -67,7 +66,7 @@
         <Style TargetType="TextBlock" x:Key="FooterTextStyle">
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Foreground" Value="#AAAAAA" />
-            <Setter Property="FontFamily" Value="Segoe UI" />
+            <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="Margin" Value="0,8,0,0" />
         </Style>

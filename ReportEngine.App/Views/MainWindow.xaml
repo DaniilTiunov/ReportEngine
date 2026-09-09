@@ -1,47 +1,42 @@
-﻿<Window
+<mah:MetroWindow
     Background="{DynamicResource PrimaryColor}"
-    FontFamily="Bahnschrift"
+    FontFamily="{DynamicResource AppFontFamily}"
     Foreground="{DynamicResource PrimaryForeground}"
     ResizeMode="CanResize"
+    ShowIconOnTitleBar="True"
     Title="КИПАРИС:PCM"
+    TitleForeground="{DynamicResource PrimaryForeground}"
     WindowStartupLocation="CenterScreen"
-    WindowState="Normal"
-    WindowStyle="None"
+    WindowState="Maximized"
     mc:Ignorable="d"
     x:Class="ReportEngine.App.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:converters="clr-namespace:ReportEngine.App.Display"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:projectConvert="clr-namespace:ReportEngine.App.Converters"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <WindowChrome.WindowChrome>
-        <WindowChrome
-            CaptionHeight="0"
-            CornerRadius="0"
-            GlassFrameThickness="0" />
-    </WindowChrome.WindowChrome>
 
-    <Window.InputBindings>
+    <mah:MetroWindow.InputBindings>
         <KeyBinding
             Command="{Binding MainWindowCommandProvider.ShowAllProjectsCommand}"
             CommandParameter="{x:Null}"
             Key="F5" />
         <KeyBinding Command="{Binding MainWindowCommandProvider.OpenTreeViewCommand}" Gesture="Ctrl+Shift+N" />
-    </Window.InputBindings>
+    </mah:MetroWindow.InputBindings>
 
-    <Window.Resources>
+    <mah:MetroWindow.Resources>
         <ResourceDictionary>
-            <Image Source="/Resources/Images/refresh-button.png" x:Key="refresh-button.png" />
             <converters:AdminVisibilityConverter x:Key="AdminVisibilityConverter" />
             <converters:TranslateUserRole x:Key="TranslateUserRole" />
             <projectConvert:ProjectStatusBrushConverter x:Key="ProjectStatusBrushConverter" />
         </ResourceDictionary>
-    </Window.Resources>
+    </mah:MetroWindow.Resources>
 
-    <Window.Triggers>
+    <mah:MetroWindow.Triggers>
         <EventTrigger RoutedEvent="Window.Loaded">
             <BeginStoryboard>
                 <Storyboard>
@@ -53,80 +48,17 @@
                 </Storyboard>
             </BeginStoryboard>
         </EventTrigger>
-    </Window.Triggers>
+    </mah:MetroWindow.Triggers>
 
     <Border Style="{DynamicResource WindowBorder}">
         <DockPanel>
             <!--  Верхняя панель заголовка  -->
-            <Border
-                Background="#2D2D30"
-                DockPanel.Dock="Top"
-                Height="34"
-                MouseLeftButtonDown="Window_MouseLeftButtonDown"
-                x:Name="MainWindowControlTitle">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
 
-                    <StackPanel
-                        Margin="10,0,0,0"
-                        Orientation="Horizontal"
-                        VerticalAlignment="Center">
-                        <Image
-                            Height="18"
-                            Margin="0,0,8,0"
-                            Source="/Resources/Icons/estimate_cost_icon_213382.ico"
-                            Width="18" />
-                        <TextBlock
-                            FontSize="14"
-                            Foreground="White"
-                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}"
-                            VerticalAlignment="Center" />
-                    </StackPanel>
-
-                    <StackPanel
-                        Grid.Column="1"
-                        Orientation="Horizontal"
-                        VerticalAlignment="Center">
-                        <Button
-                            Click="MinimizeButton_Click"
-                            FontSize="16"
-                            Height="30"
-                            ToolTip="Свернуть"
-                            Width="40"
-                            x:Name="MinimizeButton">
-                            ─
-                        </Button>
-                        <Button
-                            Click="MaxRestoreButton_Click"
-                            FontSize="16"
-                            Height="30"
-                            Margin="10,0,0,0"
-                            ToolTip="Развернуть"
-                            Width="40"
-                            x:Name="MaxRestoreButton">
-                            ▢
-                        </Button>
-                        <Button
-                            Click="CloseButton_Click"
-                            FontSize="16"
-                            Height="30"
-                            Margin="10,0,10,0"
-                            ToolTip="Закрыть"
-                            Width="40"
-                            x:Name="CloseButton">
-                            ✕
-                        </Button>
-                    </StackPanel>
-                </Grid>
-            </Border>
 
             <!--  Меню  -->
             <Menu
                 DockPanel.Dock="Top"
-                FontFamily="Bahnschrift"
+                FontFamily="{DynamicResource AppFontFamily}"
                 FontSize="16"
                 Height="35">
                 <Menu.ItemsPanel>
@@ -274,7 +206,7 @@
                 BorderBrush="{DynamicResource BorderMediumColor}"
                 BorderThickness="0,1,0,0"
                 DockPanel.Dock="Bottom"
-                FontFamily="Bahnschrift"
+                FontFamily="{DynamicResource AppFontFamily}"
                 Height="40">
                 <StatusBar.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -601,4 +533,4 @@
             </Grid>
         </DockPanel>
     </Border>
-</Window>
+</mah:MetroWindow>

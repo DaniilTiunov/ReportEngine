@@ -1,9 +1,9 @@
-﻿using System.Windows;
+﻿using MahApps.Metro.Controls;
 using ReportEngine.App.ViewModels.Contacts;
 
 namespace ReportEngine.App.Views.Windows;
 
-public partial class AuthWindow : Window
+public partial class AuthWindow : MetroWindow
 {
     private readonly AuthWindowViewModel _viewModel;
 
@@ -20,10 +20,5 @@ public partial class AuthWindow : Window
     private async Task InitializeDataAsync(AuthWindowViewModel viewModel)
     {
         await viewModel.LoadAllUsersAsync();
-    }
-
-    private void CloseButton_Click(object sender, RoutedEventArgs e)
-    {
-        Close();
     }
 }

@@ -9,11 +9,9 @@ public class BoolToVisibility : IValueConverter
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is bool b)
-        {
-            if(b)
+            if (b)
                 return Visibility.Visible;
-        }
-        
+
         return Visibility.Collapsed;
     }
 

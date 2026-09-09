@@ -1,7 +1,7 @@
 ﻿<Window
     AllowsTransparency="True"
     Background="Transparent"
-    FontFamily="Bahnschrift"
+    FontFamily="{DynamicResource AppFontFamily}"
     Foreground="{DynamicResource PrimaryForeground}"
     Height="150"
     ResizeMode="NoResize"
@@ -17,14 +17,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <WindowChrome.WindowChrome>
-        <WindowChrome
-            CaptionHeight="0"
-            CornerRadius="12"
-            GlassFrameThickness="0"
-            ResizeBorderThickness="0" />
-    </WindowChrome.WindowChrome>
-
     <Window.Resources>
         <!--  Тень  -->
         <DropShadowEffect
@@ -38,14 +30,14 @@
             <Setter Property="FontSize" Value="14" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontFamily" Value="Bahnschrift" />
+            <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
         <!--  Статус  -->
         <Style TargetType="TextBlock" x:Key="StatusTextStyle">
             <Setter Property="FontSize" Value="14" />
             <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
-            <Setter Property="FontFamily" Value="Bahnschrift" />
+            <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="Margin" Value="0,0,0,12" />
         </Style>
@@ -60,50 +52,7 @@
             <Setter Property="IsIndeterminate" Value="True" />
         </Style>
     </Window.Resources>
-    <!--  Шаблон самого Window  -->
-    <Window.Template>
-        <ControlTemplate TargetType="Window">
-            <Border
-                Background="{DynamicResource PrimaryColor}"
-                BorderBrush="{DynamicResource PrimaryForeground}"
-                BorderThickness="2"
-                CornerRadius="12"
-                Effect="{StaticResource WindowShadow}">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="40" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <!--  Заголовок  -->
-                    <Border
-                        Background="#2D2D30"
-                        CornerRadius="10,10,0,0"
-                        Grid.Row="0">
-                        <StackPanel
-                            Margin="12,0,0,0"
-                            Orientation="Horizontal"
-                            VerticalAlignment="Center">
-                            <Image
-                                Height="18"
-                                Margin="0,0,8,0"
-                                Source="/Resources/Icons/estimate_cost_icon_213382.ico"
-                                Width="18" />
-                            <TextBlock Style="{StaticResource TitleTextStyle}" Text="{TemplateBinding Title}" />
-                        </StackPanel>
-                    </Border>
-                    <!--  Содержимое Window  -->
-                    <Border Grid.Row="1">
-                        <AdornerDecorator>
-                            <ContentPresenter
-                                Content="{TemplateBinding Content}"
-                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
-                                ContentTemplate="{TemplateBinding ContentTemplate}" />
-                        </AdornerDecorator>
-                    </Border>
-                </Grid>
-            </Border>
-        </ControlTemplate>
-    </Window.Template>
+
     <!--  Всё это уже является Content самого Window  -->
     <StackPanel
         HorizontalAlignment="Center"

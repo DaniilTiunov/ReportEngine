@@ -61,12 +61,12 @@ public static class HostFactory
         var theme = RichTextBoxLoggerTheme.Create();
 
         return Host.CreateDefaultBuilder()
-            .ConfigureAppConfiguration((config) =>
+            .ConfigureAppConfiguration(config =>
             {
                 config.AddJsonFile(
                     DirectoryHelper.GetConfigPath(),
-                    optional: false,
-                    reloadOnChange: true);
+                    false,
+                    true);
             })
             .UseSerilog((context, services, config) =>
             {
@@ -91,7 +91,7 @@ public static class HostFactory
             .ConfigureServices(services =>
             {
                 services.AddSingleton(uiLog);
-                
+
                 ConfigureOptions(services);
                 // Регистрация контекста БД
                 ConfigureDatabase(services);
@@ -116,19 +116,16 @@ public static class HostFactory
     private static void ConfigureOptions(IServiceCollection services)
     {
         services.AddOptions<ReportEngineConfig>()
-            .Configure<IConfiguration>((settings, configuration) =>
-            {
-                configuration.Bind(settings);
-            })
+            .Configure<IConfiguration>((settings, configuration) => { configuration.Bind(settings); })
             .ValidateOnStart();
     }
-    
+
     private static void ConfigureDatabase(IServiceCollection services)
     {
         services.AddDbContext<ReAppContext>((serviceProvider, options) =>
         {
             var appSettings = serviceProvider.GetRequiredService<IOptions<ReportEngineConfig>>();
-            DbContextOptionsFactory.Configure(options, appSettings);  // Передаем IOptions
+            DbContextOptionsFactory.Configure(options, appSettings); // Передаем IOptions
         });
     }
 
@@ -219,7 +216,6 @@ public static class HostFactory
         services.AddScoped<ConverterService>();
         services.AddSingleton<DdsService>();
         services.AddHostedService<DdsService>();
-        
     }
 
     private static void ConfigureReportsServices(IServiceCollection services)

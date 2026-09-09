@@ -2,13 +2,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Pipes;
-using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Repositories;
+using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Helpers;
 using ReportEngine.Shared.Services.Options;
 
@@ -16,17 +15,17 @@ namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
 public class FinPlanReportGenerator : IReportGenerator
 {
+    private readonly ReportEngineConfigService _configService;
     private readonly IContainerRepository _containerRepository;
     private readonly ParametersStore _parametersStore;
     private readonly IGenericBaseRepository<StainlessPipe, StainlessPipe> _pipesRepository;
     private readonly ProjectInfoRepository _projectInfoRepository;
-    private readonly ReportEngineConfigService _configService;
 
     public FinPlanReportGenerator(
         ProjectInfoRepository projectInfoRepository,
         IContainerRepository containerRepository,
         ParametersStore parametersStore,
-        IServiceProvider serviceProvider, 
+        IServiceProvider serviceProvider,
         ReportEngineConfigService configService)
     {
         _projectInfoRepository = projectInfoRepository;
@@ -42,7 +41,7 @@ public class FinPlanReportGenerator : IReportGenerator
     {
         var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
         var pipes = await _pipesRepository.GetAllAsync();
-        
+
         using (var wb = new XLWorkbook())
         {
             const string sellCostWorksheetName = "Стоимость продажи";
@@ -173,7 +172,6 @@ public class FinPlanReportGenerator : IReportGenerator
         recordNameRange.Value = record.Name.Value;
 
 
-        
         var recordPriceRange = ws.Range($"F{row}:G{row}").Merge();
         recordPriceRange.SetValue(record.CommonCost.Value.Ceiling());
         recordPriceRange.Style.NumberFormat.Format = "# ##0";
@@ -235,7 +233,7 @@ public class FinPlanReportGenerator : IReportGenerator
             nameRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
             var valueRange = ws.Range($"D{activeRow}:I{activeRow}").Merge();
-            
+
             valueRange.Value = record.Value;
 
             valueRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);

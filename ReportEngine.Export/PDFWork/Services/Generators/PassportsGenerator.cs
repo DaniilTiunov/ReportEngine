@@ -4,7 +4,6 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories;
-using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork;
@@ -17,13 +16,13 @@ namespace ReportEngine.Export.PDFWork.Services.Generators;
 
 public class PassportsGenerator : IReportGenerator
 {
+    private readonly ReportEngineConfigService _configService;
     private readonly ParametersStore _parametersStore;
     private readonly ProjectInfoRepository _projectInfoRepository;
-    private readonly ReportEngineConfigService _configService;
 
     public PassportsGenerator(
-        ProjectInfoRepository projectRepository, 
-        ParametersStore parametersStore, 
+        ProjectInfoRepository projectRepository,
+        ParametersStore parametersStore,
         ReportEngineConfigService configService)
     {
         _projectInfoRepository = projectRepository;
@@ -38,7 +37,8 @@ public class PassportsGenerator : IReportGenerator
         var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
-        var savePath = _configService.GetSaveReportDirectory();;
+        var savePath = _configService.GetSaveReportDirectory();
+        ;
         var fileName = ExcelReportHelper.CreateReportName("Паспорт", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
 
@@ -98,7 +98,8 @@ public class PassportsGenerator : IReportGenerator
         //await _parametersStore.LoadSettingsDataAsync();
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
-        var savePath = _configService.GetSaveReportDirectory();;
+        var savePath = _configService.GetSaveReportDirectory();
+        ;
         var fileName = ExcelReportHelper.CreateReportName("Паспорт", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
 

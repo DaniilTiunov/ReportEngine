@@ -8,8 +8,8 @@ public class HeaderToIconConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        string header = value?.ToString() ?? string.Empty;
-            
+        var header = value?.ToString() ?? string.Empty;
+
         return header switch
         {
             "Проект" => PackIconKind.Folder,

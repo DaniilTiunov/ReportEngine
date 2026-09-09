@@ -2,12 +2,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Pipes;
-using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Repositories;
+using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Helpers;
 using ReportEngine.Shared.Services.Options;
 
@@ -15,13 +14,13 @@ namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
 public class FlatSummaryReportGenerator : IReportGenerator
 {
+    private readonly ReportEngineConfigService _configService;
     private readonly IGenericBaseRepository<StainlessPipe, StainlessPipe> _pipesRepository;
     private readonly ProjectInfoRepository _projectInfoRepository;
-    private readonly ReportEngineConfigService _configService;
 
     public FlatSummaryReportGenerator(
         ProjectInfoRepository projectInfoRepository,
-        IServiceProvider serviceProvider, 
+        IServiceProvider serviceProvider,
         ReportEngineConfigService configService)
     {
         _projectInfoRepository = projectInfoRepository;
@@ -30,7 +29,6 @@ public class FlatSummaryReportGenerator : IReportGenerator
     }
 
     public ReportType Type => ReportType.FlatSummaryReport;
-
 
 
     public async Task GenerateAsync(int projectId)
@@ -60,7 +58,6 @@ public class FlatSummaryReportGenerator : IReportGenerator
             wb.SaveAs(fullSavePath);
         }
     }
-
 
 
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)

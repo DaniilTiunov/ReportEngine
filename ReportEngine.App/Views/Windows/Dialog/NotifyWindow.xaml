@@ -1,7 +1,7 @@
 ﻿<Window
     AllowsTransparency="True"
     Background="Transparent"
-    FontFamily="Bahnschrift"
+    FontFamily="{DynamicResource AppFontFamily}"
     FontSize="14"
     Foreground="{DynamicResource PrimaryForeground}"
     MaxHeight="600"
@@ -34,7 +34,7 @@
             <Setter Property="FontSize" Value="14" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontFamily" Value="Bahnschrift" />
+            <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
@@ -128,7 +128,7 @@
         <Style TargetType="TextBlock" x:Key="MessageTextStyle">
             <Setter Property="FontSize" Value="15" />
             <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
-            <Setter Property="FontFamily" Value="Bahnschrift" />
+            <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
             <Setter Property="TextWrapping" Value="Wrap" />
             <Setter Property="VerticalAlignment" Value="Top" />
             <Setter Property="HorizontalAlignment" Value="Left" />
@@ -157,7 +157,7 @@
             <DockPanel>
                 <!--  Заголовок  -->
                 <Border
-                    Background="#2D2D30"
+                    Background="{DynamicResource BorderColor}"
                     CornerRadius="10,10,0,0"
                     DockPanel.Dock="Top"
                     Height="40"

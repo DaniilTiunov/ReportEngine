@@ -1,11 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ReportEngine.App.Model;
-using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Background;
 using ReportEngine.Domain.Database.Context;
-using ReportEngine.Domain.Repositories;
-using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.App.Services.Calculation;
 
@@ -61,7 +58,7 @@ public class UpdaterStandService
         if (collection == null)
             return;
 
-        foreach (var item in collection) 
+        foreach (var item in collection)
             ApplyChangesToObject(item!, change);
     }
 

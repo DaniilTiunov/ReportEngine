@@ -14,20 +14,18 @@ namespace ReportEngine.Updater.ViewModels;
 public partial class LaunchAppViewModel : BaseViewModel
 {
     private readonly DirectoryService _directoryService;
-    private readonly UpdateService _updateService;
-    private readonly NotificationService _notificationService;
     private readonly JsonSettingsService _jsonSettingsService;
-    
-    [ObservableProperty]
-    private ObservableCollection<Release> _localReleases = new();
-    
-    [ObservableProperty]
-    private Release _selectedRelease;
-    
+    private readonly NotificationService _notificationService;
+    private readonly UpdateService _updateService;
+
+    [ObservableProperty] private ObservableCollection<Release> _localReleases = new();
+
+    [ObservableProperty] private Release _selectedRelease;
+
     public LaunchAppViewModel(
         DirectoryService directoryService,
         UpdateService updateService,
-        NotificationService notificationService, 
+        NotificationService notificationService,
         JsonSettingsService jsonSettingsService)
     {
         _directoryService = directoryService;
@@ -42,7 +40,7 @@ public partial class LaunchAppViewModel : BaseViewModel
         CreateShortcutCommand = new RelayCommand(CreateShortcut);
         OpenFolderCommand = new AsyncRelayCommand(OpenFolderAsync);
     }
-    
+
     public ICommand RefreshCommand { get; set; }
     public ICommand LaunchCommand { get; set; }
     public ICommand CreateShortcutCommand { get; set; }
@@ -53,16 +51,15 @@ public partial class LaunchAppViewModel : BaseViewModel
         var localPath = await _jsonSettingsService.GetPathAsync(
             UpdateSettingsHelper.GetUpdateSettingsPath(),
             path => path.LocalPath);
-        
+
         Process.Start("explorer.exe", localPath);
     }
-    
+
     private async Task LoadReleasesAsync()
     {
         LocalReleases.Clear();
-        
-        var localDirectories = await _directoryService.GetDirectoriesAsync(
-            paths => paths.LocalPath);
+
+        var localDirectories = await _directoryService.GetDirectoriesAsync(paths => paths.LocalPath);
 
         foreach (var directory in localDirectories)
         {
@@ -76,7 +73,7 @@ public partial class LaunchAppViewModel : BaseViewModel
                 Info = updateInfo,
                 Path = directory
             };
-            
+
             LocalReleases.Add(release);
         }
     }
@@ -87,7 +84,7 @@ public partial class LaunchAppViewModel : BaseViewModel
 
         Process.Start(exePath);
     }
-    
+
     private void CreateShortcut()
     {
         if (SelectedRelease == null)
@@ -95,16 +92,16 @@ public partial class LaunchAppViewModel : BaseViewModel
             _notificationService.ShowInfo("Сначала выберите приложение из списка.");
             return;
         }
-        
-        string desktopPath  = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        string shortcutName = $"Стенды КИПиА v{SelectedRelease.Info.Version} ({SelectedRelease.Info.Channel}).lnk";
-        string shortcutPath = Path.Combine(desktopPath, shortcutName);
-        string targetPath = Path.Combine(SelectedRelease.Path, "ReportEngine.App.exe");
-            
-        Type t = Type.GetTypeFromProgID("WScript.Shell");
+
+        var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        var shortcutName = $"Стенды КИПиА v{SelectedRelease.Info.Version} ({SelectedRelease.Info.Channel}).lnk";
+        var shortcutPath = Path.Combine(desktopPath, shortcutName);
+        var targetPath = Path.Combine(SelectedRelease.Path, "ReportEngine.App.exe");
+
+        var t = Type.GetTypeFromProgID("WScript.Shell");
         dynamic shell = Activator.CreateInstance(t);
-        
-        dynamic shortcut = shell.CreateShortcut(shortcutPath);
+
+        var shortcut = shell.CreateShortcut(shortcutPath);
         shortcut.TargetPath = targetPath;
         shortcut.WorkingDirectory = Path.GetDirectoryName(targetPath);
 

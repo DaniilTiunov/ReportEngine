@@ -2,7 +2,6 @@ using CommunityToolkit.Mvvm.Input;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.Views;
 using ReportEngine.App.Views.Controls;
-using ReportEngine.App.Views.Settings;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Domain.Entities.Armautre;

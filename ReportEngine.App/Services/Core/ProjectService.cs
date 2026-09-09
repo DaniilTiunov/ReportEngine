@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using DevExpress.DocumentView;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
@@ -20,6 +19,8 @@ public class ProjectService : IProjectService
     private readonly IFormedAdditionalEquipsRepository _additionalEquipsRepository;
     private readonly AuditService _auditService;
     private readonly IBaseRepository<Company> _companyRepository;
+
+    private readonly ConverterService _converterService;
     private readonly IDialogService _dialogService;
     private readonly IFormedDrainagesRepository _drainagesRepository;
     private readonly IFormedElectricalRepository _electricalRepository;
@@ -30,8 +31,6 @@ public class ProjectService : IProjectService
     private readonly SessionService _sessionService;
     private readonly IStandService _standService;
     private readonly IBaseRepository<Subject> _subjectRepository;
-
-    private readonly ConverterService _converterService;
 
     public ProjectService(
         IProjectInfoRepository projectRepository,
@@ -316,7 +315,7 @@ public class ProjectService : IProjectService
         if (Guard.ExitIfNull("Сначала создайте проект!", _notificationService, projectModel))
             return;
 
-       
+
         var stand = projectModel.SelectedStand;
         var obv = stand?.SelectedObvyazkaInStand;
 

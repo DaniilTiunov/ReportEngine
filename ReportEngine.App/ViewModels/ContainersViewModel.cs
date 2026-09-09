@@ -10,38 +10,26 @@ using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Repositories.Interfaces;
-using ReportEngine.Extensions.Extensions;
 using ReportEngine.Domain.Entities.Other;
+using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
+using ReportEngine.Extensions.Extensions;
 using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.App.ViewModels;
 
 public partial class ContainersViewModel : ObservableObject
 {
+    private readonly ReportEngineConfigService _configService;
     private readonly IContainerRepository _containerRepository;
     private readonly ContainerService _containerService;
-    private readonly INotificationService _notificationService;
-    private readonly ProjectViewModel _projectViewModel;
     private readonly IDialogService _dialogService;
+    private readonly INotificationService _notificationService;
     private readonly IProjectInfoRepository _projectInfoRepository;
-    private readonly IServiceProvider _serviceProvider;
-    private readonly IReportService _reportService;
-    private readonly ReportEngineConfigService _configService;
-    
-    [ObservableProperty] private ObservableCollection<ContainerBatch> _allProjectBatches = new();
-    [ObservableProperty] private ObservableCollection<Stand> _standsInProject = new();
-    [ObservableProperty] private ObservableCollection<ContainerStand> _containersInBatch = new();
-    [ObservableProperty] private ObservableCollection<Stand> _standsInContainer = new();
-    [ObservableProperty] private ObservableCollection<Stand> _availableStands  = new();
-    [ObservableProperty] private ContainerBatch _selectedBatch;
-    [ObservableProperty] private ContainerStand _selectedStandContainer = new();
-    [ObservableProperty] private Stand _selectedStand;
-    [ObservableProperty] private ReportType _selectedReportType;
-    
+    private readonly ProjectViewModel _projectViewModel;
+
     private readonly Dictionary<ReportType, string> _reportDisplayNames = new()
     {
         { ReportType.SummaryReport, "📊 Сводная ведомость" },
@@ -55,6 +43,19 @@ public partial class ContainersViewModel : ObservableObject
         { ReportType.TechnologicalCards, "📑 Тех. карты" },
         { ReportType.FlatSummaryReport, "📊 Сводная ведомость 1С" }
     };
+
+    private readonly IReportService _reportService;
+    private readonly IServiceProvider _serviceProvider;
+
+    [ObservableProperty] private ObservableCollection<ContainerBatch> _allProjectBatches = new();
+    [ObservableProperty] private ObservableCollection<Stand> _availableStands = new();
+    [ObservableProperty] private ObservableCollection<ContainerStand> _containersInBatch = new();
+    [ObservableProperty] private ContainerBatch _selectedBatch;
+    [ObservableProperty] private ReportType _selectedReportType;
+    [ObservableProperty] private Stand _selectedStand;
+    [ObservableProperty] private ContainerStand _selectedStandContainer = new();
+    [ObservableProperty] private ObservableCollection<Stand> _standsInContainer = new();
+    [ObservableProperty] private ObservableCollection<Stand> _standsInProject = new();
 
     public ContainersViewModel(
         ProjectViewModel projectViewModel,
@@ -78,7 +79,7 @@ public partial class ContainersViewModel : ObservableObject
         _configService = configService;
 
         _ = InitializeAsync();
-        
+
         InitCommands();
     }
 
@@ -87,10 +88,10 @@ public partial class ContainersViewModel : ObservableObject
     public ICommand RemoveSelectedBatchCommand { get; set; }
     public ICommand AddContainerToBatchCommand { get; set; }
     public ICommand RemoveContainerFromBatchCommand { get; set; }
-    public ICommand AddStandToContainerCommand {get; set;}
+    public ICommand AddStandToContainerCommand { get; set; }
     public ICommand RemoveStandFromContainerCommand { get; set; }
     public ICommand GenerateSelectedReportCommand { get; set; }
-    
+
     private void InitCommands()
     {
         CreateBatchCommand = new AsyncRelayCommand(CreateBatchAsync);
@@ -111,7 +112,7 @@ public partial class ContainersViewModel : ObservableObject
         InitSelectedItems();
         UpdateAvailableStands();
     }
-    
+
     private void InitSelectedItems()
     {
         SelectedBatch = AllProjectBatches.FirstOrDefault();
@@ -129,9 +130,9 @@ public partial class ContainersViewModel : ObservableObject
         StandsInProject.Clear();
         var stands = await _projectInfoRepository.GetProjectWithStandsAsync(
             _projectViewModel.CurrentProjectModel.CurrentProjectId);
-        
+
         StandsInProject = stands.ToObservable();
-        
+
         UpdateAvailableStands();
     }
 
@@ -139,9 +140,9 @@ public partial class ContainersViewModel : ObservableObject
     {
         await _containerService.CreateBatchAsync(
             _projectViewModel.CurrentProjectModel.CurrentProjectId);
-        
+
         await RefreshBatchesDataAsync();
-        
+
         SelectedBatch = AllProjectBatches.LastOrDefault();
     }
 
@@ -149,16 +150,13 @@ public partial class ContainersViewModel : ObservableObject
     {
         var selectedBatchId = SelectedBatch?.Id;
         var selectedContainerId = SelectedStandContainer?.Id;
-        
+
         AllProjectBatches.Clear();
-        
+
         var batches = await _containerRepository.GetAllProjectBatchesInfoAsync(
             _projectViewModel.CurrentProjectModel.CurrentProjectId);
 
-        foreach (var batch in batches)
-        {
-            AllProjectBatches.Add(batch);
-        }
+        foreach (var batch in batches) AllProjectBatches.Add(batch);
 
         if (selectedBatchId.HasValue)
         {
@@ -171,7 +169,7 @@ public partial class ContainersViewModel : ObservableObject
                 {
                     SelectedStandContainer = SelectedBatch.Containers
                         .FirstOrDefault(c => c.Id == selectedContainerId.Value);
-                    
+
                     UpdateAvailableStands();
                 }
             }
@@ -181,23 +179,20 @@ public partial class ContainersViewModel : ObservableObject
                 ContainersInBatch.Clear();
             }
         }
-        
+
         UpdateAvailableStands();
     }
 
     private async Task RemoveSelectedBatchAsync()
     {
         if (SelectedBatch == null) return;
-        
+
         var batchId = SelectedBatch.Id;
         await _containerService.DeleteBatchAsync(batchId);
-        
+
         await RefreshBatchesDataAsync();
 
-        if (SelectedBatch?.Id == batchId)
-        {
-            SelectedBatch = null;
-        }
+        if (SelectedBatch?.Id == batchId) SelectedBatch = null;
     }
 
     private async Task AddContainerToBatchAsync()
@@ -209,7 +204,7 @@ public partial class ContainersViewModel : ObservableObject
         }
 
         var selectedContainer = _dialogService.ShowEquipDialog<Container>();
-        
+
         if (selectedContainer == null) return;
 
         var container = new ContainerStand
@@ -218,7 +213,7 @@ public partial class ContainersViewModel : ObservableObject
             Name = selectedContainer.Name,
             ContainerWeight = selectedContainer.Weight,
             ContainerCost = selectedContainer.Cost,
-            ContainerBatchId = SelectedBatch.Id,
+            ContainerBatchId = SelectedBatch.Id
         };
 
         await _containerService.AddContainerToBatchAsync(
@@ -226,17 +221,14 @@ public partial class ContainersViewModel : ObservableObject
             SelectedBatch.Id,
             container
         );
-        
+
         var batchId = SelectedBatch.Id;
-        
+
         await RefreshBatchesDataAsync();
-        
+
         SelectedBatch = AllProjectBatches.FirstOrDefault(b => b.Id == batchId);
-        
-        if (SelectedBatch?.Containers != null)
-        {
-            SelectedStandContainer = SelectedBatch.Containers.LastOrDefault();
-        }
+
+        if (SelectedBatch?.Containers != null) SelectedStandContainer = SelectedBatch.Containers.LastOrDefault();
     }
 
     private async Task RemoveContainerFromBatchAsync()
@@ -261,11 +253,11 @@ public partial class ContainersViewModel : ObservableObject
             SelectedBatch.Id,
             containerId
         );
-        
+
         await RefreshBatchesDataAsync();
-        
+
         SelectedBatch = AllProjectBatches.FirstOrDefault(b => b.Id == batchId);
-        
+
         SelectedStandContainer = null;
     }
 
@@ -278,29 +270,29 @@ public partial class ContainersViewModel : ObservableObject
         );
 
         StandsInProject.Remove(SelectedStand);
-        
+
         SelectedStandContainer.Stands.Add(SelectedStand);
 
         UpdateAvailableStands();
-        
+
         await RefreshBatchesDataAsync();
-        
+
         SelectedStand = null;
     }
 
     private async Task RemoveStandFromContainerAsync()
     {
         await _containerService.RemoveStandFromContainerAsync(
-            _projectViewModel.CurrentProjectModel.CurrentProjectId, 
-            SelectedStandContainer.Id, 
+            _projectViewModel.CurrentProjectModel.CurrentProjectId,
+            SelectedStandContainer.Id,
             SelectedStand.Id);
 
         SelectedStandContainer.Stands.Remove(SelectedStand);
-        
+
         await RefreshBatchesDataAsync();
 
         UpdateAvailableStands();
-        
+
         SelectedStand = null;
     }
 
@@ -308,20 +300,19 @@ public partial class ContainersViewModel : ObservableObject
     {
         var containerStandIds = SelectedStandContainer?.Stands?
                                     .Select(s => s.Id)
-                                    .ToHashSet() 
+                                    .ToHashSet()
                                 ?? [];
 
         AvailableStands = StandsInProject
             .Where(s => !containerStandIds.Contains(s.Id))
             .ToObservable();
     }
-    
+
     private async Task CreateReportAsync(
         ReportType typeGenerator,
         string reportName,
         List<Stand> selectedStands)
     {
-
         if (selectedStands == null || selectedStands.Count == 0)
         {
             _notificationService.ShowConfirmation("Стенды не выбраны!");
@@ -371,8 +362,8 @@ public partial class ContainersViewModel : ObservableObject
 
         await _dialogService.RunWithProgressDialogAsync(() =>
             _reportService.GenerateReportAsync(
-                typeGenerator, 
-                _projectViewModel.CurrentProjectModel.CurrentProjectId, 
+                typeGenerator,
+                _projectViewModel.CurrentProjectModel.CurrentProjectId,
                 selectedStands));
 
         if (_notificationService.ShowConfirmation(
@@ -382,7 +373,7 @@ public partial class ContainersViewModel : ObservableObject
             Process.Start("explorer.exe", reportDir);
         }
     }
-    
+
     private async Task GenerateSelectedReportAsync()
     {
         if (SelectedBatch == null)
@@ -390,7 +381,7 @@ public partial class ContainersViewModel : ObservableObject
             _notificationService.ShowInfo("Сначала выберите партию!");
             return;
         }
-        
+
         var batchStands = SelectedBatch.Containers
             .SelectMany(container => container.Stands)
             .ToList();
@@ -401,8 +392,8 @@ public partial class ContainersViewModel : ObservableObject
             return;
         }
 
-        var reportName = _reportDisplayNames.TryGetValue(SelectedReportType, out var name) 
-            ? name 
+        var reportName = _reportDisplayNames.TryGetValue(SelectedReportType, out var name)
+            ? name
             : SelectedReportType.ToString();
 
         await CreateReportAsync(SelectedReportType, reportName, batchStands);
