@@ -19,6 +19,9 @@
     <SolidColorBrush Color="Green" x:Key="PrimaryHueDarkBrush" />
 
     <FontFamily x:Key="AppFontFamily">Segoe UI Variable Text, Segoe UI</FontFamily>
+    <BitmapImage
+        UriSource="pack://application:,,,/KIPARIS_PCM;component/Resources/Icons/estimate_cost_icon_213382.ico"
+        x:Key="ApplicationWindowIcon" />
 
     <!--  ======================================================  -->
     <!--  ОБЩИЕ ЭФФЕКТЫ  -->
@@ -33,6 +36,61 @@
     <!--  ======================================================  -->
     <!--  СТИЛИ ДЛЯ ОКОН  -->
     <!--  ======================================================  -->
+    <Style
+        BasedOn="{StaticResource MahApps.Styles.Button.MetroWindow.Base}"
+        TargetType="Button"
+        x:Key="ThemedWindowCaptionButtonStyle">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="MaxHeight" Value="42" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Width" Value="46" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource RowHoverColor}" />
+                <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource SelectedRowBackground}" />
+                <Setter Property="Foreground" Value="{DynamicResource SelectedRowForeground}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource DisabledForeground}" />
+                <Setter Property="Opacity" Value="0.5" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style
+        BasedOn="{StaticResource ThemedWindowCaptionButtonStyle}"
+        TargetType="Button"
+        x:Key="ThemedWindowCloseButtonStyle">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource AccentColor}" />
+                <Setter Property="Foreground" Value="{DynamicResource SelectedRowForeground}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource ButtonPressedBackground}" />
+                <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--  WindowButtonCommands выбирает Light/Dark-варианты самостоятельно, поэтому настраиваем оба.  -->
+    <Style BasedOn="{StaticResource MahApps.Styles.WindowButtonCommands}" TargetType="mah:WindowButtonCommands">
+        <Setter Property="LightMinButtonStyle" Value="{StaticResource ThemedWindowCaptionButtonStyle}" />
+        <Setter Property="LightMaxButtonStyle" Value="{StaticResource ThemedWindowCaptionButtonStyle}" />
+        <Setter Property="LightCloseButtonStyle" Value="{StaticResource ThemedWindowCloseButtonStyle}" />
+        <Setter Property="DarkMinButtonStyle" Value="{StaticResource ThemedWindowCaptionButtonStyle}" />
+        <Setter Property="DarkMaxButtonStyle" Value="{StaticResource ThemedWindowCaptionButtonStyle}" />
+        <Setter Property="DarkCloseButtonStyle" Value="{StaticResource ThemedWindowCloseButtonStyle}" />
+    </Style>
+
     <Style TargetType="Window">
         <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
         <Setter Property="FontSize" Value="14" />
@@ -52,13 +110,14 @@
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
         <Setter Property="BorderBrush" Value="{DynamicResource WindowBorderColor}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="WindowTitleBrush" Value="{DynamicResource BorderColor}" />
+        <Setter Property="WindowTitleBrush" Value="{DynamicResource SecondaryColor}" />
         <Setter Property="NonActiveWindowTitleBrush" Value="{DynamicResource PrimaryColor}" />
         <Setter Property="NonActiveBorderBrush" Value="{DynamicResource BorderColor}" />
+        <Setter Property="OverrideDefaultWindowCommandsBrush" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="TitleForeground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="TitleBarHeight" Value="42" />
         <Setter Property="ShowIconOnTitleBar" Value="True" />
-        <Setter Property="Icon" Value="pack://application:,,,/KIPARIS_PCM;component/Resources/Icons/estimate_cost_icon_213382.ico" />
+        <Setter Property="Icon" Value="{StaticResource ApplicationWindowIcon}" />
         <Setter Property="WindowTransitionsEnabled" Value="True" />
     </Style>
 
@@ -437,7 +496,7 @@
     <!--  ======================================================  -->
     <!--  СТИЛИ ДЛЯ ListView  -->
     <!--  ======================================================  -->
-    <Style TargetType="ListView">
+    <Style BasedOn="{StaticResource MahApps.Styles.ListView}" TargetType="ListView">
         <Setter Property="FontSize" Value="14" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
@@ -459,7 +518,7 @@
         </Style.Triggers>
     </Style>
 
-    <Style TargetType="ListViewItem">
+    <Style BasedOn="{StaticResource MahApps.Styles.ListViewItem}" TargetType="ListViewItem">
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
         <Style.Triggers>
@@ -971,17 +1030,194 @@
     <!--  ======================================================  -->
     <!--  СТИЛИ ДЛЯ ScrollViewer / ScrollBar  -->
     <!--  ======================================================  -->
-    <Style BasedOn="{StaticResource MahApps.Styles.ScrollViewer}" TargetType="ScrollViewer">
-        <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
-        <Setter Property="BorderThickness" Value="4" />
+    <Style TargetType="RepeatButton" x:Key="ScrollBarPageButtonStyle">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RepeatButton">
+                    <Border Background="{TemplateBinding Background}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
-    <Style BasedOn="{StaticResource MahApps.Styles.ScrollBar}" TargetType="ScrollBar">
+    <Style TargetType="Thumb" x:Key="ScrollBarThumbStyle">
+        <Setter Property="Background" Value="{DynamicResource AccentColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentColor}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Opacity" Value="0.72" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Thumb">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="5"
+                        SnapsToDevicePixels="True"
+                        x:Name="ThumbBorder" />
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource ButtonHoverBackground}" />
+                            <Setter Property="BorderBrush" Value="{DynamicResource ButtonHoverBackground}" />
+                            <Setter Property="Opacity" Value="0.95" />
+                        </Trigger>
+                        <Trigger Property="IsDragging" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource ButtonPressedBackground}" />
+                            <Setter Property="BorderBrush" Value="{DynamicResource ButtonPressedBackground}" />
+                            <Setter Property="Opacity" Value="1" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" Value="{DynamicResource DisabledForeground}" />
+                            <Setter Property="BorderBrush" Value="{DynamicResource DisabledForeground}" />
+                            <Setter Property="Opacity" Value="0.35" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="ScrollBar">
         <Setter Property="Foreground" Value="{DynamicResource AccentColor}" />
         <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
-        <Setter Property="Width" Value="14" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="MinWidth" Value="12" />
+        <Setter Property="MinHeight" Value="12" />
+        <Setter Property="Opacity" Value="0.82" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ScrollBar">
+                    <Grid Margin="2" x:Name="Root">
+                        <Border
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6"
+                            x:Name="TrackBackground" />
+                        <Track
+                            IsDirectionReversed="True"
+                            IsEnabled="{TemplateBinding IsEnabled}"
+                            x:Name="PART_Track">
+                            <Track.DecreaseRepeatButton>
+                                <RepeatButton Command="ScrollBar.PageUpCommand" Style="{StaticResource ScrollBarPageButtonStyle}" />
+                            </Track.DecreaseRepeatButton>
+                            <Track.Thumb>
+                                <Thumb Style="{StaticResource ScrollBarThumbStyle}" />
+                            </Track.Thumb>
+                            <Track.IncreaseRepeatButton>
+                                <RepeatButton Command="ScrollBar.PageDownCommand" Style="{StaticResource ScrollBarPageButtonStyle}" />
+                            </Track.IncreaseRepeatButton>
+                        </Track>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Orientation" Value="Vertical">
+                            <Setter Property="Width" Value="14" />
+                            <Setter Property="MinHeight" TargetName="PART_Track" Value="24" />
+                        </Trigger>
+                        <Trigger Property="Orientation" Value="Horizontal">
+                            <Setter Property="Height" Value="14" />
+                            <Setter Property="IsDirectionReversed" TargetName="PART_Track" Value="False" />
+                            <Setter Property="MinWidth" TargetName="PART_Track" Value="24" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource RowHoverColor}" />
+                            <Setter Property="Opacity" Value="1" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.4" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="ScrollViewer">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Top" />
+        <Setter Property="PanningMode" Value="Both" />
+        <Setter Property="PanningDeceleration" Value="0.001" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ScrollViewer">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="4"
+                        SnapsToDevicePixels="True">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <ScrollContentPresenter
+                                CanContentScroll="{TemplateBinding CanContentScroll}"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                Grid.Column="0"
+                                Grid.Row="0"
+                                Margin="{TemplateBinding Padding}"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                x:Name="PART_ScrollContentPresenter" />
+
+                            <ScrollBar
+                                Grid.Column="1"
+                                Grid.Row="0"
+                                Maximum="{TemplateBinding ScrollableHeight}"
+                                Orientation="Vertical"
+                                Value="{TemplateBinding VerticalOffset}"
+                                ViewportSize="{TemplateBinding ViewportHeight}"
+                                Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
+                                x:Name="PART_VerticalScrollBar" />
+
+                            <ScrollBar
+                                Grid.Column="0"
+                                Grid.Row="1"
+                                Maximum="{TemplateBinding ScrollableWidth}"
+                                Orientation="Horizontal"
+                                Value="{TemplateBinding HorizontalOffset}"
+                                ViewportSize="{TemplateBinding ViewportWidth}"
+                                Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
+                                x:Name="PART_HorizontalScrollBar" />
+
+                            <Border
+                                Background="{DynamicResource SecondaryColor}"
+                                CornerRadius="4"
+                                Grid.Column="1"
+                                Grid.Row="1"
+                                Margin="2"
+                                Visibility="Collapsed"
+                                x:Name="ScrollBarCorner" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding ComputedHorizontalScrollBarVisibility, RelativeSource={RelativeSource TemplatedParent}}" Value="Visible" />
+                                <Condition Binding="{Binding ComputedVerticalScrollBarVisibility, RelativeSource={RelativeSource TemplatedParent}}" Value="Visible" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="Visibility" TargetName="ScrollBarCorner" Value="Visible" />
+                        </MultiDataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <!--  ======================================================  -->
