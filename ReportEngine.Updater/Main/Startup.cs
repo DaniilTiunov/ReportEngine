@@ -11,9 +11,9 @@ public static class Startup
         var host = AppHostBuilder.Build();
 
         var app = host.Services.GetRequiredService<App>();
-        
+
         var mainWindow = host.Services.GetRequiredService<MainWindow>();
-        
+
         mainWindow.Show();
         app.Run();
     }

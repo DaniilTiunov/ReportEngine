@@ -4,5 +4,4 @@ namespace ReportEngine.Updater.Main;
 
 public class App : Application
 {
-    
 }

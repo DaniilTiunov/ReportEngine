@@ -5,7 +5,6 @@ namespace ReportEngine.Domain.Entities;
 
 public class ObvyazkaInStand
 {
-
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }

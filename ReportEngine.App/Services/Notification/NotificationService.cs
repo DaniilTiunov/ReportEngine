@@ -14,7 +14,7 @@ public class NotificationService : INotificationService
     {
         _logger = logger;
     }
-    
+
     public void ShowError(string message)
     {
         var window = new NotifyWindow(message, NotificationType.Error, "Ошибка")
@@ -22,7 +22,7 @@ public class NotificationService : INotificationService
             Owner = Application.Current.MainWindow
         };
         window.ShowDialog();
-        
+
         _logger.Error(message);
     }
 
@@ -33,7 +33,7 @@ public class NotificationService : INotificationService
             Owner = Application.Current.MainWindow
         };
         window.ShowDialog();
-        
+
         _logger.Info(message);
     }
 

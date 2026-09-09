@@ -17,11 +17,11 @@ namespace ReportEngine.App.ViewModels.TreeView;
 public class TreeViewModel
 {
     private readonly ICalculationService _calculationService;
+    private readonly ReportEngineConfigService _configService;
     private readonly IDialogService _dialogService;
     private readonly INotificationService _notificationService;
     private readonly ProjectViewModel _projectViewModel;
     private readonly IReportService _reportService;
-    private readonly ReportEngineConfigService _configService;
 
     private readonly IServiceProvider _serviceProvider;
     private readonly UpdaterStandService _updaterStandService;

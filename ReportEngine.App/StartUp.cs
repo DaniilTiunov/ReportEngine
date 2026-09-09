@@ -35,13 +35,13 @@ public static class StartUp
                 "Сборка хоста...");
 
             var host = HostFactory.BuildHost();
-            
+
             SplashManager.SetStatus(
                 "Регистрация контекста данных...");
 
             var context =
                 host.Services.GetRequiredService<ReAppContext>();
-            
+
             SplashManager.SetStatus(
                 "Инициализация приложения...");
 
@@ -67,11 +67,12 @@ public static class StartUp
 
             SplashManager.SetStatus(
                 "Запуск приложения...");
-    
+
             var mainWindow =
                 host.Services.GetRequiredService<MainWindow>();
 
             app.MainWindow = mainWindow;
+            app.ShutdownMode = ShutdownMode.OnMainWindowClose;
 
             mainWindow.Show();
 
@@ -79,7 +80,7 @@ public static class StartUp
             SplashManager.Close();
 
             _ = host.StartAsync();
-            
+
             Log.Information("Приложение запущено");
 
             app.Run();

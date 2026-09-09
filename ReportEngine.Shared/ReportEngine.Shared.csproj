@@ -27,11 +27,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Services\" />
+        <Folder Include="Services\"/>
     </ItemGroup>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-      <Exec Command="if exist &quot;$(TargetDir)updateInfo.json&quot; del &quot;$(TargetDir)updateInfo.json&quot;" />
+        <Exec Command="if exist &quot;$(TargetDir)updateInfo.json&quot; del &quot;$(TargetDir)updateInfo.json&quot;"/>
     </Target>
 
 </Project>

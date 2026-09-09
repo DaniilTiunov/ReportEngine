@@ -1,24 +1,22 @@
-﻿using ClosedXML.Excel;
+﻿using System.Diagnostics;
+using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Helpers;
-using System.Diagnostics;
 using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
 public class ComponentListReportGenerator : IReportGenerator
 {
-    private readonly ProjectInfoRepository _projectInfoRepository;
     private readonly ReportEngineConfigService _configService;
+    private readonly ProjectInfoRepository _projectInfoRepository;
 
     public ComponentListReportGenerator(
-        ProjectInfoRepository projectInfoRepository, 
+        ProjectInfoRepository projectInfoRepository,
         ReportEngineConfigService configService)
     {
         _projectInfoRepository = projectInfoRepository;

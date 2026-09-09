@@ -14,10 +14,10 @@ namespace ReportEngine.App.ViewModels;
 
 public class SettingsViewModel : BaseViewModel
 {
+    private readonly ReportEngineConfigService _configService;
     private readonly ExceptionService _exceptionService;
     private readonly INotificationService _notificationService;
     private readonly IServiceProvider _serviceProvider;
-    private readonly ReportEngineConfigService _configService;
     private string _connectionString;
     private object _currentView;
     private string _dbName;
@@ -31,7 +31,7 @@ public class SettingsViewModel : BaseViewModel
     public SettingsViewModel(
         INotificationService notificationService,
         IServiceProvider serviceProvider,
-        ExceptionService exceptionService, 
+        ExceptionService exceptionService,
         ReportEngineConfigService configService)
     {
         ApplySettingsCommand = new RelayCommand(ExecuteSaveCommand, _ => true);

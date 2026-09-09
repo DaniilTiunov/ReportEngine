@@ -1,212 +1,134 @@
-﻿<Window
-    AllowsTransparency="True"
-    Background="Transparent"
-    FontFamily="Bahnschrift"
+﻿<mah:MetroWindow
+    FontFamily="{DynamicResource AppFontFamily}"
     FontSize="14"
     Foreground="{DynamicResource PrimaryForeground}"
     Height="600"
     MinHeight="500"
     MinWidth="800"
     ResizeMode="CanResize"
+    ShowIconOnTitleBar="True"
     Title="Все стенды"
+    TitleForeground="{DynamicResource PrimaryForeground}"
     Width="1000"
     WindowStartupLocation="CenterScreen"
-    WindowStyle="None"
     mc:Ignorable="d"
     windowHelpers:WindowBehavior.CloseOnEscape="True"
     x:Class="ReportEngine.App.Views.Windows.Dialog.AllStandsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:windowHelpers="clr-namespace:ReportEngine.App.Views.Windows.WindowHelpers"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <WindowChrome.WindowChrome>
-        <WindowChrome
-            CaptionHeight="0"
-            CornerRadius="12"
-            GlassFrameThickness="0"
-            ResizeBorderThickness="6" />
-    </WindowChrome.WindowChrome>
 
-    <Window.Resources>
+    <mah:MetroWindow.Resources>
         <DropShadowEffect
             BlurRadius="30"
             Color="#000000"
             Opacity="0.2"
             ShadowDepth="0"
             x:Key="WindowShadow" />
-    </Window.Resources>
+    </mah:MetroWindow.Resources>
+    <DockPanel>
+        <!--  Заголовок окна  -->
+        <Separator
+            Background="{DynamicResource PrimaryForeground}"
+            BorderBrush="{DynamicResource PrimaryForeground}"
+            BorderThickness="3"
+            DockPanel.Dock="Top"
+            Foreground="{DynamicResource PrimaryForeground}"
+            Height="3"
+            Margin="20,0,20,8" />
 
-    <Border
-        ClipToBounds="True"
-        CornerRadius="12"
-        Effect="{StaticResource WindowShadow}">
-        <Border
-            Background="{DynamicResource PrimaryColor}"
-            BorderBrush="{DynamicResource WindowBorderColor}"
-            BorderThickness="1"
-            CornerRadius="12">
-            <DockPanel>
-                <!--  Заголовок окна  -->
-                <Border
-                    Background="#2D2D30"
-                    CornerRadius="12,12,0,0"
-                    DockPanel.Dock="Top"
-                    Height="40"
-                    MouseLeftButtonDown="Window_MouseLeftButtonDown"
-                    x:Name="FormedFrameWindowTitle">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+        <!--  Основное содержимое  -->
+        <Grid Margin="15,15,15,15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-                        <StackPanel
-                            Margin="12,0,0,0"
-                            Orientation="Horizontal"
-                            VerticalAlignment="Center">
-                            <Image
-                                Height="18"
-                                Margin="0,0,8,0"
-                                Source="/Resources/Icons/estimate_cost_icon_213382.ico"
-                                Width="18" />
-                            <TextBlock
-                                FontSize="14"
-                                FontWeight="SemiBold"
-                                Foreground="White"
-                                Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}"
-                                VerticalAlignment="Center" />
-                        </StackPanel>
+            <!--  Заголовки колонок в стиле карточек  -->
+            <TextBlock
+                Grid.Column="0"
+                Grid.Row="0"
+                Margin="0,0,10,8"
+                Style="{StaticResource HeaderStyle}"
+                Text="Все проекты" />
 
-                        <StackPanel
-                            Grid.Column="1"
-                            Orientation="Horizontal"
-                            VerticalAlignment="Center">
-                            <Button
-                                Click="MinimizeButton_Click"
-                                Height="30"
-                                Margin="0,0,5,0"
-                                Style="{StaticResource CloseButtonStyle}"
-                                ToolTip="Свернуть"
-                                Width="40"
-                                x:Name="MinimizeButton">
-                                ─
-                            </Button>
-                            <Button
-                                Click="MaxRestoreButton_Click"
-                                Height="30"
-                                Margin="5,0"
-                                Style="{StaticResource CloseButtonStyle}"
-                                ToolTip="Развернуть"
-                                Width="40"
-                                x:Name="MaxRestoreButton">
-                                ▢
-                            </Button>
-                            <Button
-                                Click="CloseButton_Click"
-                                Height="30"
-                                Margin="5,0,10,0"
-                                Style="{StaticResource CloseButtonStyle}"
-                                ToolTip="Закрыть"
-                                Width="40"
-                                x:Name="CloseButton">
-                                ✕
-                            </Button>
-                        </StackPanel>
-                    </Grid>
-                </Border>
+            <TextBlock
+                Grid.Column="1"
+                Grid.Row="0"
+                Margin="10,0,0,8"
+                Style="{StaticResource HeaderStyle}"
+                Text="Стенды в проекте" />
 
-                <!--  Основное содержимое  -->
-                <Grid Margin="15,15,15,15">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
+            <!--  Левая карточка: список проектов  -->
+            <Border
+                Grid.Column="0"
+                Grid.Row="1"
+                Margin="0,0,10,0"
+                Style="{StaticResource CardPanelStyle}">
+                <ListView
+                    BorderThickness="0"
+                    ItemsSource="{Binding AllProjects}"
+                    Margin="5"
+                    SelectedItem="{Binding SelectedProject}"
+                    x:Name="ProjectList">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn
+                                DisplayMemberBinding="{Binding Company}"
+                                Header="Заказчик"
+                                Width="Auto" />
+                            <GridViewColumn
+                                DisplayMemberBinding="{Binding Object}"
+                                Header="Объект"
+                                Width="Auto" />
+                            <GridViewColumn
+                                DisplayMemberBinding="{Binding Description}"
+                                Header="Обозначение по КД"
+                                Width="Auto" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Border>
 
-                    <!--  Заголовки колонок в стиле карточек  -->
-                    <TextBlock
-                        Grid.Column="0"
-                        Grid.Row="0"
-                        Margin="0,0,10,8"
-                        Style="{StaticResource HeaderStyle}"
-                        Text="Все проекты" />
-
-                    <TextBlock
-                        Grid.Column="1"
-                        Grid.Row="0"
-                        Margin="10,0,0,8"
-                        Style="{StaticResource HeaderStyle}"
-                        Text="Стенды в проекте" />
-
-                    <!--  Левая карточка: список проектов  -->
-                    <Border
-                        Grid.Column="0"
-                        Grid.Row="1"
-                        Margin="0,0,10,0"
-                        Style="{StaticResource CardPanelStyle}">
-                        <ListView
-                            BorderThickness="0"
-                            ItemsSource="{Binding AllProjects}"
-                            Margin="5"
-                            SelectedItem="{Binding SelectedProject}"
-                            x:Name="ProjectList">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn
-                                        DisplayMemberBinding="{Binding Company}"
-                                        Header="Заказчик"
-                                        Width="Auto" />
-                                    <GridViewColumn
-                                        DisplayMemberBinding="{Binding Object}"
-                                        Header="Объект"
-                                        Width="Auto" />
-                                    <GridViewColumn
-                                        DisplayMemberBinding="{Binding Description}"
-                                        Header="Обозначение по КД"
-                                        Width="Auto" />
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </Border>
-
-                    <!--  Правая карточка: список стендов  -->
-                    <Border
-                        Grid.Column="1"
-                        Grid.Row="1"
-                        Margin="10,0,0,0"
-                        Style="{StaticResource CardPanelStyle}">
-                        <ListView
-                            BorderThickness="0"
-                            ItemsSource="{Binding SelectedProject.Stands}"
-                            Margin="5"
-                            MouseDoubleClick="StandsList_MouseDoubleClick"
-                            SelectedItem="{Binding SelectedStand}"
-                            x:Name="StandsList">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn
-                                        DisplayMemberBinding="{Binding KKSCode}"
-                                        Header="Код ККС"
-                                        Width="Auto" />
-                                    <GridViewColumn
-                                        DisplayMemberBinding="{Binding Design}"
-                                        Header="Обозначение стенда"
-                                        Width="Auto" />
-                                    <GridViewColumn
-                                        DisplayMemberBinding="{Binding SerialNumber}"
-                                        Header="Серийный номер"
-                                        Width="Auto" />
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </Border>
-                </Grid>
-            </DockPanel>
-        </Border>
-    </Border>
-</Window>
+            <!--  Правая карточка: список стендов  -->
+            <Border
+                Grid.Column="1"
+                Grid.Row="1"
+                Margin="10,0,0,0"
+                Style="{StaticResource CardPanelStyle}">
+                <ListView
+                    BorderThickness="0"
+                    ItemsSource="{Binding SelectedProject.Stands}"
+                    Margin="5"
+                    MouseDoubleClick="StandsList_MouseDoubleClick"
+                    SelectedItem="{Binding SelectedStand}"
+                    x:Name="StandsList">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn
+                                DisplayMemberBinding="{Binding KKSCode}"
+                                Header="Код ККС"
+                                Width="Auto" />
+                            <GridViewColumn
+                                DisplayMemberBinding="{Binding Design}"
+                                Header="Обозначение стенда"
+                                Width="Auto" />
+                            <GridViewColumn
+                                DisplayMemberBinding="{Binding SerialNumber}"
+                                Header="Серийный номер"
+                                Width="Auto" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Border>
+        </Grid>
+    </DockPanel>
+</mah:MetroWindow>

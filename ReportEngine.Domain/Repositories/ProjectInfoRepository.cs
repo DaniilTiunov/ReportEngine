@@ -52,39 +52,6 @@ public class ProjectInfoRepository : IProjectInfoRepository
     }
 
 
-    public async Task<ProjectInfo> GetFullProjectbyIdAsync(int id)
-    {
-        return await _context.Projects
-            .AsSplitQuery()
-            .AsNoTracking()
-            .Include(p => p.Stands)
-                .ThenInclude(s => s.StandFrames)
-                    .ThenInclude(sf => sf.Frame)
-                        .ThenInclude(f => f.Components)
-            .Include(p => p.Stands)
-                .ThenInclude(s => s.StandAdditionalEquips)
-                    .ThenInclude(sae => sae.AdditionalEquip)
-                        .ThenInclude(ae => ae.Purposes)
-            .Include(p => p.Stands)
-                .ThenInclude(s => s.StandElectricalComponent)
-                    .ThenInclude(sec => sec.ElectricalComponent)
-                        .ThenInclude(ec => ec.Purposes)
-            .Include(p => p.Stands)
-                .ThenInclude(s => s.StandDrainages)
-                    .ThenInclude(sd => sd.Drainage)
-            .Include(p => p.Stands)
-                .ThenInclude(s => s.ObvyazkiInStand)
-                    .ThenInclude(o => o.Obvyazka)
-            .Include(p => p.Stands)
-                .ThenInclude(s => s.ObvyazkiInStand)
-                    .ThenInclude(o => o.AdditionalComponents)
-            .FirstOrDefaultAsync(x => x.Id == id);
-    }
-
-
-
-
-
     public async Task UpdateAsync(ProjectInfo project)
     {
         var existingProject = await _context.Set<ProjectInfo>()
@@ -102,16 +69,13 @@ public class ProjectInfoRepository : IProjectInfoRepository
 
         var existingProject = await _context.Set<ProjectInfo>()
             .FirstOrDefaultAsync(p => p.Id == project.Id);
-        
+
         if (existingProject == null) return;
 
         var standsList = existingProject.Stands.ToList();
-    
-        foreach (var stand in standsList)
-        {
-            await DeleteStandAsync(project.Id, stand.Id);
-        }
-        
+
+        foreach (var stand in standsList) await DeleteStandAsync(project.Id, stand.Id);
+
         _context.Set<ProjectInfo>().Remove(existingProject);
         await _context.SaveChangesAsync();
     }
@@ -125,7 +89,7 @@ public class ProjectInfoRepository : IProjectInfoRepository
         await DeleteStandDrainagesAsync(standId);
 
         var stand = await _context.Stands.FirstOrDefaultAsync(s => s.Id == standId);
-    
+
         if (stand != null)
         {
             _context.Set<Stand>().Remove(stand);
@@ -406,7 +370,80 @@ public class ProjectInfoRepository : IProjectInfoRepository
             .Where(sae => sae.StandId == standId)
             .ToListAsync();
     }
-    
+
+
+    public async Task<List<StandFrame>> GetAllFramesInStandsAsync(int[] standIds)
+    {
+        return await _context.StandFrames
+            .AsNoTracking()
+            .Include(sf => sf.Frame)
+            .ThenInclude(f => f.Components)
+            .Where(sf => standIds.Contains(sf.StandId))
+            .ToListAsync();
+    }
+
+    public async Task<List<StandDrainage>> GetAllDrainagesInStandsAsync(int[] standIds)
+    {
+        return await _context.StandDrainages
+            .AsNoTracking()
+            .Include(sd => sd.Drainage)
+            .ThenInclude(d => d.Purposes)
+            .Where(sd => standIds.Contains(sd.StandId))
+            .ToListAsync();
+    }
+
+    public async Task<List<StandElectricalComponent>> GetAllElectricalComponentsInStandsAsync(
+        int[] standIds)
+    {
+        return await _context.StandElectricalComponents
+            .AsNoTracking()
+            .Include(sec => sec.ElectricalComponent)
+            .ThenInclude(e => e.Purposes)
+            .Where(sec => standIds.Contains(sec.StandId))
+            .ToListAsync();
+    }
+
+    public async Task<List<StandAdditionalEquip>> GetAllAdditionalEquipsInStandsAsync(
+        int[] standIds)
+    {
+        return await _context.StandAdditionalEquips
+            .AsNoTracking()
+            .Include(sae => sae.AdditionalEquip)
+            .ThenInclude(e => e.Purposes)
+            .Where(sae => standIds.Contains(sae.StandId))
+            .ToListAsync();
+    }
+
+
+    public async Task<ProjectInfo> GetFullProjectbyIdAsync(int id)
+    {
+        return await _context.Projects
+            .AsSplitQuery()
+            .AsNoTracking()
+            .Include(p => p.Stands)
+            .ThenInclude(s => s.StandFrames)
+            .ThenInclude(sf => sf.Frame)
+            .ThenInclude(f => f.Components)
+            .Include(p => p.Stands)
+            .ThenInclude(s => s.StandAdditionalEquips)
+            .ThenInclude(sae => sae.AdditionalEquip)
+            .ThenInclude(ae => ae.Purposes)
+            .Include(p => p.Stands)
+            .ThenInclude(s => s.StandElectricalComponent)
+            .ThenInclude(sec => sec.ElectricalComponent)
+            .ThenInclude(ec => ec.Purposes)
+            .Include(p => p.Stands)
+            .ThenInclude(s => s.StandDrainages)
+            .ThenInclude(sd => sd.Drainage)
+            .Include(p => p.Stands)
+            .ThenInclude(s => s.ObvyazkiInStand)
+            .ThenInclude(o => o.Obvyazka)
+            .Include(p => p.Stands)
+            .ThenInclude(s => s.ObvyazkiInStand)
+            .ThenInclude(o => o.AdditionalComponents)
+            .FirstOrDefaultAsync(x => x.Id == id);
+    }
+
     private async Task DeleteStandAdditionalEquipmentsAsync(int standId)
     {
         // Находим все FormedAdditionalEquip для данного стенда с их связями
@@ -425,14 +462,14 @@ public class ProjectInfoRepository : IProjectInfoRepository
             .SelectMany(fe => fe.StandAdditionalEquips)
             .Where(sae => sae.StandId == standId)
             .ToList();
-    
+
         if (standAdditionalEquips.Any())
             _context.Set<StandAdditionalEquip>().RemoveRange(standAdditionalEquips);
 
         // Удаляем сами FormedAdditionalEquip
         _context.Set<FormedAdditionalEquip>().RemoveRange(additionalEquips);
     }
-    
+
     private async Task DeleteStandElectricalComponentsAsync(int standId)
     {
         // Находим все FormedElectricalComponent для данного стенда с их связями
@@ -450,7 +487,7 @@ public class ProjectInfoRepository : IProjectInfoRepository
         var allPurposes = electricalComponents
             .SelectMany(fe => fe.Purposes)
             .ToList();
-    
+
         if (allPurposes.Any())
             _context.Set<ElectricalPurpose>().RemoveRange(allPurposes);
 
@@ -459,14 +496,14 @@ public class ProjectInfoRepository : IProjectInfoRepository
             .SelectMany(fe => fe.StandElectricalComponents)
             .Where(sec => sec.StandId == standId)
             .ToList();
-    
+
         if (standElectricalComponents.Any())
             _context.Set<StandElectricalComponent>().RemoveRange(standElectricalComponents);
 
         // Удаляем сами FormedElectricalComponent
         _context.Set<FormedElectricalComponent>().RemoveRange(electricalComponents);
     }
-    
+
     private async Task DeleteStandDrainagesAsync(int standId)
     {
         // Находим все FormedDrainage для данного стенда с их связями
@@ -485,54 +522,11 @@ public class ProjectInfoRepository : IProjectInfoRepository
             .SelectMany(fe => fe.StandDrainages)
             .Where(sd => sd.StandId == standId)
             .ToList();
-    
+
         if (standDrainages.Any())
             _context.Set<StandDrainage>().RemoveRange(standDrainages);
 
         // Удаляем сами FormedDrainage
         _context.Set<FormedDrainage>().RemoveRange(drainages);
-    }
-    
-    
-    public async Task<List<StandFrame>> GetAllFramesInStandsAsync(int[] standIds)
-    {
-        return await _context.StandFrames
-            .AsNoTracking()
-            .Include(sf => sf.Frame)
-            .ThenInclude(f => f.Components)
-            .Where(sf => standIds.Contains(sf.StandId))
-            .ToListAsync();
-    }
-    
-    public async Task<List<StandDrainage>> GetAllDrainagesInStandsAsync(int[] standIds)
-    {
-        return await _context.StandDrainages
-            .AsNoTracking()
-            .Include(sd => sd.Drainage)
-            .ThenInclude(d => d.Purposes)
-            .Where(sd => standIds.Contains(sd.StandId))
-            .ToListAsync();
-    }
-    
-    public async Task<List<StandElectricalComponent>> GetAllElectricalComponentsInStandsAsync(
-        int[] standIds)
-    {
-        return await _context.StandElectricalComponents
-            .AsNoTracking()
-            .Include(sec => sec.ElectricalComponent)
-            .ThenInclude(e => e.Purposes)
-            .Where(sec => standIds.Contains(sec.StandId))
-            .ToListAsync();
-    }
-    
-    public async Task<List<StandAdditionalEquip>> GetAllAdditionalEquipsInStandsAsync(
-        int[] standIds)
-    {
-        return await _context.StandAdditionalEquips
-            .AsNoTracking()
-            .Include(sae => sae.AdditionalEquip)
-            .ThenInclude(e => e.Purposes)
-            .Where(sae => standIds.Contains(sae.StandId))
-            .ToListAsync();
     }
 }

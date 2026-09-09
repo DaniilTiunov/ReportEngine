@@ -2,6 +2,7 @@
     FontSize="16"
     HorizontalAlignment="Stretch"
     HorizontalContentAlignment="Stretch"
+    Style="{DynamicResource AnimatedUserControlStyle}"
     VerticalAlignment="Stretch"
     x:Class="ReportEngine.App.Views.Controls.ProjectCardView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"

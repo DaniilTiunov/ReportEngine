@@ -2,7 +2,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ReportEngine.Updater.Config;
 using ReportEngine.Updater.Services;
 using ReportEngine.Updater.ViewModels;
 using ReportEngine.Updater.Views;
@@ -24,9 +23,9 @@ public class AppHostBuilder
                     {
                         PropertyNameCaseInsensitive = true,
                         WriteIndented = true,
-                        Converters = 
-                        { 
-                            new JsonStringEnumConverter() 
+                        Converters =
+                        {
+                            new JsonStringEnumConverter()
                         }
                     };
                     return options;

@@ -5,7 +5,9 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
+using ReportEngine.Domain.Entities;
 
 namespace ReportEngine.App.Views.Controls;
 
@@ -101,5 +103,10 @@ public partial class StandsContainerView : UserControl
         if (grid.CurrentCell != null) grid.BeginEdit();
 
         _allowEdit = false;
+    }
+
+    private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        StandsListHelper.SelectedContainersStands = AvailListBox.SelectedItems.Cast<Stand>().ToList();
     }
 }

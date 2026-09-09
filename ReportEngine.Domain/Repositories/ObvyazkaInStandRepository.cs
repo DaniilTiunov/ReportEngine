@@ -25,9 +25,9 @@ public class ObvyazkaInStandRepository
     public async Task<ObvyazkaInStand?> GetFullObvFromStandAsync(int obvInStandId)
     {
         return await _context.Set<ObvyazkaInStand>()
-                             .AsNoTracking()
-                             .Include(obvInStand => obvInStand.Obvyazka)
-                             .FirstOrDefaultAsync(obvInStand => obvInStand.Id == obvInStandId);
+            .AsNoTracking()
+            .Include(obvInStand => obvInStand.Obvyazka)
+            .FirstOrDefaultAsync(obvInStand => obvInStand.Id == obvInStandId);
     }
 
 

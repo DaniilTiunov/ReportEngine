@@ -40,6 +40,7 @@ public class ProjectViewModel : BaseViewModel
     private readonly AdditionalEquipService _additionalEquipService;
     private readonly AuditService _auditService;
     private readonly ICalculationService _calculationService;
+    private readonly ReportEngineConfigService _configService;
     private readonly ContainerService _containerService;
     private readonly IDialogService _dialogService;
     private readonly EntityStandClonerService _entityStandCloner;
@@ -57,7 +58,6 @@ public class ProjectViewModel : BaseViewModel
     private readonly IStandService _standService;
     private readonly UIValidatorService _uiValidatorService;
     private readonly UpdaterStandService _updaterStandService;
-    private readonly ReportEngineConfigService _configService;
 
     public ProjectViewModel(
         IProjectInfoRepository projectRepository,
@@ -141,7 +141,7 @@ public class ProjectViewModel : BaseViewModel
             await LoadProjectInfoAsync(CurrentProjectModel.CurrentProjectId);
         });
     }
-    
+
     public void OnOpenAllSortamentsDialogExecuted(object e)
     {
         var selected = _dialogService.ShowAllSortamentsDialog(e);
@@ -174,7 +174,7 @@ public class ProjectViewModel : BaseViewModel
             CurrentProjectModel.SelectedStand.ObvyazkaAdditionalComponents.Clear();
             //перед открытием создания обвязки обновляем номер в окне
             UpdateNewObvNn();
-            
+
             _dialogService.ShowObvSettingsWindow(this);
         });
     }
@@ -277,7 +277,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays,
                     equip => CurrentProjectModel.SelectedStand.MaterialLineEquip = equip
-                    );
+                );
                 break;
 
             case "Нержавеющие":
@@ -287,7 +287,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays,
                     equip => CurrentProjectModel.SelectedStand.MaterialLineEquip = equip
-                    );
+                );
                 break;
 
             case "Углеродистые":
@@ -297,7 +297,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays,
                     equip => CurrentProjectModel.SelectedStand.MaterialLineEquip = equip
-                    );
+                );
                 break;
         }
 
@@ -320,7 +320,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays,
                     equip => CurrentProjectModel.SelectedStand.ArmatureEquip = equip
-                    );
+                );
                 break;
 
             case "Нержавеющие":
@@ -330,7 +330,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays,
                     equip => CurrentProjectModel.SelectedStand.ArmatureEquip = equip
-                    );
+                );
                 break;
 
             case "Углеродистые":
@@ -340,7 +340,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays,
                     equip => CurrentProjectModel.SelectedStand.ArmatureEquip = equip
-                    );
+                );
                 break;
         }
 
@@ -363,7 +363,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays,
                     equip => CurrentProjectModel.SelectedStand.TreeSocketEquip = equip
-                    );
+                );
                 break;
 
             case "Нержавеющие":
@@ -373,7 +373,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays,
                     equip => CurrentProjectModel.SelectedStand.TreeSocketEquip = equip
-                    );
+                );
                 break;
 
             case "Углеродистые":
@@ -383,7 +383,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays,
                     equip => CurrentProjectModel.SelectedStand.TreeSocketEquip = equip
-                    );
+                );
                 break;
         }
 
@@ -406,7 +406,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays,
                     equip => CurrentProjectModel.SelectedStand.KMCHEquip = equip
-                    );
+                );
                 break;
 
             case "Нержавеющие":
@@ -416,7 +416,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays,
                     equip => CurrentProjectModel.SelectedStand.KMCHEquip = equip
-                    );
+                );
                 break;
 
             case "Углеродистые":
@@ -426,7 +426,7 @@ public class ProjectViewModel : BaseViewModel
                     cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays,
                     equip => CurrentProjectModel.SelectedStand.KMCHEquip = equip
-                    );
+                );
                 break;
         }
 
@@ -466,10 +466,7 @@ public class ProjectViewModel : BaseViewModel
 
     public async Task OnOpenCreateNewStandCommandExecuted()
     {
-        await _exceptionService.SafeExecuteAsync(async () =>
-        {
-            _dialogService.ShowStandsSettingsWindow(this, false);
-        });
+        await _exceptionService.SafeExecuteAsync(async () => { _dialogService.ShowStandsSettingsWindow(this, false); });
     }
 
     public async Task OnOpenEditStandCommandExecuted()
@@ -1557,14 +1554,9 @@ public class ProjectViewModel : BaseViewModel
                 setMeasure(equipment.Measure);
                 setCost(equipment.Cost.ToString());
                 setExportDays((int)equipment.ExportDays);
-                
             }
 
-            if (equipment is IBaseEquip baseEquip)
-            {
-                setEquip(baseEquip);
-            }
-
+            if (equipment is IBaseEquip baseEquip) setEquip(baseEquip);
         });
     }
 
@@ -1873,7 +1865,7 @@ public class ProjectViewModel : BaseViewModel
             UpdateChannelsQuantity();
             UpdateDrainage();
         });
-    
+
         var selectedStand = CurrentProjectModel.SelectedStand;
 
         if (selectedStand == null)

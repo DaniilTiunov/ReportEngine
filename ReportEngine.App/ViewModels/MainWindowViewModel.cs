@@ -30,6 +30,7 @@ public class MainWindowViewModel : BaseViewModel
 {
     private readonly AuditService _auditService;
     private readonly ICalculationService _calculationService;
+    private readonly ReportEngineConfigService _configService;
     private readonly IDialogService _dialogService;
     private readonly EntityProjectClonerService _entityProjectClonerService;
     private readonly ExceptionService _exceptionService;
@@ -39,7 +40,6 @@ public class MainWindowViewModel : BaseViewModel
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IServiceProvider _serviceProvider;
     private readonly SessionService _sessionService;
-    private readonly ReportEngineConfigService _configService;
 
 
     #region Конструктор
@@ -55,7 +55,7 @@ public class MainWindowViewModel : BaseViewModel
         SessionService sessionService,
         AuditService auditService,
         UiLogger logger,
-        ExceptionService exceptionService, 
+        ExceptionService exceptionService,
         ReportEngineConfigService configService)
     {
         _notificationService = notificationService;
@@ -74,7 +74,7 @@ public class MainWindowViewModel : BaseViewModel
         _sessionService.PropertyChanged += SessionChanged;
 
         _ = CheckDbConnectionAsync();
-        
+
         InitializeMainWindowCommands();
         InitializeGenericEquipCommands();
     }
@@ -128,7 +128,7 @@ public class MainWindowViewModel : BaseViewModel
     {
         return true;
     }
-    
+
     private void RestartApp()
     {
         try
@@ -171,7 +171,7 @@ public class MainWindowViewModel : BaseViewModel
 
     public async Task OnEditProjectCommandExecuted()
     {
-        if (MainWindowModel.SelectedProject == null) 
+        if (MainWindowModel.SelectedProject == null)
             return;
 
         await _exceptionService.SafeExecuteAsync(async () =>
@@ -206,8 +206,6 @@ public class MainWindowViewModel : BaseViewModel
                 _logger.Success($"Скопирован проект {selectedProject.OrderCustomer} Статус: Успешно");
 
                 await ShowAllProjectsAsync();
-
-
             });
         });
     }
@@ -350,7 +348,7 @@ public class MainWindowViewModel : BaseViewModel
 
         var existingProject = MainWindowModel.AllProjects.FirstOrDefault(p => p.Id == projectId);
 
-        
+
         if (existingProject == null)
         {
             MainWindowModel.AllProjects.Add(project);
@@ -358,13 +356,8 @@ public class MainWindowViewModel : BaseViewModel
         }
 
         var index = MainWindowModel.AllProjects.IndexOf(existingProject);
-        if (index >= 0)
-        {
-            MainWindowModel.AllProjects[index] = project;
-        }
-
+        if (index >= 0) MainWindowModel.AllProjects[index] = project;
     }
-
 
 
     public async Task DeleteSelectedProjectAsync()

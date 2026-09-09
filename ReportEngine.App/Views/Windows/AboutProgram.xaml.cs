@@ -1,7 +1,6 @@
-﻿using System.IO;
+using System.IO;
 using System.Text.Json;
-
-using System.Windows;
+using MahApps.Metro.Controls;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.Models;
@@ -11,12 +10,9 @@ namespace ReportEngine.App.Views.Windows;
 /// <summary>
 ///     Логика взаимодействия для PathSettings.xaml
 /// </summary>
-public partial class AboutProgram : Window
+public partial class AboutProgram : MetroWindow
 {
     private readonly ExceptionService _exceptionService;
-
-
-    public string Version { get; private set; } = String.Empty;
 
     public AboutProgram(ExceptionService exceptionService)
     {
@@ -25,6 +21,9 @@ public partial class AboutProgram : Window
         LoadLastUpdate();
         DataContext = this; // Устанавливаем DataContext
     }
+
+
+    public string Version { get; private set; } = string.Empty;
 
 
     private void LoadLastUpdate()
@@ -39,10 +38,7 @@ public partial class AboutProgram : Window
 
                 var updates = JsonSerializer.Deserialize<List<UpdateInfo>>(json);
 
-                if (updates == null)
-                {
-                    throw new Exception("Не удалось загрузить список обновлений");
-                }
+                if (updates == null) throw new Exception("Не удалось загрузить список обновлений");
 
                 var lastUpdate = updates
                     .Where(u => DateTime.TryParse(u.Date, out _))
@@ -50,10 +46,9 @@ public partial class AboutProgram : Window
                     .FirstOrDefault();
 
 
-                if (lastUpdate == null || (string.IsNullOrEmpty(lastUpdate.Version) && string.IsNullOrEmpty(lastUpdate.Date)))
-                {
+                if (lastUpdate == null ||
+                    (string.IsNullOrEmpty(lastUpdate.Version) && string.IsNullOrEmpty(lastUpdate.Date)))
                     throw new Exception("Не удалось определить версию приложения");
-                }
 
                 Version = $"Версия приложения:\n{lastUpdate.Version} от {lastUpdate.Date}";
             }
@@ -62,11 +57,5 @@ public partial class AboutProgram : Window
                 throw new Exception("Не удалось загрузить список обновлений");
             }
         });
-    }
-
-
-    private void CloseButton_Click(object sender, RoutedEventArgs e)
-    {
-        Close();
     }
 }

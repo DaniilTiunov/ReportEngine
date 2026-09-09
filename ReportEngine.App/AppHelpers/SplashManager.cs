@@ -16,7 +16,7 @@ public static class SplashManager
             _splash.Show();
 
             _ready.Set();
-            
+
             Dispatcher.Run();
         });
 
@@ -34,10 +34,7 @@ public static class SplashManager
         if (splash == null)
             return;
 
-        splash.Dispatcher.BeginInvoke(() =>
-        {
-            splash.SetStatusText(text);
-        });
+        splash.Dispatcher.BeginInvoke(() => { splash.SetStatusText(text); });
     }
 
     public static void Close()
@@ -50,7 +47,7 @@ public static class SplashManager
         splash.Dispatcher.BeginInvoke(() =>
         {
             splash.Close();
-            
+
             Dispatcher.CurrentDispatcher.InvokeShutdown();
         });
 

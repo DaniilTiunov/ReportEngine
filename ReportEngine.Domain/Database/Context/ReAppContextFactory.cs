@@ -17,7 +17,7 @@ public class ReAppContextFactory : IDesignTimeDbContextFactory<ReAppContext>
         // Загружаем конфигурацию напрямую из файла
         var configPath = DirectoryHelper.GetConfigPath();
         var json = File.ReadAllText(configPath);
-        var config = JsonSerializer.Deserialize<ReportEngineConfig>(json) 
+        var config = JsonSerializer.Deserialize<ReportEngineConfig>(json)
                      ?? throw new InvalidOperationException("Failed to load configuration");
 
         // Создаем IOptions из загруженной конфигурации

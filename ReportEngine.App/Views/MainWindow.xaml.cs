@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using MahApps.Metro.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels;
@@ -19,7 +20,7 @@ using AboutProgram = ReportEngine.App.Views.Windows.AboutProgram;
 
 namespace ReportEngine.App.Views;
 
-public partial class MainWindow : Window //Это так называемый "Code Behind" файл для MainWindow.xaml
+public partial class MainWindow : MetroWindow //Это так называемый "Code Behind" файл для MainWindow.xaml
 {
     private readonly ExceptionService _exceptionService;
     private readonly MainWindowViewModel _mainViewModel;
@@ -38,9 +39,8 @@ public partial class MainWindow : Window //Это так называемый "C
         _exceptionService = exceptionService;
 
         SetWindowTitle();
-        
+
         Loaded += MainWindow_Loaded;
-        StateChanged += MainWindow_StateChanges;
     }
 
     private void SetWindowTitle()
@@ -57,7 +57,7 @@ public partial class MainWindow : Window //Это так называемый "C
                 };
                 var updates = JsonSerializer.Deserialize<List<UpdateInfo>>(json, options);
                 var update = updates?.FirstOrDefault();
-                
+
                 if (update != null)
                 {
                     Title = $"КИПАРИС:PCM v{update.Version} ({update.Channel})";
@@ -65,11 +65,13 @@ public partial class MainWindow : Window //Это так называемый "C
                 }
             }
         }
-        catch { }
-        
+        catch
+        {
+        }
+
         Title = "КИПАРИС:PCM";
     }
-    
+
     // Событие загрузки окна
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
@@ -91,13 +93,6 @@ public partial class MainWindow : Window //Это так называемый "C
     private async void MainDataGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
         await _mainViewModel.OnEditProjectCommandExecuted();
-    }
-
-    // Событие изменения состояния окна
-    private void MainWindow_StateChanges(object? sender, EventArgs e)
-    {
-        if (WindowState == WindowState.Maximized)
-            WindowState = WindowState.Normal;
     }
 
     private void ShowAboutProgram(object sender, RoutedEventArgs e) //Просто простые синхронные операции
@@ -167,43 +162,6 @@ public partial class MainWindow : Window //Это так называемый "C
         Height = area.Height;
     }
 
-    private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        if (e.ClickCount == 2)
-            MaxRestoreButton_Click(sender, e);
-        else
-            DragMove();
-    }
-
-    private void MinimizeButton_Click(object sender, RoutedEventArgs e)
-    {
-        WindowState = WindowState.Minimized;
-    }
-
-    private void MaxRestoreButton_Click(object sender, RoutedEventArgs e)
-    {
-        var area = SystemParameters.WorkArea;
-        if (Width != area.Width || Height != area.Height || Left != area.Left || Top != area.Top)
-        {
-            Left = area.Left;
-            Top = area.Top;
-            Width = area.Width;
-            Height = area.Height;
-        }
-        else
-        {
-            Width = 1280;
-            Height = 800;
-            Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
-            Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
-        }
-    }
-
-    private void CloseButton_Click(object sender, RoutedEventArgs e)
-    {
-        Application.Current.Shutdown();
-    }
-
     private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
         if (_projectsView == null)
@@ -228,7 +186,7 @@ public partial class MainWindow : Window //Это так называемый "C
 
         _projectsView.Refresh();
     }
-    
+
     private void OpenLogger_Click(object sender, RoutedEventArgs e)
     {
         if (LogContainer.Visibility == Visibility.Collapsed)

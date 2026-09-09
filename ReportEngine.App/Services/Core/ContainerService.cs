@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using ReportEngine.App.Model;
-using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.Domain.Entities;
@@ -33,7 +32,7 @@ public class ContainerService
         }
 
         var newBatch = new ContainerBatch();
-        
+
         await _exceptionService.SafeExecuteAsync(async () =>
         {
             var existing = await _containerRepository
@@ -53,9 +52,8 @@ public class ContainerService
             await _containerRepository.AddAsync(newBatch);
 
             _notificationService.ShowInfo($"Партия создана {newBatch.Name}");
-
         });
-        
+
         return newBatch;
     }
 
@@ -70,9 +68,9 @@ public class ContainerService
         await _exceptionService.SafeExecuteAsync(async () =>
         {
             await _containerRepository.DeleteByIdAsync(batchId);
-            
+
             await RecalculateAndUpdateAllBatches(batchId);
-            
+
             _notificationService.ShowInfo("Партия удалена");
         });
     }
@@ -90,12 +88,12 @@ public class ContainerService
             await _containerRepository.AddContainerToBatchAsync(batchId, container);
 
             await RecalculateAndUpdateAllBatches(projectId);
-            
+
             _notificationService.ShowInfo("Тара добавлена");
         });
     }
 
-    public async Task RemoveContainerFromBatchAsync(int projectId, 
+    public async Task RemoveContainerFromBatchAsync(int projectId,
         int batchId,
         int containerId)
     {
@@ -104,13 +102,13 @@ public class ContainerService
             _notificationService.ShowInfo("Выберите партию!");
             return;
         }
-        
+
         await _exceptionService.SafeExecuteAsync(async () =>
         {
             await _containerRepository.RemoveContainerFromBatchAsync(batchId, containerId);
 
             await RecalculateAndUpdateAllBatches(projectId);
-            
+
             _notificationService.ShowInfo("Тара удалена");
         });
     }
@@ -141,8 +139,8 @@ public class ContainerService
         }
     }
 
-    public async Task AddStandToContainerAsync(int projectId, 
-        int containerId, 
+    public async Task AddStandToContainerAsync(int projectId,
+        int containerId,
         int standId)
     {
         if (projectId == null)
@@ -157,12 +155,11 @@ public class ContainerService
 
             await RecalculateAndUpdateAllBatches(projectId);
 
-            _notificationService.ShowInfo("Стенд добавлен");
         });
     }
 
-    public async Task RemoveStandFromContainerAsync(int projectId, 
-        int containerId, 
+    public async Task RemoveStandFromContainerAsync(int projectId,
+        int containerId,
         int standId)
     {
         if (projectId == null)

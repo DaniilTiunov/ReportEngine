@@ -5,7 +5,6 @@ using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories;
-using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork;
@@ -18,16 +17,16 @@ namespace ReportEngine.Export.PDFWork.Services.Generators;
 
 public class TechnologicalCardsGenerator : IReportGenerator
 {
+    private readonly ReportEngineConfigService _configService;
     private readonly ParametersStore _parametersStore;
     private readonly ProjectInfoRepository _projectInfoRepository;
     private readonly IServiceProvider _serviceProvider;
-    private readonly ReportEngineConfigService _configService;
 
 
     public TechnologicalCardsGenerator(
-        ProjectInfoRepository projectInfoRepository, 
+        ProjectInfoRepository projectInfoRepository,
         ParametersStore parametersStore,
-        IServiceProvider serviceProvider, 
+        IServiceProvider serviceProvider,
         ReportEngineConfigService configService)
     {
         _projectInfoRepository = projectInfoRepository;
@@ -61,7 +60,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
         var savePath = _configService.GetSaveReportDirectory();
         var fileName = ExcelReportHelper.CreateReportName("Технологические карты", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
-        
+
         var startInfo = new ProcessStartInfo
         {
             FileName = exeFilePath,

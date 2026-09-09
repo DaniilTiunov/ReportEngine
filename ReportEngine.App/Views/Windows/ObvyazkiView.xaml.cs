@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using MahApps.Metro.Controls;
 using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Views.Windows;
@@ -9,7 +10,7 @@ namespace ReportEngine.App.Views.Windows;
 /// <summary>
 ///     Логика взаимодействия для ObvyazkiView.xaml
 /// </summary>
-public partial class ObvyazkiView : Window
+public partial class ObvyazkiView : MetroWindow
 {
     public ObvyazkiView(ObvyazkaViewModel obvyazkiViewModel)
     {
@@ -31,43 +32,6 @@ public partial class ObvyazkiView : Window
     private void InitializeData(ObvyazkaViewModel obvyazkiViewModel)
     {
         obvyazkiViewModel.ShowAllObvyazkiAsync();
-    }
-
-    private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        if (e.ClickCount == 2)
-            MaxRestoreButton_Click(sender, e);
-        else
-            DragMove();
-    }
-
-    private void MinimizeButton_Click(object sender, RoutedEventArgs e)
-    {
-        WindowState = WindowState.Minimized;
-    }
-
-    private void MaxRestoreButton_Click(object sender, RoutedEventArgs e)
-    {
-        var area = SystemParameters.WorkArea;
-        if (Width != area.Width || Height != area.Height || Left != area.Left || Top != area.Top)
-        {
-            Left = area.Left;
-            Top = area.Top;
-            Width = area.Width;
-            Height = area.Height;
-        }
-        else
-        {
-            Width = 1400;
-            Height = 700;
-            Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
-            Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
-        }
-    }
-
-    private void CloseButton_Click(object sender, RoutedEventArgs e)
-    {
-        Close();
     }
 
     private void ListBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e)

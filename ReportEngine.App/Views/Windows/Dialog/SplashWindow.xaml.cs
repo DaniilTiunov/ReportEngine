@@ -14,9 +14,9 @@ public partial class SplashWindow : Window
 {
     [ObservableProperty] private ReleaseChannel _channel;
 
-    [ObservableProperty] private string _version;
-    
     [ObservableProperty] private string _statusText;
+
+    [ObservableProperty] private string _version;
 
     public SplashWindow()
     {

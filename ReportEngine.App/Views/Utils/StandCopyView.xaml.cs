@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using MahApps.Metro.Controls;
 using ReportEngine.App.ViewModels.Utils;
 
 namespace ReportEngine.App.Views.Utils;
@@ -6,7 +7,7 @@ namespace ReportEngine.App.Views.Utils;
 /// <summary>
 ///     Логика взаимодействия для StandCopyView.xaml
 /// </summary>
-public partial class StandCopyView : Window
+public partial class StandCopyView : MetroWindow
 {
     private readonly StandCopyViewModel _viewModel;
 
@@ -15,11 +16,6 @@ public partial class StandCopyView : Window
         InitializeComponent();
         _viewModel = viewModel;
         DataContext = viewModel;
-    }
-
-    private void CloseButton_Click(object sender, RoutedEventArgs e)
-    {
-        Close();
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)

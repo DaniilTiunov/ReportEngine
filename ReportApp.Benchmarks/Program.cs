@@ -1,9 +1,7 @@
-﻿using System.Diagnostics;
-using System.Text;
+﻿using System.Text;
 using Microsoft.EntityFrameworkCore;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO.JsonObjects;
@@ -18,13 +16,13 @@ public class Program
         var options = new DbContextOptionsBuilder<ReAppContext>()
             .UseNpgsql(conString)
             .Options;
-        
+
         using (var context = new ReAppContext(options))
         {
             var calculationRepository = new CalculationRepository(context);
             var parameterStore = new ParametersStore(calculationRepository);
             var projectRepository = new ProjectInfoRepository(context);
-            
+
             await parameterStore.LoadSettingsDataAsync();
 
             // Создаем генератор
@@ -32,14 +30,13 @@ public class Program
                 projectRepository,
                 parameterStore);
 
-            
-            int projectId = 254; // Укажите ID вашего проекта
-            
+
+            var projectId = 254; // Укажите ID вашего проекта
+
             Console.WriteLine("🚀 Генерация технологических карт в Markdown...");
             await generator.GenerateAsync(projectId);
-            
+
             Console.WriteLine("✅ Готово!");
-            
         }
     }
 }
@@ -60,15 +57,14 @@ public class TechnologicalCardsMarkdownGenerator
 
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
     {
-        
         var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
         var dataObject = await JsonCreator.CreateProjectJson(project, _parametersStore, selectedStands);
-        
+
         var markdown = GenerateMarkdown(dataObject);
-        
+
         var fileName = $"Технологические карты_{DateTime.Now:dd-MM-yyyy_HH-mm-ss}.md";
         var savePath = Path.Combine(GetSaveDirectory(), fileName);
-        
+
         await File.WriteAllTextAsync(savePath, markdown, Encoding.UTF8);
         Console.WriteLine($"✅ Технологические карты сохранены: {savePath}");
     }
@@ -76,7 +72,7 @@ public class TechnologicalCardsMarkdownGenerator
     private string GenerateMarkdown(ProjectJsonObject project)
     {
         var sb = new StringBuilder();
-        
+
         // Заголовок
         sb.AppendLine("# Технологические карты");
         sb.AppendLine();
@@ -103,10 +99,10 @@ public class TechnologicalCardsMarkdownGenerator
     private string GenerateStandCard(StandJsonObject stand, ProjectJsonObject project)
     {
         var sb = new StringBuilder();
-        
+
         sb.AppendLine($"## Стенд датчиков КИПиА {stand.Designation}");
         sb.AppendLine();
-        
+
         // Общая информация
         sb.AppendLine("### Общая информация");
         sb.AppendLine();
@@ -130,9 +126,7 @@ public class TechnologicalCardsMarkdownGenerator
             sb.AppendLine("| Рама, мм | Обозначение по КД | Кол-во, шт |");
             sb.AppendLine("|----------|-------------------|------------|");
             foreach (var frame in stand.Frames)
-            {
                 sb.AppendLine($"| {frame.Width} | {frame.DocName} | {frame.Quantity} |");
-            }
             sb.AppendLine();
         }
 
@@ -143,10 +137,7 @@ public class TechnologicalCardsMarkdownGenerator
             sb.AppendLine();
             sb.AppendLine("| Наименование | Ед. изм. | Норм. | Факт. |");
             sb.AppendLine("|--------------|----------|-------|-------|");
-            foreach (var part in stand.FrameParts)
-            {
-                sb.AppendLine($"| {part.Name} | {part.Unit} | {part.Quantity} |  |");
-            }
+            foreach (var part in stand.FrameParts) sb.AppendLine($"| {part.Name} | {part.Unit} | {part.Quantity} |  |");
             sb.AppendLine();
         }
 
@@ -157,10 +148,7 @@ public class TechnologicalCardsMarkdownGenerator
             sb.AppendLine();
             sb.AppendLine("| Наименование | Ед. изм. | Норм. | Факт. |");
             sb.AppendLine("|--------------|----------|-------|-------|");
-            foreach (var part in stand.MountParts)
-            {
-                sb.AppendLine($"| {part.Name} | {part.Unit} | {part.Quantity} |  |");
-            }
+            foreach (var part in stand.MountParts) sb.AppendLine($"| {part.Name} | {part.Unit} | {part.Quantity} |  |");
             sb.AppendLine();
         }
 
@@ -172,9 +160,7 @@ public class TechnologicalCardsMarkdownGenerator
             sb.AppendLine("| Наименование | Ед. изм. | Норм. | Факт. |");
             sb.AppendLine("|--------------|----------|-------|-------|");
             foreach (var part in stand.DrainageParts)
-            {
                 sb.AppendLine($"| {part.Name} | {part.Unit} | {part.Quantity} |  |");
-            }
             sb.AppendLine();
         }
 
@@ -186,9 +172,7 @@ public class TechnologicalCardsMarkdownGenerator
             sb.AppendLine("| Наименование | Ед. изм. | Норм. | Факт. |");
             sb.AppendLine("|--------------|----------|-------|-------|");
             foreach (var part in stand.ElectricParts)
-            {
                 sb.AppendLine($"| {part.Name} | {part.Unit} | {part.Quantity} |  |");
-            }
             sb.AppendLine();
         }
 
@@ -199,23 +183,26 @@ public class TechnologicalCardsMarkdownGenerator
             sb.AppendLine();
             sb.AppendLine("| № | Наименование и код KKS | Цепь | Маркировка | Коробка | Клеммы | Примечание |");
             sb.AppendLine("|---|------------------------|------|------------|---------|--------|------------|");
-            
-            int lineNumber = 1;
+
+            var lineNumber = 1;
             foreach (var line in stand.ImpulseLines)
             {
                 var wires = line.Wires.ToList();
-                for (int i = 0; i < wires.Count; i++)
+                for (var i = 0; i < wires.Count; i++)
                 {
                     var wire = wires[i];
                     var number = i == 0 ? lineNumber.ToString() : "";
                     var name = i == 0 ? line.Name : "";
                     var kks = i == 0 ? line.CodeKKS : "";
                     var note = i == 0 ? line.Annotation : "";
-                    
-                    sb.AppendLine($"| {number} | {name}<br/>{kks} | {wire.Circuit} | {wire.Mark} | {wire.ElectricBox} | {wire.Terminal} | {note} |");
+
+                    sb.AppendLine(
+                        $"| {number} | {name}<br/>{kks} | {wire.Circuit} | {wire.Mark} | {wire.ElectricBox} | {wire.Terminal} | {note} |");
                 }
+
                 lineNumber++;
             }
+
             sb.AppendLine();
         }
 

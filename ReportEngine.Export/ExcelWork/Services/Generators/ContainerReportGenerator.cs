@@ -1,24 +1,23 @@
 ﻿using System.Diagnostics;
 using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Repositories;
+using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
 public class ContainerReportGenerator : IReportGenerator
 {
+    private readonly ReportEngineConfigService _configService;
     private readonly IContainerRepository _containerRepository;
     private readonly ProjectInfoRepository _projectInfoRepository;
-    private readonly ReportEngineConfigService _configService;
 
     public ContainerReportGenerator(
         ProjectInfoRepository projectInfoRepository,
-        IContainerRepository containerRepository, 
+        IContainerRepository containerRepository,
         ReportEngineConfigService configService)
     {
         _projectInfoRepository = projectInfoRepository;

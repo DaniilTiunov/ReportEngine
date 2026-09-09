@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using DevExpress.XtraRichEdit.Import.Rtf;
 using ReportEngine.App.Model.FormedEquipsModels;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
@@ -89,11 +88,11 @@ public class StandModel : BaseViewModel
     // Бинарные данные изображения чертежа стенда
     private byte[]? _imageData;
 
-    // MIME тип или краткое описание типа изображения (например "image/png")
-    private string? _imageType;
-
     //имя чертежа стенда
     private string? _imageName;
+
+    // MIME тип или краткое описание типа изображения (например "image/png")
+    private string? _imageType;
 
 
     // KKS-код стенда
@@ -212,14 +211,14 @@ public class StandModel : BaseViewModel
     private float? _treeSocketMaterialCount;
     private string? _treeSocketMaterialMeasure;
 
-    //Чистый вес обвязки
-    public float? ObvWeight { get; set; }
-
     // Масса стенда
     private float _weight;
 
     // Ширина стенда
     private float _width;
+
+    //Чистый вес обвязки
+    public float? ObvWeight { get; set; }
 
     public ObvyazkaAdditionalEquipPurpose SelectedObvyazkaAdditionalEquipPurpose
     {
@@ -377,8 +376,6 @@ public class StandModel : BaseViewModel
     }
 
     public IBaseEquip? MaterialLineEquip { get; set; }
-
-
 
 
     // Арматура
@@ -784,7 +781,6 @@ public class StandModel : BaseViewModel
     }
 
 
-
     private int CountSensors(Func<string?, bool> predicate)
     {
         return ObvyazkiInStand
@@ -806,16 +802,23 @@ public class StandModel : BaseViewModel
     }
 
 
-    public int CountSensorsQuantity() =>
-            CountSensors(type => !string.IsNullOrEmpty(type));
+    public int CountSensorsQuantity()
+    {
+        return CountSensors(type => !string.IsNullOrEmpty(type));
+    }
 
-    public int CountElectricSensorsQuantity() =>
-            CountSensors(type => !string.IsNullOrEmpty(type) && type != "Манометр");
+    public int CountElectricSensorsQuantity()
+    {
+        return CountSensors(type => !string.IsNullOrEmpty(type) && type != "Манометр");
+    }
 
-    public int CountDifSensorsQuantity() =>
-                CountSensors(type => !string.IsNullOrEmpty(type) && type == "Датчик перепада давления");
+    public int CountDifSensorsQuantity()
+    {
+        return CountSensors(type => !string.IsNullOrEmpty(type) && type == "Датчик перепада давления");
+    }
 
-    public int CountAbsoluteSensorsQuantity() =>
-            CountSensors(type => !string.IsNullOrEmpty(type) && type == "Датчик абсолютного давления");
-   
+    public int CountAbsoluteSensorsQuantity()
+    {
+        return CountSensors(type => !string.IsNullOrEmpty(type) && type == "Датчик абсолютного давления");
+    }
 }
