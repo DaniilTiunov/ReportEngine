@@ -17,11 +17,8 @@ using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.Models;
 using AboutProgram = ReportEngine.App.Views.Windows.AboutProgram;
 
-namespace ReportEngine.App;
+namespace ReportEngine.App.Views;
 
-/// <summary>
-///     Interaction logic for MainWindow.xaml
-/// </summary>
 public partial class MainWindow : Window //Это так называемый "Code Behind" файл для MainWindow.xaml
 {
     private readonly ExceptionService _exceptionService;

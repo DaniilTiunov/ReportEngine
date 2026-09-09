@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
+using ReportEngine.App.Views;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Store;
 using Serilog;

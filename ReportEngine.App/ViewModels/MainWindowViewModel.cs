@@ -14,6 +14,7 @@ using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Services.Logger;
 using ReportEngine.App.Services.Navigation;
 using ReportEngine.App.Services.Notification;
+using ReportEngine.App.Views;
 using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Settings.CalculationParameters;
 using ReportEngine.App.Views.Windows;

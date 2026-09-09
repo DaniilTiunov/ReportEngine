@@ -18,6 +18,8 @@
         <Company>ЭТАЛОН-ПРИБОР</Company>
         <Product>КИПАРИС:PCM</Product>
         <Description>КИПАРИС:PCM — система подготовки ТКП</Description>
+        <NoWarn>$(NoWarn);NU1701;CS1591</NoWarn>
+        <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
     </PropertyGroup>
 
     <ItemGroup>

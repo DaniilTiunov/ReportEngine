@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
@@ -134,6 +135,7 @@ public class DdsService : BackgroundService
             }
             catch (Exception ex)
             {
+                Debug.WriteLine(ex);
             }
         }));
     }
