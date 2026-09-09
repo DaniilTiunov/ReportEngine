@@ -1154,7 +1154,13 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<int?>("ArmatureExportDays")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("ArmatureId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("ArmatureMeasure")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ArmatureType")
                         .HasColumnType("text");
 
                     b.Property<float?>("Clamp")
@@ -1193,7 +1199,13 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<int?>("KMCHExportDays")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("KMCHId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("KMCHMeasure")
+                        .HasColumnType("text");
+
+                    b.Property<string>("KMCHType")
                         .HasColumnType("text");
 
                     b.Property<float?>("LineLength")
@@ -1211,7 +1223,13 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<int?>("MaterialLineExportDays")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("MaterialLineId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("MaterialLineMeasure")
+                        .HasColumnType("text");
+
+                    b.Property<string>("MaterialLineType")
                         .HasColumnType("text");
 
                     b.Property<int?>("NN")
@@ -1274,6 +1292,9 @@ namespace ReportEngine.Domain.Migrations
                     b.Property<int?>("TreeSocketExportDays")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("TreeSocketId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("TreeSocketMaterialCostPerUnit")
                         .HasColumnType("text");
 
@@ -1281,6 +1302,9 @@ namespace ReportEngine.Domain.Migrations
                         .HasColumnType("real");
 
                     b.Property<string>("TreeSocketMaterialMeasure")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TreeSocketType")
                         .HasColumnType("text");
 
                     b.Property<float?>("Weight")

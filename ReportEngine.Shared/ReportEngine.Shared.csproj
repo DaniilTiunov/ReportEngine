@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Content Include="Config\appsettings.json">
+        <Content Include="Config\appSettings.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <None Remove="Config\settings.ini"/>
@@ -26,8 +26,12 @@
         <PackageReference Include="Serilog.Sinks.File" Version="7.0.0"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <Folder Include="Services\"/>
+    </ItemGroup>
+
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-      <Exec Command="if exist &quot;$(TargetDir)updateInfo.json&quot; del &quot;$(TargetDir)updateInfo.json&quot;" />
+        <Exec Command="if exist &quot;$(TargetDir)updateInfo.json&quot; del &quot;$(TargetDir)updateInfo.json&quot;"/>
     </Target>
 
 </Project>

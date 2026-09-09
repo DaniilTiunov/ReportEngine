@@ -5,7 +5,9 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using ReportEngine.App.AppHelpers;
 using ReportEngine.App.ViewModels;
+using ReportEngine.Domain.Entities;
 
 namespace ReportEngine.App.Views.Controls;
 
@@ -14,22 +16,13 @@ namespace ReportEngine.App.Views.Controls;
 /// </summary>
 public partial class StandsContainerView : UserControl
 {
-    private readonly ProjectViewModel _projectViewModel;
+    private readonly ContainersViewModel _viewModel;
     private bool _allowEdit;
 
-    public StandsContainerView(ProjectViewModel projectViewModel)
+    public StandsContainerView(ContainersViewModel _viewModel)
     {
-        _projectViewModel = projectViewModel;
-
+        DataContext = _viewModel;
         InitializeComponent();
-        DataContext = projectViewModel;
-
-        Loaded += StandsContainerView_Loaded;
-    }
-
-    private async void StandsContainerView_Loaded(object sender, RoutedEventArgs e)
-    {
-        await _projectViewModel.LoadContainersInfoAsync();
     }
 
     private void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
@@ -110,5 +103,10 @@ public partial class StandsContainerView : UserControl
         if (grid.CurrentCell != null) grid.BeginEdit();
 
         _allowEdit = false;
+    }
+
+    private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        StandsListHelper.SelectedContainersStands = AvailListBox.SelectedItems.Cast<Stand>().ToList();
     }
 }

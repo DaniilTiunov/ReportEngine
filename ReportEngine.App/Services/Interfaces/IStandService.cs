@@ -7,8 +7,6 @@ public interface IStandService
 {
     Task LoadStandsDataAsync(IEnumerable<StandModel> standModels);
 
-    Task LoadAllStandsDataAsync(int projectId, IEnumerable<StandModel> standModels);
-
     Task AddFrameToStandAsync(int standId, int frameId);
 
     Task AddDrainageToStandAsync(int standId, int drainageId);

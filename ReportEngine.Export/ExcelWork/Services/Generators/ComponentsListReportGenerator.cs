@@ -1,29 +1,33 @@
 ﻿using System.Diagnostics;
 using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Helpers;
+using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
 public class ComponentListReportGenerator : IReportGenerator
 {
-    private readonly IProjectInfoRepository _projectInfoRepository;
+    private readonly ReportEngineConfigService _configService;
+    private readonly ProjectInfoRepository _projectInfoRepository;
 
-    public ComponentListReportGenerator(IProjectInfoRepository projectInfoRepository)
+    public ComponentListReportGenerator(
+        ProjectInfoRepository projectInfoRepository,
+        ReportEngineConfigService configService)
     {
         _projectInfoRepository = projectInfoRepository;
+        _configService = configService;
     }
 
     public ReportType Type => ReportType.ComponentsListReport;
 
     public async Task GenerateAsync(int projectId)
     {
-        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
 
         using (var wb = new XLWorkbook())
         {
@@ -55,7 +59,7 @@ public class ComponentListReportGenerator : IReportGenerator
                 ws.Rows().AdjustToContents();
             }
 
-            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var savePath = _configService.GetSaveReportDirectory();
             var fileName = ExcelReportHelper.CreateReportName("Ведомость комплектующих", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
 
@@ -66,7 +70,7 @@ public class ComponentListReportGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
     {
-        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
 
         using (var wb = new XLWorkbook())
         {
@@ -98,7 +102,7 @@ public class ComponentListReportGenerator : IReportGenerator
                 ws.Rows().AdjustToContents();
             }
 
-            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var savePath = _configService.GetSaveReportDirectory();
             var fileName = ExcelReportHelper.CreateReportName("Ведомость комплектующих", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
 
@@ -126,7 +130,8 @@ public class ComponentListReportGenerator : IReportGenerator
         //    ws.Cell($"C{row}").Value += "\n" + ExcelReportHelper.CommonErrorString;
         //}
 
-        ws.Cell($"D{row}").Value = record.Quantity.Value?.ToString();
+
+        ws.Cell($"D{row}").Value = record.Quantity.Value.RoundUp(1).ToString();
 
         //if (!record.Quantity.IsValid)
         //{

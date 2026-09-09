@@ -83,5 +83,4 @@ public class ProjectCommandProvider
     public ICommand SelectedBatchFinPlaneReportCommand { get; set; }
     public ICommand SelectedBatchPassportReportCommand { get; set; }
     public ICommand SelectedBatchTechnoCardsReportCommand { get; set; }
-
 }

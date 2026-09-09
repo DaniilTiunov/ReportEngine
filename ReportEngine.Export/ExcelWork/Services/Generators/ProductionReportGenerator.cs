@@ -1,29 +1,33 @@
 ﻿using System.Diagnostics;
 using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Helpers;
+using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
 public class ProductionReportGenerator : IReportGenerator
 {
-    private readonly IProjectInfoRepository _projectInfoRepository;
+    private readonly ReportEngineConfigService _configService;
+    private readonly ProjectInfoRepository _projectInfoRepository;
 
-    public ProductionReportGenerator(IProjectInfoRepository projectInfoRepository)
+    public ProductionReportGenerator(
+        ProjectInfoRepository projectInfoRepository,
+        ReportEngineConfigService configService)
     {
         _projectInfoRepository = projectInfoRepository;
+        _configService = configService;
     }
 
     ReportType IReportGenerator.Type => ReportType.ProductionReport;
 
     public async Task GenerateAsync(int projectId)
     {
-        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
 
         using (var wb = new XLWorkbook())
         {
@@ -43,7 +47,7 @@ public class ProductionReportGenerator : IReportGenerator
             ws.Cells().Style.Alignment.WrapText = true;
             ws.Columns().AdjustToContents();
 
-            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var savePath = _configService.GetSaveReportDirectory();
 
             var fileName = ExcelReportHelper.CreateReportName("Отчет по производству", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
@@ -55,7 +59,7 @@ public class ProductionReportGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
     {
-        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
 
         using (var wb = new XLWorkbook())
         {
@@ -75,7 +79,7 @@ public class ProductionReportGenerator : IReportGenerator
             ws.Cells().Style.Alignment.WrapText = true;
             ws.Columns().AdjustToContents();
 
-            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var savePath = _configService.GetSaveReportDirectory();
 
             var fileName = ExcelReportHelper.CreateReportName("Отчет по производству", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
@@ -303,8 +307,8 @@ public class ProductionReportGenerator : IReportGenerator
     {
         ws.Cell($"A{row}").Value = record.Name.Value;
         ws.Cell($"B{row}").Value = record.Unit.Value;
-        ws.Cell($"C{row}").Value = record.Quantity.Value?.ToString();
-        ws.Cell($"D{row}").Value = record.Quantity.Value?.ToString();
+        ws.Cell($"C{row}").Value = record.Quantity.Value.RoundUp(1).ToString();
+        ws.Cell($"D{row}").Value = record.Quantity.Value.RoundUp(1).ToString();
 
         //if (!record.Name.IsValid)
         //{

@@ -139,29 +139,33 @@ public static class JsonCreator
     }
 
     //конвертация записи датчика в JSON объект
-    public static ImpulseLineRecordJsonObject SensorToJson(SensorRecordData record, Stand stand,ref int terminalNumber)
+    public static ImpulseLineRecordJsonObject SensorToJson(SensorRecordData record, Stand stand, ref int terminalNumber)
     {
         //находим название коробки в стенде
         var boxName = stand.StandElectricalComponent
             .SelectMany(sec => sec.ElectricalComponent.Purposes)
-            .First(purpose => !string.IsNullOrEmpty(purpose.Purpose) && purpose.Purpose.StartsWith("Клеммная коробка"))
+            .FirstOrDefault(purpose =>
+                !string.IsNullOrEmpty(purpose.Purpose) && purpose.Purpose.StartsWith("Клеммная коробка"))?
             .Material;
 
+        if (boxName == null)
+            throw new InvalidOperationException(
+                $"Не найдена обвязка/датчик для технологической карты. " +
+                $"Стенд: №{stand.Number}, KKS: {stand.KKSCode}");
 
 
-        bool terminalNumberNeeded = (!string.IsNullOrEmpty(record.SensorMarkPlus) || !string.IsNullOrEmpty(record.SensorMarkMinus));
+        var terminalNumberNeeded = !string.IsNullOrEmpty(record.SensorMarkPlus) ||
+                                   !string.IsNullOrEmpty(record.SensorMarkMinus);
 
         var wiresInfo = new List<WireRecord>
         {
-            new("+", $"{record.SensorMarkPlus}", boxName ?? "", terminalNumberNeeded ? (terminalNumber).ToString() : ""),
-            new("-", $"{record.SensorMarkMinus}", boxName ?? "", terminalNumberNeeded ? (terminalNumber + 1).ToString() : ""),
+            new("+", $"{record.SensorMarkPlus}", boxName ?? "", terminalNumberNeeded ? terminalNumber.ToString() : ""),
+            new("-", $"{record.SensorMarkMinus}", boxName ?? "",
+                terminalNumberNeeded ? (terminalNumber + 1).ToString() : ""),
             new("Экран", "", boxName ?? "", terminalNumberNeeded ? (terminalNumber + 2).ToString() : "")
         };
 
-        if (terminalNumberNeeded) 
-        {
-            terminalNumber += wiresInfo.Count;
-        }
+        if (terminalNumberNeeded) terminalNumber += wiresInfo.Count;
 
 
         return new ImpulseLineRecordJsonObject

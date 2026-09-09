@@ -9,7 +9,7 @@ public static class DirectoryHelper
 
     public static string GetConfigPath()
     {
-        return Path.Combine(GetDirectory(), "Config", "appsettings.json");
+        return Path.Combine(GetDirectory(), "Config", "appSettings.json");
     }
 
     public static string GetUpdateInfoPath()

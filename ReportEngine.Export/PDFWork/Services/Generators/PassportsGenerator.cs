@@ -3,37 +3,42 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.Export.PDFWork.Services.Generators;
 
 public class PassportsGenerator : IReportGenerator
 {
+    private readonly ReportEngineConfigService _configService;
     private readonly ParametersStore _parametersStore;
-    private readonly IProjectInfoRepository _projectInfoRepository;
+    private readonly ProjectInfoRepository _projectInfoRepository;
 
-    public PassportsGenerator(IProjectInfoRepository projectRepository, ParametersStore parametersStore)
+    public PassportsGenerator(
+        ProjectInfoRepository projectRepository,
+        ParametersStore parametersStore,
+        ReportEngineConfigService configService)
     {
         _projectInfoRepository = projectRepository;
         _parametersStore = parametersStore;
+        _configService = configService;
     }
 
     public ReportType Type => ReportType.PassportsReport;
 
     public async Task GenerateAsync(int projectId)
     {
-        var project = await _projectInfoRepository.GetByIdAsync(projectId);
-        await _parametersStore.LoadSettingsDataAsync();
+        var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
-        var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+        var savePath = _configService.GetSaveReportDirectory();
+        ;
         var fileName = ExcelReportHelper.CreateReportName("Паспорт", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
 
@@ -89,11 +94,12 @@ public class PassportsGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
     {
-        var project = await _projectInfoRepository.GetByIdAsync(projectId);
-        await _parametersStore.LoadSettingsDataAsync();
+        var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
+        //await _parametersStore.LoadSettingsDataAsync();
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
-        var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+        var savePath = _configService.GetSaveReportDirectory();
+        ;
         var fileName = ExcelReportHelper.CreateReportName("Паспорт", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
 

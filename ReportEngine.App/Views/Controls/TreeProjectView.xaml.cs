@@ -2,8 +2,8 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Threading;
+using MaterialDesignThemes.Wpf;
+using ReportEngine.App.Dds;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.TreeView;
@@ -13,6 +13,8 @@ namespace ReportEngine.App.Views.Controls;
 
 public partial class TreeProjectView : UserControl, IDisposable
 {
+    private readonly ContainersViewModel _containersViewModel;
+    private readonly DdsService _ddsService;
     private readonly ExceptionService _exceptionService;
     private readonly ProjectViewModel _projectViewModel;
     private bool _disposed;
@@ -20,11 +22,15 @@ public partial class TreeProjectView : UserControl, IDisposable
     public TreeProjectView(
         TreeViewModel treeViewModel,
         ProjectViewModel projectViewModel,
-        ExceptionService exceptionService)
+        ExceptionService exceptionService,
+        ContainersViewModel containersViewModel,
+        DdsService ddsService)
     {
         InitializeComponent();
         _projectViewModel = projectViewModel;
         _exceptionService = exceptionService;
+        _containersViewModel = containersViewModel;
+        _ddsService = ddsService;
         DataContext = treeViewModel;
     }
 
@@ -40,6 +46,28 @@ public partial class TreeProjectView : UserControl, IDisposable
         _disposed = true;
     }
 
+    private string GetHeaderText(TreeViewItem item)
+    {
+        if (item.Header is StackPanel stackPanel)
+            // Ищем TextBlock в StackPanel
+            foreach (var child in stackPanel.Children)
+                if (child is TextBlock textBlock)
+                    return textBlock.Text;
+
+        // Если Header - простая строка (для элементов без иконок)
+        return item.Header?.ToString() ?? string.Empty;
+    }
+
+    private PackIconKind GetIconKind(TreeViewItem item)
+    {
+        if (item.Header is StackPanel stackPanel)
+            foreach (var child in stackPanel.Children)
+                if (child is PackIcon icon)
+                    return icon.Kind;
+
+        return PackIconKind.Folder;
+    }
+
     private void OpenCurrentView(object sender, MouseButtonEventArgs e)
     {
         _exceptionService.SafeExecute(() =>
@@ -47,9 +75,10 @@ public partial class TreeProjectView : UserControl, IDisposable
             var treeViewItem = NavigationTree.SelectedItem as TreeViewItem;
             if (treeViewItem?.Tag != null)
             {
-                var header = treeViewItem.Header.ToString();
-                var tag = treeViewItem.Tag.ToString();
-                LoadTreeContent(tag, header);
+                var icon = GetIconKind(treeViewItem);
+                var header = GetHeaderText(treeViewItem);
+                var tag = treeViewItem.Tag.ToString() ?? string.Empty;
+                LoadTreeContent(tag, header, icon);
             }
         });
     }
@@ -73,7 +102,7 @@ public partial class TreeProjectView : UserControl, IDisposable
         });
     }
 
-    private void LoadTreeContent(string tag, string header)
+    private void LoadTreeContent(string tag, string header, PackIconKind iconKind)
     {
         _exceptionService.SafeExecute(() =>
         {
@@ -91,10 +120,12 @@ public partial class TreeProjectView : UserControl, IDisposable
             {
                 Tag = tag,
                 Content = content,
+                HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                VerticalContentAlignment = VerticalAlignment.Stretch,
                 Style = (Style)FindResource(typeof(TabItem))
             };
 
-            tabItem.Header = CreaterTabItemHeader(header, tabItem);
+            tabItem.Header = CreateTabItemHeader(header, tabItem, iconKind);
 
             MainTabControl.Items.Add(tabItem);
             MainTabControl.SelectedItem = tabItem;
@@ -110,10 +141,10 @@ public partial class TreeProjectView : UserControl, IDisposable
 
             return tag switch
             {
-                "ProjectCard" => ApplyAnimation(new ProjectCardView(_projectViewModel)),
-                "ProjectPreview" => ApplyAnimation(new ProjectPreview(_projectViewModel)),
-                "StandsContainer" => ApplyAnimation(new StandsContainerView(_projectViewModel)),
-                "DockViewer" => ApplyAnimation(new DockViewerView(new DockViewerViewModel()))
+                "ProjectCard" => new ProjectCardView(_projectViewModel),
+                "ProjectPreview" => new ProjectPreview(_projectViewModel),
+                "StandsContainer" => new StandsContainerView(_containersViewModel),
+                "DockViewer" => new DockViewerView(new DockViewerViewModel())
             };
         }
         catch (Exception ex)
@@ -124,12 +155,24 @@ public partial class TreeProjectView : UserControl, IDisposable
         }
     }
 
-    private UIElement CreaterTabItemHeader(string headerName, TabItem parentTab)
+    private UIElement CreateTabItemHeader(
+        string headerName,
+        TabItem parentTab,
+        PackIconKind iconKind)
     {
         var header = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Margin = new Thickness(0, 0, 0, 0)
+        };
+
+        var icon = new PackIcon
+        {
+            Kind = iconKind,
+            Width = 16,
+            Height = 16,
+            Margin = new Thickness(0, 0, 8, 0),
+            Foreground = (Brush)Application.Current.FindResource("PrimaryForeground")
         };
 
         var headerText = new TextBlock
@@ -153,9 +196,11 @@ public partial class TreeProjectView : UserControl, IDisposable
             Style = (Style)FindResource(typeof(Button))
         };
 
+
         closeButton.Tag = parentTab;
         closeButton.Click += CloseCurrentView;
 
+        header.Children.Add(icon);
         header.Children.Add(headerText);
         header.Children.Add(closeButton);
         return header;
@@ -185,53 +230,6 @@ public partial class TreeProjectView : UserControl, IDisposable
             }
 
         return false;
-    }
-
-    private UserControl ApplyAnimation(UserControl control)
-    {
-        control.Opacity = 0;
-        control.RenderTransform = new TranslateTransform(0, 20);
-
-        control.Dispatcher.BeginInvoke(new Action(() =>
-        {
-            var storyboard = new Storyboard();
-
-            var fadeAnimation = new DoubleAnimation
-            {
-                From = 0,
-                To = 1,
-                Duration = TimeSpan.FromMilliseconds(250),
-                EasingFunction = new QuadraticEase
-                {
-                    EasingMode = EasingMode.EaseOut
-                }
-            };
-
-            Storyboard.SetTarget(fadeAnimation, control);
-            Storyboard.SetTargetProperty(fadeAnimation, new PropertyPath("Opacity"));
-
-            var slideAnimation = new DoubleAnimation
-            {
-                From = 20,
-                To = 0,
-                Duration = TimeSpan.FromMilliseconds(250),
-                EasingFunction = new QuadraticEase
-                {
-                    EasingMode = EasingMode.EaseOut
-                }
-            };
-
-            Storyboard.SetTarget(slideAnimation, control);
-            Storyboard.SetTargetProperty(slideAnimation,
-                new PropertyPath("(UIElement.RenderTransform).(TranslateTransform.Y)"));
-
-            storyboard.Children.Add(fadeAnimation);
-            storyboard.Children.Add(slideAnimation);
-
-            storyboard.Begin();
-        }), DispatcherPriority.Loaded);
-
-        return control;
     }
 
     ~TreeProjectView()

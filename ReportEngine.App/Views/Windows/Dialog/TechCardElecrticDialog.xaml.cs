@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using System.Windows.Input;
+using MahApps.Metro.Controls;
 using ReportEngine.App.Enums;
 
 namespace ReportEngine.App.Views.Windows.Dialog;
@@ -7,7 +7,7 @@ namespace ReportEngine.App.Views.Windows.Dialog;
 /// <summary>
 ///     Логика взаимодействия для TechCardElecrticDialog.xaml
 /// </summary>
-public partial class TechCardElecrticDialog : Window
+public partial class TechCardElecrticDialog : MetroWindow
 {
     public TechCardElecrticDialog()
     {
@@ -38,17 +38,5 @@ public partial class TechCardElecrticDialog : Window
         SelectedOption = TechCardElecticDialogResult.Cancel;
         DialogResult = false;
         Close();
-    }
-
-    private void CloseButton_Click(object sender, RoutedEventArgs e)
-    {
-        SelectedOption = TechCardElecticDialogResult.Cancel;
-        DialogResult = false;
-        Close();
-    }
-
-    private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        DragMove();
     }
 }

@@ -116,8 +116,8 @@ public class GenericRepository
 
         return entity;
     }
-    
-    public async Task AddAsync(IBaseEquip entity) 
+
+    public async Task AddAsync(IBaseEquip entity)
     {
         await _context.AddAsync(entity);
         await _context.SaveChangesAsync();
@@ -129,7 +129,7 @@ public class GenericRepository
         _context.Set<TEntity>().Remove(entity);
         await _context.SaveChangesAsync();
     }
-    
+
 
     public async Task<List<T>> GetAllAsync<T>(Func<IQueryable<T>, IQueryable<T>> query)
         where T : class

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
+using Microsoft.Extensions.Options;
+using ReportEngine.Shared.Config.Models;
 
 namespace ReportEngine.Domain.Database.DbSettings;
 
@@ -8,14 +8,13 @@ public static class DbContextOptionsFactory
 {
     public static void Configure(
         DbContextOptionsBuilder options,
-        string databaseMode)
+        IOptions<ReportEngineConfig> appSettings) // Теперь принимает IOptions
     {
-        var connString = JsonHandler.GetConnectionString(DirectoryHelper.GetConfigPath());
-        var sqliteConnString = JsonHandler.GetSqlLiteConnection(DirectoryHelper.GetConfigPath());
+        var settings = appSettings.Value;
 
-        if (databaseMode == "Online")
-            options.UseNpgsql(connString);
+        if (settings.DatabaseSettings.DatabaseMode == "Online")
+            options.UseNpgsql(settings.ConnectionStrings.DefaultConnection);
         else
-            options.UseSqlite(sqliteConnString);
+            options.UseSqlite(settings.ConnectionStrings.SqliteConnectionString);
     }
 }

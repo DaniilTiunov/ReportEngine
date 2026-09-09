@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Text;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AsyncCommands;
@@ -8,19 +7,17 @@ using ReportEngine.App.Model;
 using ReportEngine.App.Services.Calculation;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Views.Windows.Dialog;
-using ReportEngine.Domain.Entities;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
-using ReportEngine.Export.ExcelWork.Services.Generators;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.App.ViewModels.TreeView;
 
 public class TreeViewModel
 {
     private readonly ICalculationService _calculationService;
+    private readonly ReportEngineConfigService _configService;
     private readonly IDialogService _dialogService;
     private readonly INotificationService _notificationService;
     private readonly ProjectViewModel _projectViewModel;
@@ -36,7 +33,8 @@ public class TreeViewModel
         IDialogService dialogService,
         ICalculationService calculationService,
         UpdaterStandService updaterStandService,
-        IServiceProvider serviceProvider)
+        IServiceProvider serviceProvider,
+        ReportEngineConfigService configService)
     {
         _notificationService = notificationService;
         _reportService = reportService;
@@ -45,6 +43,7 @@ public class TreeViewModel
         _updaterStandService = updaterStandService;
         _projectViewModel = projectViewModel;
         _serviceProvider = serviceProvider;
+        _configService = configService;
 
         InitializeCommands();
     }
@@ -65,7 +64,6 @@ public class TreeViewModel
     public IAsyncCommand RecalculateProjectCommandAsync { get; private set; }
 
 
-
     private void InitializeCommands()
     {
         CreateSummaryReportAsync = new AsyncRelayCommand(OnCreateSummaryReportAsync);
@@ -81,12 +79,7 @@ public class TreeViewModel
 
         CalculateProjectCommandAsync = new AsyncRelayCommand(OnCalculateProjectAsync);
         RecalculateProjectCommandAsync = new AsyncRelayCommand(OnRecalculateProjectAsync);
-
     }
-
-
-
-
 
     private async Task OnCreateSummaryReportAsync(object arg)
     {
@@ -108,7 +101,6 @@ public class TreeViewModel
         ShowReportSuccesfullWindow("Сводная ведомость");
     }
 
-
     private async Task OnCreateComponentsListReportAsync(object arg)
     {
         var continueWithDuplicates = CheckDuplicates();
@@ -128,7 +120,6 @@ public class TreeViewModel
 
         ShowReportSuccesfullWindow("Ведомость комплектующих");
     }
-
 
     private async Task OnCreateNamePlatesReportAsync(object arg)
     {
@@ -230,7 +221,6 @@ public class TreeViewModel
         ShowReportSuccesfullWindow("Тара");
     }
 
-
     private async Task OnCreatePassportReportAsync(object arg)
     {
         var continueWithDuplicates = CheckDuplicates();
@@ -281,8 +271,6 @@ public class TreeViewModel
             return;
         }
 
-
-
         await _dialogService.RunWithProgressDialogAsync(async () =>
         {
             await _reportService.GenerateReportAsync(
@@ -292,7 +280,6 @@ public class TreeViewModel
 
         ShowReportSuccesfullWindow("Технологические карты");
     }
-
 
     private async Task OnCreateFlatSummaryReportAsync(object arg)
     {
@@ -313,10 +300,6 @@ public class TreeViewModel
 
         ShowReportSuccesfullWindow("Сводная ведомость (1С)");
     }
-
-
-
-    
 
     private async Task OnCalculateProjectAsync(object obj)
     {
@@ -346,58 +329,46 @@ public class TreeViewModel
                                        Заказ покупателя: {_project.OrderCustomer}
                                        Обозначение КД: {_project.Description}
                                        """);
-
     }
-
-
-
-
 
 
     private bool CheckDuplicates()
     {
         var kksDuplicates = _project.Stands
-                .GroupBy(stand => stand.KKSCode)
-                .Where(group => group.Count() > 1)
-                .ToList();
+            .GroupBy(stand => stand.KKSCode)
+            .Where(group => group.Count() > 1)
+            .ToList();
 
         if (kksDuplicates.Count > 0)
         {
             var warningMessage = "Обнаружены дублирования KKS-кодов стендов:\n\n" +
-                                     string.Join("\n", kksDuplicates.Select(g => $"- {g.Key} ({g.Count()} шт.)")) +
-                                     "\n\nПродолжить генерацию отчета?";
+                                 string.Join("\n", kksDuplicates.Select(g => $"- {g.Key} ({g.Count()} шт.)")) +
+                                 "\n\nПродолжить генерацию отчета?";
 
             return _notificationService.ShowConfirmation(warningMessage);
         }
-        else
-        {
-            return true;
-        }
+
+        return true;
     }
-
-
 
     private bool ShowReportSuccesfullWindow(string reportName)
     {
         var succesfulMessage = $"""
-                   Отчёт "{reportName}" создан по проекту:
-                   Заказ покупателя: {_project.OrderCustomer}
-                   Обозначение КД: {_project.Description}
-                   
-                   Открыть папку с отчетами?
-                   """;
+                                Отчёт "{reportName}" создан по проекту:
+                                Заказ покупателя: {_project.OrderCustomer}
+                                Обозначение КД: {_project.Description}
 
-       var confirmationResult = _notificationService.ShowConfirmation(succesfulMessage);
+                                Открыть папку с отчетами?
+                                """;
 
-       if (confirmationResult)
-       {
-            var reportDir = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+        var confirmationResult = _notificationService.ShowConfirmation(succesfulMessage);
+
+        if (confirmationResult)
+        {
+            var reportDir = _configService.GetSaveReportDirectory();
             Process.Start("explorer.exe", reportDir);
-       }
-       return confirmationResult;
+        }
+
+        return confirmationResult;
     }
-
-
-
-
 }

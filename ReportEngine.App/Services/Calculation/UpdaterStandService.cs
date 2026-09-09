@@ -1,11 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ReportEngine.App.Model;
-using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Background;
 using ReportEngine.Domain.Database.Context;
-using ReportEngine.Domain.Repositories;
-using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.App.Services.Calculation;
 
@@ -13,7 +10,6 @@ public class UpdaterStandService
 {
     private readonly ReAppContext _context;
     private readonly INotificationService _notificationService;
-    private readonly IProjectInfoRepository _projectRepository;
     private readonly IProjectService _projectService;
     private readonly IStandService _standService;
 
@@ -21,14 +17,11 @@ public class UpdaterStandService
         ReAppContext context,
         IProjectService projectService,
         IStandService standService,
-        IProjectInfoRepository projectRepository,
-        INotificationService notificationService,
-        ObvyazkaInStandRepository obvyazkaRepository)
+        INotificationService notificationService)
     {
         _context = context;
         _projectService = projectService;
         _standService = standService;
-        _projectRepository = projectRepository;
         _notificationService = notificationService;
     }
 
@@ -65,7 +58,8 @@ public class UpdaterStandService
         if (collection == null)
             return;
 
-        foreach (var item in collection) ApplyChangesToObject(item!, change);
+        foreach (var item in collection)
+            ApplyChangesToObject(item!, change);
     }
 
     private void ApplyChangesToObject(object target, TablesChanges change)
@@ -108,20 +102,7 @@ public class UpdaterStandService
         }
     }
 
-    public async Task SyncStandPropertiesToObvyazkiAsync(StandModel stand)
-    {
-        foreach (var obvyazka in stand.ObvyazkiInStand)
-        {
-            obvyazka.MaterialLine = stand.MaterialLine;
-            obvyazka.Armature = stand.Armature;
-            obvyazka.TreeSocket = stand.TreeSocket;
-            obvyazka.KMCH = stand.KMCH;
-
-            await _projectRepository.UpdateObvInStandAsync(stand.Id, obvyazka);
-        }
-    }
-
-    public async Task<List<TablesChanges>> GetUnprocessedChangesAsync(ProjectModel project)
+    private async Task<List<TablesChanges>> GetUnprocessedChangesAsync(ProjectModel project)
     {
         return await _context.TablesChanges
             .Where(c => c.Processed == false)

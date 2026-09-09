@@ -5,7 +5,7 @@ using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Config.Models;
 
 namespace ReportEngine.App.Views.Windows.Dialog;
 
@@ -13,6 +13,8 @@ namespace ReportEngine.App.Views.Windows.Dialog;
 public partial class SplashWindow : Window
 {
     [ObservableProperty] private ReleaseChannel _channel;
+
+    [ObservableProperty] private string _statusText;
 
     [ObservableProperty] private string _version;
 
@@ -44,16 +46,16 @@ public partial class SplashWindow : Window
 
     public void CheckDbStatus(ReAppContext dbContext)
     {
-        StatusText.Text = "Проверка подключения к базе данных...";
+        StatusText = "Проверка подключения к базе данных...";
 
         if (dbContext.Database.CanConnect())
-            StatusText.Text = "Подключение к базе данных установлено...";
+            StatusText = "Подключение к базе данных установлено...";
         else
-            StatusText.Text = "Подключение к базе данных не установлено...";
+            StatusText = "Подключение к базе данных не установлено...";
     }
 
     public void SetStatusText(string statusText)
     {
-        StatusText.Text = statusText;
+        StatusText = statusText;
     }
 }

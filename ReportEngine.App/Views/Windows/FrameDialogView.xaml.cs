@@ -1,10 +1,10 @@
-﻿using System.Windows;
-using System.Windows.Input;
+﻿using System.Windows.Input;
+using MahApps.Metro.Controls;
 using ReportEngine.App.ViewModels.FormedEquips;
 
 namespace ReportEngine.App.Views.Windows;
 
-public partial class FrameDialogView : Window
+public partial class FrameDialogView : MetroWindow
 {
     public FrameDialogView(FormedFrameViewModel viewModel)
     {
@@ -20,15 +20,5 @@ public partial class FrameDialogView : Window
             DialogResult = true;
             Close();
         }
-    }
-
-    private void Window_MouseLeftButtonDown(object sender, RoutedEventArgs e)
-    {
-        DragMove();
-    }
-
-    private void CloseButton_Click(object sender, RoutedEventArgs e)
-    {
-        Close();
     }
 }

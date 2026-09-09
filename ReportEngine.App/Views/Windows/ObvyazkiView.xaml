@@ -1,27 +1,29 @@
-﻿<Window
+<mah:MetroWindow
     Background="{DynamicResource PrimaryColor}"
-    FontFamily="Bahnschrift"
+    FontFamily="{DynamicResource AppFontFamily}"
     Foreground="{DynamicResource PrimaryForeground}"
     Height="700"
+    ShowIconOnTitleBar="True"
     Title="Обвязки"
+    TitleForeground="{DynamicResource PrimaryForeground}"
     Width="1400"
     WindowStartupLocation="CenterScreen"
-    WindowStyle="None"
     mc:Ignorable="d"
     windowHelpers:WindowBehavior.CloseOnEscape="True"
     x:Class="ReportEngine.App.Views.Windows.ObvyazkiView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:converters="clr-namespace:ReportEngine.App.Display"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:windowHelpers="clr-namespace:ReportEngine.App.Views.Windows.WindowHelpers"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <Window.Resources>
+    <mah:MetroWindow.Resources>
         <converters:ObvyazkaImagePathConverter x:Key="ObvyazkaImagePathConverter" />
-    </Window.Resources>
+    </mah:MetroWindow.Resources>
 
-    <Window.ContextMenu>
+    <mah:MetroWindow.ContextMenu>
         <ContextMenu>
             <MenuItem Command="{Binding ShowAllObvyazkaCommand}" Header="Показать всех" />
             <Separator />
@@ -30,324 +32,260 @@
             <Separator />
             <MenuItem Command="{Binding DeleteUserCommand}" Header="Удалить" />
         </ContextMenu>
-    </Window.ContextMenu>
+    </mah:MetroWindow.ContextMenu>
 
-    <WindowChrome.WindowChrome>
-        <WindowChrome
-            CaptionHeight="0"
-            CornerRadius="0"
-            GlassFrameThickness="0" />
-    </WindowChrome.WindowChrome>
 
-    <Border Style="{DynamicResource WindowBorder}">
-        <DockPanel>
-            <Border
-                Background="#2D2D30"
-                DockPanel.Dock="Top"
-                Height="34"
-                MouseLeftButtonDown="Window_MouseLeftButtonDown"
-                x:Name="FormedFrameWindowTitle">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+    <DockPanel>
+        <Separator
+            Background="{DynamicResource PrimaryForeground}"
+            BorderBrush="{DynamicResource PrimaryForeground}"
+            BorderThickness="3"
+            DockPanel.Dock="Top"
+            Foreground="{DynamicResource PrimaryForeground}"
+            Height="3"
+            Margin="20,0,20,8" />
 
-                    <StackPanel
-                        Margin="10,0,0,0"
-                        Orientation="Horizontal"
-                        VerticalAlignment="Center">
-                        <Image
-                            Height="18"
-                            Margin="0,0,8,0"
-                            Source="/Resources/Icons/estimate_cost_icon_213382.ico"
-                            Width="18" />
-                        <TextBlock
-                            FontSize="14"
-                            Foreground="White"
-                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}"
-                            VerticalAlignment="Center" />
-                    </StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="400" x:Name="PanelColumn" />
+            </Grid.ColumnDefinitions>
 
-                    <StackPanel
-                        Grid.Column="1"
-                        Orientation="Horizontal"
-                        VerticalAlignment="Center">
-                        <Button
-                            Click="MinimizeButton_Click"
-                            FontSize="16"
-                            Height="30"
-                            ToolTip="Свернуть"
-                            Width="40"
-                            x:Name="MinimizeButton">
-                            ─
-                        </Button>
-                        <Button
-                            Click="MaxRestoreButton_Click"
-                            FontSize="16"
-                            Height="30"
-                            Margin="10,0,0,0"
-                            ToolTip="Развернуть"
-                            Width="40"
-                            x:Name="MaxRestoreButton">
-                            ▢
-                        </Button>
-                        <Button
-                            Click="CloseButton_Click"
-                            FontSize="16"
-                            Height="30"
-                            Margin="10,0,10,0"
-                            ToolTip="Закрыть"
-                            Width="40"
-                            x:Name="CloseButton">
-                            ✕
-                        </Button>
-                    </StackPanel>
-                </Grid>
-            </Border>
+            <ScrollViewer
+                Grid.Column="0"
+                Margin="10"
+                VerticalScrollBarVisibility="Auto">
+                <ListBox
+                    Background="Transparent"
+                    BorderThickness="0"
+                    ItemsSource="{Binding CurrentObvyazka.Obvyazki, Mode=TwoWay}"
+                    MouseDoubleClick="ObvyazkaListBox_MouseDoubleClick"
+                    PreviewMouseWheel="ListBox_PreviewMouseWheel"
+                    SelectedItem="{Binding CurrentObvyazka.SelectedObvyazka, Mode=TwoWay}">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="3" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border
+                                Background="{DynamicResource SecondaryColor}"
+                                BorderBrush="{DynamicResource BorderColor}"
+                                BorderThickness="1"
+                                CornerRadius="5"
+                                Margin="10">
+                                <Image
+                                    Height="200"
+                                    Source="{Binding ImageName, Converter={StaticResource ObvyazkaImagePathConverter}}"
+                                    Stretch="Uniform"
+                                    Width="200" />
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+            </ScrollViewer>
 
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="400" x:Name="PanelColumn" />
-                </Grid.ColumnDefinitions>
+            <!--  Информация о выбранной обвязке (справа)  -->
+            <StackPanel
+                Grid.Column="1"
+                Margin="10"
+                VerticalAlignment="Top"
+                x:Name="CreateObvPanel">
+                <!--  Картинка выбранной обвязки  -->
+                <Border
+                    Background="{DynamicResource SecondaryColor}"
+                    BorderBrush="{DynamicResource BorderColor}"
+                    BorderThickness="1"
+                    CornerRadius="5"
+                    Margin="0,10,0,10">
+                    <Image
+                        Height="200"
+                        Source="{Binding CurrentObvyazka.SelectedObvyazka.ImageName, Converter={StaticResource ObvyazkaImagePathConverter}}"
+                        Stretch="Uniform"
+                        Width="200" />
+                </Border>
 
-                <ScrollViewer
-                    Grid.Column="0"
-                    Margin="10"
-                    VerticalScrollBarVisibility="Auto">
-                    <ListBox
-                        Background="Transparent"
-                        BorderThickness="0"
-                        ItemsSource="{Binding CurrentObvyazka.Obvyazki, Mode=TwoWay}"
-                        MouseDoubleClick="ObvyazkaListBox_MouseDoubleClick"
-                        PreviewMouseWheel="ListBox_PreviewMouseWheel"
-                        SelectedItem="{Binding CurrentObvyazka.SelectedObvyazka, Mode=TwoWay}">
-                        <ListBox.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="3" />
-                            </ItemsPanelTemplate>
-                        </ListBox.ItemsPanel>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Border
-                                    Background="{DynamicResource SecondaryColor}"
-                                    BorderBrush="{DynamicResource BorderColor}"
-                                    BorderThickness="1"
-                                    CornerRadius="5"
-                                    Margin="10">
-                                    <Image
-                                        Height="200"
-                                        Source="{Binding ImageName, Converter={StaticResource ObvyazkaImagePathConverter}}"
-                                        Stretch="Uniform"
-                                        Width="200" />
-                                </Border>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem">
-                                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                            </Style>
-                        </ListBox.ItemContainerStyle>
-                    </ListBox>
-                </ScrollViewer>
+                <!--  Данные обвязки  -->
+                <GroupBox
+                    Header="Информация"
+                    Margin="0,10,0,0"
+                    Padding="10">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="30" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0">
+                            <StackPanel.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontSize" Value="14" />
+                                    <Setter Property="Margin" Value="0,5" />
+                                </Style>
+                            </StackPanel.Resources>
 
-                <!--  Информация о выбранной обвязке (справа)  -->
-                <StackPanel
-                    Grid.Column="1"
-                    Margin="10"
-                    VerticalAlignment="Top"
-                    x:Name="CreateObvPanel">
-                    <!--  Картинка выбранной обвязки  -->
-                    <Border
-                        Background="{DynamicResource SecondaryColor}"
-                        BorderBrush="{DynamicResource BorderColor}"
-                        BorderThickness="1"
-                        CornerRadius="5"
-                        Margin="0,10,0,10">
-                        <Image
-                            Height="200"
-                            Source="{Binding CurrentObvyazka.SelectedObvyazka.ImageName, Converter={StaticResource ObvyazkaImagePathConverter}}"
-                            Stretch="Uniform"
-                            Width="200" />
-                    </Border>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
 
-                    <!--  Данные обвязки  -->
-                    <GroupBox
-                        Header="Информация"
-                        Margin="0,10,0,0"
-                        Padding="10">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="30" />
-                            </Grid.RowDefinitions>
-                            <StackPanel Grid.Row="0">
-                                <StackPanel.Resources>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="FontSize" Value="14" />
-                                        <Setter Property="Margin" Value="0,5" />
-                                    </Style>
-                                </StackPanel.Resources>
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Margin="0,0,5,5"
+                                    Text="Номер:" />
+                                <TextBox
+                                    Grid.Row="0"
+                                    Margin="100,0,5,5"
+                                    Text="{Binding CurrentObvyazka.SelectedObvyazka.Number}" />
 
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Margin="0,0,5,5"
+                                    Text="Длина линии:" />
+                                <TextBox
+                                    Grid.Row="1"
+                                    Margin="100,0,5,5"
+                                    Text="{Binding CurrentObvyazka.SelectedObvyazka.LineLength}" />
 
-                                    <TextBlock
-                                        Grid.Row="0"
-                                        Margin="0,0,5,5"
-                                        Text="Номер:" />
-                                    <TextBox
-                                        Grid.Row="0"
-                                        Margin="100,0,5,5"
-                                        Text="{Binding CurrentObvyazka.SelectedObvyazka.Number}" />
+                                <TextBlock
+                                    Grid.Row="3"
+                                    Margin="0,0,5,5"
+                                    Text="Кол-во ЗРА:" />
+                                <TextBox
+                                    Grid.Row="3"
+                                    Margin="100,0,5,5"
+                                    Text="{Binding CurrentObvyazka.SelectedObvyazka.ZraCount}" />
 
-                                    <TextBlock
-                                        Grid.Row="1"
-                                        Margin="0,0,5,5"
-                                        Text="Длина линии:" />
-                                    <TextBox
-                                        Grid.Row="1"
-                                        Margin="100,0,5,5"
-                                        Text="{Binding CurrentObvyazka.SelectedObvyazka.LineLength}" />
+                                <TextBlock
+                                    Grid.Row="4"
+                                    Margin="0,0,5,5"
+                                    Text="Тройники:" />
+                                <TextBox
+                                    Grid.Row="4"
+                                    Margin="100,0,5,5"
+                                    Text="{Binding CurrentObvyazka.SelectedObvyazka.TreeSocket}" />
 
-                                    <TextBlock
-                                        Grid.Row="3"
-                                        Margin="0,0,5,5"
-                                        Text="Кол-во ЗРА:" />
-                                    <TextBox
-                                        Grid.Row="3"
-                                        Margin="100,0,5,5"
-                                        Text="{Binding CurrentObvyazka.SelectedObvyazka.ZraCount}" />
+                                <TextBlock
+                                    Grid.Row="5"
+                                    Margin="0,0,5,5"
+                                    Text="Датчики:" />
+                                <TextBox
+                                    Grid.Row="5"
+                                    Margin="100,0,5,5"
+                                    Text="{Binding CurrentObvyazka.SelectedObvyazka.Sensor}" />
 
-                                    <TextBlock
-                                        Grid.Row="4"
-                                        Margin="0,0,5,5"
-                                        Text="Тройники:" />
-                                    <TextBox
-                                        Grid.Row="4"
-                                        Margin="100,0,5,5"
-                                        Text="{Binding CurrentObvyazka.SelectedObvyazka.TreeSocket}" />
+                                <TextBlock
+                                    Grid.Row="6"
+                                    Margin="0,0,5,5"
+                                    Text="Тип датчиков:" />
+                                <TextBox
+                                    Grid.Row="6"
+                                    Margin="100,0,5,5"
+                                    Text="{Binding CurrentObvyazka.SelectedObvyazka.SensorType}" />
 
-                                    <TextBlock
-                                        Grid.Row="5"
-                                        Margin="0,0,5,5"
-                                        Text="Датчики:" />
-                                    <TextBox
-                                        Grid.Row="5"
-                                        Margin="100,0,5,5"
-                                        Text="{Binding CurrentObvyazka.SelectedObvyazka.Sensor}" />
+                                <TextBlock
+                                    Grid.Row="7"
+                                    Margin="0,0,5,5"
+                                    Text="Хомуты:" />
+                                <TextBox
+                                    Grid.Row="7"
+                                    Margin="100,0,5,5"
+                                    Text="{Binding CurrentObvyazka.SelectedObvyazka.Clamp}" />
 
-                                    <TextBlock
-                                        Grid.Row="6"
-                                        Margin="0,0,5,5"
-                                        Text="Тип датчиков:" />
-                                    <TextBox
-                                        Grid.Row="6"
-                                        Margin="100,0,5,5"
-                                        Text="{Binding CurrentObvyazka.SelectedObvyazka.SensorType}" />
+                                <TextBlock
+                                    Grid.Row="8"
+                                    Margin="0,0,5,5"
+                                    Text="Длина на раме:" />
+                                <TextBox
+                                    Grid.Row="8"
+                                    Margin="100,0,5,5"
+                                    Text="{Binding CurrentObvyazka.SelectedObvyazka.WidthOnFrame}" />
 
-                                    <TextBlock
-                                        Grid.Row="7"
-                                        Margin="0,0,5,5"
-                                        Text="Хомуты:" />
-                                    <TextBox
-                                        Grid.Row="7"
-                                        Margin="100,0,5,5"
-                                        Text="{Binding CurrentObvyazka.SelectedObvyazka.Clamp}" />
+                                <TextBlock
+                                    Grid.Row="9"
+                                    Margin="0,0,5,5"
+                                    Text="Др. линии:" />
+                                <TextBox
+                                    Grid.Row="9"
+                                    Margin="100,0,5,5"
+                                    Text="{Binding CurrentObvyazka.SelectedObvyazka.OtherLineCount}" />
 
-                                    <TextBlock
-                                        Grid.Row="8"
-                                        Margin="0,0,5,5"
-                                        Text="Длина на раме:" />
-                                    <TextBox
-                                        Grid.Row="8"
-                                        Margin="100,0,5,5"
-                                        Text="{Binding CurrentObvyazka.SelectedObvyazka.WidthOnFrame}" />
+                                <TextBlock
+                                    Grid.Row="10"
+                                    Margin="0,0,5,5"
+                                    Text="Масса:" />
+                                <TextBox
+                                    Grid.Row="10"
+                                    Margin="100,0,5,5"
+                                    Text="{Binding CurrentObvyazka.SelectedObvyazka.Weight}" />
 
-                                    <TextBlock
-                                        Grid.Row="9"
-                                        Margin="0,0,5,5"
-                                        Text="Др. линии:" />
-                                    <TextBox
-                                        Grid.Row="9"
-                                        Margin="100,0,5,5"
-                                        Text="{Binding CurrentObvyazka.SelectedObvyazka.OtherLineCount}" />
+                                <TextBlock
+                                    Grid.Row="11"
+                                    Margin="0,0,5,5"
+                                    Text="Трудозатраты:" />
+                                <TextBox
+                                    Grid.Row="11"
+                                    Margin="100,0,5,5"
+                                    Text="{Binding CurrentObvyazka.SelectedObvyazka.HumanCost}" />
 
-                                    <TextBlock
-                                        Grid.Row="10"
-                                        Margin="0,0,5,5"
-                                        Text="Масса:" />
-                                    <TextBox
-                                        Grid.Row="10"
-                                        Margin="100,0,5,5"
-                                        Text="{Binding CurrentObvyazka.SelectedObvyazka.Weight}" />
+                                <TextBlock
+                                    Grid.Row="12"
+                                    Margin="0,0,5,5"
+                                    Text="Кол-во КМЧ:" />
+                                <TextBox
+                                    Grid.Row="12"
+                                    Margin="125,0,5,5"
+                                    Text="{Binding CurrentObvyazka.SelectedObvyazka.KMCHCount}" />
 
-                                    <TextBlock
-                                        Grid.Row="11"
-                                        Margin="0,0,5,5"
-                                        Text="Трудозатраты:" />
-                                    <TextBox
-                                        Grid.Row="11"
-                                        Margin="100,0,5,5"
-                                        Text="{Binding CurrentObvyazka.SelectedObvyazka.HumanCost}" />
-
-                                    <TextBlock
-                                        Grid.Row="12"
-                                        Margin="0,0,5,5"
-                                        Text="Кол-во КМЧ:" />
-                                    <TextBox
-                                        Grid.Row="12"
-                                        Margin="125,0,5,5"
-                                        Text="{Binding CurrentObvyazka.SelectedObvyazka.KMCHCount}" />
-
-                                    <TextBlock
-                                        Grid.Row="13"
-                                        Margin="0,0,5,5"
-                                        Text="Имя изображения:" />
-                                    <TextBox
-                                        Grid.Row="13"
-                                        Margin="125,0,5,5"
-                                        Text="{Binding CurrentObvyazka.SelectedObvyazka.ImageName}" />
-                                </Grid>
-                            </StackPanel>
-                            <StackPanel
-                                Grid.Row="1"
-                                Margin="0,5,0,0"
-                                Orientation="Horizontal">
-                                <Button
-                                    Command="{Binding AddNewObvyazkaCommand}"
-                                    Content="Добавить новую"
-                                    Margin="10,0,10,0" />
-                                <Button
-                                    Command="{Binding UpdateChangesCommand}"
-                                    Content="Сохранить изменения"
-                                    Margin="10,0,10,0" />
-                                <Button
-                                    Command="{Binding DeleteObvyazkaCommand}"
-                                    Content="Удалить"
-                                    Margin="0,0,0,0"
-                                    Width="75" />
-                            </StackPanel>
-                        </Grid>
-                    </GroupBox>
-                </StackPanel>
-            </Grid>
-        </DockPanel>
-    </Border>
-</Window>
+                                <TextBlock
+                                    Grid.Row="13"
+                                    Margin="0,0,5,5"
+                                    Text="Имя изображения:" />
+                                <TextBox
+                                    Grid.Row="13"
+                                    Margin="125,0,5,5"
+                                    Text="{Binding CurrentObvyazka.SelectedObvyazka.ImageName}" />
+                            </Grid>
+                        </StackPanel>
+                        <StackPanel
+                            Grid.Row="1"
+                            Margin="0,5,0,0"
+                            Orientation="Horizontal">
+                            <Button
+                                Command="{Binding AddNewObvyazkaCommand}"
+                                Content="Добавить новую"
+                                Margin="10,0,10,0" />
+                            <Button
+                                Command="{Binding UpdateChangesCommand}"
+                                Content="Сохранить изменения"
+                                Margin="10,0,10,0" />
+                            <Button
+                                Command="{Binding DeleteObvyazkaCommand}"
+                                Content="Удалить"
+                                Margin="0,0,0,0"
+                                Width="75" />
+                        </StackPanel>
+                    </Grid>
+                </GroupBox>
+            </StackPanel>
+        </Grid>
+    </DockPanel>
+</mah:MetroWindow>

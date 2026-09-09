@@ -1,7 +1,7 @@
 using System.IO;
 using System.Text.Json;
 using System.Windows;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Config.Models;
 using ReportEngine.Updater.Config;
 
 namespace ReportEngine.Updater.Services;
@@ -9,12 +9,12 @@ namespace ReportEngine.Updater.Services;
 public class JsonSettingsService
 {
     private readonly JsonSerializerOptions _jsonOptions;
-    
+
     public JsonSettingsService(JsonSerializerOptions jsonOptions)
     {
         _jsonOptions = jsonOptions;
     }
-    
+
     private async Task<UpdateSettings> GetUpdateSettingsJsonAsync(string jsonConfigPath)
     {
         var json = await File.ReadAllTextAsync(jsonConfigPath);
@@ -49,16 +49,16 @@ public class JsonSettingsService
     public async Task<UpdateInfo> GetLatestReleaseInfoAsync(string releaseDirectory, string jsonName)
     {
         var path = Path.Combine(releaseDirectory, jsonName);
-        
+
         var json = await File.ReadAllTextAsync(path);
-        
+
         if (string.IsNullOrEmpty(json))
         {
             MessageBox.Show("Файл пуст");
             return new UpdateInfo();
         }
-        
-        return JsonSerializer.Deserialize<UpdateInfo>(json, _jsonOptions) ?? 
+
+        return JsonSerializer.Deserialize<UpdateInfo>(json, _jsonOptions) ??
                new UpdateInfo();
     }
 

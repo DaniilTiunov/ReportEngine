@@ -20,17 +20,13 @@ public class InitializeService
 
     public async Task InitializeStandDefaultPurposes(StandModel standForInitialize)
     {
-        //принудительно прогружаем настройки
-        await _parametersStore.LoadSettingsDataAsync();
-
-
-        InitializeObvAdditionalPurposes(standForInitialize);
-        InitializeDrainagePurposes(standForInitialize);
+        await InitializeObvAdditionalPurposes(standForInitialize);
+        await InitializeDrainagePurposes(standForInitialize);
         await InitializeElectricalComponent(standForInitialize);
         await InitializeAdditionalEquip(standForInitialize);
     }
 
-    public void InitializeObvAdditionalPurposes(StandModel stand)
+    private async Task InitializeObvAdditionalPurposes(StandModel stand)
     {
         stand.ObvyazkaAdditionalComponents = new ObservableCollection<ObvyazkaAdditionalEquipPurpose>
         {
@@ -38,7 +34,7 @@ public class InitializeService
         };
     }
 
-    public void InitializeDrainagePurposes(StandModel stand)
+    private async Task InitializeDrainagePurposes(StandModel stand)
     {
         const float endPipeQuantityPerStand = 0.2f;
         const float pipePlugQuantityPerStand = 2.0f;
@@ -53,7 +49,7 @@ public class InitializeService
         };
     }
 
-    public async Task InitializeAdditionalEquip(StandModel stand)
+    private async Task InitializeAdditionalEquip(StandModel stand)
     {
         const float nameplatesPerStand = 1.0f;
 
@@ -118,7 +114,7 @@ public class InitializeService
         };
     }
 
-    public async Task InitializeElectricalComponent(StandModel stand)
+    private async Task InitializeElectricalComponent(StandModel stand)
     {
         float? usualConnectionBoxQuantity = 1.0f;
         float? usualCablesQuantity = 2.0f;

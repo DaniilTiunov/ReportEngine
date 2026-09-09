@@ -1,119 +1,109 @@
-﻿<Window
-    Background="{DynamicResource PrimaryColor}"
-    FontFamily="Bahnschrift"
+﻿<mah:MetroWindow
+    FontFamily="{DynamicResource AppFontFamily}"
     FontSize="14"
     Foreground="{DynamicResource PrimaryForeground}"
     Height="700"
     ResizeMode="NoResize"
+    ShowIconOnTitleBar="True"
     Title="Выбор рамы"
+    TitleForeground="{DynamicResource PrimaryForeground}"
     Width="800"
     WindowStartupLocation="CenterScreen"
-    WindowStyle="None"
     mc:Ignorable="d"
     windowHelpers:WindowBehavior.CloseOnEscape="True"
     x:Class="ReportEngine.App.Views.Windows.FrameDialogView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:windowHelpers="clr-namespace:ReportEngine.App.Views.Windows.WindowHelpers"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <WindowChrome.WindowChrome>
-        <WindowChrome
-            CaptionHeight="0"
-            CornerRadius="0"
-            GlassFrameThickness="0" />
-    </WindowChrome.WindowChrome>
 
-    <Border Style="{DynamicResource WindowBorder}">
-        <DockPanel>
-            <Border
-                Background="#2D2D30"
-                DockPanel.Dock="Top"
-                Height="34"
-                MouseLeftButtonDown="Window_MouseLeftButtonDown"
-                x:Name="WindowTitle">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+    <mah:MetroWindow.Resources>
+        <DropShadowEffect
+            BlurRadius="30"
+            Color="#000000"
+            Opacity="0.2"
+            ShadowDepth="0"
+            x:Key="WindowShadow" />
+    </mah:MetroWindow.Resources>
+    <DockPanel>
+        <!--  Заголовок окна  -->
 
-                    <StackPanel
-                        Margin="10,0,0,0"
-                        Orientation="Horizontal"
-                        VerticalAlignment="Center">
-                        <Image
-                            Height="18"
-                            Margin="0,0,8,0"
-                            Source="/Resources/Icons/estimate_cost_icon_213382.ico"
-                            Width="18" />
-                        <TextBlock
-                            FontSize="14"
-                            Foreground="White"
-                            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}"
-                            VerticalAlignment="Center" />
-                    </StackPanel>
+        <Separator
+            Background="{DynamicResource PrimaryForeground}"
+            BorderBrush="{DynamicResource PrimaryForeground}"
+            BorderThickness="3"
+            DockPanel.Dock="Top"
+            Foreground="{DynamicResource PrimaryForeground}"
+            Height="3"
+            Margin="20,0,20,8" />
+        <!--  Основное содержимое  -->
+        <Grid Margin="15,10,15,15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="160" />
+            </Grid.ColumnDefinitions>
 
-                    <StackPanel
-                        Grid.Column="1"
-                        Orientation="Horizontal"
-                        VerticalAlignment="Center">
-                        <Button
-                            Click="CloseButton_Click"
-                            FontSize="16"
-                            Height="30"
-                            Margin="10,0,10,0"
-                            ToolTip="Закрыть"
-                            Width="40"
-                            x:Name="CloseButton">
-                            ✕
-                        </Button>
-                    </StackPanel>
-                </Grid>
-            </Border>
-
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="160" />
-                </Grid.ColumnDefinitions>
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+            <ScrollViewer
+                Grid.Column="0"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
                 <DataGrid
                     AutoGenerateColumns="False"
                     CanUserAddRows="False"
-                    Grid.Column="0"
                     ItemsSource="{Binding FormedFrameModel.AllFrames}"
-                    Margin="10,5,10,10"
+                    Margin="0,5,10,5"
+                    MinHeight="200"
                     MouseDoubleClick="FormedFrameGrid_MouseDoubleClick"
                     SelectedItem="{Binding FormedFrameModel.SelectedFrame}"
                     x:Name="FrameDataGrid">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Name}" Header="Наименование" />
-                        <DataGridTextColumn Binding="{Binding FrameType}" Header="Тип" />
-                        <DataGridTextColumn Binding="{Binding Width}" Header="Ширина" />
-                        <DataGridTextColumn Binding="{Binding Height}" Header="Высота" />
-                        <DataGridTextColumn Binding="{Binding Depth}" Header="Глубина" />
-                        <DataGridTextColumn Binding="{Binding Weight}" Header="Масса" />
-                        <DataGridTextColumn Binding="{Binding Designe}" Header="Описание по КД" />
+                        <DataGridTextColumn
+                            Binding="{Binding Name}"
+                            Header="Наименование"
+                            Width="*" />
+                        <DataGridTextColumn
+                            Binding="{Binding FrameType}"
+                            Header="Тип"
+                            Width="Auto" />
+                        <DataGridTextColumn
+                            Binding="{Binding Width}"
+                            Header="Ширина"
+                            Width="Auto" />
+                        <DataGridTextColumn
+                            Binding="{Binding Height}"
+                            Header="Высота"
+                            Width="Auto" />
+                        <DataGridTextColumn
+                            Binding="{Binding Depth}"
+                            Header="Глубина"
+                            Width="Auto" />
+                        <DataGridTextColumn
+                            Binding="{Binding Weight}"
+                            Header="Масса"
+                            Width="Auto" />
+                        <DataGridTextColumn
+                            Binding="{Binding Designe}"
+                            Header="Описание по КД"
+                            Width="*" />
                     </DataGrid.Columns>
                 </DataGrid>
-                <StackPanel
-                    Grid.Column="1"
-                    Margin="10"
-                    VerticalAlignment="Top">
+            </ScrollViewer>
 
-                    <CheckBox
-                        Content="Разборная"
-                        FontSize="16"
-                        IsChecked="{Binding FormedFrameModel.SelectedFrame.Disassembled, Mode=TwoWay}"
-                        VerticalAlignment="Top" />
-
-                </StackPanel>
-            </Grid>
-        </DockPanel>
-    </Border>
-</Window>
+            <Border
+                Grid.Column="1"
+                Margin="10,5,0,5"
+                Padding="10"
+                Style="{StaticResource CardPanelStyle}"
+                VerticalAlignment="Top">
+                <CheckBox
+                    Content="Разборная"
+                    FontSize="16"
+                    IsChecked="{Binding FormedFrameModel.SelectedFrame.Disassembled, Mode=TwoWay}"
+                    VerticalAlignment="Top" />
+            </Border>
+        </Grid>
+    </DockPanel>
+</mah:MetroWindow>

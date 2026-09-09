@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
@@ -19,7 +20,6 @@ using ReportEngine.App.ViewModels.Utils;
 using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
-using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 using ReportEngine.Domain.Entities.ElectricSockets;
@@ -31,8 +31,7 @@ using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Extensions.Extensions;
-using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -41,6 +40,7 @@ public class ProjectViewModel : BaseViewModel
     private readonly AdditionalEquipService _additionalEquipService;
     private readonly AuditService _auditService;
     private readonly ICalculationService _calculationService;
+    private readonly ReportEngineConfigService _configService;
     private readonly ContainerService _containerService;
     private readonly IDialogService _dialogService;
     private readonly EntityStandClonerService _entityStandCloner;
@@ -79,7 +79,8 @@ public class ProjectViewModel : BaseViewModel
         SessionService sessionService,
         ExceptionService exceptionService,
         UiLogger logger,
-        IServiceProvider serviceProvider)
+        IServiceProvider serviceProvider,
+        ReportEngineConfigService configService)
     {
         _projectRepository = projectRepository;
         _dialogService = dialogService;
@@ -101,14 +102,18 @@ public class ProjectViewModel : BaseViewModel
         _exceptionService = exceptionService;
         _logger = logger;
         _serviceProvider = serviceProvider;
+        _configService = configService;
 
         NewStand = new StandModel { Number = 1 };
+
+        RefreshCommandAsync = new AsyncRelayCommand(RefreshProjectAsync);
 
         InitializeCommands();
         InitializeTime();
         InitializeGenericCommands();
     }
 
+    public IAsyncRelayCommand RefreshCommandAsync { get; set; }
     public ObservableCollection<FormedFrame> AllAvailableFrames { get; set; } = new();
     public ObservableCollection<FormedDrainage> AllAvailableDrainages { get; set; } = new();
     public ObservableCollection<FormedElectricalComponent> AllAvailableElectricalComponents { get; set; } = new();
@@ -129,6 +134,14 @@ public class ProjectViewModel : BaseViewModel
         return true;
     }
 
+    public async Task RefreshProjectAsync()
+    {
+        await _dialogService.RunWithProgressDialogAsync(async () =>
+        {
+            await LoadProjectInfoAsync(CurrentProjectModel.CurrentProjectId);
+        });
+    }
+
     public void OnOpenAllSortamentsDialogExecuted(object e)
     {
         var selected = _dialogService.ShowAllSortamentsDialog(e);
@@ -139,7 +152,7 @@ public class ProjectViewModel : BaseViewModel
         ApplySelectedEquipToPurpose(e, selected);
     }
 
-    public async void OnShowCompanyDialogExecuted(object e)
+    public async Task OnShowCompanyDialogExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -147,29 +160,26 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async void OnShowSubjectDialogExecuted(object e)
+    public async Task OnShowSubjectDialogExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
             CurrentProjectModel.Object = _dialogService.ShowSubjectDialog());
     }
 
-
     //добавление новой обвязки
-    public async void OnOpenObvSettingsWindowCommandExecuted(object e)
+    public async Task OnOpenObvSettingsWindowCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
             CurrentProjectModel.SelectedStand.ObvyazkaAdditionalComponents.Clear();
-
-
             //перед открытием создания обвязки обновляем номер в окне
-            UpdateNewObvNN();
+            UpdateNewObvNn();
 
             _dialogService.ShowObvSettingsWindow(this);
         });
     }
 
-    public async void OnShowFrameDialogExecuted(object e)
+    public async Task OnShowFrameDialogExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -199,18 +209,18 @@ public class ProjectViewModel : BaseViewModel
 
             CurrentProjectModel.SelectedStand.FramesInStand.Add(selectedFrame);
 
-            OnFramesInStandChanged();
+            await OnFramesInStandChanged();
         });
     }
 
-    public async void OnAdditionalTestCommandExecuted(object e)
+    public async Task OnAdditionalTestCommandExecuted()
     {
         CurrentProjectModel.SelectedStand.AdditionalPurposesChanges = true;
 
         await _additionalEquipService.CreateEquipsFromObvyzkaAsync(CurrentProjectModel);
     }
 
-    public async Task DisambledFrameUpdateAsync()
+    private async Task DisambledFrameUpdateAsync()
     {
         var materialFirstEquip =
             _parametersStore.GetParameterEquip(
@@ -266,7 +276,8 @@ public class ProjectViewModel : BaseViewModel
                     measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays,
-                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
+                    equip => CurrentProjectModel.SelectedStand.MaterialLineEquip = equip
+                );
                 break;
 
             case "Нержавеющие":
@@ -275,7 +286,8 @@ public class ProjectViewModel : BaseViewModel
                     measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays,
-                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
+                    equip => CurrentProjectModel.SelectedStand.MaterialLineEquip = equip
+                );
                 break;
 
             case "Углеродистые":
@@ -284,7 +296,8 @@ public class ProjectViewModel : BaseViewModel
                     measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays,
-                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
+                    equip => CurrentProjectModel.SelectedStand.MaterialLineEquip = equip
+                );
                 break;
         }
 
@@ -306,7 +319,8 @@ public class ProjectViewModel : BaseViewModel
                     measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays,
-                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
+                    equip => CurrentProjectModel.SelectedStand.ArmatureEquip = equip
+                );
                 break;
 
             case "Нержавеющие":
@@ -315,7 +329,8 @@ public class ProjectViewModel : BaseViewModel
                     measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays,
-                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
+                    equip => CurrentProjectModel.SelectedStand.ArmatureEquip = equip
+                );
                 break;
 
             case "Углеродистые":
@@ -324,7 +339,8 @@ public class ProjectViewModel : BaseViewModel
                     measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays,
-                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
+                    equip => CurrentProjectModel.SelectedStand.ArmatureEquip = equip
+                );
                 break;
         }
 
@@ -346,7 +362,8 @@ public class ProjectViewModel : BaseViewModel
                     measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays,
-                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
+                    equip => CurrentProjectModel.SelectedStand.TreeSocketEquip = equip
+                );
                 break;
 
             case "Нержавеющие":
@@ -355,7 +372,8 @@ public class ProjectViewModel : BaseViewModel
                     measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays,
-                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
+                    equip => CurrentProjectModel.SelectedStand.TreeSocketEquip = equip
+                );
                 break;
 
             case "Углеродистые":
@@ -364,7 +382,8 @@ public class ProjectViewModel : BaseViewModel
                     measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays,
-                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
+                    equip => CurrentProjectModel.SelectedStand.TreeSocketEquip = equip
+                );
                 break;
         }
 
@@ -386,7 +405,8 @@ public class ProjectViewModel : BaseViewModel
                     measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays,
-                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
+                    equip => CurrentProjectModel.SelectedStand.KMCHEquip = equip
+                );
                 break;
 
             case "Нержавеющие":
@@ -395,7 +415,8 @@ public class ProjectViewModel : BaseViewModel
                     measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays,
-                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
+                    equip => CurrentProjectModel.SelectedStand.KMCHEquip = equip
+                );
                 break;
 
             case "Углеродистые":
@@ -404,14 +425,15 @@ public class ProjectViewModel : BaseViewModel
                     measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
                     cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
                     exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays,
-                    weight => CurrentProjectModel.SelectedStand.Weight += weight);
+                    equip => CurrentProjectModel.SelectedStand.KMCHEquip = equip
+                );
                 break;
         }
 
         _standService.UpdateStandWeight(CurrentProjectModel.SelectedStand);
     }
 
-    public async void OnCreateNewCardCommandExecuted(object? e)
+    public async Task OnCreateNewCardCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -442,12 +464,12 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async void OnOpenCreateNewStandCommandExecuted(object? e)
+    public async Task OnOpenCreateNewStandCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () => { _dialogService.ShowStandsSettingsWindow(this, false); });
     }
 
-    public async void OnOpenEditStandCommandExecuted(object? e)
+    public async Task OnOpenEditStandCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -455,12 +477,12 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async void OnAddNewStandCommandExecuted(object? e)
+    public async Task OnAddNewStandCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(AddNewStandToProjectAsync);
     }
 
-    public async void OnCopyStandsCommandExecuted(object? e)
+    public async Task OnCopyStandsCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -484,12 +506,12 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async void OnDeleteSelectedStandFromProjectExecuted(object? e)
+    public async Task OnDeleteSelectedStandFromProjectExecuted()
     {
         await _exceptionService.SafeExecuteAsync(DeleteStandFromProject);
     }
 
-    public async void OnDeleteSelectedStandsCommandExecuted(object? e)
+    public async Task OnDeleteSelectedStandsCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -502,7 +524,7 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async void OnSaveChangesCommandExecuted(object? e)
+    public async Task OnSaveChangesCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -520,7 +542,7 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async void OnAddObvCommandExecuted(object e)
+    public async Task OnAddObvCommandExecuted()
     {
         var selectedStand = CurrentProjectModel?.SelectedStand;
 
@@ -556,6 +578,7 @@ public class ProjectViewModel : BaseViewModel
 
             await _standService.AddObvyazkaToStandAsync(selectedStand.Id, entity);
 
+
             //сравнение по типу
             var isAlreadyExist =
                 CurrentProjectModel.ObvyazkiInProject.Any(obv => obv.ObvyazkaName == entity.ObvyazkaName);
@@ -568,14 +591,14 @@ public class ProjectViewModel : BaseViewModel
 
             await LoadObvyazkiAsync(); // Перезагрузить данные из БД
 
-            UpdateNewObvNN();
-            OnObvyazkiInStandChanged();
+            UpdateNewObvNn();
+            await OnObvyazkiInStandChanged();
         });
 
         _notificationService.ShowInfo("Обвязка добавлена в стенд");
     }
 
-    public async void OnDeleteAdditionalEquipFromObvCommandExecuted(object e)
+    public async Task OnDeleteAdditionalEquipFromObvCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
             await _standService.DeleteAdditionalPurposeFromObvAsync(
@@ -585,7 +608,7 @@ public class ProjectViewModel : BaseViewModel
 
 
     //TODO: перенести в отдельный  метод
-    public async void OnUpdateAdditionalEquipFromObvCommandExecuted(object e)
+    public async Task OnUpdateAdditionalEquipFromObvCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -623,24 +646,24 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async void OnRemoveObvCommandExecuted(object e)
+    public async Task OnRemoveObvCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(DeleteObvFromStandAsync);
     }
 
-    public async void OnRemoveFrameFromStandCommandExecuted(object e)
+    public async Task OnRemoveFrameFromStandCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
             await _projectService.DeleteFrameFromStandAsync(CurrentProjectModel);
 
-            OnFramesInStandChanged();
+            await OnFramesInStandChanged();
 
             _notificationService.ShowInfo("Рама удалена из стенда");
         });
     }
 
-    public async void OnUpdateStandsAfterEquipsCommandExecuted(object e)
+    public async Task OnUpdateStandsAfterEquipsCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -649,17 +672,17 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async void OnAddDrainageToStandExecuted(object p)
+    public async Task OnAddDrainageToStandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(AddDrainageToStandAsync);
     }
 
-    public async void OnAddFrameToStandExecuted(object p)
+    public async Task OnAddFrameToStandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(AddFrameToStandAsync);
     }
 
-    public async void OnCopyObvyazkaToStandsCommandExecuted(object p)
+    public async Task OnCopyObvyazkaToStandsCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -681,7 +704,7 @@ public class ProjectViewModel : BaseViewModel
 
             await LoadObvyazkiAsync();
 
-            OnObvyazkiInStandChanged();
+            await OnObvyazkiInStandChanged();
 
             _notificationService.ShowInfo("Обвязка успешно добавлена в стенд!");
         });
@@ -699,171 +722,27 @@ public class ProjectViewModel : BaseViewModel
 
             var stand = CurrentProjectModel.SelectedStand;
 
-            var tmp = new ObvyazkaInStand
-            {
-                ImageName = SelectedObvyazka.ImageName
-            };
 
+            stand.ObvWeight = SelectedObvyazka.Weight;
             stand.MaterialLineCount = SelectedObvyazka.LineLength;
             stand.ArmatureCount = SelectedObvyazka.ZraCount;
             stand.TreeSocketMaterialCount = SelectedObvyazka.TreeSocket;
             stand.KMCHCount = SelectedObvyazka.KMCHCount;
-
-            stand.SelectedObvyazkaInStand = tmp;
+            stand.ImageName = SelectedObvyazka.ImageName;
         });
     }
 
-    public async void OnCalculateProjectCommandExecuted(object p)
+    public async Task OnCalculateProjectCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(CalculateProjectAsync);
     }
 
-
-    #region Отчеты по выбранным стендам
-
-    public async void OnCreateSelectedStandsComponentsListReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() =>
-            CreateReportAsync(ReportType.ComponentsListReport, "Ведомость комплектующих", StandsListHelper.SelectedStands));
-    }
-
-    public async void OnCreateSelectedStandsSummaryReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() =>
-            CreateReportAsync(ReportType.SummaryReport, "Сводная ведомость", StandsListHelper.SelectedStands));
-    }
-
-    public async void OnCreateSelectedStandsMarksReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() =>
-            CreateReportAsync(ReportType.MarksReport, "Ведомость маркировки", StandsListHelper.SelectedStands));
-    }
-
-    public async void OnCreateSelectedStandsNameplatesReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() =>
-            CreateReportAsync(ReportType.NameplatesReport, "Ведомость шильдиков и табличек", StandsListHelper.SelectedStands));
-    }
-
-    public async void OnCreateSelectedStandsContainerReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() =>
-            CreateReportAsync(ReportType.ContainerReport, "Тара", StandsListHelper.SelectedStands));
-    }
-
-    public async void OnCreateSelectedStandsProductionReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() =>
-            CreateReportAsync(ReportType.ProductionReport, "Ведомость производства", StandsListHelper.SelectedStands));
-    }
-
-    public async void OnCreateSelectedStandsFinplanReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() =>
-            CreateReportAsync(ReportType.FinPlanReport, "Финансовый план", StandsListHelper.SelectedStands));
-    }
-
-    public async void OnCreateSelectedStandsPassportReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() =>
-            CreateReportAsync(ReportType.PassportsReport, "Паспорт", StandsListHelper.SelectedStands));
-    }
-
-    public async void OnCreateSelectedStandsTechnologicalCardsCommandExecute(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await CreateReportAsync(ReportType.TechnologicalCards, "Технологические карты", StandsListHelper.SelectedStands));
-    }
-
-
-    #endregion
-
-
-    #region Отчеты по выбранной упаковке
-
-
-    //валидация выбранной упаковки
-    private Task CreateReportForSelectedBatchAsync(ReportType type, string name)
-    {
-        var selectedBatch = CurrentProjectModel.SelectedContainerBatch;
-
-        if (selectedBatch == null)
-        {
-            _notificationService.ShowError("Партия не выбрана!");
-            return Task.CompletedTask;
-        }
-
-        var batchStands = selectedBatch.Containers
-            .SelectMany(container => container.Stands)
-            .ToList();
-
-        if (batchStands.Count == 0)
-        {
-            _notificationService.ShowError("Выбранная партия не содержит стендов!");
-            return Task.CompletedTask;
-        }
-
-        return CreateReportAsync(type, name, batchStands);
-    }
-
-
-
-    public async void OnCreateSelectedBatchSummaryReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.SummaryReport, "сводная"));
-    }
-
-    public async void OnSelectedBatchComponentsListReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.ComponentsListReport, "комплектующих"));
-    }
-
-    public async void OnCreateSelectedBatchNameplatesReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.NameplatesReport, "шильдики и таблички"));
-    }
-
-    public async void OnSelectedBatchCreateMarksReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.MarksReport, "маркировки"));
-    }
-
-    public async void OnSelectedBatchCreateContainerReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.ContainerReport, "тара"));
-    }
-
-
-    public async void OnCreateSelectedBatchProductionReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.ProductionReport, "производство"));
-    }
-
-    public async void OnCreateSelectedBatchFinplanReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.FinPlanReport, "финплан"));
-    }
-
-    public async void OnCreateSelectedBatchPassportReportCommandExecuted(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.PassportsReport, "паспорта"));
-    }
-
-    public async void OnCreateSelectedBatchTechnologicalCardsCommandExecute(object p)
-    {
-        await _exceptionService.SafeExecuteAsync(() => CreateReportForSelectedBatchAsync(ReportType.TechnologicalCards, "технологические карты"));
-    }
-
-    #endregion
-
-
-
-    public async void OnSaveChangesInStandCommandExecuted(object obj)
+    public async Task OnSaveChangesInStandCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(SaveChangesInStandAsync);
     }
 
-    public async void OnSaveAllChangesInComponentsCommandExecuted(object obj)
+    public async Task OnSaveAllChangesInComponentsCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -883,7 +762,7 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async Task OnDeleteElectricalComponentFromStandCommandExecuted(object obj)
+    public async Task OnDeleteElectricalComponentFromStandCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -894,7 +773,7 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async Task OnUpdateElectricalComponentInStandCommandExecuted(object obj)
+    public async Task OnUpdateElectricalComponentInStandCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -919,11 +798,12 @@ public class ProjectViewModel : BaseViewModel
             CurrentProjectModel.SelectedStand.ElectricalPurposesChanges = false;
             OnPropertyChanged(nameof(CurrentProjectModel.SelectedStand.ElectricalPurposesChanges));
 
+
             _notificationService.ShowInfo("Все электрические компоненты сохранены");
         });
     }
 
-    public async Task OnDeleteAdditionalComponentFromStandCommandExecuted(object obj)
+    public async Task OnDeleteAdditionalComponentFromStandCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -934,7 +814,7 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async Task OnUpdateAdditionalComponentInStandCommandExecuted(object obj)
+    public async Task OnUpdateAdditionalComponentInStandCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -962,7 +842,7 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async void OnAddStandFromAllStandsCommandExecuted(object obj)
+    public async Task OnAddStandFromAllStandsCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -994,7 +874,7 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async Task OnDeleteDrainageComponentFromStandCommandExecuted(object obj)
+    public async Task OnDeleteDrainageComponentFromStandCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -1005,7 +885,7 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async Task OnUpdateDrainageComponentInStandCommandExecuted(object obj)
+    public async Task OnUpdateDrainageComponentInStandCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -1035,7 +915,7 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async void OnEditObvSettingsCommandExecuted(object obj)
+    public async Task OnEditObvSettingsCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -1045,7 +925,7 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async void OnFillObvFieldsCommandExecuted(object obj)
+    public async Task OnFillObvFieldsCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -1055,7 +935,7 @@ public class ProjectViewModel : BaseViewModel
     }
 
     //TODO: вынести в standService
-    public async void OnFillStandFieldsFromSelectedStandCommandExecuted(object obj)
+    public async Task OnFillStandFieldsFromSelectedStandCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -1085,7 +965,7 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async void OnRenumerateStandsCommandExecuted(object obj)
+    public async Task OnRenumerateStandsCommandExecuted()
     {
         var renumInfo = _dialogService.ShowRenumerateDialog();
 
@@ -1135,7 +1015,7 @@ public class ProjectViewModel : BaseViewModel
         _notificationService.ShowInfo("Стенды пронумерованы");
     }
 
-    public async void OnUpdateObvInStandCommandExecuted(object obj)
+    public async Task OnUpdateObvInStandCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -1165,14 +1045,14 @@ public class ProjectViewModel : BaseViewModel
 
             await _projectService.UpdateObvInStandAsync(CurrentProjectModel);
 
-            OnObvyazkiInStandChanged();
+            await OnObvyazkiInStandChanged();
             OnPropertyChanged(nameof(CurrentProjectModel.SelectedStand.NewAdditionalEquip.Purposes));
             OnPropertyChanged(nameof(CurrentProjectModel.SelectedStand.NewElectricalComponent.Purposes));
         });
     }
 
 
-    public async Task OnFillMarkInObvCommandExecuted(object obv)
+    public async Task OnFillMarkInObvCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -1228,55 +1108,6 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-
-    public async void OnCreateContainerStandCommandExecuted(object obj)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await _containerService.CreateBatchAsync(CurrentProjectModel));
-    }
-
-    public async void OnDeleteBatchCommandExecuted(object obj)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await _containerService.DeleteBatchAsync(CurrentProjectModel));
-    }
-
-    public async void OnRefreshBatchesCommandCommandExecuted(object obj)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await _containerService.LoadBatchesAsync(CurrentProjectModel));
-    }
-
-    public async void OnAddContainerToBatchCommandExecuted(object obj)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await _containerService.AddContainerToBatchAsync(CurrentProjectModel));
-    }
-
-    public async void OnDeleteContainerCommandExecuted(object obj)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await _containerService.RemoveContainerFromBatchAsync(CurrentProjectModel));
-    }
-
-    public async Task OnUpdateSelectedContainerExecuted(object obj)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await _containerService.UpdateSelectedContainerAsync(CurrentProjectModel));
-    }
-
-    public async void OnAddStandToContainerCommandExecuted(object obj)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await _containerService.AddStandToContainerAsync(CurrentProjectModel));
-    }
-
-    public async void OnRemoveStandFromContainerCommandExecuted(object obj)
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-            await _containerService.RemoveStandFromContainerAsync(CurrentProjectModel));
-    }
-
     public void ResetProject()
     {
         // Совместимый синхронный вызов, чтобы не дедлокалось в процессе загрузки
@@ -1299,6 +1130,67 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(CurrentProjectModel));
         OnPropertyChanged(nameof(CurrentStandModel));
     }
+
+    #region Отчеты по выбранным стендам
+
+    public async Task OnCreateSelectedStandsComponentsListReportCommandExecuted()
+    {
+        await _exceptionService.SafeExecuteAsync(() =>
+            CreateReportAsync(ReportType.ComponentsListReport, "Ведомость комплектующих",
+                StandsListHelper.SelectedStands));
+    }
+
+    public async Task OnCreateSelectedStandsSummaryReportCommandExecuted()
+    {
+        await _exceptionService.SafeExecuteAsync(() =>
+            CreateReportAsync(ReportType.SummaryReport, "Сводная ведомость", StandsListHelper.SelectedStands));
+    }
+
+    public async Task OnCreateSelectedStandsMarksReportCommandExecuted()
+    {
+        await _exceptionService.SafeExecuteAsync(() =>
+            CreateReportAsync(ReportType.MarksReport, "Ведомость маркировки", StandsListHelper.SelectedStands));
+    }
+
+    public async Task OnCreateSelectedStandsNameplatesReportCommandExecuted()
+    {
+        await _exceptionService.SafeExecuteAsync(() =>
+            CreateReportAsync(ReportType.NameplatesReport, "Ведомость шильдиков и табличек",
+                StandsListHelper.SelectedStands));
+    }
+
+    public async Task OnCreateSelectedStandsContainerReportCommandExecuted()
+    {
+        await _exceptionService.SafeExecuteAsync(() =>
+            CreateReportAsync(ReportType.ContainerReport, "Тара", StandsListHelper.SelectedStands));
+    }
+
+    public async Task OnCreateSelectedStandsProductionReportCommandExecuted()
+    {
+        await _exceptionService.SafeExecuteAsync(() =>
+            CreateReportAsync(ReportType.ProductionReport, "Ведомость производства", StandsListHelper.SelectedStands));
+    }
+
+    public async Task OnCreateSelectedStandsFinplanReportCommandExecuted()
+    {
+        await _exceptionService.SafeExecuteAsync(() =>
+            CreateReportAsync(ReportType.FinPlanReport, "Финансовый план", StandsListHelper.SelectedStands));
+    }
+
+    public async Task OnCreateSelectedStandsPassportReportCommandExecuted()
+    {
+        await _exceptionService.SafeExecuteAsync(() =>
+            CreateReportAsync(ReportType.PassportsReport, "Паспорт", StandsListHelper.SelectedStands));
+    }
+
+    public async Task OnCreateSelectedStandsTechnologicalCardsCommandExecute()
+    {
+        await _exceptionService.SafeExecuteAsync(async () =>
+            await CreateReportAsync(ReportType.TechnologicalCards, "Технологические карты",
+                StandsListHelper.SelectedStands));
+    }
+
+    #endregion
 
     #region Инициализация
 
@@ -1329,8 +1221,6 @@ public class ProjectViewModel : BaseViewModel
         await _exceptionService.SafeExecuteAsync(async () =>
         {
             await _standService.LoadStandsDataAsync(CurrentProjectModel.Stands);
-            await _standService.LoadAllStandsDataAsync(CurrentProjectModel.CurrentProjectId,
-                CurrentProjectModel.Stands);
         });
     }
 
@@ -1368,8 +1258,10 @@ public class ProjectViewModel : BaseViewModel
             CurrentProjectModel = loadedModel;
             CurrentStandModel = loadedModel.SelectedStand ?? new StandModel();
 
+            await LoadAllAvaileDataAsync();
             await LoadObvyazkiAsync();
             await LoadStandsDataAsync();
+            await LoadPurposesInStandsAsync();
 
             OnPropertyChanged(nameof(CurrentStandModel));
         });
@@ -1436,7 +1328,7 @@ public class ProjectViewModel : BaseViewModel
 
         stand.SelectedObvyazkaInStand = null;
 
-        OnObvyazkiInStandChanged();
+        await OnObvyazkiInStandChanged();
 
         _notificationService.ShowInfo("Обвязка удалена из стенда");
     }
@@ -1513,7 +1405,7 @@ public class ProjectViewModel : BaseViewModel
         //после создания стенда тут же запрашиваем обновленные данные по доп комплектующими
         await _standService.LoadStandsDataAsync([newStandModel]);
 
-        UpdateNewStandNN();
+        UpdateNewStandNn();
 
         OnPropertyChanged(nameof(CurrentStandModel));
         OnPropertyChanged(nameof(NewStand));
@@ -1604,8 +1496,8 @@ public class ProjectViewModel : BaseViewModel
         selectedStand.Comments = newStandEntity.Comments;
         selectedStand.DesignStand = newStandEntity.DesigneStand;
 
-        OnStandsInProjectChanged();
-        UpdateNewStandNN();
+        await OnStandsInProjectChanged();
+        UpdateNewStandNn();
 
         _notificationService.ShowInfo("Изменения стенда сохранены");
     }
@@ -1624,8 +1516,8 @@ public class ProjectViewModel : BaseViewModel
 
         _notificationService.ShowInfo("Стенд удалён из проекта");
 
-        UpdateNewStandNN();
-        OnStandsInProjectChanged();
+        UpdateNewStandNn();
+        await OnStandsInProjectChanged();
 
         await _auditService.LogEventAsync(
             _sessionService.CurrentUser.UserLogin,
@@ -1645,11 +1537,12 @@ public class ProjectViewModel : BaseViewModel
         OnPropertyChanged(nameof(NewStand));
     }
 
-    private void SelectEquipment<T>(Action<string> setProperty,
+    private void SelectEquipment<T>(
+        Action<string> setProperty,
         Action<string> setMeasure,
         Action<string> setCost,
         Action<int> setExportDays,
-        Action<float> setWeight)
+        Action<IBaseEquip> setEquip)
         where T : class, IBaseEquip, new()
     {
         _exceptionService.SafeExecute(() =>
@@ -1663,7 +1556,7 @@ public class ProjectViewModel : BaseViewModel
                 setExportDays((int)equipment.ExportDays);
             }
 
-            if (equipment is BaseEquip baseEquip) setWeight((float)baseEquip.Weight);
+            if (equipment is IBaseEquip baseEquip) setEquip(baseEquip);
         });
     }
 
@@ -1864,7 +1757,6 @@ public class ProjectViewModel : BaseViewModel
         string reportName,
         List<Stand> selectedStands)
     {
-
         if (selectedStands == null || selectedStands.Count == 0)
         {
             _notificationService.ShowConfirmation("Стенды не выбраны!");
@@ -1922,7 +1814,7 @@ public class ProjectViewModel : BaseViewModel
         if (_notificationService.ShowConfirmation(
                 $"Отчёт \"{reportName}\" по выбранным стендам создана!\nОткрыть папку с отчётами?"))
         {
-            var reportDir = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var reportDir = _configService.GetSaveReportDirectory();
             Process.Start("explorer.exe", reportDir);
         }
     }
@@ -1931,7 +1823,7 @@ public class ProjectViewModel : BaseViewModel
 
     #region Обновление UI
 
-    public void OnObvyazkiInStandChanged()
+    public async Task OnObvyazkiInStandChanged()
     {
         Debug.WriteLine("Обвязки поменялись");
 
@@ -1941,10 +1833,16 @@ public class ProjectViewModel : BaseViewModel
             return;
 
 
-        UpdateTablesQuantity();
-        UpdateClampsQuantity();
-        UpdateBracketsQuantity();
-        UpdateElectricEquipment();
+        await BackgroundExecutor.ExecuteAsync(() =>
+        {
+            UpdateTablesQuantity();
+            UpdateClampsQuantity();
+            UpdateBracketsQuantity();
+            UpdateElectricEquipment();
+
+            selectedStand.StandSensorsQuantity =
+                selectedStand.CountElectricSensorsQuantity();
+        });
 
         CollectionRefreshHelper.SafeRefreshCollection(selectedStand.AllElectricalPurposesInStand);
         CollectionRefreshHelper.SafeRefreshCollection(selectedStand.AllAdditionalEquipPurposesInStand);
@@ -1958,12 +1856,15 @@ public class ProjectViewModel : BaseViewModel
         selectedStand.StandSensorsQuantity = selectedStand.CountElectricSensorsQuantity();
     }
 
-    public void OnFramesInStandChanged()
+    public async Task OnFramesInStandChanged()
     {
         Debug.WriteLine("Рамы поменялись");
 
-        UpdateChannelsQuantity();
-        UpdateDrainage();
+        await BackgroundExecutor.ExecuteAsync(() =>
+        {
+            UpdateChannelsQuantity();
+            UpdateDrainage();
+        });
 
         var selectedStand = CurrentProjectModel.SelectedStand;
 
@@ -1974,12 +1875,12 @@ public class ProjectViewModel : BaseViewModel
         CollectionRefreshHelper.SafeRefreshCollection(selectedStand.AllDrainagePurposesInStand);
     }
 
-    public void OnSelectedStandChanged()
+    public async void OnSelectedStandChanged()
     {
         Debug.WriteLine("Выбранный стенд изменился");
 
-        OnFramesInStandChanged();
-        OnObvyazkiInStandChanged();
+        await OnFramesInStandChanged();
+        await OnObvyazkiInStandChanged();
         UpdateBracketsQuantity();
 
         var selectedStand = CurrentProjectModel.SelectedStand;
@@ -1992,7 +1893,7 @@ public class ProjectViewModel : BaseViewModel
         selectedStand.DrainagePurposesChanges = false;
     }
 
-    public void OnStandsInProjectChanged()
+    public async Task OnStandsInProjectChanged()
     {
         Debug.WriteLine("Стенды изменились");
 
@@ -2008,13 +1909,13 @@ public class ProjectViewModel : BaseViewModel
         if (selectedStand == null)
             return;
 
-        UpdateChannelsQuantity();
+        await BackgroundExecutor.ExecuteAsync(UpdateChannelsQuantity);
 
         CollectionRefreshHelper.SafeRefreshCollection(selectedStand.AllAdditionalEquipPurposesInStand);
     }
 
     //обновляем поле NN в обвязке
-    public void UpdateNewObvNN()
+    private void UpdateNewObvNn()
     {
         var selectedStand = CurrentProjectModel.SelectedStand;
 
@@ -2025,7 +1926,7 @@ public class ProjectViewModel : BaseViewModel
     }
 
     //обновляем № п/п стенда
-    public void UpdateNewStandNN()
+    private void UpdateNewStandNn()
     {
         if (NewStand == null) return;
 
@@ -2033,7 +1934,7 @@ public class ProjectViewModel : BaseViewModel
     }
 
     //обновляем кол-во швеллера
-    public void UpdateChannelsQuantity()
+    private void UpdateChannelsQuantity()
     {
         var selectedStand = CurrentProjectModel.SelectedStand;
 
@@ -2071,7 +1972,7 @@ public class ProjectViewModel : BaseViewModel
     }
 
     //обновляем кол-во хомутов
-    public void UpdateClampsQuantity()
+    private void UpdateClampsQuantity()
     {
         var selectedStand = CurrentProjectModel.SelectedStand;
 
@@ -2093,7 +1994,7 @@ public class ProjectViewModel : BaseViewModel
     }
 
     //обновляем кол-во табличек
-    public void UpdateTablesQuantity()
+    private void UpdateTablesQuantity()
     {
         var selectedStand = CurrentProjectModel.SelectedStand;
 
@@ -2117,7 +2018,7 @@ public class ProjectViewModel : BaseViewModel
     }
 
     //обновляем кол-во кронштейнов
-    public void UpdateBracketsQuantity()
+    private void UpdateBracketsQuantity()
     {
         var selectedStand = CurrentProjectModel.SelectedStand;
 
@@ -2175,7 +2076,7 @@ public class ProjectViewModel : BaseViewModel
     }
 
     //обновляем данные по дренажу
-    public void UpdateDrainage()
+    private void UpdateDrainage()
     {
         var selectedStand = CurrentProjectModel.SelectedStand;
 
@@ -2211,7 +2112,7 @@ public class ProjectViewModel : BaseViewModel
     }
 
     //обновляем данные по электрике
-    public void UpdateElectricEquipment()
+    private void UpdateElectricEquipment()
     {
         Debug.WriteLine("Пересчет электрики начат");
 
@@ -2226,18 +2127,26 @@ public class ProjectViewModel : BaseViewModel
         const int cableInputsPerSensor = 2;
         var cableInputsRecord = electricComponents.FirstOrDefault(purpose => purpose.Purpose == "Кабельные вводы");
 
-        var cableInputsQuantity = 0;
 
         var sensorsQuantity = selectedStand.CountElectricSensorsQuantity();
 
+        var cableInputsQuantity = 0;
 
-        if (cableInputsRecord != null && cableInputsRecord.IsAutoCalculationEnabled == true)
+        if (cableInputsRecord != null)
         {
-            cableInputsQuantity = sensorsQuantity * cableInputsPerSensor;
-            cableInputsRecord.Quantity = cableInputsQuantity;
+            if (cableInputsRecord.IsAutoCalculationEnabled == true)
+            {
+                cableInputsQuantity = sensorsQuantity * cableInputsPerSensor;
+                cableInputsRecord.Quantity = cableInputsQuantity;
 
-            selectedStand.ElectricalPurposesChanges = true;
+                selectedStand.ElectricalPurposesChanges = true;
+            }
+            else
+            {
+                cableInputsQuantity = (int)(cableInputsRecord.Quantity ?? 0.0);
+            }
         }
+
 
         //сигнальный кабель
 

@@ -1,7 +1,11 @@
-﻿using System.Diagnostics;
+﻿using System.Text;
 using Microsoft.EntityFrameworkCore;
 using ReportEngine.Domain.Database.Context;
-using ReportEngine.Domain.Entities.Other;
+using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Repositories;
+using ReportEngine.Domain.Store;
+using ReportEngine.Export.DTO.JsonObjects;
+using ReportEngine.Export.ExcelWork;
 
 public class Program
 {
@@ -15,58 +19,210 @@ public class Program
 
         using (var context = new ReAppContext(options))
         {
-            var sw = new Stopwatch();
-            sw.Start();
+            var calculationRepository = new CalculationRepository(context);
+            var parameterStore = new ParametersStore(calculationRepository);
+            var projectRepository = new ProjectInfoRepository(context);
+
+            await parameterStore.LoadSettingsDataAsync();
+
+            // Создаем генератор
+            var generator = new TechnologicalCardsMarkdownGenerator(
+                projectRepository,
+                parameterStore);
 
 
-            var containersSizes = new Dictionary<string, (float Width, float Height, float Depth)>
-            {
-                { "ЭП-П.041.1100.000", (1150.00f, 1700.00f, 1400.00f) },
-                { "ЭП-П.041.1200.000", (1350.00f, 1700.00f, 2050.00f) },
-                { "ЭП-П.043.0100.000", (1400.00f, 1700.00f, 1600.00f) },
-                { "ЭП-П.049.0100.000", (1450.00f, 1700.00f, 2200.00f) },
-                { "ЭП-П.049.0200.000", (1100.00f, 1700.00f, 2200.00f) },
-                { "ЭП-П.049.0300.000", (1100.00f, 1700.00f, 2520.00f) },
-                { "ЭП-П.049.0400.000", (1100.00f, 1700.00f, 1800.00f) },
-                { "ЭП-П.049.0500.000", (600.00f, 1700.00f, 2100.00f) },
-                { "ЭП-П.052.0100.000", (1300.00f, 1700.00f, 1900.00f) },
-                { "ЭП-П.059.0100.000", (1400.00f, 1700.00f, 1900.00f) },
-                { "ЭП-П.068.0100.000", (1000.00f, 1700.00f, 1900.00f) },
-                { "ЭП-П.084.0100.000", (1200.00f, 1700.00f, 1200.00f) },
-                { "ЭП-П.084.0200.000", (1000.00f, 1700.00f, 1000.00f) },
-                { "ЭП-П.093.0100.000", (1900.00f, 1700.00f, 1600.00f) },
-                { "ЭП-П.093.0200.000", (1900.00f, 1700.00f, 2400.00f) },
-                { "ЭП-П.094.0100.000", (800.00f, 1700.00f, 1100.00f) },
-                { "ЭП-С.000.0001.000", (800.00f, 1700.00f, 600.00f) },
-                { "ЭП-С.000.0002.000", (1400.00f, 1700.00f, 900.00f) },
-                { "ЭП-С.000.0003.000", (2200.00f, 1700.00f, 1500.00f) },
-                { "ЭП-С.000.0004.000", (2600.00f, 1700.00f, 1900.00f) },
-                { "ЭП-С.000.0005.000", (1900.00f, 1700.00f, 3000.00f) },
-                { "ЭП-С.000.0007.000", (2800.00f, 1700.00f, 1900.00f) },
-                { "ЭП-С.000.0008.000", (1700.00f, 600.00f, 900.00f) },
-                { "ЭП-С.000.0009.000", (1700.00f, 2000.00f, 1400.00f) },
-                { "ЭП-С.000.0010.000", (900.00f, 1700.00f, 600.00f) },
-                { "ЭП-С.000.0011.000", (1600.00f, 1700.00f, 600.00f) },
-                { "ЭП-С.000.0012.000", (2600.00f, 2100.00f, 1200.00f) },
-                { "ЭП-С.007.0100.000", (1400.00f, 1700.00f, 1900.00f) },
-                { "ЭП-С.007.0100.000-01", (1700.00f, 1700.00f, 2300.00f) },
-                { "ЭП-С.007.0100.000-02", (1900.00f, 1700.00f, 3600.00f) },
-                { "ЭП-С.58.0001.000", (1800.00f, 2000.00f, 1000.00f) },
-                { "ЭП-С.58.0002.000", (1400.00f, 2000.00f, 900.00f) },
-                { "ЭП-С.58.42.100", (1800.00f, 2000.00f, 1200.00f) }
-            };
+            var projectId = 254; // Укажите ID вашего проекта
 
+            Console.WriteLine("🚀 Генерация технологических карт в Markdown...");
+            await generator.GenerateAsync(projectId);
 
-            var allContainers = await context.Set<Container>().ToListAsync();
-
-            foreach (var container in allContainers)
-                if (containersSizes.TryGetValue(container.Name, out var size))
-                {
-                    container.Width = size.Width;
-                    container.Height = size.Height;
-                    container.Depth = size.Depth;
-                    await context.SaveChangesAsync();
-                }
+            Console.WriteLine("✅ Готово!");
         }
+    }
+}
+
+
+public class TechnologicalCardsMarkdownGenerator
+{
+    private readonly ParametersStore _parametersStore;
+    private readonly ProjectInfoRepository _projectInfoRepository;
+
+    public TechnologicalCardsMarkdownGenerator(
+        ProjectInfoRepository projectInfoRepository,
+        ParametersStore parametersStore)
+    {
+        _projectInfoRepository = projectInfoRepository;
+        _parametersStore = parametersStore;
+    }
+
+    public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
+    {
+        var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
+        var dataObject = await JsonCreator.CreateProjectJson(project, _parametersStore, selectedStands);
+
+        var markdown = GenerateMarkdown(dataObject);
+
+        var fileName = $"Технологические карты_{DateTime.Now:dd-MM-yyyy_HH-mm-ss}.md";
+        var savePath = Path.Combine(GetSaveDirectory(), fileName);
+
+        await File.WriteAllTextAsync(savePath, markdown, Encoding.UTF8);
+        Console.WriteLine($"✅ Технологические карты сохранены: {savePath}");
+    }
+
+    private string GenerateMarkdown(ProjectJsonObject project)
+    {
+        var sb = new StringBuilder();
+
+        // Заголовок
+        sb.AppendLine("# Технологические карты");
+        sb.AppendLine();
+        sb.AppendLine($"**Проект:** {project.Description}");
+        sb.AppendLine($"**Номер проекта:** {project.Number}");
+        sb.AppendLine($"**Заказчик:** {project.OrderCustomer}");
+        sb.AppendLine($"**Дата:** {DateTime.Now:dd.MM.yyyy}");
+        sb.AppendLine();
+        sb.AppendLine("---");
+        sb.AppendLine();
+
+        // Карты для каждого стенда
+        foreach (var stand in project.Stands)
+        {
+            sb.AppendLine(GenerateStandCard(stand, project));
+            sb.AppendLine();
+            sb.AppendLine("---");
+            sb.AppendLine();
+        }
+
+        return sb.ToString();
+    }
+
+    private string GenerateStandCard(StandJsonObject stand, ProjectJsonObject project)
+    {
+        var sb = new StringBuilder();
+
+        sb.AppendLine($"## Стенд датчиков КИПиА {stand.Designation}");
+        sb.AppendLine();
+
+        // Общая информация
+        sb.AppendLine("### Общая информация");
+        sb.AppendLine();
+        sb.AppendLine("| Параметр | Значение |");
+        sb.AppendLine("|----------|----------|");
+        sb.AppendLine($"| **Обозначение по КД** | {stand.Designation} |");
+        sb.AppendLine($"| **Код KKS** | {stand.KKSCode} |");
+        sb.AppendLine($"| **Заводской номер** | {stand.SerialNumber} |");
+        sb.AppendLine($"| **Размер стенда, мм** | {stand.Width} |");
+        sb.AppendLine($"| **Тип обвязки** | {stand.ObvyazkaType} |");
+        sb.AppendLine($"| **Материал линии** | {stand.MaterialLine} |");
+        sb.AppendLine($"| **Арматура** | {stand.Armature} |");
+        sb.AppendLine($"| **Тип покрытия** | {(project.IsGalvanized ? "Оцинковка" : "Покраска")} |");
+        sb.AppendLine();
+
+        // Рамы
+        if (stand.Frames.Any())
+        {
+            sb.AppendLine("### Рамы");
+            sb.AppendLine();
+            sb.AppendLine("| Рама, мм | Обозначение по КД | Кол-во, шт |");
+            sb.AppendLine("|----------|-------------------|------------|");
+            foreach (var frame in stand.Frames)
+                sb.AppendLine($"| {frame.Width} | {frame.DocName} | {frame.Quantity} |");
+            sb.AppendLine();
+        }
+
+        // Основные материалы рамы
+        if (stand.FrameParts.Any())
+        {
+            sb.AppendLine("### Основные материалы рамы");
+            sb.AppendLine();
+            sb.AppendLine("| Наименование | Ед. изм. | Норм. | Факт. |");
+            sb.AppendLine("|--------------|----------|-------|-------|");
+            foreach (var part in stand.FrameParts) sb.AppendLine($"| {part.Name} | {part.Unit} | {part.Quantity} |  |");
+            sb.AppendLine();
+        }
+
+        // Монтажные части
+        if (stand.MountParts.Any())
+        {
+            sb.AppendLine("### Комплект монтажных частей");
+            sb.AppendLine();
+            sb.AppendLine("| Наименование | Ед. изм. | Норм. | Факт. |");
+            sb.AppendLine("|--------------|----------|-------|-------|");
+            foreach (var part in stand.MountParts) sb.AppendLine($"| {part.Name} | {part.Unit} | {part.Quantity} |  |");
+            sb.AppendLine();
+        }
+
+        // Дренаж
+        if (stand.DrainageParts.Any())
+        {
+            sb.AppendLine("### Дренаж и/или продувка");
+            sb.AppendLine();
+            sb.AppendLine("| Наименование | Ед. изм. | Норм. | Факт. |");
+            sb.AppendLine("|--------------|----------|-------|-------|");
+            foreach (var part in stand.DrainageParts)
+                sb.AppendLine($"| {part.Name} | {part.Unit} | {part.Quantity} |  |");
+            sb.AppendLine();
+        }
+
+        // Электрические компоненты
+        if (stand.ElectricParts.Any())
+        {
+            sb.AppendLine("### Электрические компоненты");
+            sb.AppendLine();
+            sb.AppendLine("| Наименование | Ед. изм. | Норм. | Факт. |");
+            sb.AppendLine("|--------------|----------|-------|-------|");
+            foreach (var part in stand.ElectricParts)
+                sb.AppendLine($"| {part.Name} | {part.Unit} | {part.Quantity} |  |");
+            sb.AppendLine();
+        }
+
+        // Импульсные линии
+        if (stand.ImpulseLines.Any())
+        {
+            sb.AppendLine("### Импульсные линии");
+            sb.AppendLine();
+            sb.AppendLine("| № | Наименование и код KKS | Цепь | Маркировка | Коробка | Клеммы | Примечание |");
+            sb.AppendLine("|---|------------------------|------|------------|---------|--------|------------|");
+
+            var lineNumber = 1;
+            foreach (var line in stand.ImpulseLines)
+            {
+                var wires = line.Wires.ToList();
+                for (var i = 0; i < wires.Count; i++)
+                {
+                    var wire = wires[i];
+                    var number = i == 0 ? lineNumber.ToString() : "";
+                    var name = i == 0 ? line.Name : "";
+                    var kks = i == 0 ? line.CodeKKS : "";
+                    var note = i == 0 ? line.Annotation : "";
+
+                    sb.AppendLine(
+                        $"| {number} | {name}<br/>{kks} | {wire.Circuit} | {wire.Mark} | {wire.ElectricBox} | {wire.Terminal} | {note} |");
+                }
+
+                lineNumber++;
+            }
+
+            sb.AppendLine();
+        }
+
+        // Чертеж
+        if (stand.ImageData != null)
+        {
+            sb.AppendLine("### Чертеж стенда");
+            sb.AppendLine();
+            sb.AppendLine($"![Чертеж стенда {stand.Designation}](data:image/png;base64,{stand.ImageData})");
+            sb.AppendLine();
+        }
+
+        return sb.ToString();
+    }
+
+    private string GetSaveDirectory()
+    {
+        var currentDir = Directory.GetCurrentDirectory();
+        var reportPath = Path.Combine(currentDir, "Reports", "Markdown");
+        Directory.CreateDirectory(reportPath);
+        return reportPath;
     }
 }

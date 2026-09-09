@@ -1,12 +1,20 @@
 ﻿using System.Windows;
 using ReportEngine.App.Enums;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.App.Services.Logger;
 using ReportEngine.App.Views.Windows.Dialog;
 
 namespace ReportEngine.App.Services.Notification;
 
 public class NotificationService : INotificationService
 {
+    private readonly UiLogger _logger;
+
+    public NotificationService(UiLogger logger)
+    {
+        _logger = logger;
+    }
+
     public void ShowError(string message)
     {
         var window = new NotifyWindow(message, NotificationType.Error, "Ошибка")
@@ -14,6 +22,8 @@ public class NotificationService : INotificationService
             Owner = Application.Current.MainWindow
         };
         window.ShowDialog();
+
+        _logger.Error(message);
     }
 
     public void ShowInfo(string message)
@@ -23,6 +33,8 @@ public class NotificationService : INotificationService
             Owner = Application.Current.MainWindow
         };
         window.ShowDialog();
+
+        _logger.Info(message);
     }
 
     public bool ShowConfirmation(string message, string title = "Подтверждение")

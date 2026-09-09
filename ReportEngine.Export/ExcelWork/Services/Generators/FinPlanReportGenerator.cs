@@ -2,32 +2,36 @@
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Pipes;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Helpers;
+using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
 public class FinPlanReportGenerator : IReportGenerator
 {
+    private readonly ReportEngineConfigService _configService;
     private readonly IContainerRepository _containerRepository;
     private readonly ParametersStore _parametersStore;
     private readonly IGenericBaseRepository<StainlessPipe, StainlessPipe> _pipesRepository;
-    private readonly IProjectInfoRepository _projectInfoRepository;
+    private readonly ProjectInfoRepository _projectInfoRepository;
 
     public FinPlanReportGenerator(
-        IProjectInfoRepository projectInfoRepository,
+        ProjectInfoRepository projectInfoRepository,
         IContainerRepository containerRepository,
         ParametersStore parametersStore,
-        IServiceProvider serviceProvider)
+        IServiceProvider serviceProvider,
+        ReportEngineConfigService configService)
     {
         _projectInfoRepository = projectInfoRepository;
         _containerRepository = containerRepository;
         _parametersStore = parametersStore;
+        _configService = configService;
         _pipesRepository = serviceProvider.GetRequiredService<IGenericBaseRepository<StainlessPipe, StainlessPipe>>();
     }
 
@@ -35,12 +39,8 @@ public class FinPlanReportGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId)
     {
-        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
         var pipes = await _pipesRepository.GetAllAsync();
-
-
-        //принудительно загружаем настройки при генерации отчета
-        await _parametersStore.LoadSettingsDataAsync();
 
         using (var wb = new XLWorkbook())
         {
@@ -91,7 +91,7 @@ public class FinPlanReportGenerator : IReportGenerator
                 ws.Columns().AdjustToContents();
             }
 
-            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var savePath = _configService.GetSaveReportDirectory();
 
             var fileName = ExcelReportHelper.CreateReportName("Финплан", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
@@ -102,7 +102,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
     {
-        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
 
         var pipes = await _pipesRepository.GetAllAsync();
 
@@ -155,7 +155,7 @@ public class FinPlanReportGenerator : IReportGenerator
                 ws.Columns().AdjustToContents();
             }
 
-            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var savePath = _configService.GetSaveReportDirectory();
 
             var fileName = ExcelReportHelper.CreateReportName("Финплан", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
@@ -171,8 +171,11 @@ public class FinPlanReportGenerator : IReportGenerator
         var recordNameRange = ws.Range($"A{row}:E{row}").Merge();
         recordNameRange.Value = record.Name.Value;
 
+
         var recordPriceRange = ws.Range($"F{row}:G{row}").Merge();
-        recordPriceRange.Value = ExcelReportHelper.FormatPrice(record.CommonCost.Value);
+        recordPriceRange.SetValue(record.CommonCost.Value.Ceiling());
+        recordPriceRange.Style.NumberFormat.Format = "# ##0";
+
 
         var unitPriceRange = ws.Range($"H{row}:I{row}").Merge();
         unitPriceRange.Value = record.Unit.Value;
@@ -230,7 +233,7 @@ public class FinPlanReportGenerator : IReportGenerator
             nameRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);
 
             var valueRange = ws.Range($"D{activeRow}:I{activeRow}").Merge();
-            ;
+
             valueRange.Value = record.Value;
 
             valueRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);
@@ -299,20 +302,20 @@ public class FinPlanReportGenerator : IReportGenerator
 
         laborTotalCostRecord.Name = new ValidatedField<string?>("Трудозатраты", true);
         laborTotalCostRecord.Unit = new ValidatedField<string?>("чел. * мес.", true);
+        //костылек для правильного отображения
+
+        laborTotalCostRecord.CommonCost = laborTotalCostRecord.Quantity;
 
         var laborValueRange = PasteRecord(activeRow, laborTotalCostRecord, ws);
-        sumCellList.Add(laborValueRange);
+        //sumCellList.Add(laborValueRange);
         activeRow++;
 
-        var laborFundRecord = new EquipmentRecord
-        {
-            ExportDays = new ValidatedField<int?>(null, true),
-            Name = new ValidatedField<string?>("Фонд оплаты труда", true),
-            Unit = new ValidatedField<string?>("руб.", true),
-            Quantity = new ValidatedField<float?>(null, true),
-            CostPerUnit = new ValidatedField<float?>(null, true),
-            CommonCost = new ValidatedField<float?>(null, true)
-        };
+
+        var laborFundRecord = ExcelReportHelper.GenerateTotalRecord(laborRecords);
+
+
+        laborFundRecord.Name = new ValidatedField<string?>("Фонд оплаты труда", true);
+        laborFundRecord.Unit = new ValidatedField<string?>("руб.", true);
 
         var laborFundValueRange = PasteRecord(activeRow, laborFundRecord, ws);
         sumCellList.Add(laborFundValueRange);
@@ -332,7 +335,7 @@ public class FinPlanReportGenerator : IReportGenerator
         };
 
         var bussinessTripValueRange = PasteRecord(activeRow, bussinessTripCostsRecord, ws);
-        sumCellList.Add(bussinessTripValueRange);
+        //sumCellList.Add(bussinessTripValueRange);
         activeRow++;
 
         var customerDeliveryRecord = new EquipmentRecord

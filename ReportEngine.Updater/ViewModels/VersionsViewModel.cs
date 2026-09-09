@@ -1,11 +1,8 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
-using System.Text.Json;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using ReportEngine.Shared.Config.JsonHelpers;
 using ReportEngine.Updater.Helpers;
 using ReportEngine.Updater.Models;
 using ReportEngine.Updater.Services;
@@ -16,15 +13,13 @@ namespace ReportEngine.Updater.ViewModels;
 public partial class VersionsViewModel : BaseViewModel
 {
     private readonly DirectoryService _directoryService;
-    private readonly NotificationService _notificationService;
     private readonly JsonSettingsService _jsonSettingsService;
+    private readonly NotificationService _notificationService;
     private readonly UpdateService _updateService;
 
-    [ObservableProperty] 
-    private ObservableCollection<Release> _releases = new();
+    [ObservableProperty] private ObservableCollection<Release> _releases = new();
 
-    [ObservableProperty] 
-    private Release? _selectedRelease = new();
+    [ObservableProperty] private Release? _selectedRelease = new();
 
     public VersionsViewModel(
         JsonSettingsService jsonSettingsService,
@@ -51,7 +46,7 @@ public partial class VersionsViewModel : BaseViewModel
         Releases.Clear();
 
         await LoadReleasesAsync();
-        
+
         _notificationService.ShowInfo("Версии загружены");
     }
 
@@ -75,13 +70,11 @@ public partial class VersionsViewModel : BaseViewModel
                 Arguments = distPath,
                 UseShellExecute = true
             });
-        
     }
 
     private async Task LoadReleasesAsync()
     {
-        var releasesDirectories = await _directoryService.GetDirectoriesAsync(
-            paths => paths.RemotePath);
+        var releasesDirectories = await _directoryService.GetDirectoriesAsync(paths => paths.RemotePath);
 
         foreach (var releasesDirectory in releasesDirectories)
         {

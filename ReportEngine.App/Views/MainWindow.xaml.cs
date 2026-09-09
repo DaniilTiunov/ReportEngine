@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
@@ -7,24 +7,20 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using MahApps.Metro.Controls;
 using Microsoft.Extensions.DependencyInjection;
-using ReportEngine.App.LLM;
-using ReportEngine.App.LLM.ViewModels;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Config.Models;
 using AboutProgram = ReportEngine.App.Views.Windows.AboutProgram;
 
-namespace ReportEngine.App;
+namespace ReportEngine.App.Views;
 
-/// <summary>
-///     Interaction logic for MainWindow.xaml
-/// </summary>
-public partial class MainWindow : Window //Это так называемый "Code Behind" файл для MainWindow.xaml
+public partial class MainWindow : MetroWindow //Это так называемый "Code Behind" файл для MainWindow.xaml
 {
     private readonly ExceptionService _exceptionService;
     private readonly MainWindowViewModel _mainViewModel;
@@ -43,9 +39,8 @@ public partial class MainWindow : Window //Это так называемый "C
         _exceptionService = exceptionService;
 
         SetWindowTitle();
-        
+
         Loaded += MainWindow_Loaded;
-        StateChanged += MainWindow_StateChanges;
     }
 
     private void SetWindowTitle()
@@ -62,19 +57,21 @@ public partial class MainWindow : Window //Это так называемый "C
                 };
                 var updates = JsonSerializer.Deserialize<List<UpdateInfo>>(json, options);
                 var update = updates?.FirstOrDefault();
-                
+
                 if (update != null)
                 {
-                    Title = $"Стенды КИПиА v{update.Version} ({update.Channel})";
+                    Title = $"КИПАРИС:PCM v{update.Version} ({update.Channel})";
                     return;
                 }
             }
         }
-        catch { }
-        
-        Title = "Стенды КИПиА";
+        catch
+        {
+        }
+
+        Title = "КИПАРИС:PCM";
     }
-    
+
     // Событие загрузки окна
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
@@ -93,16 +90,9 @@ public partial class MainWindow : Window //Это так называемый "C
         });
     }
 
-    private void MainDataGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+    private async void MainDataGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-        _mainViewModel.OnEditProjectCommandExecuted(e);
-    }
-
-    // Событие изменения состояния окна
-    private void MainWindow_StateChanges(object? sender, EventArgs e)
-    {
-        if (WindowState == WindowState.Maximized)
-            WindowState = WindowState.Normal;
+        await _mainViewModel.OnEditProjectCommandExecuted();
     }
 
     private void ShowAboutProgram(object sender, RoutedEventArgs e) //Просто простые синхронные операции
@@ -172,64 +162,6 @@ public partial class MainWindow : Window //Это так называемый "C
         Height = area.Height;
     }
 
-    private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        if (e.ClickCount == 2)
-            MaxRestoreButton_Click(sender, e);
-        else
-            DragMove();
-    }
-
-    private void MinimizeButton_Click(object sender, RoutedEventArgs e)
-    {
-        WindowState = WindowState.Minimized;
-    }
-
-    private void MaxRestoreButton_Click(object sender, RoutedEventArgs e)
-    {
-        var area = SystemParameters.WorkArea;
-        if (Width != area.Width || Height != area.Height || Left != area.Left || Top != area.Top)
-        {
-            Left = area.Left;
-            Top = area.Top;
-            Width = area.Width;
-            Height = area.Height;
-        }
-        else
-        {
-            Width = 1280;
-            Height = 800;
-            Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
-            Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
-        }
-    }
-
-    private void CloseButton_Click(object sender, RoutedEventArgs e)
-    {
-        Application.Current.Shutdown();
-    }
-
-    private void OpenLauncher(object sender, RoutedEventArgs e)
-    {
-        try
-        {
-            var localPath = AppDomain.CurrentDomain.BaseDirectory;
-            var updaterPath = Path.Combine(localPath, "ReportEngine.Launcher.exe");
-
-            if (!File.Exists(updaterPath))
-            {
-                MessageBox.Show("Лаунчер не найден!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            Process.Start(updaterPath);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Ошибка запуска: {ex.Message}");
-        }
-    }
-
     private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
         if (_projectsView == null)
@@ -253,37 +185,6 @@ public partial class MainWindow : Window //Это так называемый "C
             };
 
         _projectsView.Refresh();
-    }
-
-    private void OpenAssistant_Click(object sender, RoutedEventArgs e)
-    {
-        try
-        {
-            if (AiAssistantContainer.Visibility == Visibility.Collapsed)
-            {
-                AiAssistantContainer.Visibility = Visibility.Visible;
-
-                if (AiAssistantHost.Content == null)
-                {
-                    var viewModel = _serviceProvider.GetRequiredService<ChatWithAiViewModel>();
-                    var chatView = new ChatWithAi(viewModel);
-                    AiAssistantHost.Content = chatView;
-                }
-            }
-            else
-            {
-                AiAssistantContainer.Visibility = Visibility.Collapsed;
-            }
-        }
-        catch (Exception exception)
-        {
-            MessageBox.Show(exception.Message);
-        }
-    }
-
-    private void CloseAiAssistant_Click(object sender, RoutedEventArgs e)
-    {
-        AiAssistantContainer.Visibility = Visibility.Collapsed;
     }
 
     private void OpenLogger_Click(object sender, RoutedEventArgs e)

@@ -1,13 +1,13 @@
 ﻿using System.Windows.Controls;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ReportEngine.App.LLM;
-using ReportEngine.App.LLM.Interfaces;
-using ReportEngine.App.LLM.Services;
-using ReportEngine.App.LLM.ViewModels;
+using Microsoft.Extensions.Options;
+using ReportEngine.App.Dds;
 using ReportEngine.App.Services;
 using ReportEngine.App.Services.Calculation;
 using ReportEngine.App.Services.Cloners;
+using ReportEngine.App.Services.Converters;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Services.Logger;
@@ -20,7 +20,6 @@ using ReportEngine.App.ViewModels.TreeView;
 using ReportEngine.App.ViewModels.Utils;
 using ReportEngine.App.Views;
 using ReportEngine.App.Views.Controls;
-using ReportEngine.App.Views.Settings;
 using ReportEngine.App.Views.Settings.CalculationParameters;
 using ReportEngine.App.Views.Settings.CalculationParameters.Controls;
 using ReportEngine.App.Views.Settings.SettingsControls;
@@ -46,19 +45,29 @@ using ReportEngine.Export.ExcelWork.Services;
 using ReportEngine.Export.ExcelWork.Services.Generators;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Export.PDFWork.Services.Generators;
+using ReportEngine.Shared.Config.Directory;
+using ReportEngine.Shared.Config.Models;
+using ReportEngine.Shared.Services.Options;
 using Serilog;
 
 namespace ReportEngine.App;
 
-public class HostFactory
+public static class HostFactory
 {
-    public static IHost BuildHost(string dbMode)
+    public static IHost BuildHost()
     {
         var uiLog = new AppLogsView();
 
         var theme = RichTextBoxLoggerTheme.Create();
 
         return Host.CreateDefaultBuilder()
+            .ConfigureAppConfiguration(config =>
+            {
+                config.AddJsonFile(
+                    DirectoryHelper.GetConfigPath(),
+                    false,
+                    true);
+            })
             .UseSerilog((context, services, config) =>
             {
                 config
@@ -82,8 +91,10 @@ public class HostFactory
             .ConfigureServices(services =>
             {
                 services.AddSingleton(uiLog);
+
+                ConfigureOptions(services);
                 // Регистрация контекста БД
-                ConfigureDatabase(services, dbMode);
+                ConfigureDatabase(services);
                 // Регистрация репозиториев
                 ConfigureRepositories(services);
                 // Регистрация обощённых репозиториев
@@ -102,12 +113,20 @@ public class HostFactory
             .Build();
     }
 
-    private static void ConfigureDatabase(
-        IServiceCollection services,
-        string dbMode)
+    private static void ConfigureOptions(IServiceCollection services)
     {
-        services.AddDbContext<ReAppContext>(options =>
-            DbContextOptionsFactory.Configure(options, dbMode));
+        services.AddOptions<ReportEngineConfig>()
+            .Configure<IConfiguration>((settings, configuration) => { configuration.Bind(settings); })
+            .ValidateOnStart();
+    }
+
+    private static void ConfigureDatabase(IServiceCollection services)
+    {
+        services.AddDbContext<ReAppContext>((serviceProvider, options) =>
+        {
+            var appSettings = serviceProvider.GetRequiredService<IOptions<ReportEngineConfig>>();
+            DbContextOptionsFactory.Configure(options, appSettings); // Передаем IOptions
+        });
     }
 
 
@@ -129,6 +148,7 @@ public class HostFactory
         services.AddScoped<IPurposesRepository<ElectricalPurpose>, FormedElectricalRepository>();
         services.AddScoped<IPurposesRepository<DrainagePurpose>, FormedDrainagesRepository>();
         services.AddScoped<CalculationRepository>();
+        services.AddScoped<ProjectInfoRepository>();
     }
 
     private static void ConfigureGenericRepositories(IServiceCollection services)
@@ -171,6 +191,7 @@ public class HostFactory
 
     private static void ConfigureApplicationServices(IServiceCollection services)
     {
+        services.AddSingleton<ReportEngineConfigService>();
         services.AddSingleton<UpdaterStandService>();
         services.AddSingleton<GenericEquipWindowFactory>();
         services.AddSingleton<NavigationService>();
@@ -192,8 +213,9 @@ public class HostFactory
         services.AddScoped<EntityProjectClonerService>();
         services.AddScoped<ParameterGroupService>();
         services.AddScoped<AuditService>();
-        services.AddScoped<IAiChatService, GigachatAiService>();
-        services.AddHttpClient();
+        services.AddScoped<ConverterService>();
+        services.AddSingleton<DdsService>();
+        services.AddHostedService<DdsService>();
     }
 
     private static void ConfigureReportsServices(IServiceCollection services)
@@ -233,8 +255,8 @@ public class HostFactory
         services.AddScoped<AllStandsViewModel>();
         services.AddScoped<CalculationParametersViewModel>();
         services.AddScoped<AuditViewModel>();
-        services.AddScoped<ChatWithAiViewModel>();
         services.AddScoped<TreeViewModel>();
+        services.AddScoped<ContainersViewModel>();
     }
 
     private static void ConfigureViews(IServiceCollection services)
@@ -257,8 +279,6 @@ public class HostFactory
         services.AddTransient<ProjectCardView>();
         services.AddTransient<CompanyView>();
         services.AddTransient<FormedFrameView>();
-        services.AddTransient<FormedDrainagesView>();
-        services.AddTransient<FrameDrainagesView>();
         services.AddTransient<ProjectPreview>();
         services.AddTransient<AllSortamentsView>();
         services.AddTransient<SettingsWindow>();
@@ -284,6 +304,5 @@ public class HostFactory
         services.AddTransient<SandBlastView>();
         services.AddTransient<ElectricCostView>();
         services.AddTransient<AuditEventsView>();
-        services.AddTransient<ChatWithAi>();
     }
 }

@@ -3,33 +3,36 @@ using ClosedXML.Excel;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Pipes;
+using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
 using ReportEngine.Shared.Helpers;
+using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
 public class SummaryReportGenerator : IReportGenerator
 {
+    private readonly ReportEngineConfigService _configService;
     private readonly IContainerRepository _containerRepository;
     private readonly ParametersStore _parametersStore;
     private readonly IGenericBaseRepository<StainlessPipe, StainlessPipe> _pipesRepository;
-    private readonly IProjectInfoRepository _projectInfoRepository;
+    private readonly ProjectInfoRepository _projectInfoRepository;
 
     public SummaryReportGenerator(
-        IProjectInfoRepository projectInfoRepository,
+        ProjectInfoRepository projectInfoRepository,
         IContainerRepository containerRepository,
         ParametersStore parametersStore,
-        IServiceProvider serviceProvider)
+        IServiceProvider serviceProvider,
+        ReportEngineConfigService configService)
     {
         _projectInfoRepository = projectInfoRepository;
         _containerRepository = containerRepository;
         _parametersStore = parametersStore;
+        _configService = configService;
         _pipesRepository = serviceProvider.GetRequiredService<IGenericBaseRepository<StainlessPipe, StainlessPipe>>();
     }
 
@@ -37,11 +40,8 @@ public class SummaryReportGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId)
     {
-        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
         var pipes = await _pipesRepository.GetAllAsync();
-
-        //принудительно загружаем настройки при генерации отчета
-        await _parametersStore.LoadSettingsDataAsync();
 
         using (var wb = new XLWorkbook())
         {
@@ -89,7 +89,7 @@ public class SummaryReportGenerator : IReportGenerator
             // Применяем оформление ко всему документу
             foreach (var ws in wb.Worksheets) ws.Cells().Style.Font.FontName = "Times New Roman";
 
-            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var savePath = _configService.GetSaveReportDirectory();
             var fileName = ExcelReportHelper.CreateReportName("Сводная ведомость", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
 
@@ -100,7 +100,7 @@ public class SummaryReportGenerator : IReportGenerator
 
     public async Task GenerateAsync(int projectId, List<Stand>? selectedStands = null)
     {
-        var project = await _projectInfoRepository.GetByIdAsync(projectId);
+        var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
         var pipes = await _pipesRepository.GetAllAsync();
 
         using (var wb = new XLWorkbook())
@@ -147,10 +147,10 @@ public class SummaryReportGenerator : IReportGenerator
             await FillCalculationTable(calculationSheet, project, pipes, selectedStands);
 
             // Применяем оформление ко всему документу
-            foreach (var ws in wb.Worksheets) 
+            foreach (var ws in wb.Worksheets)
                 ws.Cells().Style.Font.FontName = "Times New Roman";
 
-            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var savePath = _configService.GetSaveReportDirectory();
             var fileName = ExcelReportHelper.CreateReportName("Сводная ведомость", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
 
@@ -170,7 +170,7 @@ public class SummaryReportGenerator : IReportGenerator
 
         ws.Cell($"C{row}").Value = record?.Unit.Value;
 
-        ws.Cell($"D{row}").Value = record?.Quantity.Value?.Round(2).ToString();
+        ws.Cell($"D{row}").Value = record?.Quantity.Value?.Round(1).ToString();
 
         ws.Cell($"E{row}").Value = ExcelReportHelper.FormatPrice(record?.CostPerUnit.Value);
 
@@ -472,7 +472,7 @@ public class SummaryReportGenerator : IReportGenerator
 
         var containerBatches = _containerRepository.GetAllByProjectIdAsync(project.Id);
 
-        var generatedPartsData = (selectedStands != null) 
+        var generatedPartsData = selectedStands != null
             ? ExcelReportHelper.GeneratePartsData(selectedStands)
             : ExcelReportHelper.GeneratePartsData(project.Stands);
 
@@ -550,10 +550,9 @@ public class SummaryReportGenerator : IReportGenerator
         activeRow = CreateUsualTotalRecord(activeRow, "Итого по комплектующим", allPartsList, ws);
 
 
-
-        var generatedLaborData = (selectedStands != null) ?
-                                    ExcelReportHelper.GenerateLaborData(selectedStands, _parametersStore, project, pipes) :
-                                    ExcelReportHelper.GenerateLaborData(project.Stands, _parametersStore, project, pipes);
+        var generatedLaborData = selectedStands != null
+            ? ExcelReportHelper.GenerateLaborData(selectedStands, _parametersStore, project, pipes)
+            : ExcelReportHelper.GenerateLaborData(project.Stands, _parametersStore, project, pipes);
 
 
         var allLaborsList = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);
@@ -579,7 +578,8 @@ public class SummaryReportGenerator : IReportGenerator
     }
 
     //заполняет лист калькуляции
-    private async Task FillCalculationTable(IXLWorksheet ws, ProjectInfo project, IEnumerable<StainlessPipe> pipes, List<Stand>? selectedStands = null)
+    private async Task FillCalculationTable(IXLWorksheet ws, ProjectInfo project, IEnumerable<StainlessPipe> pipes,
+        List<Stand>? selectedStands = null)
     {
         var activeRow = 7;
 
@@ -634,7 +634,8 @@ public class SummaryReportGenerator : IReportGenerator
                 var generatedPartsData = ExcelReportHelper.GeneratePartsData(new List<Stand> { stand });
                 var partsRecords = ExcelReportHelper.GenerateAllPartsCollection(generatedPartsData);
 
-                var generatedLaborData = ExcelReportHelper.GenerateLaborData(new List<Stand> { stand },_parametersStore, project, pipes);
+                var generatedLaborData =
+                    ExcelReportHelper.GenerateLaborData(new List<Stand> { stand }, _parametersStore, project, pipes);
                 var laborRecords = ExcelReportHelper.GenerateAllLaborsCollection(generatedLaborData);
 
                 var exportDays = partsRecords.Max(part => part.ExportDays.Value);
@@ -645,7 +646,8 @@ public class SummaryReportGenerator : IReportGenerator
                 var weight = stand.Weight.RoundUp(1);
                 var width = stand.Width;
 
-                var standCostSum = partsRecords.Sum(pr => pr.CommonCost.Value) + laborRecords.Sum(pr => pr.CommonCost.Value);
+                var standCostSum = partsRecords.Sum(pr => pr.CommonCost.Value) +
+                                   laborRecords.Sum(pr => pr.CommonCost.Value);
                 var cost = standCostSum ?? 0;
 
 
@@ -764,7 +766,7 @@ public class SummaryReportGenerator : IReportGenerator
         totalLabelRange.Style.Font.SetBold();
 
         var totalValueCell = ws.Cell($"K{activeRow}");
-        
+
         totalValueCell.Value = ExcelReportHelper.FormatPrice(totalPrice);
         totalValueCell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
         totalValueCell.Style.Font.SetBold();

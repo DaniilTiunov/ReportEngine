@@ -2,6 +2,7 @@
 using ReportEngine.App.Model.FormedEquipsModels;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Domain.Entities;
+using ReportEngine.Domain.Entities.BaseEntities.Interface;
 
 namespace ReportEngine.App.Model.StandsModel;
 
@@ -87,8 +88,12 @@ public class StandModel : BaseViewModel
     // Бинарные данные изображения чертежа стенда
     private byte[]? _imageData;
 
+    //имя чертежа стенда
+    private string? _imageName;
+
     // MIME тип или краткое описание типа изображения (например "image/png")
     private string? _imageType;
+
 
     // KKS-код стенда
     private string _kksCode;
@@ -100,6 +105,7 @@ public class StandModel : BaseViewModel
     private float? _kmchCount;
     private int? _kMCHExportDays;
     private string? _kmchMeasure;
+
 
     // Материал линии
     private string _materialLine;
@@ -210,6 +216,9 @@ public class StandModel : BaseViewModel
 
     // Ширина стенда
     private float _width;
+
+    //Чистый вес обвязки
+    public float? ObvWeight { get; set; }
 
     public ObvyazkaAdditionalEquipPurpose SelectedObvyazkaAdditionalEquipPurpose
     {
@@ -366,41 +375,8 @@ public class StandModel : BaseViewModel
         set => Set(ref _materialLineCostPerUnit, value);
     }
 
-    public string? ArmatureCostPerUnit
-    {
-        get => _armatureCostPerUnit;
-        set => Set(ref _armatureCostPerUnit, value);
-    }
+    public IBaseEquip? MaterialLineEquip { get; set; }
 
-    public int? ArmatureExportDays
-    {
-        get => _armatureExportDays;
-        set => Set(ref _armatureExportDays, value);
-    }
-
-    public string? KMCHCostPerUnit
-    {
-        get => _kmchCostPerUnit;
-        set => Set(ref _kmchCostPerUnit, value);
-    }
-
-    public int? KMCHExportDays
-    {
-        get => _kMCHExportDays;
-        set => Set(ref _kMCHExportDays, value);
-    }
-
-    public string? TreeSocketMaterialCostPerUnit
-    {
-        get => _treeSocketMaterialCostPerUnit;
-        set => Set(ref _treeSocketMaterialCostPerUnit, value);
-    }
-
-    public int? TreeSocketExportDays
-    {
-        get => _treeSocketExportDays;
-        set => Set(ref _treeSocketExportDays, value);
-    }
 
     // Арматура
     public string Armature
@@ -421,6 +397,21 @@ public class StandModel : BaseViewModel
         set => Set(ref _armatureMeasure, value);
     }
 
+    public string? ArmatureCostPerUnit
+    {
+        get => _armatureCostPerUnit;
+        set => Set(ref _armatureCostPerUnit, value);
+    }
+
+    public int? ArmatureExportDays
+    {
+        get => _armatureExportDays;
+        set => Set(ref _armatureExportDays, value);
+    }
+
+    public IBaseEquip? ArmatureEquip { get; set; }
+
+
     // Информация о тройнике/разветвителе
     public string TreeSocket
     {
@@ -440,11 +431,20 @@ public class StandModel : BaseViewModel
         set => Set(ref _treeSocketMaterialMeasure, value);
     }
 
-    public int StandSensorsQuantity
+    public string? TreeSocketMaterialCostPerUnit
     {
-        get => _standSensorsQuantity;
-        set => Set(ref _standSensorsQuantity, value);
+        get => _treeSocketMaterialCostPerUnit;
+        set => Set(ref _treeSocketMaterialCostPerUnit, value);
     }
+
+    public int? TreeSocketExportDays
+    {
+        get => _treeSocketExportDays;
+        set => Set(ref _treeSocketExportDays, value);
+    }
+
+    public IBaseEquip? TreeSocketEquip { get; set; }
+
 
     // КМЧ
     public string KMCH
@@ -464,6 +464,22 @@ public class StandModel : BaseViewModel
         get => _kmchMeasure;
         set => Set(ref _kmchMeasure, value);
     }
+
+    public string? KMCHCostPerUnit
+    {
+        get => _kmchCostPerUnit;
+        set => Set(ref _kmchCostPerUnit, value);
+    }
+
+    public int? KMCHExportDays
+    {
+        get => _kMCHExportDays;
+        set => Set(ref _kMCHExportDays, value);
+    }
+
+
+    public IBaseEquip? KMCHEquip { get; set; }
+
 
     // Тип первого датчика
     public string FirstSensorType
@@ -574,6 +590,12 @@ public class StandModel : BaseViewModel
         set => Set(ref _sensor, value);
     }
 
+    public int StandSensorsQuantity
+    {
+        get => _standSensorsQuantity;
+        set => Set(ref _standSensorsQuantity, value);
+    }
+
     // Описание стенда
     public string? DesignStand
     {
@@ -593,6 +615,13 @@ public class StandModel : BaseViewModel
     {
         get => _imageType;
         set => Set(ref _imageType, value);
+    }
+
+    //Наименование чертежа 
+    public string? ImageName
+    {
+        get => _imageName;
+        set => Set(ref _imageName, value);
     }
 
     // Коллекция всех доступных рам
@@ -750,93 +779,46 @@ public class StandModel : BaseViewModel
         get => _drainagePurposesChanges;
         set => Set(ref _drainagePurposesChanges, value);
     }
-    
-    public int CountSensorsQuantity()
+
+
+    private int CountSensors(Func<string?, bool> predicate)
     {
         return ObvyazkiInStand
             .Sum(obv =>
             {
                 var sensorsQuantity = 0;
 
-                if (!string.IsNullOrEmpty(obv.FirstSensorType))
+                if (predicate(obv.FirstSensorType))
                     sensorsQuantity++;
 
-                if (!string.IsNullOrEmpty(obv.SecondSensorType))
+                if (predicate(obv.SecondSensorType))
                     sensorsQuantity++;
 
-                if (!string.IsNullOrEmpty(obv.ThirdSensorType))
+                if (predicate(obv.ThirdSensorType))
                     sensorsQuantity++;
 
                 return sensorsQuantity;
             });
+    }
+
+
+    public int CountSensorsQuantity()
+    {
+        return CountSensors(type => !string.IsNullOrEmpty(type));
     }
 
     public int CountElectricSensorsQuantity()
     {
-        var isElectricSensor = (string? typeOfSensor) =>
-            !string.IsNullOrEmpty(typeOfSensor) && typeOfSensor != "Манометр";
-
-        return ObvyazkiInStand
-            .Sum(obv =>
-            {
-                var sensorsQuantity = 0;
-
-                if (isElectricSensor(obv.FirstSensorType))
-                    sensorsQuantity++;
-
-                if (isElectricSensor(obv.SecondSensorType))
-                    sensorsQuantity++;
-
-                if (isElectricSensor(obv.ThirdSensorType))
-                    sensorsQuantity++;
-
-                return sensorsQuantity;
-            });
+        return CountSensors(type => !string.IsNullOrEmpty(type) && type != "Манометр");
     }
 
     public int CountDifSensorsQuantity()
     {
-        var isDifSensor = (string? typeOfSensor) =>
-            !string.IsNullOrEmpty(typeOfSensor) && typeOfSensor == "Датчик перепада давления";
-
-        return ObvyazkiInStand
-            .Sum(obv =>
-            {
-                var sensorsQuantity = 0;
-
-                if (isDifSensor(obv.FirstSensorType))
-                    sensorsQuantity++;
-
-                if (isDifSensor(obv.SecondSensorType))
-                    sensorsQuantity++;
-
-                if (isDifSensor(obv.ThirdSensorType))
-                    sensorsQuantity++;
-
-                return sensorsQuantity;
-            });
+        return CountSensors(type => !string.IsNullOrEmpty(type) && type == "Датчик перепада давления");
     }
 
     public int CountAbsoluteSensorsQuantity()
     {
-        var isAbsoluteSensor = (string? typeOfSensor) =>
-            !string.IsNullOrEmpty(typeOfSensor) && typeOfSensor == "Датчик абсолютного давления";
-
-        return ObvyazkiInStand
-            .Sum(obv =>
-            {
-                var sensorsQuantity = 0;
-
-                if (isAbsoluteSensor(obv.FirstSensorType))
-                    sensorsQuantity++;
-
-                if (isAbsoluteSensor(obv.SecondSensorType))
-                    sensorsQuantity++;
-
-                if (isAbsoluteSensor(obv.ThirdSensorType))
-                    sensorsQuantity++;
-
-                return sensorsQuantity;
-            });
+        return CountSensors(type => !string.IsNullOrEmpty(type) && type == "Датчик абсолютного давления");
     }
 }

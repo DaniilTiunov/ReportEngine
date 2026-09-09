@@ -10,7 +10,6 @@ using System.Windows.Threading;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ViewModels;
-using ReportEngine.App.Views.Windows.Dialog;
 
 namespace ReportEngine.App.Views.Controls;
 
@@ -31,56 +30,28 @@ public partial class ProjectPreview : UserControl
                 OnPasteExecuted,
                 OnPasteCanExecute));
 
-        Loaded += async (_, __) => await InitializeDataAndRecalculateAsync(_projectViewModel);
-
-        PreviewKeyDown += StandObvView_PreviewKeyDown;
+        //Loaded += OnLoaded;
     }
 
-    private async Task InitializeDataAndRecalculateAsync(ProjectViewModel projectViewModel)
+    private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        var progress = new ProgressDialog();
+        Loaded -= OnLoaded;
 
-        progress.Show();
-
-        try
-        {
-            await InitializeDataAsync(projectViewModel);
-
-            projectViewModel.OnObvyazkiInStandChanged();
-            projectViewModel.OnFramesInStandChanged();
-            projectViewModel.UpdateNewStandNN();
-            projectViewModel.OnStandsInProjectChanged();
-        }
-        finally
-        {
-            progress.Close();
-        }
+        Dispatcher.BeginInvoke(
+            DispatcherPriority.ContextIdle,
+            new Action(async () =>
+            {
+                await InitializeDataAndRecalculateAsync(
+                    _projectViewModel);
+            }));
     }
 
-    private async Task InitializeDataAsync(ProjectViewModel projectViewModel)
+    private async Task InitializeDataAndRecalculateAsync(
+        ProjectViewModel projectViewModel)
     {
-        await projectViewModel.LoadStandsDataAsync();
-        await projectViewModel.LoadObvyazkiAsync();
-        await projectViewModel.LoadAllAvaileDataAsync();
-        await projectViewModel.LoadPurposesInStandsAsync();
-    }
-
-    // Защита от автоповтора F5
-    private async void StandObvView_PreviewKeyDown(object sender, KeyEventArgs e)
-    {
-        if (e.Key != Key.F5 || e.IsRepeat)
-            return;
-
-        e.Handled = true;
-
-        try
-        {
-            await InitializeDataAsync(_projectViewModel);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(ex.Message);
-        }
+        await projectViewModel.OnObvyazkiInStandChanged();
+        await projectViewModel.OnFramesInStandChanged();
+        await projectViewModel.OnStandsInProjectChanged();
     }
 
     private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -91,15 +62,6 @@ public partial class ProjectPreview : UserControl
         // Принудительно прокручиваем ScrollViewer
         scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta);
         e.Handled = true;
-    }
-
-    private void Image_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        if (sender is Control c)
-        {
-            c.Focus();
-            e.Handled = true;
-        }
     }
 
     private void OnPasteCanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -218,14 +180,14 @@ public partial class ProjectPreview : UserControl
         }), DispatcherPriority.Loaded);
     }
 
-    private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    private async void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-        _projectViewModel.OnEditObvSettingsCommandExecuted(e);
+        await _projectViewModel.OnEditObvSettingsCommandExecuted();
     }
 
-    private void StandListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    private async void StandListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-        _projectViewModel.OnOpenEditStandCommandExecuted(e);
+        await _projectViewModel.OnOpenEditStandCommandExecuted();
     }
 
     private void DeleteSelectedEntity_KeyDown(object sender, KeyEventArgs e)

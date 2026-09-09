@@ -122,12 +122,12 @@ public class ContainerRepository : IContainerRepository
     public async Task<IEnumerable<ContainerBatch>> GetAllByProjectIdAsync(int projectId)
     {
         return await _context.ContainersBatch
+            .AsNoTracking()
             .Include(b => b.Containers)
             .ThenInclude(c => c.Stands)
             .ThenInclude(s => s.StandFrames)
             .ThenInclude(sf => sf.Frame)
             .Where(b => b.ProjectInfoId == projectId)
-            .AsNoTracking()
             .ToListAsync();
     }
 

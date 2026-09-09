@@ -1,10 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
-using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
@@ -17,6 +14,7 @@ using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Services.Logger;
 using ReportEngine.App.Services.Navigation;
 using ReportEngine.App.Services.Notification;
+using ReportEngine.App.Views;
 using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Settings.CalculationParameters;
 using ReportEngine.App.Views.Windows;
@@ -24,8 +22,7 @@ using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Repositories.Interfaces;
-using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -33,6 +30,7 @@ public class MainWindowViewModel : BaseViewModel
 {
     private readonly AuditService _auditService;
     private readonly ICalculationService _calculationService;
+    private readonly ReportEngineConfigService _configService;
     private readonly IDialogService _dialogService;
     private readonly EntityProjectClonerService _entityProjectClonerService;
     private readonly ExceptionService _exceptionService;
@@ -57,7 +55,8 @@ public class MainWindowViewModel : BaseViewModel
         SessionService sessionService,
         AuditService auditService,
         UiLogger logger,
-        ExceptionService exceptionService)
+        ExceptionService exceptionService,
+        ReportEngineConfigService configService)
     {
         _notificationService = notificationService;
         _calculationService = calculationService;
@@ -70,8 +69,11 @@ public class MainWindowViewModel : BaseViewModel
         _auditService = auditService;
         _logger = logger;
         _exceptionService = exceptionService;
+        _configService = configService;
 
         _sessionService.PropertyChanged += SessionChanged;
+
+        _ = CheckDbConnectionAsync();
 
         InitializeMainWindowCommands();
         InitializeGenericEquipCommands();
@@ -85,7 +87,7 @@ public class MainWindowViewModel : BaseViewModel
 
     public User? CurrentUser => _sessionService.CurrentUser;
     public string? CurrentUserLogin => _sessionService.CurrentUser?.UserLogin;
-    public string DatabaseMode => JsonHandler.GetDatabaseMode(DirectoryHelper.GetConfigPath());
+    public string DatabaseMode => _configService.GetDatabaseMode();
 
     private void SessionChanged(object? sender, PropertyChangedEventArgs e)
     {
@@ -127,18 +129,6 @@ public class MainWindowViewModel : BaseViewModel
         return true;
     }
 
-    public void OnSetDbOffline(object e)
-    {
-        JsonHandler.SetDatabaseMode(DirectoryHelper.GetConfigPath(), "Offline");
-        RestartApp();
-    }
-
-    public void OnSetDbOnline(object e)
-    {
-        JsonHandler.SetDatabaseMode(DirectoryHelper.GetConfigPath(), "Online");
-        RestartApp();
-    }
-
     private void RestartApp()
     {
         try
@@ -172,16 +162,17 @@ public class MainWindowViewModel : BaseViewModel
         }
     }
 
-    public async void OnRecalculateProjectCommandExecuted(object e)
+    public async Task OnRecalculateProjectCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(RecalculateProjectAsync);
 
         _notificationService.ShowInfo("Переформирование завершено");
     }
 
-    public async void OnEditProjectCommandExecuted(object e)
+    public async Task OnEditProjectCommandExecuted()
     {
-        if (MainWindowModel.SelectedProject == null) return;
+        if (MainWindowModel.SelectedProject == null)
+            return;
 
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -196,7 +187,7 @@ public class MainWindowViewModel : BaseViewModel
         });
     }
 
-    public async void OnCopyProjectCommandExecuted(object e)
+    public async Task OnCopyProjectCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
@@ -215,45 +206,46 @@ public class MainWindowViewModel : BaseViewModel
                 _logger.Success($"Скопирован проект {selectedProject.OrderCustomer} Статус: Успешно");
 
                 await ShowAllProjectsAsync();
-
-
             });
         });
     }
 
-    public async void OnOpenMainWindowCommandExecuted(object e)
+    public async Task OnOpenMainWindowCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
             var projectViewModel = _serviceProvider.GetRequiredService<ProjectViewModel>();
 
-            //принудительно обновляем количество стендов при закрытии проекта и подгружаем свежие данные
-            //при пересчете всего проекта начинает подтормаживать, поэтому оставляем только обновление количества стендов
-            if (projectViewModel?.CurrentProjectModel != null &&
-                projectViewModel.CurrentProjectModel.CurrentProjectId != 0)
+            await _dialogService.RunWithProgressDialogAsync(async () =>
             {
-                //await RecalculateProjectAsync();
-                await _calculationService.CalculateAndUpdateStandQuantity(projectViewModel.CurrentProjectModel);
+                //принудительно обновляем количество стендов при закрытии проекта и подгружаем свежие данные
+                //при пересчете всего проекта начинает подтормаживать, поэтому оставляем только обновление количества стендов
+                if (projectViewModel?.CurrentProjectModel != null &&
+                    projectViewModel.CurrentProjectModel.CurrentProjectId != 0)
+                {
+                    //await RecalculateProjectAsync();
+                    await _calculationService.CalculateAndUpdateStandQuantity(projectViewModel.CurrentProjectModel);
 
-                await UpdateProjectStandsQuantity(projectViewModel.CurrentProjectModel.CurrentProjectId);
-            }
+                    await UpdateProjectStandsQuantity(projectViewModel.CurrentProjectModel.CurrentProjectId);
+                }
 
-            //if (CheckUnsafeDetails(projectViewModel))
-            //{
-            //    var result = _notificationService.ShowConfirmation("У вас есть несохраненные изменения. \nВы уверены, что хотите вернуться на главный экран?", "Подтверждение");
-            //    if (!result)
-            //        return;
-            //}
+                //if (CheckUnsafeDetails(projectViewModel))
+                //{
+                //    var result = _notificationService.ShowConfirmation("У вас есть несохраненные изменения. \nВы уверены, что хотите вернуться на главный экран?", "Подтверждение");
+                //    if (!result)
+                //        return;
+                //}
 
-            //if(projectViewModel.CurrentProjectModel.Stands.Count == 0 || projectViewModel.CurrentProjectModel.Stands == null)
-            //{
-            //    _navigation.CloseContent();
-            //}
+                //if(projectViewModel.CurrentProjectModel.Stands.Count == 0 || projectViewModel.CurrentProjectModel.Stands == null)
+                //{
+                //    _navigation.CloseContent();
+                //}
 
-            _navigation.CloseContent();
-            var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
-            mainWindow.MainContentControl.Content = mainWindow.MainGrid;
-            CollectionRefreshHelper.SafeRefreshCollection(MainWindowModel.AllProjects);
+                _navigation.CloseContent();
+                var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+                mainWindow.MainContentControl.Content = mainWindow.MainGrid;
+                CollectionRefreshHelper.SafeRefreshCollection(MainWindowModel.AllProjects);
+            });
         });
     }
 
@@ -304,25 +296,25 @@ public class MainWindowViewModel : BaseViewModel
         });
     }
 
-    public async void OnCheckDbConnectionCommandExecuted(object e)
+    public async Task OnCheckDbConnectionCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(CheckDbConnectionAsync);
     }
 
-    public async void OnShowAllProjectsCommandExecuted(object e)
+    public async Task OnShowAllProjectsCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(ShowAllProjectsAsync);
     }
 
-    public async void OnDeleteSelectedProjectExecuted(object e)
+    public async Task OnDeleteSelectedProjectExecuted()
     {
         await _exceptionService.SafeExecuteAsync(DeleteSelectedProjectAsync);
     }
 
-    public async Task CheckDbConnectionAsync()
+    private async Task CheckDbConnectionAsync()
     {
         var context = _serviceProvider.GetRequiredService<ReAppContext>();
-        MainWindowModel.IsConnected = context.Database.CanConnect();
+        MainWindowModel.IsConnected = await context.Database.CanConnectAsync();
         MainWindowModel.ConnectionStatusMessage =
             MainWindowModel.IsConnected ? "Соединение установлено" : "Соединение не установлено";
     }
@@ -349,14 +341,14 @@ public class MainWindowViewModel : BaseViewModel
     }
 
     //Обновление информации о проекте в коллекции AllProjects
-    public async Task UpdateProjectStandsQuantity(int projectId)
+    private async Task UpdateProjectStandsQuantity(int projectId)
     {
         var project = await _projectRepository.GetByIdAsync(projectId);
         if (project == null || project.Stands.Count == 0) return;
 
         var existingProject = MainWindowModel.AllProjects.FirstOrDefault(p => p.Id == projectId);
 
-        
+
         if (existingProject == null)
         {
             MainWindowModel.AllProjects.Add(project);
@@ -364,13 +356,8 @@ public class MainWindowViewModel : BaseViewModel
         }
 
         var index = MainWindowModel.AllProjects.IndexOf(existingProject);
-        if (index >= 0)
-        {
-            MainWindowModel.AllProjects[index] = project;
-        }
-
+        if (index >= 0) MainWindowModel.AllProjects[index] = project;
     }
-
 
 
     public async Task DeleteSelectedProjectAsync()

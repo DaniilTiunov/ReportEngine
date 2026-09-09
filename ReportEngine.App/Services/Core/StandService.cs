@@ -1,7 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
+using ReportEngine.App.Services.Converters;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
@@ -16,6 +18,8 @@ public class StandService : IStandService
     private readonly IPurposesRepository<AdditionalEquipPurpose> _additionalPurposesRepository;
     private readonly IContainerRepository _containerRepository;
     private readonly ReAppContext _context;
+
+    private readonly ConverterService _converterService;
     private readonly IPurposesRepository<DrainagePurpose> _drainagesPurposesRepository;
     private readonly IPurposesRepository<ElectricalPurpose> _electricalPurposesRepository;
     private readonly IFormedAdditionalEquipsRepository _formedAdditionalEquipsRepository;
@@ -25,6 +29,7 @@ public class StandService : IStandService
     private readonly INotificationService _notificationService;
     private readonly ObvyazkaInStandRepository _obvyazkaInStandRepository;
     private readonly IProjectInfoRepository _projectRepository;
+    private readonly IServiceScopeFactory _scopeFactory;
 
     public StandService(
         IProjectInfoRepository projectRepository,
@@ -38,8 +43,11 @@ public class StandService : IStandService
         IPurposesRepository<AdditionalEquipPurpose> additionalPurposesRepository,
         IPurposesRepository<ElectricalPurpose> electricalPurposesRepository,
         IPurposesRepository<DrainagePurpose> drainagesPurposesRepository,
+        IServiceScopeFactory scopeFactory,
+        ConverterService converterService,
         ReAppContext context)
     {
+        _scopeFactory = scopeFactory;
         _obvyazkaInStandRepository = obvyazkaInStandRepository;
         _projectRepository = projectRepository;
         _formedFrameRepository = frameRepository;
@@ -52,6 +60,7 @@ public class StandService : IStandService
         _electricalPurposesRepository = electricalPurposesRepository;
         _drainagesPurposesRepository = drainagesPurposesRepository;
         _context = context;
+        _converterService = converterService;
     }
 
     public async Task<IEnumerable<FormedFrame>> LoadAllAvailableFrameAsync()
@@ -83,38 +92,73 @@ public class StandService : IStandService
         }
     }
 
-    public async Task LoadAllStandsDataAsync(int projectId, IEnumerable<StandModel> standModels)
-    {
-        var standsEntities = await _projectRepository.GetStandsByIdAsync(projectId);
-
-        foreach (var (entity, model) in standsEntities.Stands.Zip(standModels)) model.ImageData = entity.ImageData;
-    }
-
     public async Task LoadStandsDataAsync(IEnumerable<StandModel> standModels)
     {
-        foreach (var standModel in standModels)
+        var stands = standModels.ToList();
+
+        if (stands.Count == 0)
+            return;
+
+        var standIds = stands
+            .Select(x => x.Id)
+            .ToArray();
+
+        var framesTask = GetFramesAsync(standIds);
+        var drainagesTask = GetDrainagesAsync(standIds);
+        var electricalsTask = GetElectricalsAsync(standIds);
+        var additionalsTask = GetAdditionalsAsync(standIds);
+
+        await Task.WhenAll(
+            framesTask,
+            drainagesTask,
+            electricalsTask,
+            additionalsTask);
+
+        var frames = (await framesTask)
+            .GroupBy(x => x.StandId)
+            .ToDictionary(
+                x => x.Key,
+                x => x.Select(y => y.Frame).ToList());
+
+        var drainages = (await drainagesTask)
+            .GroupBy(x => x.StandId)
+            .ToDictionary(
+                x => x.Key,
+                x => x.Select(y => y.Drainage).ToList());
+
+        var electricals = (await electricalsTask)
+            .GroupBy(x => x.StandId)
+            .ToDictionary(
+                x => x.Key,
+                x => x.Select(y => y.ElectricalComponent).ToList());
+
+        var additionals = (await additionalsTask)
+            .GroupBy(x => x.StandId)
+            .ToDictionary(
+                x => x.Key,
+                x => x.Select(y => y.AdditionalEquip).ToList());
+
+        foreach (var stand in stands)
         {
-            var standFrames = await _projectRepository.GetAllFramesInStandAsync(standModel.Id);
-            var standDrainages = await _projectRepository.GetAllDrainagesInStandAsync(standModel.Id);
-            var standElectricals = await _projectRepository.GetAllElectricalComponentsInStandAsync(standModel.Id);
-            var standAdditionals = await _projectRepository.GetAllAdditionalEquipsInStandAsync(standModel.Id);
+            stand.FramesInStand.Clear();
+            if (frames.TryGetValue(stand.Id, out var standFrames))
+                foreach (var frame in standFrames)
+                    stand.FramesInStand.Add(frame);
 
+            stand.DrainagesInStand.Clear();
+            if (drainages.TryGetValue(stand.Id, out var standDrainages))
+                foreach (var drainage in standDrainages)
+                    stand.DrainagesInStand.Add(drainage);
 
-            standModel.FramesInStand.Clear();
-            foreach (var frame in standFrames.Select(sf => sf.Frame))
-                standModel.FramesInStand.Add(frame);
+            stand.ElectricalComponentsInStand.Clear();
+            if (electricals.TryGetValue(stand.Id, out var standElectricals))
+                foreach (var electrical in standElectricals)
+                    stand.ElectricalComponentsInStand.Add(electrical);
 
-            standModel.DrainagesInStand.Clear();
-            foreach (var drainage in standDrainages.Select(sd => sd.Drainage))
-                standModel.DrainagesInStand.Add(drainage);
-
-            standModel.ElectricalComponentsInStand.Clear();
-            foreach (var electrical in standElectricals.Select(se => se.ElectricalComponent))
-                standModel.ElectricalComponentsInStand.Add(electrical);
-
-            standModel.AdditionalEquipsInStand.Clear();
-            foreach (var additional in standAdditionals.Select(sa => sa.AdditionalEquip))
-                standModel.AdditionalEquipsInStand.Add(additional);
+            stand.AdditionalEquipsInStand.Clear();
+            if (additionals.TryGetValue(stand.Id, out var standAdditionalEquips))
+                foreach (var additional in standAdditionalEquips)
+                    stand.AdditionalEquipsInStand.Add(additional);
         }
     }
 
@@ -191,15 +235,15 @@ public class StandService : IStandService
         await _projectRepository.AddAdditionalEquipToStandAsync(standId, entity.Id);
     }
 
-    public Task<ObvyazkaInStand> CreateObvyazkaAsync(StandModel standModel, Obvyazka selectedObvyazka)
+    public async Task<ObvyazkaInStand> CreateObvyazkaAsync(StandModel standModel, Obvyazka selectedObvyazka)
     {
         if (standModel == null)
         {
             _notificationService.ShowError("Стенд не выбран!");
-            return Task.FromResult<ObvyazkaInStand>(null);
+            return null;
         }
 
-        if (selectedObvyazka == null || selectedObvyazka.Id <= 0) return Task.FromResult<ObvyazkaInStand>(null);
+        if (selectedObvyazka == null || selectedObvyazka.Id <= 0) return null;
 
         var entity = new ObvyazkaInStand
         {
@@ -210,12 +254,11 @@ public class StandService : IStandService
             Clamp = selectedObvyazka.Clamp,
             WidthOnFrame = selectedObvyazka.WidthOnFrame,
             OtherLineCount = selectedObvyazka.OtherLineCount,
-            Weight = selectedObvyazka.Weight,
             TreeSocketCount = selectedObvyazka.TreeSocket,
             HumanCost = selectedObvyazka.HumanCost,
-            ImageName = selectedObvyazka.ImageName,
-            ObvyazkaId = selectedObvyazka.Id,
 
+            ObvyazkaId = selectedObvyazka.Id,
+            ImageName = standModel.ImageName,
             ObvyazkaName = standModel.ObvyazkaName,
             StandId = standModel.Id,
             NN = standModel.NN,
@@ -224,21 +267,25 @@ public class StandService : IStandService
             MaterialLineMeasure = standModel.MaterialLineMeasure,
             MaterialLineCostPerUnit = standModel.MaterialLineCostPerUnit,
             MaterialLineExportDays = standModel.MaterialLineExportDays,
+
             Armature = standModel.Armature,
             ArmatureCount = standModel.ArmatureCount,
             ArmatureMeasure = standModel.ArmatureMeasure,
             ArmatureCostPerUnit = standModel.ArmatureCostPerUnit,
             ArmatureExportDays = standModel.ArmatureExportDays,
+
             TreeSocket = standModel.TreeSocket,
             TreeSocketMaterialCount = standModel.TreeSocketMaterialCount,
             TreeSocketMaterialMeasure = standModel.TreeSocketMaterialMeasure,
             TreeSocketMaterialCostPerUnit = standModel.TreeSocketMaterialCostPerUnit,
             TreeSocketExportDays = standModel.TreeSocketExportDays,
+
             KMCH = standModel.KMCH,
             KMCHCount = standModel.KMCHCount,
             KMCHMeasure = standModel.KMCHMeasure,
             KMCHCostPerUnit = standModel.KMCHCostPerUnit,
             KMCHExportDays = standModel.KMCHExportDays,
+
             FirstSensorType = standModel.FirstSensorType,
             FirstSensorKKS = standModel.FirstSensorKKS,
             FirstSensorMarkPlus = standModel.FirstSensorMarkPlus,
@@ -268,13 +315,31 @@ public class StandService : IStandService
                 .ToList()
         };
 
-        return Task.FromResult(entity);
+
+        _converterService.ConvertStandEquipsToObvyazkaInStandData(standModel, entity);
+
+        entity.Weight = CountObvComponentsWeight(standModel);
+
+        return entity;
     }
+
 
     public async void FillStandFieldsFromObvyazka(StandModel stand, ObvyazkaInStand obv)
     {
         if (stand == null || obv == null)
             return;
+
+        // костыль для получения полной сущности
+        var originalFullObv = await _obvyazkaInStandRepository.GetFullObvFromStandAsync(obv.Id);
+
+        await _converterService.ConvertObvyazkaInStandDataToStandEquips(stand, obv);
+
+        if (originalFullObv?.Obvyazka == null)
+        {
+            _notificationService.ShowError("Не найдены данные по обвязке");
+            return;
+        }
+
 
         stand.NN = obv.NN ?? 0;
         stand.ObvyazkaName = obv.ObvyazkaName;
@@ -290,6 +355,7 @@ public class StandService : IStandService
         stand.KMCH = obv.KMCH;
         stand.KMCHCount = obv.KMCHCount;
         stand.KMCHMeasure = obv.KMCHMeasure;
+
 
         stand.MaterialLineCostPerUnit = obv.MaterialLineCostPerUnit;
         stand.TreeSocketMaterialCostPerUnit = obv.TreeSocketMaterialCostPerUnit;
@@ -311,11 +377,15 @@ public class StandService : IStandService
         stand.ThirdSensorMarkPlus = obv.ThirdSensorMarkPlus;
         stand.ThirdSensorMarkMinus = obv.ThirdSensorMarkMinus;
         stand.ThirdSensorDescription = obv.ThirdSensorDescription;
+        stand.ImageName = obv.ImageName;
+
+        stand.ObvWeight = originalFullObv.Obvyazka.Weight;
 
         var additionalComponents = await GetAdditionalComponentsAsync(obv);
-
         stand.ObvyazkaAdditionalComponents.Clear();
-        foreach (var additionalEqip in additionalComponents) stand.ObvyazkaAdditionalComponents.Add(additionalEqip);
+
+        foreach (var additionalEqip in additionalComponents)
+            stand.ObvyazkaAdditionalComponents.Add(additionalEqip);
     }
 
     public async Task DeleteAdditionalPurposeFromObvAsync(ObvyazkaAdditionalEquipPurpose obv, StandModel standModel)
@@ -438,6 +508,13 @@ public class StandService : IStandService
             await updater(item);
     }
 
+    public async Task LoadAllStandsDataAsync(int projectId, IEnumerable<StandModel> standModels)
+    {
+        var standsEntities = await _projectRepository.GetStandsByIdAsync(projectId);
+
+        foreach (var (entity, model) in standsEntities.Stands.Zip(standModels)) model.ImageData = entity.ImageData;
+    }
+
     private async Task<List<ObvyazkaAdditionalEquipPurpose>> GetAdditionalComponentsAsync(ObvyazkaInStand obv)
     {
         if (obv.AdditionalComponents != null) return obv.AdditionalComponents.ToList();
@@ -449,5 +526,101 @@ public class StandService : IStandService
                 .ToListAsync();
 
         return new List<ObvyazkaAdditionalEquipPurpose>();
+    }
+
+    public static float CountObvComponentsWeight(StandModel standModel)
+    {
+        //суммируем в обвязку веса всех комплектующих
+        var commonWeight = 0.0f;
+
+        commonWeight += standModel.MaterialLineEquip?.Weight * standModel.MaterialLineCount ?? 0.0f;
+        commonWeight += standModel.TreeSocketEquip?.Weight * standModel.TreeSocketMaterialCount ?? 0.0f;
+        commonWeight += standModel.KMCHEquip?.Weight * standModel.KMCHCount ?? 0.0f;
+        commonWeight += standModel.ArmatureEquip?.Weight * standModel.ArmatureCount ?? 0.0f;
+
+
+        foreach (var obvComponent in standModel.ObvyazkaAdditionalComponents)
+            commonWeight += obvComponent.Weight * obvComponent.Quantity ?? 0.0f;
+
+        return commonWeight;
+    }
+
+    private async Task<List<StandFrame>> GetFramesAsync(int[] standIds)
+    {
+        await using var scope = _scopeFactory.CreateAsyncScope();
+
+        var repository = scope.ServiceProvider
+            .GetRequiredService<IProjectInfoRepository>();
+
+        return await repository.GetAllFramesInStandsAsync(standIds);
+    }
+
+    private async Task<List<StandDrainage>> GetDrainagesAsync(int[] standIds)
+    {
+        await using var scope = _scopeFactory.CreateAsyncScope();
+
+        var repository = scope.ServiceProvider
+            .GetRequiredService<IProjectInfoRepository>();
+
+        return await repository.GetAllDrainagesInStandsAsync(standIds);
+    }
+
+    private async Task<List<StandElectricalComponent>> GetElectricalsAsync(int[] standIds)
+    {
+        await using var scope = _scopeFactory.CreateAsyncScope();
+
+        var repository = scope.ServiceProvider
+            .GetRequiredService<IProjectInfoRepository>();
+
+        return await repository.GetAllElectricalComponentsInStandsAsync(standIds);
+    }
+
+    private async Task<List<StandAdditionalEquip>> GetAdditionalsAsync(int[] standIds)
+    {
+        await using var scope = _scopeFactory.CreateAsyncScope();
+
+        var repository = scope.ServiceProvider
+            .GetRequiredService<IProjectInfoRepository>();
+
+        return await repository.GetAllAdditionalEquipsInStandsAsync(standIds);
+    }
+
+
+    private async Task<IBaseEquip?> GetBaseEquip(string? typeName, int? id)
+    {
+        if (string.IsNullOrEmpty(typeName) || !id.HasValue)
+            return null;
+
+        var entityType = Type.GetType(typeName);
+
+        if (entityType == null)
+            return null;
+
+        return await _context.FindAsync(entityType, id) as IBaseEquip;
+    }
+
+
+    public async Task ParseObvyazkaInStandToStandEquips(StandModel stand, ObvyazkaInStand obv)
+    {
+        stand.MaterialLineEquip = await GetBaseEquip(obv.MaterialLineType, obv.MaterialLineId);
+        stand.TreeSocketEquip = await GetBaseEquip(obv.TreeSocketType, obv.TreeSocketId);
+        stand.KMCHEquip = await GetBaseEquip(obv.KMCHType, obv.KMCHId);
+        stand.ArmatureEquip = await GetBaseEquip(obv.ArmatureType, obv.ArmatureId);
+    }
+
+
+    public void ParseIBaseEquipsToObvyazkaInStand(StandModel stand, ObvyazkaInStand obv)
+    {
+        obv.MaterialLineId = stand.MaterialLineEquip?.Id;
+        obv.MaterialLineType = stand.MaterialLineEquip?.GetType().AssemblyQualifiedName;
+
+        obv.TreeSocketId = stand.TreeSocketEquip?.Id;
+        obv.TreeSocketType = stand.TreeSocketEquip?.GetType().AssemblyQualifiedName;
+
+        obv.KMCHId = stand.KMCHEquip?.Id;
+        obv.KMCHType = stand.KMCHEquip?.GetType().AssemblyQualifiedName;
+
+        obv.ArmatureId = stand.ArmatureEquip?.Id;
+        obv.ArmatureType = stand.ArmatureEquip?.GetType().AssemblyQualifiedName;
     }
 }

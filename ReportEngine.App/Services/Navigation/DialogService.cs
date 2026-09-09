@@ -315,7 +315,7 @@ public class DialogService : IDialogService
             }
 
             projectViewModel.CurrentProjectModel.SelectedStand = standModel;
-            projectViewModel.OnFillStandFieldsFromSelectedStandCommandExecuted(new object());
+            projectViewModel.OnFillStandFieldsFromSelectedStandCommandExecuted();
 
 
             window.ShowDialog();

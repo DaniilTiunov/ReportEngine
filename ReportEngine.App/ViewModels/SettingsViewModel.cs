@@ -8,13 +8,13 @@ using ReportEngine.App.Commands;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.App.Views.Settings.SettingsControls;
-using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.App.ViewModels;
 
 public class SettingsViewModel : BaseViewModel
 {
+    private readonly ReportEngineConfigService _configService;
     private readonly ExceptionService _exceptionService;
     private readonly INotificationService _notificationService;
     private readonly IServiceProvider _serviceProvider;
@@ -31,7 +31,8 @@ public class SettingsViewModel : BaseViewModel
     public SettingsViewModel(
         INotificationService notificationService,
         IServiceProvider serviceProvider,
-        ExceptionService exceptionService)
+        ExceptionService exceptionService,
+        ReportEngineConfigService configService)
     {
         ApplySettingsCommand = new RelayCommand(ExecuteSaveCommand, _ => true);
 
@@ -39,6 +40,7 @@ public class SettingsViewModel : BaseViewModel
 
         _serviceProvider = serviceProvider;
         _exceptionService = exceptionService;
+        _configService = configService;
         _notificationService = notificationService;
     }
 
@@ -125,8 +127,8 @@ public class SettingsViewModel : BaseViewModel
 
     public void LoadSettings()
     {
-        SaveReportDirPath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
-        ConnectionString = JsonHandler.GetConnectionString(DirectoryHelper.GetConfigPath());
+        SaveReportDirPath = _configService.GetSaveReportDirectory();
+        ConnectionString = _configService.GetConnectionString();
         ConnectionStringParse(ConnectionString);
     }
 
@@ -161,10 +163,9 @@ public class SettingsViewModel : BaseViewModel
 
     public void SaveSettings()
     {
-        JsonHandler.SetSaveReportDirectory(DirectoryHelper.GetConfigPath(), SaveReportDirPath);
+        _configService.SetSaveReportDirectory(SaveReportDirPath);
 
-        var configPath = DirectoryHelper.GetConfigPath();
-        var currentConnectionString = JsonHandler.GetConnectionString(configPath);
+        var currentConnectionString = _configService.GetConnectionString();
 
         var newConnectionString =
             BuildConnectionString(ServerAddress, ServerPort, DbName, DbUser, DbPassword);
@@ -177,7 +178,7 @@ public class SettingsViewModel : BaseViewModel
             if (!result)
                 return;
 
-            JsonHandler.SetConnectionString(configPath, newConnectionString);
+            _configService.SetConnectionString(newConnectionString);
 
             StartUp.ReleaseMutex();
             StartUp.DisposeMutex();

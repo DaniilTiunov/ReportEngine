@@ -1,18 +1,18 @@
 using System.IO;
 using System.Text.Json;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Config.Models;
 
 namespace ReportEngine.Updater.Services;
 
 public class UpdateService
 {
     private readonly JsonSettingsService _jsonSettingsService;
-    
+
     public UpdateService(JsonSettingsService jsonSettingsService)
     {
         _jsonSettingsService = jsonSettingsService;
     }
-    
+
     public async Task<UpdateInfo?> GetUpdaterInfoAsync(string releaseDirectory)
     {
         var path = Path.Combine(

@@ -16,6 +16,8 @@ public class AllStandsViewModel : BaseViewModel
     public AllStandsViewModel(IProjectInfoRepository projectRepository)
     {
         _projectRepository = projectRepository;
+
+        _ = GetAllProjectsAsync();
     }
 
     public ObservableCollection<ProjectInfo> AllProjects
@@ -43,12 +45,13 @@ public class AllStandsViewModel : BaseViewModel
         SelectedResult = SelectedStand;
     }
 
-    public async Task GetAllProjectsAsync()
+    private async Task GetAllProjectsAsync()
     {
         var projects = await _projectRepository.GetAllWithSandsAsync();
 
         AllProjects = projects.ToObservable();
 
-        if (AllProjects.Any()) SelectedProject = AllProjects.First();
+        if (AllProjects.Any())
+            SelectedProject = AllProjects.First();
     }
 }

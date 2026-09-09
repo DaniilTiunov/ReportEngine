@@ -1,11 +1,9 @@
 ﻿using System.Globalization;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
-using ReportEngine.App.Views.Windows.Dialog;
+using ReportEngine.App.Views;
 using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Store;
-using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
 using Serilog;
 
 namespace ReportEngine.App;
@@ -17,7 +15,7 @@ public static class StartUp
     public static bool CanConnect;
 
     [STAThread]
-   public static void Main()
+    public static void Main()
     {
         _mutex = new Mutex(true, "Global\\ReportEngineApp", out var createdNew);
 
@@ -30,62 +28,58 @@ public static class StartUp
         try
         {
             SetCulture();
-            
-            var splash = new SplashWindow();
-            splash.Show();
 
-            // Шаг 1
-            splash.SetStatusText("Загрузка файлов конфигурации...");
-            Thread.Sleep(500);
-            
-            var config = JsonHandler.GetDatabaseMode(DirectoryHelper.GetConfigPath());
+            SplashManager.Start();
 
-            // Шаг 2
-            splash.SetStatusText("Сборка хоста...");
-            Thread.Sleep(500);
-            
-            var host = HostFactory.BuildHost(config);
+            SplashManager.SetStatus(
+                "Сборка хоста...");
 
-            // Шаг 3
-            splash.SetStatusText("Регистрация контекста данных...");
-            Thread.Sleep(500);
-            
-            var context = host.Services.GetRequiredService<ReAppContext>();
-            var app = host.Services.GetRequiredService<App>();
+            var host = HostFactory.BuildHost();
 
-            // Шаг 4
-            splash.CheckDbStatus(context);
-            Thread.Sleep(500);
-            
-            CanConnect = CheckDbConnection(context);
+            SplashManager.SetStatus(
+                "Регистрация контекста данных...");
+
+            var context =
+                host.Services.GetRequiredService<ReAppContext>();
+
+            SplashManager.SetStatus(
+                "Инициализация приложения...");
+
+            var app =
+                host.Services.GetRequiredService<App>();
+
+            SplashManager.SetStatus(
+                "Проверка подключения к БД...");
+
+            CanConnect = context.Database.CanConnect();
 
             if (CanConnect)
             {
-                try
-                {
-                    splash.SetStatusText("Загрузка необходимых данных из базы данных...");
-                    Thread.Sleep(500);
-                    
-                    host.Services
-                        .GetRequiredService<ParametersStore>()
-                        .LoadSettingsDataAsync()
-                        .GetAwaiter()
-                        .GetResult();
-                }
-                catch (Exception ex)
-                {
-                    Log.Fatal(ex, "Ошибка загрузки ParameterStore");
-                }
+                SplashManager.SetStatus(
+                    "Загрузка необходимых данных из базы данных...");
+
+                host.Services
+                    .GetRequiredService<ParametersStore>()
+                    .LoadSettingsDataAsync()
+                    .GetAwaiter()
+                    .GetResult();
             }
 
-            splash.SetStatusText("Запуск приложения...");
+            SplashManager.SetStatus(
+                "Запуск приложения...");
 
-            Thread.Sleep(500);
-            var mainWindow = host.Services.GetRequiredService<MainWindow>();
+            var mainWindow =
+                host.Services.GetRequiredService<MainWindow>();
+
             app.MainWindow = mainWindow;
+            app.ShutdownMode = ShutdownMode.OnMainWindowClose;
 
             mainWindow.Show();
-            splash.Close();
+
+
+            SplashManager.Close();
+
+            _ = host.StartAsync();
 
             Log.Information("Приложение запущено");
 

@@ -7,12 +7,12 @@ namespace ReportEngine.Updater.Services;
 public class DirectoryService
 {
     private readonly JsonSettingsService _jsonSettingsService;
-    
+
     public DirectoryService(JsonSettingsService jsonSettingsService)
     {
         _jsonSettingsService = jsonSettingsService;
     }
-    
+
     public async Task<IEnumerable<string>> GetDirectoriesAsync(Func<UpdatePaths, string> selector)
     {
         var settingsPath = await _jsonSettingsService.GetPathAsync(
@@ -27,7 +27,7 @@ public class DirectoryService
 
         return selectedDirectories;
     }
-    
+
     public void Copy(
         string sourceDirectory,
         string destinationDirectory)
@@ -44,7 +44,7 @@ public class DirectoryService
 
         CopyDirectory(source, destination);
     }
-    
+
     private void CopyDirectory(
         DirectoryInfo source,
         string destinationDirectory)
@@ -59,7 +59,7 @@ public class DirectoryService
 
             file.CopyTo(
                 destinationFile,
-                overwrite: true);
+                true);
         }
 
         foreach (var directory in source.GetDirectories())
