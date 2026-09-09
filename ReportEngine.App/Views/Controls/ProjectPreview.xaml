@@ -3,6 +3,7 @@
     FontSize="15"
     Foreground="{DynamicResource PrimaryForeground}"
     PreviewKeyDown="DeleteSelectedEntity_KeyDown"
+    Style="{DynamicResource AnimatedUserControlStyle}"
     d:DesignHeight="700"
     d:DesignWidth="800"
     mc:Ignorable="d"

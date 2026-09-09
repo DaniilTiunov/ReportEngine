@@ -5,6 +5,7 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
+using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Enums;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
@@ -47,6 +48,7 @@ public partial class ContainersViewModel : ObservableObject
     private readonly IReportService _reportService;
     private readonly IServiceProvider _serviceProvider;
 
+    [ObservableProperty] private bool _isChecked;
     [ObservableProperty] private ObservableCollection<ContainerBatch> _allProjectBatches = new();
     [ObservableProperty] private ObservableCollection<Stand> _availableStands = new();
     [ObservableProperty] private ObservableCollection<ContainerStand> _containersInBatch = new();
@@ -56,7 +58,6 @@ public partial class ContainersViewModel : ObservableObject
     [ObservableProperty] private ContainerStand _selectedStandContainer = new();
     [ObservableProperty] private ObservableCollection<Stand> _standsInContainer = new();
     [ObservableProperty] private ObservableCollection<Stand> _standsInProject = new();
-    [ObservableProperty] private ObservableCollection<Stand> _selectedStands = new();
 
     public ContainersViewModel(
         ProjectViewModel projectViewModel,
@@ -84,15 +85,15 @@ public partial class ContainersViewModel : ObservableObject
         InitCommands();
     }
 
-    public ICommand CreateBatchCommand { get; set; }
-    public ICommand RefreshBatchesCommand { get; set; }
-    public ICommand RemoveSelectedBatchCommand { get; set; }
-    public ICommand AddContainerToBatchCommand { get; set; }
-    public ICommand RemoveContainerFromBatchCommand { get; set; }
-    public ICommand AddStandToContainerCommand { get; set; }
-    public ICommand RemoveStandFromContainerCommand { get; set; }
-    public ICommand GenerateSelectedReportCommand { get; set; }
-    public ICommand AddContainersToBatchCommand { get; set; }
+    public IAsyncRelayCommand CreateBatchCommand { get; set; }
+    public IAsyncRelayCommand RefreshBatchesCommand { get; set; }
+    public IAsyncRelayCommand RemoveSelectedBatchCommand { get; set; }
+    public IAsyncRelayCommand AddContainerToBatchCommand { get; set; }
+    public IAsyncRelayCommand RemoveContainerFromBatchCommand { get; set; }
+    public IAsyncRelayCommand AddStandToContainerCommand { get; set; }
+    public IAsyncRelayCommand RemoveStandFromContainerCommand { get; set; }
+    public IAsyncRelayCommand GenerateSelectedReportCommand { get; set; }
+    public IAsyncRelayCommand AddStandsToContainerCommand { get; set; }
 
     private void InitCommands()
     {
@@ -102,6 +103,7 @@ public partial class ContainersViewModel : ObservableObject
         AddContainerToBatchCommand = new AsyncRelayCommand(AddContainerToBatchAsync);
         RemoveContainerFromBatchCommand = new AsyncRelayCommand(RemoveContainerFromBatchAsync);
         AddStandToContainerCommand = new AsyncRelayCommand(AddStandToContainerAsync);
+        AddStandsToContainerCommand = new AsyncRelayCommand(AddStandsToContainerAsync);
         RemoveStandFromContainerCommand = new AsyncRelayCommand(RemoveStandFromContainerAsync);
         GenerateSelectedReportCommand = new AsyncRelayCommand(GenerateSelectedReportAsync);
     }
@@ -279,7 +281,57 @@ public partial class ContainersViewModel : ObservableObject
 
         await RefreshBatchesDataAsync();
 
+        _notificationService.ShowInfo($"""
+                                       Стенд {SelectedStand.KKSCode},
+                                       Добавлен в тару {SelectedStandContainer.Name}
+                                       """);
+        
         SelectedStand = null;
+    }
+    
+    private async Task AddStandsToContainerAsync()
+    {
+        if (SelectedStandContainer == null || SelectedStandContainer.Id == 0)
+        {
+            _notificationService.ShowInfo("Сначала выберите контейнер!");
+            return;
+        }
+        
+        var selectedStands = StandsListHelper.SelectedContainersStands?.Any() == true
+            ? StandsListHelper.SelectedContainersStands
+            : AvailableStands.Where(s => s.IsChecked).ToList();
+
+        if (selectedStands == null || selectedStands.Count == 0)
+        {
+            _notificationService.ShowInfo("Не выбрано ни одного стенда для добавления!");
+            return;
+        }
+
+        try
+        {
+            foreach (var stand in selectedStands)
+            {
+                await _containerService.AddStandToContainerAsync(
+                    _projectViewModel.CurrentProjectModel.CurrentProjectId,
+                    SelectedStandContainer.Id,
+                    stand.Id);
+
+                SelectedStandContainer.Stands.Add(stand);
+                AvailableStands.Remove(stand);
+                stand.IsChecked = false;
+            }
+
+            // Очищаем статический список после добавления
+            StandsListHelper.SelectedContainersStands?.Clear();
+
+            await RefreshBatchesDataAsync();
+            _notificationService.ShowInfo($"Добавлено {selectedStands.Count} стендов в контейнер \"{SelectedStandContainer.Name}\"");
+            UpdateAvailableStands();
+        }
+        catch (Exception ex)
+        {
+            _notificationService.ShowError($"Ошибка при добавлении стендов: {ex.Message}");
+        }
     }
 
     private async Task RemoveStandFromContainerAsync()

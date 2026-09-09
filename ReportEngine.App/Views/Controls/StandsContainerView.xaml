@@ -1,4 +1,5 @@
 ﻿<UserControl
+    Style="{DynamicResource AnimatedUserControlStyle}"
     d:DesignHeight="800"
     d:DesignWidth="1200"
     mc:Ignorable="d"
@@ -294,7 +295,7 @@
                                     Margin="2" />
 
                                 <Button
-                                    Command="{Binding AddContainersToBatchCommand}"
+                                    Command="{Binding AddStandsToContainerCommand}"
                                     Content="←← Добавить выбранные"
                                     FontSize="15"
                                     Margin="2" />
@@ -433,8 +434,7 @@
                                 BorderThickness="0"
                                 Foreground="{DynamicResource PrimaryForeground}"
                                 ItemsSource="{Binding AvailableStands}"
-                                SelectedItem="{Binding SelectedStand}"
-                                SelectionChanged="Selector_OnSelectionChanged"
+                                SelectionMode="Multiple"
                                 x:Name="AvailListBox">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
@@ -463,6 +463,8 @@
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="*" />
@@ -472,17 +474,24 @@
                                                     <ColumnDefinition Width="*" />
                                                 </Grid.ColumnDefinitions>
 
+                                                <!--  Чекбокс для выбора  -->
+                                                <CheckBox
+                                                    Grid.Column="0"
+                                                    IsChecked="{Binding IsChecked}"
+                                                    Margin="0,0,10,0"
+                                                    VerticalAlignment="Center" />
+
                                                 <!--  KKS  -->
                                                 <TextBlock
                                                     FontWeight="SemiBold"
                                                     Foreground="{DynamicResource StandLabelColor}"
-                                                    Grid.Column="0"
+                                                    Grid.Column="1"
                                                     Text="KKS:"
                                                     VerticalAlignment="Center" />
                                                 <TextBlock
                                                     FontWeight="SemiBold"
                                                     Foreground="{DynamicResource StandKKSSColor}"
-                                                    Grid.Column="1"
+                                                    Grid.Column="2"
                                                     Margin="5,0,15,0"
                                                     Text="{Binding KKSCode}"
                                                     VerticalAlignment="Center" />
@@ -491,12 +500,12 @@
                                                 <TextBlock
                                                     FontWeight="SemiBold"
                                                     Foreground="{DynamicResource StandLabelColor}"
-                                                    Grid.Column="2"
+                                                    Grid.Column="3"
                                                     Text="Серийный:"
                                                     VerticalAlignment="Center" />
                                                 <TextBlock
                                                     Foreground="{DynamicResource PrimaryForeground}"
-                                                    Grid.Column="3"
+                                                    Grid.Column="4"
                                                     Margin="5,0,15,0"
                                                     Text="{Binding SerialNumber}"
                                                     TextTrimming="CharacterEllipsis"
@@ -506,12 +515,12 @@
                                                 <TextBlock
                                                     FontWeight="SemiBold"
                                                     Foreground="{DynamicResource StandLabelColor}"
-                                                    Grid.Column="4"
+                                                    Grid.Column="5"
                                                     Text="Ширина:"
                                                     VerticalAlignment="Center" />
                                                 <TextBlock
                                                     Foreground="{DynamicResource PrimaryForeground}"
-                                                    Grid.Column="5"
+                                                    Grid.Column="6"
                                                     Margin="5,0,15,0"
                                                     Text="{Binding Width}"
                                                     TextTrimming="CharacterEllipsis"
@@ -521,13 +530,13 @@
                                                 <TextBlock
                                                     FontWeight="SemiBold"
                                                     Foreground="{DynamicResource StandLabelColor}"
-                                                    Grid.Column="6"
+                                                    Grid.Column="7"
                                                     Text="⚖️ Вес:"
                                                     VerticalAlignment="Center" />
                                                 <TextBlock
                                                     FontWeight="SemiBold"
                                                     Foreground="{DynamicResource StandWeightColor}"
-                                                    Grid.Column="7"
+                                                    Grid.Column="8"
                                                     Margin="5,0,0,0"
                                                     Text="{Binding Weight, StringFormat='{}{0} кг'}"
                                                     VerticalAlignment="Center" />

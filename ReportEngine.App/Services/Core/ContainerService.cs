@@ -155,7 +155,6 @@ public class ContainerService
 
             await RecalculateAndUpdateAllBatches(projectId);
 
-            _notificationService.ShowInfo("Стенд добавлен");
         });
     }
 
