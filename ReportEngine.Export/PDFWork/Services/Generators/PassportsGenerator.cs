@@ -11,7 +11,7 @@ using ReportEngine.Export.ExcelWork;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.Export.PDFWork.Services.Generators;
 
@@ -19,11 +19,16 @@ public class PassportsGenerator : IReportGenerator
 {
     private readonly ParametersStore _parametersStore;
     private readonly ProjectInfoRepository _projectInfoRepository;
+    private readonly ReportEngineConfigService _configService;
 
-    public PassportsGenerator(ProjectInfoRepository projectRepository, ParametersStore parametersStore)
+    public PassportsGenerator(
+        ProjectInfoRepository projectRepository, 
+        ParametersStore parametersStore, 
+        ReportEngineConfigService configService)
     {
         _projectInfoRepository = projectRepository;
         _parametersStore = parametersStore;
+        _configService = configService;
     }
 
     public ReportType Type => ReportType.PassportsReport;
@@ -31,10 +36,9 @@ public class PassportsGenerator : IReportGenerator
     public async Task GenerateAsync(int projectId)
     {
         var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
-        //await _parametersStore.LoadSettingsDataAsync();
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
-        var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+        var savePath = _configService.GetSaveReportDirectory();;
         var fileName = ExcelReportHelper.CreateReportName("Паспорт", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
 
@@ -94,7 +98,7 @@ public class PassportsGenerator : IReportGenerator
         //await _parametersStore.LoadSettingsDataAsync();
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
-        var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+        var savePath = _configService.GetSaveReportDirectory();;
         var fileName = ExcelReportHelper.CreateReportName("Паспорт", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
 

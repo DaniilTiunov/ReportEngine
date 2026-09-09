@@ -11,7 +11,7 @@
                 FontSize="22"
                 FontWeight="Bold"
                 Margin="0,0,0,5"
-                Text="🏠 Добро пожаловать в Менеджер Стенды КИПиА" />
+                Text="🏠 Добро пожаловать в Менеджер КИПАРИС:PCM" />
 
             <TextBlock
                 FontSize="14"
@@ -150,17 +150,6 @@
                     FontSize="14"
                     FontWeight="SemiBold"
                     Foreground="White"
-                    Padding="20,10" />
-
-                <Button
-                    Background="#4CAF50"
-                    Command="{Binding CheckForUpdatesCommand}"
-                    Content="🔄 Проверить обновления"
-                    Cursor="Hand"
-                    FontSize="14"
-                    FontWeight="SemiBold"
-                    Foreground="White"
-                    Margin="10,0,0,0"
                     Padding="20,10" />
             </StackPanel>
 

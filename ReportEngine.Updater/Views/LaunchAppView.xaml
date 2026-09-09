@@ -231,6 +231,16 @@
                 Margin="10,0,0,0"
                 Padding="20,10" />
 
+            <Button
+                Background="#2196F3"
+                Command="{Binding OpenFolderCommand}"
+                Content="📁 Открыть папку"
+                Cursor="Hand"
+                FontWeight="SemiBold"
+                Foreground="White"
+                Margin="10,0,0,0"
+                Padding="20,10" />
+
         </StackPanel>
     </Grid>
 </UserControl>

@@ -12,7 +12,7 @@ using ReportEngine.Export.ExcelWork;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.Export.PDFWork.Services.Generators;
 
@@ -21,16 +21,19 @@ public class TechnologicalCardsGenerator : IReportGenerator
     private readonly ParametersStore _parametersStore;
     private readonly ProjectInfoRepository _projectInfoRepository;
     private readonly IServiceProvider _serviceProvider;
+    private readonly ReportEngineConfigService _configService;
 
 
     public TechnologicalCardsGenerator(
         ProjectInfoRepository projectInfoRepository, 
         ParametersStore parametersStore,
-        IServiceProvider serviceProvider)
+        IServiceProvider serviceProvider, 
+        ReportEngineConfigService configService)
     {
         _projectInfoRepository = projectInfoRepository;
         _parametersStore = parametersStore;
         _serviceProvider = serviceProvider;
+        _configService = configService;
     }
 
     public ReportType Type => ReportType.TechnologicalCards;
@@ -38,7 +41,6 @@ public class TechnologicalCardsGenerator : IReportGenerator
     public async Task GenerateAsync(int projectId)
     {
         var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
-        //await _parametersStore.LoadSettingsDataAsync();
 
         var dataObject = await JsonCreator.CreateProjectJson(project, _parametersStore);
 
@@ -56,7 +58,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
 
-        var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+        var savePath = _configService.GetSaveReportDirectory();
         var fileName = ExcelReportHelper.CreateReportName("Технологические карты", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
         
@@ -123,7 +125,7 @@ public class TechnologicalCardsGenerator : IReportGenerator
 
         var exeFilePath = DirectoryHelper.GetPythonExePath();
 
-        var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+        var savePath = _configService.GetSaveReportDirectory();
         var fileName = ExcelReportHelper.CreateReportName("Технологические карты", "pdf");
         var fullSavePath = Path.Combine(savePath, fileName);
 

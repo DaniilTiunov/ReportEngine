@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands.Initializers;
@@ -19,7 +20,6 @@ using ReportEngine.App.ViewModels.Utils;
 using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
-using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 using ReportEngine.Domain.Entities.ElectricSockets;
@@ -31,8 +31,7 @@ using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Extensions.Extensions;
-using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -58,6 +57,7 @@ public class ProjectViewModel : BaseViewModel
     private readonly IStandService _standService;
     private readonly UIValidatorService _uiValidatorService;
     private readonly UpdaterStandService _updaterStandService;
+    private readonly ReportEngineConfigService _configService;
 
     public ProjectViewModel(
         IProjectInfoRepository projectRepository,
@@ -79,7 +79,8 @@ public class ProjectViewModel : BaseViewModel
         SessionService sessionService,
         ExceptionService exceptionService,
         UiLogger logger,
-        IServiceProvider serviceProvider)
+        IServiceProvider serviceProvider,
+        ReportEngineConfigService configService)
     {
         _projectRepository = projectRepository;
         _dialogService = dialogService;
@@ -101,14 +102,18 @@ public class ProjectViewModel : BaseViewModel
         _exceptionService = exceptionService;
         _logger = logger;
         _serviceProvider = serviceProvider;
+        _configService = configService;
 
         NewStand = new StandModel { Number = 1 };
+
+        RefreshCommandAsync = new AsyncRelayCommand(RefreshProjectAsync);
 
         InitializeCommands();
         InitializeTime();
         InitializeGenericCommands();
     }
 
+    public IAsyncRelayCommand RefreshCommandAsync { get; set; }
     public ObservableCollection<FormedFrame> AllAvailableFrames { get; set; } = new();
     public ObservableCollection<FormedDrainage> AllAvailableDrainages { get; set; } = new();
     public ObservableCollection<FormedElectricalComponent> AllAvailableElectricalComponents { get; set; } = new();
@@ -129,6 +134,14 @@ public class ProjectViewModel : BaseViewModel
         return true;
     }
 
+    public async Task RefreshProjectAsync()
+    {
+        await _dialogService.RunWithProgressDialogAsync(async () =>
+        {
+            await LoadProjectInfoAsync(CurrentProjectModel.CurrentProjectId);
+        });
+    }
+    
     public void OnOpenAllSortamentsDialogExecuted(object e)
     {
         var selected = _dialogService.ShowAllSortamentsDialog(e);
@@ -1248,6 +1261,7 @@ public class ProjectViewModel : BaseViewModel
             CurrentProjectModel = loadedModel;
             CurrentStandModel = loadedModel.SelectedStand ?? new StandModel();
 
+            await LoadAllAvaileDataAsync();
             await LoadObvyazkiAsync();
             await LoadStandsDataAsync();
             await LoadPurposesInStandsAsync();
@@ -1808,7 +1822,7 @@ public class ProjectViewModel : BaseViewModel
         if (_notificationService.ShowConfirmation(
                 $"Отчёт \"{reportName}\" по выбранным стендам создана!\nОткрыть папку с отчётами?"))
         {
-            var reportDir = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var reportDir = _configService.GetSaveReportDirectory();
             Process.Start("explorer.exe", reportDir);
         }
     }

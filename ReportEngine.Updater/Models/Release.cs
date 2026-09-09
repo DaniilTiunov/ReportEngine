@@ -1,4 +1,4 @@
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Config.Models;
 
 namespace ReportEngine.Updater.Models;
 

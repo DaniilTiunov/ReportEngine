@@ -11,7 +11,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib import colors
 from PIL import Image as PILImage
 
-#стили
+#пїЅпїЅпїЅпїЅпїЅ
 commonTableStyleCmd = [    
         ('BACKGROUND', (0, 0), (-1, 0), colors.white),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
@@ -22,8 +22,8 @@ leftAlignTableStyleCmd = [ ('ALIGN', (0, 0), (-1, -1), 'LEFT')]
 centerAlignTableStyleCmd = [ ('ALIGN', (0, 0), (-1, -1), 'CENTER')]
 firstColumnLeftTableStyleCmd = [('ALIGN', (0, 1), (0, -1), 'LEFT')]
 
-usualFontTableStyleCmd = [('FONTNAME', (0, 0), (-1, -1), "Arial")]
-boldFontTableStyleCmd = [('FONTNAME', (0, 0), (-1, -1), "Arial-Bold")]
+usualFontTableStyleCmd = [('FONTNAME', (0, 0), (-1, -1), "TimesNewRoman")]
+boldFontTableStyleCmd = [('FONTNAME', (0, 0), (-1, -1), "TimesNewRoman-Bold")]
 
 visibleAllBordersTableStyleCmd = [('GRID', (0, 0), (-1, -1), 1, colors.black)]
 invisibleAllBordersTableStyleCmd = []
@@ -38,7 +38,7 @@ visibleInnerBordersTableStyleCmd = [('INNERGRID', (0, 0), (-1, -1), 1, colors.bl
 
 newLineMark = "<br/>"
 
-#функции
+#пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 def openJsonFile(filePath):
     
     try:
@@ -92,6 +92,9 @@ def registerFonts():
     pdfmetrics.registerFont(TTFont('Arial','arial.ttf'))
     pdfmetrics.registerFont(TTFont('Arial-Bold','arialbd.ttf'))
     pdfmetrics.registerFont(UnicodeCIDFont('STSong-Light'))
+    pdfmetrics.registerFont(TTFont('TimesNewRoman','times.ttf'))
+    pdfmetrics.registerFont(TTFont('TimesNewRoman-Bold','timesbd.ttf'))
+    pdfmetrics.registerFont(TTFont('TimesNewRoman-Italic','timesi.ttf'))
 
 
 def to_str(value):
@@ -100,21 +103,21 @@ def to_str(value):
 
 
 def calculate_element_height(element, width):
-    #Вычисляет реальную высоту элемента
+    #пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     try:
         w, h = element.wrap(width, 0)
         return h
     except:
-        # Если элемент не поддерживает wrap
+        # пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ wrap
         return 0
 
 
 def get_column_height(elements, column_width):
-    #Вычисляет суммарную высоту колонки
+    #пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     total = 0
     for element in elements:
         if isinstance(element, list):
-            # Рекурсивно для вложенных списков
+            # пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             for sub_element in element:
                 total += calculate_element_height(sub_element, column_width)
         else:

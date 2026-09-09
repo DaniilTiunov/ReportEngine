@@ -1,7 +1,7 @@
 using System.IO;
 using System.Text.Json;
 using System.Windows;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Config.Models;
 using ReportEngine.Updater.Config;
 
 namespace ReportEngine.Updater.Services;

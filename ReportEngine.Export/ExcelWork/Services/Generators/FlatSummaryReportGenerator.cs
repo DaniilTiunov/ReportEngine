@@ -8,8 +8,8 @@ using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
 using ReportEngine.Shared.Helpers;
+using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -17,12 +17,15 @@ public class FlatSummaryReportGenerator : IReportGenerator
 {
     private readonly IGenericBaseRepository<StainlessPipe, StainlessPipe> _pipesRepository;
     private readonly ProjectInfoRepository _projectInfoRepository;
+    private readonly ReportEngineConfigService _configService;
 
     public FlatSummaryReportGenerator(
         ProjectInfoRepository projectInfoRepository,
-        IServiceProvider serviceProvider)
+        IServiceProvider serviceProvider, 
+        ReportEngineConfigService configService)
     {
         _projectInfoRepository = projectInfoRepository;
+        _configService = configService;
         _pipesRepository = serviceProvider.GetRequiredService<IGenericBaseRepository<StainlessPipe, StainlessPipe>>();
     }
 
@@ -50,7 +53,7 @@ public class FlatSummaryReportGenerator : IReportGenerator
             // Применяем оформление ко всему документу
             foreach (var ws in wb.Worksheets) ws.Cells().Style.Font.FontName = "Times New Roman";
 
-            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var savePath = _configService.GetSaveReportDirectory();
             var fileName = ExcelReportHelper.CreateReportName("Сводная ведомость для 1С", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
 
@@ -80,7 +83,7 @@ public class FlatSummaryReportGenerator : IReportGenerator
             // Применяем оформление ко всему документу
             foreach (var ws in wb.Worksheets) ws.Cells().Style.Font.FontName = "Times New Roman";
 
-            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var savePath = _configService.GetSaveReportDirectory();
             var fileName = ExcelReportHelper.CreateReportName("Сводная ведомость для 1С", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
 

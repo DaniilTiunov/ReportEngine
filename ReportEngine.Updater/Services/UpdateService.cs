@@ -1,6 +1,6 @@
 using System.IO;
 using System.Text.Json;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Config.Models;
 
 namespace ReportEngine.Updater.Services;
 

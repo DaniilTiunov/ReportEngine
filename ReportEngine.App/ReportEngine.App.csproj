@@ -7,6 +7,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UseWPF>true</UseWPF>
+        <AssemblyName>KIPARIS_PCM</AssemblyName>
         <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
         <ApplicationIcon>Resources\Icons\estimate_cost_icon_213382_prev.ico</ApplicationIcon>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
@@ -14,6 +15,11 @@
         <UseWindowsForms>False</UseWindowsForms>
         <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
         <UseUTF8>true</UseUTF8>
+        <Company>ЭТАЛОН-ПРИБОР</Company>
+        <Product>КИПАРИС:PCM</Product>
+        <Description>КИПАРИС:PCM — система подготовки ТКП</Description>
+        <NoWarn>$(NoWarn);NU1701;CS1591</NoWarn>
+        <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
     </PropertyGroup>
 
     <ItemGroup>

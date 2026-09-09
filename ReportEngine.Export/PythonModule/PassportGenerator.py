@@ -78,7 +78,7 @@ def fillTitlePage(stand,doc,project):
     usualStyle = ParagraphStyle(
         'Normal',
         parent = styles['Normal'],
-        fontName ='Arial',
+        fontName ='TimesNewRoman',  # вместо 'Arial'
         encoding ='UTF-8',
         fontSize = 7
     )
@@ -86,7 +86,7 @@ def fillTitlePage(stand,doc,project):
     titleStyle = ParagraphStyle(
         'Normal',
         parent = styles['Normal'],
-        fontName ='Arial-Bold',
+        fontName ='TimesNewRoman-Bold',  # вместо 'Arial-Bold'
         encoding ='UTF-8',
         fontSize = 16,
         alignment = TA_CENTER,
@@ -139,30 +139,30 @@ def fillBodyPage(stand,doc,project):
     usualStyle = ParagraphStyle(
         name = 'Normal',
         parent = styles['Normal'],
-        fontName ='Arial',
+        fontName ='TimesNewRoman',  # вместо 'Arial'
         encoding ='UTF-8',
         fontSize = 8,
         firstLineIndent = 12,
         spaceAfter = 0.5
     )
-
+    
     titleStyle = ParagraphStyle(
         name = 'Title',
         parent = styles['Normal'],
-        fontName ='Arial-Bold',
+        fontName ='TimesNewRoman-Bold',  # вместо 'Arial-Bold'
         encoding ='UTF-8',
         fontSize = 8,
         spaceAfter = 6,
         alignment = TA_CENTER
     )
-
+    
     noteStyle = ParagraphStyle(
         name = 'Note',
         parent = styles['Normal'],
-        fontName ='Arial-Bold',
+        fontName ='TimesNewRoman-Bold',  # вместо 'Arial-Bold'
         encoding ='UTF-8',
         fontSize = 6,
-        firstLineIndent = 12        
+        firstLineIndent = 12
     )
 
     leftPartContent = [ Paragraph(text = "1. Основные сведения об изделии и и технические данные", 

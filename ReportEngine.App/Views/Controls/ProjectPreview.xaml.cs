@@ -30,42 +30,28 @@ public partial class ProjectPreview : UserControl
                 OnPasteExecuted,
                 OnPasteCanExecute));
 
-        Loaded += async (_, __) => await InitializeDataAndRecalculateAsync(_projectViewModel);
-
-        PreviewKeyDown += StandObvView_PreviewKeyDown;
+        //Loaded += OnLoaded;
     }
 
-    private async Task InitializeDataAndRecalculateAsync(ProjectViewModel projectViewModel)
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        Loaded -= OnLoaded;
+
+        Dispatcher.BeginInvoke(
+            DispatcherPriority.ContextIdle,
+            new Action(async () =>
+            {
+                await InitializeDataAndRecalculateAsync(
+                    _projectViewModel);
+            }));
+    }
+
+    private async Task InitializeDataAndRecalculateAsync(
+        ProjectViewModel projectViewModel)
     {
         await projectViewModel.OnObvyazkiInStandChanged();
         await projectViewModel.OnFramesInStandChanged();
         await projectViewModel.OnStandsInProjectChanged();
-    }
-
-    private async Task InitializeDataAsync(ProjectViewModel projectViewModel)
-    {
-        await projectViewModel.LoadStandsDataAsync();
-        await projectViewModel.LoadObvyazkiAsync();
-        await projectViewModel.LoadAllAvaileDataAsync();
-        await projectViewModel.LoadPurposesInStandsAsync();
-    }
-
-    // Защита от автоповтора F5
-    private async void StandObvView_PreviewKeyDown(object sender, KeyEventArgs e)
-    {
-        if (e.Key != Key.F5 || e.IsRepeat)
-            return;
-
-        e.Handled = true;
-
-        try
-        {
-            await InitializeDataAsync(_projectViewModel);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(ex.Message);
-        }
     }
 
     private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -77,7 +63,7 @@ public partial class ProjectPreview : UserControl
         scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta);
         e.Handled = true;
     }
-    
+
     private void OnPasteCanExecute(object sender, CanExecuteRoutedEventArgs e)
     {
         if (DataContext is ProjectViewModel projectViewModel &&

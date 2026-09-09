@@ -9,8 +9,8 @@ using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
 using ReportEngine.Shared.Helpers;
+using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -20,16 +20,19 @@ public class FinPlanReportGenerator : IReportGenerator
     private readonly ParametersStore _parametersStore;
     private readonly IGenericBaseRepository<StainlessPipe, StainlessPipe> _pipesRepository;
     private readonly ProjectInfoRepository _projectInfoRepository;
+    private readonly ReportEngineConfigService _configService;
 
     public FinPlanReportGenerator(
         ProjectInfoRepository projectInfoRepository,
         IContainerRepository containerRepository,
         ParametersStore parametersStore,
-        IServiceProvider serviceProvider)
+        IServiceProvider serviceProvider, 
+        ReportEngineConfigService configService)
     {
         _projectInfoRepository = projectInfoRepository;
         _containerRepository = containerRepository;
         _parametersStore = parametersStore;
+        _configService = configService;
         _pipesRepository = serviceProvider.GetRequiredService<IGenericBaseRepository<StainlessPipe, StainlessPipe>>();
     }
 
@@ -39,11 +42,7 @@ public class FinPlanReportGenerator : IReportGenerator
     {
         var project = await _projectInfoRepository.GetFullProjectbyIdAsync(projectId);
         var pipes = await _pipesRepository.GetAllAsync();
-
-
-        //принудительно загружаем настройки при генерации отчета
-        //await _parametersStore.LoadSettingsDataAsync();
-
+        
         using (var wb = new XLWorkbook())
         {
             const string sellCostWorksheetName = "Стоимость продажи";
@@ -93,7 +92,7 @@ public class FinPlanReportGenerator : IReportGenerator
                 ws.Columns().AdjustToContents();
             }
 
-            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var savePath = _configService.GetSaveReportDirectory();
 
             var fileName = ExcelReportHelper.CreateReportName("Финплан", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
@@ -157,7 +156,7 @@ public class FinPlanReportGenerator : IReportGenerator
                 ws.Columns().AdjustToContents();
             }
 
-            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var savePath = _configService.GetSaveReportDirectory();
 
             var fileName = ExcelReportHelper.CreateReportName("Финплан", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);

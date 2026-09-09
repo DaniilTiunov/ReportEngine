@@ -128,7 +128,7 @@ def fillStandPage(stand, project, tableSplittingInfo = None):
     tableContentStyle = ParagraphStyle(
         'TableContent',
         parent = styles['Normal'],
-        fontName ='Arial',
+        fontName ='TimesNewRoman',  # вместо 'Arial'
         encoding ='UTF-8',
         fontSize = 6,
         wordWrap = 'LTR',
@@ -139,27 +139,26 @@ def fillStandPage(stand, project, tableSplittingInfo = None):
     otherHeaderStyle = ParagraphStyle(
         'otherHeader',
         parent = styles['Normal'],
-        fontName ='Arial-Bold',
+        fontName ='TimesNewRoman-Bold',  # вместо 'Arial-Bold'
         encoding ='UTF-8',
         fontSize = 7,
         wordWrap = 'LTR',
         alignment = TA_CENTER,
         leading = 7
-
     )
-
-
+    
     cyrillicStyle = ParagraphStyle(
         'Normal',
         parent = styles['Normal'],
-        fontName ='Arial',
+        fontName ='TimesNewRoman',  # вместо 'Arial'
         encoding ='UTF-8',
         fontSize = 6,
         wordWrap = 'LTR'
     )
 
 
-    invisibleText = '&nbsp;'
+
+invisibleText = '&nbsp;'
 
     testExecution = tableSplittingInfo is None
 

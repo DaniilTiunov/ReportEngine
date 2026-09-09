@@ -3,7 +3,7 @@
     FontSize="14"
     Height="800"
     Title="MainWindow"
-    Width="1280"
+    Width="1350"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d"
@@ -53,7 +53,7 @@
                             FontWeight="Bold"
                             Foreground="White"
                             Margin="10,0,0,0"
-                            Text="Менеджер Стенды КИПиА"
+                            Text="Менеджер КИПАРИС:PCM"
                             VerticalAlignment="Center" />
                     </StackPanel>
 

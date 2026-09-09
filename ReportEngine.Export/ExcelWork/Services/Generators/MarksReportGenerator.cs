@@ -6,17 +6,21 @@ using ReportEngine.Domain.Repositories;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
 public class MarksReportGenerator : IReportGenerator
 {
     private readonly ProjectInfoRepository _projectInfoRepository;
+    private readonly ReportEngineConfigService _configService;
 
-    public MarksReportGenerator(ProjectInfoRepository projectInfoRepository)
+    public MarksReportGenerator(
+        ProjectInfoRepository projectInfoRepository, 
+        ReportEngineConfigService configService)
     {
         _projectInfoRepository = projectInfoRepository;
+        _configService = configService;
     }
 
     public ReportType Type => ReportType.MarksReport;
@@ -38,7 +42,7 @@ public class MarksReportGenerator : IReportGenerator
             ws.Cells().Style.Alignment.WrapText = true;
             ws.Columns().AdjustToContents();
 
-            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var savePath = _configService.GetSaveReportDirectory();
 
             var fileName = ExcelReportHelper.CreateReportName("Маркировка", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
@@ -65,7 +69,7 @@ public class MarksReportGenerator : IReportGenerator
             ws.Cells().Style.Alignment.WrapText = true;
             ws.Columns().AdjustToContents();
 
-            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var savePath = _configService.GetSaveReportDirectory();
 
             var fileName = ExcelReportHelper.CreateReportName("Маркировка", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);

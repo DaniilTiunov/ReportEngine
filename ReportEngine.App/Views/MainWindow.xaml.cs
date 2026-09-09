@@ -14,14 +14,11 @@ using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Config.Models;
 using AboutProgram = ReportEngine.App.Views.Windows.AboutProgram;
 
-namespace ReportEngine.App;
+namespace ReportEngine.App.Views;
 
-/// <summary>
-///     Interaction logic for MainWindow.xaml
-/// </summary>
 public partial class MainWindow : Window //Это так называемый "Code Behind" файл для MainWindow.xaml
 {
     private readonly ExceptionService _exceptionService;
@@ -63,14 +60,14 @@ public partial class MainWindow : Window //Это так называемый "C
                 
                 if (update != null)
                 {
-                    Title = $"Стенды КИПиА v{update.Version} ({update.Channel})";
+                    Title = $"КИПАРИС:PCM v{update.Version} ({update.Channel})";
                     return;
                 }
             }
         }
         catch { }
         
-        Title = "Стенды КИПиА";
+        Title = "КИПАРИС:PCM";
     }
     
     // Событие загрузки окна

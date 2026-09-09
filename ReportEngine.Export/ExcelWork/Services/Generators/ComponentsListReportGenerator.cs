@@ -6,19 +6,23 @@ using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
 using ReportEngine.Shared.Helpers;
 using System.Diagnostics;
+using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
 public class ComponentListReportGenerator : IReportGenerator
 {
     private readonly ProjectInfoRepository _projectInfoRepository;
+    private readonly ReportEngineConfigService _configService;
 
-    public ComponentListReportGenerator(ProjectInfoRepository projectInfoRepository)
+    public ComponentListReportGenerator(
+        ProjectInfoRepository projectInfoRepository, 
+        ReportEngineConfigService configService)
     {
         _projectInfoRepository = projectInfoRepository;
+        _configService = configService;
     }
 
     public ReportType Type => ReportType.ComponentsListReport;
@@ -57,7 +61,7 @@ public class ComponentListReportGenerator : IReportGenerator
                 ws.Rows().AdjustToContents();
             }
 
-            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var savePath = _configService.GetSaveReportDirectory();
             var fileName = ExcelReportHelper.CreateReportName("Ведомость комплектующих", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
 
@@ -100,7 +104,7 @@ public class ComponentListReportGenerator : IReportGenerator
                 ws.Rows().AdjustToContents();
             }
 
-            var savePath = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var savePath = _configService.GetSaveReportDirectory();
             var fileName = ExcelReportHelper.CreateReportName("Ведомость комплектующих", "xlsx");
             var fullSavePath = Path.Combine(savePath, fileName);
 

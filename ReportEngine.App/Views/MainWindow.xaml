@@ -3,12 +3,12 @@
     FontFamily="Bahnschrift"
     Foreground="{DynamicResource PrimaryForeground}"
     ResizeMode="CanResize"
-    Title="Стенды КИПиА"
+    Title="КИПАРИС:PCM"
     WindowStartupLocation="CenterScreen"
     WindowState="Normal"
     WindowStyle="None"
     mc:Ignorable="d"
-    x:Class="ReportEngine.App.MainWindow"
+    x:Class="ReportEngine.App.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:converters="clr-namespace:ReportEngine.App.Display"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -127,8 +127,8 @@
             <Menu
                 DockPanel.Dock="Top"
                 FontFamily="Bahnschrift"
-                FontSize="14"
-                Height="25">
+                FontSize="16"
+                Height="35">
                 <Menu.ItemsPanel>
                     <ItemsPanelTemplate>
                         <DockPanel HorizontalAlignment="Stretch" />
@@ -265,7 +265,7 @@
                     Click="OpenLogger_Click"
                     Header="📜 Логгер"
                     HorizontalAlignment="Right"
-                    Width="80" />
+                    Width="110" />
             </Menu>
 
             <!--  StatusBar  -->
@@ -275,7 +275,7 @@
                 BorderThickness="0,1,0,0"
                 DockPanel.Dock="Bottom"
                 FontFamily="Bahnschrift"
-                Height="34">
+                Height="40">
                 <StatusBar.ItemsPanel>
                     <ItemsPanelTemplate>
                         <Grid>
@@ -295,11 +295,11 @@
 
                 <!--  Пользователь  -->
                 <StatusBarItem Grid.Column="0">
-                    <TextBlock FontSize="14" Text="👤" />
+                    <TextBlock FontSize="16" Text="👤" />
                 </StatusBarItem>
                 <StatusBarItem Grid.Column="1">
                     <TextBlock
-                        FontSize="14"
+                        FontSize="16"
                         Margin="4,0,0,0"
                         Text="{Binding CurrentUserLogin}" />
                 </StatusBarItem>
@@ -311,7 +311,7 @@
                 <!--  Права доступа  -->
                 <StatusBarItem Grid.Column="3">
                     <TextBlock
-                        FontSize="12"
+                        FontSize="14"
                         Foreground="{DynamicResource PrimaryForeground}"
                         Opacity="0.8"
                         Text="{Binding CurrentUser.SystemRole, Converter={StaticResource TranslateUserRole}}" />
@@ -326,7 +326,7 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock FontSize="14" Text="🗄️" />
                         <TextBlock
-                            FontSize="13"
+                            FontSize="16"
                             Margin="4,0,0,0"
                             Text="{Binding DatabaseMode}" />
                     </StackPanel>
@@ -350,7 +350,7 @@
                                 Width="16" />
                         </Button>
                         <TextBlock
-                            FontSize="13"
+                            FontSize="16"
                             Margin="4,0,0,0"
                             Text="{Binding MainWindowModel.ConnectionStatusMessage}" />
                     </StackPanel>
@@ -434,6 +434,7 @@
                                     Height="28"
                                     ToolTip="Обновить список">
                                     <materialDesign:PackIcon
+                                        Foreground="{DynamicResource PrimaryForeground}"
                                         Height="18"
                                         Kind="Refresh"
                                         Width="18" />

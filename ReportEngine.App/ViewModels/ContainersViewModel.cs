@@ -1,7 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -9,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.Enums;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
-using ReportEngine.App.Services.Notification;
 using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories.Interfaces;
@@ -18,8 +16,7 @@ using ReportEngine.Domain.Entities.Other;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
-using ReportEngine.Shared.Config.Directory;
-using ReportEngine.Shared.Config.JsonHelpers;
+using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -33,6 +30,7 @@ public partial class ContainersViewModel : ObservableObject
     private readonly IProjectInfoRepository _projectInfoRepository;
     private readonly IServiceProvider _serviceProvider;
     private readonly IReportService _reportService;
+    private readonly ReportEngineConfigService _configService;
     
     [ObservableProperty] private ObservableCollection<ContainerBatch> _allProjectBatches = new();
     [ObservableProperty] private ObservableCollection<Stand> _standsInProject = new();
@@ -62,11 +60,12 @@ public partial class ContainersViewModel : ObservableObject
         ProjectViewModel projectViewModel,
         ContainerService containerService,
         INotificationService notificationService,
-        IContainerRepository containerRepository, 
-        IDialogService dialogService, 
-        IProjectInfoRepository projectInfoRepository, 
-        IServiceProvider serviceProvider, 
-        IReportService reportService)
+        IContainerRepository containerRepository,
+        IDialogService dialogService,
+        IProjectInfoRepository projectInfoRepository,
+        IServiceProvider serviceProvider,
+        IReportService reportService,
+        ReportEngineConfigService configService)
     {
         _projectViewModel = projectViewModel;
         _containerService = containerService;
@@ -76,7 +75,8 @@ public partial class ContainersViewModel : ObservableObject
         _projectInfoRepository = projectInfoRepository;
         _serviceProvider = serviceProvider;
         _reportService = reportService;
-        
+        _configService = configService;
+
         _ = InitializeAsync();
         
         InitCommands();
@@ -378,7 +378,7 @@ public partial class ContainersViewModel : ObservableObject
         if (_notificationService.ShowConfirmation(
                 $"Отчёт \"{reportName}\" по выбранной партии создана!\nОткрыть папку с отчётами?"))
         {
-            var reportDir = JsonHandler.GetSaveReportDirectory(DirectoryHelper.GetConfigPath());
+            var reportDir = _configService.GetSaveReportDirectory();
             Process.Start("explorer.exe", reportDir);
         }
     }

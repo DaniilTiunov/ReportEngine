@@ -5,7 +5,6 @@ using System.Text.Json;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using ReportEngine.Shared.Config.JsonHelpers;
 using ReportEngine.Updater.Helpers;
 using ReportEngine.Updater.Models;
 using ReportEngine.Updater.Services;
