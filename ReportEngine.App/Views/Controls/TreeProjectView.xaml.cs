@@ -14,7 +14,6 @@ namespace ReportEngine.App.Views.Controls;
 public partial class TreeProjectView : UserControl, IDisposable
 {
     private readonly ContainersViewModel _containersViewModel;
-    private readonly DdsService _ddsService;
     private readonly ExceptionService _exceptionService;
     private readonly ProjectViewModel _projectViewModel;
     private bool _disposed;
@@ -23,15 +22,13 @@ public partial class TreeProjectView : UserControl, IDisposable
         TreeViewModel treeViewModel,
         ProjectViewModel projectViewModel,
         ExceptionService exceptionService,
-        ContainersViewModel containersViewModel,
-        DdsService ddsService)
+        ContainersViewModel containersViewModel)
     {
-        InitializeComponent();
+        DataContext = treeViewModel;
         _projectViewModel = projectViewModel;
         _exceptionService = exceptionService;
         _containersViewModel = containersViewModel;
-        _ddsService = ddsService;
-        DataContext = treeViewModel;
+        InitializeComponent();
     }
 
     public void Dispose()
@@ -181,7 +178,6 @@ public partial class TreeProjectView : UserControl, IDisposable
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 0, 5, 0),
             FontSize = 16,
-            FontFamily = new FontFamily("Bahnschrift"),
             Style = (Style)FindResource(typeof(TextBlock))
         };
 

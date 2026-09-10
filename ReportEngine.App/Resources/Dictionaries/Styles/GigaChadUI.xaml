@@ -19,9 +19,7 @@
     <SolidColorBrush Color="Green" x:Key="PrimaryHueDarkBrush" />
 
     <FontFamily x:Key="AppFontFamily">Segoe UI Variable Text, Segoe UI</FontFamily>
-    <BitmapImage
-        UriSource="pack://application:,,,/KIPARIS_PCM;component/Resources/Icons/estimate_cost_icon_213382.ico"
-        x:Key="ApplicationWindowIcon" />
+    <BitmapImage UriSource="pack://application:,,,/KIPARIS_PCM;component/Resources/Icons/estimate_cost_icon_213382.ico" x:Key="ApplicationWindowIcon" />
 
     <!--  ======================================================  -->
     <!--  ОБЩИЕ ЭФФЕКТЫ  -->
@@ -730,6 +728,9 @@
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
+        <Setter Property="Padding" Value="1" />
     </Style>
 
     <Style BasedOn="{StaticResource MahApps.Styles.TabItem}" TargetType="TabItem">
@@ -737,15 +738,17 @@
         <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
-        <Setter Property="Padding" Value="6,2" />
+        <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Padding" Value="3,3" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TabItem">
                     <Border
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="1"
-                        CornerRadius="2,2,0,0"
+                        BorderThickness="1,1,1,0"
+                        CornerRadius="6,6,0,0"
                         Name="Border"
                         Padding="{TemplateBinding Padding}">
                         <ContentPresenter
@@ -757,10 +760,15 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Background" TargetName="Border" Value="{DynamicResource PrimaryColor}" />
-                            <Setter Property="BorderBrush" TargetName="Border" Value="{DynamicResource BorderColor}" />
+                            <Setter Property="BorderBrush" TargetName="Border" Value="{DynamicResource AccentColor}" />
+                            <Setter Property="Foreground" Value="{DynamicResource AccentColor}" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" TargetName="Border" Value="{DynamicResource PrimaryColor}" />
+                            <Setter Property="Background" TargetName="Border" Value="{DynamicResource RowHoverColor}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{DynamicResource DisabledForeground}" />
+                            <Setter Property="Opacity" Value="0.65" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -768,41 +776,10 @@
         </Setter>
     </Style>
 
-    <Style TargetType="TabItem" x:Key="GeneratedTabItem">
-        <Setter Property="OverridesDefaultStyle" Value="True" />
-        <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
-        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
-        <Setter Property="Padding" Value="6,2" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="TabItem">
-                    <Border
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="1"
-                        CornerRadius="2,2,0,0"
-                        Name="Border"
-                        Padding="{TemplateBinding Padding}">
-                        <ContentPresenter
-                            ContentSource="Header"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            x:Name="ContentSite" />
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" TargetName="Border" Value="{DynamicResource PrimaryColor}" />
-                            <Setter Property="BorderBrush" TargetName="Border" Value="{DynamicResource BorderColor}" />
-                        </Trigger>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" TargetName="Border" Value="{DynamicResource PrimaryColor}" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+    <Style
+        BasedOn="{StaticResource {x:Type TabItem}}"
+        TargetType="TabItem"
+        x:Key="GeneratedTabItem" />
 
     <!--  ======================================================  -->
     <!--  СТИЛИ ДЛЯ ContextMenu / GroupBox / PopupBox  -->
