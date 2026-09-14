@@ -8,7 +8,7 @@ using Serilog;
 
 namespace ReportEngine.App;
 
-public static class StartUp
+public static class Startup
 {
     private static Mutex _mutex;
 

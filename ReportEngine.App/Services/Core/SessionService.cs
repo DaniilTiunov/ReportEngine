@@ -17,7 +17,7 @@ public class SessionService : INotifyPropertyChanged
         _auditService = auditService;
         _userRepository = userRepository;
 
-        if (StartUp.CanConnect)
+        if (Startup.CanConnect)
             FirstStartSession();
         else
             CurrentUser = new User

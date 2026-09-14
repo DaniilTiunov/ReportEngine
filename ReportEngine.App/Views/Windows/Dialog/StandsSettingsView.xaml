@@ -35,12 +35,7 @@
 
     <!--  Основной контейнер с тенью и рамкой  -->
     <DockPanel>
-        <Separator
-            Background="{DynamicResource PrimaryForeground}"
-            BorderThickness="0"
-            DockPanel.Dock="Top"
-            Height="3"
-            Margin="20,0,20,8" />
+        <Separator DockPanel.Dock="Top" Style="{DynamicResource WindowTitleSeparatorStyle}" />
         <Border
             BorderBrush="#22000000"
             BorderThickness="0,1,0,0"

@@ -81,7 +81,7 @@ public partial class MainWindow : MetroWindow //Это так называемы
 
             MainWindow_StartUpState();
 
-            if (StartUp.CanConnect) await _mainViewModel.ShowAllProjectsAsync();
+            if (Startup.CanConnect) await _mainViewModel.ShowAllProjectsAsync();
 
             _projectsView = CollectionViewSource.GetDefaultView(
                 _mainViewModel.MainWindowModel.AllProjects);

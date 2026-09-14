@@ -180,8 +180,8 @@ public class SettingsViewModel : BaseViewModel
 
             _configService.SetConnectionString(newConnectionString);
 
-            StartUp.ReleaseMutex();
-            StartUp.DisposeMutex();
+            Startup.ReleaseMutex();
+            Startup.DisposeMutex();
 
             Process.Start(new ProcessStartInfo
             {

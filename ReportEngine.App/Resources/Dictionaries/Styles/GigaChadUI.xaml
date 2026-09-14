@@ -38,10 +38,11 @@
         BasedOn="{StaticResource MahApps.Styles.Button.MetroWindow.Base}"
         TargetType="Button"
         x:Key="ThemedWindowCaptionButtonStyle">
-        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Margin" Value="0" />
         <Setter Property="Focusable" Value="False" />
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="MaxHeight" Value="42" />
@@ -53,7 +54,7 @@
                 <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Background" Value="{DynamicResource SelectedRowBackground}" />
+                <Setter Property="Background" Value="{DynamicResource ButtonHoverBackground}" />
                 <Setter Property="Foreground" Value="{DynamicResource SelectedRowForeground}" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
@@ -81,6 +82,8 @@
 
     <!--  WindowButtonCommands выбирает Light/Dark-варианты самостоятельно, поэтому настраиваем оба.  -->
     <Style BasedOn="{StaticResource MahApps.Styles.WindowButtonCommands}" TargetType="mah:WindowButtonCommands">
+        <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
         <Setter Property="LightMinButtonStyle" Value="{StaticResource ThemedWindowCaptionButtonStyle}" />
         <Setter Property="LightMaxButtonStyle" Value="{StaticResource ThemedWindowCaptionButtonStyle}" />
         <Setter Property="LightCloseButtonStyle" Value="{StaticResource ThemedWindowCloseButtonStyle}" />
@@ -640,17 +643,18 @@
     </Style>
 
     <Style TargetType="Separator">
-        <Setter Property="Background" Value="{DynamicResource BorderColor}" />
+        <Setter Property="Background" Value="{DynamicResource AccentColor}" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="Height" Value="1" />
+        <Setter Property="Height" Value="3" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="Margin" Value="8,5" />
+        <Setter Property="Margin" Value="20,5,20,5" />
+        <Setter Property="Padding" Value="5" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="UseLayoutRounding" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Separator">
-                    <Border Background="{TemplateBinding Background}" />
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{DynamicResource AccentColor}" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -660,9 +664,7 @@
     <Style
         BasedOn="{StaticResource {x:Type Separator}}"
         TargetType="Separator"
-        x:Key="WindowTitleSeparatorStyle">
-        <Setter Property="Margin" Value="20,0,20,8" />
-    </Style>
+        x:Key="WindowTitleSeparatorStyle" />
 
     <Style TargetType="StatusBar">
         <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
