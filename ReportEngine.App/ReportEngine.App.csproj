@@ -109,49 +109,50 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2"/>
-        <PackageReference Include="ConsoleControl.WPF" Version="1.3.0"/>
-        <PackageReference Include="DevExpress.AIIntegration.Wpf" Version="25.2.6"/>
-        <PackageReference Include="DevExpress.AIIntegration.Wpf.Chat" Version="25.2.6"/>
-        <PackageReference Include="DevExpress.Wpf" Version="25.2.6"/>
-        <PackageReference Include="Dirkster.AvalonDock" Version="4.72.1"/>
-        <PackageReference Include="Dragablz" Version="0.0.3.234"/>
-        <PackageReference Include="Extended.Wpf.Toolkit" Version="5.0.0"/>
-        <PackageReference Include="GigaChatAdapter" Version="1.0.7"/>
-        <PackageReference Include="MahApps.Metro" Version="3.0.0-rc0529"/>
-        <PackageReference Include="Mapster" Version="7.4.0"/>
-        <PackageReference Include="MaterialDesignColors" Version="5.3.0"/>
-        <PackageReference Include="MaterialDesignExtensions" Version="3.3.0"/>
-        <PackageReference Include="MaterialDesignThemes" Version="5.3.0"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.10">
+        <PackageReference Include="CommunityToolkit.Mvvm"/>
+        <PackageReference Include="ConsoleControl.WPF"/>
+        <PackageReference Include="DevExpress.AIIntegration.Wpf"/>
+        <PackageReference Include="DevExpress.AIIntegration.Wpf.Chat"/>
+        <PackageReference Include="DevExpress.Wpf"/>
+        <PackageReference Include="Dirkster.AvalonDock"/>
+        <PackageReference Include="Dragablz"/>
+        <PackageReference Include="Extended.Wpf.Toolkit"/>
+        <PackageReference Include="GigaChatAdapter"/>
+        <PackageReference Include="MahApps.Metro"/>
+        <PackageReference Include="Mapster"/>
+        <PackageReference Include="MaterialDesignColors"/>
+        <PackageReference Include="MaterialDesignExtensions"/>
+        <PackageReference Include="MaterialDesignThemes"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.10"/>
-        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.10"/>
-        <PackageReference Include="Microsoft.Extensions.Http" Version="11.0.0-preview.3.26207.106"/>
-        <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135"/>
-        <PackageReference Include="Roslynator.Analyzers" Version="4.15.0">
+        <PackageReference Include="Microsoft.Extensions.Hosting"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions"/>
+        <PackageReference Include="Microsoft.Extensions.Http"/>
+        <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf"/>
+        <PackageReference Include="Roslynator.Analyzers">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Roslynator.CodeFixes" Version="4.15.0">
+        <PackageReference Include="Roslynator.CodeFixes">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Serilog" Version="4.3.0"/>
-        <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0"/>
-        <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.2"/>
-        <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0"/>
-        <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0"/>
-        <PackageReference Include="Serilog.Sinks.File" Version="7.0.0"/>
-        <PackageReference Include="Serilog.Sinks.Observable" Version="3.0.0"/>
-        <PackageReference Include="Serilog.Sinks.RichTextBox.Wpf" Version="1.1.0"/>
-        <PackageReference Include="Syncfusion.SfChat.WPF" Version="33.2.4"/>
-        <PackageReference Include="Syncfusion.SfSpreadsheet.WPF" Version="32.2.8"/>
-        <PackageReference Include="unvell.ReoGridWPF.dll" Version="3.3.0"/>
-        <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1"/>
+        <PackageReference Include="Serilog"/>
+        <PackageReference Include="Serilog.Extensions.Hosting"/>
+        <PackageReference Include="Serilog.Extensions.Logging"/>
+        <PackageReference Include="Serilog.Settings.Configuration"/>
+        <PackageReference Include="Serilog.Sinks.Console"/>
+        <PackageReference Include="Serilog.Sinks.File"/>
+        <PackageReference Include="Serilog.Sinks.Observable"/>
+        <PackageReference Include="Serilog.Sinks.RichTextBox.Wpf"/>
+        <PackageReference Include="Syncfusion.SfChat.WPF"/>
+        <PackageReference Include="Syncfusion.SfSpreadsheet.WPF"/>
+        <PackageReference Include="unvell.ReoGridWPF.dll"/>
+        <PackageReference Include="WindowsAPICodePack-Shell"/>
+        <PackageReference Include="WPF-UI" />
     </ItemGroup>
 
     <ItemGroup>
@@ -159,9 +160,9 @@
         <ProjectReference Include="..\ReportEngine.Export\ReportEngine.Export.csproj"/>
         <ProjectReference Include="..\ReportEngine.Extensions\ReportEngine.Extensions.csproj"/>
         <ProjectReference Include="..\ReportEngine.Shared\ReportEngine.Shared.csproj"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.10"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.10"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.10"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder"/>
     </ItemGroup>
 
     <ItemGroup>
