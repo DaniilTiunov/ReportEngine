@@ -73,11 +73,14 @@
                         x:Name="StandsList"
                         MaxHeight="300"
                         Background="{DynamicResource SecondaryColor}"
+                        BorderBrush="{DynamicResource SecondaryColor}"
                         FontSize="15"
                         Foreground="{DynamicResource PrimaryForeground}"
                         ItemContainerStyle="{DynamicResource ThemedWpfUiListViewItemStyle}"
                         ItemsSource="{Binding CurrentProjectModel.Stands}"
                         MouseDoubleClick="StandListView_MouseDoubleClick"
+                        ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
                         SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}"
                         SelectionChanged="StandsList_SelectionChanged"
                         SelectionMode="Extended">
@@ -85,7 +88,7 @@
                         <ui:ListView.View>
                             <ui:GridView>
 
-                                <GridViewColumn Width="40" DisplayMemberBinding="{Binding Number}">
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Number}">
                                     <GridViewColumn.Header>
                                         <ui:SymbolIcon
                                             Margin="4,0,0,0"
@@ -95,7 +98,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="120" DisplayMemberBinding="{Binding KKSCode}">
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding KKSCode}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -110,7 +113,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="200" DisplayMemberBinding="{Binding Design}">
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Design}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -125,7 +128,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="200" DisplayMemberBinding="{Binding SerialNumber}">
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding SerialNumber}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -140,7 +143,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="130" DisplayMemberBinding="{Binding BraceType}">
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding BraceType}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -155,7 +158,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="120" DisplayMemberBinding="{Binding Width}">
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Width}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -170,7 +173,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="120" DisplayMemberBinding="{Binding Weight}">
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Weight}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -185,7 +188,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="150" DisplayMemberBinding="{Binding StandSummCost}">
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding StandSummCost}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -249,7 +252,7 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.Column="0" HorizontalAlignment="Left">
-                                <Run FontSize="15" Text="Обвязки в стенде — " />
+                                <Run FontSize="15" Text="⚙️ Обвязки в стенде — " />
                                 <Run
                                     FontSize="15"
                                     FontWeight="Bold"
@@ -258,11 +261,13 @@
                             <TextBlock Grid.Column="1" MinWidth="200" />
                             <TextBlock Grid.Column="2" HorizontalAlignment="Right">
                                 <Run FontSize="15" Text="Общее количество датчиков в стенде - " />
+                                <Run Text=" (" />
                                 <Run
                                     FontSize="15"
                                     FontWeight="Bold"
+                                    Foreground="{DynamicResource StandWeightColor}"
                                     Text="{Binding CurrentProjectModel.SelectedStand.StandSensorsQuantity, TargetNullValue='(нет данных)'}" />
-                                <Run FontSize="14" Text="шт." />
+                                <Run Text=" шт.)" />
                             </TextBlock>
                         </Grid>
                     </GroupBox.Header>
@@ -270,89 +275,141 @@
                     <ui:ListView
                         x:Name="ObvyazkiListView"
                         MaxHeight="300"
+                        Background="{DynamicResource SecondaryColor}"
+                        BorderBrush="{DynamicResource SecondaryColor}"
                         FontSize="15"
                         Foreground="{DynamicResource PrimaryForeground}"
                         ItemContainerStyle="{DynamicResource ThemedWpfUiListViewItemStyle}"
                         ItemsSource="{Binding CurrentProjectModel.SelectedStand.ObvyazkiInStand}"
                         MouseDoubleClick="ListView_MouseDoubleClick"
+                        ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
                         SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand, Mode=TwoWay}">
 
                         <ui:ListView.View>
                             <ui:GridView>
-                                <GridViewColumn Width="60" DisplayMemberBinding="{Binding NN}">
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding NN}">
                                     <GridViewColumn.Header>
-                                        <ui:SymbolIcon Symbol="NumberSymbol24" />
+                                        <ui:SymbolIcon Foreground="{DynamicResource PrimaryForeground}" Symbol="NumberSymbol24" />
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding ObvyazkaName}">
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding ObvyazkaName}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
-                                            <ui:SymbolIcon Margin="0,0,6,0" Symbol="Pin24" />
-                                            <TextBlock VerticalAlignment="Center" Text="Тип" />
+                                            <ui:SymbolIcon
+                                                Margin="0,0,6,0"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Symbol="Pin24" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Text="Тип" />
                                         </StackPanel>
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="120" DisplayMemberBinding="{Binding MaterialLine}">
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding MaterialLine}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
-                                            <ui:SymbolIcon Margin="0,0,6,0" Symbol="Cube24" />
-                                            <TextBlock VerticalAlignment="Center" Text="Материал" />
+                                            <ui:SymbolIcon
+                                                Margin="0,0,6,0"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Symbol="Cube24" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Text="Материал" />
                                         </StackPanel>
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="120" DisplayMemberBinding="{Binding Armature}">
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Armature}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
-                                            <ui:SymbolIcon Margin="0,0,6,0" Symbol="Settings24" />
-                                            <TextBlock VerticalAlignment="Center" Text="Арматура" />
+                                            <ui:SymbolIcon
+                                                Margin="0,0,6,0"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Symbol="Settings24" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Text="Арматура" />
                                         </StackPanel>
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="120" DisplayMemberBinding="{Binding TreeSocket}">
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding TreeSocket}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
-                                            <ui:SymbolIcon Margin="0,0,6,0" Symbol="BranchFork24" />
-                                            <TextBlock VerticalAlignment="Center" Text="Тройник" />
+                                            <ui:SymbolIcon
+                                                Margin="0,0,6,0"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Symbol="BranchFork24" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Text="Тройник" />
                                         </StackPanel>
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="120" DisplayMemberBinding="{Binding KMCH}">
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding KMCH}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
-                                            <ui:SymbolIcon Margin="0,0,6,0" Symbol="Options24" />
-                                            <TextBlock VerticalAlignment="Center" Text="КМЧ" />
+                                            <ui:SymbolIcon
+                                                Margin="0,0,6,0"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Symbol="Options24" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Text="КМЧ" />
                                         </StackPanel>
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="120" DisplayMemberBinding="{Binding FirstSensorType}">
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding FirstSensorType}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
-                                            <ui:SymbolIcon Margin="0,0,6,0" Symbol="DeviceEq24" />
-                                            <TextBlock VerticalAlignment="Center" Text="Датчик 1" />
+                                            <ui:SymbolIcon
+                                                Margin="0,0,6,0"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Symbol="DeviceEq24" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Text="Датчик 1" />
                                         </StackPanel>
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="120" DisplayMemberBinding="{Binding SecondSensorType}">
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding SecondSensorType}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
-                                            <ui:SymbolIcon Margin="0,0,6,0" Symbol="DeviceEq24" />
-                                            <TextBlock VerticalAlignment="Center" Text="Датчик 2" />
+                                            <ui:SymbolIcon
+                                                Margin="0,0,6,0"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Symbol="DeviceEq24" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Text="Датчик 2" />
                                         </StackPanel>
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="120" DisplayMemberBinding="{Binding ThirdSensorType}">
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding ThirdSensorType}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
-                                            <ui:SymbolIcon Margin="0,0,6,0" Symbol="DeviceEq24" />
-                                            <TextBlock VerticalAlignment="Center" Text="Датчик 3" />
+                                            <ui:SymbolIcon
+                                                Margin="0,0,6,0"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Symbol="DeviceEq24" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Text="Датчик 3" />
                                         </StackPanel>
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
@@ -433,23 +490,24 @@
                             <DataGridTemplateColumn Width="90" Header="Выбрать">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ui:Button
+                                        <Button
                                             Margin="2,0,2,0"
                                             Padding="5,0,5,0"
                                             Command="{Binding DataContext.ProjectCommandProvider.OpenAllSortamentsDialogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                             CommandParameter="{Binding}"
-                                            Content="Выбрать"
-                                            Style="{DynamicResource FluentButton}" />
+                                            Content="Выбрать" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                             <DataGridTemplateColumn Width="70" Header="Авто">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <CheckBox
+                                        <ui:ToggleSwitch
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center"
-                                            IsChecked="{Binding IsAutoCalculationEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            IsChecked="{Binding IsAutoCalculationEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            Style="{DynamicResource FluentToggleSwitchStyle}"
+                                            ToolTip="Автоматический расчёт" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -515,23 +573,24 @@
                             <DataGridTemplateColumn Header="Выбрать">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ui:Button
+                                        <Button
                                             Margin="2,0,2,0"
                                             Padding="5,0,5,0"
                                             Command="{Binding DataContext.ProjectCommandProvider.OpenAllSortamentsDialogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                             CommandParameter="{Binding}"
-                                            Content="Выбрать"
-                                            Style="{DynamicResource FluentButton}" />
+                                            Content="Выбрать" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                             <DataGridTemplateColumn Width="70" Header="Авто">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <CheckBox
+                                        <ui:ToggleSwitch
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center"
-                                            IsChecked="{Binding IsAutoCalculationEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            IsChecked="{Binding IsAutoCalculationEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            Style="{DynamicResource FluentToggleSwitchStyle}"
+                                            ToolTip="Автоматический расчёт" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -597,23 +656,24 @@
                             <DataGridTemplateColumn Header="Выбрать">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ui:Button
+                                        <Button
                                             Margin="2,0,2,0"
                                             Padding="5,0,5,0"
                                             Command="{Binding DataContext.ProjectCommandProvider.OpenAllSortamentsDialogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                             CommandParameter="{Binding}"
-                                            Content="Выбрать"
-                                            Style="{DynamicResource FluentButton}" />
+                                            Content="Выбрать" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                             <DataGridTemplateColumn Width="70" Header="Авто">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <CheckBox
+                                        <ui:ToggleSwitch
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center"
-                                            IsChecked="{Binding IsAutoCalculationEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            IsChecked="{Binding IsAutoCalculationEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            Style="{DynamicResource FluentToggleSwitchStyle}"
+                                            ToolTip="Автоматический расчёт" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -633,10 +693,7 @@
                     Grid.Column="0"
                     Margin="5"
                     HorizontalAlignment="Right">
-                    <ui:Button
-                        Command="{Binding ProjectCommandProvider.SaveAllChangesInComponentsCommand}"
-                        Content="💾 Сохранить все изменения"
-                        Style="{DynamicResource FluentButton}" />
+                    <Button Command="{Binding ProjectCommandProvider.SaveAllChangesInComponentsCommand}" Content="💾 Сохранить все изменения" />
                 </StackPanel>
             </Grid>
 
@@ -677,58 +734,147 @@
                         </Grid.ColumnDefinitions>
 
                         <!--  Рамы  -->
-                        <ListView
+                        <ui:ListView
                             Grid.Column="0"
                             MaxHeight="150"
+                            BorderBrush="{DynamicResource SecondaryColor}"
                             DisplayMemberPath="Name"
                             FontSize="15"
+                            Foreground="{DynamicResource PrimaryForeground}"
+                            ItemContainerStyle="{DynamicResource ThemedWpfUiListViewItemStyle}"
                             ItemsSource="{Binding CurrentProjectModel.SelectedStand.FramesInStand}"
+                            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
                             SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedFrame}">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn
-                                        Width="150"
-                                        DisplayMemberBinding="{Binding Name}"
-                                        Header="📌 Наименование" />
-                                    <GridViewColumn
-                                        Width="150"
-                                        DisplayMemberBinding="{Binding FrameType}"
-                                        Header="🏷 Тип" />
-                                    <GridViewColumn
-                                        Width="80"
-                                        DisplayMemberBinding="{Binding Width}"
-                                        Header="📏 Ширина" />
-                                    <GridViewColumn
-                                        Width="80"
-                                        DisplayMemberBinding="{Binding Height}"
-                                        Header="📐 Высота" />
-                                    <GridViewColumn
-                                        Width="80"
-                                        DisplayMemberBinding="{Binding Depth}"
-                                        Header="📏 Глубина" />
-                                    <GridViewColumn
-                                        Width="80"
-                                        DisplayMemberBinding="{Binding Weight}"
-                                        Header="⚖️ Масса" />
-                                    <GridViewColumn
-                                        Width="150"
-                                        DisplayMemberBinding="{Binding Designe}"
-                                        Header="📝 Описание" />
-                                </GridView>
-                            </ListView.View>
-                            <ListView.ContextMenu>
+
+                            <ui:ListView.View>
+                                <ui:GridView>
+                                    <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Name}">
+                                        <GridViewColumn.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <ui:SymbolIcon
+                                                    Margin="0,0,6,0"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
+                                                    Symbol="Pin24" />
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
+                                                    Text="Наименование" />
+                                            </StackPanel>
+                                        </GridViewColumn.Header>
+                                    </GridViewColumn>
+
+                                    <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding FrameType}">
+                                        <GridViewColumn.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <ui:SymbolIcon
+                                                    Margin="0,0,6,0"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
+                                                    Symbol="Tag24" />
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
+                                                    Text="Тип" />
+                                            </StackPanel>
+                                        </GridViewColumn.Header>
+                                    </GridViewColumn>
+
+                                    <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Width}">
+                                        <GridViewColumn.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <ui:SymbolIcon
+                                                    Margin="0,0,6,0"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
+                                                    Symbol="Ruler24" />
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
+                                                    Text="Ширина" />
+                                            </StackPanel>
+                                        </GridViewColumn.Header>
+                                    </GridViewColumn>
+
+                                    <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Height}">
+                                        <GridViewColumn.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <ui:SymbolIcon
+                                                    Margin="0,0,6,0"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
+                                                    Symbol="ArrowUp24" />
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
+                                                    Text="Высота" />
+                                            </StackPanel>
+                                        </GridViewColumn.Header>
+                                    </GridViewColumn>
+
+                                    <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Depth}">
+                                        <GridViewColumn.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <ui:SymbolIcon
+                                                    Margin="0,0,6,0"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
+                                                    Symbol="ArrowRight24" />
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
+                                                    Text="Глубина" />
+                                            </StackPanel>
+                                        </GridViewColumn.Header>
+                                    </GridViewColumn>
+
+                                    <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Weight}">
+                                        <GridViewColumn.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <ui:SymbolIcon
+                                                    Margin="0,0,6,0"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
+                                                    Symbol="ScaleFit24" />
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
+                                                    Text="Масса" />
+                                            </StackPanel>
+                                        </GridViewColumn.Header>
+                                    </GridViewColumn>
+
+                                    <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Designe}">
+                                        <GridViewColumn.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <ui:SymbolIcon
+                                                    Margin="0,0,6,0"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
+                                                    Symbol="DocumentText24" />
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    Foreground="{DynamicResource PrimaryForeground}"
+                                                    Text="Описание" />
+                                            </StackPanel>
+                                        </GridViewColumn.Header>
+                                    </GridViewColumn>
+                                </ui:GridView>
+
+                            </ui:ListView.View>
+                            <ui:ListView.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Command="{Binding ProjectCommandProvider.RemoveFrameStandCommand}" Header="🗑 Удалить раму" />
+                                    <MenuItem Command="{Binding ProjectCommandProvider.RemoveFrameStandCommand}" Header="Удалить раму">
+                                        <MenuItem.Icon>
+                                            <ui:SymbolIcon Foreground="IndianRed" Symbol="Delete24" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
                                 </ContextMenu>
-                            </ListView.ContextMenu>
-                        </ListView>
-                        <ui:Button
+                            </ui:ListView.ContextMenu>
+                        </ui:ListView>
+
+                        <Button
                             Grid.Column="1"
-                            MaxHeight="20"
-                            Margin="10,10,10,10"
+                            Width="30"
+                            Height="30"
+                            Margin="5,5,5,5"
                             Command="{Binding ProjectCommandProvider.ShowFrameDialogCommand}"
                             Content="➕"
-                            Style="{DynamicResource FluentButton}" />
+                            ToolTip="Добавить раму" />
                     </Grid>
                 </GroupBox>
 
@@ -738,8 +884,9 @@
                     Margin="5"
                     Padding="5"
                     BorderThickness="0">
+
                     <GroupBox.Header>
-                        <TextBlock>
+                        <ui:TextBlock>
                             <Run FontSize="15" Text="📦 Обвязки в проекте — " />
                             <Run
                                 FontSize="15"
@@ -752,55 +899,156 @@
                                 Foreground="{DynamicResource StandWeightColor}"
                                 Text="{Binding CurrentProjectModel.ObvyazkiInProject.Count, Mode=OneWay}" />
                             <Run Text=" шт.)" />
-                        </TextBlock>
+                        </ui:TextBlock>
                     </GroupBox.Header>
-                    <ListView
+
+                    <ui:ListView
                         MaxHeight="300"
+                        Background="{DynamicResource SecondaryColor}"
+                        BorderBrush="{DynamicResource SecondaryColor}"
                         FontSize="15"
+                        ItemContainerStyle="{DynamicResource ThemedWpfUiListViewItemStyle}"
                         ItemsSource="{Binding CurrentProjectModel.ObvyazkiInProject}"
+                        ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
                         SelectedItem="{Binding CurrentProjectModel.SelectedObvyazkaToCopy}">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn
-                                    Width="100"
-                                    DisplayMemberBinding="{Binding ObvyazkaName}"
-                                    Header="📌 Тип" />
-                                <GridViewColumn
-                                    Width="120"
-                                    DisplayMemberBinding="{Binding MaterialLine}"
-                                    Header="🧱 Материал" />
-                                <GridViewColumn
-                                    Width="120"
-                                    DisplayMemberBinding="{Binding Armature}"
-                                    Header="🔩 Арматура" />
-                                <GridViewColumn
-                                    Width="120"
-                                    DisplayMemberBinding="{Binding TreeSocket}"
-                                    Header="🔧 Тройник" />
-                                <GridViewColumn
-                                    Width="120"
-                                    DisplayMemberBinding="{Binding KMCH}"
-                                    Header="⚙️ КМЧ" />
-                                <GridViewColumn
-                                    Width="120"
-                                    DisplayMemberBinding="{Binding FirstSensorType}"
-                                    Header="📡 Датчик 1" />
-                                <GridViewColumn
-                                    Width="120"
-                                    DisplayMemberBinding="{Binding SecondSensorType}"
-                                    Header="📡 Датчик 2" />
-                                <GridViewColumn
-                                    Width="120"
-                                    DisplayMemberBinding="{Binding ThirdSensorType}"
-                                    Header="📡 Датчик 3" />
-                            </GridView>
-                        </ListView.View>
+
+                        <ui:ListView.View>
+                            <ui:GridView>
+
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding ObvyazkaName}">
+                                    <GridViewColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <ui:SymbolIcon
+                                                Margin="0,0,6,0"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Symbol="Pin24" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Text="Тип" />
+                                        </StackPanel>
+                                    </GridViewColumn.Header>
+                                </GridViewColumn>
+
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding MaterialLine}">
+                                    <GridViewColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <ui:SymbolIcon
+                                                Margin="0,0,6,0"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Symbol="Cube24" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Text="Материал" />
+                                        </StackPanel>
+                                    </GridViewColumn.Header>
+                                </GridViewColumn>
+
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Armature}">
+                                    <GridViewColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <ui:SymbolIcon
+                                                Margin="0,0,6,0"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Symbol="Settings24" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Text="Арматура" />
+                                        </StackPanel>
+                                    </GridViewColumn.Header>
+                                </GridViewColumn>
+
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding TreeSocket}">
+                                    <GridViewColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <ui:SymbolIcon
+                                                Margin="0,0,6,0"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Symbol="BranchFork24" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Text="Тройник" />
+                                        </StackPanel>
+                                    </GridViewColumn.Header>
+                                </GridViewColumn>
+
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding KMCH}">
+                                    <GridViewColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <ui:SymbolIcon
+                                                Margin="0,0,6,0"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Symbol="Options24" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Text="КМЧ" />
+                                        </StackPanel>
+                                    </GridViewColumn.Header>
+                                </GridViewColumn>
+
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding FirstSensorType}">
+                                    <GridViewColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <ui:SymbolIcon
+                                                Margin="0,0,6,0"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Symbol="Pulse24" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Text="Датчик 1" />
+                                        </StackPanel>
+                                    </GridViewColumn.Header>
+                                </GridViewColumn>
+
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding SecondSensorType}">
+                                    <GridViewColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <ui:SymbolIcon
+                                                Margin="0,0,6,0"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Symbol="Pulse24" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Text="Датчик 2" />
+                                        </StackPanel>
+                                    </GridViewColumn.Header>
+                                </GridViewColumn>
+
+                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding ThirdSensorType}">
+                                    <GridViewColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <ui:SymbolIcon
+                                                Margin="0,0,6,0"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Symbol="Pulse24" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Foreground="{DynamicResource PrimaryForeground}"
+                                                Text="Датчик 3" />
+                                        </StackPanel>
+                                    </GridViewColumn.Header>
+                                </GridViewColumn>
+
+                            </ui:GridView>
+                        </ui:ListView.View>
+
                         <ListView.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}" Header="📋 Скопировать в выбранный стенд" />
+                                <MenuItem Command="{Binding ProjectCommandProvider.CopyObvyazkaToStandsCommand}" Header="Скопировать в выбранный стенд">
+                                    <MenuItem.Icon>
+                                        <ui:SymbolIcon Symbol="Copy24" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
                             </ContextMenu>
                         </ListView.ContextMenu>
-                    </ListView>
+                    </ui:ListView>
                 </GroupBox>
 
                 <!--  Объединённая секция: Чертёж стенда + инфо  -->

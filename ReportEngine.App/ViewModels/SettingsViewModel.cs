@@ -35,13 +35,13 @@ public class SettingsViewModel : BaseViewModel
         ReportEngineConfigService configService)
     {
         ApplySettingsCommand = new RelayCommand(ExecuteSaveCommand, _ => true);
-
-        LoadSettings();
-
+        
         _serviceProvider = serviceProvider;
         _exceptionService = exceptionService;
         _configService = configService;
         _notificationService = notificationService;
+        
+        LoadSettings();
     }
 
     public ObservableCollection<string> SettingsItems { get; } = new()
@@ -127,6 +127,10 @@ public class SettingsViewModel : BaseViewModel
 
     public void LoadSettings()
     {
+        var jopa = _configService.GetOptions();
+
+        var path = jopa.Value.PathSettings;
+        
         SaveReportDirPath = _configService.GetSaveReportDirectory();
         ConnectionString = _configService.GetConnectionString();
         ConnectionStringParse(ConnectionString);

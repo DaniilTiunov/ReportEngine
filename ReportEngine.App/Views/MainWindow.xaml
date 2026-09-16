@@ -14,8 +14,9 @@
     FontFamily="{DynamicResource AppFontFamily}"
     Foreground="{DynamicResource PrimaryForeground}"
     ResizeMode="CanResize"
-    ShowIconOnTitleBar="True"
+    ShowIconOnTitleBar="False"
     TitleForeground="{DynamicResource PrimaryForeground}"
+    TitleTemplate="{DynamicResource MainWindowTitleTemplate}"
     WindowStartupLocation="CenterScreen"
     WindowState="Maximized"
     mc:Ignorable="d">
@@ -32,6 +33,7 @@
     <mah:MetroWindow.Resources>
         <ResourceDictionary>
             <converters:AdminVisibilityConverter x:Key="AdminVisibilityConverter" />
+            <converters:RectConverter x:Key="WorkspaceRectConverter" />
             <converters:TranslateUserRole x:Key="TranslateUserRole" />
             <projectConvert:ProjectStatusBrushConverter x:Key="ProjectStatusBrushConverter" />
         </ResourceDictionary>
@@ -51,23 +53,19 @@
         </EventTrigger>
     </mah:MetroWindow.Triggers>
 
-    <DockPanel>
+    <DockPanel Background="{DynamicResource PrimaryColor}">
         <!--  Верхняя панель заголовка  -->
         <Separator DockPanel.Dock="Top" Style="{DynamicResource WindowTitleSeparatorStyle}" />
 
         <!--  Меню  -->
-        <Menu
-            Height="35"
-            DockPanel.Dock="Top"
-            FontFamily="{DynamicResource AppFontFamily}"
-            FontSize="16">
+        <Menu DockPanel.Dock="Top" Style="{DynamicResource MainWindowMenuStyle}">
             <Menu.ItemsPanel>
                 <ItemsPanelTemplate>
                     <DockPanel HorizontalAlignment="Stretch" />
                 </ItemsPanelTemplate>
             </Menu.ItemsPanel>
 
-            <MenuItem Header="📁 Проект">
+            <MenuItem Header="Проект">
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenTreeViewCommand}" Header="📄 Создать новый проект">
                     <MenuItem.Icon>
                         <materialDesign:PackIcon
@@ -87,7 +85,7 @@
                 </MenuItem>
             </MenuItem>
 
-            <MenuItem Header="⚙️ Настройки">
+            <MenuItem Header="Настройки">
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenCalculationParametersCommand}" Header="🧮 Параметры расчета" />
                 <Separator />
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenSettingsWindow}" Header="🔧 Настройки приложения" />
@@ -98,7 +96,7 @@
                 </MenuItem>
             </MenuItem>
 
-            <MenuItem Header="🎨 Вид" Tag="ThemeItemChanger">
+            <MenuItem Header="Вид" Tag="ThemeItemChanger">
                 <MenuItem
                     Click="StandardTheme"
                     Header="☀️ Светлая тема"
@@ -120,7 +118,7 @@
                     Tag="Bubble" />
             </MenuItem>
 
-            <MenuItem Header="👥 Контакты">
+            <MenuItem Header="Контакты">
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllUsersCommand}" Header="👤 Сотрудники" />
                 <Separator />
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllCompaniesCommand}" Header="🏢 Заказчики" />
@@ -128,7 +126,7 @@
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllSubjectsCommand}" Header="📍 Объекты" />
             </MenuItem>
 
-            <MenuItem Header="🔩 Комплектующие">
+            <MenuItem Header="Комплектующие">
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllObvyazkiCommand}" Header="🔗 Обвязки" />
                 <Separator />
                 <MenuItem Header="📏 Сортамент труб">
@@ -176,38 +174,32 @@
                 <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllSortamentsCommand}" Header="📋 Весь сортамент" />
             </MenuItem>
 
-            <MenuItem Command="{Binding MainWindowCommandProvider.OpenFormedFramesCommand}" Header="🖼️ Создание и редактирование рам" />
-            <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllStandsCommand}" Header="🏗️ Стенды" />
+            <MenuItem Command="{Binding MainWindowCommandProvider.OpenFormedFramesCommand}" Header="Рамы" />
+            <MenuItem Command="{Binding MainWindowCommandProvider.OpenAllStandsCommand}" Header="Стенды" />
 
-            <MenuItem Header="🛠️ Инструменты">
+            <MenuItem Header="Инструменты">
                 <MenuItem Click="ShowCalculator" Header="🧮 Калькулятор" />
                 <Separator />
                 <MenuItem Click="ShowNotepad" Header="📝 Блокнот" />
             </MenuItem>
 
-            <MenuItem Header="❓ Справка">
+            <MenuItem Header="Справка">
                 <MenuItem Click="ShowAboutProgram" Header="ℹ️ О программе" />
                 <Separator />
                 <MenuItem Click="ShowUpdateIndo" Header="📌 Об этой версии" />
             </MenuItem>
 
-            <MenuItem Command="{Binding MainWindowCommandProvider.OpenAuthWindowCommand}" Header="🔐 Авторизация" />
-            <MenuItem Command="{Binding MainWindowCommandProvider.OpenAuditContentCommand}" Header="📋 Аудит" />
+            <MenuItem Command="{Binding MainWindowCommandProvider.OpenAuthWindowCommand}" Header="Авторизация" />
+            <MenuItem Command="{Binding MainWindowCommandProvider.OpenAuditContentCommand}" Header="Аудит" />
             <MenuItem
                 Width="110"
                 HorizontalAlignment="Right"
                 Click="OpenLogger_Click"
-                Header="📜 Логгер" />
+                Header="Логи" />
         </Menu>
 
         <!--  StatusBar  -->
-        <StatusBar
-            Height="40"
-            Background="{DynamicResource SecondaryColor}"
-            BorderBrush="{DynamicResource BorderMediumColor}"
-            BorderThickness="0,1,0,0"
-            DockPanel.Dock="Bottom"
-            FontFamily="{DynamicResource AppFontFamily}">
+        <StatusBar DockPanel.Dock="Bottom" Style="{DynamicResource MainWindowStatusBarStyle}">
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid>
@@ -227,7 +219,7 @@
 
             <!--  Пользователь  -->
             <StatusBarItem Grid.Column="0">
-                <TextBlock FontSize="16" Text="👤" />
+                <ui:SymbolIcon Foreground="{DynamicResource SecondaryForeground}" Symbol="Person24" />
             </StatusBarItem>
             <StatusBarItem Grid.Column="1">
                 <TextBlock
@@ -256,7 +248,7 @@
             <!--  База данных  -->
             <StatusBarItem Grid.Column="5">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock FontSize="14" Text="🗄️" />
+                    <ui:SymbolIcon Foreground="{DynamicResource SecondaryForeground}" Symbol="Database20" />
                     <TextBlock
                         Margin="4,0,0,0"
                         FontSize="16"
@@ -271,16 +263,12 @@
             <!--  Статус подключения  -->
             <StatusBarItem Grid.Column="7">
                 <StackPanel Orientation="Horizontal">
-                    <Button
-                        BorderThickness="0"
+                    <ui:Button
                         Command="{Binding MainWindowCommandProvider.ChekDbConnectionCommand}"
-                        Cursor="Hand"
+                        Style="{DynamicResource MainWindowIconButtonStyle}"
                         ToolTip="Проверить подключение">
-                        <materialDesign:PackIcon
-                            Width="16"
-                            Height="16"
-                            Kind="DatabaseOutline" />
-                    </Button>
+                        <ui:SymbolIcon Symbol="DatabasePlugConnected20" />
+                    </ui:Button>
                     <TextBlock
                         Margin="4,0,0,0"
                         FontSize="16"
@@ -289,205 +277,190 @@
             </StatusBarItem>
         </StatusBar>
 
-        <Grid>
+        <Grid Margin="18">
             <!--  Основной контент  -->
-            <ContentControl
-                x:Name="MainContentControl"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Stretch">
-                <Grid x:Name="MainGrid">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
+            <Border x:Name="WorkspaceBorder" Style="{DynamicResource MainWindowWorkspaceCardStyle}">
+                <ContentControl
+                    x:Name="MainContentControl"
+                    HorizontalContentAlignment="Stretch"
+                    VerticalContentAlignment="Stretch">
+                    <ContentControl.Clip>
+                        <RectangleGeometry RadiusX="10" RadiusY="10">
+                            <RectangleGeometry.Rect>
+                                <MultiBinding Converter="{StaticResource WorkspaceRectConverter}">
+                                    <Binding ElementName="MainContentControl" Path="ActualWidth" />
+                                    <Binding ElementName="MainContentControl" Path="ActualHeight" />
+                                </MultiBinding>
+                            </RectangleGeometry.Rect>
+                        </RectangleGeometry>
+                    </ContentControl.Clip>
+                    <Grid x:Name="MainGrid">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
 
-                    <!--  Поисковая панель  -->
-                    <Border
-                        Grid.Row="0"
-                        Padding="10,5"
-                        Background="{DynamicResource SecondaryColor}"
-                        BorderBrush="{DynamicResource BorderMediumColor}"
-                        BorderThickness="0,0,0,1">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
+                        <!--  Поисковая панель  -->
+                        <Border Grid.Row="0" Style="{DynamicResource MainWindowToolbarStyle}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
-                            <StackPanel
-                                Grid.Column="0"
-                                VerticalAlignment="Center"
-                                Orientation="Horizontal">
-                                <TextBlock
+                                <StackPanel
+                                    Grid.Column="0"
                                     VerticalAlignment="Center"
-                                    FontSize="14"
-                                    Foreground="{DynamicResource PrimaryForeground}"
-                                    Opacity="0.7"
-                                    Text="🔍" />
-                                <TextBlock
-                                    Margin="8,0,0,0"
-                                    VerticalAlignment="Center"
-                                    FontSize="14"
-                                    Text="Поиск" />
-                            </StackPanel>
+                                    Orientation="Horizontal">
+                                    <ui:SymbolIcon
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource AccentColor}"
+                                        Symbol="Search20" />
+                                    <StackPanel Margin="10,0,16,0">
+                                        <TextBlock
+                                            FontSize="15"
+                                            FontWeight="SemiBold"
+                                            Text="Проекты" />
+                                        <TextBlock
+                                            FontSize="11"
+                                            Foreground="{DynamicResource SecondaryForeground}"
+                                            Text="Поиск и управление списком" />
+                                    </StackPanel>
+                                </StackPanel>
 
-                            <TextBox
-                                x:Name="SearchTextBox"
-                                Grid.Column="1"
-                                Height="28"
-                                Margin="10,0,10,0"
-                                Padding="8,0"
-                                VerticalContentAlignment="Center"
-                                Background="{DynamicResource PrimaryColor}"
-                                BorderBrush="{DynamicResource BorderMediumColor}"
-                                BorderThickness="1"
-                                FontSize="14"
-                                TextChanged="SearchTextBox_TextChanged">
-                                <TextBox.Style>
-                                    <Style TargetType="TextBox">
-                                        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
-                                        <Setter Property="CaretBrush" Value="{DynamicResource PrimaryForeground}" />
-                                        <Style.Triggers>
-                                            <Trigger Property="Text" Value="">
-                                                <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBox.Style>
-                            </TextBox>
+                                <TextBox
+                                    x:Name="SearchTextBox"
+                                    Grid.Column="1"
+                                    Margin="10,0,10,0"
+                                    Style="{DynamicResource MainWindowSearchTextBoxStyle}"
+                                    TextChanged="SearchTextBox_TextChanged" />
 
-                            <Button
-                                Grid.Column="2"
-                                Height="28"
-                                Background="{DynamicResource PrimaryColor}"
-                                BorderThickness="0"
-                                Command="{Binding MainWindowCommandProvider.ShowAllProjectsCommand}"
-                                Cursor="Hand"
-                                ToolTip="Обновить список">
-                                <materialDesign:PackIcon
-                                    Width="18"
-                                    Height="18"
-                                    Foreground="{DynamicResource PrimaryForeground}"
-                                    Kind="Refresh" />
-                            </Button>
-                        </Grid>
-                    </Border>
+                                <ui:Button
+                                    Grid.Column="2"
+                                    Command="{Binding MainWindowCommandProvider.ShowAllProjectsCommand}"
+                                    Style="{DynamicResource MainWindowIconButtonStyle}"
+                                    ToolTip="Обновить список">
+                                    <ui:SymbolIcon Symbol="ArrowSync20" />
+                                </ui:Button>
+                            </Grid>
+                        </Border>
 
-                    <!--  DataGrid  -->
-                    <ui:DataGrid
-                        x:Name="MainDataGrid"
-                        Grid.Row="1"
-                        Margin="0,0,0,5"
-                        AutoGenerateColumns="False"
-                        IsReadOnly="True"
-                        MouseDoubleClick="MainDataGrid_OnMouseDoubleClick"
-                        SelectedItem="{Binding MainWindowModel.SelectedProject}"
-                        SelectionUnit="FullRow">
-                        <ui:DataGrid.RowStyle>
-                            <Style TargetType="DataGridRow">
-                                <Setter Property="Background" Value="{Binding Status, Converter={StaticResource ProjectStatusBrushConverter}}" />
-                                <Setter Property="ToolTip">
-                                    <Setter.Value>
-                                        <ToolTip>
-                                            <Border
-                                                Padding="10"
-                                                Background="{DynamicResource PrimaryColor}"
-                                                CornerRadius="5">
-                                                <StackPanel>
-                                                    <TextBlock
-                                                        FontSize="14"
-                                                        FontWeight="Bold"
-                                                        Text="{Binding Number, StringFormat='📋 Проект №{0}'}" />
-                                                    <Separator Margin="0,5,0,5" />
-                                                    <TextBlock Text="{Binding Company, StringFormat='🏢 Заказчик: {0}'}" />
-                                                    <TextBlock Text="{Binding Object, StringFormat='📍 Объект: {0}'}" />
-                                                    <TextBlock Text="{Binding Status, StringFormat='📊 Статус: {0}'}" />
-                                                    <TextBlock Text="{Binding Manager, StringFormat='👤 Руководитель: {0}'}" />
-                                                    <TextBlock Text="{Binding StandCount, StringFormat='🏗️ Стендов: {0}'}" />
-                                                    <TextBlock Text="{Binding StartDate, StringFormat='📅 Старт: {0:dd.MM.yyyy}'}" />
-                                                </StackPanel>
-                                            </Border>
-                                        </ToolTip>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </ui:DataGrid.RowStyle>
-                        <ui:DataGrid.Columns>
-                            <DataGridTextColumn
-                                Width="*"
-                                Binding="{Binding Number}"
-                                Header="№п/п"
-                                SortMemberPath="Number" />
-                            <DataGridTextColumn
-                                Width="*"
-                                Binding="{Binding Company}"
-                                Header="Заказчик" />
-                            <DataGridTextColumn
-                                Width="*"
-                                Binding="{Binding Object}"
-                                Header="Объект" />
-                            <DataGridTextColumn
-                                Width="*"
-                                Binding="{Binding StandCount}"
-                                Header="Кол-во стендов" />
-                            <DataGridTextColumn
-                                Width="*"
-                                Binding="{Binding Status}"
-                                Header="Статус" />
-                            <DataGridTextColumn
-                                Width="*"
-                                Binding="{Binding StartDate, StringFormat={}{0:dd-MM-yy}}"
-                                Header="Старт проекта" />
-                            <DataGridTextColumn
-                                Width="*"
-                                Binding="{Binding OutOfProduction, StringFormat={}{0:dd-MM-yy}}"
-                                Header="Выход из производства" />
-                            <DataGridTextColumn
-                                Width="*"
-                                Binding="{Binding EndDate, StringFormat={}{0:dd-MM-yy}}"
-                                Header="Дата окончания договора" />
-                            <DataGridTextColumn
-                                Width="*"
-                                Binding="{Binding OrderCustomer}"
-                                Header="Заказ покупателя" />
-                            <DataGridTextColumn
-                                Width="*"
-                                Binding="{Binding RequestProduction}"
-                                Header="Заявка на производство" />
-                            <DataGridTextColumn
-                                Width="*"
-                                Binding="{Binding HumanCost}"
-                                Header="Трудозатраты" />
-                            <DataGridTextColumn
-                                Width="*"
-                                Binding="{Binding Manager}"
-                                Header="Руководитель" />
-                            <DataGridTextColumn
-                                Width="*"
-                                Binding="{Binding MarkPlus}"
-                                Header="Маркировка +" />
-                            <DataGridTextColumn
-                                Width="*"
-                                Binding="{Binding MarkMinus}"
-                                Header="Маркировка -" />
-                        </ui:DataGrid.Columns>
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Command="{Binding MainWindowCommandProvider.EditProjectCommand}" Header="Редактировать проект" />
-                                <MenuItem Command="{Binding MainWindowCommandProvider.CopySelectedProjectCommand}" Header="Копировать проект" />
-                                <MenuItem Command="{Binding MainWindowCommandProvider.RecalculateProjectCommand}" Header="Переформировать" />
-                                <MenuItem
-                                    Command="{Binding MainWindowCommandProvider.DeleteSelectedProjectCommand}"
-                                    Header="Удалить проект"
-                                    Visibility="{Binding CurrentUser.SystemRole, Converter={StaticResource AdminVisibilityConverter}}" />
-                                <Separator />
-                                <MenuItem Command="{Binding MainWindowCommandProvider.ShowAllProjectsCommand}" Header="Обновить список проектов" />
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
-                    </ui:DataGrid>
-                </Grid>
-            </ContentControl>
+                        <!--  DataGrid  -->
+                        <ui:DataGrid
+                            x:Name="MainDataGrid"
+                            Grid.Row="1"
+                            AutoGenerateColumns="False"
+                            IsReadOnly="True"
+                            MouseDoubleClick="MainDataGrid_OnMouseDoubleClick"
+                            SelectedItem="{Binding MainWindowModel.SelectedProject}"
+                            SelectionUnit="FullRow"
+                            Style="{DynamicResource MainWindowDataGridStyle}">
+                            <ui:DataGrid.RowStyle>
+                                <Style BasedOn="{StaticResource {x:Type DataGridRow}}" TargetType="DataGridRow">
+                                    <Setter Property="Background" Value="{Binding Status, Converter={StaticResource ProjectStatusBrushConverter}}" />
+                                    <Setter Property="ToolTip">
+                                        <Setter.Value>
+                                            <ToolTip>
+                                                <Border
+                                                    Padding="10"
+                                                    Background="{DynamicResource PrimaryColor}"
+                                                    CornerRadius="5">
+                                                    <StackPanel>
+                                                        <TextBlock
+                                                            FontSize="14"
+                                                            FontWeight="Bold"
+                                                            Text="{Binding Number, StringFormat='📋 Проект №{0}'}" />
+                                                        <Separator Margin="0,5,0,5" />
+                                                        <TextBlock Text="{Binding Company, StringFormat='🏢 Заказчик: {0}'}" />
+                                                        <TextBlock Text="{Binding Object, StringFormat='📍 Объект: {0}'}" />
+                                                        <TextBlock Text="{Binding Status, StringFormat='📊 Статус: {0}'}" />
+                                                        <TextBlock Text="{Binding Manager, StringFormat='👤 Руководитель: {0}'}" />
+                                                        <TextBlock Text="{Binding StandCount, StringFormat='🏗️ Стендов: {0}'}" />
+                                                        <TextBlock Text="{Binding StartDate, StringFormat='📅 Старт: {0:dd.MM.yyyy}'}" />
+                                                    </StackPanel>
+                                                </Border>
+                                            </ToolTip>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ui:DataGrid.RowStyle>
+                            <ui:DataGrid.Columns>
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Number}"
+                                    Header="№п/п"
+                                    SortMemberPath="Number" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Company}"
+                                    Header="Заказчик" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Object}"
+                                    Header="Объект" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding StandCount}"
+                                    Header="Кол-во стендов" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Status}"
+                                    Header="Статус" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding StartDate, StringFormat={}{0:dd-MM-yy}}"
+                                    Header="Старт проекта" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding OutOfProduction, StringFormat={}{0:dd-MM-yy}}"
+                                    Header="Выход из производства" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding EndDate, StringFormat={}{0:dd-MM-yy}}"
+                                    Header="Дата окончания договора" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding OrderCustomer}"
+                                    Header="Заказ покупателя" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding RequestProduction}"
+                                    Header="Заявка на производство" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding HumanCost}"
+                                    Header="Трудозатраты" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Manager}"
+                                    Header="Руководитель" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding MarkPlus}"
+                                    Header="Маркировка +" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding MarkMinus}"
+                                    Header="Маркировка -" />
+                            </ui:DataGrid.Columns>
+                            <DataGrid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="{Binding MainWindowCommandProvider.EditProjectCommand}" Header="Редактировать проект" />
+                                    <MenuItem Command="{Binding MainWindowCommandProvider.CopySelectedProjectCommand}" Header="Копировать проект" />
+                                    <MenuItem Command="{Binding MainWindowCommandProvider.RecalculateProjectCommand}" Header="Переформировать" />
+                                    <MenuItem
+                                        Command="{Binding MainWindowCommandProvider.DeleteSelectedProjectCommand}"
+                                        Header="Удалить проект"
+                                        Visibility="{Binding CurrentUser.SystemRole, Converter={StaticResource AdminVisibilityConverter}}" />
+                                    <Separator />
+                                    <MenuItem Command="{Binding MainWindowCommandProvider.ShowAllProjectsCommand}" Header="Обновить список проектов" />
+                                </ContextMenu>
+                            </DataGrid.ContextMenu>
+                        </ui:DataGrid>
+                    </Grid>
+                </ContentControl>
+            </Border>
 
             <!--  Окно для логирования  -->
             <Border
