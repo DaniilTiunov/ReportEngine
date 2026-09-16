@@ -10,9 +10,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2"/>
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.10"/>
-        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.10"/>
+        <PackageReference Include="CommunityToolkit.Mvvm"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions"/>
     </ItemGroup>
 
     <ItemGroup>
