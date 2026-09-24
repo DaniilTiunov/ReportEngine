@@ -86,7 +86,10 @@ public partial class MainWindow : MetroWindow //Это так называемы
             _projectsView = CollectionViewSource.GetDefaultView(
                 _mainViewModel.MainWindowModel.AllProjects);
 
+            _projectsView.SortDescriptions.Add(new SortDescription("Status", ListSortDirection.Descending));
+            
             MainDataGrid.ItemsSource = _projectsView;
+            
         });
     }
 

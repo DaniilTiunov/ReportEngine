@@ -2,11 +2,12 @@
     FontFamily="{DynamicResource AppFontFamily}"
     FontSize="14"
     Foreground="{DynamicResource PrimaryForeground}"
+    Background="{DynamicResource PrimaryColor}"
     Height="800"
     MinHeight="600"
     MinWidth="1000"
     ResizeMode="CanResize"
-    ShowIconOnTitleBar="True"
+    ShowIconOnTitleBar="False"
     Title="Создание и редактирование стендов"
     TitleForeground="{DynamicResource PrimaryForeground}"
     Width="1200"
@@ -34,22 +35,24 @@
     </mah:MetroWindow.Resources>
 
     <!--  Основной контейнер с тенью и рамкой  -->
-    <DockPanel>
+    <DockPanel Background="{DynamicResource PrimaryColor}">
         <Separator DockPanel.Dock="Top" Style="{DynamicResource WindowTitleSeparatorStyle}" />
         <Border
-            BorderBrush="#22000000"
-            BorderThickness="0,1,0,0"
+            Margin="18"
+            BorderBrush="Transparent"
+            BorderThickness="0"
             DockPanel.Dock="Top">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="1.15*" />
+                    <ColumnDefinition Width="16" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
                 <!--  Левая панель: редактирование стенда  -->
                 <Border
                     Grid.Column="0"
-                    Margin="0,0,10,0"
+                    Padding="16"
                     Style="{StaticResource CardPanelStyle}">
                     <StackPanel>
                         <!--  Заголовок карточки  -->
@@ -270,8 +273,8 @@
 
                 <!--  Правая панель: список стендов  -->
                 <Border
-                    Grid.Column="1"
-                    Margin="10,0,0,0"
+                    Grid.Column="2"
+                    Padding="16"
                     Style="{StaticResource CardPanelStyle}">
                     <StackPanel>
                         <TextBlock
@@ -279,42 +282,32 @@
                             Style="{StaticResource HeaderStyle}"
                             Text="Список стендов" />
 
-                        <ListView
+                        <DataGrid
+                            AutoGenerateColumns="False"
+                            CanUserAddRows="False"
+                            HeadersVisibility="Column"
+                            IsReadOnly="True"
                             ItemsSource="{Binding CurrentProjectModel.Stands}"
                             Margin="0,0,0,5"
                             MinHeight="250"
                             SelectedItem="{Binding CurrentProjectModel.SelectedStand, Mode=TwoWay}"
                             SelectionChanged="StandsList_SelectionChanged"
                             x:Name="StandsList">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn
-                                        DisplayMemberBinding="{Binding Number}"
-                                        Header="№"
-                                        Width="40" />
-                                    <GridViewColumn
-                                        DisplayMemberBinding="{Binding KKSCode}"
-                                        Header="KKS"
-                                        Width="120" />
-                                    <GridViewColumn
-                                        DisplayMemberBinding="{Binding Design}"
-                                        Header="Обозначение"
-                                        Width="200" />
-                                    <GridViewColumn
-                                        DisplayMemberBinding="{Binding SerialNumber}"
-                                        Header="Серийный номер"
-                                        Width="200" />
-                                </GridView>
-                            </ListView.View>
-                            <ListView.ContextMenu>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding Number}" Header="№" Width="0.45*" />
+                                <DataGridTextColumn Binding="{Binding KKSCode}" Header="KKS" Width="*" />
+                                <DataGridTextColumn Binding="{Binding Design}" Header="Обозначение" Width="1.5*" />
+                                <DataGridTextColumn Binding="{Binding SerialNumber}" Header="Серийный номер" Width="1.3*" />
+                            </DataGrid.Columns>
+                            <DataGrid.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem Command="{Binding ProjectCommandProvider.CopyStandsCommand}" Header="Создать копию на основе прототипа" />
                                     <MenuItem Command="{Binding ProjectCommandProvider.DeleteSelectedStandCommand}" Header="Удалить стенд из проекта" />
                                     <Separator />
                                     <MenuItem Command="{Binding ProjectCommandProvider.RenumerateStandsCommand}" Header="Пронумеровать стенды…" />
                                 </ContextMenu>
-                            </ListView.ContextMenu>
-                        </ListView>
+                            </DataGrid.ContextMenu>
+                        </DataGrid>
                     </StackPanel>
                 </Border>
             </Grid>

@@ -9,15 +9,16 @@ public class ReportEngineConfigService
 {
     private readonly string _configFilePath;
     private readonly IOptions<ReportEngineConfig> _options;
-    private readonly IOptionsMonitor<ReportEngineConfig> _optionsMonitor;
 
-    public ReportEngineConfigService(
-        IOptions<ReportEngineConfig> options,
-        IOptionsMonitor<ReportEngineConfig> optionsMonitor)
+    public ReportEngineConfigService(IOptions<ReportEngineConfig> options)
     {
         _options = options;
-        _optionsMonitor = optionsMonitor;
         _configFilePath = DirectoryHelper.GetConfigPath();
+    }
+
+    public IOptions<ReportEngineConfig> GetOptions()
+    {
+        return _options;
     }
 
     public string GetConnectionString()

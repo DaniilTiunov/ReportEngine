@@ -94,7 +94,7 @@ public partial class LaunchAppViewModel : BaseViewModel
         }
 
         var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        var shortcutName = $"Стенды КИПиА v{SelectedRelease.Info.Version} ({SelectedRelease.Info.Channel}).lnk";
+        var shortcutName = $"КИПАРИС:PCM v{SelectedRelease.Info.Version} ({SelectedRelease.Info.Channel}).lnk";
         var shortcutPath = Path.Combine(desktopPath, shortcutName);
         var targetPath = Path.Combine(SelectedRelease.Path, "ReportEngine.App.exe");
 

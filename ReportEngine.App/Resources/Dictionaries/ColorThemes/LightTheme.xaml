@@ -4,73 +4,53 @@
         <ResourceDictionary Source="pack://application:,,,/KIPARIS_PCM;component/Resources/Dictionaries/Styles/GigaChadUI.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <!--  Цветовые ресурсы для светлой темы (fresh / modern, глубокий индиго-синий акцент)  -->
+    <!--  Современная светлая Fluent-палитра: холодные поверхности и чистый синий акцент.  -->
 
     <!--  Фоны и панели  -->
-    <SolidColorBrush Color="#F0F2F9" x:Key="PrimaryColor" />
-    <!--  Слегка затемненный основной фон  -->
-    <SolidColorBrush Color="#FFFFFF" x:Key="SecondaryColor" />
+    <SolidColorBrush x:Key="PrimaryColor" Color="#F5F7FB" />
+    <SolidColorBrush x:Key="SecondaryColor" Color="#FFFFFF" />
     <!--  Чистый белый для панелей и карточек  -->
 
-    <!--  Акценты и кнопки (Глубокий индиго)  -->
-    <SolidColorBrush Color="#3B4FC5" x:Key="AccentColor" />
-    <!--  Основной акцент: глубокий индиго  -->
-    <SolidColorBrush Color="#2F3FA8" x:Key="ButtonBackground" />
-    <!--  Кнопка в покое: темнее акцента  -->
-    <SolidColorBrush Color="#263490" x:Key="ButtonHoverBackground" />
-    <!--  Еще темнее при наведении  -->
-    <SolidColorBrush Color="#FFFFFF" x:Key="ButtonForeground" />
+    <!--  Акцент и интерактивные состояния  -->
+    <SolidColorBrush x:Key="AccentColor" Color="#2563EB" />
+    <SolidColorBrush x:Key="ButtonBackground" Color="#2563EB" />
+    <SolidColorBrush x:Key="ButtonHoverBackground" Color="#1D4ED8" />
+    <SolidColorBrush x:Key="ButtonForeground" Color="#FFFFFF" />
     <!--  Белый текст на кнопках  -->
-    <SolidColorBrush Color="#1E2A70" x:Key="ButtonPressedBackground" />
-    <!--  Почти черный индиго при нажатии  -->
+    <SolidColorBrush x:Key="ButtonPressedBackground" Color="#1E40AF" />
 
     <!--  Подложки, границы и наведения  -->
-    <SolidColorBrush Color="#D9DEEB" x:Key="BorderColor" />
-    <!--  Чуть более контрастные рамки  -->
-    <SolidColorBrush Color="#E5E9F6" x:Key="RowHoverColor" />
-    <!--  Мягкое наведение  -->
-    <SolidColorBrush Color="#3B4FC5" x:Key="SelectedRowBackground" />
-    <!--  Выделение строк: насыщенный индиго  -->
-    <SolidColorBrush Color="#FFFFFF" x:Key="SelectedRowForeground" />
+    <SolidColorBrush x:Key="BorderColor" Color="#DCE3EE" />
+    <SolidColorBrush x:Key="RowHoverColor" Color="#EEF4FF" />
+    <SolidColorBrush x:Key="SelectedRowBackground" Color="#DBEAFE" />
+    <SolidColorBrush x:Key="SelectedRowForeground" Color="#1E3A8A" />
 
     <!--  Тексты  -->
-    <SolidColorBrush Color="#171B2C" x:Key="PrimaryForeground" />
-    <!--  Основной текст: почти черный с синевой  -->
-    <SolidColorBrush Color="#4A4F6A" x:Key="SecondaryForeground" />
-    <!--  Второстепенный текст: темно-серый  -->
-    <SolidColorBrush Color="Black" x:Key="WindowBorderColor" />
+    <SolidColorBrush x:Key="PrimaryForeground" Color="#172033" />
+    <SolidColorBrush x:Key="SecondaryForeground" Color="#5B667A" />
+    <SolidColorBrush x:Key="WindowBorderColor" Color="#CBD5E1" />
 
     <!--  Дополнительные состояния  -->
-    <SolidColorBrush Color="#D9DEEB" x:Key="ButtonDisabledBackground" />
-    <!--  Слегка серый  -->
-    <SolidColorBrush Color="#9EA3B8" x:Key="ButtonDisabledForeground" />
-    <SolidColorBrush Color="#9EA3B8" x:Key="DisabledForeground" />
-    <SolidColorBrush Color="#F0F2F9" x:Key="ControlLightColor" />
-    <SolidColorBrush Color="#E5E9F6" x:Key="ControlMouseOverColor" />
-    <SolidColorBrush Color="#3B4FC5" x:Key="ControlPressedColor" />
-    <SolidColorBrush Color="#D9DEEB" x:Key="BorderLightColor" />
-    <SolidColorBrush Color="#C2C7DB" x:Key="BorderMediumColor" />
-    <SolidColorBrush Color="#4A4F6A" x:Key="GlyphColor" />
-    <SolidColorBrush Color="#3B4FC5" x:Key="SelectedBackgroundColor" />
-    <SolidColorBrush Color="#9EA3B8" x:Key="DisabledForegroundColor" />
-    <SolidColorBrush Color="#D9DEEB" x:Key="DisabledControlDarkColor" />
-    <SolidColorBrush Color="#707590" x:Key="UnsafeDetails" />
+    <SolidColorBrush x:Key="ButtonDisabledBackground" Color="#E2E8F0" />
+    <SolidColorBrush x:Key="ButtonDisabledForeground" Color="#94A3B8" />
+    <SolidColorBrush x:Key="DisabledForeground" Color="#94A3B8" />
+    <SolidColorBrush x:Key="BorderLightColor" Color="#E7ECF3" />
+    <SolidColorBrush x:Key="BorderMediumColor" Color="#CBD5E1" />
+    <SolidColorBrush x:Key="UnsafeDetails" Color="#FDE2E2" />
 
     <!--  Стенды (аккуратные и мягкие)  -->
-    <SolidColorBrush Color="#FFFFFF" x:Key="StandCardBackground" />
-    <SolidColorBrush Color="#D9DEEB" x:Key="StandCardBorder" />
-    <SolidColorBrush Color="#EFF2FC" x:Key="StandCardHover" />
-    <SolidColorBrush Color="#3B4FC5" x:Key="StandKKSSColor" />
-    <!--  KKS теперь глубокий индиго  -->
-    <SolidColorBrush Color="#2E7D52" x:Key="StandWeightColor" />
-    <!--  Более насыщенный зеленый  -->
-    <SolidColorBrush Color="#6A708C" x:Key="StandLabelColor" />
-    <SolidColorBrush Color="#E2E8FF" x:Key="StandInContainerSelected" />
-    <SolidColorBrush Color="#3B4FC5" x:Key="StandInContainerBorderSelected" />
-    <SolidColorBrush Color="#DEF6E7" x:Key="StandAvailableSelected" />
-    <SolidColorBrush Color="#2E7D52" x:Key="StandAvailableBorderSelected" />
+    <SolidColorBrush x:Key="StandCardBackground" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="StandCardBorder" Color="#DCE3EE" />
+    <SolidColorBrush x:Key="StandCardHover" Color="#F1F5FF" />
+    <SolidColorBrush x:Key="StandKKSSColor" Color="#2563EB" />
+    <SolidColorBrush x:Key="StandWeightColor" Color="#0F8A62" />
+    <SolidColorBrush x:Key="StandLabelColor" Color="#64748B" />
+    <SolidColorBrush x:Key="StandInContainerSelected" Color="#DBEAFE" />
+    <SolidColorBrush x:Key="StandInContainerBorderSelected" Color="#2563EB" />
+    <SolidColorBrush x:Key="StandAvailableSelected" Color="#DCFCE7" />
+    <SolidColorBrush x:Key="StandAvailableBorderSelected" Color="#16A36A" />
 
     <!--  Акценты MaterialDesign-контролов (DataGrid, ComboBox, TreeView и т.д.)  -->
-    <SolidColorBrush Color="#3B4FC5" x:Key="PrimaryHueMidBrush" />
-    <SolidColorBrush Color="#1E2A70" x:Key="PrimaryHueDarkBrush" />
+    <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#2563EB" />
+    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#1E40AF" />
 </ResourceDictionary>

@@ -25,42 +25,6 @@
             ResizeBorderThickness="0" />
     </WindowChrome.WindowChrome>
 
-    <Window.Resources>
-        <!--  Тень  -->
-        <DropShadowEffect
-            BlurRadius="30"
-            Color="#000000"
-            Opacity="0.35"
-            ShadowDepth="0"
-            x:Key="WindowShadow" />
-        <!--  Заголовок  -->
-        <Style TargetType="TextBlock" x:Key="TitleTextStyle">
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
-            <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-        </Style>
-        <!--  Статус  -->
-        <Style TargetType="TextBlock" x:Key="StatusTextStyle">
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
-            <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="Margin" Value="0,0,0,12" />
-        </Style>
-        <!--  ProgressBar  -->
-        <Style TargetType="ProgressBar" x:Key="ProgressBarStyle">
-            <Setter Property="Height" Value="6" />
-            <Setter Property="Width" Value="300" />
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="Background" Value="{DynamicResource BorderColor}" />
-            <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="IsIndeterminate" Value="True" />
-        </Style>
-    </Window.Resources>
-
     <Border
         Background="{DynamicResource PrimaryColor}"
         BorderBrush="{DynamicResource WindowBorderColor}"
