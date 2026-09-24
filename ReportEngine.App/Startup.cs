@@ -73,10 +73,7 @@ public static class Startup
 
             app.MainWindow = mainWindow;
             app.ShutdownMode = ShutdownMode.OnMainWindowClose;
-
-            mainWindow.Show();
-
-
+            
             SplashManager.Close();
 
             _ = host.StartAsync();

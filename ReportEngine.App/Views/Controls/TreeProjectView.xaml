@@ -11,9 +11,6 @@
 
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/Dictionaries/Styles/GigaChadUI.xaml" />
-            </ResourceDictionary.MergedDictionaries>
             <converters:RectConverter x:Key="WorkspaceRectConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
