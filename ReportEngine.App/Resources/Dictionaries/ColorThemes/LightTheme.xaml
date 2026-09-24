@@ -7,50 +7,50 @@
     <!--  Современная светлая Fluent-палитра: холодные поверхности и чистый синий акцент.  -->
 
     <!--  Фоны и панели  -->
-    <SolidColorBrush Color="#F5F7FB" x:Key="PrimaryColor" />
-    <SolidColorBrush Color="#FFFFFF" x:Key="SecondaryColor" />
+    <SolidColorBrush x:Key="PrimaryColor" Color="#F5F7FB" />
+    <SolidColorBrush x:Key="SecondaryColor" Color="#FFFFFF" />
     <!--  Чистый белый для панелей и карточек  -->
 
     <!--  Акцент и интерактивные состояния  -->
-    <SolidColorBrush Color="#2563EB" x:Key="AccentColor" />
-    <SolidColorBrush Color="#2563EB" x:Key="ButtonBackground" />
-    <SolidColorBrush Color="#1D4ED8" x:Key="ButtonHoverBackground" />
-    <SolidColorBrush Color="#FFFFFF" x:Key="ButtonForeground" />
+    <SolidColorBrush x:Key="AccentColor" Color="#2563EB" />
+    <SolidColorBrush x:Key="ButtonBackground" Color="#2563EB" />
+    <SolidColorBrush x:Key="ButtonHoverBackground" Color="#1D4ED8" />
+    <SolidColorBrush x:Key="ButtonForeground" Color="#FFFFFF" />
     <!--  Белый текст на кнопках  -->
-    <SolidColorBrush Color="#1E40AF" x:Key="ButtonPressedBackground" />
+    <SolidColorBrush x:Key="ButtonPressedBackground" Color="#1E40AF" />
 
     <!--  Подложки, границы и наведения  -->
-    <SolidColorBrush Color="#DCE3EE" x:Key="BorderColor" />
-    <SolidColorBrush Color="#EEF4FF" x:Key="RowHoverColor" />
-    <SolidColorBrush Color="#DBEAFE" x:Key="SelectedRowBackground" />
-    <SolidColorBrush Color="#1E3A8A" x:Key="SelectedRowForeground" />
+    <SolidColorBrush x:Key="BorderColor" Color="#DCE3EE" />
+    <SolidColorBrush x:Key="RowHoverColor" Color="#EEF4FF" />
+    <SolidColorBrush x:Key="SelectedRowBackground" Color="#DBEAFE" />
+    <SolidColorBrush x:Key="SelectedRowForeground" Color="#1E3A8A" />
 
     <!--  Тексты  -->
-    <SolidColorBrush Color="#172033" x:Key="PrimaryForeground" />
-    <SolidColorBrush Color="#5B667A" x:Key="SecondaryForeground" />
-    <SolidColorBrush Color="#CBD5E1" x:Key="WindowBorderColor" />
+    <SolidColorBrush x:Key="PrimaryForeground" Color="#172033" />
+    <SolidColorBrush x:Key="SecondaryForeground" Color="#5B667A" />
+    <SolidColorBrush x:Key="WindowBorderColor" Color="#CBD5E1" />
 
     <!--  Дополнительные состояния  -->
-    <SolidColorBrush Color="#E2E8F0" x:Key="ButtonDisabledBackground" />
-    <SolidColorBrush Color="#94A3B8" x:Key="ButtonDisabledForeground" />
-    <SolidColorBrush Color="#94A3B8" x:Key="DisabledForeground" />
-    <SolidColorBrush Color="#E7ECF3" x:Key="BorderLightColor" />
-    <SolidColorBrush Color="#CBD5E1" x:Key="BorderMediumColor" />
-    <SolidColorBrush Color="#FDE2E2" x:Key="UnsafeDetails" />
+    <SolidColorBrush x:Key="ButtonDisabledBackground" Color="#E2E8F0" />
+    <SolidColorBrush x:Key="ButtonDisabledForeground" Color="#94A3B8" />
+    <SolidColorBrush x:Key="DisabledForeground" Color="#94A3B8" />
+    <SolidColorBrush x:Key="BorderLightColor" Color="#E7ECF3" />
+    <SolidColorBrush x:Key="BorderMediumColor" Color="#CBD5E1" />
+    <SolidColorBrush x:Key="UnsafeDetails" Color="#FDE2E2" />
 
     <!--  Стенды (аккуратные и мягкие)  -->
-    <SolidColorBrush Color="#FFFFFF" x:Key="StandCardBackground" />
-    <SolidColorBrush Color="#DCE3EE" x:Key="StandCardBorder" />
-    <SolidColorBrush Color="#F1F5FF" x:Key="StandCardHover" />
-    <SolidColorBrush Color="#2563EB" x:Key="StandKKSSColor" />
-    <SolidColorBrush Color="#0F8A62" x:Key="StandWeightColor" />
-    <SolidColorBrush Color="#64748B" x:Key="StandLabelColor" />
-    <SolidColorBrush Color="#DBEAFE" x:Key="StandInContainerSelected" />
-    <SolidColorBrush Color="#2563EB" x:Key="StandInContainerBorderSelected" />
-    <SolidColorBrush Color="#DCFCE7" x:Key="StandAvailableSelected" />
-    <SolidColorBrush Color="#16A36A" x:Key="StandAvailableBorderSelected" />
+    <SolidColorBrush x:Key="StandCardBackground" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="StandCardBorder" Color="#DCE3EE" />
+    <SolidColorBrush x:Key="StandCardHover" Color="#F1F5FF" />
+    <SolidColorBrush x:Key="StandKKSSColor" Color="#2563EB" />
+    <SolidColorBrush x:Key="StandWeightColor" Color="#0F8A62" />
+    <SolidColorBrush x:Key="StandLabelColor" Color="#64748B" />
+    <SolidColorBrush x:Key="StandInContainerSelected" Color="#DBEAFE" />
+    <SolidColorBrush x:Key="StandInContainerBorderSelected" Color="#2563EB" />
+    <SolidColorBrush x:Key="StandAvailableSelected" Color="#DCFCE7" />
+    <SolidColorBrush x:Key="StandAvailableBorderSelected" Color="#16A36A" />
 
     <!--  Акценты MaterialDesign-контролов (DataGrid, ComboBox, TreeView и т.д.)  -->
-    <SolidColorBrush Color="#2563EB" x:Key="PrimaryHueMidBrush" />
-    <SolidColorBrush Color="#1E40AF" x:Key="PrimaryHueDarkBrush" />
+    <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#2563EB" />
+    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#1E40AF" />
 </ResourceDictionary>

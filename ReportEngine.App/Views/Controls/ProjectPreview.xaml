@@ -17,6 +17,18 @@
     <UserControl.Resources>
         <converters:ObvyazkaImagePathConverter x:Key="ObvyazkaImagePathConverter" />
         <converters:ByteArrayImageConverter x:Key="ByteArrayImageConverter" />
+
+        <!--
+            GridViewColumn does not have MinWidth. The minimum width of its
+            header keeps an Auto-sized column readable when its cells are empty
+            or contain short values, while longer content can still expand it.
+        -->
+        <Style
+            x:Key="ContentSizedColumnHeaderStyle"
+            BasedOn="{StaticResource {x:Type GridViewColumnHeader}}"
+            TargetType="GridViewColumnHeader">
+            <Setter Property="MinWidth" Value="120" />
+        </Style>
     </UserControl.Resources>
 
     <UserControl.InputBindings>
@@ -86,7 +98,7 @@
                         SelectionMode="Extended">
 
                         <ui:ListView.View>
-                            <ui:GridView>
+                            <ui:GridView ColumnHeaderContainerStyle="{StaticResource ContentSizedColumnHeaderStyle}">
 
                                 <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Number}">
                                     <GridViewColumn.Header>
@@ -287,7 +299,7 @@
                         SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand, Mode=TwoWay}">
 
                         <ui:ListView.View>
-                            <ui:GridView>
+                            <ui:GridView ColumnHeaderContainerStyle="{StaticResource ContentSizedColumnHeaderStyle}">
                                 <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding NN}">
                                     <GridViewColumn.Header>
                                         <ui:SymbolIcon Foreground="{DynamicResource PrimaryForeground}" Symbol="NumberSymbol24" />
@@ -748,7 +760,7 @@
                             SelectedItem="{Binding CurrentProjectModel.SelectedStand.SelectedFrame}">
 
                             <ui:ListView.View>
-                                <ui:GridView>
+                                <ui:GridView ColumnHeaderContainerStyle="{StaticResource ContentSizedColumnHeaderStyle}">
                                     <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Name}">
                                         <GridViewColumn.Header>
                                             <StackPanel Orientation="Horizontal">
@@ -914,7 +926,7 @@
                         SelectedItem="{Binding CurrentProjectModel.SelectedObvyazkaToCopy}">
 
                         <ui:ListView.View>
-                            <ui:GridView>
+                            <ui:GridView ColumnHeaderContainerStyle="{StaticResource ContentSizedColumnHeaderStyle}">
 
                                 <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding ObvyazkaName}">
                                     <GridViewColumn.Header>

@@ -3,21 +3,28 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using MahApps.Metro.Controls;
+using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Views.Windows;
 
-public partial class AllSortamentsView : MetroWindow
+public partial class AllSortamentsView : MetroWindow, IWindowWithViewModel<AllSortamentsViewModel>
 {
     private readonly bool _isDialog;
     private readonly AllSortamentsViewModel _viewModel;
     private string _currentGroupKey;
     private ICollectionView _equipView;
+    
+    public AllSortamentsViewModel ViewModel { get; }
+    
 
-    public AllSortamentsView(AllSortamentsViewModel viewModel, bool isDialog = false)
+    public AllSortamentsView(
+        AllSortamentsViewModel viewModel,
+        bool isDialog = false)
     {
         InitializeComponent();
         DataContext = viewModel;
+        ViewModel = viewModel;
         _viewModel = viewModel;
         _isDialog = isDialog;
     }

@@ -165,11 +165,12 @@ public partial class ProjectPreview : UserControl
                     var button = new Button
                     {
                         Content = "➕",
-                        Foreground = (Brush)Application.Current.FindResource("PrimaryForeground"),
-                        Background = (Brush)Application.Current.FindResource("ButtonBackground"),
                         VerticalAlignment = VerticalAlignment.Center,
                         Cursor = Cursors.Hand
                     };
+
+                    button.SetResourceReference(Control.ForegroundProperty, "ButtonForeground");
+                    button.SetResourceReference(Control.BackgroundProperty, "ButtonBackground");
 
                     cell.Content = button;
                 }
