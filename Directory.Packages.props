@@ -10,7 +10,6 @@
     <PackageVersion Include="DevExpress.AIIntegration.Wpf" Version="25.2.6" />
     <PackageVersion Include="DevExpress.AIIntegration.Wpf.Chat" Version="25.2.6" />
     <PackageVersion Include="DevExpress.Wpf" Version="25.2.6" />
-    <PackageVersion Include="Dirkster.AvalonDock" Version="4.72.1" />
     <PackageVersion Include="Dragablz" Version="0.0.3.234" />
     <PackageVersion Include="Extended.Wpf.Toolkit" Version="5.0.0" />
     <PackageVersion Include="GigaChatAdapter" Version="1.0.7" />

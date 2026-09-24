@@ -9,7 +9,7 @@
         <UseWPF>true</UseWPF>
         <AssemblyName>KIPARIS_PCM</AssemblyName>
         <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
-        <ApplicationIcon>Resources\Icons\estimate_cost_icon_213382_prev.ico</ApplicationIcon>
+        <ApplicationIcon>Resources\Assets\ReportEngine.ico</ApplicationIcon>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <DocumentationFile>C:\Work\Prjs\ReportEngine\Documentation.xml</DocumentationFile>
         <UseWindowsForms>False</UseWindowsForms>
@@ -114,7 +114,6 @@
         <PackageReference Include="DevExpress.AIIntegration.Wpf"/>
         <PackageReference Include="DevExpress.AIIntegration.Wpf.Chat"/>
         <PackageReference Include="DevExpress.Wpf"/>
-        <PackageReference Include="Dirkster.AvalonDock"/>
         <PackageReference Include="Dragablz"/>
         <PackageReference Include="Extended.Wpf.Toolkit"/>
         <PackageReference Include="GigaChatAdapter"/>
@@ -422,6 +421,10 @@
         </Content>
         <Resource Include="Resources\Images\refresh-button.png">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Resource>
+        <None Remove="Resources\Assets\ReportEngine.ico" />
+        <Resource Include="Resources\Assets\ReportEngine.ico">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Resource>
     </ItemGroup>
 

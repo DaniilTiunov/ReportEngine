@@ -7,7 +7,7 @@
     MinHeight="650"
     MinWidth="1100"
     ResizeMode="CanResize"
-    ShowIconOnTitleBar="True"
+    ShowIconOnTitleBar="False"
     Title="Создание и редактирование обвязок"
     TitleForeground="{DynamicResource PrimaryForeground}"
     Width="1400"
@@ -46,11 +46,11 @@
 
 
 
-    <DockPanel>
+    <DockPanel Background="{DynamicResource PrimaryColor}">
         <Separator DockPanel.Dock="Top" Style="{DynamicResource WindowTitleSeparatorStyle}" />
 
         <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-            <Grid>
+            <Grid Margin="12">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition MinWidth="760" Width="2.4*" />
                     <ColumnDefinition MinWidth="300" Width="*" />
@@ -62,10 +62,9 @@
 
                 <!--  Обвязки и датчики в стенде  -->
                 <GroupBox
-                    BorderThickness="0"
                     Grid.Column="0"
                     Grid.Row="0"
-                    Margin="5">
+                    Style="{DynamicResource SettingsGroupBoxStyle}">
                     <GroupBox.Header>
                         <TextBlock TextWrapping="Wrap">
                             <Run
@@ -427,10 +426,10 @@
 
                 <!--  Изображение обвязки  -->
                 <Border
-                    Background="WhiteSmoke"
-                    BorderBrush="LightGray"
+                    Background="{DynamicResource SecondaryColor}"
+                    BorderBrush="{DynamicResource BorderColor}"
                     BorderThickness="1"
-                    CornerRadius="4"
+                    CornerRadius="8"
                     Grid.Column="1"
                     Grid.Row="0"
                     Height="245"
@@ -449,10 +448,8 @@
 
                 <!--  Датчики в обвязке  -->
                 <GroupBox
-                    BorderThickness="0"
                     Grid.Row="1"
-                    Margin="5,0,5,5"
-                    Padding="8">
+                    Style="{DynamicResource SettingsGroupBoxStyle}">
                     <GroupBox.Header>
                         <TextBlock TextWrapping="Wrap">
                             <Run
@@ -690,10 +687,9 @@
 
                 <!--  Обвязки в проекте  -->
                 <GroupBox
-                    BorderThickness="0"
                     Grid.Column="1"
                     Grid.Row="1"
-                    Margin="5,0,5,5">
+                    Style="{DynamicResource SettingsGroupBoxStyle}">
                     <GroupBox.Header>
                         <TextBlock TextWrapping="Wrap">
                             <Run

@@ -10,6 +10,7 @@ using System.Windows.Input;
 using MahApps.Metro.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.Services.Notification;
+using ReportEngine.App.Services.Theming;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.Views.Controls;
 using ReportEngine.App.Views.Windows;
@@ -25,18 +26,21 @@ public partial class MainWindow : MetroWindow //Это так называемы
     private readonly ExceptionService _exceptionService;
     private readonly MainWindowViewModel _mainViewModel;
     private readonly IServiceProvider _serviceProvider;
+    private readonly IThemeService _themeService;
     private ICollectionView _projectsView;
 
     public MainWindow(
         MainWindowViewModel mainViewModel,
         IServiceProvider serviceProvider,
-        ExceptionService exceptionService)
+        ExceptionService exceptionService,
+        IThemeService themeService)
     {
         InitializeComponent();
         DataContext = mainViewModel;
         _mainViewModel = mainViewModel;
         _serviceProvider = serviceProvider;
         _exceptionService = exceptionService;
+        _themeService = themeService;
 
         SetWindowTitle();
 
@@ -77,8 +81,6 @@ public partial class MainWindow : MetroWindow //Это так называемы
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
-            StandardTheme(null, null);
-
             MainWindow_StartUpState();
 
             if (Startup.CanConnect) await _mainViewModel.ShowAllProjectsAsync();
@@ -86,7 +88,10 @@ public partial class MainWindow : MetroWindow //Это так называемы
             _projectsView = CollectionViewSource.GetDefaultView(
                 _mainViewModel.MainWindowModel.AllProjects);
 
+            _projectsView.SortDescriptions.Add(new SortDescription("Status", ListSortDirection.Descending));
+            
             MainDataGrid.ItemsSource = _projectsView;
+            
         });
     }
 
@@ -119,38 +124,22 @@ public partial class MainWindow : MetroWindow //Это так называемы
 
     private void ChangeDarkTheme(object sender, RoutedEventArgs e)
     {
-        ChangesTheme("/Resources/Dictionaries/ColorThemes/DarkTheme.xaml");
+        _themeService.ApplyTheme(AppTheme.Dark);
     }
 
     private void StandardTheme(object sender, RoutedEventArgs e)
     {
-        ChangesTheme("/Resources/Dictionaries/ColorThemes/LightTheme.xaml");
+        _themeService.ApplyTheme(AppTheme.Light);
     }
 
     private void MangoParadiseTheme(object sender, RoutedEventArgs e)
     {
-        ChangesTheme("/Resources/Dictionaries/ColorThemes/MangoParadiseTheme.xaml");
+        _themeService.ApplyTheme(AppTheme.MangoParadise);
     }
 
     private void BubbleGumTheme(object sender, RoutedEventArgs e)
     {
-        ChangesTheme("/Resources/Dictionaries/ColorThemes/BubbleGumTheme.xaml");
-    }
-
-    private void ChangesTheme(string dictPath)
-    {
-        var uri = new Uri(dictPath, UriKind.Relative);
-        var themeDict = Application.LoadComponent(uri) as ResourceDictionary;
-
-        var mergedDicts = Application.Current.Resources.MergedDictionaries;
-        for (var i = 0; i < mergedDicts.Count; i++)
-            if (mergedDicts[i].Source != null && mergedDicts[i].Source.OriginalString.Contains("ColorThemes"))
-            {
-                mergedDicts[i] = themeDict;
-                return;
-            }
-
-        mergedDicts.Add(themeDict);
+        _themeService.ApplyTheme(AppTheme.BubbleGum);
     }
 
     private void MainWindow_StartUpState()

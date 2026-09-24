@@ -165,10 +165,12 @@ public partial class ProjectPreview : UserControl
                     var button = new Button
                     {
                         Content = "➕",
-                        Foreground = Brushes.White,
                         VerticalAlignment = VerticalAlignment.Center,
                         Cursor = Cursors.Hand
                     };
+
+                    button.SetResourceReference(Control.ForegroundProperty, "ButtonForeground");
+                    button.SetResourceReference(Control.BackgroundProperty, "ButtonBackground");
 
                     cell.Content = button;
                 }
@@ -197,7 +199,7 @@ public partial class ProjectPreview : UserControl
         var focusedElement = Keyboard.FocusedElement as DependencyObject;
         if (focusedElement == null) return;
 
-        // Ищем родительский ListView (вверх по дереву)
+        // Табличные секции представлены ListView и DataGrid.
         var parentListView = FindVisualParent<ListView>(focusedElement);
 
         // Получаем провайдер команд
@@ -205,7 +207,7 @@ public partial class ProjectPreview : UserControl
         if (vm?.ProjectCommandProvider == null) return;
 
         // Если фокус на списке обвязок - удаляем обвязку
-        if (parentListView == ObvyazkiListView) // x:Name="ObvyazkiListView"
+        if (parentListView == ObvyazkiListView)
         {
             var command = vm.ProjectCommandProvider.RemoveObvFromStandCommand;
             if (command?.CanExecute(null) == true)
