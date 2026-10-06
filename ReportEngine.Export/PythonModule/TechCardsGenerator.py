@@ -890,6 +890,9 @@ def ProcessSplitInfo(stand):
             
 
 
+
+
+
 def fillConclusionPage(stand,project):
 
     #вписываем в рамку
@@ -1018,7 +1021,166 @@ def fillConclusionPage(stand,project):
 
 
 
+def fillConclusionPage_v2(stand,project):
 
+     #вписываем в рамку
+    sheetWidth = landscapeParams['frameWidth'] * 0.99
+    sheetHeight = landscapeParams['frameHeight'] * 0.99
+
+    #инициализируем стили листа
+    styles = getSampleStyleSheet()
+
+    cyrillicStyle = ParagraphStyle(
+        'Normal',
+        parent = styles['Normal'],
+        fontName ='Arial',
+        encoding ='UTF-8',
+        fontSize = 7
+    )
+
+
+    standSN = PdfHelper.to_str(stand["SerialNumber"])
+    standKKS = PdfHelper.to_str(stand["KKSCode"])
+    standDesignation = PdfHelper.to_str(stand["Designation"])
+    logoImage =  PdfHelper.generateImageFromFile("Etalon.jpg",sheetWidth * 0.18,sheetHeight * 0.15)
+
+    standTableHeaderInfo = [[f"Маршрутно-сопроводительная карта № {standSN}"] + [""] * 4]
+    standTableHeaderInfo.append(["", "Обозначение:", f"{standKKS}", "Дата начала:", ""])
+    standTableHeaderInfo.append(["", "Чертёж:", f"{standDesignation}", "Дата окончания:", "", ])
+    standTableHeaderInfo.append(["", "Зав. номер:", f"{standSN}", "", "",])
+
+
+
+    columnsSizes = [sheetWidth*0.05,sheetWidth*0.2,sheetWidth*0.15,sheetWidth*0.15,sheetWidth*0.15]
+
+
+    standTextTableHeader= Table(data = standTableHeaderInfo, colWidths = columnsSizes)
+
+    standTextTableHeader.setStyle(TableStyle(cmds = 
+                                       PdfHelper.commonTableStyleCmd +
+                                       PdfHelper.centerAlignTableStyleCmd + 
+                                       PdfHelper.visibleAllBordersTableStyleCmd +   
+                                       #объединяем ячейки для заголовка карты
+                                       [('SPAN', (0,0), (-1, 0) )] +
+                                       [('SPAN', (0,1), (0, 3) )] +
+                                       #жирный шрифт для шапки 
+                                       [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] +   
+                                       #обычный шрифт для данных таблицы
+                                       [('FONTNAME', (1, 1), (-1, -1), "Arial")] ))
+
+
+
+    standTableHeader = Table(data = [[standTextTableHeader,logoImage]], 
+                                    colWidths = [sheetWidth*0.7, sheetWidth*0.2])
+
+    standTableHeader.setStyle(TableStyle(cmds = 
+                                            PdfHelper.commonTableStyleCmd +
+                                            PdfHelper.centerAlignTableStyleCmd + 
+                                            PdfHelper.visibleAllBordersTableStyleCmd
+                                             ))
+
+    
+    columnsHeader = [["№ п.п.", "Наименование операции","Дата и время выполнения", "Рабочий центр","Ф.И.О и подпись исполнителя", "№ извещения НП","Примечание"]]
+    operationsTable = columnsHeader.copy();
+
+    assemblyTableInfo = [["1. СБОРОЧНО-СВАРОЧНЫЙ УЧАСТОК"] + [""] * 6]
+
+    assemblyTableInfo.append(["1.1" , "Сварка рамы"] + [""] + ["ПС"] + [""] * 3)
+    assemblyTableInfo.append(["1.2" , "Контроль сварки рамы"] + [""] + ["ОТК"] + [""] * 3)
+    assemblyTableInfo.append(["1.3" , "Сварка ТХ"] + [""] + ["ПС"] + [""] * 3)
+    assemblyTableInfo.append(["1.4" , "Контроль сварки ТХ"] + [""] + ["ОТК"] + [""] * 3)
+
+
+    recordsColumnsSizes = [sheetWidth*0.05,sheetWidth*0.2,sheetWidth*0.15,sheetWidth*0.15,sheetWidth*0.15,sheetWidth*0.15, sheetWidth*0.15]
+
+    recordsTableStyle = TableStyle(cmds = 
+                                    PdfHelper.commonTableStyleCmd +
+                                    PdfHelper.centerAlignTableStyleCmd + 
+                                    PdfHelper.visibleAllBordersTableStyleCmd +
+                                     #обычный шрифт для данных таблицы
+                                     [('FONTNAME', (1, 1), (-1, -1), "Arial")] + 
+                                     #шапка 
+                                     [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] +
+                                     [('SPAN', (0, 0), (-1, 0) )] )
+
+    assemblyTable = Table(data = assemblyTableInfo, 
+                                colWidths = recordsColumnsSizes)
+
+    assemblyTable.setStyle(recordsTableStyle)
+
+    
+
+    paintTable = [["2. УЧАСТОК ЛКП"] + [""] * 6]
+
+    paintTable.append(["2.1" , "Подготовка поверхности перед нанесением ЛКП рамы"] + ["Дата:"] + ["ПС"] + [""] * 3)
+    paintTable.append(["", ""] + ["Время:"] +  [""] * 4)
+
+    paintTable.append(["2.2" , "Контроль подготовки поверхности рамы"] + [""] + ["ОТК"] + [""] * 3)
+
+    paintTable.append(["2.3" , "Подготовка поверхности перед нанесением ЛKП ТХ"] + ["Дата:"] + ["ПС"] + [""] * 3)
+    paintTable.append(["", ""] + ["Время:"] +  [""] * 4)
+
+    paintTable.append(["2.4" , "Контроль подготовки поверхности"] + [""] + ["ОТК"] + [""] * 3)
+
+    paintTable.append(["2.5" , "Нанесение ЛКП рамы"] + ["Дата:\nВремя:"] + ["ПС"] + [""] * 3)
+    paintTable.append(["", ""] + ["Время:"] +  [""] * 4)
+
+    paintTable.append(["2.6" , "Контроль ЛКП рамы"] + [""] + ["ОТК"] + [""] * 3)
+
+    paintTable.append(["2.7" , "Нанесение ЛКП ТХ"] + ["Дата:"] + ["ПС"] + [""] * 3)
+    paintTable.append(["", ""] + ["Время:"] +  [""] * 4)
+
+    paintTable.append(["2.8" , "Контроль ЛКП ТХ"] + [""] + ["ОТК"] + [""] * 3)
+
+    #operationsTable.append(paintTable)
+
+    checkTable = [["3. ПРИЁМО-СДАТОЧНЫЕ ИСПЫТАНИЯ"] + [""] * 6]
+
+    checkTable.append(["3.1" , "ЭТЛ"] + ["№ протокола ЭТЛ:"] + ["ПС"] + [""] * 3)
+    checkTable.append(["", ""] + ["Дата"] + ["ОТК"] + [""] * 3)
+
+    checkTable.append(["3.2" , "Подготовка ЛКП к финишному контролю"] + [""] + ["ПС"] + [""] * 3)
+
+    checkTable.append(["3.3" , "Финишный контроль ЛКП"] + ["№ акта ЛКП:"] + ["ОТК"] + [""] * 3)
+    checkTable.append(["", ""]  + ["Дата"] + [""] + [""] * 3)
+
+    checkTable.append(["3.4" , "Гидроиспытания"] + ["№ акта ГИ:"] + ["ПС"] + [""] * 3)
+    checkTable.append(["", ""] + ["Дата"] + ["ОТК"] + [""] * 3)
+
+    checkTable.append(["3.5" , "Отметка о завершении ПСИ"] + ["Результат:_____________"] + ["ПС"] + [""] * 3)
+    checkTable.append(["", ""] + ["№ протокола"] + ["ОТК"] + [""] * 3)
+    checkTable.append(["", ""] + ["Дата"] + [""] + [""] * 3)
+
+    #operationsTable.append(checkTable)
+
+    packageTable = [["4. УПАКОВКА, СОПРОВОДИТЕЛЬНАЯ ДОКУМЕНТАЦИЯ"] + [""] * 6]
+
+    packageTable.append(["4.1", "Консервация"] + [""] + ["ПС"] + [""] * 3)
+    packageTable.append(["4.2", "Контроль консервация"] + [""] + ["ОТК"] + [""] * 3)
+
+    packageTable.append(["4.3", "Упаковка"] + [""] + ["ПС"] + [""] * 3)
+    packageTable.append(["", ""] + [""] + ["ОСиЛ"] + [""] * 3)
+
+    packageTable.append(["4.4", "Подготовка и контроль сопроводительной документации"] + [""] + ["ОСиЛ"] + [""] * 3)
+    packageTable.append(["", ""] + [""] + ["ПСС"] + [""] * 3)
+
+    #operationsTable.append(packageTable)
+
+
+    shippingTable = [["5. ОТГРУЗКА"] + [""] * 6]
+    shippingTable.append(["5.1", "Контроль соблюдения правил отгрузки"] + [""] + ["ОСиЛ"] + [""] * 3)
+    shippingTable.append(["5.2", "Обеспечение фотоматериалов"] + [""] + ["ОСиЛ"] + [""] * 3)
+
+    #operationsTable.append(shippingTable)
+
+    #operationsTable.append(assemblyTable)
+
+
+    #собираем все элементы листа
+    sheetElements = []
+    sheetElements.append(standTableHeader)
+    sheetElements.append(operationsTable)
+    return sheetElements
 
 #основной генератор отчета
 def generateReport(jsonFilePath,outputFilePath):
@@ -1040,7 +1202,8 @@ def generateReport(jsonFilePath,outputFilePath):
         elements.extend(standSheet)  
         elements.append(NextPageTemplate('landscape'))
         elements.append(PageBreak())
-        conclusionSheet = fillConclusionPage(stand,data)
+        #conclusionSheet = fillConclusionPage(stand,data)
+        conclusionSheet = fillConclusionPage_v2(stand,data)
         elements.extend(conclusionSheet)
         elements.append(NextPageTemplate('portrait'))
         elements.append(PageBreak())
@@ -1078,7 +1241,8 @@ def generateTestReport(jsonFilePath):
         elements.extend(standSheet)  
         elements.append(NextPageTemplate('landscape'))
         elements.append(PageBreak())
-        conclusionSheet = fillConclusionPage(stand,data)
+        #conclusionSheet = fillConclusionPage(stand,data)
+        conclusionSheet = fillConclusionPage_v2(stand,data)
         elements.extend(conclusionSheet)
         elements.append(NextPageTemplate('portrait'))
         elements.append(PageBreak())
