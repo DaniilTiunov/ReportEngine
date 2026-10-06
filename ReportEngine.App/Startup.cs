@@ -17,11 +17,13 @@ public static class Startup
     [STAThread]
     public static void Main()
     {
-        _mutex = new Mutex(true, "Global\\ReportEngineApp", out var createdNew);
+        _mutex = new Mutex(true, "Global\\ReportEngineApp", 
+            out var createdNew);
 
         if (!createdNew)
         {
-            MessageBox.Show("Приложение уже запущено", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show("Приложение уже запущено", "Ошибка", 
+                MessageBoxButton.OK, MessageBoxImage.Error);
             return;
         }
 
@@ -73,7 +75,7 @@ public static class Startup
 
             app.MainWindow = mainWindow;
             app.ShutdownMode = ShutdownMode.OnMainWindowClose;
-            
+
             SplashManager.Close();
 
             _ = host.StartAsync();
