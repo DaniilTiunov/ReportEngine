@@ -1038,6 +1038,17 @@ def fillConclusionPage_v2(stand,project):
         fontSize = 7
     )
 
+    tableContentStyle = ParagraphStyle(
+        'TableContent',
+        parent = styles['Normal'],
+        fontName ='Arial',
+        encoding ='UTF-8',
+        fontSize = 6,
+        wordWrap = 'LTR',
+        alignment = TA_CENTER,
+        leading = 7
+    )
+
     
 
     standSN = PdfHelper.to_str(stand["SerialNumber"])
@@ -1136,6 +1147,15 @@ def fillConclusionPage_v2(stand,project):
 
     paintTableInfo.append(["2.8" , "Контроль ЛКП ТХ"] + [""] + ["ОТК"] + [""] * 3)
 
+    #запихиваем все в параграфы
+    # for i,row in enumerate(paintTableInfo,1):
+    #     for j,cellItem in enumerate(row,0):
+    #         paintTableInfo[i][j] = Paragraph(cellItem,tableContentStyle)
+
+
+
+
+
     paintTable = Table(data = paintTableInfo, colWidths=recordsColumnsSizes)
 
     paintTable.setStyle(TableStyle(cmds = 
@@ -1146,7 +1166,11 @@ def fillConclusionPage_v2(stand,project):
                                      [('FONTNAME', (1, 1), (-1, -1), "Arial")] + 
                                      #шапка 
                                      [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] +
-                                     [('SPAN', (0, 0), (-1, 0) )] ))
+                                     [('SPAN', (0, 0), (-1, 0) )] +
+                                     #выравнивание столбца времени и даты выполнения
+                                     [('ALIGN', (2, 0), (2, -1), 'LEFT')]
+                                     )) 
+
 
 
 
@@ -1196,7 +1220,9 @@ def fillConclusionPage_v2(stand,project):
                                      #соединения в записях
                                      [('SPAN', (0, 7), (0, 8) )] +
                                      [('SPAN', (1, 7), (1, 8) )] +
-                                     [('SPAN', (2, 7), (2, 8) )] 
+                                     [('SPAN', (2, 7), (2, 8) )] +
+                                     #выравнивание столбца времени и даты выполнения
+                                     [('ALIGN', (2, 0), (2, -1), 'LEFT')]
                                      ))
 
 
@@ -1233,13 +1259,8 @@ def fillConclusionPage_v2(stand,project):
                                      #соединения в записях
                                      [('SPAN', (0, 5), (0, 6) )] + 
                                      [('SPAN', (1, 5), (1, 6) )] + 
-                                     [('SPAN', (2, 5), (2, 6) )] 
+                                     [('SPAN', (2, 5), (2, 6) )]
                                      ))
-
-
-
-
-
 
     shippingTableInfo = [["5. ОТГРУЗКА"] + [""] * 6]
     shippingTableInfo.append(["5.1", "Контроль соблюдения правил отгрузки"] + [""] + ["ОСиЛ"] + [""] * 3)
@@ -1249,8 +1270,8 @@ def fillConclusionPage_v2(stand,project):
 
     shippingTable.setStyle(TableStyle(cmds = 
                                      PdfHelper.commonTableStyleCmd +
-                                    PdfHelper.centerAlignTableStyleCmd + 
-                                    PdfHelper.visibleAllBordersTableStyleCmd +
+                                     PdfHelper.centerAlignTableStyleCmd + 
+                                     PdfHelper.visibleAllBordersTableStyleCmd +
                                      #обычный шрифт для данных таблицы
                                      [('FONTNAME', (1, 1), (-1, -1), "Arial")] + 
                                      #шапка 
@@ -1296,7 +1317,6 @@ def generateReport(jsonFilePath,outputFilePath):
         elements.extend(conclusionSheet)
         elements.append(NextPageTemplate('portrait'))
         elements.append(PageBreak())
-
 
     doc.build(elements)
 
