@@ -1084,6 +1084,12 @@ def fillConclusionPage_v2(stand,project):
                                     #шапка 
                                     [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] ))
 
+    
+    dateText = "Дата:"
+    dateTimeText = "Дата:" + "\n" + "Время:"
+
+
+
     assemblyTableInfo = [["1. СБОРОЧНО-СВАРОЧНЫЙ УЧАСТОК"] + [""] * 6]
 
     assemblyTableInfo.append(["1.1" , "Сварка рамы"] + [""] + ["ПС"] + [""] * 3)
@@ -1108,8 +1114,9 @@ def fillConclusionPage_v2(stand,project):
                                      [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] +
                                      [('SPAN', (0, 0), (-1, 0) )] ))
 
-    dateText = "Дата:"
-    dateTimeText = "Дата:" + "\n" + "Время:"
+
+
+
 
     paintTableInfo = [["2. УЧАСТОК ЛКП"] + [""] * 6]
 
@@ -1140,24 +1147,30 @@ def fillConclusionPage_v2(stand,project):
                                      #шапка 
                                      [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] +
                                      [('SPAN', (0, 0), (-1, 0) )] ))
-    #operationsTable.append(paintTable)
+
+
+
+
 
     checkTableInfo = [["3. ПРИЁМО-СДАТОЧНЫЕ ИСПЫТАНИЯ"] + [""] * 6]
 
-    checkTableInfo.append(["3.1" , "ЭТЛ"] + ["№ протокола ЭТЛ:"] + ["ПС"] + [""] * 3)
-    checkTableInfo.append(["", ""] + ["Дата"] + ["ОТК"] + [""] * 3)
+    checkTableInfo.append(["3.1" , "ЭТЛ"] + ["№ протокола ЭТЛ:" + "\n" + dateText] + ["ПС"] + [""] * 3)
+    checkTableInfo.append([""] * 3 + ["ОТК"] + [""] * 3)
 
     checkTableInfo.append(["3.2" , "Подготовка ЛКП к финишному контролю"] + [""] + ["ПС"] + [""] * 3)
 
-    checkTableInfo.append(["3.3" , "Финишный контроль ЛКП"] + ["№ акта ЛКП:"] + ["ОТК"] + [""] * 3)
-    checkTableInfo.append(["", ""]  + ["Дата"] + [""] + [""] * 3)
+    checkTableInfo.append(["3.3" , "Финишный контроль ЛКП"] + ["№ акта ЛКП:" + "\n" + dateText] + ["ОТК"] + [""] * 3)
 
-    checkTableInfo.append(["3.4" , "Гидроиспытания"] + ["№ акта ГИ:"] + ["ПС"] + [""] * 3)
-    checkTableInfo.append(["", ""] + ["Дата"] + ["ОТК"] + [""] * 3)
+    checkTableInfo.append(["3.4" , "Гидроиспытания"] + ["№ акта ГИ:" "\n" + dateText] + ["ПС"] + [""] * 3)
+    checkTableInfo.append([""] * 3 + ["ОТК"] + [""] * 3)
 
-    checkTableInfo.append(["3.5" , "Отметка о завершении ПСИ"] + ["Результат:_____________"] + ["ПС"] + [""] * 3)
-    checkTableInfo.append(["", ""] + ["№ протокола"] + ["ОТК"] + [""] * 3)
-    checkTableInfo.append(["", ""] + ["Дата"] + [""] + [""] * 3)
+    checkTableInfo.append(["3.5" , "Отметка о завершении ПСИ"] + 
+                          ["Результат:_____________" + "\n" + "№ протокола:" + "\n" + dateText] + 
+                          ["ПС"] + 
+                          [""] * 3)
+    checkTableInfo.append([""] * 3 + ["ОТК"] + [""] * 3)
+
+
 
     checkTable = Table(data = checkTableInfo, colWidths=recordsColumnsSizes)
 
@@ -1169,9 +1182,27 @@ def fillConclusionPage_v2(stand,project):
                                      [('FONTNAME', (1, 1), (-1, -1), "Arial")] + 
                                      #шапка 
                                      [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] +
-                                     [('SPAN', (0, 0), (-1, 0) )] ))
+                                     [('SPAN', (0, 0), (-1, 0) )] +
+                                     #жирный шрифт для последней записи
+                                     [('FONTNAME', (1, 7), (2, 8), "Arial-Bold")]+
+                                     #соединения в записях
+                                     [('SPAN', (0, 1), (0, 2) )] + 
+                                     [('SPAN', (1, 1), (1, 2) )] + 
+                                     [('SPAN', (2, 1), (2, 2) )] +
+                                     #соединения в записях
+                                     [('SPAN', (0, 5), (0, 6) )] + 
+                                     [('SPAN', (1, 5), (1, 6) )] + 
+                                     [('SPAN', (2, 5), (2, 6) )] +  
+                                     #соединения в записях
+                                     [('SPAN', (0, 7), (0, 8) )] +
+                                     [('SPAN', (1, 7), (1, 8) )] +
+                                     [('SPAN', (2, 7), (2, 8) )] 
+                                     ))
 
-    #operationsTable.append(checkTable)
+
+                                     
+                                     
+
 
     packageTableInfo = [["4. УПАКОВКА, СОПРОВОДИТЕЛЬНАЯ ДОКУМЕНТАЦИЯ"] + [""] * 6]
 
@@ -1179,10 +1210,10 @@ def fillConclusionPage_v2(stand,project):
     packageTableInfo.append(["4.2", "Контроль консервация"] + [""] + ["ОТК"] + [""] * 3)
 
     packageTableInfo.append(["4.3", "Упаковка"] + [""] + ["ПС"] + [""] * 3)
-    packageTableInfo.append(["", ""] + [""] + ["ОСиЛ"] + [""] * 3)
+    packageTableInfo.append([""] * 3 + ["ОСиЛ"] + [""] * 3)
 
     packageTableInfo.append(["4.4", "Подготовка и контроль сопроводительной документации"] + [""] + ["ОСиЛ"] + [""] * 3)
-    packageTableInfo.append(["", ""] + [""] + ["ПСС"] + [""] * 3)
+    packageTableInfo.append([""] * 3 + ["ПСС"] + [""] * 3)
 
     packageTable = Table(data = packageTableInfo, colWidths=recordsColumnsSizes)
 
@@ -1194,12 +1225,20 @@ def fillConclusionPage_v2(stand,project):
                                      [('FONTNAME', (1, 1), (-1, -1), "Arial")] + 
                                      #шапка 
                                      [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] +
-                                     [('SPAN', (0, 0), (-1, 0) )] ))
+                                     [('SPAN', (0, 0), (-1, 0) )] +
+                                     #соединения в записях
+                                     [('SPAN', (0, 3), (0, 4) )] + 
+                                     [('SPAN', (1, 3), (1, 4) )] + 
+                                     [('SPAN', (2, 3), (2, 4) )] +
+                                     #соединения в записях
+                                     [('SPAN', (0, 5), (0, 6) )] + 
+                                     [('SPAN', (1, 5), (1, 6) )] + 
+                                     [('SPAN', (2, 5), (2, 6) )] 
+                                     ))
 
 
 
 
-    #operationsTable.append(packageTable)
 
 
     shippingTableInfo = [["5. ОТГРУЗКА"] + [""] * 6]
@@ -1218,9 +1257,7 @@ def fillConclusionPage_v2(stand,project):
                                      [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] +
                                      [('SPAN', (0, 0), (-1, 0) )] ))
 
-    #operationsTable.append(shippingTable)
 
-    #operationsTable.append(assemblyTable)
 
 
     #собираем все элементы листа
