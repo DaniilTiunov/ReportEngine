@@ -1030,23 +1030,46 @@ def fillConclusionPage_v2(stand,project):
     #инициализируем стили листа
     styles = getSampleStyleSheet()
 
-    cyrillicStyle = ParagraphStyle(
-        'Normal',
+
+    HeaderL1Style = ParagraphStyle(
+        'HeaderL1',
         parent = styles['Normal'],
-        fontName ='Arial',
+        fontName ='TimesNewRoman-Bold', 
         encoding ='UTF-8',
-        fontSize = 7
+        fontSize = 10,
+        wordWrap = 'LTR',
+        alignment = TA_CENTER
+    )
+    HeaderL2Style = ParagraphStyle(
+        'HeaderL2',
+        parent = styles['Normal'],
+        fontName ='TimesNewRoman-Bold',  
+        encoding ='UTF-8',
+        fontSize = 8,
+        wordWrap = 'LTR',
+        alignment = TA_CENTER
     )
 
     tableContentStyle = ParagraphStyle(
         'TableContent',
         parent = styles['Normal'],
-        fontName ='Arial',
+        fontName ='TimesNewRoman',
         encoding ='UTF-8',
-        fontSize = 6,
+        fontSize = 7,
         wordWrap = 'LTR',
         alignment = TA_CENTER,
-        leading = 7
+        leading = 8
+    )
+
+    dateTimeStyle = ParagraphStyle(
+        'DateTimeContent',
+        parent = styles['Normal'],
+        fontName ='TimesNewRoman',  # вместо 'Arial'
+        encoding ='UTF-8',
+        fontSize = 7,
+        wordWrap = 'LTR',
+        leading = 8,
+        alignment= TA_LEFT
     )
 
     
@@ -1062,9 +1085,21 @@ def fillConclusionPage_v2(stand,project):
     standTableHeaderInfo.append(["", "Зав. номер:", f"{standSN}", "", "",] + [""] * 2)
 
 
+    #оформляем текст внутри
+    for i,row in enumerate(standTableHeaderInfo):
+        for j,cellItem in enumerate(row):
+          
+            if isinstance(cellItem, str):
+                if (i==0):  #шапка
+                    targetStyle = HeaderL2Style
+                else: #остальные данные
+                    targetStyle = tableContentStyle
 
-    columnsSizes = [sheetWidth*0.05,sheetWidth*0.2,sheetWidth*0.15,sheetWidth*0.15,sheetWidth*0.15]
+                standTableHeaderInfo[i][j] = Paragraph(cellItem,targetStyle)
 
+
+   
+    columnsSizes = [sheetWidth*0.05,sheetWidth*0.25,sheetWidth*0.15,sheetWidth*0.1,sheetWidth*0.15]
 
     standTableHeader= Table(data = standTableHeaderInfo, colWidths = columnsSizes)
 
@@ -1077,15 +1112,33 @@ def fillConclusionPage_v2(stand,project):
                                        #пустая область слева
                                        [('SPAN', (0,1), (0, 3) )] +
                                        #логотип в шапке
-                                       [('SPAN', (5,0), (-1, 3) )] +
+                                       [('SPAN', (5,0), (-1, 3) )] 
                                        #жирный шрифт для шапки 
-                                       [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] +   
+                                       #[('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] +   
                                        #обычный шрифт для данных таблицы
-                                       [('FONTNAME', (1, 1), (-1, -1), "Arial")] ))
+                                       #[('FONTNAME', (1, 1), (-1, -1), "Arial")] 
+    
+    ))
 
 
     
     columnsHeaderInfo = [["№ п.п.", "Наименование операции","Дата и время выполнения", "Рабочий центр","Ф.И.О и подпись исполнителя", "№ извещения НП","Примечание"]]
+    
+        #оформляем текст внутри
+    for i,row in enumerate(columnsHeaderInfo):
+        for j,cellItem in enumerate(row):
+          
+            if (i==0):  #шапка
+                targetStyle = HeaderL2Style
+            else: #остальные данные
+                targetStyle = tableContentStyle
+
+            columnsHeaderInfo[i][j] = Paragraph(cellItem,targetStyle)
+    
+    
+    
+    
+    
     columnsHeaderTable = Table(data = columnsHeaderInfo, colWidths = columnsSizes)
 
     columnsHeaderTable.setStyle(TableStyle(cmds = 
@@ -1097,7 +1150,7 @@ def fillConclusionPage_v2(stand,project):
 
     
     dateText = "Дата:"
-    dateTimeText = "Дата:" + "\n" + "Время:"
+    dateTimeText = f"Дата:{PdfHelper.newLineMark}Время:"
 
 
 
@@ -1108,9 +1161,20 @@ def fillConclusionPage_v2(stand,project):
     assemblyTableInfo.append(["1.3" , "Сварка ТХ"] + [""] + ["ПС"] + [""] * 3)
     assemblyTableInfo.append(["1.4" , "Контроль сварки ТХ"] + [""] + ["ОТК"] + [""] * 3)
 
+    #оформляем текст внутри
+    for i,row in enumerate(assemblyTableInfo):
+        for j,cellItem in enumerate(row):
+          
+            if (i==0):  #шапка
+                targetStyle = HeaderL1Style
+            elif(j == 2): #колонка дата и время
+                targetStyle = dateTimeStyle
+            else: #остальные данные
+                targetStyle = tableContentStyle
+
+            assemblyTableInfo[i][j] = Paragraph(cellItem,targetStyle)
 
     recordsColumnsSizes = [sheetWidth*0.05,sheetWidth*0.2,sheetWidth*0.15,sheetWidth*0.15,sheetWidth*0.15,sheetWidth*0.15, sheetWidth*0.15]
-
 
     assemblyTable = Table(data = assemblyTableInfo, 
                                 colWidths = recordsColumnsSizes)
@@ -1120,9 +1184,9 @@ def fillConclusionPage_v2(stand,project):
                                     PdfHelper.centerAlignTableStyleCmd + 
                                     PdfHelper.visibleAllBordersTableStyleCmd +
                                      #обычный шрифт для данных таблицы
-                                     [('FONTNAME', (1, 1), (-1, -1), "Arial")] + 
+                                    # [('FONTNAME', (1, 1), (-1, -1), "Arial")] + 
                                      #шапка 
-                                     [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] +
+                                    # [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] +
                                      [('SPAN', (0, 0), (-1, 0) )] ))
 
 
@@ -1147,10 +1211,22 @@ def fillConclusionPage_v2(stand,project):
 
     paintTableInfo.append(["2.8" , "Контроль ЛКП ТХ"] + [""] + ["ОТК"] + [""] * 3)
 
-    #запихиваем все в параграфы
-    # for i,row in enumerate(paintTableInfo,1):
-    #     for j,cellItem in enumerate(row,0):
-    #         paintTableInfo[i][j] = Paragraph(cellItem,tableContentStyle)
+
+    for i,row in enumerate(paintTableInfo):
+        for j,cellItem in enumerate(row):
+          
+            if (i==0):  #шапка
+                targetStyle = HeaderL1Style
+            elif(j == 2): #колонка дата и время
+                targetStyle = dateTimeStyle
+            else: #остальные данные
+                targetStyle = tableContentStyle
+
+            paintTableInfo[i][j] = Paragraph(cellItem,targetStyle)
+            
+
+
+            
 
 
 
@@ -1287,9 +1363,9 @@ def fillConclusionPage_v2(stand,project):
     sheetElements.append(columnsHeaderTable)
     sheetElements.append(assemblyTable)
     sheetElements.append(paintTable)
-    sheetElements.append(checkTable)
-    sheetElements.append(packageTable)
-    sheetElements.append(shippingTable)
+   # sheetElements.append(checkTable)
+    #sheetElements.append(packageTable)
+    #sheetElements.append(shippingTable)
     return sheetElements
 
 #основной генератор отчета
