@@ -602,8 +602,8 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
 
         boxColumnIndex = 4
         annotationColumnIndex = 6 
-        print("StandNN:"  + str(standNN))
-        print("Table length:" + str(len(impulseLineTableData))) 
+        #print("StandNN:"  + str(standNN))
+        #print("Table length:" + str(len(impulseLineTableData))) 
 
 
         #проходим по всем страницам
@@ -612,10 +612,10 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
             pageStartDataRowIndex = pageInfo["startDataRowIndex"]
             pageEndDataRowIndex = pageInfo["endDataRowIndex"]
             pageMiddleRecordFirstRowIndex = pageInfo["middleRecordFirstRowIndex"]
-            print(f"Page:" + str(p))
-            print(f"pageStartDataRowIndex:" + str(pageStartDataRowIndex))
-            print(f"pageEndDataRowIndex:" + str(pageEndDataRowIndex))
-            print(f"pageMiddleRecordFirstRowIndex:" + str(pageMiddleRecordFirstRowIndex))
+            # print(f"Page:" + str(p))
+            # print(f"pageStartDataRowIndex:" + str(pageStartDataRowIndex))
+            # print(f"pageEndDataRowIndex:" + str(pageEndDataRowIndex))
+            # print(f"pageMiddleRecordFirstRowIndex:" + str(pageMiddleRecordFirstRowIndex))
             
             arrayStartIndex = pageStartDataRowIndex
             arrayEndIndex = pageEndDataRowIndex
@@ -626,8 +626,8 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
                 arrayEndIndex -= headerRows
                 pageMiddleRecordFirstRowIndex -= headerRows
 
-            print(f"arrayStartIndex:" + str(arrayStartIndex))
-            print(f"arrayEndIndex:" + str(arrayEndIndex))
+            # print(f"arrayStartIndex:" + str(arrayStartIndex))
+            # print(f"arrayEndIndex:" + str(arrayEndIndex))
 
 
             #проходимся по строкам таблицы
@@ -637,8 +637,6 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
                 #среднюю запись не трогаем
                 if i == pageMiddleRecordFirstRowIndex:
                     continue
-
-                print(i)
 
                 impulseLineTableData[i][boxColumnIndex] = ""
                 impulseLineTableData[i][annotationColumnIndex] = ""
@@ -1102,7 +1100,7 @@ def fillConclusionPage_v2(stand,project):
 
     standSN = PdfHelper.to_str(stand["SerialNumber"])
     standKKS = PdfHelper.to_str(stand["KKSCode"])
-    standDesignation = PdfHelper.to_str(stand["Designation"])
+    standDesignation = PdfHelper.to_str(project["Description"])
     logoImage =  PdfHelper.generateImageFromFile("Etalon.jpg",sheetWidth * 0.25,sheetHeight * 0.05)
 
     standTableHeaderInfo = [[f"МАРШРУТНО-СОПРОВОДИТЕЛЬНАЯ КАРТА № {standSN.upper()}"] + [""] * 4 + [logoImage] + [""]]
