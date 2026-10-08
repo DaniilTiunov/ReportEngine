@@ -1,12 +1,13 @@
-﻿using System.Diagnostics;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories;
+using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Helpers;
 using ReportEngine.Shared.Services.Options;
+using System.Diagnostics;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -14,13 +15,16 @@ public class ProductionReportGenerator : IReportGenerator
 {
     private readonly ReportEngineConfigService _configService;
     private readonly ProjectInfoRepository _projectInfoRepository;
+    private readonly ParametersStore _parametersStore;
 
     public ProductionReportGenerator(
         ProjectInfoRepository projectInfoRepository,
-        ReportEngineConfigService configService)
+        ReportEngineConfigService configService,
+        ParametersStore parametersStore)
     {
         _projectInfoRepository = projectInfoRepository;
         _configService = configService;
+        _parametersStore = parametersStore;
     }
 
     ReportType IReportGenerator.Type => ReportType.ProductionReport;
@@ -245,7 +249,7 @@ public class ProductionReportGenerator : IReportGenerator
 
         sourceData = sourceData.OrderBy(stand => stand.Number).ToList();
 
-        var generatedData = ExcelReportHelper.GeneratePartsData(sourceData);
+        var generatedData = ExcelReportHelper.GeneratePartsData(sourceData, _parametersStore, project);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
         activeRow = FillSubtableData(activeRow, generatedData.PipesList, ws);

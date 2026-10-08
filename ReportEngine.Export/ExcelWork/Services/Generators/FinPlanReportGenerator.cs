@@ -262,7 +262,7 @@ public class FinPlanReportGenerator : IReportGenerator
 
         if (selectedStands != null) sourceData = selectedStands;
 
-        var generatedEquipmentsData = ExcelReportHelper.GeneratePartsData(sourceData);
+        var generatedEquipmentsData = ExcelReportHelper.GeneratePartsData(sourceData, _parametersStore, project);
         var equipmentRecords = ExcelReportHelper.GenerateAllPartsCollection(generatedEquipmentsData);
         var equipmentTotalCostRecord = ExcelReportHelper.GenerateTotalRecord(equipmentRecords);
 

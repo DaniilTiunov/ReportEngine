@@ -396,7 +396,7 @@ public class SummaryReportGenerator : IReportGenerator
 
         var standList = new List<Stand> { stand };
 
-        var generatedPartsData = ExcelReportHelper.GeneratePartsData(standList);
+        var generatedPartsData = ExcelReportHelper.GeneratePartsData(standList, _parametersStore, project);
 
         activeRow = CreateSubheaderOnWorksheet(activeRow, "Сортамент труб", ws);
         activeRow = FillSubtableData(activeRow, generatedPartsData.PipesList, ws);
@@ -473,8 +473,8 @@ public class SummaryReportGenerator : IReportGenerator
         var containerBatches = _containerRepository.GetAllByProjectIdAsync(project.Id);
 
         var generatedPartsData = selectedStands != null
-            ? ExcelReportHelper.GeneratePartsData(selectedStands)
-            : ExcelReportHelper.GeneratePartsData(project.Stands);
+            ? ExcelReportHelper.GeneratePartsData(selectedStands, _parametersStore, project)
+            : ExcelReportHelper.GeneratePartsData(project.Stands, _parametersStore, project);
 
 
         //принудительно обнуляем сроки поставки, они там не нужны (вроде)
@@ -631,7 +631,7 @@ public class SummaryReportGenerator : IReportGenerator
         var standsRecords = sourceStands
             .Select(stand =>
             {
-                var generatedPartsData = ExcelReportHelper.GeneratePartsData(new List<Stand> { stand });
+                var generatedPartsData = ExcelReportHelper.GeneratePartsData(new List<Stand> { stand }, _parametersStore, project);
                 var partsRecords = ExcelReportHelper.GenerateAllPartsCollection(generatedPartsData);
 
                 var generatedLaborData =

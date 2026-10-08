@@ -54,7 +54,7 @@ public static class ExcelReportHelper
     }
 
     //создаем инфу о комплектующих
-    public static PartsStandsData GeneratePartsData(IEnumerable<Stand> stands)
+    public static PartsStandsData GeneratePartsData(IEnumerable<Stand> stands, ParametersStore store, ProjectInfo project)
     {
         //Формирование списка труб
         var pipesList = stands
@@ -415,6 +415,43 @@ public static class ExcelReportHelper
             .Where(record => (record.Name.Value?.Contains("Табличка") ?? false) ||
                              (record.Name.Value?.Contains("Шильдик") ?? false))
             .ToList();
+
+
+        //если в стенде указана оцинковка
+        if (project.IsGalvanized)
+        {
+            //вытаскиваем все рамы, которые подлежат оцинковке
+            var gavanizedCandidates = stands
+                .SelectMany(stand => stand.StandFrames)
+                .Select(sf => sf.Frame)
+                .Where(fr => fr.FrameType == "Рама");
+
+            //если такие есть - добавляем запись об оцинковке
+            if (gavanizedCandidates.Any())
+            {
+                var galvanizationCostValueString = store[CalculationParameterType.HumanCost, "TestBenchGalvCost"].Value ;
+                var galvanizationCostValue = TryToParseFloat(galvanizationCostValueString);
+
+                var galvanizeRecord = new EquipmentRecord
+                {
+                    ExportDays = new ValidatedField<int?>(null, true),
+                    Name = new ValidatedField<string?>("Оцинкование рамы", true),
+                    Unit = new ValidatedField<string?>("шт", true),
+                    Quantity = new ValidatedField<float?>(gavanizedCandidates.Count(), true),
+                    CostPerUnit = new ValidatedField<float?>(galvanizationCostValue ?? 0.0f, galvanizationCostValue.HasValue)
+                };
+
+                galvanizeRecord.CommonCost = new ValidatedField<float?>(
+                    galvanizeRecord.Quantity.Value * galvanizeRecord.CostPerUnit.Value,
+                    galvanizeRecord.Quantity.Value * galvanizeRecord.CostPerUnit.Value != null);
+
+                othersParts.Add(galvanizeRecord);
+            }
+        }
+       
+
+
+        
 
 
         //расходные материалы - то осталось из доп комплектующих, за исключением прочих материалов и кронштейнов
