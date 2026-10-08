@@ -602,8 +602,8 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
 
         boxColumnIndex = 4
         annotationColumnIndex = 6 
-        print("StandNN:"  + str(standNN))
-        print("Table length:" + str(len(impulseLineTableData))) 
+        #print("StandNN:"  + str(standNN))
+        #print("Table length:" + str(len(impulseLineTableData))) 
 
 
         #проходим по всем страницам
@@ -612,10 +612,10 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
             pageStartDataRowIndex = pageInfo["startDataRowIndex"]
             pageEndDataRowIndex = pageInfo["endDataRowIndex"]
             pageMiddleRecordFirstRowIndex = pageInfo["middleRecordFirstRowIndex"]
-            print(f"Page:" + str(p))
-            print(f"pageStartDataRowIndex:" + str(pageStartDataRowIndex))
-            print(f"pageEndDataRowIndex:" + str(pageEndDataRowIndex))
-            print(f"pageMiddleRecordFirstRowIndex:" + str(pageMiddleRecordFirstRowIndex))
+            # print(f"Page:" + str(p))
+            # print(f"pageStartDataRowIndex:" + str(pageStartDataRowIndex))
+            # print(f"pageEndDataRowIndex:" + str(pageEndDataRowIndex))
+            # print(f"pageMiddleRecordFirstRowIndex:" + str(pageMiddleRecordFirstRowIndex))
             
             arrayStartIndex = pageStartDataRowIndex
             arrayEndIndex = pageEndDataRowIndex
@@ -626,8 +626,8 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
                 arrayEndIndex -= headerRows
                 pageMiddleRecordFirstRowIndex -= headerRows
 
-            print(f"arrayStartIndex:" + str(arrayStartIndex))
-            print(f"arrayEndIndex:" + str(arrayEndIndex))
+            # print(f"arrayStartIndex:" + str(arrayStartIndex))
+            # print(f"arrayEndIndex:" + str(arrayEndIndex))
 
 
             #проходимся по строкам таблицы
@@ -637,8 +637,6 @@ def CreateImpulseLinesTable(stand, project, tableSplittingInfo = None):
                 #среднюю запись не трогаем
                 if i == pageMiddleRecordFirstRowIndex:
                     continue
-
-                print(i)
 
                 impulseLineTableData[i][boxColumnIndex] = ""
                 impulseLineTableData[i][annotationColumnIndex] = ""
@@ -890,6 +888,9 @@ def ProcessSplitInfo(stand):
             
 
 
+
+
+
 def fillConclusionPage(stand,project):
 
     #вписываем в рамку
@@ -1018,7 +1019,409 @@ def fillConclusionPage(stand,project):
 
 
 
+def fillConclusionPage_v2(stand,project):
 
+     #вписываем в рамку
+    sheetWidth = portraitParams['frameWidth'] * 0.99
+    sheetHeight = portraitParams['frameHeight'] * 0.99
+
+    #инициализируем стили листа
+    styles = getSampleStyleSheet()
+
+
+    HeaderL1Style = ParagraphStyle(
+        'HeaderL1',
+        parent = styles['Normal'],
+        fontName ='TimesNewRoman-Bold', 
+        encoding ='UTF-8',
+        fontSize = 10,
+        wordWrap = 'LTR',
+        alignment = TA_CENTER
+    )
+    HeaderL2Style = ParagraphStyle(
+        'HeaderL2',
+        parent = styles['Normal'],
+        fontName ='TimesNewRoman-Bold',  
+        encoding ='UTF-8',
+        fontSize = 8,
+        wordWrap = 'LTR',
+        alignment = TA_CENTER
+    )
+
+
+    tableContentStyle = ParagraphStyle(
+        'TableContent',
+        parent = styles['Normal'],
+        fontName ='TimesNewRoman',
+        encoding ='UTF-8',
+        fontSize = 7,
+        wordWrap = 'LTR',
+        alignment = TA_CENTER,
+        leading = 8
+    )
+
+
+    boldTableContentStyle = ParagraphStyle(
+        'BoldTableContent',
+        parent = styles['Normal'],
+        fontName ='TimesNewRoman-Bold',
+        encoding ='UTF-8',
+        fontSize = 7,
+        wordWrap = 'LTR',
+        alignment = TA_CENTER,
+        leading = 8
+    )
+
+
+
+    dateTimeStyle = ParagraphStyle(
+        'DateTimeContent',
+        parent = styles['Normal'],
+        fontName ='TimesNewRoman', 
+        encoding ='UTF-8',
+        fontSize = 7,
+        wordWrap = 'LTR',
+        leading = 10,
+        alignment= TA_LEFT
+    )
+
+    boldDateTimeStyle = ParagraphStyle(
+        'BoldDateTimeContent',
+        parent = styles['Normal'],
+        fontName ='TimesNewRoman-Bold',  
+        encoding ='UTF-8',
+        fontSize = 7,
+        wordWrap = 'LTR',
+        leading = 10,
+        alignment= TA_LEFT
+    )
+
+    
+
+    standSN = PdfHelper.to_str(stand["SerialNumber"])
+    standKKS = PdfHelper.to_str(stand["KKSCode"])
+    standDesignation = PdfHelper.to_str(project["Description"])
+    logoImage =  PdfHelper.generateImageFromFile("Etalon.jpg",sheetWidth * 0.25,sheetHeight * 0.05)
+
+    standTableHeaderInfo = [[f"МАРШРУТНО-СОПРОВОДИТЕЛЬНАЯ КАРТА № {standSN.upper()}"] + [""] * 4 + [logoImage] + [""]]
+    standTableHeaderInfo.append(["", "Обозначение:", f"{standKKS}", "Дата начала:", ""] + [""] * 2)
+    standTableHeaderInfo.append(["", "Чертёж:", f"{standDesignation}", "Дата окончания:", ""] + [""] * 2)
+    standTableHeaderInfo.append(["", "Зав. номер:", f"{standSN}", "", "",] + [""] * 2)
+
+
+    #оформляем текст внутри
+    for i,row in enumerate(standTableHeaderInfo):
+        for j,cellItem in enumerate(row):
+          
+            if isinstance(cellItem, str):
+                if (i==0):  #шапка
+                    targetStyle = HeaderL1Style
+                else: #остальные данные
+                    targetStyle = tableContentStyle
+
+                standTableHeaderInfo[i][j] = Paragraph(cellItem,targetStyle)
+
+
+   
+    columnsSizes = [sheetWidth*0.05,sheetWidth*0.2,sheetWidth*0.2,sheetWidth*0.13,sheetWidth*0.15,sheetWidth*0.12, sheetWidth*0.15]
+
+    standTableHeader= Table(data = standTableHeaderInfo, colWidths = columnsSizes)
+
+    standTableHeader.setStyle(TableStyle(cmds = 
+                                       PdfHelper.commonTableStyleCmd +
+                                       PdfHelper.centerAlignTableStyleCmd + 
+                                       PdfHelper.visibleAllBordersTableStyleCmd +   
+                                       #объединяем ячейки для заголовка карты
+                                       [('SPAN', (0,0), (4, 0) )] +
+                                       #пустая область слева
+                                       [('SPAN', (0,1), (0, 3) )] +
+                                       #логотип в шапке
+                                       [('SPAN', (5,0), (-1, 3) )] 
+    
+    ))
+
+
+    
+    columnsHeaderInfo = [["№ п.п.", "Наименование операции","Дата и время выполнения", "Рабочий центр","Ф.И.О и подпись исполнителя", "№ извещения НП","Примечание"]]
+    
+    #оформляем текст внутри
+    for i,row in enumerate(columnsHeaderInfo):
+        for j,cellItem in enumerate(row):
+          
+            if (i==0):  #шапка
+                targetStyle = HeaderL2Style
+            else: #остальные данные
+                targetStyle = tableContentStyle
+
+            columnsHeaderInfo[i][j] = Paragraph(cellItem,targetStyle)
+    
+    
+    
+    
+    
+    columnsHeaderTable = Table(data = columnsHeaderInfo, colWidths = columnsSizes)
+
+    columnsHeaderTable.setStyle(TableStyle(cmds = 
+                                    PdfHelper.commonTableStyleCmd +
+                                    PdfHelper.centerAlignTableStyleCmd + 
+                                    PdfHelper.visibleAllBordersTableStyleCmd +
+                                    #шапка 
+                                    [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] ))
+
+    
+    dateText = "Дата:"
+    dateTimeText = f"Дата:{PdfHelper.newLineMark}Время:"
+
+
+
+    assemblyTableInfo = [["1. СБОРОЧНО-СВАРОЧНЫЙ УЧАСТОК"] + [""] * 6]
+
+    assemblyTableInfo.append(["1.1" , "Сварка рамы"] + [""] + ["ПС"] + [""] * 3)
+    assemblyTableInfo.append(["1.2" , "Контроль сварки рамы"] + [""] + ["ОТК"] + [""] * 3)
+    assemblyTableInfo.append(["1.3" , "Сварка ТХ"] + [""] + ["ПС"] + [""] * 3)
+    assemblyTableInfo.append(["1.4" , "Контроль сварки ТХ"] + [""] + ["ОТК"] + [""] * 3)
+
+    #оформляем текст внутри
+    for i,row in enumerate(assemblyTableInfo):
+        for j,cellItem in enumerate(row):
+          
+            if (i==0):  #шапка
+                targetStyle = HeaderL1Style
+            elif(j == 2): #колонка дата и время
+                targetStyle = dateTimeStyle
+            else: #остальные данные
+                targetStyle = tableContentStyle
+
+            assemblyTableInfo[i][j] = Paragraph(cellItem,targetStyle)
+
+    
+
+    assemblyTable = Table(data = assemblyTableInfo, 
+                                colWidths = columnsSizes)
+
+    assemblyTable.setStyle(TableStyle(cmds = 
+                                    PdfHelper.commonTableStyleCmd +
+                                    PdfHelper.centerAlignTableStyleCmd + 
+                                    PdfHelper.visibleAllBordersTableStyleCmd +
+                                     [('SPAN', (0, 0), (-1, 0) )] ))
+
+
+
+
+
+    paintTableInfo = [["2. УЧАСТОК ЛКП"] + [""] * 6]
+
+    paintTableInfo.append(["2.1" , "Подготовка поверхности перед нанесением ЛКП рамы"] + [dateTimeText] + ["ПС"] + [""] * 3)
+
+    paintTableInfo.append(["2.2" , "Контроль подготовки поверхности рамы"] + [""] + ["ОТК"] + [""] * 3)
+
+    paintTableInfo.append(["2.3" , "Подготовка поверхности перед нанесением ЛKП ТХ"] + [dateTimeText] + ["ПС"] + [""] * 3)
+
+    paintTableInfo.append(["2.4" , "Контроль подготовки поверхности"] + [""] + ["ОТК"] + [""] * 3)
+
+    paintTableInfo.append(["2.5" , "Нанесение ЛКП рамы"] + [dateTimeText] + ["ПС"] + [""] * 3)
+
+    paintTableInfo.append(["2.6" , "Контроль ЛКП рамы"] + [""] + ["ОТК"] + [""] * 3)
+
+    paintTableInfo.append(["2.7" , "Нанесение ЛКП ТХ"] + [dateTimeText] + ["ПС"] + [""] * 3)
+
+    paintTableInfo.append(["2.8" , "Контроль ЛКП ТХ"] + [""] + ["ОТК"] + [""] * 3)
+
+
+    for i,row in enumerate(paintTableInfo):
+        for j,cellItem in enumerate(row):
+          
+            if (i==0):  #шапка
+                targetStyle = HeaderL1Style
+            elif(j == 2): #колонка дата и время
+                targetStyle = dateTimeStyle
+            else: #остальные данные
+                targetStyle = tableContentStyle
+
+            paintTableInfo[i][j] = Paragraph(cellItem,targetStyle)
+            
+
+
+            
+
+
+
+
+
+    paintTable = Table(data = paintTableInfo, colWidths=columnsSizes)
+
+    paintTable.setStyle(TableStyle(cmds = 
+                                    PdfHelper.commonTableStyleCmd +
+                                    PdfHelper.centerAlignTableStyleCmd + 
+                                    PdfHelper.visibleAllBordersTableStyleCmd +
+                                     #обычный шрифт для данных таблицы
+                                     [('FONTNAME', (1, 1), (-1, -1), "Arial")] + 
+                                     #шапка 
+                                     [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] +
+                                     [('SPAN', (0, 0), (-1, 0) )] +
+                                     #выравнивание столбца времени и даты выполнения
+                                     [('ALIGN', (2, 0), (2, -1), 'LEFT')]
+                                     )) 
+
+
+
+
+
+
+    checkTableInfo = [["3. ПРИЁМО-СДАТОЧНЫЕ ИСПЫТАНИЯ"] + [""] * 6]
+
+    checkTableInfo.append(["3.1" , "ЭТЛ"] + ["№ протокола ЭТЛ:" + PdfHelper.newLineMark + dateText] + ["ПС"] + [""] * 3)
+    checkTableInfo.append([""] * 3 + ["ОТК"] + [""] * 3)
+
+    checkTableInfo.append(["3.2" , "Подготовка ЛКП к финишному контролю"] + [""] + ["ПС"] + [""] * 3)
+
+    checkTableInfo.append(["3.3" , "Финишный контроль ЛКП"] + ["№ акта ЛКП:" + PdfHelper.newLineMark + dateText] + ["ОТК"] + [""] * 3)
+
+    checkTableInfo.append(["3.4" , "Гидроиспытания"] + ["№ акта ГИ:" + PdfHelper.newLineMark + dateText] + ["ПС"] + [""] * 3)
+    checkTableInfo.append([""] * 3 + ["ОТК"] + [""] * 3)
+
+    checkTableInfo.append(["3.5" , "Отметка о завершении ПСИ"] + 
+                          ["Результат: __________________" + PdfHelper.newLineMark + "№ протокола:" + PdfHelper.newLineMark + dateText] + 
+                          ["ПС"] + 
+                          [""] * 3)
+    checkTableInfo.append([""] * 3 + ["ОТК"] + [""] * 3)
+
+    for i,row in enumerate(checkTableInfo):
+        for j,cellItem in enumerate(row):
+          
+            if (i==0):  #шапка
+                targetStyle = HeaderL1Style
+            elif(j == 2): #колонка дата и время
+                targetStyle = dateTimeStyle
+            else: #остальные данные
+                targetStyle = tableContentStyle
+
+            #в последней строку дату и время жирным
+            if (j == 2 and i == 7):
+                targetStyle = boldDateTimeStyle
+            #в последней строку номер операции жирным    
+            if (j == 1 and i == 7):
+                targetStyle = boldTableContentStyle
+
+            checkTableInfo[i][j] = Paragraph(cellItem,targetStyle)
+
+    checkTable = Table(data = checkTableInfo, colWidths=columnsSizes)
+
+    checkTable.setStyle(TableStyle(cmds = 
+                                    PdfHelper.commonTableStyleCmd +
+                                    PdfHelper.centerAlignTableStyleCmd + 
+                                    PdfHelper.visibleAllBordersTableStyleCmd +
+                                     #шапка 
+                                     [('SPAN', (0, 0), (-1, 0) )] +
+                                     #соединения в записях
+                                     [('SPAN', (0, 1), (0, 2) )] + 
+                                     [('SPAN', (1, 1), (1, 2) )] + 
+                                     [('SPAN', (2, 1), (2, 2) )] +
+                                     #соединения в записях
+                                     [('SPAN', (0, 5), (0, 6) )] + 
+                                     [('SPAN', (1, 5), (1, 6) )] + 
+                                     [('SPAN', (2, 5), (2, 6) )] +  
+                                     #соединения в записях
+                                     [('SPAN', (0, 7), (0, 8) )] +
+                                     [('SPAN', (1, 7), (1, 8) )] +
+                                     [('SPAN', (2, 7), (2, 8) )] 
+
+                                     ))
+
+
+                                     
+                                     
+
+
+    packageTableInfo = [["4. УПАКОВКА, СОПРОВОДИТЕЛЬНАЯ ДОКУМЕНТАЦИЯ"] + [""] * 6]
+
+    packageTableInfo.append(["4.1", "Консервация"] + [""] + ["ПС"] + [""] * 3)
+    packageTableInfo.append(["4.2", "Контроль консервация"] + [""] + ["ОТК"] + [""] * 3)
+
+    packageTableInfo.append(["4.3", "Упаковка"] + [""] + ["ПС"] + [""] * 3)
+    packageTableInfo.append([""] * 3 + ["ОСиЛ"] + [""] * 3)
+
+    packageTableInfo.append(["4.4", "Подготовка и контроль сопроводительной документации"] + [""] + ["ОСиЛ"] + [""] * 3)
+    packageTableInfo.append([""] * 3 + ["ПСС"] + [""] * 3)
+
+
+    for i,row in enumerate(packageTableInfo):
+        for j,cellItem in enumerate(row):
+          
+            if (i==0):  #шапка
+                targetStyle = HeaderL1Style
+            elif(j == 2): #колонка дата и время
+                targetStyle = dateTimeStyle
+            else: #остальные данные
+                targetStyle = tableContentStyle
+
+            packageTableInfo[i][j] = Paragraph(cellItem,targetStyle)
+
+
+
+    packageTable = Table(data = packageTableInfo, colWidths=columnsSizes)
+
+    packageTable.setStyle(TableStyle(cmds = 
+                                     PdfHelper.commonTableStyleCmd +
+                                    PdfHelper.centerAlignTableStyleCmd + 
+                                    PdfHelper.visibleAllBordersTableStyleCmd +
+                                     #обычный шрифт для данных таблицы
+                                     [('FONTNAME', (1, 1), (-1, -1), "Arial")] + 
+                                     #шапка 
+                                     [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] +
+                                     [('SPAN', (0, 0), (-1, 0) )] +
+                                     #соединения в записях
+                                     [('SPAN', (0, 3), (0, 4) )] + 
+                                     [('SPAN', (1, 3), (1, 4) )] + 
+                                     [('SPAN', (2, 3), (2, 4) )] +
+                                     #соединения в записях
+                                     [('SPAN', (0, 5), (0, 6) )] + 
+                                     [('SPAN', (1, 5), (1, 6) )] + 
+                                     [('SPAN', (2, 5), (2, 6) )]
+                                     ))
+
+    shippingTableInfo = [["5. ОТГРУЗКА"] + [""] * 6]
+    shippingTableInfo.append(["5.1", "Контроль соблюдения правил отгрузки"] + [""] + ["ОСиЛ"] + [""] * 3)
+    shippingTableInfo.append(["5.2", "Обеспечение фотоматериалов"] + [""] + ["ОСиЛ"] + [""] * 3)
+
+    for i,row in enumerate(shippingTableInfo):
+        for j,cellItem in enumerate(row):
+          
+            if (i==0):  #шапка
+                targetStyle = HeaderL1Style
+            elif(j == 2): #колонка дата и время
+                targetStyle = dateTimeStyle
+            else: #остальные данные
+                targetStyle = tableContentStyle
+
+            shippingTableInfo[i][j] = Paragraph(cellItem,targetStyle)
+
+
+    shippingTable = Table(data = shippingTableInfo, colWidths=columnsSizes)
+
+    shippingTable.setStyle(TableStyle(cmds = 
+                                     PdfHelper.commonTableStyleCmd +
+                                     PdfHelper.centerAlignTableStyleCmd + 
+                                     PdfHelper.visibleAllBordersTableStyleCmd +
+                                     #обычный шрифт для данных таблицы
+                                     [('FONTNAME', (1, 1), (-1, -1), "Arial")] + 
+                                     #шапка 
+                                     [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] +
+                                     [('SPAN', (0, 0), (-1, 0) )] ))
+
+
+
+
+    #собираем все элементы листа
+    sheetElements = []
+    sheetElements.append(standTableHeader)
+    sheetElements.append(columnsHeaderTable)
+    sheetElements.append(assemblyTable)
+    sheetElements.append(paintTable)
+    sheetElements.append(checkTable)
+    sheetElements.append(packageTable)
+    sheetElements.append(shippingTable)
+    return sheetElements
 
 #основной генератор отчета
 def generateReport(jsonFilePath,outputFilePath):
@@ -1038,13 +1441,13 @@ def generateReport(jsonFilePath,outputFilePath):
     for stand in data["Stands"]:      
         standSheet = fillStandPage(stand,data, tableSplittingInfo = impulseTableInfo) # теперь передаем инфу в заполнитель
         elements.extend(standSheet)  
-        elements.append(NextPageTemplate('landscape'))
+        elements.append(NextPageTemplate('portrait'))
         elements.append(PageBreak())
-        conclusionSheet = fillConclusionPage(stand,data)
+        #conclusionSheet = fillConclusionPage(stand,data)
+        conclusionSheet = fillConclusionPage_v2(stand,data)
         elements.extend(conclusionSheet)
         elements.append(NextPageTemplate('portrait'))
         elements.append(PageBreak())
-
 
     doc.build(elements)
 
@@ -1076,9 +1479,10 @@ def generateTestReport(jsonFilePath):
     for stand in data["Stands"]:      
         standSheet = fillStandPage(stand,data)
         elements.extend(standSheet)  
-        elements.append(NextPageTemplate('landscape'))
+        elements.append(NextPageTemplate('portrait'))
         elements.append(PageBreak())
-        conclusionSheet = fillConclusionPage(stand,data)
+        #conclusionSheet = fillConclusionPage(stand,data)
+        conclusionSheet = fillConclusionPage_v2(stand,data)
         elements.extend(conclusionSheet)
         elements.append(NextPageTemplate('portrait'))
         elements.append(PageBreak())
