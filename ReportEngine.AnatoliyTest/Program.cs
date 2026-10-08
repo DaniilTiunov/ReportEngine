@@ -10,6 +10,14 @@ public class Program
         Console.WriteLine("Тест");
 
 
+
+        List<string> _keys = new List<string>
+        {
+            "var sraka",
+            "var zhopa",
+            "var huy"
+        };
+
         var ddsMailService = new DdsMailService();
 
         var message = "Тестовое сообщение";
@@ -23,5 +31,6 @@ public class Program
 
         Console.WriteLine($"Расшифрованное сообщение: {decryptedMessage}");
 
+        await ddsMailService.ViewAllFolders();
     }
 }

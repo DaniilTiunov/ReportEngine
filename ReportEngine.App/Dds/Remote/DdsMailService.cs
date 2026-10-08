@@ -55,8 +55,26 @@ namespace ReportEngine.App.Dds.Remote
 
 
 
+        public async Task ViewAllFolders()
+        {
+            using var client = new ImapClient();
+            try
+            {
+                await client.ConnectAsync("imap.mail.ru", 993, true);
+                await client.AuthenticateAsync("5677890@mail.ru", _mailApiKey);
 
-
+                var folders = await client.GetFoldersAsync(client.PersonalNamespaces[0]);
+                Console.WriteLine("Папки:");
+                foreach (var folder in folders)
+                {
+                    Console.WriteLine($" - {folder.Name}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
+        }
 
         public async Task GetLastMessage()
         {
