@@ -1024,8 +1024,8 @@ def fillConclusionPage(stand,project):
 def fillConclusionPage_v2(stand,project):
 
      #вписываем в рамку
-    sheetWidth = landscapeParams['frameWidth'] * 0.99
-    sheetHeight = landscapeParams['frameHeight'] * 0.99
+    sheetWidth = portraitParams['frameWidth'] * 0.99
+    sheetHeight = portraitParams['frameHeight'] * 0.99
 
     #инициализируем стили листа
     styles = getSampleStyleSheet()
@@ -1050,6 +1050,7 @@ def fillConclusionPage_v2(stand,project):
         alignment = TA_CENTER
     )
 
+
     tableContentStyle = ParagraphStyle(
         'TableContent',
         parent = styles['Normal'],
@@ -1061,14 +1062,39 @@ def fillConclusionPage_v2(stand,project):
         leading = 8
     )
 
-    dateTimeStyle = ParagraphStyle(
-        'DateTimeContent',
+
+    boldTableContentStyle = ParagraphStyle(
+        'BoldTableContent',
         parent = styles['Normal'],
-        fontName ='TimesNewRoman',  # вместо 'Arial'
+        fontName ='TimesNewRoman-Bold',
         encoding ='UTF-8',
         fontSize = 7,
         wordWrap = 'LTR',
-        leading = 8,
+        alignment = TA_CENTER,
+        leading = 8
+    )
+
+
+
+    dateTimeStyle = ParagraphStyle(
+        'DateTimeContent',
+        parent = styles['Normal'],
+        fontName ='TimesNewRoman', 
+        encoding ='UTF-8',
+        fontSize = 7,
+        wordWrap = 'LTR',
+        leading = 10,
+        alignment= TA_LEFT
+    )
+
+    boldDateTimeStyle = ParagraphStyle(
+        'BoldDateTimeContent',
+        parent = styles['Normal'],
+        fontName ='TimesNewRoman-Bold',  
+        encoding ='UTF-8',
+        fontSize = 7,
+        wordWrap = 'LTR',
+        leading = 10,
         alignment= TA_LEFT
     )
 
@@ -1077,9 +1103,9 @@ def fillConclusionPage_v2(stand,project):
     standSN = PdfHelper.to_str(stand["SerialNumber"])
     standKKS = PdfHelper.to_str(stand["KKSCode"])
     standDesignation = PdfHelper.to_str(stand["Designation"])
-    logoImage =  PdfHelper.generateImageFromFile("Etalon.jpg",sheetWidth * 0.18,sheetHeight * 0.15)
+    logoImage =  PdfHelper.generateImageFromFile("Etalon.jpg",sheetWidth * 0.25,sheetHeight * 0.05)
 
-    standTableHeaderInfo = [[f"Маршрутно-сопроводительная карта № {standSN}"] + [""] * 4 + [logoImage] + [""]]
+    standTableHeaderInfo = [[f"МАРШРУТНО-СОПРОВОДИТЕЛЬНАЯ КАРТА № {standSN.upper()}"] + [""] * 4 + [logoImage] + [""]]
     standTableHeaderInfo.append(["", "Обозначение:", f"{standKKS}", "Дата начала:", ""] + [""] * 2)
     standTableHeaderInfo.append(["", "Чертёж:", f"{standDesignation}", "Дата окончания:", ""] + [""] * 2)
     standTableHeaderInfo.append(["", "Зав. номер:", f"{standSN}", "", "",] + [""] * 2)
@@ -1091,7 +1117,7 @@ def fillConclusionPage_v2(stand,project):
           
             if isinstance(cellItem, str):
                 if (i==0):  #шапка
-                    targetStyle = HeaderL2Style
+                    targetStyle = HeaderL1Style
                 else: #остальные данные
                     targetStyle = tableContentStyle
 
@@ -1099,7 +1125,7 @@ def fillConclusionPage_v2(stand,project):
 
 
    
-    columnsSizes = [sheetWidth*0.05,sheetWidth*0.25,sheetWidth*0.15,sheetWidth*0.1,sheetWidth*0.15]
+    columnsSizes = [sheetWidth*0.05,sheetWidth*0.2,sheetWidth*0.2,sheetWidth*0.13,sheetWidth*0.15,sheetWidth*0.12, sheetWidth*0.15]
 
     standTableHeader= Table(data = standTableHeaderInfo, colWidths = columnsSizes)
 
@@ -1113,10 +1139,6 @@ def fillConclusionPage_v2(stand,project):
                                        [('SPAN', (0,1), (0, 3) )] +
                                        #логотип в шапке
                                        [('SPAN', (5,0), (-1, 3) )] 
-                                       #жирный шрифт для шапки 
-                                       #[('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] +   
-                                       #обычный шрифт для данных таблицы
-                                       #[('FONTNAME', (1, 1), (-1, -1), "Arial")] 
     
     ))
 
@@ -1124,7 +1146,7 @@ def fillConclusionPage_v2(stand,project):
     
     columnsHeaderInfo = [["№ п.п.", "Наименование операции","Дата и время выполнения", "Рабочий центр","Ф.И.О и подпись исполнителя", "№ извещения НП","Примечание"]]
     
-        #оформляем текст внутри
+    #оформляем текст внутри
     for i,row in enumerate(columnsHeaderInfo):
         for j,cellItem in enumerate(row):
           
@@ -1174,19 +1196,15 @@ def fillConclusionPage_v2(stand,project):
 
             assemblyTableInfo[i][j] = Paragraph(cellItem,targetStyle)
 
-    recordsColumnsSizes = [sheetWidth*0.05,sheetWidth*0.2,sheetWidth*0.15,sheetWidth*0.15,sheetWidth*0.15,sheetWidth*0.15, sheetWidth*0.15]
+    
 
     assemblyTable = Table(data = assemblyTableInfo, 
-                                colWidths = recordsColumnsSizes)
+                                colWidths = columnsSizes)
 
     assemblyTable.setStyle(TableStyle(cmds = 
                                     PdfHelper.commonTableStyleCmd +
                                     PdfHelper.centerAlignTableStyleCmd + 
                                     PdfHelper.visibleAllBordersTableStyleCmd +
-                                     #обычный шрифт для данных таблицы
-                                    # [('FONTNAME', (1, 1), (-1, -1), "Arial")] + 
-                                     #шапка 
-                                    # [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] +
                                      [('SPAN', (0, 0), (-1, 0) )] ))
 
 
@@ -1232,7 +1250,7 @@ def fillConclusionPage_v2(stand,project):
 
 
 
-    paintTable = Table(data = paintTableInfo, colWidths=recordsColumnsSizes)
+    paintTable = Table(data = paintTableInfo, colWidths=columnsSizes)
 
     paintTable.setStyle(TableStyle(cmds = 
                                     PdfHelper.commonTableStyleCmd +
@@ -1254,37 +1272,49 @@ def fillConclusionPage_v2(stand,project):
 
     checkTableInfo = [["3. ПРИЁМО-СДАТОЧНЫЕ ИСПЫТАНИЯ"] + [""] * 6]
 
-    checkTableInfo.append(["3.1" , "ЭТЛ"] + ["№ протокола ЭТЛ:" + "\n" + dateText] + ["ПС"] + [""] * 3)
+    checkTableInfo.append(["3.1" , "ЭТЛ"] + ["№ протокола ЭТЛ:" + PdfHelper.newLineMark + dateText] + ["ПС"] + [""] * 3)
     checkTableInfo.append([""] * 3 + ["ОТК"] + [""] * 3)
 
     checkTableInfo.append(["3.2" , "Подготовка ЛКП к финишному контролю"] + [""] + ["ПС"] + [""] * 3)
 
-    checkTableInfo.append(["3.3" , "Финишный контроль ЛКП"] + ["№ акта ЛКП:" + "\n" + dateText] + ["ОТК"] + [""] * 3)
+    checkTableInfo.append(["3.3" , "Финишный контроль ЛКП"] + ["№ акта ЛКП:" + PdfHelper.newLineMark + dateText] + ["ОТК"] + [""] * 3)
 
-    checkTableInfo.append(["3.4" , "Гидроиспытания"] + ["№ акта ГИ:" "\n" + dateText] + ["ПС"] + [""] * 3)
+    checkTableInfo.append(["3.4" , "Гидроиспытания"] + ["№ акта ГИ:" + PdfHelper.newLineMark + dateText] + ["ПС"] + [""] * 3)
     checkTableInfo.append([""] * 3 + ["ОТК"] + [""] * 3)
 
     checkTableInfo.append(["3.5" , "Отметка о завершении ПСИ"] + 
-                          ["Результат:_____________" + "\n" + "№ протокола:" + "\n" + dateText] + 
+                          ["Результат: __________________" + PdfHelper.newLineMark + "№ протокола:" + PdfHelper.newLineMark + dateText] + 
                           ["ПС"] + 
                           [""] * 3)
     checkTableInfo.append([""] * 3 + ["ОТК"] + [""] * 3)
 
+    for i,row in enumerate(checkTableInfo):
+        for j,cellItem in enumerate(row):
+          
+            if (i==0):  #шапка
+                targetStyle = HeaderL1Style
+            elif(j == 2): #колонка дата и время
+                targetStyle = dateTimeStyle
+            else: #остальные данные
+                targetStyle = tableContentStyle
 
+            #в последней строку дату и время жирным
+            if (j == 2 and i == 7):
+                targetStyle = boldDateTimeStyle
+            #в последней строку номер операции жирным    
+            if (j == 1 and i == 7):
+                targetStyle = boldTableContentStyle
 
-    checkTable = Table(data = checkTableInfo, colWidths=recordsColumnsSizes)
+            checkTableInfo[i][j] = Paragraph(cellItem,targetStyle)
+
+    checkTable = Table(data = checkTableInfo, colWidths=columnsSizes)
 
     checkTable.setStyle(TableStyle(cmds = 
                                     PdfHelper.commonTableStyleCmd +
                                     PdfHelper.centerAlignTableStyleCmd + 
                                     PdfHelper.visibleAllBordersTableStyleCmd +
-                                     #обычный шрифт для данных таблицы
-                                     [('FONTNAME', (1, 1), (-1, -1), "Arial")] + 
                                      #шапка 
-                                     [('FONTNAME', (0, 0), (-1, 0), "Arial-Bold")] +
                                      [('SPAN', (0, 0), (-1, 0) )] +
-                                     #жирный шрифт для последней записи
-                                     [('FONTNAME', (1, 7), (2, 8), "Arial-Bold")]+
                                      #соединения в записях
                                      [('SPAN', (0, 1), (0, 2) )] + 
                                      [('SPAN', (1, 1), (1, 2) )] + 
@@ -1296,9 +1326,8 @@ def fillConclusionPage_v2(stand,project):
                                      #соединения в записях
                                      [('SPAN', (0, 7), (0, 8) )] +
                                      [('SPAN', (1, 7), (1, 8) )] +
-                                     [('SPAN', (2, 7), (2, 8) )] +
-                                     #выравнивание столбца времени и даты выполнения
-                                     [('ALIGN', (2, 0), (2, -1), 'LEFT')]
+                                     [('SPAN', (2, 7), (2, 8) )] 
+
                                      ))
 
 
@@ -1317,7 +1346,22 @@ def fillConclusionPage_v2(stand,project):
     packageTableInfo.append(["4.4", "Подготовка и контроль сопроводительной документации"] + [""] + ["ОСиЛ"] + [""] * 3)
     packageTableInfo.append([""] * 3 + ["ПСС"] + [""] * 3)
 
-    packageTable = Table(data = packageTableInfo, colWidths=recordsColumnsSizes)
+
+    for i,row in enumerate(packageTableInfo):
+        for j,cellItem in enumerate(row):
+          
+            if (i==0):  #шапка
+                targetStyle = HeaderL1Style
+            elif(j == 2): #колонка дата и время
+                targetStyle = dateTimeStyle
+            else: #остальные данные
+                targetStyle = tableContentStyle
+
+            packageTableInfo[i][j] = Paragraph(cellItem,targetStyle)
+
+
+
+    packageTable = Table(data = packageTableInfo, colWidths=columnsSizes)
 
     packageTable.setStyle(TableStyle(cmds = 
                                      PdfHelper.commonTableStyleCmd +
@@ -1342,7 +1386,20 @@ def fillConclusionPage_v2(stand,project):
     shippingTableInfo.append(["5.1", "Контроль соблюдения правил отгрузки"] + [""] + ["ОСиЛ"] + [""] * 3)
     shippingTableInfo.append(["5.2", "Обеспечение фотоматериалов"] + [""] + ["ОСиЛ"] + [""] * 3)
 
-    shippingTable = Table(data = shippingTableInfo, colWidths=recordsColumnsSizes)
+    for i,row in enumerate(shippingTableInfo):
+        for j,cellItem in enumerate(row):
+          
+            if (i==0):  #шапка
+                targetStyle = HeaderL1Style
+            elif(j == 2): #колонка дата и время
+                targetStyle = dateTimeStyle
+            else: #остальные данные
+                targetStyle = tableContentStyle
+
+            shippingTableInfo[i][j] = Paragraph(cellItem,targetStyle)
+
+
+    shippingTable = Table(data = shippingTableInfo, colWidths=columnsSizes)
 
     shippingTable.setStyle(TableStyle(cmds = 
                                      PdfHelper.commonTableStyleCmd +
@@ -1363,9 +1420,9 @@ def fillConclusionPage_v2(stand,project):
     sheetElements.append(columnsHeaderTable)
     sheetElements.append(assemblyTable)
     sheetElements.append(paintTable)
-   # sheetElements.append(checkTable)
-    #sheetElements.append(packageTable)
-    #sheetElements.append(shippingTable)
+    sheetElements.append(checkTable)
+    sheetElements.append(packageTable)
+    sheetElements.append(shippingTable)
     return sheetElements
 
 #основной генератор отчета
@@ -1386,7 +1443,7 @@ def generateReport(jsonFilePath,outputFilePath):
     for stand in data["Stands"]:      
         standSheet = fillStandPage(stand,data, tableSplittingInfo = impulseTableInfo) # теперь передаем инфу в заполнитель
         elements.extend(standSheet)  
-        elements.append(NextPageTemplate('landscape'))
+        elements.append(NextPageTemplate('portrait'))
         elements.append(PageBreak())
         #conclusionSheet = fillConclusionPage(stand,data)
         conclusionSheet = fillConclusionPage_v2(stand,data)
@@ -1424,7 +1481,7 @@ def generateTestReport(jsonFilePath):
     for stand in data["Stands"]:      
         standSheet = fillStandPage(stand,data)
         elements.extend(standSheet)  
-        elements.append(NextPageTemplate('landscape'))
+        elements.append(NextPageTemplate('portrait'))
         elements.append(PageBreak())
         #conclusionSheet = fillConclusionPage(stand,data)
         conclusionSheet = fillConclusionPage_v2(stand,data)
