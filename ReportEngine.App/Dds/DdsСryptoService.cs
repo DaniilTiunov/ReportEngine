@@ -40,8 +40,27 @@ namespace ReportEngine.App.Dds
             return (Convert.ToBase64String(cipherBytes), Convert.ToBase64String(iv));
         }
 
+        public static string EncryptAndCombine(string plainText, string key)
+        {
+            var (cryptedText, ivValue) = Encrypt(plainText, key);
+            return $"{ivValue}:{cryptedText}";
+        }
 
-        public static string Decrypt(string cryptedText, string key, string iv)
+
+
+        public static string SplitAndDecrypt(string encryptedMessage, string key)
+        {
+            var parts = encryptedMessage.Split(':');
+            if (parts.Length != 2)
+                throw new ArgumentException("Invalid combined text format. Expected format: 'iv:cryptedText'");
+            var iv = parts[0];
+            var cryptedText = parts[1];
+            Console.WriteLine($"IV: {iv}");
+            Console.WriteLine($"Crypted Text: {cryptedText}");
+            return Decrypt(cryptedText, iv, key);
+        }
+
+        public static string Decrypt(string cryptedText, string iv, string key)
         {
             byte[] keyBytes = SHA256.HashData(Encoding.UTF8.GetBytes(key));
             byte[] cipherBytes = Convert.FromBase64String(cryptedText);
@@ -60,5 +79,7 @@ namespace ReportEngine.App.Dds
             return srDecrypt.ReadToEnd();
 
         }
+
+        
     }
 }

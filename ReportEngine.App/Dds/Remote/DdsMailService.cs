@@ -68,7 +68,7 @@ namespace ReportEngine.App.Dds.Remote
 
                 var inbox = client.Inbox;
                 await inbox.OpenAsync(MailKit.FolderAccess.ReadOnly);
-
+              
                 Console.WriteLine($"Всего писем в папке Входящие: {inbox.Count}");
 
                 if (inbox.Count > 0)
