@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
@@ -14,17 +15,15 @@ using ReportEngine.App.Services.Calculation;
 using ReportEngine.App.Services.Cloners;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
-using ReportEngine.App.Services.Logger;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels.Utils;
+using ReportEngine.App.Views.Windows;
 using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Entities.Armautre;
+using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.CalculationParameters.Enums;
-using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Other;
-using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
@@ -35,18 +34,16 @@ using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.App.ViewModels;
 
-public class ProjectViewModel : BaseViewModel
+public partial class ProjectViewModel : ObservableObject
 {
     private readonly AdditionalEquipService _additionalEquipService;
     private readonly AuditService _auditService;
     private readonly ICalculationService _calculationService;
     private readonly ReportEngineConfigService _configService;
-    private readonly ContainerService _containerService;
     private readonly IDialogService _dialogService;
     private readonly EntityStandClonerService _entityStandCloner;
     private readonly ExceptionService _exceptionService;
     private readonly InitializeService _initializeService;
-    private readonly UiLogger _logger;
     private readonly INotificationService _notificationService;
     private readonly ParametersStore _parametersStore;
     private readonly IProjectDataLoaderService _projectDataLoaderService;
@@ -57,7 +54,6 @@ public class ProjectViewModel : BaseViewModel
     private readonly SessionService _sessionService;
     private readonly IStandService _standService;
     private readonly UIValidatorService _uiValidatorService;
-    private readonly UpdaterStandService _updaterStandService;
 
     public ProjectViewModel(
         IProjectInfoRepository projectRepository,
@@ -68,8 +64,6 @@ public class ProjectViewModel : BaseViewModel
         IProjectDataLoaderService projectDataLoaderService,
         IReportService reportService,
         ICalculationService calculationService,
-        ContainerService containerService,
-        UpdaterStandService updaterStandService,
         AdditionalEquipService additionalEquipService,
         UIValidatorService uiValidatorService,
         InitializeService initializeService,
@@ -78,7 +72,6 @@ public class ProjectViewModel : BaseViewModel
         AuditService auditService,
         SessionService sessionService,
         ExceptionService exceptionService,
-        UiLogger logger,
         IServiceProvider serviceProvider,
         ReportEngineConfigService configService)
     {
@@ -90,8 +83,6 @@ public class ProjectViewModel : BaseViewModel
         _projectDataLoaderService = projectDataLoaderService;
         _reportService = reportService;
         _calculationService = calculationService;
-        _containerService = containerService;
-        _updaterStandService = updaterStandService;
         _additionalEquipService = additionalEquipService;
         _uiValidatorService = uiValidatorService;
         _initializeService = initializeService;
@@ -100,40 +91,61 @@ public class ProjectViewModel : BaseViewModel
         _sessionService = sessionService;
         _auditService = auditService;
         _exceptionService = exceptionService;
-        _logger = logger;
         _serviceProvider = serviceProvider;
         _configService = configService;
 
         NewStand = new StandModel { Number = 1 };
-
-        RefreshCommandAsync = new AsyncRelayCommand(RefreshProjectAsync);
 
         InitializeCommands();
         InitializeTime();
         InitializeGenericCommands();
     }
 
-    public IAsyncRelayCommand RefreshCommandAsync { get; set; }
-    public ObservableCollection<FormedFrame> AllAvailableFrames { get; set; } = new();
-    public ObservableCollection<FormedDrainage> AllAvailableDrainages { get; set; } = new();
-    public ObservableCollection<FormedElectricalComponent> AllAvailableElectricalComponents { get; set; } = new();
-    public ObservableCollection<FormedAdditionalEquip> AllAvailableAdditionalEquips { get; set; } = new();
-    public Obvyazka SelectedObvyazka { get; set; } = new();
-    public StandModel CurrentStandModel { get; set; } = new();
-    public StandModel NewStand { get; set; } = new();
-    public ProjectModel CurrentProjectModel { get; set; } = new();
-    public ProjectCommandProvider ProjectCommandProvider { get; set; } = new();
-    public MaterialLinesModel CurrentMaterials { get; set; } = new();
+    [ObservableProperty]
+    private ObservableCollection<FormedFrame> _allAvailableFrames = new();
+
+    [ObservableProperty]
+    private ObservableCollection<FormedDrainage> _allAvailableDrainages = new();
+
+    [ObservableProperty]
+    private ObservableCollection<FormedElectricalComponent> _allAvailableElectricalComponents = new();
+
+    [ObservableProperty]
+    private ObservableCollection<FormedAdditionalEquip> _allAvailableAdditionalEquips = new();
+
+    [ObservableProperty]
+    private Obvyazka _selectedObvyazka = new();
+
+    [ObservableProperty]
+    private StandModel _currentStandModel = new();
+
+    [ObservableProperty]
+    private StandModel _newStand = new();
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(MaxObvNN))]
+    [NotifyPropertyChangedFor(nameof(MaxStandNN))]
+    private ProjectModel _currentProjectModel = new();
+
+    public IAsyncRelayCommand RefreshCommandAsync => RefreshProjectCommand;
+    public ProjectCommandProvider ProjectCommandProvider { get; } = new();
+    public MaterialLinesModel CurrentMaterials { get; } = new();
     public int MaxObvNN => CurrentProjectModel?.SelectedStand?.ObvyazkiInStand.Max(obv => obv.NN) ?? 0;
 
     public int MaxStandNN =>
         CurrentProjectModel.Stands.Count > 0 ? CurrentProjectModel.Stands.Max(stand => stand.Number) : 0;
+
+    public new void OnPropertyChanged(string? propertyName = null)
+    {
+        base.OnPropertyChanged(propertyName);
+    }
 
     public bool CanAllCommandsExecute(object? e)
     {
         return true;
     }
 
+    [RelayCommand]
     public async Task RefreshProjectAsync()
     {
         await _dialogService.RunWithProgressDialogAsync(async () =>
@@ -259,180 +271,65 @@ public class ProjectViewModel : BaseViewModel
             CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand.Add(item);
         }
     }
-
-    // TODO: Сделать тут рефакторинг команд
-    public void OnSelectMaterialFromDialogCommandExecuted(object e)
+    
+    public void SelectEquipCommandExecuted(EquipField? equipField)
     {
-        if (Guard.ExitIfNull("Стенд не выбран!",
-                _notificationService,
-                CurrentProjectModel.SelectedStand))
-            return;
-
-        switch (CurrentMaterials.SelectedMaterialLine)
+        if (CurrentProjectModel.SelectedStand == null)
         {
-            case "Жаропрочные":
-                SelectEquipment<HeaterPipe>(
-                    name => CurrentProjectModel.SelectedStand.MaterialLine = name,
-                    measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays,
-                    equip => CurrentProjectModel.SelectedStand.MaterialLineEquip = equip
-                );
-                break;
-
-            case "Нержавеющие":
-                SelectEquipment<StainlessPipe>(
-                    name => CurrentProjectModel.SelectedStand.MaterialLine = name,
-                    measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays,
-                    equip => CurrentProjectModel.SelectedStand.MaterialLineEquip = equip
-                );
-                break;
-
-            case "Углеродистые":
-                SelectEquipment<CarbonPipe>(
-                    name => CurrentProjectModel.SelectedStand.MaterialLine = name,
-                    measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays,
-                    equip => CurrentProjectModel.SelectedStand.MaterialLineEquip = equip
-                );
-                break;
+            _notificationService.ShowInfo("Стенд не выбран!");
+            return;
         }
+        
+        var selectedEquip = GetBaseEquip();
 
-        _standService.UpdateStandWeight(CurrentProjectModel.SelectedStand);
+        SetEquipValue(equipField,  selectedEquip);
     }
 
-    public void OnSelectArmatureFromDialogCommandExecuted(object e)
+    private IBaseEquip GetBaseEquip()
     {
-        if (Guard.ExitIfNull("Стенд не выбран!",
-                _notificationService,
-                CurrentProjectModel.SelectedStand))
-            return;
-
-        switch (CurrentMaterials.SelectedAramuteres)
-        {
-            case "Жаропрочные":
-                SelectEquipment<HeaterArmature>(
-                    name => CurrentProjectModel.SelectedStand.Armature = name,
-                    measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays,
-                    equip => CurrentProjectModel.SelectedStand.ArmatureEquip = equip
-                );
-                break;
-
-            case "Нержавеющие":
-                SelectEquipment<StainlessArmature>(
-                    name => CurrentProjectModel.SelectedStand.Armature = name,
-                    measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays,
-                    equip => CurrentProjectModel.SelectedStand.ArmatureEquip = equip
-                );
-                break;
-
-            case "Углеродистые":
-                SelectEquipment<CarbonArmature>(
-                    name => CurrentProjectModel.SelectedStand.Armature = name,
-                    measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays,
-                    equip => CurrentProjectModel.SelectedStand.ArmatureEquip = equip
-                );
-                break;
-        }
-
-        _standService.UpdateStandWeight(CurrentProjectModel.SelectedStand);
+        var selectedEquip = _dialogService.ShowAllSortamentsDialog();
+        
+        return selectedEquip ?? new BaseEquip();
     }
 
-    public void OnSelectTreeSocketFromDialogCommandExecuted(object e)
+    private void SetEquipValue(EquipField? equipField, IBaseEquip selectedEquip)
     {
-        if (Guard.ExitIfNull("Стенд не выбран!",
-                _notificationService,
-                CurrentProjectModel.SelectedStand))
-            return;
-
-        switch (CurrentMaterials.SelectedSocketTypes)
+        switch (equipField)
         {
-            case "Жаропрочные":
-                SelectEquipment<HeaterSocket>(
-                    name => CurrentProjectModel.SelectedStand.TreeSocket = name,
-                    measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays,
-                    equip => CurrentProjectModel.SelectedStand.TreeSocketEquip = equip
-                );
+            case EquipField.Line:
+                CurrentProjectModel.SelectedStand.MaterialLine = selectedEquip.Name ?? string.Empty;
+                CurrentProjectModel.SelectedStand.MaterialLineMeasure = selectedEquip.Measure;
+                CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = selectedEquip.Cost.ToString();
+                CurrentProjectModel.SelectedStand.MaterialLineExportDays = selectedEquip.ExportDays;
+                CurrentProjectModel.SelectedStand.MaterialLineEquip = selectedEquip;
                 break;
-
-            case "Нержавеющие":
-                SelectEquipment<StainlessSocket>(
-                    name => CurrentProjectModel.SelectedStand.TreeSocket = name,
-                    measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays,
-                    equip => CurrentProjectModel.SelectedStand.TreeSocketEquip = equip
-                );
+            
+            case EquipField.Armature:
+                CurrentProjectModel.SelectedStand.Armature = selectedEquip.Name ?? string.Empty;
+                CurrentProjectModel.SelectedStand.ArmatureMeasure = selectedEquip.Measure;
+                CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = selectedEquip.Cost.ToString();
+                CurrentProjectModel.SelectedStand.ArmatureExportDays = selectedEquip.ExportDays;
+                CurrentProjectModel.SelectedStand.ArmatureEquip = selectedEquip;
                 break;
-
-            case "Углеродистые":
-                SelectEquipment<CarbonSocket>(
-                    name => CurrentProjectModel.SelectedStand.TreeSocket = name,
-                    measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays,
-                    equip => CurrentProjectModel.SelectedStand.TreeSocketEquip = equip
-                );
+            
+            case EquipField.TreeSocket:
+                CurrentProjectModel.SelectedStand.TreeSocket = selectedEquip.Name ?? string.Empty;
+                CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = selectedEquip.Measure;
+                CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = selectedEquip.Cost.ToString();
+                CurrentProjectModel.SelectedStand.TreeSocketExportDays = selectedEquip.ExportDays;
+                CurrentProjectModel.SelectedStand.TreeSocketEquip = selectedEquip;
+                break;
+            
+            case EquipField.KMCH:
+                CurrentProjectModel.SelectedStand.KMCH = selectedEquip.Name ?? string.Empty;
+                CurrentProjectModel.SelectedStand.KMCHMeasure = selectedEquip.Measure;
+                CurrentProjectModel.SelectedStand.KMCHCostPerUnit = selectedEquip.Cost.ToString();
+                CurrentProjectModel.SelectedStand.KMCHExportDays = selectedEquip.ExportDays;
+                CurrentProjectModel.SelectedStand.KMCHEquip = selectedEquip;
                 break;
         }
-
-        _standService.UpdateStandWeight(CurrentProjectModel.SelectedStand);
     }
-
-    public void OnSelectKMCHFromDialogCommandExecuted(object e)
-    {
-        if (Guard.ExitIfNull("Стенд не выбран!",
-                _notificationService,
-                CurrentProjectModel.SelectedStand))
-            return;
-
-        switch (CurrentMaterials.SelectedKMCHType)
-        {
-            case "Жаропрочные":
-                SelectEquipment<HeaterSocket>(
-                    name => CurrentProjectModel.SelectedStand.KMCH = name,
-                    measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays,
-                    equip => CurrentProjectModel.SelectedStand.KMCHEquip = equip
-                );
-                break;
-
-            case "Нержавеющие":
-                SelectEquipment<StainlessSocket>(
-                    name => CurrentProjectModel.SelectedStand.KMCH = name,
-                    measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays,
-                    equip => CurrentProjectModel.SelectedStand.KMCHEquip = equip
-                );
-                break;
-
-            case "Углеродистые":
-                SelectEquipment<CarbonSocket>(
-                    name => CurrentProjectModel.SelectedStand.KMCH = name,
-                    measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays,
-                    equip => CurrentProjectModel.SelectedStand.KMCHEquip = equip
-                );
-                break;
-        }
-
-        _standService.UpdateStandWeight(CurrentProjectModel.SelectedStand);
-    }
-
+    
     public async Task OnCreateNewCardCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
@@ -667,8 +564,8 @@ public class ProjectViewModel : BaseViewModel
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
-            await _updaterStandService.ApplyChangesAndSaveAsync(CurrentProjectModel);
             await _calculationService.CalculateProjectAsync(CurrentProjectModel);
+            OnPropertyChanged(nameof(CurrentProjectModel));
         });
     }
 
@@ -1267,14 +1164,6 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async Task LoadContainersInfoAsync()
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-        {
-            await _containerService.LoadAllData(CurrentProjectModel);
-        });
-    }
-
     #endregion Методы загрузки данных на view
 
     #region Методы для CRUD с проектами и стендами
@@ -1746,8 +1635,7 @@ public class ProjectViewModel : BaseViewModel
     private async Task CalculateProjectAsync()
     {
         await _calculationService.CalculateProjectAsync(CurrentProjectModel);
-        OnPropertyChanged(nameof(CurrentProjectModel.Stands));
-        OnPropertyChanged(nameof(CurrentProjectModel.Cost));
+        OnPropertyChanged(nameof(CurrentProjectModel));
 
         _notificationService.ShowInfo("Расчёт завершён");
     }

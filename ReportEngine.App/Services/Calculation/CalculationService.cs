@@ -12,20 +12,22 @@ public class CalculationService : ICalculationService
 {
     private readonly ParametersStore _parametersStore;
     private readonly IProjectService _projectService;
+    private readonly UpdaterStandService _updaterStandService;
 
     public CalculationService(
         IProjectService projectService,
-        ParametersStore parametersStore)
+        ParametersStore parametersStore,
+        UpdaterStandService updaterStandService)
     {
         _projectService = projectService;
         _parametersStore = parametersStore;
+        _updaterStandService = updaterStandService;
     }
 
 
     public async Task CalculateProjectAsync(ProjectModel project)
     {
-        //принудительно загружаем настройки
-        //await _parametersStore.LoadSettingsDataAsync();
+        await _updaterStandService.ApplyChangesAndSaveAsync(project);
 
         CalculateStandsCount(project);
 
