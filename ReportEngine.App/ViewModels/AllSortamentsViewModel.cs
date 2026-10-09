@@ -76,11 +76,13 @@ public class AllSortamentsViewModel : BaseViewModel
         _notificationService = notificationService;
 
         AddAsyncCommand = new AsyncRelayCommand(AddNewEquipAsync);
+        SaveChangesAsyncCommand = new AsyncRelayCommand(SaveChangesEquipAsync);
     }
 
     public AllSortamentsModel CurrentSortamentsModel { get; set; } = new();
 
     public ICommand AddAsyncCommand { get; set; }
+    public ICommand SaveChangesAsyncCommand { get; set; }
 
     public IBaseEquip SelectedEquip
     {
@@ -262,5 +264,42 @@ public class AllSortamentsViewModel : BaseViewModel
         await RefreshItems(newEquip);
 
         _notificationService.ShowInfo("Успешно добавлено");
+    }
+
+    private async Task SaveChangesEquipAsync()
+    {
+        var currentType = GetCurrentEquipType();
+        var newEquip = (IBaseEquip)Activator.CreateInstance(currentType)!;
+
+        newEquip.Id = SelectedEquip.Id;
+        newEquip.Name = SelectedEquip.Name;
+        newEquip.Cost = SelectedEquip.Cost;
+        newEquip.ExportDays = SelectedEquip.ExportDays;
+        newEquip.Weight = SelectedEquip.Weight;
+        newEquip.Measure = SelectedEquip.Measure;
+
+        if (SelectedEquip is BaseElectricComponent electrical
+            && newEquip is BaseElectricComponent newElectrical)
+        {
+            newElectrical.CabelInput = electrical.CabelInput;
+            newElectrical.Cabel = electrical.Cabel;
+            newElectrical.ElectricProtection = electrical.ElectricProtection;
+        }
+
+        if (SelectedEquip is Container container
+            && newEquip is Container newContainer)
+        {
+            newContainer.Width = container.Width;
+            newContainer.Height = container.Height;
+            newContainer.Depth = container.Depth;
+        }
+
+        await _genericRepository.UpdateAsync(newEquip);
+
+        GenerateDataGrid(currentType, TargetDataGrid);
+
+        await RefreshItems(newEquip);
+
+        _notificationService.ShowInfo("Успешно сохранено");
     }
 }

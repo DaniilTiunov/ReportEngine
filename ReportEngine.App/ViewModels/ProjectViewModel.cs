@@ -17,9 +17,11 @@ using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Services.Logger;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels.Utils;
+using ReportEngine.App.Views.Windows;
 using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Armautre;
+using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.CalculationParameters.Enums;
 using ReportEngine.Domain.Entities.ElectricSockets;
@@ -259,180 +261,69 @@ public class ProjectViewModel : BaseViewModel
             CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand.Add(item);
         }
     }
-
-    // TODO: Сделать тут рефакторинг команд
-    public void OnSelectMaterialFromDialogCommandExecuted(object e)
+    
+    public void SelectEquipCommandExecuted(EquipField? equipField)
     {
-        if (Guard.ExitIfNull("Стенд не выбран!",
-                _notificationService,
-                CurrentProjectModel.SelectedStand))
-            return;
-
-        switch (CurrentMaterials.SelectedMaterialLine)
+        if (CurrentProjectModel.SelectedStand == null)
         {
-            case "Жаропрочные":
-                SelectEquipment<HeaterPipe>(
-                    name => CurrentProjectModel.SelectedStand.MaterialLine = name,
-                    measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays,
-                    equip => CurrentProjectModel.SelectedStand.MaterialLineEquip = equip
-                );
-                break;
-
-            case "Нержавеющие":
-                SelectEquipment<StainlessPipe>(
-                    name => CurrentProjectModel.SelectedStand.MaterialLine = name,
-                    measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays,
-                    equip => CurrentProjectModel.SelectedStand.MaterialLineEquip = equip
-                );
-                break;
-
-            case "Углеродистые":
-                SelectEquipment<CarbonPipe>(
-                    name => CurrentProjectModel.SelectedStand.MaterialLine = name,
-                    measure => CurrentProjectModel.SelectedStand.MaterialLineMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.MaterialLineExportDays = exportDays,
-                    equip => CurrentProjectModel.SelectedStand.MaterialLineEquip = equip
-                );
-                break;
+            _notificationService.ShowInfo("Стенд не выбран!");
+            return;
         }
+        
+        var selectedEquip = GetBaseEquip();
 
-        _standService.UpdateStandWeight(CurrentProjectModel.SelectedStand);
+        SetEquipValue(equipField,  selectedEquip);
     }
 
-    public void OnSelectArmatureFromDialogCommandExecuted(object e)
+    private IBaseEquip GetBaseEquip()
     {
-        if (Guard.ExitIfNull("Стенд не выбран!",
-                _notificationService,
-                CurrentProjectModel.SelectedStand))
-            return;
-
-        switch (CurrentMaterials.SelectedAramuteres)
-        {
-            case "Жаропрочные":
-                SelectEquipment<HeaterArmature>(
-                    name => CurrentProjectModel.SelectedStand.Armature = name,
-                    measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays,
-                    equip => CurrentProjectModel.SelectedStand.ArmatureEquip = equip
-                );
-                break;
-
-            case "Нержавеющие":
-                SelectEquipment<StainlessArmature>(
-                    name => CurrentProjectModel.SelectedStand.Armature = name,
-                    measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays,
-                    equip => CurrentProjectModel.SelectedStand.ArmatureEquip = equip
-                );
-                break;
-
-            case "Углеродистые":
-                SelectEquipment<CarbonArmature>(
-                    name => CurrentProjectModel.SelectedStand.Armature = name,
-                    measure => CurrentProjectModel.SelectedStand.ArmatureMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.ArmatureExportDays = exportDays,
-                    equip => CurrentProjectModel.SelectedStand.ArmatureEquip = equip
-                );
-                break;
-        }
-
-        _standService.UpdateStandWeight(CurrentProjectModel.SelectedStand);
+        var allAssortment = _serviceProvider.GetRequiredService<AllSortamentsViewModel>();
+        
+        var selectedEquip = _dialogService.ShowDialogAndGetFromViewModel<AllSortamentsViewModel, IBaseEquip>(
+            new AllSortamentsView(allAssortment, true),
+            vm => vm.SelectedEquip);
+        
+        return selectedEquip ?? new BaseEquip();
     }
 
-    public void OnSelectTreeSocketFromDialogCommandExecuted(object e)
+    private void SetEquipValue(EquipField? equipField, IBaseEquip selectedEquip)
     {
-        if (Guard.ExitIfNull("Стенд не выбран!",
-                _notificationService,
-                CurrentProjectModel.SelectedStand))
-            return;
-
-        switch (CurrentMaterials.SelectedSocketTypes)
+        switch (equipField)
         {
-            case "Жаропрочные":
-                SelectEquipment<HeaterSocket>(
-                    name => CurrentProjectModel.SelectedStand.TreeSocket = name,
-                    measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays,
-                    equip => CurrentProjectModel.SelectedStand.TreeSocketEquip = equip
-                );
+            case EquipField.Line:
+                CurrentProjectModel.SelectedStand.MaterialLine = selectedEquip.Name ?? string.Empty;
+                CurrentProjectModel.SelectedStand.MaterialLineMeasure = selectedEquip.Measure;
+                CurrentProjectModel.SelectedStand.MaterialLineCostPerUnit = selectedEquip.Cost.ToString();
+                CurrentProjectModel.SelectedStand.MaterialLineExportDays = selectedEquip.ExportDays;
+                CurrentProjectModel.SelectedStand.MaterialLineEquip = selectedEquip;
                 break;
-
-            case "Нержавеющие":
-                SelectEquipment<StainlessSocket>(
-                    name => CurrentProjectModel.SelectedStand.TreeSocket = name,
-                    measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays,
-                    equip => CurrentProjectModel.SelectedStand.TreeSocketEquip = equip
-                );
+            
+            case EquipField.Armature:
+                CurrentProjectModel.SelectedStand.Armature = selectedEquip.Name ?? string.Empty;
+                CurrentProjectModel.SelectedStand.ArmatureMeasure = selectedEquip.Measure;
+                CurrentProjectModel.SelectedStand.ArmatureCostPerUnit = selectedEquip.Cost.ToString();
+                CurrentProjectModel.SelectedStand.ArmatureExportDays = selectedEquip.ExportDays;
+                CurrentProjectModel.SelectedStand.ArmatureEquip = selectedEquip;
                 break;
-
-            case "Углеродистые":
-                SelectEquipment<CarbonSocket>(
-                    name => CurrentProjectModel.SelectedStand.TreeSocket = name,
-                    measure => CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.TreeSocketExportDays = exportDays,
-                    equip => CurrentProjectModel.SelectedStand.TreeSocketEquip = equip
-                );
+            
+            case EquipField.TreeSocket:
+                CurrentProjectModel.SelectedStand.TreeSocket = selectedEquip.Name ?? string.Empty;
+                CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = selectedEquip.Measure;
+                CurrentProjectModel.SelectedStand.TreeSocketMaterialCostPerUnit = selectedEquip.Cost.ToString();
+                CurrentProjectModel.SelectedStand.TreeSocketExportDays = selectedEquip.ExportDays;
+                CurrentProjectModel.SelectedStand.TreeSocketEquip = selectedEquip;
+                break;
+            
+            case EquipField.KMCH:
+                CurrentProjectModel.SelectedStand.KMCH = selectedEquip.Name ?? string.Empty;
+                CurrentProjectModel.SelectedStand.KMCHMeasure = selectedEquip.Measure;
+                CurrentProjectModel.SelectedStand.KMCHCostPerUnit = selectedEquip.Cost.ToString();
+                CurrentProjectModel.SelectedStand.KMCHExportDays = selectedEquip.ExportDays;
+                CurrentProjectModel.SelectedStand.KMCHEquip = selectedEquip;
                 break;
         }
-
-        _standService.UpdateStandWeight(CurrentProjectModel.SelectedStand);
     }
-
-    public void OnSelectKMCHFromDialogCommandExecuted(object e)
-    {
-        if (Guard.ExitIfNull("Стенд не выбран!",
-                _notificationService,
-                CurrentProjectModel.SelectedStand))
-            return;
-
-        switch (CurrentMaterials.SelectedKMCHType)
-        {
-            case "Жаропрочные":
-                SelectEquipment<HeaterSocket>(
-                    name => CurrentProjectModel.SelectedStand.KMCH = name,
-                    measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays,
-                    equip => CurrentProjectModel.SelectedStand.KMCHEquip = equip
-                );
-                break;
-
-            case "Нержавеющие":
-                SelectEquipment<StainlessSocket>(
-                    name => CurrentProjectModel.SelectedStand.KMCH = name,
-                    measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays,
-                    equip => CurrentProjectModel.SelectedStand.KMCHEquip = equip
-                );
-                break;
-
-            case "Углеродистые":
-                SelectEquipment<CarbonSocket>(
-                    name => CurrentProjectModel.SelectedStand.KMCH = name,
-                    measure => CurrentProjectModel.SelectedStand.KMCHMeasure = measure,
-                    cost => CurrentProjectModel.SelectedStand.KMCHCostPerUnit = cost,
-                    exportDays => CurrentProjectModel.SelectedStand.KMCHExportDays = exportDays,
-                    equip => CurrentProjectModel.SelectedStand.KMCHEquip = equip
-                );
-                break;
-        }
-
-        _standService.UpdateStandWeight(CurrentProjectModel.SelectedStand);
-    }
-
+    
     public async Task OnCreateNewCardCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
