@@ -24,8 +24,6 @@ namespace ReportEngine.App.ViewModels;
 
 public class AllSortamentsViewModel : BaseViewModel
 {
-    private readonly List<string> _comboBoxUnits = new() { "шт", "м", "компл.", "ед." };
-
     private readonly Dictionary<string, Type> _equipTypeMap = new()
     {
         { "Трубы\\Жаропрочные", typeof(HeaterPipe) },
@@ -130,8 +128,6 @@ public class AllSortamentsViewModel : BaseViewModel
         set => Set(ref _showMeasureComboBox, value);
     }
 
-    public DataGrid TargetDataGrid { get; set; } = new();
-
     public Action<IBaseEquip>? SelectionHandler { get; set; }
 
     private Type GetCurrentEquipType()
@@ -210,7 +206,7 @@ public class AllSortamentsViewModel : BaseViewModel
         }
     }
 
-    private async Task RefreshItems(IBaseEquip newEquip)
+    private async Task AddToCurrentGroupAsync(IBaseEquip newEquip)
     {
         if (CurrentSortamentsModel.EquipGroups.TryGetValue(CurrentGroupKey, out var collection))
             collection.Add(newEquip);
@@ -235,6 +231,9 @@ public class AllSortamentsViewModel : BaseViewModel
     private async Task AddNewEquipAsync()
     {
         var currentType = GetCurrentEquipType();
+        if (currentType == null)
+            return;
+
         var newEquip = (IBaseEquip)Activator.CreateInstance(currentType)!;
 
         newEquip.Name = InputEquip.Name;
@@ -259,9 +258,7 @@ public class AllSortamentsViewModel : BaseViewModel
 
         await _genericRepository.AddAsync(newEquip);
 
-        GenerateDataGrid(currentType, TargetDataGrid);
-
-        await RefreshItems(newEquip);
+        await AddToCurrentGroupAsync(newEquip);
 
         _notificationService.ShowInfo("Успешно добавлено");
     }
@@ -269,6 +266,9 @@ public class AllSortamentsViewModel : BaseViewModel
     private async Task SaveChangesEquipAsync()
     {
         var currentType = GetCurrentEquipType();
+        if (currentType == null || SelectedEquip == null)
+            return;
+
         var newEquip = (IBaseEquip)Activator.CreateInstance(currentType)!;
 
         newEquip.Id = SelectedEquip.Id;
@@ -295,10 +295,6 @@ public class AllSortamentsViewModel : BaseViewModel
         }
 
         await _genericRepository.UpdateAsync(newEquip);
-
-        GenerateDataGrid(currentType, TargetDataGrid);
-
-        await RefreshItems(newEquip);
 
         _notificationService.ShowInfo("Успешно сохранено");
     }

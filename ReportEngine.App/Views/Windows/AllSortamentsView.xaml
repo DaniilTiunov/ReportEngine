@@ -227,6 +227,7 @@
                                 AutoGenerateColumns="False"
                                 MouseDoubleClick="SelectEquip_DoubleClick"
                                 RowHeight="38"
+                                IsReadOnly="True"
                                 SelectedItem="{Binding SelectedEquip, Mode=TwoWay}" />
                         </Border>
                     </Grid>
@@ -410,7 +411,7 @@
 
                                 <!--  Добавление новой позиции  -->
                                 <Border Style="{StaticResource FormSectionCardStyle}">
-                                    <Expander IsExpanded="True">
+                                    <Expander IsExpanded="False">
                                         <Expander.Header>
                                             <TextBlock Style="{StaticResource ExpanderHeaderTextStyle}" Text="Добавить новую позицию" />
                                         </Expander.Header>

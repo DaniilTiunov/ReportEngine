@@ -12,8 +12,7 @@ public partial class AllSortamentsView : MetroWindow, IWindowWithViewModel<AllSo
 {
     private readonly bool _isDialog;
     private readonly AllSortamentsViewModel _viewModel;
-    private string _currentGroupKey;
-    private ICollectionView _equipView;
+    private ICollectionView? _equipView;
     
     public AllSortamentsViewModel ViewModel { get; }
     
@@ -27,6 +26,13 @@ public partial class AllSortamentsView : MetroWindow, IWindowWithViewModel<AllSo
         ViewModel = viewModel;
         _viewModel = viewModel;
         _isDialog = isDialog;
+
+        CheckIsDialog();
+    }
+
+    private void CheckIsDialog()
+    {
+        EquipDataGrid.IsReadOnly = _isDialog;
     }
 
     private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -34,18 +40,19 @@ public partial class AllSortamentsView : MetroWindow, IWindowWithViewModel<AllSo
         if (_equipView == null)
             return;
 
-        var query = SearchTextBox.Text.Trim().ToLower();
+        FinishPendingViewEdit();
+
+        var query = SearchTextBox.Text.Trim();
 
         if (string.IsNullOrEmpty(query))
             _equipView.Filter = null;
         else
             _equipView.Filter = obj =>
             {
-                // Пример фильтрации по свойству Name
                 var prop = obj?.GetType().GetProperty("Name");
                 var value = prop?.GetValue(obj) as string;
-                EquipDataGrid.ItemsSource = _equipView;
-                return !string.IsNullOrEmpty(value) && value.ToLower().Contains(query);
+                return !string.IsNullOrEmpty(value) &&
+                       value.Contains(query, StringComparison.CurrentCultureIgnoreCase);
             };
 
         _equipView.Refresh();
@@ -56,17 +63,7 @@ public partial class AllSortamentsView : MetroWindow, IWindowWithViewModel<AllSo
         if (e.Source is not TabControl) return;
         if ((sender as TabControl)?.SelectedItem is not TabItem selectedTab) return;
 
-        // Перед сменой данных отменяем текущее редактирование в DataGrid —
-        // когда колонки/ItemsSource меняются во время редактирования.
-        try
-        {
-            if (!EquipDataGrid.IsReadOnly) EquipDataGrid.CancelEdit(DataGridEditingUnit.Row);
-        }
-        catch
-        {
-        }
-
-        ResetAllSubTabControls();
+        CancelPendingGridEdit();
 
         var groupKey = selectedTab.Tag as string;
         if (string.IsNullOrWhiteSpace(groupKey)) return;
@@ -74,23 +71,37 @@ public partial class AllSortamentsView : MetroWindow, IWindowWithViewModel<AllSo
         _viewModel.TabItemKey = groupKey;
 
         await _viewModel.LoadGroupAsync(groupKey);
-        _viewModel.TargetDataGrid = EquipDataGrid;
         _viewModel.GenerateDataGridByTag(EquipDataGrid, groupKey);
 
-        _currentGroupKey = groupKey;
         _viewModel.CurrentGroupKey = groupKey;
 
-        if (_viewModel.CurrentSortamentsModel.EquipGroups.TryGetValue(groupKey, out var collection))
-            EquipDataGrid.ItemsSource = collection;
-        _equipView = CollectionViewSource.GetDefaultView(collection);
+        if (!_viewModel.CurrentSortamentsModel.EquipGroups.TryGetValue(groupKey, out var collection))
+            return;
+
+        // У каждого окна должно быть своё представление коллекции. DefaultView является общим
+        // и может сохранить EditItem-транзакцию после закрытия предыдущего окна.
+        _equipView = new ListCollectionView(collection);
+        EquipDataGrid.ItemsSource = _equipView;
     }
 
-    // TODO: Исправить этот костыль
-    private void ResetAllSubTabControls()
+    private void CancelPendingGridEdit()
     {
-        foreach (var mainTabItem in MainTabControl.Items)
-            if (mainTabItem is TabItem tabItem && tabItem.Content is TabControl subTabControl)
-                subTabControl.SelectedIndex = -1;
+        if (EquipDataGrid.IsReadOnly)
+            return;
+
+        EquipDataGrid.CancelEdit(DataGridEditingUnit.Cell);
+        EquipDataGrid.CancelEdit(DataGridEditingUnit.Row);
+    }
+
+    private void FinishPendingViewEdit()
+    {
+        if (_equipView is not IEditableCollectionView editableView)
+            return;
+
+        if (editableView.IsAddingNew)
+            editableView.CommitNew();
+        if (editableView.IsEditingItem)
+            editableView.CommitEdit();
     }
 
     private void SelectEquip_DoubleClick(object sender, MouseButtonEventArgs e)

@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
@@ -14,19 +15,15 @@ using ReportEngine.App.Services.Calculation;
 using ReportEngine.App.Services.Cloners;
 using ReportEngine.App.Services.Core;
 using ReportEngine.App.Services.Interfaces;
-using ReportEngine.App.Services.Logger;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels.Utils;
 using ReportEngine.App.Views.Windows;
 using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Domain.Entities;
-using ReportEngine.Domain.Entities.Armautre;
 using ReportEngine.Domain.Entities.BaseEntities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Entities.CalculationParameters.Enums;
-using ReportEngine.Domain.Entities.ElectricSockets;
 using ReportEngine.Domain.Entities.Other;
-using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories.Interfaces;
 using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
@@ -37,18 +34,16 @@ using ReportEngine.Shared.Services.Options;
 
 namespace ReportEngine.App.ViewModels;
 
-public class ProjectViewModel : BaseViewModel
+public partial class ProjectViewModel : ObservableObject
 {
     private readonly AdditionalEquipService _additionalEquipService;
     private readonly AuditService _auditService;
     private readonly ICalculationService _calculationService;
     private readonly ReportEngineConfigService _configService;
-    private readonly ContainerService _containerService;
     private readonly IDialogService _dialogService;
     private readonly EntityStandClonerService _entityStandCloner;
     private readonly ExceptionService _exceptionService;
     private readonly InitializeService _initializeService;
-    private readonly UiLogger _logger;
     private readonly INotificationService _notificationService;
     private readonly ParametersStore _parametersStore;
     private readonly IProjectDataLoaderService _projectDataLoaderService;
@@ -59,7 +54,6 @@ public class ProjectViewModel : BaseViewModel
     private readonly SessionService _sessionService;
     private readonly IStandService _standService;
     private readonly UIValidatorService _uiValidatorService;
-    private readonly UpdaterStandService _updaterStandService;
 
     public ProjectViewModel(
         IProjectInfoRepository projectRepository,
@@ -70,8 +64,6 @@ public class ProjectViewModel : BaseViewModel
         IProjectDataLoaderService projectDataLoaderService,
         IReportService reportService,
         ICalculationService calculationService,
-        ContainerService containerService,
-        UpdaterStandService updaterStandService,
         AdditionalEquipService additionalEquipService,
         UIValidatorService uiValidatorService,
         InitializeService initializeService,
@@ -80,7 +72,6 @@ public class ProjectViewModel : BaseViewModel
         AuditService auditService,
         SessionService sessionService,
         ExceptionService exceptionService,
-        UiLogger logger,
         IServiceProvider serviceProvider,
         ReportEngineConfigService configService)
     {
@@ -92,8 +83,6 @@ public class ProjectViewModel : BaseViewModel
         _projectDataLoaderService = projectDataLoaderService;
         _reportService = reportService;
         _calculationService = calculationService;
-        _containerService = containerService;
-        _updaterStandService = updaterStandService;
         _additionalEquipService = additionalEquipService;
         _uiValidatorService = uiValidatorService;
         _initializeService = initializeService;
@@ -102,40 +91,61 @@ public class ProjectViewModel : BaseViewModel
         _sessionService = sessionService;
         _auditService = auditService;
         _exceptionService = exceptionService;
-        _logger = logger;
         _serviceProvider = serviceProvider;
         _configService = configService;
 
         NewStand = new StandModel { Number = 1 };
-
-        RefreshCommandAsync = new AsyncRelayCommand(RefreshProjectAsync);
 
         InitializeCommands();
         InitializeTime();
         InitializeGenericCommands();
     }
 
-    public IAsyncRelayCommand RefreshCommandAsync { get; set; }
-    public ObservableCollection<FormedFrame> AllAvailableFrames { get; set; } = new();
-    public ObservableCollection<FormedDrainage> AllAvailableDrainages { get; set; } = new();
-    public ObservableCollection<FormedElectricalComponent> AllAvailableElectricalComponents { get; set; } = new();
-    public ObservableCollection<FormedAdditionalEquip> AllAvailableAdditionalEquips { get; set; } = new();
-    public Obvyazka SelectedObvyazka { get; set; } = new();
-    public StandModel CurrentStandModel { get; set; } = new();
-    public StandModel NewStand { get; set; } = new();
-    public ProjectModel CurrentProjectModel { get; set; } = new();
-    public ProjectCommandProvider ProjectCommandProvider { get; set; } = new();
-    public MaterialLinesModel CurrentMaterials { get; set; } = new();
+    [ObservableProperty]
+    private ObservableCollection<FormedFrame> _allAvailableFrames = new();
+
+    [ObservableProperty]
+    private ObservableCollection<FormedDrainage> _allAvailableDrainages = new();
+
+    [ObservableProperty]
+    private ObservableCollection<FormedElectricalComponent> _allAvailableElectricalComponents = new();
+
+    [ObservableProperty]
+    private ObservableCollection<FormedAdditionalEquip> _allAvailableAdditionalEquips = new();
+
+    [ObservableProperty]
+    private Obvyazka _selectedObvyazka = new();
+
+    [ObservableProperty]
+    private StandModel _currentStandModel = new();
+
+    [ObservableProperty]
+    private StandModel _newStand = new();
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(MaxObvNN))]
+    [NotifyPropertyChangedFor(nameof(MaxStandNN))]
+    private ProjectModel _currentProjectModel = new();
+
+    public IAsyncRelayCommand RefreshCommandAsync => RefreshProjectCommand;
+    public ProjectCommandProvider ProjectCommandProvider { get; } = new();
+    public MaterialLinesModel CurrentMaterials { get; } = new();
     public int MaxObvNN => CurrentProjectModel?.SelectedStand?.ObvyazkiInStand.Max(obv => obv.NN) ?? 0;
 
     public int MaxStandNN =>
         CurrentProjectModel.Stands.Count > 0 ? CurrentProjectModel.Stands.Max(stand => stand.Number) : 0;
+
+    public new void OnPropertyChanged(string? propertyName = null)
+    {
+        base.OnPropertyChanged(propertyName);
+    }
 
     public bool CanAllCommandsExecute(object? e)
     {
         return true;
     }
 
+    [RelayCommand]
     public async Task RefreshProjectAsync()
     {
         await _dialogService.RunWithProgressDialogAsync(async () =>
@@ -277,11 +287,7 @@ public class ProjectViewModel : BaseViewModel
 
     private IBaseEquip GetBaseEquip()
     {
-        var allAssortment = _serviceProvider.GetRequiredService<AllSortamentsViewModel>();
-        
-        var selectedEquip = _dialogService.ShowDialogAndGetFromViewModel<AllSortamentsViewModel, IBaseEquip>(
-            new AllSortamentsView(allAssortment, true),
-            vm => vm.SelectedEquip);
+        var selectedEquip = _dialogService.ShowAllSortamentsDialog();
         
         return selectedEquip ?? new BaseEquip();
     }
@@ -558,8 +564,8 @@ public class ProjectViewModel : BaseViewModel
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
-            await _updaterStandService.ApplyChangesAndSaveAsync(CurrentProjectModel);
             await _calculationService.CalculateProjectAsync(CurrentProjectModel);
+            OnPropertyChanged(nameof(CurrentProjectModel));
         });
     }
 
@@ -1158,14 +1164,6 @@ public class ProjectViewModel : BaseViewModel
         });
     }
 
-    public async Task LoadContainersInfoAsync()
-    {
-        await _exceptionService.SafeExecuteAsync(async () =>
-        {
-            await _containerService.LoadAllData(CurrentProjectModel);
-        });
-    }
-
     #endregion Методы загрузки данных на view
 
     #region Методы для CRUD с проектами и стендами
@@ -1637,8 +1635,7 @@ public class ProjectViewModel : BaseViewModel
     private async Task CalculateProjectAsync()
     {
         await _calculationService.CalculateProjectAsync(CurrentProjectModel);
-        OnPropertyChanged(nameof(CurrentProjectModel.Stands));
-        OnPropertyChanged(nameof(CurrentProjectModel.Cost));
+        OnPropertyChanged(nameof(CurrentProjectModel));
 
         _notificationService.ShowInfo("Расчёт завершён");
     }
