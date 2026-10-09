@@ -373,6 +373,47 @@ public class DialogService : IDialogService
 
         return null;
     }
+    
+    public T? ShowDialogAndGetFromWindow<TWindow, T>(
+        TWindow window,
+        Func<TWindow, T> extractor,
+        Window? owner = null)
+        where TWindow : Window
+    {
+        SetOwner(window, owner);
+        window.ShowDialog();
+        
+        return extractor(window);
+    }
+
+    public T? ShowDialogAndGetFromViewModel<TViewModel, T>(
+        IWindowWithViewModel<TViewModel> window,
+        Func<TViewModel, T> extractor,
+        Window? owner = null)
+    {
+        SetOwner(window, owner);
+        window.ShowDialog();
+
+        return extractor(window.ViewModel);
+    }
+
+    private static void SetOwner(Window window, Window? owner)
+    {
+        if (owner != null)
+        {
+            window.Owner = owner;
+            return;
+        }
+
+        window.Owner = Application.Current?.MainWindow;
+    }
+
+    private static void SetOwner<TViewModel>(
+        IWindowWithViewModel<TViewModel> window,
+        Window? owner)
+    {
+        window.Owner = owner ?? Application.Current?.MainWindow;
+    }
 
     private void OpenCurrentTab(object equipType, AllSortamentsView window)
     {

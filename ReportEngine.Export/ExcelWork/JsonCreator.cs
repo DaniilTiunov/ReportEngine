@@ -43,13 +43,13 @@ public static class JsonCreator
             Manager = project.Manager,
             Stands = sourceData
                 .OrderBy(stand => stand.Number)
-                .Select(CreateStandJson)
+                .Select(stand => CreateStandJson(stand, parametersStore, project))
                 .ToList()
         };
     }
 
     // создание JSON объекта стенда
-    private static StandJsonObject CreateStandJson(Stand stand)
+    private static StandJsonObject CreateStandJson(Stand stand,ParametersStore parametersStore, ProjectInfo project)
     {
         var framesInfos = stand.StandFrames
             .Select(frame => new
@@ -69,7 +69,7 @@ public static class JsonCreator
                 Quantity = group.Count()
             });
 
-        var parts = ExcelReportHelper.GeneratePartsData(new List<Stand> { stand });
+        var parts = ExcelReportHelper.GeneratePartsData(new List<Stand> { stand }, parametersStore, project);
 
         var framesParts = parts.FramesList.Select(record => RecordToJson(record));
 

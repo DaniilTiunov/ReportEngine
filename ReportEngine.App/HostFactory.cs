@@ -13,6 +13,7 @@ using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Services.Logger;
 using ReportEngine.App.Services.Navigation;
 using ReportEngine.App.Services.Notification;
+using ReportEngine.App.Services.Theming;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.Contacts;
 using ReportEngine.App.ViewModels.FormedEquips;
@@ -191,6 +192,7 @@ public static class HostFactory
 
     private static void ConfigureApplicationServices(IServiceCollection services)
     {
+        services.AddSingleton<IThemeService, ThemeService>();
         services.AddSingleton<ReportEngineConfigService>();
         services.AddSingleton<UpdaterStandService>();
         services.AddSingleton<GenericEquipWindowFactory>();
@@ -267,7 +269,8 @@ public static class HostFactory
             var navService = serviceProvider.GetRequiredService<NavigationService>();
             var viewModel = serviceProvider.GetRequiredService<MainWindowViewModel>();
             var exService = serviceProvider.GetRequiredService<ExceptionService>();
-            var mainWindow = new MainWindow(viewModel, serviceProvider, exService);
+            var themeService = serviceProvider.GetRequiredService<IThemeService>();
+            var mainWindow = new MainWindow(viewModel, serviceProvider, exService, themeService);
 
             navService.InitializeContentHost(mainWindow.FindName("MainContentControl") as ContentControl);
             return mainWindow;

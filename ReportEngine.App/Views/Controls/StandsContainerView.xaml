@@ -1,4 +1,5 @@
 ﻿<UserControl
+    FontFamily="{DynamicResource AppFontFamily}"
     Style="{DynamicResource AnimatedUserControlStyle}"
     d:DesignHeight="800"
     d:DesignWidth="1200"
@@ -18,7 +19,8 @@
 
         <!--  Верхняя панель с кнопками  -->
         <Border
-            BorderBrush="Gray"
+            Background="{DynamicResource SecondaryColor}"
+            BorderBrush="{DynamicResource BorderColor}"
             BorderThickness="1"
             Grid.Row="0"
             Margin="0,0,0,10"
@@ -48,7 +50,8 @@
 
             <!--  Левая панель: Список партий  -->
             <Border
-                BorderBrush="Gray"
+                Background="{DynamicResource SecondaryColor}"
+                BorderBrush="{DynamicResource BorderColor}"
                 BorderThickness="1"
                 Grid.Column="0"
                 Margin="0,0,5,0"
@@ -135,10 +138,30 @@
                     <!--  Список партий  -->
                     <ListBox
                         Background="{DynamicResource SecondaryColor}"
-                        Foreground="{DynamicResource PrimaryForeground}"
                         ItemsSource="{Binding AllProjectBatches}"
                         Margin="0,5,0,0"
                         SelectedItem="{Binding SelectedBatch}">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListBoxItem}">
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="BorderThickness" Value="0" />
+                                <Setter Property="Padding" Value="0" />
+                                <Setter Property="Margin" Value="0" />
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+                                <Setter Property="FontSize" Value="16" />
+                                <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="Transparent" />
+                                    </Trigger>
+
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="Transparent" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Border Margin="0,2" Padding="8,6">
@@ -176,7 +199,8 @@
 
             <!--  Центральная панель: Контейнеры выбранной партии  -->
             <Border
-                BorderBrush="Gray"
+                Background="{DynamicResource SecondaryColor}"
+                BorderBrush="{DynamicResource BorderColor}"
                 BorderThickness="1"
                 Grid.Column="1"
                 Margin="5,0,5,0"
@@ -210,10 +234,30 @@
 
                     <ListBox
                         Background="{DynamicResource SecondaryColor}"
-                        Foreground="{DynamicResource PrimaryForeground}"
                         ItemsSource="{Binding SelectedBatch.Containers}"
                         Margin="0,5,0,0"
                         SelectedItem="{Binding SelectedStandContainer}">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListBoxItem}">
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="BorderThickness" Value="0" />
+                                <Setter Property="Padding" Value="0" />
+                                <Setter Property="Margin" Value="0" />
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+                                <Setter Property="FontSize" Value="16" />
+                                <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="Transparent" />
+                                    </Trigger>
+
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="Transparent" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Border Margin="0,2" Padding="8,6">
@@ -259,7 +303,7 @@
             <!--  Правая панель: Стенды  -->
             <Border
                 Background="{DynamicResource SecondaryColor}"
-                BorderBrush="Gray"
+                BorderBrush="{DynamicResource BorderColor}"
                 BorderThickness="1"
                 Grid.Column="2"
                 Margin="5,0,0,0"
@@ -309,32 +353,46 @@
                         </Grid>
                     </StackPanel>
 
-                    <TabControl
-                        Background="{DynamicResource SecondaryColor}"
-                        Foreground="{DynamicResource PrimaryForeground}"
-                        Margin="0,5,0,0">
-                        <TabItem
-                            Background="{DynamicResource SecondaryColor}"
-                            Foreground="{DynamicResource PrimaryForeground}"
-                            Header="📦 В контейнере">
+                    <TabControl Margin="0,5,0,0">
+                        <TabItem Header="📦 В контейнере">
                             <ListBox
                                 Background="{DynamicResource SecondaryColor}"
                                 BorderThickness="0"
-                                Foreground="{DynamicResource PrimaryForeground}"
                                 ItemsSource="{Binding SelectedStandContainer.Stands}"
                                 SelectedItem="{Binding SelectedStand}">
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="{x:Type ListBoxItem}">
+                                        <Setter Property="Background" Value="Transparent" />
+                                        <Setter Property="BorderThickness" Value="0" />
+                                        <Setter Property="Padding" Value="0" />
+                                        <Setter Property="Margin" Value="0" />
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+                                        <Setter Property="FontSize" Value="16" />
+                                        <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
+                                        <Style.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter Property="Background" Value="Transparent" />
+                                            </Trigger>
+
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="Transparent" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <Border
-                                            Background="{DynamicResource StandCardBackground}"
-                                            BorderBrush="{DynamicResource StandCardBorder}"
-                                            BorderThickness="1"
-                                            CornerRadius="8"
-                                            Cursor="Hand"
-                                            Margin="0,3"
-                                            Padding="12,10">
+                                        <Border>
                                             <Border.Style>
                                                 <Style TargetType="Border">
+                                                    <Setter Property="Background" Value="{DynamicResource StandCardBackground}" />
+                                                    <Setter Property="BorderBrush" Value="{DynamicResource StandCardBorder}" />
+                                                    <Setter Property="BorderThickness" Value="1" />
+                                                    <Setter Property="CornerRadius" Value="8" />
+                                                    <Setter Property="Cursor" Value="Hand" />
+                                                    <Setter Property="Margin" Value="0,3" />
+                                                    <Setter Property="Padding" Value="12,10" />
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding IsSelected}" Value="True">
                                                             <Setter Property="Background" Value="{DynamicResource StandInContainerSelected}" />
@@ -425,29 +483,47 @@
                             </ListBox>
                         </TabItem>
 
-                        <TabItem
-                            Background="{DynamicResource SecondaryColor}"
-                            Foreground="{DynamicResource PrimaryForeground}"
-                            Header="➕ Доступные">
+                        <TabItem Header="➕ Доступные">
                             <ListBox
                                 Background="{DynamicResource SecondaryColor}"
                                 BorderThickness="0"
-                                Foreground="{DynamicResource PrimaryForeground}"
                                 ItemsSource="{Binding AvailableStands}"
                                 SelectionMode="Multiple"
                                 x:Name="AvailListBox">
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="{x:Type ListBoxItem}">
+                                        <Setter Property="Background" Value="Transparent" />
+                                        <Setter Property="Foreground" Value="{DynamicResource PrimaryForeground}" />
+                                        <Setter Property="FontSize" Value="16" />
+                                        <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
+                                        <Setter Property="BorderThickness" Value="0" />
+                                        <Setter Property="Padding" Value="0" />
+                                        <Setter Property="Margin" Value="0" />
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+
+                                        <Style.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter Property="Background" Value="Transparent" />
+                                            </Trigger>
+
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="Transparent" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <Border
-                                            Background="{DynamicResource StandCardBackground}"
-                                            BorderBrush="{DynamicResource StandCardBorder}"
-                                            BorderThickness="1"
-                                            CornerRadius="8"
-                                            Cursor="Hand"
-                                            Margin="0,3"
-                                            Padding="12,10">
+                                        <Border>
                                             <Border.Style>
                                                 <Style TargetType="Border">
+                                                    <Setter Property="Background" Value="{DynamicResource StandCardBackground}" />
+                                                    <Setter Property="BorderBrush" Value="{DynamicResource StandCardBorder}" />
+                                                    <Setter Property="BorderThickness" Value="1" />
+                                                    <Setter Property="CornerRadius" Value="8" />
+                                                    <Setter Property="Cursor" Value="Hand" />
+                                                    <Setter Property="Margin" Value="0,3" />
+                                                    <Setter Property="Padding" Value="12,10" />
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding IsSelected}" Value="True">
                                                             <Setter Property="Background" Value="{DynamicResource StandAvailableSelected}" />

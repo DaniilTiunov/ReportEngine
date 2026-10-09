@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using ReportEngine.App.Enums;
 using ReportEngine.App.ViewModels;
+using ReportEngine.Domain.Entities.BaseEntities.Interface;
 
 namespace ReportEngine.App.Commands.Initializers;
 
@@ -161,16 +163,7 @@ public static class ProjectCommandsInitializer
 
     public static void InitializeGenericCommands(ProjectViewModel vm)
     {
-        vm.ProjectCommandProvider.SelectMaterialLineDialogCommand =
-            new RelayCommand(vm.OnSelectMaterialFromDialogCommandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.SelectArmatureDialogCommand =
-            new RelayCommand(vm.OnSelectArmatureFromDialogCommandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.SelectKMCHDialogCommand =
-            new RelayCommand(vm.OnSelectKMCHFromDialogCommandExecuted, vm.CanAllCommandsExecute);
-
-        vm.ProjectCommandProvider.SelectTreeSocketDialogCommand =
-            new RelayCommand(vm.OnSelectTreeSocketFromDialogCommandExecuted, vm.CanAllCommandsExecute);
+        vm.ProjectCommandProvider.SelectEquipCommand =
+            new RelayCommand<EquipField?>(vm.SelectEquipCommandExecuted);
     }
 }

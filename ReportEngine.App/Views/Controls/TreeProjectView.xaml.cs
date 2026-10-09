@@ -8,13 +8,17 @@ using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.TreeView;
 using ReportEngine.Shared.Config.DebugConsol;
+using Wpf.Ui.Controls;
+using Button = System.Windows.Controls.Button;
+using MessageBox = System.Windows.MessageBox;
+using TextBlock = System.Windows.Controls.TextBlock;
+using TreeViewItem = System.Windows.Controls.TreeViewItem;
 
 namespace ReportEngine.App.Views.Controls;
 
 public partial class TreeProjectView : UserControl, IDisposable
 {
     private readonly ContainersViewModel _containersViewModel;
-    private readonly DdsService _ddsService;
     private readonly ExceptionService _exceptionService;
     private readonly ProjectViewModel _projectViewModel;
     private bool _disposed;
@@ -23,15 +27,13 @@ public partial class TreeProjectView : UserControl, IDisposable
         TreeViewModel treeViewModel,
         ProjectViewModel projectViewModel,
         ExceptionService exceptionService,
-        ContainersViewModel containersViewModel,
-        DdsService ddsService)
+        ContainersViewModel containersViewModel)
     {
-        InitializeComponent();
+        DataContext = treeViewModel;
         _projectViewModel = projectViewModel;
         _exceptionService = exceptionService;
         _containersViewModel = containersViewModel;
-        _ddsService = ddsService;
-        DataContext = treeViewModel;
+        InitializeComponent();
     }
 
     public void Dispose()
@@ -58,14 +60,14 @@ public partial class TreeProjectView : UserControl, IDisposable
         return item.Header?.ToString() ?? string.Empty;
     }
 
-    private PackIconKind GetIconKind(TreeViewItem item)
+    private SymbolRegular GetIconKind(TreeViewItem item)
     {
         if (item.Header is StackPanel stackPanel)
             foreach (var child in stackPanel.Children)
-                if (child is PackIcon icon)
-                    return icon.Kind;
+                if (child is SymbolIcon icon)
+                    return icon.Symbol;
 
-        return PackIconKind.Folder;
+        return SymbolRegular.Apps48;
     }
 
     private void OpenCurrentView(object sender, MouseButtonEventArgs e)
@@ -102,7 +104,7 @@ public partial class TreeProjectView : UserControl, IDisposable
         });
     }
 
-    private void LoadTreeContent(string tag, string header, PackIconKind iconKind)
+    private void LoadTreeContent(string tag, string header, SymbolRegular iconKind)
     {
         _exceptionService.SafeExecute(() =>
         {
@@ -158,7 +160,7 @@ public partial class TreeProjectView : UserControl, IDisposable
     private UIElement CreateTabItemHeader(
         string headerName,
         TabItem parentTab,
-        PackIconKind iconKind)
+        SymbolRegular iconKind)
     {
         var header = new StackPanel
         {
@@ -166,9 +168,9 @@ public partial class TreeProjectView : UserControl, IDisposable
             Margin = new Thickness(0, 0, 0, 0)
         };
 
-        var icon = new PackIcon
+        var icon = new SymbolIcon()
         {
-            Kind = iconKind,
+            Symbol = iconKind,
             Width = 16,
             Height = 16,
             Margin = new Thickness(0, 0, 8, 0),
@@ -181,7 +183,6 @@ public partial class TreeProjectView : UserControl, IDisposable
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 0, 5, 0),
             FontSize = 16,
-            FontFamily = new FontFamily("Bahnschrift"),
             Style = (Style)FindResource(typeof(TextBlock))
         };
 

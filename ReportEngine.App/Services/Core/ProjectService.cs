@@ -566,7 +566,8 @@ public class ProjectService : IProjectService
                 Measure = purpose.Measure,
                 CostPerUnit = purpose.CostPerUnit,
                 ExportDays = purpose.ExportDays,
-                FormedDrainageId = newComponent.Id
+                IsAutoCalculationEnabled = purpose.IsAutoCalculationEnabled,
+                FormedDrainageId = newComponent.Id,
             };
 
             newComponent.Purposes.Add(newPurpose);
@@ -596,6 +597,7 @@ public class ProjectService : IProjectService
                 Measure = purpose.Measure,
                 CostPerUnit = purpose.CostPerUnit,
                 ExportDays = purpose.ExportDays,
+                IsAutoCalculationEnabled = purpose.IsAutoCalculationEnabled,
                 FormedAdditionalEquipId = newComponent.Id
             };
 
@@ -626,6 +628,7 @@ public class ProjectService : IProjectService
                 Measure = purpose.Measure,
                 CostPerUnit = purpose.CostPerUnit,
                 ExportDays = purpose.ExportDays,
+                IsAutoCalculationEnabled = purpose.IsAutoCalculationEnabled,
                 FormedElectricalComponentId = newComponent.Id
             };
 

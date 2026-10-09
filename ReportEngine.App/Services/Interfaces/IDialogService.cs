@@ -1,4 +1,5 @@
-﻿using ReportEngine.App.Model.StandsModel;
+﻿using System.Windows;
+using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.ViewModels.DTO;
 using ReportEngine.Domain.Entities;
@@ -39,4 +40,15 @@ public interface IDialogService
     void RunWithProgressDialog(Action action);
 
     Task RunWithProgressDialogAsync(Func<Task> action);
+
+    T? ShowDialogAndGetFromWindow<TWindow, T>(
+        TWindow window,
+        Func<TWindow, T> extractor,
+        Window? owner = null) where TWindow : Window;
+    
+    T? ShowDialogAndGetFromViewModel<TViewModel, T>(
+        IWindowWithViewModel<TViewModel> window,
+        Func<TViewModel, T> extractor,
+        Window? owner = null);
+
 }

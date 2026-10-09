@@ -15,9 +15,9 @@
 
     <Window.Resources>
         <!--  Светлый градиент для фона  -->
-        <LinearGradientBrush EndPoint="1,1" StartPoint="0,0" x:Key="BackgroundGradient">
-            <GradientStop Color="#F8F9FA" Offset="0" />
-            <GradientStop Color="#E9ECEF" Offset="1" />
+        <LinearGradientBrush EndPoint="1,2" StartPoint="0,0" x:Key="BackgroundGradient">
+            <GradientStop Color="#E9ECEF" Offset="0" />
+            <GradientStop Color="#3B4FC5" Offset="1" />
         </LinearGradientBrush>
 
         <!--  Тень для окна  -->

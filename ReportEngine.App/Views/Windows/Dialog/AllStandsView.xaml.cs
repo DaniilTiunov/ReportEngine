@@ -1,5 +1,6 @@
 ﻿using System.Windows.Input;
 using MahApps.Metro.Controls;
+using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.ViewModels;
 
 namespace ReportEngine.App.Views.Windows.Dialog;
@@ -7,13 +8,14 @@ namespace ReportEngine.App.Views.Windows.Dialog;
 /// <summary>
 ///     Логика взаимодействия для AllStandsView.xaml
 /// </summary>
-public partial class AllStandsView : MetroWindow
+public partial class AllStandsView : MetroWindow, IWindowWithViewModel<AllStandsViewModel>
 {
-    private readonly AllStandsViewModel _allStandsViewModel;
+    public AllStandsViewModel ViewModel { get; }
 
     public AllStandsView(AllStandsViewModel allStandsViewModel)
     {
         InitializeComponent();
+        ViewModel = allStandsViewModel;
         DataContext = allStandsViewModel;
     }
 

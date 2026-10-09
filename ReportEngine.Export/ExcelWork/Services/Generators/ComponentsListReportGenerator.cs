@@ -1,12 +1,13 @@
-﻿using System.Diagnostics;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories;
+using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Helpers;
 using ReportEngine.Shared.Services.Options;
+using System.Diagnostics;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -14,13 +15,16 @@ public class ComponentListReportGenerator : IReportGenerator
 {
     private readonly ReportEngineConfigService _configService;
     private readonly ProjectInfoRepository _projectInfoRepository;
+    private readonly ParametersStore _parametersStore;
 
     public ComponentListReportGenerator(
         ProjectInfoRepository projectInfoRepository,
-        ReportEngineConfigService configService)
+        ReportEngineConfigService configService,
+        ParametersStore parametersStore)
     {
         _projectInfoRepository = projectInfoRepository;
         _configService = configService;
+        _parametersStore = parametersStore;
     }
 
     public ReportType Type => ReportType.ComponentsListReport;
@@ -39,7 +43,7 @@ public class ComponentListReportGenerator : IReportGenerator
                 var ws = wb.Worksheets.Add($"{standNumber}");
 
                 CreateStandTableHeader(ws, stand);
-                FillStandTable(ws, stand);
+                FillStandTable(ws, stand, project);
 
                 standNumber++;
             }
@@ -82,7 +86,7 @@ public class ComponentListReportGenerator : IReportGenerator
                 var ws = wb.Worksheets.Add($"{standNumber}");
 
                 CreateStandTableHeader(ws, stand);
-                FillStandTable(ws, stand);
+                FillStandTable(ws, stand, project);
 
                 standNumber++;
             }
@@ -207,9 +211,9 @@ public class ComponentListReportGenerator : IReportGenerator
     #region Заполнители
 
     //Заполняет таблицу на листе (для стенда)
-    private void FillStandTable(IXLWorksheet ws, Stand stand)
+    private void FillStandTable(IXLWorksheet ws, Stand stand, ProjectInfo project)
     {
-        var generatedData = ExcelReportHelper.GeneratePartsData(new List<Stand> { stand });
+        var generatedData = ExcelReportHelper.GeneratePartsData(new List<Stand> { stand }, _parametersStore, project);
 
         var activeRow = 4;
 
@@ -245,9 +249,9 @@ public class ComponentListReportGenerator : IReportGenerator
     //создание сводной ведомости
     private void FillCommonListTable(IXLWorksheet ws, ProjectInfo project, List<Stand>? selectedStands = null)
     {
-        var generatedData = ExcelReportHelper.GeneratePartsData(project.Stands);
+        var generatedData = ExcelReportHelper.GeneratePartsData(project.Stands, _parametersStore, project);
 
-        if (selectedStands != null) generatedData = ExcelReportHelper.GeneratePartsData(selectedStands);
+        if (selectedStands != null) generatedData = ExcelReportHelper.GeneratePartsData(selectedStands, _parametersStore, project);
 
         var activeRow = 4;
 

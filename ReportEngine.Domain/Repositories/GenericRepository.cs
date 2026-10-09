@@ -123,6 +123,12 @@ public class GenericRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task UpdateAsync(IBaseEquip entity)
+    {
+        _context.Update(entity);
+        await _context.SaveChangesAsync();
+    }
+
     public async Task DeleteAsync<TEntity>(TEntity entity)
         where TEntity : class
     {

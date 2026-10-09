@@ -21,6 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решен
 	ProjectSection(SolutionItems) = preProject
 		latest.json = latest.json
 		Publish-Release.ps1 = Publish-Release.ps1
+		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
 Global

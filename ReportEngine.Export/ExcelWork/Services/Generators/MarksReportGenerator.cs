@@ -1,10 +1,11 @@
-﻿using System.Diagnostics;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Repositories;
+using ReportEngine.Domain.Store;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Shared.Services.Options;
+using System.Diagnostics;
 
 namespace ReportEngine.Export.ExcelWork.Services.Generators;
 
@@ -13,12 +14,16 @@ public class MarksReportGenerator : IReportGenerator
     private readonly ReportEngineConfigService _configService;
     private readonly ProjectInfoRepository _projectInfoRepository;
 
+    private readonly ParametersStore _parametersStore;
+
     public MarksReportGenerator(
         ProjectInfoRepository projectInfoRepository,
-        ReportEngineConfigService configService)
+        ReportEngineConfigService configService,
+        ParametersStore parametersStore)
     {
         _projectInfoRepository = projectInfoRepository;
         _configService = configService;
+        _parametersStore = parametersStore;
     }
 
     public ReportType Type => ReportType.MarksReport;

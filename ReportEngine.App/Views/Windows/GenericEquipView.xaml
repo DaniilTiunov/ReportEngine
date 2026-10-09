@@ -30,14 +30,7 @@
 
 
     <DockPanel>
-        <Separator
-            Background="{DynamicResource PrimaryForeground}"
-            BorderBrush="{DynamicResource PrimaryForeground}"
-            BorderThickness="3"
-            DockPanel.Dock="Top"
-            Foreground="{DynamicResource PrimaryForeground}"
-            Height="3"
-            Margin="20,0,20,8" />
+        <Separator DockPanel.Dock="Top" Style="{DynamicResource WindowTitleSeparatorStyle}" />
 
         <Grid Margin="5,5,0,5">
             <Grid.RowDefinitions>

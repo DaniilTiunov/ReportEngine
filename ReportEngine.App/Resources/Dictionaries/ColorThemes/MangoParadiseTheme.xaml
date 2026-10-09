@@ -26,4 +26,15 @@
     <SolidColorBrush Color="#AA8865" x:Key="ButtonDisabledForeground" />
     <SolidColorBrush Color="#A58B6C" x:Key="DisabledForeground" />
     <SolidColorBrush Color="#A58B6C" x:Key="UnsafeDetails" />
+    <!--  Карточки стендов  -->
+    <SolidColorBrush Color="#3B2924" x:Key="StandCardBackground" />
+    <SolidColorBrush Color="#5A4032" x:Key="StandCardBorder" />
+    <SolidColorBrush Color="#4D362C" x:Key="StandCardHover" />
+    <SolidColorBrush Color="#FFC56A" x:Key="StandKKSSColor" />
+    <SolidColorBrush Color="#66D98B" x:Key="StandWeightColor" />
+    <SolidColorBrush Color="#DCC7A8" x:Key="StandLabelColor" />
+    <SolidColorBrush Color="#61432F" x:Key="StandInContainerSelected" />
+    <SolidColorBrush Color="#FFB84C" x:Key="StandInContainerBorderSelected" />
+    <SolidColorBrush Color="#284733" x:Key="StandAvailableSelected" />
+    <SolidColorBrush Color="#66D98B" x:Key="StandAvailableBorderSelected" />
 </ResourceDictionary>

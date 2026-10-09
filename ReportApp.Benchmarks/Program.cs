@@ -7,7 +7,9 @@ using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO.JsonObjects;
 using ReportEngine.Export.ExcelWork;
 
-public class Program
+namespace ReportApp.Benchmarks;
+
+public static class Program
 {
     private static async Task Main(string[] args)
     {
@@ -17,7 +19,7 @@ public class Program
             .UseNpgsql(conString)
             .Options;
 
-        using (var context = new ReAppContext(options))
+        await using (var context = new ReAppContext(options))
         {
             var calculationRepository = new CalculationRepository(context);
             var parameterStore = new ParametersStore(calculationRepository);

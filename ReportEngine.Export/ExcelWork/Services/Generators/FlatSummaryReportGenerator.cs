@@ -4,6 +4,7 @@ using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.Pipes;
 using ReportEngine.Domain.Repositories;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Domain.Store;
 using ReportEngine.Export.DTO;
 using ReportEngine.Export.ExcelWork.Enums;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
@@ -17,15 +18,18 @@ public class FlatSummaryReportGenerator : IReportGenerator
     private readonly ReportEngineConfigService _configService;
     private readonly IGenericBaseRepository<StainlessPipe, StainlessPipe> _pipesRepository;
     private readonly ProjectInfoRepository _projectInfoRepository;
+    private readonly ParametersStore _parametersStore;
 
     public FlatSummaryReportGenerator(
         ProjectInfoRepository projectInfoRepository,
         IServiceProvider serviceProvider,
-        ReportEngineConfigService configService)
+        ReportEngineConfigService configService,
+        ParametersStore parametersStore)
     {
         _projectInfoRepository = projectInfoRepository;
         _configService = configService;
         _pipesRepository = serviceProvider.GetRequiredService<IGenericBaseRepository<StainlessPipe, StainlessPipe>>();
+        _parametersStore = parametersStore;
     }
 
     public ReportType Type => ReportType.FlatSummaryReport;
@@ -98,8 +102,8 @@ public class FlatSummaryReportGenerator : IReportGenerator
         var activeRow = 1;
 
         var generatedPartsData = selectedStands == null
-            ? ExcelReportHelper.GeneratePartsData(project.Stands)
-            : ExcelReportHelper.GeneratePartsData(selectedStands);
+            ? ExcelReportHelper.GeneratePartsData(project.Stands, _parametersStore, project)
+            : ExcelReportHelper.GeneratePartsData(selectedStands, _parametersStore, project);
 
         // Все комплектующие одним списком
         var allParts = ExcelReportHelper.GenerateAllPartsCollection(generatedPartsData);
