@@ -27,7 +27,7 @@
             x:Key="ContentSizedColumnHeaderStyle"
             BasedOn="{StaticResource {x:Type GridViewColumnHeader}}"
             TargetType="GridViewColumnHeader">
-            <Setter Property="MinWidth" Value="120" />
+            <Setter Property="MinWidth" Value="56" />
         </Style>
     </UserControl.Resources>
 
@@ -100,7 +100,7 @@
                         <ui:ListView.View>
                             <ui:GridView ColumnHeaderContainerStyle="{StaticResource ContentSizedColumnHeaderStyle}">
 
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Number}">
+                                <GridViewColumn Width="56" DisplayMemberBinding="{Binding Number}">
                                     <GridViewColumn.Header>
                                         <ui:SymbolIcon
                                             Margin="4,0,0,0"
@@ -110,7 +110,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding KKSCode}">
+                                <GridViewColumn Width="110" DisplayMemberBinding="{Binding KKSCode}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -125,7 +125,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Design}">
+                                <GridViewColumn Width="150" DisplayMemberBinding="{Binding Design}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -140,7 +140,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding SerialNumber}">
+                                <GridViewColumn Width="165" DisplayMemberBinding="{Binding SerialNumber}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -155,7 +155,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding BraceType}">
+                                <GridViewColumn Width="175" DisplayMemberBinding="{Binding BraceType}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -170,7 +170,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Width}">
+                                <GridViewColumn Width="125" DisplayMemberBinding="{Binding Width}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -185,7 +185,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Weight}">
+                                <GridViewColumn Width="125" DisplayMemberBinding="{Binding Weight}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -200,7 +200,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding StandSummCost}">
+                                <GridViewColumn Width="165" DisplayMemberBinding="{Binding StandSummCost}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -300,13 +300,13 @@
 
                         <ui:ListView.View>
                             <ui:GridView ColumnHeaderContainerStyle="{StaticResource ContentSizedColumnHeaderStyle}">
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding NN}">
+                                <GridViewColumn Width="56" DisplayMemberBinding="{Binding NN}">
                                     <GridViewColumn.Header>
                                         <ui:SymbolIcon Foreground="{DynamicResource PrimaryForeground}" Symbol="NumberSymbol24" />
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding ObvyazkaName}">
+                                <GridViewColumn Width="140" DisplayMemberBinding="{Binding ObvyazkaName}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -321,7 +321,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding MaterialLine}">
+                                <GridViewColumn Width="340" DisplayMemberBinding="{Binding MaterialLine}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -336,7 +336,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Armature}">
+                                <GridViewColumn Width="220" DisplayMemberBinding="{Binding Armature}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -351,7 +351,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding TreeSocket}">
+                                <GridViewColumn Width="180" DisplayMemberBinding="{Binding TreeSocket}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -366,7 +366,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding KMCH}">
+                                <GridViewColumn Width="180" DisplayMemberBinding="{Binding KMCH}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -381,7 +381,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding FirstSensorType}">
+                                <GridViewColumn Width="210" DisplayMemberBinding="{Binding FirstSensorType}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -396,7 +396,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding SecondSensorType}">
+                                <GridViewColumn Width="210" DisplayMemberBinding="{Binding SecondSensorType}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -411,7 +411,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding ThirdSensorType}">
+                                <GridViewColumn Width="210" DisplayMemberBinding="{Binding ThirdSensorType}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -761,7 +761,7 @@
 
                             <ui:ListView.View>
                                 <ui:GridView ColumnHeaderContainerStyle="{StaticResource ContentSizedColumnHeaderStyle}">
-                                    <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Name}">
+                                    <GridViewColumn Width="180" DisplayMemberBinding="{Binding Name}">
                                         <GridViewColumn.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <ui:SymbolIcon
@@ -776,7 +776,7 @@
                                         </GridViewColumn.Header>
                                     </GridViewColumn>
 
-                                    <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding FrameType}">
+                                    <GridViewColumn Width="150" DisplayMemberBinding="{Binding FrameType}">
                                         <GridViewColumn.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <ui:SymbolIcon
@@ -791,7 +791,7 @@
                                         </GridViewColumn.Header>
                                     </GridViewColumn>
 
-                                    <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Width}">
+                                    <GridViewColumn Width="115" DisplayMemberBinding="{Binding Width}">
                                         <GridViewColumn.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <ui:SymbolIcon
@@ -806,7 +806,7 @@
                                         </GridViewColumn.Header>
                                     </GridViewColumn>
 
-                                    <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Height}">
+                                    <GridViewColumn Width="115" DisplayMemberBinding="{Binding Height}">
                                         <GridViewColumn.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <ui:SymbolIcon
@@ -821,7 +821,7 @@
                                         </GridViewColumn.Header>
                                     </GridViewColumn>
 
-                                    <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Depth}">
+                                    <GridViewColumn Width="115" DisplayMemberBinding="{Binding Depth}">
                                         <GridViewColumn.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <ui:SymbolIcon
@@ -836,7 +836,7 @@
                                         </GridViewColumn.Header>
                                     </GridViewColumn>
 
-                                    <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Weight}">
+                                    <GridViewColumn Width="115" DisplayMemberBinding="{Binding Weight}">
                                         <GridViewColumn.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <ui:SymbolIcon
@@ -851,7 +851,7 @@
                                         </GridViewColumn.Header>
                                     </GridViewColumn>
 
-                                    <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Designe}">
+                                    <GridViewColumn Width="240" DisplayMemberBinding="{Binding Designe}">
                                         <GridViewColumn.Header>
                                             <StackPanel Orientation="Horizontal">
                                                 <ui:SymbolIcon
@@ -886,6 +886,7 @@
                             Margin="5,5,5,5"
                             Command="{Binding ProjectCommandProvider.ShowFrameDialogCommand}"
                             Content="➕"
+                            FontSize="12"
                             ToolTip="Добавить раму" />
                     </Grid>
                 </GroupBox>
@@ -928,7 +929,7 @@
                         <ui:ListView.View>
                             <ui:GridView ColumnHeaderContainerStyle="{StaticResource ContentSizedColumnHeaderStyle}">
 
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding ObvyazkaName}">
+                                <GridViewColumn Width="140" DisplayMemberBinding="{Binding ObvyazkaName}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -943,7 +944,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding MaterialLine}">
+                                <GridViewColumn Width="340" DisplayMemberBinding="{Binding MaterialLine}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -958,7 +959,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Armature}">
+                                <GridViewColumn Width="220" DisplayMemberBinding="{Binding Armature}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -973,7 +974,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding TreeSocket}">
+                                <GridViewColumn Width="180" DisplayMemberBinding="{Binding TreeSocket}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -988,7 +989,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding KMCH}">
+                                <GridViewColumn Width="180" DisplayMemberBinding="{Binding KMCH}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -1003,7 +1004,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding FirstSensorType}">
+                                <GridViewColumn Width="210" DisplayMemberBinding="{Binding FirstSensorType}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -1018,7 +1019,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding SecondSensorType}">
+                                <GridViewColumn Width="210" DisplayMemberBinding="{Binding SecondSensorType}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon
@@ -1033,7 +1034,7 @@
                                     </GridViewColumn.Header>
                                 </GridViewColumn>
 
-                                <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding ThirdSensorType}">
+                                <GridViewColumn Width="210" DisplayMemberBinding="{Binding ThirdSensorType}">
                                     <GridViewColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <ui:SymbolIcon

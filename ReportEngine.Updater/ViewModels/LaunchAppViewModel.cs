@@ -96,7 +96,7 @@ public partial class LaunchAppViewModel : BaseViewModel
         var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         var shortcutName = $"КИПАРИС:PCM v{SelectedRelease.Info.Version} ({SelectedRelease.Info.Channel}).lnk";
         var shortcutPath = Path.Combine(desktopPath, shortcutName);
-        var targetPath = Path.Combine(SelectedRelease.Path, "ReportEngine.App.exe");
+        var targetPath = Path.Combine(SelectedRelease.Path, "KIPARIS_PCM.exe");
 
         var t = Type.GetTypeFromProgID("WScript.Shell");
         dynamic shell = Activator.CreateInstance(t);
