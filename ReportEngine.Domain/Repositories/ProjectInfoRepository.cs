@@ -435,6 +435,7 @@ public class ProjectInfoRepository : IProjectInfoRepository
             .Include(p => p.Stands)
             .ThenInclude(s => s.StandDrainages)
             .ThenInclude(sd => sd.Drainage)
+            .ThenInclude(d => d.Purposes)
             .Include(p => p.Stands)
             .ThenInclude(s => s.ObvyazkiInStand)
             .ThenInclude(o => o.Obvyazka)

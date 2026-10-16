@@ -1168,7 +1168,7 @@ public partial class ProjectViewModel : ObservableObject
         if (Guard.ExitIfNull("Не выбран тип обвязки!", _notificationService, SelectedObvyazka))
             return;
 
-        //автонумерация
+        // автономерация
         selectedStand.NN = MaxObvNN + 1;
 
         var entity = await _standService.CreateObvyazkaAsync(selectedStand, SelectedObvyazka);
