@@ -1336,7 +1336,7 @@ def fillConclusionPage_v2(stand,project):
     packageTableInfo = [["4. УПАКОВКА, СОПРОВОДИТЕЛЬНАЯ ДОКУМЕНТАЦИЯ"] + [""] * 6]
 
     packageTableInfo.append(["4.1", "Консервация"] + [""] + ["ПС"] + [""] * 3)
-    packageTableInfo.append(["4.2", "Контроль консервация"] + [""] + ["ОТК"] + [""] * 3)
+    packageTableInfo.append(["4.2", "Контроль консервации"] + [""] + ["ОТК"] + [""] * 3)
 
     packageTableInfo.append(["4.3", "Упаковка"] + [""] + ["ПС"] + [""] * 3)
     packageTableInfo.append([""] * 3 + ["ОСиЛ"] + [""] * 3)
