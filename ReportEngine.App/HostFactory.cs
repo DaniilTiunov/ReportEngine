@@ -9,6 +9,7 @@ using ReportEngine.App.Services.Calculation;
 using ReportEngine.App.Services.Cloners;
 using ReportEngine.App.Services.Converters;
 using ReportEngine.App.Services.Core;
+using ReportEngine.App.Services.Import;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Services.Logger;
 using ReportEngine.App.Services.Navigation;
@@ -46,6 +47,10 @@ using ReportEngine.Export.ExcelWork.Services;
 using ReportEngine.Export.ExcelWork.Services.Generators;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Export.PDFWork.Services.Generators;
+using ReportEngine.Import.Abstractions;
+using ReportEngine.Import.Services.Excel;
+using ReportEngine.Import.Services.Project;
+using ReportEngine.Import.Services.Report;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.Models;
 using ReportEngine.Shared.Services.Options;
@@ -233,6 +238,10 @@ public static class HostFactory
         services.AddScoped<IReportGenerator, PassportsGenerator>();
         services.AddScoped<IReportGenerator, TechnologicalCardsGenerator>();
         services.AddScoped<IReportGenerator, FlatSummaryReportGenerator>();
+        services.AddScoped<IFileService, FileService>();
+        services.AddScoped<IReportParser, ReportParser>();
+        services.AddScoped<IProjectInfoParser, ProjectInfoParser>();
+        services.AddScoped<IImportService, ImportService>();
         services.AddSingleton<ReportSettings>();
     }
 

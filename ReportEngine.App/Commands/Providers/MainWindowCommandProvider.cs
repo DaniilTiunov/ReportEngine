@@ -15,10 +15,8 @@ public class MainWindowCommandProvider
     public ICommand ShowAllProjectsCommand { get; set; }
     public ICommand DeleteSelectedProjectCommand { get; set; }
     public ICommand EditProjectCommand { get; set; }
-    public ICommand OpenAllDrainagesCommand { get; set; }
     public ICommand OpenAllSortamentsCommand { get; set; }
     public ICommand OpenSettingsWindow { get; set; }
-    public ICommand OpenCalculationSettingsWindow { get; set; }
     public ICommand RecalculateProjectCommand { get; set; }
     public ICommand OpenAllSubjectsCommand { get; set; }
     public ICommand OpenAllStandsCommand { get; set; }
@@ -27,4 +25,5 @@ public class MainWindowCommandProvider
     public ICommand OpenAuditContentCommand { get; set; }
     public ICommand SetOfflineDbCommand { get; set; }
     public ICommand SetOnlineDbCommand { get; set; }
+    public ICommand ImportReportCommand { get; set; }
 }

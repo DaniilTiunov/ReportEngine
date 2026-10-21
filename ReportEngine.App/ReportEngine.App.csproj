@@ -158,6 +158,7 @@
         <ProjectReference Include="..\ReportEngine.Domain\ReportEngine.Domain.csproj"/>
         <ProjectReference Include="..\ReportEngine.Export\ReportEngine.Export.csproj"/>
         <ProjectReference Include="..\ReportEngine.Extensions\ReportEngine.Extensions.csproj"/>
+        <ProjectReference Include="..\ReportEngine.Import\ReportEngine.Import.csproj" />
         <ProjectReference Include="..\ReportEngine.Shared\ReportEngine.Shared.csproj"/>
         <PackageReference Include="Microsoft.Extensions.Configuration"/>
         <PackageReference Include="Microsoft.Extensions.Configuration.Json"/>
