@@ -1,6 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ReportEngine.Import.Services;
+using ReportEngine.Domain.Database.Context;
+using ReportEngine.Domain.Repositories;
 
 namespace ReportApp.Benchmarks;
 
@@ -8,15 +10,28 @@ public static class Startup
 {
     public static IHost BuildHost(string[] args, string filePath)
     {
-        var jsonService = new JsonFileService(filePath);
+        
         
         return Host
             .CreateDefaultBuilder(args)
             .ConfigureServices((context, services) =>
             {
-                services.AddSingleton(jsonService);
-                services.AddSingleton<ProjectService>();
+                ConfigureDbContext(services);
             })
             .Build();
+    }
+
+    private static void ConfigureRepositiries(IServiceCollection services)
+    {
+        services.AddScoped<ProjectInfoRepository>();
+    }
+    
+    private static void ConfigureDbContext(IServiceCollection services)
+    {
+        services.AddDbContext<ReAppContext>(options =>
+        {
+            options.UseNpgsql(
+                connectionString: "Host=172.16.10.230;Port=5432;Database=reportengine;Username=postgres;Password=postgres");
+        });
     }
 }

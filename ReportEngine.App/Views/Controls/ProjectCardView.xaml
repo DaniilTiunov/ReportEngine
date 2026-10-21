@@ -186,7 +186,8 @@
                             Height="32"
                             Margin="5"
                             Command="{Binding ProjectCommandProvider.ShowCompanyDialogCommand}"
-                            Content="..." />
+                            Content="..."
+                            FontSize="14" />
 
                     </Grid>
 
@@ -226,7 +227,8 @@
                             Height="32"
                             Margin="5"
                             Command="{Binding ProjectCommandProvider.ShowSubjectDialogCommand}"
-                            Content="..." />
+                            Content="..."
+                            FontSize="14" />
 
                     </Grid>
 
@@ -777,7 +779,7 @@
                     Orientation="Horizontal">
 
                     <Button
-                        Width="150"
+                        Width="200"
                         Margin="0,0,10,0"
                         Command="{Binding ProjectCommandProvider.CreateNewCardCommand}"
                         Content="Добавить новый" />

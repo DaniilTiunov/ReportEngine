@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using ReportEngine.Import.Services;
-
-namespace ReportApp.Benchmarks;
+﻿namespace ReportApp.Benchmarks;
 
 public static class Program
 {
@@ -13,11 +10,6 @@ public static class Program
 
             using var host = Startup.BuildHost(args, jsonFilePath);
 
-            var projectService = host.Services.GetRequiredService<ProjectService>();
-
-            var stands = projectService.GetStands();
-
-            foreach (var stand in stands) Console.WriteLine(stand.Designation);
 
             await host.StartAsync();
         }
