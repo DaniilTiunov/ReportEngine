@@ -119,6 +119,7 @@
         <PackageReference Include="GigaChatAdapter"/>
         <PackageReference Include="MahApps.Metro"/>
         <PackageReference Include="Mapster"/>
+        <PackageReference Include="Mapster.DependencyInjection" />
         <PackageReference Include="MaterialDesignColors"/>
         <PackageReference Include="MaterialDesignExtensions"/>
         <PackageReference Include="MaterialDesignThemes"/>

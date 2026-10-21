@@ -1,4 +1,5 @@
 using ClosedXML.Excel;
+using ReportEngine.Extensions.Extensions.ClosedXmlExtensions;
 using ReportEngine.Import.Abstractions;
 using ReportEngine.Import.Configuration;
 using ReportEngine.Import.Dto;
@@ -28,42 +29,31 @@ public class ProjectInfoParser : IProjectInfoParser
         CellHumanCost = "C14",
         CellManager = "G10"
     };
-
-
+    
     public ProjectInfoDto Parse(IXLWorksheet worksheet)
     {
         var projectInfo = new ProjectInfoDto
         {
-            Number = GetCellValue(worksheet, _projectInfoCellConfig.CellNumber ?? "A1"),
-            Description = GetCellValue(worksheet, _projectInfoCellConfig.CellDescription ?? "A1"),
-            CreationDate = GetCellValue(worksheet, _projectInfoCellConfig.CellCreationDate ?? "A1"),
-            Company = GetCellValue(worksheet, _projectInfoCellConfig.CellCompany ?? "A1"),
-            Object = GetCellValue(worksheet, _projectInfoCellConfig.CellObject ?? "A1"),
-            StandCount = GetCellValue(worksheet, _projectInfoCellConfig.CellStandCount ?? "A1"),
-            Cost = GetCellValue(worksheet, _projectInfoCellConfig.CellCost ?? "A1"),
-            Status = GetCellValue(worksheet, _projectInfoCellConfig.CellStatus ?? "A1"),
-            StartDate = GetCellValue(worksheet, _projectInfoCellConfig.CellStartDate ?? "A1"),
-            OutOfProduction = GetCellValue(worksheet, _projectInfoCellConfig.CellOutOfProduction ?? "A1"),
-            EndDate = GetCellValue(worksheet, _projectInfoCellConfig.CellEndDate ?? "A1"),
-            OrderCustomer = GetCellValue(worksheet, _projectInfoCellConfig.CellOrderCustomer ?? "A1"),
-            RequestProduction = GetCellValue(worksheet, _projectInfoCellConfig.CellRequestProduction ?? "A1"),
-            MarkPlus = GetCellValue(worksheet, _projectInfoCellConfig.CellMarkPlus ?? "A1"),
-            MarkMinus = GetCellValue(worksheet, _projectInfoCellConfig.CellMarkMinus ?? "A1"),
-            IsGalvanized = GetCellValue(worksheet, _projectInfoCellConfig.CellIsGalvanized ?? "A1"),
-            HumanCost = GetCellValue(worksheet, _projectInfoCellConfig.CellHumanCost ?? "A1"),
-            Manager = GetCellValue(worksheet, _projectInfoCellConfig.CellManager ?? "A1")
+            Number = worksheet.GetCellValue(_projectInfoCellConfig.CellNumber),
+            Description = worksheet.GetCellValue(_projectInfoCellConfig.CellDescription),
+            CreationDate = worksheet.GetCellValue(_projectInfoCellConfig.CellCreationDate),
+            Company = worksheet.GetCellValue(_projectInfoCellConfig.CellCompany),
+            Object = worksheet.GetCellValue(_projectInfoCellConfig.CellObject),
+            StandCount = worksheet.GetCellValue(_projectInfoCellConfig.CellStandCount),
+            Cost = worksheet.GetCellValue(_projectInfoCellConfig.CellCost),
+            Status = worksheet.GetCellValue(_projectInfoCellConfig.CellStatus),
+            StartDate = worksheet.GetCellValue(_projectInfoCellConfig.CellStartDate),
+            OutOfProduction = worksheet.GetCellValue(_projectInfoCellConfig.CellOutOfProduction),
+            EndDate = worksheet.GetCellValue(_projectInfoCellConfig.CellEndDate),
+            OrderCustomer = worksheet.GetCellValue(_projectInfoCellConfig.CellOrderCustomer),
+            RequestProduction = worksheet.GetCellValue(_projectInfoCellConfig.CellRequestProduction),
+            MarkPlus = worksheet.GetCellValue(_projectInfoCellConfig.CellMarkPlus),
+            MarkMinus = worksheet.GetCellValue(_projectInfoCellConfig.CellMarkMinus),
+            IsGalvanized = worksheet.GetCellValue(_projectInfoCellConfig.CellIsGalvanized),
+            HumanCost = worksheet.GetCellValue(_projectInfoCellConfig.CellHumanCost),
+            Manager = worksheet.GetCellValue(_projectInfoCellConfig.CellManager)
         };
 
         return projectInfo;
-    }
-
-    private string GetCellValue(
-        IXLWorksheet worksheet,
-        string cell)
-    {
-        return worksheet
-            .Cell(cell)
-            .GetString()
-            .Trim();
     }
 }
