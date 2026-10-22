@@ -26,7 +26,7 @@ public class ProjectInfoParser : IProjectInfoParser
         CellMarkPlus = "C17",
         CellMarkMinus = "C18",
         CellIsGalvanized = "C14",
-        CellHumanCost = "C14",
+        CellHumanCost = "C11",
         CellManager = "G10"
     };
     

@@ -5,5 +5,5 @@ namespace ReportEngine.App.Services.Import;
 
 public interface IImportService
 {
-    void Import(ReportDto report, ProjectViewModel projectViewModel);
+    Task ImportAsync(ReportDto report, ProjectViewModel projectViewModel);
 }

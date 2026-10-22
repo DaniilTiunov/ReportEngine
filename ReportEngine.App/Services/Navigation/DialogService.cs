@@ -329,8 +329,7 @@ public class DialogService : IDialogService
     public void RunWithProgressDialog(Action action)
     {
         var progressDialog = new ProgressDialog();
-        var owner = Application.Current.MainWindow;
-
+        
         progressDialog.Show();
 
         try

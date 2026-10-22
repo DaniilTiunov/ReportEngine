@@ -426,9 +426,9 @@ public class MainWindowViewModel : BaseViewModel
         CollectionRefreshHelper.SafeRefreshCollection(MainWindowModel.AllProjects);
     }
 
-    public void ImportFileCommand(object e)
+    public async Task ImportFileCommandAsync()
     {
-        _exceptionService.SafeExecute(() =>
+        await _exceptionService.SafeExecuteAsync(async () =>
         {
             var filename = SelectImportFile();
 
@@ -437,9 +437,7 @@ public class MainWindowViewModel : BaseViewModel
 
             var report = _reportParser.Parse(filename);
 
-            
-            _dialogService.RunWithProgressDialog(() 
-                => ImportReport(report));
+            await ImportReportAsync(report);
         });
     }
 
@@ -460,12 +458,12 @@ public class MainWindowViewModel : BaseViewModel
 
     }
     
-    private void ImportReport(ReportDto report)
+    private async Task ImportReportAsync(ReportDto report)
     {
         var projectViewModel =
             _serviceProvider.GetRequiredService<ProjectViewModel>();
- 
-        _importService.Import(report, projectViewModel);
+
+        await _importService.ImportAsync(report, projectViewModel);
         
         _navigation.ShowContent<TreeProjectView>();
     }

@@ -81,7 +81,7 @@ public static class MainWindowCommandsInitializer
             new RelayCommand(vm.OnOpenCalculationParametersCommandExecuted, vm.CanAllCommandsExecute);
 
         vm.MainWindowCommandProvider.ImportReportCommand =
-            new RelayCommand(vm.ImportFileCommand, vm.CanAllCommandsExecute);
+            new AsyncRelayCommand(vm.ImportFileCommandAsync);
     }
 
     public static void InitializeGenericCommands(MainWindowViewModel vm)

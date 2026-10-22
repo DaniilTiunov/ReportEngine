@@ -15,12 +15,12 @@ public class ImportService : IImportService
         _mapper = mapper;
     }
     
-    public void Import(
+    public async Task ImportAsync(
         ReportDto report,
         ProjectViewModel projectViewModel)
     {
-        projectViewModel.ResetProject();
-        
+        await projectViewModel.ResetProjectAsync(isImportView: true);
+    
         ImportProjectInfo(report.ProjectInfo,  projectViewModel);
         ImportStands(report.Stands, projectViewModel);
     }
