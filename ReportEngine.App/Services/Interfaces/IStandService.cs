@@ -23,13 +23,11 @@ public interface IStandService
 
     Task<IEnumerable<FormedAdditionalEquip>> LoadAllAvailableAdditionalEquipsAsync();
 
-    Task AddCustomDrainageAsync(int standId, List<DrainagePurpose> drainagePurposes, FormedDrainage customDrainage);
+    Task AddCustomDrainageAsync(int standId, IEnumerable<DrainagePurpose> drainagePurposes);
 
-    Task AddCustomElectricalComponentAsync(int standId, List<ElectricalPurpose> electricalPurpose,
-        FormedElectricalComponent customElectrical);
+    Task AddCustomElectricalComponentAsync(int standId, IEnumerable<ElectricalPurpose> electricalPurposes);
 
-    Task AddCustomAdditionalEquipAsync(int standId, List<AdditionalEquipPurpose> additionalEquipPurposes,
-        FormedAdditionalEquip customEquip);
+    Task AddCustomAdditionalEquipAsync(int standId, IEnumerable<AdditionalEquipPurpose> additionalEquipPurposes);
 
     Task LoadPurposesInStands(IEnumerable<StandModel> stands);
 

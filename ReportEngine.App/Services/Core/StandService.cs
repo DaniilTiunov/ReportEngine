@@ -198,41 +198,51 @@ public class StandService : IStandService
         await _projectRepository.AddStandObvyazkaAsync(standId, obvyazka);
     }
 
-    public async Task AddCustomDrainageAsync(int standId, List<DrainagePurpose> drainagePurposes,
-        FormedDrainage customDrainage)
+    public Task AddCustomDrainageAsync(
+        int standId, 
+        IEnumerable<DrainagePurpose> drainagePurposes)
     {
-        var entity = new FormedDrainage
-        {
-            Purposes = drainagePurposes
-        };
-
-        await _formedDrainagesRepository.AddAsync(entity);
-        await _projectRepository.AddDrainageToStandAsync(standId, entity.Id);
+        return AddCustomComponentAsync(
+            standId,
+            new FormedDrainage { Purposes = drainagePurposes.ToList() },
+            _formedDrainagesRepository.AddAsync,
+            entity => entity.Id,
+            _projectRepository.AddDrainageToStandAsync);
     }
 
-    public async Task AddCustomElectricalComponentAsync(int standId, List<ElectricalPurpose> electricalPurpose,
-        FormedElectricalComponent customElectrical)
+    public Task AddCustomElectricalComponentAsync(
+        int standId, 
+        IEnumerable<ElectricalPurpose> electricalPurposes)
     {
-        var entity = new FormedElectricalComponent
-        {
-            Purposes = electricalPurpose
-        };
-
-        await _formedElectricalRepository.AddAsync(entity);
-
-        await _projectRepository.AddElectricalComponentToStandAsync(standId, entity.Id);
+        return AddCustomComponentAsync(
+            standId,
+            new FormedElectricalComponent { Purposes = electricalPurposes.ToList() },
+            _formedElectricalRepository.AddAsync,
+            entity => entity.Id,
+            _projectRepository.AddElectricalComponentToStandAsync);
     }
 
-    public async Task AddCustomAdditionalEquipAsync(int standId, List<AdditionalEquipPurpose> additionalEquipPurposes,
-        FormedAdditionalEquip customEquip)
+    public Task AddCustomAdditionalEquipAsync(
+        int standId, 
+        IEnumerable<AdditionalEquipPurpose> additionalEquipPurposes)
     {
-        var entity = new FormedAdditionalEquip
-        {
-            Purposes = additionalEquipPurposes
-        };
+        return AddCustomComponentAsync(
+            standId,
+            new FormedAdditionalEquip { Purposes = additionalEquipPurposes.ToList() },
+            _formedAdditionalEquipsRepository.AddAsync,
+            entity => entity.Id,
+            _projectRepository.AddAdditionalEquipToStandAsync);
+    }
 
-        await _formedAdditionalEquipsRepository.AddAsync(entity);
-        await _projectRepository.AddAdditionalEquipToStandAsync(standId, entity.Id);
+    private static async Task AddCustomComponentAsync<TEntity>(
+        int standId,
+        TEntity entity,
+        Func<TEntity, Task> addAsync,
+        Func<TEntity, int> getId,
+        Func<int, int, Task> attachToStandAsync)
+    {
+        await addAsync(entity);
+        await attachToStandAsync(standId, getId(entity));
     }
 
     public async Task<ObvyazkaInStand> CreateObvyazkaAsync(StandModel standModel, Obvyazka selectedObvyazka)

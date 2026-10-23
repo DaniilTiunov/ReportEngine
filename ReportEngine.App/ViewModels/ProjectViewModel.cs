@@ -154,9 +154,12 @@ public partial class ProjectViewModel : ObservableObject
     [RelayCommand]
     public async Task SaveAfterImport()
     {
-        IsImportView = false;
+        await _exceptionService.SafeExecuteAsync(async () =>
+        {
+            IsImportView = false;
 
-        await _saveImportService.SaveImportedProjectAsync(CurrentProjectModel);
+            await _saveImportService.SaveImportedProjectAsync(CurrentProjectModel);
+        });
     }
 
     public void OnOpenAllSortamentsDialogExecuted(object e)
@@ -1329,17 +1332,17 @@ public partial class ProjectViewModel : ObservableObject
         newStandModel.NewAdditionalEquip.Purposes =
             CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand.ToList();
 
-        await _standService.AddCustomDrainageAsync(newStandModel.Id,
-            newStandModel.NewDrainage.Purposes.ToList(),
-            newStandModel.NewDrainage);
+        await _standService.AddCustomDrainageAsync(
+            newStandModel.Id,
+            newStandModel.NewDrainage.Purposes);
 
-        await _standService.AddCustomElectricalComponentAsync(newStandModel.Id,
-            newStandModel.NewElectricalComponent.Purposes.ToList(),
-            newStandModel.NewElectricalComponent);
+        await _standService.AddCustomElectricalComponentAsync(
+            newStandModel.Id,
+            newStandModel.NewElectricalComponent.Purposes);
 
-        await _standService.AddCustomAdditionalEquipAsync(newStandModel.Id,
-            newStandModel.NewAdditionalEquip.Purposes.ToList(),
-            newStandModel.NewAdditionalEquip);
+        await _standService.AddCustomAdditionalEquipAsync(
+            newStandModel.Id,
+            newStandModel.NewAdditionalEquip.Purposes);
     }
 
     private async Task SaveChangesInStandAsync()
