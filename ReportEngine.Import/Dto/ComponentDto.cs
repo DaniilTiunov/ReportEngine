@@ -9,4 +9,5 @@ public class ComponentDto
     public string? Measure { get; set; }
     public string? Weight { get; set; }
     public string? ExportDays { get; set; }
+    public bool? IsAutoCalculationEnabled { get; set; } = false;
 }

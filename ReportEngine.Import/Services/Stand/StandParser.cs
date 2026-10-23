@@ -8,6 +8,8 @@ namespace ReportEngine.Import.Services.Stand;
 
 public class StandParser : IStandParser
 {
+    private readonly ComponentParser _componentParser;
+
     private readonly StandCellConfig _standCellConfig = new()
     {
         CellNumber = "C3",
@@ -22,6 +24,11 @@ public class StandParser : IStandParser
         CellDesigneStand = "G5",
         CellComments = "G5"
     };
+
+    public StandParser(ComponentParser componentParser)
+    {
+        _componentParser = componentParser;
+    }
     
     public List<StandDto> Parse(IXLWorksheets worksheets)
     {
@@ -51,6 +58,9 @@ public class StandParser : IStandParser
             StandSummCost = worksheet.GetCellValue(_standCellConfig.CellStandSummCost),
             DesigneStand = worksheet.GetCellValue(_standCellConfig.CellDesigneStand),
             Comments = worksheet.GetCellValue(_standCellConfig.CellComments),
+            AdditionalPurposes = _componentParser.Parse(worksheet, "ДОПОЛНИТЕЛЬНЫЕ КОМПОНЕНТЫ"),
+            DrainagePurposes = _componentParser.Parse(worksheet, "ДРЕНАЖ"),
+            ElectricalPurposes = _componentParser.Parse(worksheet, "ЭЛЕКТРИКА")
         };
     }
 }

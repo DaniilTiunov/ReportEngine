@@ -4,7 +4,12 @@ namespace ReportEngine.Import.Services.Excel;
 
 public class ExcelAddressingService
 {
-    public int FindStartRow(
+    public int FindSectionLastRow()
+    {
+        return 1;
+    }
+    
+    public int FindSectionStartRow(
         IXLWorksheet worksheet,
         string categoryName)
     {

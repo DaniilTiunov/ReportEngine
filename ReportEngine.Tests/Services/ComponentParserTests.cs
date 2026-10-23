@@ -25,11 +25,14 @@ public class ComponentParserTests
     {
         var workbook = _fileService.OpenFileAsXlw(filename);
         
-        var actual = _parser.Parse(workbook.Worksheets);
+        var actual = 
+            _parser.Parse(workbook.Worksheets.First(), "ДОПОЛНИТЕЛЬНЫЕ КОМПОНЕНТЫ");
 
         foreach (var act in actual)
         {
-            Console.WriteLine(act.Material);
+            Console.WriteLine($"""
+                               {act.Purpose} {act.Material}
+                               """);
         }
 
     }

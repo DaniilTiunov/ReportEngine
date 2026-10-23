@@ -253,6 +253,8 @@ public static class HostFactory
         services.AddScoped<IProjectInfoParser, ProjectInfoParser>();
         services.AddScoped<IReportParser, ReportParser>();
         services.AddScoped<IStandParser, StandParser>();
+        services.AddScoped<ComponentParser>();
+        services.AddScoped<ExcelAddressingService>();
         services.AddScoped<IFileService, FileService>();
         services.AddScoped<IImportService, ImportService>();
     }

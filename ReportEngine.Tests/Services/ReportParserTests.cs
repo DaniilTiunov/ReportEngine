@@ -34,7 +34,7 @@ public class ReportParserTests
             $"Лист 'Лист 2' не найден. Доступные листы: " +
             string.Join(", ", workbook.Worksheets.Select(c => $"'{c.Name}'")));
         
-        var actual = _excelAddressingService.FindStartRow(worksheet, "ДОПОЛНИТЕЛЬНЫЕ КОМПОНЕНТЫ");
+        var actual = _excelAddressingService.FindSectionStartRow(worksheet, "ДОПОЛНИТЕЛЬНЫЕ КОМПОНЕНТЫ");
         
         Assert.AreEqual(expected, actual);
     }

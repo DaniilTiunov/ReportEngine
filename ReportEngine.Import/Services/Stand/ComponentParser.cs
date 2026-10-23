@@ -9,7 +9,6 @@ public class ComponentParser
 {
     private readonly ComponentsCellConfig _componentsCellConfig = new()
     {
-        CategoryName = "ДОПОЛНИТЕЛЬНЫЕ КОМПОНЕНТЫ",
         ColumnPurpose = "B",
         ColumnMaterial = "C",
         ColumnQuantity = "D",
@@ -26,29 +25,25 @@ public class ComponentParser
         _excelAddressingService = excelAddressingService;
     }
 
-    public List<ComponentDto> Parse(IXLWorksheets worksheets)
+    public List<ComponentDto> Parse(
+        IXLWorksheet worksheet,
+        string categoryName)
     {
         var components = new List<ComponentDto>();
 
-        foreach (var worksheet in worksheets.Skip(1))
+        var startRow = _excelAddressingService.FindSectionStartRow(
+            worksheet, categoryName) + 2;
+
+        var lastRow = worksheet.LastRowUsed()?.RowNumber() ?? 0;
+
+        for (var row = startRow; row <= lastRow; row++)
         {
-            var startRow = _excelAddressingService.FindStartRow(
-                worksheet,
-                _componentsCellConfig.CategoryName) + 2;
+            var component = ParseComponent(worksheet, row);
 
-            var lastRow = worksheet.LastRowUsed()?.RowNumber() ?? 0;
+            if (IsEmpty(component))
+                break;
 
-            for (var row = startRow; row <= lastRow; row++)
-            {
-                var purpose = worksheet
-                    .Cell(row, _componentsCellConfig.ColumnPurpose)
-                    .GetString();
-
-                if (string.IsNullOrWhiteSpace(purpose))
-                    break;
-
-                components.Add(ParseComponent(worksheet, row));
-            }
+            components.Add(component);
         }
 
         return components;
@@ -86,5 +81,16 @@ public class ComponentParser
                 .Cell(row, _componentsCellConfig.ColumnExportDays)
                 .GetString()
         };
+    }
+    
+    private static bool IsEmpty(ComponentDto component)
+    {
+        return string.IsNullOrWhiteSpace(component.Purpose)
+               && string.IsNullOrWhiteSpace(component.Material)
+               && string.IsNullOrWhiteSpace(component.Quantity)
+               && string.IsNullOrWhiteSpace(component.CostPerUnit)
+               && string.IsNullOrWhiteSpace(component.Measure)
+               && string.IsNullOrWhiteSpace(component.Weight)
+               && string.IsNullOrWhiteSpace(component.ExportDays);
     }
 }
