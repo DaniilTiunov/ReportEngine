@@ -18,4 +18,14 @@ public static class StringExtensions
     {
         return float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
     }
+
+    public static int ToInt(this string value)
+    {
+        return int.Parse(value ?? string.Empty);
+    }
+
+    public static DateOnly ToDateOnly(this string value)
+    {
+        return DateOnly.Parse(value ?? string.Empty);
+    }
 }

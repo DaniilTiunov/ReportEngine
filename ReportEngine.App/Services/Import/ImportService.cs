@@ -1,6 +1,6 @@
-using Mapster;
 using MapsterMapper;
 using ReportEngine.App.Model.StandsModel;
+using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Import.Dto;
 
@@ -9,23 +9,25 @@ namespace ReportEngine.App.Services.Import;
 public class ImportService : IImportService
 {
     private readonly IMapper _mapper;
-
-    public ImportService(IMapper mapper)
+    private readonly IProjectService _projectService;
+    
+    public ImportService(
+        IMapper mapper)
     {
         _mapper = mapper;
     }
-    
+
     public async Task ImportAsync(
         ReportDto report,
         ProjectViewModel projectViewModel)
     {
-        await projectViewModel.ResetProjectAsync(isImportView: true);
-    
-        ImportProjectInfo(report.ProjectInfo,  projectViewModel);
+        await projectViewModel.ResetProjectAsync(true);
+
+        await ImportProjectInfo(report.ProjectInfo, projectViewModel);
         ImportStands(report.Stands, projectViewModel);
     }
-    
-    private void ImportProjectInfo(
+
+    private async Task ImportProjectInfo(
         ProjectInfoDto info,
         ProjectViewModel viewModel)
     {
@@ -36,12 +38,9 @@ public class ImportService : IImportService
         List<StandDto> standDtos,
         ProjectViewModel viewModel)
     {
-        List<StandModel> stands =
+        var stands =
             _mapper.Map<List<StandModel>>(standDtos);
 
-        foreach (var stand in stands)
-        {
-            viewModel.CurrentProjectModel.Stands.Add(stand);
-        }
+        foreach (var stand in stands) viewModel.CurrentProjectModel.Stands.Add(stand);
     }
 }
