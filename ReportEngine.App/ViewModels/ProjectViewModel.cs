@@ -13,6 +13,7 @@ using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
 using ReportEngine.App.Services.Cloners;
 using ReportEngine.App.Services.Core;
+using ReportEngine.App.Services.Import;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels.Utils;
@@ -38,6 +39,7 @@ public partial class ProjectViewModel : ObservableObject
     private readonly AuditService _auditService;
     private readonly ICalculationService _calculationService;
     private readonly ReportEngineConfigService _configService;
+    private readonly SaveImportService _saveImportService;
     private readonly IDialogService _dialogService;
     private readonly EntityStandClonerService _entityStandCloner;
     private readonly ExceptionService _exceptionService;
@@ -89,7 +91,8 @@ public partial class ProjectViewModel : ObservableObject
         SessionService sessionService,
         ExceptionService exceptionService,
         IServiceProvider serviceProvider,
-        ReportEngineConfigService configService)
+        ReportEngineConfigService configService,
+        SaveImportService saveImportService)
     {
         _projectRepository = projectRepository;
         _dialogService = dialogService;
@@ -109,6 +112,7 @@ public partial class ProjectViewModel : ObservableObject
         _exceptionService = exceptionService;
         _serviceProvider = serviceProvider;
         _configService = configService;
+        _saveImportService = saveImportService;
 
         NewStand = new StandModel { Number = 1 };
 
@@ -148,9 +152,11 @@ public partial class ProjectViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public void SaveAfterImport()
+    public async Task SaveAfterImport()
     {
         IsImportView = false;
+
+        await _saveImportService.SaveImportedProjectAsync(CurrentProjectModel);
     }
 
     public void OnOpenAllSortamentsDialogExecuted(object e)

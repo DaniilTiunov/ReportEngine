@@ -9,7 +9,7 @@ public class SaveImportService
 {
     private readonly IProjectService _projectService;
 
-    public SaveImportService(ProjectService projectService)
+    public SaveImportService(IProjectService projectService)
     {
         _projectService = projectService;
     }
@@ -22,13 +22,5 @@ public class SaveImportService
     private async Task SaveProjectInfoAsync(ProjectModel projectModel)
     {
         await _projectService.CreateProjectAsync(projectModel);
-    }
-
-    private async Task SaveStandsAsync(ProjectModel projectModel)
-    {
-        foreach (var stand in projectModel.Stands)
-        {
-            await _projectService.AddStandToProjectAsync(projectModel.CurrentProjectId,  projectModel.Stand);
-        }
     }
 }
