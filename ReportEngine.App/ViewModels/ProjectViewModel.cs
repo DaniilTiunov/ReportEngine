@@ -117,7 +117,10 @@ public partial class ProjectViewModel : ObservableObject
         InitializeGenericCommands();
     }
 
+    [ObservableProperty] private bool _isImportView;
+
     public IAsyncRelayCommand RefreshCommandAsync => RefreshProjectCommand;
+    
     public ProjectCommandProvider ProjectCommandProvider { get; } = new();
     public MaterialLinesModel CurrentMaterials { get; } = new();
     public int MaxObvNN => CurrentProjectModel?.SelectedStand?.ObvyazkiInStand.Max(obv => obv.NN) ?? 0;
@@ -142,6 +145,12 @@ public partial class ProjectViewModel : ObservableObject
         {
             await LoadProjectInfoAsync(CurrentProjectModel.CurrentProjectId);
         });
+    }
+
+    [RelayCommand]
+    public void SaveAfterImport()
+    {
+        IsImportView = false;
     }
 
     public void OnOpenAllSortamentsDialogExecuted(object e)
@@ -1001,8 +1010,9 @@ public partial class ProjectViewModel : ObservableObject
         _ = ResetProjectAsync();
     }
 
-    public async Task ResetProjectAsync()
+    public async Task ResetProjectAsync(bool isImportView = false)
     {
+        IsImportView = isImportView;
         CurrentProjectModel = new ProjectModel();
         CurrentStandModel = new StandModel();
 
@@ -1012,7 +1022,7 @@ public partial class ProjectViewModel : ObservableObject
         var maxProjNumber = projects?.Max(proj => proj.Number) ?? 0;
 
         CurrentProjectModel.Number = maxProjNumber + 1;
-
+  
         InitializeTime();
         OnPropertyChanged(nameof(CurrentProjectModel));
         OnPropertyChanged(nameof(CurrentStandModel));
@@ -1083,10 +1093,13 @@ public partial class ProjectViewModel : ObservableObject
 
     public void InitializeTime()
     {
-        CurrentProjectModel.CreationDate = DateTime.Now.Date;
-        CurrentProjectModel.StartDate = DateTime.Now.Date;
-        CurrentProjectModel.OutOfProduction = DateTime.Now.Date;
-        CurrentProjectModel.EndDate = DateTime.Now.Date;
+        if (!IsImportView)
+        {
+            CurrentProjectModel.CreationDate = DateTime.Now.Date;
+            CurrentProjectModel.StartDate = DateTime.Now.Date;
+            CurrentProjectModel.OutOfProduction = DateTime.Now.Date;
+            CurrentProjectModel.EndDate = DateTime.Now.Date;
+        }
     }
 
     public void InitializeCommands()
@@ -1142,6 +1155,7 @@ public partial class ProjectViewModel : ObservableObject
             if (loadedModel == null)
                 return;
 
+            IsImportView = false;
             CurrentProjectModel = loadedModel;
             CurrentStandModel = loadedModel.SelectedStand ?? new StandModel();
 

@@ -33,7 +33,9 @@ public partial class TreeProjectView : UserControl, IDisposable
         _projectViewModel = projectViewModel;
         _exceptionService = exceptionService;
         _containersViewModel = containersViewModel;
+        
         InitializeComponent();
+        LoadTreeContent("ProjectCard", "Карточка проекта", SymbolRegular.Edit24);
     }
 
     public void Dispose()

@@ -10,8 +10,6 @@ public static class Startup
 {
     public static IHost BuildHost(string[] args, string filePath)
     {
-        
-        
         return Host
             .CreateDefaultBuilder(args)
             .ConfigureServices((context, services) =>
