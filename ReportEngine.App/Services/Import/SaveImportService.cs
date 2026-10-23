@@ -24,11 +24,5 @@ public class SaveImportService
         await _projectService.CreateProjectAsync(projectModel);
     }
 
-    private async Task SaveStandsAsync(ProjectModel projectModel)
-    {
-        foreach (var stand in projectModel.Stands)
-        {
-            await _projectService.AddStandToProjectAsync(projectModel.CurrentProjectId,  projectModel.Stand);
-        }
-    }
+
 }
