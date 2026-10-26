@@ -24,4 +24,6 @@ public class StandDto
     public List<ComponentDto> AdditionalPurposes { get; init; } = [];
     public List<ComponentDto> DrainagePurposes { get; init; } = [];
     public List<ComponentDto> ElectricalPurposes { get; init; } = [];
+    public List<FrameDto> Frames { get; init; } = [];
+    public List<ObvyazkaDto> StandObvs { get; init; } = [];
 }

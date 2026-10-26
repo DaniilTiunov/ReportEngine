@@ -2,7 +2,6 @@ namespace ReportEngine.Import.Configuration;
 
 public class ComponentsCellConfig
 {
-    public string CategoryName { get; set; }
     public string ColumnPurpose { get; set; } = "B";
     public string ColumnMaterial { get; set; } = "C";
     public string ColumnQuantity { get; set; } = "D";

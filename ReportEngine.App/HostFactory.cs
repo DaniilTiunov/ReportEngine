@@ -257,6 +257,7 @@ public static class HostFactory
         services.AddScoped<ExcelAddressingService>();
         services.AddScoped<IFileService, FileService>();
         services.AddScoped<IImportService, ImportService>();
+        services.AddScoped<ObvParser>();
     }
 
     private static void ConfigureMapsterService(IServiceCollection services)

@@ -40,7 +40,7 @@ public class ComponentParser
         {
             var component = ParseComponent(worksheet, row);
 
-            if (IsEmpty(component))
+            if (component.IsEmpty())
                 break;
 
             components.Add(component);
@@ -81,16 +81,5 @@ public class ComponentParser
                 .Cell(row, _componentsCellConfig.ColumnExportDays)
                 .GetString()
         };
-    }
-    
-    private static bool IsEmpty(ComponentDto component)
-    {
-        return string.IsNullOrWhiteSpace(component.Purpose)
-               && string.IsNullOrWhiteSpace(component.Material)
-               && string.IsNullOrWhiteSpace(component.Quantity)
-               && string.IsNullOrWhiteSpace(component.CostPerUnit)
-               && string.IsNullOrWhiteSpace(component.Measure)
-               && string.IsNullOrWhiteSpace(component.Weight)
-               && string.IsNullOrWhiteSpace(component.ExportDays);
     }
 }
