@@ -11,29 +11,43 @@ public class ComponentParserTests
     private IFileService _fileService;
     private ExcelAddressingService _excelAddressingService;
     private ComponentParser _parser;
-    
+    private FrameParser _frameParser;
+
+    private ObvParser _obvParser;
+
     [TestInitialize]
     public void Initialize()
     {
         _fileService = new FileService();
         _excelAddressingService = new ExcelAddressingService();
         _parser = new ComponentParser(_excelAddressingService);
+        _frameParser = new FrameParser(_excelAddressingService);
+
+        _obvParser = new ObvParser(_excelAddressingService, _parser);
     }
 
     [TestMethod]
     public void ParseTest()
     {
+
+        var expected = 2;
+
         var workbook = _fileService.OpenFileAsXlw(filename);
-        
-        var actual = 
-            _parser.Parse(workbook.Worksheets.First(), "ДОПОЛНИТЕЛЬНЫЕ КОМПОНЕНТЫ");
+        Console.WriteLine(workbook.Worksheets.Count);
+
+        var actual = _obvParser.Parse(workbook.Worksheets.Last());
+
+
+
+        Assert.HasCount(expected, actual);
+        Console.WriteLine(actual?.Count);
 
         foreach (var act in actual)
         {
-            Console.WriteLine($"""
-                               {act.Purpose} {act.Material}
-                               """);
+            Console.WriteLine($"{act.Number}:{act.ObvType}");
         }
+
+
 
     }
 }

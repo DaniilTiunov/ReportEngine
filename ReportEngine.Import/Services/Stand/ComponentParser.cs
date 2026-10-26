@@ -49,7 +49,7 @@ public class ComponentParser
         return components;
     }
 
-    private ComponentDto ParseComponent(IXLWorksheet worksheet, int row)
+    public ComponentDto ParseComponent(IXLWorksheet worksheet, int row)
     {
         return new ComponentDto
         {

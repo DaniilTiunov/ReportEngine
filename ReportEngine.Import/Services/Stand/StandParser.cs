@@ -9,6 +9,8 @@ namespace ReportEngine.Import.Services.Stand;
 public class StandParser : IStandParser
 {
     private readonly ComponentParser _componentParser;
+    private readonly FrameParser _frameParser;
+
     private readonly ObvParser _obvParser;
 
     private readonly StandCellConfig _standCellConfig = new()
@@ -26,9 +28,10 @@ public class StandParser : IStandParser
         CellComments = "G5"
     };
 
-    public StandParser(ComponentParser componentParser, ObvParser obvParser)
+    public StandParser(ComponentParser componentParser,FrameParser frameParser, ObvParser obvParser)
     {
         _componentParser = componentParser;
+        _frameParser = frameParser;
         _obvParser = obvParser;
     }
     
@@ -62,8 +65,10 @@ public class StandParser : IStandParser
             Comments = worksheet.GetCellValue(_standCellConfig.CellComments),
             AdditionalPurposes = _componentParser.Parse(worksheet, "ДОПОЛНИТЕЛЬНЫЕ КОМПОНЕНТЫ"),
             DrainagePurposes = _componentParser.Parse(worksheet, "ДРЕНАЖ"),
-            ElectricalPurposes = _componentParser.Parse(worksheet, "ЭЛЕКТРИКА")
-            
+            ElectricalPurposes = _componentParser.Parse(worksheet, "ЭЛЕКТРИКА"),
+            Frames = _frameParser.Parse(worksheet),
+            StandObvs = _obvParser.Parse(worksheet)
+
         };
     }
 

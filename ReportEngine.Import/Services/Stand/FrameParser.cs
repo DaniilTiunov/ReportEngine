@@ -17,16 +17,18 @@ public class FrameParser
     private readonly ExcelAddressingService _excelAddressingService;
 
 
+    private readonly string _categoryName = "РАМЫ";
+
     public FrameParser(ExcelAddressingService excelAddressingService)
     {
         _excelAddressingService = excelAddressingService;
     }
 
-    public List<FrameDto> Parse(IXLWorksheet worksheet,string categoryName)
+    public List<FrameDto> Parse(IXLWorksheet worksheet)
     {
         var frames = new List<FrameDto>();
 
-        var (startRow, lastRow) = _excelAddressingService.FindSectionRows(worksheet, categoryName);
+        var (startRow, lastRow) = _excelAddressingService.FindSectionRows(worksheet, _categoryName);
 
 
         for (var row = startRow + 2; row <= lastRow; row++)

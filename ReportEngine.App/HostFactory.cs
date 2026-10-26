@@ -259,6 +259,7 @@ public static class HostFactory
         services.AddScoped<IFileService, FileService>();
         services.AddScoped<IImportService, ImportService>();
         services.AddScoped<ObvParser>();
+        services.AddScoped<FrameParser>();
     }
 
     private static void ConfigureMapsterService(IServiceCollection services)
