@@ -41,6 +41,7 @@ public class ImportService : IImportService
         var stands =
             _mapper.Map<List<StandModel>>(standDtos);
 
-        foreach (var stand in stands) viewModel.CurrentProjectModel.Stands.Add(stand);
+        foreach (var stand in stands) 
+            viewModel.CurrentProjectModel.Stands.Add(stand);
     }
 }
