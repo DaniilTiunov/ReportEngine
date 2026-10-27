@@ -3,23 +3,19 @@ using ReportEngine.Import.Configuration;
 using ReportEngine.Import.Dto;
 using ReportEngine.Import.Services.Excel;
 
-
 namespace ReportEngine.Import.Services.Stand;
 
 public class ObvParser
 {
-    private readonly ObvCellConfig _obvCellConfig = new();
+    private readonly string _categoryName = "ОБВЯЗКИ СТЕНДА";
 
     private readonly ComponentParser _componentParser;
 
     private readonly ExcelAddressingService _excelAddressingService;
+    private readonly ObvCellConfig _obvCellConfig = new();
 
 
-    private readonly string _categoryName = "ОБВЯЗКИ СТЕНДА";
-
-
-
-    public ObvParser(ExcelAddressingService excelAddressingService,ComponentParser componentParser)
+    public ObvParser(ExcelAddressingService excelAddressingService, ComponentParser componentParser)
     {
         _excelAddressingService = excelAddressingService;
         _componentParser = componentParser;
@@ -34,7 +30,7 @@ public class ObvParser
         //начинаем с первой
         var currentObvStartRow = allObvTitleRow + 1;
 
-        while(HasObvDataAt(worksheet, currentObvStartRow + 1))
+        while (HasObvDataAt(worksheet, currentObvStartRow + 1))
         {
             var (obv, lastObvRow) = ParseObv(worksheet, currentObvStartRow);
 
@@ -47,7 +43,7 @@ public class ObvParser
         return results;
     }
 
-    public (ObvyazkaDto obv, int lastObvRow) ParseObv(IXLWorksheet worksheet, int obvStartRow)
+    private (ObvyazkaDto obv, int lastObvRow) ParseObv(IXLWorksheet worksheet, int obvStartRow)
     {
         var result = new ObvyazkaDto();
 
@@ -64,7 +60,8 @@ public class ObvParser
         ParseStructure(worksheet, result, structureStartRow + 2);
 
         //Находим секцию датчиков, вытаскиваем их
-        var (sensorsStartRow, sensorsEndRow) = _excelAddressingService.FindSectionRows(worksheet, "Датчики", obvStartRow);
+        var (sensorsStartRow, sensorsEndRow) =
+            _excelAddressingService.FindSectionRows(worksheet, "Датчики", obvStartRow);
 
         //находим секцию доп комплектующих (высчитываем)
         var (additionalStartRow, additionalLastRow) = (structureEndRow + 1, sensorsStartRow - 1);
@@ -79,7 +76,7 @@ public class ObvParser
     }
 
 
-    private void ParseStructure(IXLWorksheet worksheet, ObvyazkaDto target,int dataStartRow)
+    private void ParseStructure(IXLWorksheet worksheet, ObvyazkaDto target, int dataStartRow)
     {
         target.Line = _componentParser.ParseComponent(worksheet, dataStartRow);
         target.Armature = _componentParser.ParseComponent(worksheet, dataStartRow + 1);
@@ -88,11 +85,9 @@ public class ObvParser
     }
 
 
-
-
     private void ParseAdditionalComponents(IXLWorksheet worksheet, ObvyazkaDto target, int dataStartRow, int dataEndRow)
     {
-        for (int row = dataStartRow; row <= dataEndRow; row++)
+        for (var row = dataStartRow; row <= dataEndRow; row++)
         {
             var parsedComponent = _componentParser.ParseComponent(worksheet, row);
 
@@ -106,9 +101,8 @@ public class ObvParser
 
     private void ParseSensors(IXLWorksheet worksheet, ObvyazkaDto target, int dataStartRow, int dataEndRow)
     {
-        for (int row = dataStartRow; row <= dataEndRow; row++)
+        for (var row = dataStartRow; row <= dataEndRow; row++)
         {
-
             var parsedSensor = ParseSensor(worksheet, row);
 
             if (parsedSensor is null || parsedSensor.IsEmpty())
@@ -119,11 +113,9 @@ public class ObvParser
     }
 
 
-
-
-    private ObvSensorDto ParseSensor(IXLWorksheet worksheet,int row)
+    private ObvSensorDto ParseSensor(IXLWorksheet worksheet, int row)
     {
-        return new ObvSensorDto()
+        return new ObvSensorDto
         {
             Number = worksheet.Cell(row, _obvCellConfig.SensorNumberColumn).Value.ToString(),
             SensorType = worksheet.Cell(row, _obvCellConfig.SensorTypeColumn).Value.ToString(),

@@ -16,9 +16,9 @@ public class FileServiceTests
     
     [TestMethod]
     [DataRow("C:\\Work\\Тестовая папка для отчётов\\Сводная ведомость 16-10-26___11-39-11.xlsx")]
-    public void OpenFileAsXlw_Test(string filename)
+    public async Task OpenFileAsXlw_Test(string filename)
     {
-        var fileContent = _fileService.OpenFileAsXlw(filename);
+        var fileContent = await _fileService.OpenFileAsXlwAsync(filename);
         Console.WriteLine(fileContent.Worksheets
             .First()
             .Row(2)

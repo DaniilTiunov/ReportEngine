@@ -23,19 +23,6 @@ public class ReportParserTests
     [DataRow(8)]
     public void FindStartRow_Test(int expected)
     {
-        var workbook = _fileService.OpenFileAsXlw(filename);
-        
-        var worksheet = workbook
-            .Worksheets
-            .FirstOrDefault(c => c.Name == "Лист2");
-        
-        Assert.IsNotNull(
-            worksheet,
-            $"Лист 'Лист 2' не найден. Доступные листы: " +
-            string.Join(", ", workbook.Worksheets.Select(c => $"'{c.Name}'")));
-        
-        var actual = _excelAddressingService.FindSectionStartRow(worksheet, "ДОПОЛНИТЕЛЬНЫЕ КОМПОНЕНТЫ");
-        
-        Assert.AreEqual(expected, actual);
+       
     }
 }

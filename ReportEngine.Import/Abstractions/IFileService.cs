@@ -4,5 +4,5 @@ namespace ReportEngine.Import.Abstractions;
 
 public interface IFileService
 {
-    XLWorkbook OpenFileAsXlw(string filename);
+    Task<XLWorkbook> OpenFileAsXlwAsync(string filename);
 }

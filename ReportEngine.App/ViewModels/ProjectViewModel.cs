@@ -824,7 +824,7 @@ public partial class ProjectViewModel : ObservableObject
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
-            _dialogService.ShowEditObvSettingsWindow(this,
+            await _dialogService.ShowEditObvSettingsWindow(this,
                 CurrentProjectModel.SelectedStand,
                 CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand);
         });
@@ -834,7 +834,7 @@ public partial class ProjectViewModel : ObservableObject
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
-            _standService.FillStandFieldsFromObvyazka(CurrentProjectModel.SelectedStand,
+            await _standService.FillStandFieldsFromObvyazka(CurrentProjectModel.SelectedStand,
                 CurrentProjectModel.SelectedObvyazkaToCopy);
         });
     }

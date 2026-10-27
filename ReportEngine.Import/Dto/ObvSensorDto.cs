@@ -1,13 +1,4 @@
-﻿using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Wordprocessing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ReportEngine.Import.Dto;
+﻿namespace ReportEngine.Import.Dto;
 
 public class ObvSensorDto
 {
@@ -21,7 +12,6 @@ public class ObvSensorDto
     public string MarkMinus { get; set; } = "";
 
     public string Description { get; set; } = "";
-
 
 
     public bool IsEmpty()

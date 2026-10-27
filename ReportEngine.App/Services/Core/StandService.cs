@@ -187,6 +187,11 @@ public class StandService : IStandService
         _notificationService.ShowInfo("Рама успешно добавлена в стенд");
     }
 
+    public async Task AddFrameToStandByNameAsync(int standId, string frameName)
+    {
+        await _projectRepository.AddFrameToStandByNameAsync(standId, frameName);
+    }
+
     public async Task AddDrainageToStandAsync(int standId, int drainageId)
     {
         await _projectRepository.AddDrainageToStandAsync(standId, drainageId);
@@ -334,22 +339,17 @@ public class StandService : IStandService
     }
 
 
-    public async void FillStandFieldsFromObvyazka(StandModel stand, ObvyazkaInStand obv)
+    public async Task FillStandFieldsFromObvyazka(StandModel stand, ObvyazkaInStand obv)
     {
         if (stand == null || obv == null)
             return;
 
-        // костыль для получения полной сущности
-        var originalFullObv = await _obvyazkaInStandRepository.GetFullObvFromStandAsync(obv.Id);
+        // Импортированная обвязка ещё не имеет записи в БД.
+        var originalFullObv = obv.Id > 0
+            ? await _obvyazkaInStandRepository.GetFullObvFromStandAsync(obv.Id)
+            : null;
 
         await _converterService.ConvertObvyazkaInStandDataToStandEquips(stand, obv);
-
-        if (originalFullObv?.Obvyazka == null)
-        {
-            _notificationService.ShowError("Не найдены данные по обвязке");
-            return;
-        }
-
 
         stand.NN = obv.NN ?? 0;
         stand.ObvyazkaName = obv.ObvyazkaName;
@@ -371,6 +371,10 @@ public class StandService : IStandService
         stand.TreeSocketMaterialCostPerUnit = obv.TreeSocketMaterialCostPerUnit;
         stand.KMCHCostPerUnit = obv.KMCHCostPerUnit;
         stand.ArmatureCostPerUnit = obv.ArmatureCostPerUnit;
+        stand.MaterialLineExportDays = obv.MaterialLineExportDays;
+        stand.TreeSocketExportDays = obv.TreeSocketExportDays;
+        stand.KMCHExportDays = obv.KMCHExportDays;
+        stand.ArmatureExportDays = obv.ArmatureExportDays;
 
         stand.FirstSensorType = obv.FirstSensorType;
         stand.FirstSensorKKS = obv.FirstSensorKKS;
@@ -389,7 +393,7 @@ public class StandService : IStandService
         stand.ThirdSensorDescription = obv.ThirdSensorDescription;
         stand.ImageName = obv.ImageName;
 
-        stand.ObvWeight = originalFullObv.Obvyazka.Weight;
+        stand.ObvWeight = originalFullObv?.Obvyazka?.Weight ?? obv.Obvyazka?.Weight;
 
         var additionalComponents = await GetAdditionalComponentsAsync(obv);
         stand.ObvyazkaAdditionalComponents.Clear();

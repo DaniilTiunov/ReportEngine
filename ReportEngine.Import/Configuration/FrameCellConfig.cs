@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ReportEngine.Import.Configuration;
+﻿namespace ReportEngine.Import.Configuration;
 
 public class FrameCellConfig
 {

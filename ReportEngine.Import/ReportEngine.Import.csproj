@@ -7,13 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ReportEngine.Domain\ReportEngine.Domain.csproj" />
-      <ProjectReference Include="..\ReportEngine.Export\ReportEngine.Export.csproj" />
-      <ProjectReference Include="..\ReportEngine.Extensions\ReportEngine.Extensions.csproj" />
+        <ProjectReference Include="..\ReportEngine.Domain\ReportEngine.Domain.csproj"/>
+        <ProjectReference Include="..\ReportEngine.Export\ReportEngine.Export.csproj"/>
+        <ProjectReference Include="..\ReportEngine.Extensions\ReportEngine.Extensions.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Mapster" />
+        <PackageReference Include="Mapster"/>
     </ItemGroup>
 
 </Project>

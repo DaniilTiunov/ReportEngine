@@ -1,5 +1,3 @@
-using System.ComponentModel;
-
 namespace ReportEngine.Import.Dto;
 
 public class ComponentDto
@@ -12,8 +10,6 @@ public class ComponentDto
     public string? Weight { get; set; }
     public string? ExportDays { get; set; }
     public bool? IsAutoCalculationEnabled { get; set; } = false;
-
-
 
 
     public bool IsEmpty()

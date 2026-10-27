@@ -9,15 +9,18 @@ public class SaveImportService
     private readonly IProjectService _projectService;
     private readonly IDialogService _dialogService;
     private readonly IStandService _standService;
+    private readonly INotificationService _notificationService;
 
     public SaveImportService(
         IProjectService projectService,
         IDialogService dialogService,
-        IStandService standService)
+        IStandService standService,
+        INotificationService notificationService)
     {
         _projectService = projectService;
         _dialogService = dialogService;
         _standService = standService;
+        _notificationService = notificationService;
     }
 
     public async Task SaveImportedProjectAsync(ProjectModel projectModel)
@@ -40,7 +43,10 @@ public class SaveImportService
         {
             await _projectService.AddStandToProjectAsync(projectModel.CurrentProjectId, stand);
             await SaveStandEquips(stand);
+            await SaveFramesAsync(stand);
         }
+        
+        _notificationService.ShowInfo("Стенды успешно импортированы!");
     }
 
     private async Task SaveStandEquips(StandModel standModel)
@@ -51,5 +57,23 @@ public class SaveImportService
             standModel.Id, standModel.AllElectricalPurposesInStand);
         await _standService.AddCustomDrainageAsync(
             standModel.Id, standModel.AllDrainagePurposesInStand);
+        
+        _notificationService.ShowInfo("Комплектующие стенда успешно импортированы!");
+    }
+
+    private async Task SaveFramesAsync(StandModel standModel)
+    {
+        foreach (var frame in standModel.FramesInStand)
+        {
+            await _standService.AddFrameToStandByNameAsync(standModel.Id, frame.Name);
+        }
+        
+        _notificationService.ShowInfo("Рамы успешно импортированы");
+    }
+
+    //TODO: Доделать сохранение обвязок
+    private async Task SaveObvAsync(StandModel standModel)
+    {
+        _notificationService.ShowInfo("Обвязки успешно импортированы");
     }
 }
