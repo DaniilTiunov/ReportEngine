@@ -29,7 +29,6 @@ public class ComponentParserTests
     [TestMethod]
     public void ParseTest()
     {
-
         var expected = 2;
 
         var workbook = _fileService.OpenFileAsXlw(filename);
@@ -42,8 +41,5 @@ public class ComponentParserTests
         {
             Console.WriteLine($"{act.Number}:{act.ObvType}");
         }
-
-
-
     }
 }
