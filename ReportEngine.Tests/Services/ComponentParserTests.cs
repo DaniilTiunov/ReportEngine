@@ -33,14 +33,10 @@ public class ComponentParserTests
         var expected = 2;
 
         var workbook = _fileService.OpenFileAsXlw(filename);
-        Console.WriteLine(workbook.Worksheets.Count);
 
         var actual = _obvParser.Parse(workbook.Worksheets.Last());
 
-
-
         Assert.HasCount(expected, actual);
-        Console.WriteLine(actual?.Count);
 
         foreach (var act in actual)
         {

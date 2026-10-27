@@ -1,15 +1,8 @@
 ﻿using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Spreadsheet;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Query.ExpressionTranslators.Internal;
 using ReportEngine.Import.Configuration;
 using ReportEngine.Import.Dto;
 using ReportEngine.Import.Services.Excel;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace ReportEngine.Import.Services.Stand;
 
@@ -21,6 +14,11 @@ public class ObvParser
 
     private readonly ExcelAddressingService _excelAddressingService;
 
+
+    private readonly string _categoryName = "ОБВЯЗКИ СТЕНДА";
+
+
+
     public ObvParser(ExcelAddressingService excelAddressingService,ComponentParser componentParser)
     {
         _excelAddressingService = excelAddressingService;
@@ -29,42 +27,22 @@ public class ObvParser
 
     public List<ObvyazkaDto> Parse(IXLWorksheet worksheet)
     {
-
         var results = new List<ObvyazkaDto>();
 
-
-
-        var allObvTitleRow = _excelAddressingService.FindSectionStartRow(worksheet, "ОБВЯЗКИ СТЕНДА");
+        var allObvTitleRow = _excelAddressingService.FindSectionStartRow(worksheet, _categoryName);
 
         //начинаем с первой
         var currentObvStartRow = allObvTitleRow + 1;
-        ObvyazkaDto obv = null;
 
-        //идем до тех пор, пока не встретим пустую обвязку
-        do
+        while(HasObvDataAt(worksheet, currentObvStartRow + 1))
         {
-            try
-            {
-                (obv, currentObvStartRow) = ParseObv(worksheet, currentObvStartRow);
-                if (obv?.IsEmpty() == false)
-                {
-                    results.Add(obv);
-                }
+            var (obv, lastObvRow) = ParseObv(worksheet, currentObvStartRow);
 
-                currentObvStartRow += 2;
-            }
-            catch
-            {
-                break;
-            }
-           
+            if (!obv.IsEmpty())
+                results.Add(obv);
 
-
-
-
+            currentObvStartRow = lastObvRow + 2;
         }
-        while (obv?.IsEmpty() == false);
-        
 
         return results;
     }
@@ -75,6 +53,7 @@ public class ObvParser
 
         //вытаскиваем номер и тип обвязки
         var commonObvInfoRow = obvStartRow + 1;
+
         result.Number = worksheet.Cell(commonObvInfoRow, _obvCellConfig.ObvNumberColumn).Value.ToString();
         result.ObvType = worksheet.Cell(commonObvInfoRow, _obvCellConfig.ObvTypeColumn).Value.ToString();
 
@@ -88,10 +67,10 @@ public class ObvParser
         var (sensorsStartRow, sensorsEndRow) = _excelAddressingService.FindSectionRows(worksheet, "Датчики", obvStartRow);
 
         //находим секцию доп комплектующих (высчитываем)
-        var (additionalStartRow, additionaLastRow) = (structureEndRow + 1, sensorsStartRow - 1);
+        var (additionalStartRow, additionalLastRow) = (structureEndRow + 1, sensorsStartRow - 1);
 
         //напихиваем доп комплектующие в обвязку
-        ParseAdditionalComponents(worksheet, result, additionalStartRow + 2, additionaLastRow);
+        ParseAdditionalComponents(worksheet, result, additionalStartRow + 2, additionalLastRow);
 
         //Напихиваем датчики в обвязку
         ParseSensors(worksheet, result, sensorsStartRow + 2, sensorsEndRow);
@@ -132,7 +111,6 @@ public class ObvParser
 
             var parsedSensor = ParseSensor(worksheet, row);
 
-
             if (parsedSensor is null || parsedSensor.IsEmpty())
                 continue;
 
@@ -154,5 +132,14 @@ public class ObvParser
             MarkMinus = worksheet.Cell(row, _obvCellConfig.SensorMarkMinusColumn).Value.ToString(),
             Description = worksheet.Cell(row, _obvCellConfig.SensorDescriptionColumn).Value.ToString()
         };
+    }
+
+    private bool HasObvDataAt(IXLWorksheet worksheet, int row)
+    {
+        // обвязка считается начавшейся, если в строке номера/типа есть хоть что-то
+        var number = worksheet.Cell(row, _obvCellConfig.ObvNumberColumn).GetString().Trim();
+        var type = worksheet.Cell(row, _obvCellConfig.ObvTypeColumn).GetString().Trim();
+
+        return !string.IsNullOrEmpty(number) || !string.IsNullOrEmpty(type);
     }
 }
