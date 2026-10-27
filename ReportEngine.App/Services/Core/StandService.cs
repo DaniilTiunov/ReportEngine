@@ -187,6 +187,11 @@ public class StandService : IStandService
         _notificationService.ShowInfo("Рама успешно добавлена в стенд");
     }
 
+    public async Task AddFrameToStandByNameAsync(int standId, string frameName)
+    {
+        await _projectRepository.AddFrameToStandByNameAsync(standId, frameName);
+    }
+
     public async Task AddDrainageToStandAsync(int standId, int drainageId)
     {
         await _projectRepository.AddDrainageToStandAsync(standId, drainageId);
@@ -198,41 +203,51 @@ public class StandService : IStandService
         await _projectRepository.AddStandObvyazkaAsync(standId, obvyazka);
     }
 
-    public async Task AddCustomDrainageAsync(int standId, List<DrainagePurpose> drainagePurposes,
-        FormedDrainage customDrainage)
+    public Task AddCustomDrainageAsync(
+        int standId, 
+        IEnumerable<DrainagePurpose> drainagePurposes)
     {
-        var entity = new FormedDrainage
-        {
-            Purposes = drainagePurposes
-        };
-
-        await _formedDrainagesRepository.AddAsync(entity);
-        await _projectRepository.AddDrainageToStandAsync(standId, entity.Id);
+        return AddCustomComponentAsync(
+            standId,
+            new FormedDrainage { Purposes = drainagePurposes.ToList() },
+            _formedDrainagesRepository.AddAsync,
+            entity => entity.Id,
+            _projectRepository.AddDrainageToStandAsync);
     }
 
-    public async Task AddCustomElectricalComponentAsync(int standId, List<ElectricalPurpose> electricalPurpose,
-        FormedElectricalComponent customElectrical)
+    public Task AddCustomElectricalComponentAsync(
+        int standId, 
+        IEnumerable<ElectricalPurpose> electricalPurposes)
     {
-        var entity = new FormedElectricalComponent
-        {
-            Purposes = electricalPurpose
-        };
-
-        await _formedElectricalRepository.AddAsync(entity);
-
-        await _projectRepository.AddElectricalComponentToStandAsync(standId, entity.Id);
+        return AddCustomComponentAsync(
+            standId,
+            new FormedElectricalComponent { Purposes = electricalPurposes.ToList() },
+            _formedElectricalRepository.AddAsync,
+            entity => entity.Id,
+            _projectRepository.AddElectricalComponentToStandAsync);
     }
 
-    public async Task AddCustomAdditionalEquipAsync(int standId, List<AdditionalEquipPurpose> additionalEquipPurposes,
-        FormedAdditionalEquip customEquip)
+    public Task AddCustomAdditionalEquipAsync(
+        int standId, 
+        IEnumerable<AdditionalEquipPurpose> additionalEquipPurposes)
     {
-        var entity = new FormedAdditionalEquip
-        {
-            Purposes = additionalEquipPurposes
-        };
+        return AddCustomComponentAsync(
+            standId,
+            new FormedAdditionalEquip { Purposes = additionalEquipPurposes.ToList() },
+            _formedAdditionalEquipsRepository.AddAsync,
+            entity => entity.Id,
+            _projectRepository.AddAdditionalEquipToStandAsync);
+    }
 
-        await _formedAdditionalEquipsRepository.AddAsync(entity);
-        await _projectRepository.AddAdditionalEquipToStandAsync(standId, entity.Id);
+    private static async Task AddCustomComponentAsync<TEntity>(
+        int standId,
+        TEntity entity,
+        Func<TEntity, Task> addAsync,
+        Func<TEntity, int> getId,
+        Func<int, int, Task> attachToStandAsync)
+    {
+        await addAsync(entity);
+        await attachToStandAsync(standId, getId(entity));
     }
 
     public async Task<ObvyazkaInStand> CreateObvyazkaAsync(StandModel standModel, Obvyazka selectedObvyazka)
@@ -324,22 +339,17 @@ public class StandService : IStandService
     }
 
 
-    public async void FillStandFieldsFromObvyazka(StandModel stand, ObvyazkaInStand obv)
+    public async Task FillStandFieldsFromObvyazka(StandModel stand, ObvyazkaInStand obv)
     {
         if (stand == null || obv == null)
             return;
 
-        // костыль для получения полной сущности
-        var originalFullObv = await _obvyazkaInStandRepository.GetFullObvFromStandAsync(obv.Id);
+        // Импортированная обвязка ещё не имеет записи в БД.
+        var originalFullObv = obv.Id > 0
+            ? await _obvyazkaInStandRepository.GetFullObvFromStandAsync(obv.Id)
+            : null;
 
         await _converterService.ConvertObvyazkaInStandDataToStandEquips(stand, obv);
-
-        if (originalFullObv?.Obvyazka == null)
-        {
-            _notificationService.ShowError("Не найдены данные по обвязке");
-            return;
-        }
-
 
         stand.NN = obv.NN ?? 0;
         stand.ObvyazkaName = obv.ObvyazkaName;
@@ -361,6 +371,10 @@ public class StandService : IStandService
         stand.TreeSocketMaterialCostPerUnit = obv.TreeSocketMaterialCostPerUnit;
         stand.KMCHCostPerUnit = obv.KMCHCostPerUnit;
         stand.ArmatureCostPerUnit = obv.ArmatureCostPerUnit;
+        stand.MaterialLineExportDays = obv.MaterialLineExportDays;
+        stand.TreeSocketExportDays = obv.TreeSocketExportDays;
+        stand.KMCHExportDays = obv.KMCHExportDays;
+        stand.ArmatureExportDays = obv.ArmatureExportDays;
 
         stand.FirstSensorType = obv.FirstSensorType;
         stand.FirstSensorKKS = obv.FirstSensorKKS;
@@ -379,7 +393,7 @@ public class StandService : IStandService
         stand.ThirdSensorDescription = obv.ThirdSensorDescription;
         stand.ImageName = obv.ImageName;
 
-        stand.ObvWeight = originalFullObv.Obvyazka.Weight;
+        stand.ObvWeight = originalFullObv?.Obvyazka?.Weight ?? obv.Obvyazka?.Weight;
 
         var additionalComponents = await GetAdditionalComponentsAsync(obv);
         stand.ObvyazkaAdditionalComponents.Clear();

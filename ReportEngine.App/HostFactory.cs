@@ -1,14 +1,18 @@
 ﻿using System.Windows.Controls;
+using Mapster;
+using MapsterMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using ReportEngine.App.Dds;
+using ReportEngine.App.Mapping.Import;
 using ReportEngine.App.Services;
 using ReportEngine.App.Services.Calculation;
 using ReportEngine.App.Services.Cloners;
 using ReportEngine.App.Services.Converters;
 using ReportEngine.App.Services.Core;
+using ReportEngine.App.Services.Import;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Services.Logger;
 using ReportEngine.App.Services.Navigation;
@@ -46,6 +50,11 @@ using ReportEngine.Export.ExcelWork.Services;
 using ReportEngine.Export.ExcelWork.Services.Generators;
 using ReportEngine.Export.ExcelWork.Services.Interfaces;
 using ReportEngine.Export.PDFWork.Services.Generators;
+using ReportEngine.Import.Abstractions;
+using ReportEngine.Import.Services.Excel;
+using ReportEngine.Import.Services.Project;
+using ReportEngine.Import.Services.Report;
+using ReportEngine.Import.Services.Stand;
 using ReportEngine.Shared.Config.Directory;
 using ReportEngine.Shared.Config.Models;
 using ReportEngine.Shared.Services.Options;
@@ -109,6 +118,9 @@ public static class HostFactory
                 // Регистрация сервисов для формирования отчётов
                 ConfigureReportsServices(services);
 
+                ConfigureImportServices(services);
+                ConfigureMapsterService(services);
+                
                 services.AddSingleton<App>();
             })
             .Build();
@@ -234,6 +246,29 @@ public static class HostFactory
         services.AddScoped<IReportGenerator, TechnologicalCardsGenerator>();
         services.AddScoped<IReportGenerator, FlatSummaryReportGenerator>();
         services.AddSingleton<ReportSettings>();
+    }
+
+    private static void ConfigureImportServices(IServiceCollection services)
+    {
+        services.AddScoped<IProjectInfoParser, ProjectInfoParser>();
+        services.AddScoped<IReportParser, ReportParser>();
+        services.AddScoped<IStandParser, StandParser>();
+        services.AddScoped<SaveImportService>();
+        services.AddScoped<ComponentParser>();
+        services.AddScoped<ExcelAddressingService>();
+        services.AddScoped<IFileService, FileService>();
+        services.AddScoped<IImportService, ImportService>();
+        services.AddScoped<ObvParser>();
+        services.AddScoped<FrameParser>();
+    }
+
+    private static void ConfigureMapsterService(IServiceCollection services)
+    {
+        var config = new TypeAdapterConfig();
+        
+        config.Scan(typeof(ProjectInfoMapper).Assembly);
+        services.AddSingleton(config);
+        services.AddSingleton<IMapper, ServiceMapper>();
     }
 
     private static void ConfigureViewModels(IServiceCollection services)

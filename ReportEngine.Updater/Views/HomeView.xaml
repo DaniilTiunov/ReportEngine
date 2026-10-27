@@ -8,23 +8,23 @@
 
             <!--  Заголовок  -->
             <TextBlock
+                Margin="0,0,0,5"
                 FontSize="22"
                 FontWeight="Bold"
-                Margin="0,0,0,5"
-                Text="🏠 Добро пожаловать в Менеджер КИПАРИС:PCM" />
+                Text="🏠 Добро пожаловать в Менеджер версий КИПАРИС:PCM" />
 
             <TextBlock
+                Margin="0,0,0,25"
                 FontSize="14"
                 Foreground="#666"
-                Margin="0,0,0,25"
                 Text="Управление обновлениями приложения" />
 
             <!--  Информация о последней версии  -->
             <Border
-                Background="#F0F4FF"
-                CornerRadius="8"
                 Margin="0,0,0,20"
-                Padding="20">
+                Padding="20"
+                Background="#F0F4FF"
+                CornerRadius="8">
 
                 <StackPanel>
                     <TextBlock
@@ -59,29 +59,29 @@
 
             <!--  Изменения  -->
             <TextBlock
+                Margin="0,0,0,10"
                 FontSize="16"
                 FontWeight="SemiBold"
-                Margin="0,0,0,10"
                 Text="📋 Что нового" />
 
             <!--  Added  -->
             <Border
-                Background="#E8F5E9"
-                CornerRadius="4"
                 Margin="0,0,0,8"
-                Padding="10,6">
+                Padding="10,6"
+                Background="#E8F5E9"
+                CornerRadius="4">
                 <TextBlock
                     FontWeight="Bold"
                     Foreground="#2E7D32"
                     Text="✅ Добавлено" />
             </Border>
-            <ItemsControl ItemsSource="{Binding LatestInfo.Sections.Added}" Margin="0,0,0,12">
+            <ItemsControl Margin="0,0,0,12" ItemsSource="{Binding LatestInfo.Sections.Added}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock
+                            Margin="20,3,0,3"
                             FontSize="13"
                             Foreground="#333"
-                            Margin="20,3,0,3"
                             TextWrapping="Wrap">
                             <Run Text="• " /><Run Text="{Binding Path=., Mode=OneWay}" />
                         </TextBlock>
@@ -91,22 +91,22 @@
 
             <!--  Changed  -->
             <Border
-                Background="#FFF3E0"
-                CornerRadius="4"
                 Margin="0,0,0,8"
-                Padding="10,6">
+                Padding="10,6"
+                Background="#FFF3E0"
+                CornerRadius="4">
                 <TextBlock
                     FontWeight="Bold"
                     Foreground="#E65100"
                     Text="🔄 Изменено" />
             </Border>
-            <ItemsControl ItemsSource="{Binding LatestInfo.Sections.Changed}" Margin="0,0,0,12">
+            <ItemsControl Margin="0,0,0,12" ItemsSource="{Binding LatestInfo.Sections.Changed}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock
+                            Margin="20,3,0,3"
                             FontSize="13"
                             Foreground="#333"
-                            Margin="20,3,0,3"
                             TextWrapping="Wrap">
                             <Run Text="• " /><Run Text="{Binding Path=., Mode=OneWay}" />
                         </TextBlock>
@@ -116,22 +116,22 @@
 
             <!--  Fixed  -->
             <Border
-                Background="#E3F2FD"
-                CornerRadius="4"
                 Margin="0,0,0,8"
-                Padding="10,6">
+                Padding="10,6"
+                Background="#E3F2FD"
+                CornerRadius="4">
                 <TextBlock
                     FontWeight="Bold"
                     Foreground="#0D47A1"
                     Text="🐛 Исправлено" />
             </Border>
-            <ItemsControl ItemsSource="{Binding LatestInfo.Sections.Fixed}" Margin="0,0,0,12">
+            <ItemsControl Margin="0,0,0,12" ItemsSource="{Binding LatestInfo.Sections.Fixed}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock
+                            Margin="20,3,0,3"
                             FontSize="13"
                             Foreground="#333"
-                            Margin="20,3,0,3"
                             TextWrapping="Wrap">
                             <Run Text="• " /><Run Text="{Binding Path=., Mode=OneWay}" />
                         </TextBlock>
@@ -142,6 +142,7 @@
             <!--  Кнопки действий  -->
             <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
                 <Button
+                    Padding="20,10"
                     Background="#2196F3"
                     Command="{Binding NavigateCommand}"
                     CommandParameter="Versions"
@@ -149,8 +150,7 @@
                     Cursor="Hand"
                     FontSize="14"
                     FontWeight="SemiBold"
-                    Foreground="White"
-                    Padding="20,10" />
+                    Foreground="White" />
             </StackPanel>
 
         </StackPanel>

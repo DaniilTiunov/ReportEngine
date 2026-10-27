@@ -74,7 +74,8 @@ public partial class VersionsViewModel : BaseViewModel
 
     private async Task LoadReleasesAsync()
     {
-        var releasesDirectories = await _directoryService.GetDirectoriesAsync(paths => paths.RemotePath);
+        var releasesDirectories = 
+            await _directoryService.GetDirectoriesAsync(paths => paths.RemotePath);
 
         foreach (var releasesDirectory in releasesDirectories)
         {

@@ -11,13 +11,12 @@ using ReportEngine.App.Enums;
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.ModelWrappers;
-using ReportEngine.App.Services.Calculation;
 using ReportEngine.App.Services.Cloners;
 using ReportEngine.App.Services.Core;
+using ReportEngine.App.Services.Import;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Services.Notification;
 using ReportEngine.App.ViewModels.Utils;
-using ReportEngine.App.Views.Windows;
 using ReportEngine.App.Views.Windows.Dialog;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities;
@@ -40,6 +39,7 @@ public partial class ProjectViewModel : ObservableObject
     private readonly AuditService _auditService;
     private readonly ICalculationService _calculationService;
     private readonly ReportEngineConfigService _configService;
+    private readonly SaveImportService _saveImportService;
     private readonly IDialogService _dialogService;
     private readonly EntityStandClonerService _entityStandCloner;
     private readonly ExceptionService _exceptionService;
@@ -54,6 +54,24 @@ public partial class ProjectViewModel : ObservableObject
     private readonly SessionService _sessionService;
     private readonly IStandService _standService;
     private readonly UIValidatorService _uiValidatorService;
+
+    [ObservableProperty] private ObservableCollection<FormedAdditionalEquip> _allAvailableAdditionalEquips = new();
+
+    [ObservableProperty] private ObservableCollection<FormedDrainage> _allAvailableDrainages = new();
+
+    [ObservableProperty]
+    private ObservableCollection<FormedElectricalComponent> _allAvailableElectricalComponents = new();
+
+    [ObservableProperty] private ObservableCollection<FormedFrame> _allAvailableFrames = new();
+
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(MaxObvNN))] [NotifyPropertyChangedFor(nameof(MaxStandNN))]
+    private ProjectModel _currentProjectModel = new();
+
+    [ObservableProperty] private StandModel _currentStandModel = new();
+
+    [ObservableProperty] private StandModel _newStand = new();
+
+    [ObservableProperty] private Obvyazka _selectedObvyazka = new();
 
     public ProjectViewModel(
         IProjectInfoRepository projectRepository,
@@ -73,7 +91,8 @@ public partial class ProjectViewModel : ObservableObject
         SessionService sessionService,
         ExceptionService exceptionService,
         IServiceProvider serviceProvider,
-        ReportEngineConfigService configService)
+        ReportEngineConfigService configService,
+        SaveImportService saveImportService)
     {
         _projectRepository = projectRepository;
         _dialogService = dialogService;
@@ -93,6 +112,7 @@ public partial class ProjectViewModel : ObservableObject
         _exceptionService = exceptionService;
         _serviceProvider = serviceProvider;
         _configService = configService;
+        _saveImportService = saveImportService;
 
         NewStand = new StandModel { Number = 1 };
 
@@ -101,33 +121,10 @@ public partial class ProjectViewModel : ObservableObject
         InitializeGenericCommands();
     }
 
-    [ObservableProperty]
-    private ObservableCollection<FormedFrame> _allAvailableFrames = new();
-
-    [ObservableProperty]
-    private ObservableCollection<FormedDrainage> _allAvailableDrainages = new();
-
-    [ObservableProperty]
-    private ObservableCollection<FormedElectricalComponent> _allAvailableElectricalComponents = new();
-
-    [ObservableProperty]
-    private ObservableCollection<FormedAdditionalEquip> _allAvailableAdditionalEquips = new();
-
-    [ObservableProperty]
-    private Obvyazka _selectedObvyazka = new();
-
-    [ObservableProperty]
-    private StandModel _currentStandModel = new();
-
-    [ObservableProperty]
-    private StandModel _newStand = new();
-
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(MaxObvNN))]
-    [NotifyPropertyChangedFor(nameof(MaxStandNN))]
-    private ProjectModel _currentProjectModel = new();
+    [ObservableProperty] private bool _isImportView;
 
     public IAsyncRelayCommand RefreshCommandAsync => RefreshProjectCommand;
+    
     public ProjectCommandProvider ProjectCommandProvider { get; } = new();
     public MaterialLinesModel CurrentMaterials { get; } = new();
     public int MaxObvNN => CurrentProjectModel?.SelectedStand?.ObvyazkiInStand.Max(obv => obv.NN) ?? 0;
@@ -151,6 +148,17 @@ public partial class ProjectViewModel : ObservableObject
         await _dialogService.RunWithProgressDialogAsync(async () =>
         {
             await LoadProjectInfoAsync(CurrentProjectModel.CurrentProjectId);
+        });
+    }
+
+    [RelayCommand]
+    public async Task SaveAfterImport()
+    {
+        await _exceptionService.SafeExecuteAsync(async () =>
+        {
+            IsImportView = false;
+
+            await _saveImportService.SaveImportedProjectAsync(CurrentProjectModel);
         });
     }
 
@@ -271,7 +279,7 @@ public partial class ProjectViewModel : ObservableObject
             CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand.Add(item);
         }
     }
-    
+
     public void SelectEquipCommandExecuted(EquipField? equipField)
     {
         if (CurrentProjectModel.SelectedStand == null)
@@ -279,16 +287,16 @@ public partial class ProjectViewModel : ObservableObject
             _notificationService.ShowInfo("Стенд не выбран!");
             return;
         }
-        
+
         var selectedEquip = GetBaseEquip();
 
-        SetEquipValue(equipField,  selectedEquip);
+        SetEquipValue(equipField, selectedEquip);
     }
 
     private IBaseEquip GetBaseEquip()
     {
         var selectedEquip = _dialogService.ShowAllSortamentsDialog();
-        
+
         return selectedEquip ?? new BaseEquip();
     }
 
@@ -303,7 +311,7 @@ public partial class ProjectViewModel : ObservableObject
                 CurrentProjectModel.SelectedStand.MaterialLineExportDays = selectedEquip.ExportDays;
                 CurrentProjectModel.SelectedStand.MaterialLineEquip = selectedEquip;
                 break;
-            
+
             case EquipField.Armature:
                 CurrentProjectModel.SelectedStand.Armature = selectedEquip.Name ?? string.Empty;
                 CurrentProjectModel.SelectedStand.ArmatureMeasure = selectedEquip.Measure;
@@ -311,7 +319,7 @@ public partial class ProjectViewModel : ObservableObject
                 CurrentProjectModel.SelectedStand.ArmatureExportDays = selectedEquip.ExportDays;
                 CurrentProjectModel.SelectedStand.ArmatureEquip = selectedEquip;
                 break;
-            
+
             case EquipField.TreeSocket:
                 CurrentProjectModel.SelectedStand.TreeSocket = selectedEquip.Name ?? string.Empty;
                 CurrentProjectModel.SelectedStand.TreeSocketMaterialMeasure = selectedEquip.Measure;
@@ -319,7 +327,7 @@ public partial class ProjectViewModel : ObservableObject
                 CurrentProjectModel.SelectedStand.TreeSocketExportDays = selectedEquip.ExportDays;
                 CurrentProjectModel.SelectedStand.TreeSocketEquip = selectedEquip;
                 break;
-            
+
             case EquipField.KMCH:
                 CurrentProjectModel.SelectedStand.KMCH = selectedEquip.Name ?? string.Empty;
                 CurrentProjectModel.SelectedStand.KMCHMeasure = selectedEquip.Measure;
@@ -329,7 +337,7 @@ public partial class ProjectViewModel : ObservableObject
                 break;
         }
     }
-    
+
     public async Task OnCreateNewCardCommandExecuted()
     {
         await _exceptionService.SafeExecuteAsync(async () =>
@@ -816,7 +824,7 @@ public partial class ProjectViewModel : ObservableObject
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
-            _dialogService.ShowEditObvSettingsWindow(this,
+            await _dialogService.ShowEditObvSettingsWindow(this,
                 CurrentProjectModel.SelectedStand,
                 CurrentProjectModel.SelectedStand.SelectedObvyazkaInStand);
         });
@@ -826,7 +834,7 @@ public partial class ProjectViewModel : ObservableObject
     {
         await _exceptionService.SafeExecuteAsync(async () =>
         {
-            _standService.FillStandFieldsFromObvyazka(CurrentProjectModel.SelectedStand,
+            await _standService.FillStandFieldsFromObvyazka(CurrentProjectModel.SelectedStand,
                 CurrentProjectModel.SelectedObvyazkaToCopy);
         });
     }
@@ -1011,8 +1019,9 @@ public partial class ProjectViewModel : ObservableObject
         _ = ResetProjectAsync();
     }
 
-    public async Task ResetProjectAsync()
+    public async Task ResetProjectAsync(bool isImportView = false)
     {
+        IsImportView = isImportView;
         CurrentProjectModel = new ProjectModel();
         CurrentStandModel = new StandModel();
 
@@ -1022,7 +1031,7 @@ public partial class ProjectViewModel : ObservableObject
         var maxProjNumber = projects?.Max(proj => proj.Number) ?? 0;
 
         CurrentProjectModel.Number = maxProjNumber + 1;
-
+  
         InitializeTime();
         OnPropertyChanged(nameof(CurrentProjectModel));
         OnPropertyChanged(nameof(CurrentStandModel));
@@ -1093,10 +1102,13 @@ public partial class ProjectViewModel : ObservableObject
 
     public void InitializeTime()
     {
-        CurrentProjectModel.CreationDate = DateTime.Now.Date;
-        CurrentProjectModel.StartDate = DateTime.Now.Date;
-        CurrentProjectModel.OutOfProduction = DateTime.Now.Date;
-        CurrentProjectModel.EndDate = DateTime.Now.Date;
+        if (!IsImportView)
+        {
+            CurrentProjectModel.CreationDate = DateTime.Now.Date;
+            CurrentProjectModel.StartDate = DateTime.Now.Date;
+            CurrentProjectModel.OutOfProduction = DateTime.Now.Date;
+            CurrentProjectModel.EndDate = DateTime.Now.Date;
+        }
     }
 
     public void InitializeCommands()
@@ -1152,6 +1164,7 @@ public partial class ProjectViewModel : ObservableObject
             if (loadedModel == null)
                 return;
 
+            IsImportView = false;
             CurrentProjectModel = loadedModel;
             CurrentStandModel = loadedModel.SelectedStand ?? new StandModel();
 
@@ -1178,7 +1191,7 @@ public partial class ProjectViewModel : ObservableObject
         if (Guard.ExitIfNull("Не выбран тип обвязки!", _notificationService, SelectedObvyazka))
             return;
 
-        //автонумерация
+        // автономерация
         selectedStand.NN = MaxObvNN + 1;
 
         var entity = await _standService.CreateObvyazkaAsync(selectedStand, SelectedObvyazka);
@@ -1319,17 +1332,17 @@ public partial class ProjectViewModel : ObservableObject
         newStandModel.NewAdditionalEquip.Purposes =
             CurrentProjectModel.SelectedStand.AllAdditionalEquipPurposesInStand.ToList();
 
-        await _standService.AddCustomDrainageAsync(newStandModel.Id,
-            newStandModel.NewDrainage.Purposes.ToList(),
-            newStandModel.NewDrainage);
+        await _standService.AddCustomDrainageAsync(
+            newStandModel.Id,
+            newStandModel.NewDrainage.Purposes);
 
-        await _standService.AddCustomElectricalComponentAsync(newStandModel.Id,
-            newStandModel.NewElectricalComponent.Purposes.ToList(),
-            newStandModel.NewElectricalComponent);
+        await _standService.AddCustomElectricalComponentAsync(
+            newStandModel.Id,
+            newStandModel.NewElectricalComponent.Purposes);
 
-        await _standService.AddCustomAdditionalEquipAsync(newStandModel.Id,
-            newStandModel.NewAdditionalEquip.Purposes.ToList(),
-            newStandModel.NewAdditionalEquip);
+        await _standService.AddCustomAdditionalEquipAsync(
+            newStandModel.Id,
+            newStandModel.NewAdditionalEquip.Purposes);
     }
 
     private async Task SaveChangesInStandAsync()
@@ -1425,30 +1438,7 @@ public partial class ProjectViewModel : ObservableObject
         NewStand = new StandModel { Number = 1 };
         OnPropertyChanged(nameof(NewStand));
     }
-
-    private void SelectEquipment<T>(
-        Action<string> setProperty,
-        Action<string> setMeasure,
-        Action<string> setCost,
-        Action<int> setExportDays,
-        Action<IBaseEquip> setEquip)
-        where T : class, IBaseEquip, new()
-    {
-        _exceptionService.SafeExecute(() =>
-        {
-            var equipment = _dialogService.ShowEquipDialog<T>();
-            if (equipment != null && CurrentProjectModel.SelectedStand != null)
-            {
-                setProperty(equipment.Name);
-                setMeasure(equipment.Measure);
-                setCost(equipment.Cost.ToString());
-                setExportDays((int)equipment.ExportDays);
-            }
-
-            if (equipment is IBaseEquip baseEquip) setEquip(baseEquip);
-        });
-    }
-
+    
     private async Task AddFrameToStandAsync()
     {
         if (CurrentStandModel.SelectedFrame != null)
@@ -1601,19 +1591,7 @@ public partial class ProjectViewModel : ObservableObject
             if (costProp != null && costProp.CanWrite) costProp.SetValue(target, selected.Cost);
         });
     }
-
-    private async Task UpdatePurposeAsync<T>(T? purpose,
-        Func<T, Task> updateFunc,
-        string successMessage)
-        where T : class, IPurposeEntity
-    {
-        if (purpose is null)
-            return;
-
-        await updateFunc(purpose);
-        _notificationService.ShowInfo(successMessage);
-    }
-
+    
     private async Task DeletePurposeAsync<T>(T? purpose,
         Func<int, Task> deleteFunc,
         ICollection<T> collection,

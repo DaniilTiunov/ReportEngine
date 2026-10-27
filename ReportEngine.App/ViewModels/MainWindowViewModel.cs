@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Forms;
 using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.AppHelpers;
 using ReportEngine.App.Commands;
@@ -11,6 +11,7 @@ using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Cloners;
 using ReportEngine.App.Services.Core;
+using ReportEngine.App.Services.Import;
 using ReportEngine.App.Services.Interfaces;
 using ReportEngine.App.Services.Logger;
 using ReportEngine.App.Services.Navigation;
@@ -24,7 +25,12 @@ using ReportEngine.Domain.Database.Context;
 using ReportEngine.Domain.Entities;
 using ReportEngine.Domain.Entities.BaseEntities.Interface;
 using ReportEngine.Domain.Repositories.Interfaces;
+using ReportEngine.Import.Abstractions;
+using ReportEngine.Import.Dto;
 using ReportEngine.Shared.Services.Options;
+using Application = System.Windows.Application;
+using MessageBox = System.Windows.MessageBox;
+using UserControl = System.Windows.Controls.UserControl;
 
 namespace ReportEngine.App.ViewModels;
 
@@ -42,6 +48,8 @@ public class MainWindowViewModel : BaseViewModel
     private readonly IProjectInfoRepository _projectRepository;
     private readonly IServiceProvider _serviceProvider;
     private readonly SessionService _sessionService;
+    private readonly IReportParser _reportParser;
+    private readonly IImportService _importService;
 
 
     #region Конструктор
@@ -58,7 +66,9 @@ public class MainWindowViewModel : BaseViewModel
         AuditService auditService,
         UiLogger logger,
         ExceptionService exceptionService,
-        ReportEngineConfigService configService)
+        ReportEngineConfigService configService,
+        IReportParser reportParser,
+        IImportService importService)
     {
         _notificationService = notificationService;
         _calculationService = calculationService;
@@ -72,6 +82,8 @@ public class MainWindowViewModel : BaseViewModel
         _logger = logger;
         _exceptionService = exceptionService;
         _configService = configService;
+        _reportParser = reportParser;
+        _importService = importService;
 
         _sessionService.PropertyChanged += SessionChanged;
 
@@ -414,5 +426,49 @@ public class MainWindowViewModel : BaseViewModel
         CollectionRefreshHelper.SafeRefreshCollection(MainWindowModel.AllProjects);
     }
 
+    public async Task ImportFileCommandAsync()
+    {
+        await _exceptionService.SafeExecuteAsync(async () =>
+        {
+            var filename = SelectImportFile();
+
+            if (filename is null)
+                return;
+
+            await _dialogService.RunWithProgressDialogAsync(async () =>
+            {
+                var report = await _reportParser.Parse(filename);
+
+                await ImportReportAsync(report);
+                
+            });
+        });
+    }
+
+    private static string? SelectImportFile()
+    {
+        using var dialog = new OpenFileDialog();
+        dialog.Title = "Импорт отчёта";
+        dialog.Filter = "Excel файлы (*.xlsx)|*.xlsx";
+        dialog.DefaultExt = ".xlsx";
+        dialog.CheckFileExists = true;
+        dialog.Multiselect = false;
+
+        return dialog.ShowDialog() == DialogResult.OK
+            ? dialog.FileName
+            : null;
+
+    }
+    
+    private async Task ImportReportAsync(ReportDto report)
+    {
+        var projectViewModel =
+            _serviceProvider.GetRequiredService<ProjectViewModel>();
+
+        await _importService.ImportAsync(report, projectViewModel);
+        
+        _navigation.ShowContent<TreeProjectView>();
+    }
+    
     #endregion Комманды главного окна
 }

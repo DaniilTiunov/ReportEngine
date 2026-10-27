@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.Input;
+using DevExpress.Charts.Designer.Native;
 using ReportEngine.App.ViewModels;
 using ReportEngine.App.Views;
 using ReportEngine.App.Views.Controls;
@@ -78,6 +79,9 @@ public static class MainWindowCommandsInitializer
 
         vm.MainWindowCommandProvider.OpenCalculationParametersCommand =
             new RelayCommand(vm.OnOpenCalculationParametersCommandExecuted, vm.CanAllCommandsExecute);
+
+        vm.MainWindowCommandProvider.ImportReportCommand =
+            new AsyncRelayCommand(vm.ImportFileCommandAsync);
     }
 
     public static void InitializeGenericCommands(MainWindowViewModel vm)

@@ -14,15 +14,11 @@
 
     <ItemGroup>
         <None Remove="PythonModule\Etalon.jpg" />
-        <None Remove="PythonModule\MainLauncher.exe" />
         <None Remove="PythonModule\MainLauncher.py" />
     </ItemGroup>
 
     <ItemGroup>
         <Content Include="PythonModule\Etalon.jpg">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="PythonModule\MainLauncher.exe">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Include="PythonModule\MainLauncher.py">
