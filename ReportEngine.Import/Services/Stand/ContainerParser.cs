@@ -19,8 +19,11 @@ public class ContainerParser
         var startDataRow = 2;
 
         var results = new List<ContainerDto>();
+    }
 
 
+    public ContainerDto Parse(IXLWorksheet worksheet)
+    {
 
     }
 }
