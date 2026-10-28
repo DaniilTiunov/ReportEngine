@@ -16,6 +16,4 @@ public class ContainerParser
         var results = new List<ContainerDto>();
     }
 
-        return results;
-    }
 }
