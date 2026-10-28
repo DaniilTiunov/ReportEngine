@@ -8,11 +8,13 @@ namespace ReportEngine.Tests.Services;
 public class ComponentParserTests
 {
     private const string filename = "C:\\Work\\Тестовая папка для отчётов\\Test.xlsx";
+
+    private const string containerFileName = "C:\\Work\\Тестовая папка для отчётов\\ContainerTest.xlsx";
     private IFileService _fileService;
     private ExcelAddressingService _excelAddressingService;
     private ComponentParser _parser;
     private FrameParser _frameParser;
-
+    private ContainerParser _containerParser;
     private ObvParser _obvParser;
 
     [TestInitialize]
@@ -24,11 +26,22 @@ public class ComponentParserTests
         _frameParser = new FrameParser(_excelAddressingService);
 
         _obvParser = new ObvParser(_excelAddressingService, _parser);
+
+        _containerParser = new ContainerParser(_excelAddressingService);
     }
 
     [TestMethod]
-    public void ParseTest()
+    public async Task ParseTest()
     {
+        var workbook = await _fileService.OpenFileAsXlwAsync(containerFileName);
+
+        var firstSheet = workbook.Worksheets.First();
+
+        var results = _containerParser.Parse(firstSheet);
+
+
+
+        var sraka = 5;
 
     }
 }
