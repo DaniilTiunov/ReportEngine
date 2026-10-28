@@ -1,6 +1,7 @@
 using ReportEngine.App.Model;
 using ReportEngine.App.Model.StandsModel;
 using ReportEngine.App.Services.Interfaces;
+using ReportEngine.Domain.Repositories.Interfaces;
 
 namespace ReportEngine.App.Services.Import;
 
@@ -10,26 +11,55 @@ public class SaveImportService
     private readonly IDialogService _dialogService;
     private readonly IStandService _standService;
     private readonly INotificationService _notificationService;
+    private readonly IObvyazkaRepository _obvyazkaRepository;
 
     public SaveImportService(
         IProjectService projectService,
         IDialogService dialogService,
         IStandService standService,
-        INotificationService notificationService)
+        INotificationService notificationService,
+        IObvyazkaRepository obvyazkaRepository)
     {
         _projectService = projectService;
         _dialogService = dialogService;
         _standService = standService;
         _notificationService = notificationService;
+        _obvyazkaRepository = obvyazkaRepository;
     }
 
     public async Task SaveImportedProjectAsync(ProjectModel projectModel)
     {
         await _dialogService.RunWithProgressDialogAsync(async () =>
         {
+            await ValidateObvyazkiAsync(projectModel);
             await SaveProjectInfoAsync(projectModel);
             await SaveStandsAsync(projectModel);
         });
+    }
+
+    private async Task ValidateObvyazkiAsync(ProjectModel projectModel)
+    {
+        var importedObvyazki = projectModel.Stands
+            .SelectMany(stand => stand.ObvyazkiInStand)
+            .ToList();
+
+        if (importedObvyazki.Count == 0)
+            return;
+
+        var existingIds = (await _obvyazkaRepository.GetAllAsync())
+            .Select(obvyazka => obvyazka.Id)
+            .ToHashSet();
+        var missingIds = importedObvyazki
+            .Select(obvyazka => obvyazka.ObvyazkaId)
+            .Where(id => id <= 0 || !existingIds.Contains(id))
+            .Distinct()
+            .OrderBy(id => id)
+            .ToList();
+
+        if (missingIds.Count > 0)
+            throw new InvalidOperationException(
+                $"В справочнике не найдены обвязки с ID: {string.Join(", ", missingIds)}. " +
+                "Проверьте столбец K в импортируемом документе.");
     }
 
     private async Task SaveProjectInfoAsync(ProjectModel projectModel)
@@ -41,6 +71,7 @@ public class SaveImportService
     {
         foreach (var stand in projectModel.Stands)
         {
+            // Обвязки и их комплектующие сохраняются вместе со стендом через EF.
             await _projectService.AddStandToProjectAsync(projectModel.CurrentProjectId, stand);
             await SaveStandEquips(stand);
             await SaveFramesAsync(stand);
@@ -70,10 +101,14 @@ public class SaveImportService
         
         _notificationService.ShowInfo("Рамы успешно импортированы");
     }
-
-    //TODO: Доделать сохранение обвязок
+    
     private async Task SaveObvAsync(StandModel standModel)
     {
+        foreach (var obvyazkaInStand in (standModel.ObvyazkiInStand))
+        {
+            await _standService.AddObvyazkaToStandAsync(standModel.Id, obvyazkaInStand);
+        }
+        
         _notificationService.ShowInfo("Обвязки успешно импортированы");
     }
 }

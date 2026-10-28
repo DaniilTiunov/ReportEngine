@@ -2,6 +2,8 @@
 
 public class ObvyazkaDto
 {
+    public int ObvyazkaId { get; set; }
+
     public string Number { get; set; }
 
     public string ObvType { get; set; }
