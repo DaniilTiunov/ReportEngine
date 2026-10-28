@@ -71,8 +71,7 @@ public class SaveImportService
     {
         foreach (var stand in projectModel.Stands)
         {
-            // Обвязки и их комплектующие сохраняются вместе со стендом через EF.
-            await _projectService.AddStandToProjectAsync(projectModel.CurrentProjectId, stand);
+            await _projectService.AddStandToProjectAsync(projectModel.CurrentProjectId, stand, includeFrames: false);
             await SaveStandEquips(stand);
             await SaveFramesAsync(stand);
         }
@@ -100,15 +99,5 @@ public class SaveImportService
         }
         
         _notificationService.ShowInfo("Рамы успешно импортированы");
-    }
-    
-    private async Task SaveObvAsync(StandModel standModel)
-    {
-        foreach (var obvyazkaInStand in (standModel.ObvyazkiInStand))
-        {
-            await _standService.AddObvyazkaToStandAsync(standModel.Id, obvyazkaInStand);
-        }
-        
-        _notificationService.ShowInfo("Обвязки успешно импортированы");
     }
 }

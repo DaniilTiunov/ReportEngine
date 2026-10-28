@@ -53,7 +53,7 @@ public static class StandDataConverter
         };
     }
 
-    public static Stand ConvertToStandEntity(StandModel model)
+    public static Stand ConvertToStandEntity(StandModel model, bool includeFrames = true)
     {
         return new Stand
         {
@@ -102,7 +102,7 @@ public static class StandDataConverter
                     Drainage = equip is FormedDrainage fd ? fd : null
                 }).ToList(),
 
-            StandFrames = model.FramesInStand
+            StandFrames = (includeFrames ? model.FramesInStand : Enumerable.Empty<FormedFrame>())
                 .Select(equip => new StandFrame
                 {
                     FrameId = equip.Id,

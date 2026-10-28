@@ -246,9 +246,9 @@ public class ProjectService : IProjectService
         _notificationService.ShowInfo("Стенды удалены из проекта");
     }
 
-    public async Task AddStandToProjectAsync(int projectId, StandModel standModel)
+    public async Task AddStandToProjectAsync(int projectId, StandModel standModel, bool includeFrames = true)
     {
-        var standEntity = StandDataConverter.ConvertToStandEntity(standModel);
+        var standEntity = StandDataConverter.ConvertToStandEntity(standModel, includeFrames);
         var addedStand = await _projectRepository.AddStandAsync(projectId, standEntity);
 
         standModel.Id = addedStand.Id;
