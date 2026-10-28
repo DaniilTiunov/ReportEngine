@@ -29,7 +29,7 @@ public class ProjectInfoParser : IProjectInfoParser
         CellHumanCost = "C11",
         CellManager = "G10"
     };
-    
+
     public ProjectInfoDto Parse(IXLWorksheet worksheet)
     {
         var projectInfo = new ProjectInfoDto

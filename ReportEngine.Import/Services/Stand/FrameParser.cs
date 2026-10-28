@@ -2,22 +2,15 @@
 using ReportEngine.Import.Configuration;
 using ReportEngine.Import.Dto;
 using ReportEngine.Import.Services.Excel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ReportEngine.Import.Services.Stand;
 
 public class FrameParser
 {
+    private readonly string _categoryName = "РАМЫ";
     private readonly FrameCellConfig _cellConfig = new();
 
     private readonly ExcelAddressingService _excelAddressingService;
-
-
-    private readonly string _categoryName = "РАМЫ";
 
     public FrameParser(ExcelAddressingService excelAddressingService)
     {
@@ -43,8 +36,6 @@ public class FrameParser
 
         return frames;
     }
-
-
 
 
     private FrameDto ParseFrame(IXLWorksheet worksheet, int row)
@@ -80,6 +71,4 @@ public class FrameParser
                 .GetString()
         };
     }
-
-
 }

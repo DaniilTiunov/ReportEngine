@@ -1,5 +1,3 @@
-using ReportEngine.Domain.Enums;
-
 namespace ReportEngine.Import.Dto;
 
 public class ProjectInfoDto

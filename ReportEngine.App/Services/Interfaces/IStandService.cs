@@ -8,6 +8,7 @@ public interface IStandService
     Task LoadStandsDataAsync(IEnumerable<StandModel> standModels);
 
     Task AddFrameToStandAsync(int standId, int frameId);
+    Task AddFrameToStandByNameAsync(int standId, string frameName);
 
     Task AddDrainageToStandAsync(int standId, int drainageId);
 
@@ -45,7 +46,7 @@ public interface IStandService
 
     Task DeleteDrainagePurposeAsync(int purposeId);
 
-    void FillStandFieldsFromObvyazka(StandModel stand, ObvyazkaInStand obv);
+    Task FillStandFieldsFromObvyazka(StandModel stand, ObvyazkaInStand obv);
 
     Task UpdateStandWeight(StandModel stand);
 

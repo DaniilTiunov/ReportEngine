@@ -20,7 +20,6 @@ public class StandDto
     public string? DesigneStand { get; set; } //Описание
     public string? Comments { get; set; } // Комментарий
     public byte[]? ImageData { get; set; } // Изображение
-    
     public List<ComponentDto> AdditionalPurposes { get; init; } = [];
     public List<ComponentDto> DrainagePurposes { get; init; } = [];
     public List<ComponentDto> ElectricalPurposes { get; init; } = [];

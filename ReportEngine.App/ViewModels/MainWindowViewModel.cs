@@ -435,22 +435,24 @@ public class MainWindowViewModel : BaseViewModel
             if (filename is null)
                 return;
 
-            var report = _reportParser.Parse(filename);
+            await _dialogService.RunWithProgressDialogAsync(async () =>
+            {
+                var report = await _reportParser.Parse(filename);
 
-            await ImportReportAsync(report);
+                await ImportReportAsync(report);
+                
+            });
         });
     }
 
     private static string? SelectImportFile()
     {
-        using var dialog = new OpenFileDialog
-        {
-            Title = "Импорт отчёта",
-            Filter = "Excel файлы (*.xlsx)|*.xlsx",
-            DefaultExt = ".xlsx",
-            CheckFileExists = true,
-            Multiselect = false
-        };
+        using var dialog = new OpenFileDialog();
+        dialog.Title = "Импорт отчёта";
+        dialog.Filter = "Excel файлы (*.xlsx)|*.xlsx";
+        dialog.DefaultExt = ".xlsx";
+        dialog.CheckFileExists = true;
+        dialog.Multiselect = false;
 
         return dialog.ShowDialog() == DialogResult.OK
             ? dialog.FileName

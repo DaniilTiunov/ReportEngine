@@ -4,5 +4,5 @@ namespace ReportEngine.Import.Abstractions;
 
 public interface IReportParser
 {
-    ReportDto Parse(string fileName);
+    Task<ReportDto> Parse(string fileName);
 }

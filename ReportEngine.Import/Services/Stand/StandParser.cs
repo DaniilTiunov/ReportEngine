@@ -21,30 +21,30 @@ public class StandParser : IStandParser
         CellDevices = "C4",
         CellBraceType = "C5",
         CellWidth = "C6",
-        CellSerialNumber = "F2",
+        CellSerialNumber = "E2",
         CellWeight = "G4",
         CellStandSummCost = "G3",
         CellDesigneStand = "G5",
         CellComments = "G5"
     };
 
-    public StandParser(ComponentParser componentParser,FrameParser frameParser, ObvParser obvParser)
+    public StandParser(ComponentParser componentParser, FrameParser frameParser, ObvParser obvParser)
     {
         _componentParser = componentParser;
         _frameParser = frameParser;
         _obvParser = obvParser;
     }
-    
+
     public List<StandDto> Parse(IXLWorksheets worksheets)
     {
         var stands = new List<StandDto>();
-        
+
         foreach (var worksheet in worksheets.Skip(1))
         {
-            var stand =  ParseStand(worksheet);
+            var stand = ParseStand(worksheet);
             stands.Add(stand);
         }
-        
+
         return stands;
     }
 
@@ -68,26 +68,6 @@ public class StandParser : IStandParser
             ElectricalPurposes = _componentParser.Parse(worksheet, "ЭЛЕКТРИКА"),
             Frames = _frameParser.Parse(worksheet),
             StandObvs = _obvParser.Parse(worksheet)
-
         };
     }
-
-
-
-
-    private List<FrameDto> ParseStandFrames(IXLWorksheet worksheet)
-    {
-        var parsedFrames = new List<FrameDto>();
-
-        return parsedFrames;
-    }
-
-    private List<ObvyazkaDto> ParseStandObv(IXLWorksheet worksheet)
-    {
-        var parsedObv = new List<ObvyazkaDto>();
-
-        return parsedObv;
-    }
-
-   
 }

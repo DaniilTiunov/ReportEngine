@@ -251,7 +251,7 @@ public class DialogService : IDialogService
         window.ShowDialog();
     }
 
-    public void ShowEditObvSettingsWindow(ProjectViewModel projectViewModel,
+    public async Task ShowEditObvSettingsWindow(ProjectViewModel projectViewModel,
         StandModel standModel,
         ObvyazkaInStand selectedObvyazka)
     {
@@ -259,7 +259,10 @@ public class DialogService : IDialogService
 
         window.DataContext = projectViewModel;
 
-        _standService.FillStandFieldsFromObvyazka(standModel, selectedObvyazka);
+        if (standModel == null || selectedObvyazka == null)
+            return;
+
+        await _standService.FillStandFieldsFromObvyazka(standModel, selectedObvyazka);
 
         window.ShowDialog();
     }

@@ -5,8 +5,8 @@ namespace ReportEngine.Import.Services.Excel;
 
 public class FileService : IFileService
 {
-    public XLWorkbook OpenFileAsXlw(string filename)
+    public async Task<XLWorkbook> OpenFileAsXlwAsync(string filename)
     {
-        return new XLWorkbook(filename);
+        return await Task.Run(() => new XLWorkbook(filename));
     }
 }

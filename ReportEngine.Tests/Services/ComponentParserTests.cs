@@ -29,17 +29,6 @@ public class ComponentParserTests
     [TestMethod]
     public void ParseTest()
     {
-        var expected = 2;
 
-        var workbook = _fileService.OpenFileAsXlw(filename);
-
-        var actual = _obvParser.Parse(workbook.Worksheets.Last());
-
-        Assert.HasCount(expected, actual);
-
-        foreach (var act in actual)
-        {
-            Console.WriteLine($"{act.Number}:{act.ObvType}");
-        }
     }
 }

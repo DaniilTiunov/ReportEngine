@@ -260,6 +260,32 @@ public class ProjectInfoRepository : IProjectInfoRepository
         if (result == 0)
             throw new Exception("StandFrame не был добавлен в базу данных.");
     }
+    
+    public async Task AddFrameToStandByNameAsync(int standId, string frameName)
+    {
+        var stand = await _context.Stands.FirstOrDefaultAsync(s => s.Id == standId);
+        var frame = await _context.FormedFrames.FirstOrDefaultAsync(f => f.Name == frameName);
+
+        if (stand == null)
+            throw new ArgumentException($"Стенд с ID: {standId} не найден.");
+
+        if (frame == null)
+            throw new ArgumentException($"Рама с ID: {frameName} не найдена.");
+
+        var standFrame = new StandFrame
+        {
+            StandId = standId,
+            FrameId = frame.Id,
+            Stand = stand,
+            Frame = frame
+        };
+
+        await _context.StandFrames.AddAsync(standFrame);
+        var result = await _context.SaveChangesAsync();
+
+        if (result == 0)
+            throw new Exception("StandFrame не был добавлен в базу данных.");
+    }
 
     public async Task<IEnumerable<StandFrame>> GetAllFramesInStandAsync(int standId)
     {
