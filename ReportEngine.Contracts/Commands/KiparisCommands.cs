@@ -1,6 +1,6 @@
 namespace ReportEngine.Contracts.Commands;
 
-public class KiparisCommands
+public class KiparisCommands(string commandName)
 {
-    public const string GetAppState = "get_app_state";
+    public string CommandName { get; set; } = commandName;
 }

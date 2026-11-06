@@ -353,6 +353,7 @@ public static class HostFactory
     private static void ConfigureApiServices(IServiceCollection services)
     {
         services.AddSingleton<IKiparisCommand, GetAppStateCommand>();
+        services.AddSingleton<IKiparisCommand, GetProcessCommand>();
         services.AddSingleton<KiparisCommandHandler>();
         services.AddSingleton<PipeFactory>();
         services.AddHostedService<KiparisWorker>();

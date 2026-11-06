@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace ReportEngine.Contracts.Project;
+namespace ReportEngine.Contracts.Models.Project;
 
 public class AppStateResult
 {

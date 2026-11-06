@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ReportEngine.App.Services.Automation.Route;
 using ReportEngine.App.ViewModels;
 using ReportEngine.Contracts.Commands;
-using ReportEngine.Contracts.Project;
+using ReportEngine.Contracts.Models.Project;
 
 namespace ReportEngine.App.Services.Automation.Handlers;
 
@@ -17,14 +17,14 @@ public class GetAppStateCommand : IKiparisCommand
     {
         _serviceProvider = serviceProvider;
     }
-    
-    public string Name => KiparisCommands.GetAppState;
+
+    public string Name => new KiparisCommands(commandName: "get_app_state").CommandName;
+
     public async Task<JsonElement> ExecuteAsync(
-        JsonElement? arguments, 
+        JsonElement? arguments,
         CancellationToken cancellationToken)
     {
-        var state = await Application.Current.Dispatcher.InvokeAsync(
-            () =>
+        var state = await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 var viewModel = _serviceProvider
                     .GetRequiredService<ProjectViewModel>();
