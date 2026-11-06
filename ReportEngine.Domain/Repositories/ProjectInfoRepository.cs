@@ -270,7 +270,7 @@ public class ProjectInfoRepository : IProjectInfoRepository
             throw new ArgumentException($"Стенд с ID: {standId} не найден.");
 
         if (frame == null)
-            throw new ArgumentException($"Рама с ID: {frameName} не найдена.");
+            throw new ArgumentException($"Рама с именем: {frameName} не найдена.");
 
         var standFrame = new StandFrame
         {

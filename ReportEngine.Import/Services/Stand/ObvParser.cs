@@ -2,6 +2,7 @@
 using ReportEngine.Import.Configuration;
 using ReportEngine.Import.Dto;
 using ReportEngine.Import.Services.Excel;
+using System.Globalization;
 
 namespace ReportEngine.Import.Services.Stand;
 
@@ -52,6 +53,19 @@ public class ObvParser
 
         result.Number = worksheet.Cell(commonObvInfoRow, _obvCellConfig.ObvNumberColumn).Value.ToString();
         result.ObvType = worksheet.Cell(commonObvInfoRow, _obvCellConfig.ObvTypeColumn).Value.ToString();
+
+        // ID находится в строке заголовка обвязки, на строку выше номера и типа.
+        var idCell = worksheet.Cell(obvStartRow, _obvCellConfig.ObvyazkaIdColumn);
+        if (!int.TryParse(idCell.GetString().Trim(), NumberStyles.Integer,
+                CultureInfo.InvariantCulture, out var obvyazkaId) || obvyazkaId <= 0)
+        {
+            throw new FormatException(
+                $"На листе '{worksheet.Name}' в ячейке {idCell.Address} " +
+                $"указан некорректный ID обвязки: '{idCell.GetString()}'. " +
+                "Ожидается положительное целое число из справочника обвязок.");
+        }
+
+        result.ObvyazkaId = obvyazkaId;
 
         //находим секцию состав целиком
         var (structureStartRow, structureEndRow) = (obvStartRow + 2, obvStartRow + 7);

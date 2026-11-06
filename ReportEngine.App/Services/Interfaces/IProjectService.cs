@@ -10,7 +10,7 @@ public interface IProjectService
 
     Task UpdateProjectAsync(ProjectModel projectModel);
 
-    Task AddStandToProjectAsync(int projectId, StandModel standModel);
+    Task AddStandToProjectAsync(int projectId, StandModel standModel, bool includeFrames = true);
 
     Task CopyStandsAsync(ProjectModel projectModel);
 

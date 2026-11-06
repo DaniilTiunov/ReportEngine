@@ -17,6 +17,7 @@ public class ObvyazkiMapper : IRegister
     {
         var result = new ObvyazkaInStand
         {
+            ObvyazkaId = src.ObvyazkaId,
             NN = ParseInt(src.Number),
             ObvyazkaName = src.ObvType,
 
@@ -43,6 +44,8 @@ public class ObvyazkiMapper : IRegister
             KMCHMeasure = src.KMCH.Measure,
             KMCHCostPerUnit = src.KMCH.CostPerUnit,
             KMCHExportDays = ParseInt(src.KMCH.ExportDays),
+            
+            ImageName = $"{src.ObvyazkaId}",
 
             AdditionalComponents = src.ObvAdditionalComponents
                 .Select(c => new ObvyazkaAdditionalEquipPurpose

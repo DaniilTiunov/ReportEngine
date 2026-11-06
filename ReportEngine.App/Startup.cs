@@ -96,16 +96,7 @@ public static class Startup
             Log.CloseAndFlush();
         }
     }
-
-    private static bool CheckDbConnection(ReAppContext context)
-    {
-        var canConnect = context.Database.CanConnect();
-
-        if (!canConnect) ShowErrorWindow("Отсутствует подключение к БД");
-
-        return canConnect;
-    }
-
+    
     private static void SetCulture()
     {
         var culture = new CultureInfo("ru-RU");

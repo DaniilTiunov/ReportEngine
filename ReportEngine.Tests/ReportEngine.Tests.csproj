@@ -9,6 +9,7 @@
 
     <ItemGroup>
         <PackageReference Include="MSTest"/>
+        <PackageReference Include="xunit.v3.assert" />
     </ItemGroup>
 
     <ItemGroup>
