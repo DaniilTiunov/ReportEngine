@@ -8,6 +8,10 @@ using Microsoft.Extensions.Options;
 using ReportEngine.App.Dds;
 using ReportEngine.App.Mapping.Import;
 using ReportEngine.App.Services;
+using ReportEngine.App.Services.Automation.Handlers;
+using ReportEngine.App.Services.Automation.Pipe;
+using ReportEngine.App.Services.Automation.Route;
+using ReportEngine.App.Services.Automation.Worker;
 using ReportEngine.App.Services.Calculation;
 using ReportEngine.App.Services.Cloners;
 using ReportEngine.App.Services.Converters;
@@ -120,8 +124,10 @@ public static class HostFactory
 
                 ConfigureImportServices(services);
                 ConfigureMapsterService(services);
-                
+
+                ConfigureApiServices(services);
                 services.AddSingleton<App>();
+                
             })
             .Build();
     }
@@ -342,5 +348,13 @@ public static class HostFactory
         services.AddTransient<SandBlastView>();
         services.AddTransient<ElectricCostView>();
         services.AddTransient<AuditEventsView>();
+    }
+
+    private static void ConfigureApiServices(IServiceCollection services)
+    {
+        services.AddSingleton<IKiparisCommand, GetAppStateCommand>();
+        services.AddSingleton<KiparisCommandHandler>();
+        services.AddSingleton<PipeFactory>();
+        services.AddHostedService<KiparisWorker>();
     }
 }

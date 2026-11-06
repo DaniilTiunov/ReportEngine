@@ -156,6 +156,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\ReportEngine.Contracts\ReportEngine.Contracts.csproj" />
         <ProjectReference Include="..\ReportEngine.Domain\ReportEngine.Domain.csproj"/>
         <ProjectReference Include="..\ReportEngine.Export\ReportEngine.Export.csproj"/>
         <ProjectReference Include="..\ReportEngine.Extensions\ReportEngine.Extensions.csproj"/>
