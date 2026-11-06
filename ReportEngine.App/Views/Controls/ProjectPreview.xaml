@@ -760,6 +760,7 @@
                         <ui:ListView
                             Grid.Column="0"
                             MaxHeight="150"
+                            Margin="0,0,15,0"
                             BorderBrush="{DynamicResource SecondaryColor}"
                             DisplayMemberPath="Name"
                             FontSize="15"
@@ -892,12 +893,11 @@
 
                         <Button
                             Grid.Column="1"
-                            Width="50"
+                            Width="40"
                             Height="30"
-                            Margin="5,5,5,5"
                             Command="{Binding ProjectCommandProvider.ShowFrameDialogCommand}"
                             Content="➕"
-                            FontSize="12"
+                            FontSize="10"
                             ToolTip="Добавить раму" />
                     </Grid>
                 </GroupBox>

@@ -21,8 +21,8 @@ public class StandFrameImportTests
 
         var entity = StandDataConverter.ConvertToStandEntity(model, includeFrames: false);
 
-        Assert.AreEqual(0, entity.StandFrames.Count);
-        Assert.AreEqual(1, model.FramesInStand.Count);
+        Assert.IsEmpty(entity.StandFrames);
+        Assert.HasCount(1, model.FramesInStand);
         Assert.AreSame(frame, model.FramesInStand.Single());
         Assert.AreSame(obvyazka, entity.ObvyazkiInStand.Single());
     }
